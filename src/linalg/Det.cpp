@@ -17,9 +17,9 @@ namespace cytnx {
       if (Tl.dtype() > 4) {
         // do conversion:
         _tl = _tl.astype(Type.Double);
-        out.Init({1}, Type.Double, _tl.device());
+        out.Init({1}, Type.Double, Device.cpu); //scalar, so on cpu always!
       } else {
-        out.Init({1}, _tl.dtype(), _tl.device());
+        out.Init({1}, _tl.dtype(), Device.cpu); //scalar, so on cpu always!
       }
 
       if (Tl.device() == Device.cpu) {
@@ -30,10 +30,10 @@ namespace cytnx {
 
       } else {
 #ifdef UNI_GPU
-        cytnx_error_msg(true, "[Det] on GPU Developing!%s", "\n");
-        // checkCudaErrors(cudaSetDevice(Tl.device()));
-        // cytnx::linalg_internal::lii.cuNorm_ii[_tl.dtype()](out._impl->storage()._impl->Mem,
-        //                                         _tl._impl->storage()._impl, Tl.shape()[0]);
+        //cytnx_error_msg(true, "[Det] on GPU Developing!%s", "\n");
+        checkCudaErrors(cudaSetDevice(Tl.device()));
+        cytnx::linalg_internal::lii.cuDet_ii[_tl.dtype()](out._impl->storage()._impl->Mem,
+                                                          _tl._impl->storage()._impl, Tl.shape()[0]);
 
         return out;
 #else

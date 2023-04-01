@@ -20,17 +20,31 @@ namespace cytnx {
       // perform UL -= a*UR) for each blocks.
       //[Warning] 1. This function does not check the Bond mismatch of UL and UR. Use with caution.
       //           2. This function does not check if UL and UR are of the same UTenType!
-      for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
-        UL.get_block_(blk) -= a * UR.get_block_(blk);
+      if(UL.uten_type() == UTenType.Block){
+          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+            UL.get_block_(UR.get_itoi()[blk]) -= a * UR.get_block_(blk);
+          }
+      }else{
+          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+            UL.get_block_(blk) -= a * UR.get_block_(blk);
+          }
+
       }
+    
     }
 
     void unsafe_Add_(UniTensor &UL, const Scalar &a, const UniTensor &UR) {
       // perform UL += a*UR) for each blocks.
       //[Warning] 1. This function does not check the Bond mismatch of UL and UR. Use with caution.
       //           2. This function does not check if UL and UR are of the same UTenType!
-      for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
-        UL.get_block_(blk) += a * UR.get_block_(blk);
+      if(UL.uten_type() == UTenType.Block){
+          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+            UL.get_block_(UR.get_itoi()[blk]) += a * UR.get_block_(blk);
+          }
+      }else{
+          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+            UL.get_block_(blk) += a * UR.get_block_(blk);
+          }
       }
     }
 
@@ -42,6 +56,9 @@ namespace cytnx {
 
       double Norm = double(Contract(Tin, Tin.Dagger()).item().real());
       Norm = std::sqrt(Norm);
+
+      // cout<<"Norm: "<<Norm<<endl;
+
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
       // UniTensor psi_1 = Tin.clone();
@@ -64,9 +81,11 @@ namespace cytnx {
       //-------------------------------------------------
       new_psi = Hop->matvec(psi_1);
 
+      // cout<<"psi_1, new_psi: "<<endl;
       // psi_1.print_diagram();
+      // psi_1.print_blocks();
       // new_psi.print_diagram();
-
+      // new_psi.print_blocks();
       /*
          checking if the output match input:
       */
@@ -80,7 +99,7 @@ namespace cytnx {
                       "\n");
 
       As(0) = Contract(new_psi.Dagger(), psi_1).item().real();
-
+      
       // As(0) =
       // linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true);
 
@@ -101,6 +120,11 @@ namespace cytnx {
       E = As(0).item();
       Scalar Ediff;
 
+      // cout<<"psi_0: "<<endl;
+      // psi_0.print_diagram();
+      // psi_0.print_blocks();
+      // cout<<"As(0), Bs(0): "<<As(0)<<" "<<Bs(0)<<endl;
+
       ///---------------------------
 
       // iteration LZ:
@@ -110,6 +134,12 @@ namespace cytnx {
 
         // new_psi = Hop->matvec(psi_1) - Bs(i-1)*psi_0;
         new_psi = Hop->matvec(psi_1);
+
+        // cout<<"2222222psi_1, new_psi: "<<endl;
+        // psi_1.print_diagram();
+        // psi_1.print_blocks();
+        // new_psi.print_diagram();
+        // new_psi.print_blocks();
 
         As.append(Contract(new_psi.Dagger(), psi_1).item().real());
         // As.append(linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true).item());
@@ -131,8 +161,16 @@ namespace cytnx {
         auto tmpB =
           new_psi.Norm().item();  // sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
         Bs.append(tmpB);
+
+        // cout<<"psi_0: "<<endl;
+        // psi_0.print_diagram();
+        // psi_0.print_blocks();
+        // cout<<"As(1), Bs(1): "<<As(1)<<" "<<Bs(1)<<endl;
+        // cout<<"tmpB: "<< tmpB<<endl;
+
         if (tmpB == 0) {
           cvg_fin = true;
+          // cout<<"TMPB = 0!!!!!!!!!!!!!"<<endl;
           break;
         }
 

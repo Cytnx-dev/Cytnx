@@ -11,73 +11,73 @@ namespace cytnx {
 
   // Storage Init interface.
   //=============================
-  boost::intrusive_ptr<Storage_base> SIInit_cd() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_cf() {
-    boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_d() {
-    boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_f() {
-    boost::intrusive_ptr<Storage_base> out(new FloatStorage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_u64() {
-    boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_i64() {
-    boost::intrusive_ptr<Storage_base> out(new Int64Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_u32() {
-    boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_i32() {
-    boost::intrusive_ptr<Storage_base> out(new Int32Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_u16() {
-    boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_i16() {
-    boost::intrusive_ptr<Storage_base> out(new Int16Storage());
-    return out;
-  }
-  boost::intrusive_ptr<Storage_base> SIInit_b() {
-    boost::intrusive_ptr<Storage_base> out(new BoolStorage());
-    return out;
-  }
+  // boost::intrusive_ptr<Storage_base> SIInit_cd() {
+  //   boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_cf() {
+  //   boost::intrusive_ptr<Storage_base> out(new ComplexFloatStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_d() {
+  //   boost::intrusive_ptr<Storage_base> out(new DoubleStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_f() {
+  //   boost::intrusive_ptr<Storage_base> out(new FloatStorage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_u64() {
+  //   boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_i64() {
+  //   boost::intrusive_ptr<Storage_base> out(new Int64Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_u32() {
+  //   boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_i32() {
+  //   boost::intrusive_ptr<Storage_base> out(new Int32Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_u16() {
+  //   boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_i16() {
+  //   boost::intrusive_ptr<Storage_base> out(new Int16Storage());
+  //   return out;
+  // }
+  // boost::intrusive_ptr<Storage_base> SIInit_b() {
+  //   boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+  //   return out;
+  // }
 
-  Storage_init_interface::Storage_init_interface() {
-    USIInit.resize(N_Type);
-    USIInit[this->Double] = SIInit_d;
-    USIInit[this->Float] = SIInit_f;
-    USIInit[this->ComplexDouble] = SIInit_cd;
-    USIInit[this->ComplexFloat] = SIInit_cf;
-    USIInit[this->Uint64] = SIInit_u64;
-    USIInit[this->Int64] = SIInit_i64;
-    USIInit[this->Uint32] = SIInit_u32;
-    USIInit[this->Int32] = SIInit_i32;
-    USIInit[this->Uint16] = SIInit_u16;
-    USIInit[this->Int16] = SIInit_i16;
-    USIInit[this->Bool] = SIInit_b;
-  }
+  // constexpr Storage_init_interface::Storage_init_interface() {
+  //   USIInit.resize(N_Type);
+  //   USIInit[this->Double] = SIInit_d;
+  //   USIInit[this->Float] = SIInit_f;
+  //   USIInit[this->ComplexDouble] = SIInit_cd;
+  //   USIInit[this->ComplexFloat] = SIInit_cf;
+  //   USIInit[this->Uint64] = SIInit_u64;
+  //   USIInit[this->Int64] = SIInit_i64;
+  //   USIInit[this->Uint32] = SIInit_u32;
+  //   USIInit[this->Int32] = SIInit_i32;
+  //   USIInit[this->Uint16] = SIInit_u16;
+  //   USIInit[this->Int16] = SIInit_i16;
+  //   USIInit[this->Bool] = SIInit_b;
+  // }
 
   //==========================
-  void Storage_base::Init(const unsigned long long &len_in, const int &device) {
+  void Storage_base::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
     // cout << "Base.init" << endl;
   }
 
-  Storage_base::Storage_base(const unsigned long long &len_in, const int &device) {
-    this->Init(len_in, device);
+  Storage_base::Storage_base(const unsigned long long &len_in, const int &device, const bool &init_zero) {
+    this->Init(len_in, device, init_zero);
   }
 
   Storage_base &Storage_base::operator=(Storage_base &Rhs) {
@@ -200,10 +200,10 @@ namespace cytnx {
                                         const std::vector<cytnx_uint64> &shape,
                                         const std::vector<std::vector<cytnx_uint64>> &locators,
                                         const cytnx_uint64 &Nunit) {
-#ifdef UNI_DEBUG
+    if(User_debug)
     cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
                     "internal, the output dtype does not match current storage dtype.\n");
-#endif
+
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < locators.size(); i++) {
       if (locators[i].size())
@@ -254,12 +254,12 @@ namespace cytnx {
                                      const std::vector<cytnx_uint64> &mapper,
                                      const std::vector<cytnx_uint64> &len,
                                      const std::vector<std::vector<cytnx_uint64>> &locators) {
-#ifdef UNI_DEBUG
-    cytnx_error_msg(shape.size() != len.size(), "%s",
-                    "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
-    cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
-                    "internal, the output dtype does not match current storage dtype.\n");
-#endif
+    if(User_debug){
+        cytnx_error_msg(shape.size() != len.size(), "%s",
+                        "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
+        cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
+                        "internal, the output dtype does not match current storage dtype.\n");
+    }
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
@@ -311,10 +311,9 @@ namespace cytnx {
                                      const std::vector<cytnx_uint64> &len,
                                      const std::vector<std::vector<cytnx_uint64>> &locators,
                                      const bool &is_scalar) {
-#ifdef UNI_DEBUG
+    if(User_debug)
     cytnx_error_msg(shape.size() != len.size(), "%s",
                     "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
-#endif
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:

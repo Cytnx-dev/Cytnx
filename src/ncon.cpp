@@ -11,7 +11,7 @@ namespace cytnx {
     string net_in = "";
     map<cytnx_int64, vector<cytnx_uint64>> posbond2tensor;
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
-      net_in.append("t"), net_in.append(to_string(i)), net_in.append(": ;");
+      net_in.append("t"), net_in.append(to_string(i)), net_in.append(": ");
       vector<cytnx_int64> bds = connect_list_in[i];
       for (cytnx_uint64 j = 0; j < bds.size(); j++) {
         net_in.append(to_string(bds[j]));

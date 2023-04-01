@@ -77,4 +77,19 @@ namespace cytnx {
     return out;
   }
 
+    std::string operator*(const std::string &in, const unsigned int &N){
+
+        std::string out = in;
+        if(N==0) return std::string("");        
+        for(cytnx_uint64 i=1;i<N;i++){
+
+            out += in;
+        }
+        return out;
+
+    }
+
+
+
+
 }  // namespace cytnx

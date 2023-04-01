@@ -14,7 +14,10 @@ namespace cytnx {
     return *this;
   }
   UniTensor UniTensor::Add(const UniTensor &rhs) const { return cytnx::linalg::Add(*this, rhs); }
-  UniTensor UniTensor::Add(const Scalar &rhs) const { return cytnx::linalg::Add(*this, rhs); }
+  UniTensor UniTensor::Add(const Scalar &rhs) const { 
+    //cout << "lyer1: " << rhs << endl;
+    return cytnx::linalg::Add(*this, rhs); 
+  }
 
   UniTensor UniTensor::Sub(const UniTensor &rhs) const { return cytnx::linalg::Sub(*this, rhs); }
   UniTensor UniTensor::Sub(const Scalar &rhs) const { return cytnx::linalg::Sub(*this, rhs); }
@@ -60,7 +63,11 @@ namespace cytnx {
     cytnx_uint64 rank = this->_impl->_labels.size();
     f.write((char *)&rank, sizeof(cytnx_uint64));
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      f.write((char *)&(this->_impl->_labels[i]), sizeof(this->_impl->_labels[i]));
+      size_t tmp = this->_impl->_labels[i].size();
+      f.write((char *)&tmp, sizeof(this->_impl->_labels[i].size()));
+    }
+    for (cytnx_uint64 i = 0; i < rank; i++) {
+      f.write((char *)(this->_impl->_labels[i].data()), sizeof(char)*this->_impl->_labels[i].size());
     }
     // f.write((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
@@ -87,7 +94,9 @@ namespace cytnx {
       // cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for
       // SparseUniTensor is under developing!!%s","\n");
       this->_impl = boost::intrusive_ptr<UniTensor_base>(new SparseUniTensor());
-    } else {
+    } else if(utentype == UTenType.Block){
+      this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
+    }else {
       cytnx_error_msg(true, "[ERROR] Unknown UniTensor type!%s", "\n");
     }
 
@@ -110,7 +119,12 @@ namespace cytnx {
     this->_impl->_labels.resize(rank);
     this->_impl->_bonds.resize(rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      f.read((char *)&(this->_impl->_labels[i]), sizeof(this->_impl->_labels[i]));
+      size_t tmp;
+      f.read((char *)&tmp, sizeof(size_t));
+      this->_impl->_labels[i].resize(tmp);
+    }
+    for (cytnx_uint64 i = 0; i < rank; i++) {
+      f.read((char *)(this->_impl->_labels[i].data()), sizeof(char)*this->_impl->_labels[i].size());
     }
     // f.read((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
@@ -146,7 +160,7 @@ namespace cytnx {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
     }
     out._Load(f);
     f.close();
@@ -157,7 +171,7 @@ namespace cytnx {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname);
     }
     out._Load(f);
     f.close();

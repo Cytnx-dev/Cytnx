@@ -8,7 +8,7 @@ using namespace std;
 namespace cytnx {
 
   //+++++++++++++++++++
-  void ComplexFloatStorage::Init(const unsigned long long &len_in, const int &device) {
+  void ComplexFloatStorage::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
     // cout << "ComplexFloat.init" << endl;
     // check:
     this->len = len_in;
@@ -24,8 +24,8 @@ namespace cytnx {
     }
 
     if (device == Device.cpu) {
-      // this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(complex<float>));
-      this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(complex<float>));
+      if(init_zero) this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(complex<float>));
+      else this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(complex<float>));
     } else {
 #ifdef UNI_GPU
       cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
@@ -53,11 +53,11 @@ namespace cytnx {
     cytnx_error_msg(this->cap % STORAGE_DEFT_SZ != 0,
                     "[ERROR] _Init_by_ptr cannot have not %dx cap_in.", STORAGE_DEFT_SZ);
 
-#ifdef UNI_DEBUG
-    cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
-    cytnx_error_msg(this->cap < this->len, "%s",
-                    "[ERROR] _Init_by_ptr cannot have capacity < size.");
-#endif
+    if(User_debug){
+        cytnx_error_msg(len_in < 1, "%s", "[ERROR] _Init_by_ptr cannot have len_in < 1.");
+        cytnx_error_msg(this->cap < this->len, "%s",
+                        "[ERROR] _Init_by_ptr cannot have capacity < size.");
+    }
     this->dtype = Type.ComplexFloat;
     this->device = device;
   }

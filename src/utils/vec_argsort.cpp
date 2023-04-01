@@ -18,4 +18,8 @@ namespace cytnx {
   template std::vector<cytnx_uint64> vec_argsort(const std::vector<cytnx_double>& in);
   template std::vector<cytnx_uint64> vec_argsort(const std::vector<cytnx_float>& in);
   template std::vector<cytnx_uint64> vec_argsort(const std::vector<cytnx_bool>& in);
+
+  template std::vector<cytnx_uint64> vec_argsort(const std::vector<std::vector<cytnx_uint64> >& in);
+  template std::vector<cytnx_uint64> vec_argsort(const std::vector<std::vector<cytnx_int64> >& in);
+
 }  // namespace cytnx

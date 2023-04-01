@@ -16,6 +16,9 @@ namespace cytnx {
   std::vector<std::string> str_split(const std::string &in, const bool remove_null = true,
                                      const std::string &delimiter = " ");
   std::vector<std::string> str_findall(const std::string &in, const std::string &tokens);
+  std::string operator*(const std::string &, const unsigned int &N);
+
+
 
 }  // namespace cytnx
 

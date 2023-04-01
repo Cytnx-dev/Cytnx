@@ -8,15 +8,15 @@
 #include <vector>
 typedef cytnx::Accessor ac;
 namespace cytnx {
-
-  void DenseUniTensor::Init(const std::vector<Bond> &bonds,
-                            const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
-                            const unsigned int &dtype, const int &device, const bool &is_diag,
-                            const bool &no_alloc) {
-    std::vector<std::string> vs;
-    for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
-    DenseUniTensor::Init(bonds, in_labels, rowrank, dtype, device, is_diag, no_alloc);
-  }
+  
+  //void DenseUniTensor::Init(const std::vector<Bond> &bonds,
+  //                          const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
+  //                          const unsigned int &dtype, const int &device, const bool &is_diag,
+  //                          const bool &no_alloc) {
+  //  std::vector<std::string> vs;
+  //  for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
+  //  DenseUniTensor::Init(bonds, in_labels, rowrank, dtype, device, is_diag, no_alloc);
+  //}
   void DenseUniTensor::Init(const std::vector<Bond> &bonds,
                             const std::vector<std::string> &in_labels, const cytnx_int64 &rowrank,
                             const unsigned int &dtype, const int &device, const bool &is_diag,
@@ -25,6 +25,7 @@ namespace cytnx {
     this->_is_tag = false;
     cytnx_uint32 N_ket = 0;
     if (bonds.size() != 0) this->_is_tag = (bonds[0].type() != bondType::BD_REG);
+    
     for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
       // check
       cytnx_error_msg(bonds[i].qnums().size() != 0, "%s",
@@ -41,27 +42,49 @@ namespace cytnx {
       }
       cytnx_error_msg(bonds[i].dim() == 0, "%s", "[ERROR] All bonds must have dimension >=1");
     }
+    //cout << N_ket << endl;
+    //cout << is_diag << endl;
+    //cout << this->_is_tag << endl; 
 
     // check rowrank
     if (this->_is_tag) {
-      if (rowrank < 0) {
+      if(is_diag){
+        //cout << "NKET = " << N_ket << endl;
+        cytnx_error_msg(N_ket != 1,"[ERROR][DenseUniTensor] is_diag = true with tagged UniTensor must have one IN (KET) bond  and one OUT (BRA) bond.%s","\n");
+      }
+      if (rowrank == -1) {
         this->_rowrank = N_ket;
-      } else {
-        cytnx_error_msg(rowrank > bonds.size(),
-                        "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+      }else{
+        if(is_diag){
+            cytnx_error_msg(rowrank != 1,
+                      "[ERROR][DenseUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+        }else{
+            cytnx_error_msg((rowrank < 0) || (rowrank > bonds.size()),
+                        "[ERROR] rowrank is invalid or cannot exceed total rank of Tensor.%s", "\n");
+        }
         this->_rowrank = rowrank;
       }
     } else {
+      
       if (bonds.size() == 0)
         this->_rowrank = 0;
       else {
-        cytnx_error_msg(
-          rowrank < 0,
-          "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
-          "\n");
-        cytnx_error_msg(rowrank > bonds.size(),
-                        "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
-        this->_rowrank = rowrank;
+        if(rowrank==-1){
+            this->_rowrank=1;
+        }else{
+            if(is_diag){
+                cytnx_error_msg(rowrank != 1,
+                      "[ERROR][DenseUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+            }else{
+                cytnx_error_msg(
+                  rowrank < 0,
+                  "[ERROR] initialize a non-symmetry, un-tagged tensor should assign a >=0 rowrank.%s",
+                  "\n");
+                cytnx_error_msg(rowrank > bonds.size(),
+                                "[ERROR] rowrank cannot exceed total rank of Tensor.%s", "\n");
+            }
+            this->_rowrank = rowrank;
+        }
       }
     }
 
@@ -284,6 +307,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
+  /*
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -322,6 +346,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
+  */
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -442,6 +467,7 @@ namespace cytnx {
       this->_is_braket_form = this->_update_braket();
     }
   }
+  /*
   void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
                                 const cytnx_int64 &rowrank) {
     std::vector<cytnx_uint64> mapper_u64;
@@ -469,9 +495,37 @@ namespace cytnx {
       this->_is_braket_form = this->_update_braket();
     }
   };
+  */
+  void DenseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const{
+    std::ostream &os = std::cout;
+    os << "-------- start of print ---------\n";
+    char *buffer = (char *)malloc(sizeof(char) * 10240);
+    sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
+    os << std::string(buffer);
+    if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "is_diag    : %s\n", this->_is_diag ? "True" : "False");
+    os << std::string(buffer);
+    sprintf(buffer, "contiguous : %s\n", this->is_contiguous() ? "True" : "False");
+    os << std::string(buffer);
+
+    if(full_info)
+        os << this->_block << std::endl;
+    else{
+        os << "dtype: " << Type.getname(this->_block.dtype()) << endl;
+        os << "device: " << Device.getname(this->_block.device()) << endl;
+        os << "shape: ";
+        vec_print_simple(os,this->_block.shape());
+    }
+    free(buffer);
+  }
+  void DenseUniTensor::print_blocks(const bool &full_info)const{
+    this->print_block(0,full_info);
+  }
 
   void DenseUniTensor::print_diagram(const bool &bond_info) {
-    char *buffer = (char *)malloc(256 * sizeof(char));
+    char *buffer = (char *)malloc(10240 * sizeof(char));
+    unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
     std::cout << std::string(buffer);
@@ -495,105 +549,147 @@ namespace cytnx {
       vl = Nout;
 
     std::string bks;
-    char *l = (char *)malloc(40 * sizeof(char));
-    char *llbl = (char *)malloc(40 * sizeof(char));
-    char *r = (char *)malloc(40 * sizeof(char));
-    char *rlbl = (char *)malloc(40 * sizeof(char));
+    char *l = (char *)malloc(BUFFsize * sizeof(char));
+    char *llbl = (char *)malloc(BUFFsize * sizeof(char));
+    char *r = (char *)malloc(BUFFsize * sizeof(char));
+    char *rlbl = (char *)malloc(BUFFsize * sizeof(char));
+
+      int Space_Llabel_max=0, Space_Ldim_max=0, Space_Rdim_max =0;
+      //quickly checking the size for each line, only check the largest! 
+
+      for (cytnx_uint64 i = 0; i < vl; i++) {
+        if(i<Nin){
+            if(Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
+            if(Space_Ldim_max < to_string(this->_bonds[i].dim()).size()) Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
+        }
+        if(i<Nout){
+            if(Space_Rdim_max < to_string(this->_bonds[Nin+i].dim()).size()) Space_Rdim_max = to_string(this->_bonds[Nin+i].dim()).size();
+        }
+      }
+      string LallSpace = (string(" ")*(Space_Llabel_max+3+1));
+      string MallSpace = string(" ")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
+      string M_dashes  = string("-")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
+      std::string tmpss;
+
     if (this->is_tag()) {
       sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
       std::cout << std::string(buffer);
-      sprintf(buffer, "        row               col   %s", "\n");
-      std::cout << std::string(buffer);
-      sprintf(buffer, "           ---------------      %s", "\n");
-      std::cout << std::string(buffer);
-      for (cytnx_uint64 i = 0; i < vl; i++) {
-        sprintf(buffer, "           |             |     %s", "\n");
+
+
+        sprintf(buffer, "%s row %s col %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
         std::cout << std::string(buffer);
-        if (i < Nin) {
-          if (this->_bonds[i].type() == bondType::BD_KET)
-            bks = " -->";
-          else
-            bks = "*<--";
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          // sprintf(l, "%3ld %s", this->_labels[i], bks.c_str());
-          sprintf(l, "%s %s", this->_labels[i], bks.c_str());
-          sprintf(llbl, "%-3lu", this->_bonds[i].dim());
-        } else {
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          sprintf(l, "%s", "        ");
-          sprintf(llbl, "%s", "   ");
-        }
-        if (i < Nout) {
-          if (this->_bonds[Nin + i].type() == bondType::BD_KET)
-            bks = "<--*";
-          else
-            bks = "--> ";
-          memset(r, 0, sizeof(char) * 40);
-          memset(rlbl, 0, sizeof(char) * 40);
-          // sprintf(r, "%s %-3d", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(rlbl, "%3d", this->_bonds[Nin + i].dim());
-        } else {
-          memset(r, 0, sizeof(char) * 40);
-          memset(rlbl, 0, sizeof(char) * 40);
-          sprintf(r, "%s", "        ");
-          sprintf(rlbl, "%s", "   ");
-        }
-        sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
+        sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
         std::cout << std::string(buffer);
-      }
-      sprintf(buffer, "           |             |     %s", "\n");
-      std::cout << std::string(buffer);
-      sprintf(buffer, "           ---------------     %s", "\n");
-      std::cout << std::string(buffer);
+        for (cytnx_uint64 i = 0; i < vl; i++) {
+          sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+          std::cout << std::string(buffer);
+
+          if (i < Nin) {
+            if (this->_bonds[i].type() == bondType::BD_KET)
+              bks = " -->";
+            else
+              bks = "*<--";
+            memset(l, 0, sizeof(char) * BUFFsize);
+            memset(llbl, 0, sizeof(char) * BUFFsize);
+            tmpss = this->_labels[i] + std::string(" ")*(Space_Llabel_max-this->_labels[i].size());
+            sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
+            tmpss = to_string(this->_bonds[i].dim()) + std::string(" ")*(Space_Ldim_max-to_string(this->_bonds[i].dim()).size());
+            sprintf(llbl, "%s", tmpss.c_str());
+          } else {
+            memset(l, 0, sizeof(char) * BUFFsize);
+            memset(llbl, 0, sizeof(char) * BUFFsize);
+            tmpss = std::string(" ")*(Space_Llabel_max+5);
+            sprintf(l, "%s",tmpss.c_str());
+            tmpss = std::string(" ")*(Space_Ldim_max);
+            sprintf(llbl, "%s",tmpss.c_str());
+          }
+          if (i < Nout) {
+            if (this->_bonds[Nin + i].type() == bondType::BD_KET)
+              bks = "<--*";
+            else
+              bks = "--> ";
+            memset(r, 0, sizeof(char) * BUFFsize);
+            memset(rlbl, 0, sizeof(char) * BUFFsize);
+
+            sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
+
+            tmpss = to_string(this->_bonds[Nin+i].dim()) + std::string(" ")*(Space_Rdim_max-to_string(this->_bonds[Nin+i].dim()).size());
+            sprintf(rlbl, "%s", tmpss.c_str());
+
+          } else {
+            memset(r, 0, sizeof(char) * BUFFsize);
+            memset(rlbl, 0, sizeof(char) * BUFFsize);
+            sprintf(r, "%s", "        ");
+            tmpss = std::string(" ")*Space_Rdim_max;
+            sprintf(rlbl, "%s",tmpss.c_str());
+          }
+          sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
+          std::cout << std::string(buffer);
+        }
+        sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+        std::cout << std::string(buffer);
+        sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
+        std::cout << std::string(buffer);
+        //sprintf(buffer, "%s", "\n");
+        //std::cout << std::string(buffer);
 
     } else {
-      sprintf(buffer, "            -------------      %s", "\n");
+      sprintf(buffer, "%s     %s     %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
       std::cout << std::string(buffer);
       for (cytnx_uint64 i = 0; i < vl; i++) {
         if (i == 0) {
-          sprintf(buffer, "           /             \\     %s", "\n");
+          sprintf(buffer, "%s    /%s\\    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
           std::cout << std::string(buffer);
         } else {
-          sprintf(buffer, "           |             |     %s", "\n");
+          sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
           std::cout << std::string(buffer);
         }
 
         if (i < Nin) {
-          bks = "__";
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          // sprintf(l, "%3d %s__", this->_labels[i], bks.c_str());
-          sprintf(l, "%s %s__", this->_labels[i], bks.c_str());
-          sprintf(llbl, "%-3d", this->_bonds[i].dim());
+          bks = "____";
+          memset(l, 0, sizeof(char) *BUFFsize);
+          memset(llbl, 0, sizeof(char) *BUFFsize);
+          tmpss = this->_labels[i] + std::string(" ")*(Space_Llabel_max-this->_labels[i].size());
+          sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
+          tmpss = to_string(this->_bonds[i].dim()) + std::string(" ")*(Space_Ldim_max-to_string(this->_bonds[i].dim()).size());
+          sprintf(llbl, "%s", tmpss.c_str());
+
         } else {
-          memset(l, 0, sizeof(char) * 40);
-          memset(llbl, 0, sizeof(char) * 40);
-          sprintf(l, "%s", "        ");
-          sprintf(llbl, "%s", "   ");
+          memset(l, 0, sizeof(char) * BUFFsize);
+          memset(llbl, 0, sizeof(char) * BUFFsize);
+        
+          tmpss = std::string(" ")*(Space_Llabel_max+5);
+          sprintf(l, "%s",tmpss.c_str());
+          tmpss = std::string(" ")*(Space_Ldim_max);
+          sprintf(llbl, "%s",tmpss.c_str());
+
         }
         if (i < Nout) {
-          bks = "__";
-          memset(r, 0, sizeof(char) * 40);
-          memset(rlbl, 0, sizeof(char) * 40);
-          // sprintf(r, "__%s %-3d", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(r, "__%s %s", bks.c_str(), this->_labels[Nin + i]);
-          sprintf(rlbl, "%3d", this->_bonds[Nin + i].dim());
+          bks = "____";
+          memset(r, 0, sizeof(char) * BUFFsize);
+          memset(rlbl, 0, sizeof(char) * BUFFsize);
+
+          sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
+
+          tmpss = to_string(this->_bonds[Nin+i].dim()) + std::string(" ")*(Space_Rdim_max-to_string(this->_bonds[Nin+i].dim()).size());
+          sprintf(rlbl, "%s", tmpss.c_str());
+
         } else {
           memset(r, 0, sizeof(char) * 40);
           memset(rlbl, 0, sizeof(char) * 40);
           sprintf(r, "%s", "        ");
-          sprintf(rlbl, "%s", "   ");
+          tmpss = std::string(" ")*Space_Rdim_max;
+          sprintf(rlbl, "%s",tmpss.c_str());
+
         }
         sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
         std::cout << std::string(buffer);
       }
-      sprintf(buffer, "           \\             /     %s", "\n");
+      sprintf(buffer, "%s    \\%s/    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
       std::cout << std::string(buffer);
-      sprintf(buffer, "            -------------      %s", "\n");
+      sprintf(buffer, "%s     %s     %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
       std::cout << std::string(buffer);
+
     }
 
     if (bond_info) {
@@ -659,11 +755,11 @@ namespace cytnx {
     return out;
   }
   void DenseUniTensor::combineBonds(const std::vector<std::string> &indicators,
-                                    const bool &permute_back) {
+                                    const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
-    std::vector<cytnx_uint64> idx_mapper;
+    std::vector<cytnx_int64> idx_mapper;
     // find the index of label:
     for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
@@ -671,116 +767,87 @@ namespace cytnx {
                       "\n");
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
-
-    /// first permute the Tensor:
-    std::vector<cytnx_uint64> old_shape = this->shape();
-
+    this->combineBonds(idx_mapper,force);
+  }
+  void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
+                                    const bool &force) {
+    cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
+                    "\n");
+    std::vector<cytnx_int64>::iterator it;
+    std::vector<cytnx_int64> idx_mapper; idx_mapper.reserve(this->rank());
+  
     cytnx_error_msg(this->_is_diag,
                     "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
                     "UniTensor.to_dense()/to_dense_() first.%s",
                     "\n");
 
-    if (permute_back) {
-      cytnx_uint64 new_Nin = this->_rowrank;
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        if (idx_mapper[i] < this->_rowrank) new_Nin -= 1;
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      /// create mapper for permute
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-      std::vector<cytnx_int64> new_shape;
-      new_shape.push_back(-1);
-      for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++)
-        new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-
-      this->_block.permute_(mapper);
-
-      this->_block.reshape_(new_shape);
-
-      std::string f_label = this->_labels[idx_mapper[0]];
-      vec_erase_(this->_bonds, std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      vec_erase_(this->_labels,
-                 std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      // permute back>>
-      // find index
-      cytnx_uint64 x = vec_where(this->_labels, f_label);
-      idx_no_combine = utils_internal::range_cpu(1, this->_labels.size());
-      idx_no_combine.insert(idx_no_combine.begin() + x, 0);
-      this->_block.permute_(idx_no_combine);
-      this->_rowrank = new_Nin;
-
-      if (this->is_tag()) {
-        this->_is_braket_form = this->_update_braket();
-      }
-
-    } else {
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      std::vector<cytnx_int64> new_shape;
-      if (idx_mapper[0] >= this->_rowrank) {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_no_combine, idx_mapper);
-
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
+    //get the mapper:
+    int cnt = 0;
+    int idor;
+    for(int i=0;i<this->rank();i++){
+        if(cnt==indicators.size()){
+            idx_mapper.push_back(i);
+        }else{
+            if(std::find(indicators.begin(),indicators.end(),i)==indicators.end()){
+                idx_mapper.push_back(i);
+            }else{
+                if(i==indicators[0]){
+                    idor = idx_mapper.size(); //new_shape_aft_perm.size();
+                    for(int j=0;j<indicators.size();j++)
+                        idx_mapper.push_back(indicators[j]);
+                }
+                cnt += 1;
+            }
         }
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
+    }
+    this->permute_(idx_mapper);
 
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
+    //group bonds:
+    std::vector<Bond> new_bonds;
+    //std::cout << "idor" << idor << std::endl;
+    //std::cout << "rank" << this->rank() << std::endl; 
+    for(int i=0;i<this->rank();i++){
+        if(i==idor){
+            Bond tmp = this->_bonds[i];
+            for(int j=1;j<indicators.size();j++){
+                if(force) tmp._impl->force_combineBond_(this->_bonds[i+j]._impl,false); 
+                else  tmp.combineBond_(this->_bonds[i+j]);
+            }
+            new_bonds.push_back(tmp);
+            i += indicators.size()-1;
 
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = this->_labels.size() - 1;
-
-      } else {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
+        }else{
+            new_bonds.push_back(this->_bonds[i]);
         }
+    }
 
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
+    // remove labels, update bonds:
+    this->_labels.erase(this->_labels.begin()+idor+1,this->_labels.begin()+idor+1+indicators.size()-1);
+    this->_bonds = new_bonds;
 
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = 1;
-      }
+    // new shape:
+    std::vector<cytnx_int64> new_shape(this->_block.shape().begin(),this->_block.shape().end());
+    new_shape[idor] = -1;
+    if(idor+indicators.size()<new_shape.size()){
+        memcpy(&new_shape[idor+1],&new_shape[idor+indicators.size()],sizeof(cytnx_int64)*(new_shape.size()-idor-indicators.size()));
+    }
+    new_shape.resize(this->rank()); // rank follows this->_labels.size()!
+    
+    this->_block.reshape_(new_shape); 
 
-      if (this->is_tag()) {
+    if(this->_rowrank >= this->rank()) this->_rowrank = this->rank();
+
+    if (this->is_tag()) {
         this->_is_braket_form = this->_update_braket();
-      }
-    }  // permute_back
+    }
+
+
+
   }
+
+  /*
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
-                                    const bool &permute_back) {
+                                    const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<cytnx_int64>::iterator it;
@@ -894,12 +961,14 @@ namespace cytnx {
       }
     }  // permute_back
   }
+  */
+
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
-                                    const bool &permute_back, const bool &by_label) {
+                                    const bool &force, const bool &by_label) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
-    std::vector<cytnx_uint64> idx_mapper;
+    std::vector<cytnx_int64> idx_mapper;
     if (by_label) {
       // find the index of label:
       for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
@@ -910,115 +979,10 @@ namespace cytnx {
       }
 
     } else {
-      idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
+      idx_mapper = indicators;
     }
+    this->combineBonds(idx_mapper,force);
 
-    /// first permute the Tensor:
-    std::vector<cytnx_uint64> old_shape = this->shape();
-
-    cytnx_error_msg(this->_is_diag,
-                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
-                    "UniTensor.to_dense()/to_dense_() first.%s",
-                    "\n");
-
-    if (permute_back) {
-      cytnx_uint64 new_Nin = this->_rowrank;
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        if (idx_mapper[i] < this->_rowrank) new_Nin -= 1;
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      /// create mapper for permute
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-      std::vector<cytnx_int64> new_shape;
-      new_shape.push_back(-1);
-      for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++)
-        new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-
-      this->_block.permute_(mapper);
-
-      this->_block.reshape_(new_shape);
-
-      std::string f_label = this->_labels[idx_mapper[0]];
-      vec_erase_(this->_bonds, std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      vec_erase_(this->_labels,
-                 std::vector<cytnx_uint64>(idx_mapper.begin() + 1, idx_mapper.end()));
-      // permute back>>
-      // find index
-      cytnx_uint64 x = vec_where(this->_labels, f_label);
-      idx_no_combine = utils_internal::range_cpu(1, this->_labels.size());
-      idx_no_combine.insert(idx_no_combine.begin() + x, 0);
-      this->_block.permute_(idx_no_combine);
-      this->_rowrank = new_Nin;
-
-      if (this->is_tag()) {
-        this->_is_braket_form = this->_update_braket();
-      }
-
-    } else {
-      //[Fusion tree]>>>
-      for (cytnx_uint64 i = 1; i < idx_mapper.size(); i++) {
-        this->_bonds[idx_mapper[0]].combineBond_(this->_bonds[idx_mapper[i]]);
-      }
-      //<<<
-      std::vector<cytnx_uint64> idx_no_combine = utils_internal::range_cpu(this->_labels.size());
-      vec_erase_(idx_no_combine, idx_mapper);
-
-      std::vector<cytnx_uint64> mapper;
-      std::vector<cytnx_int64> new_shape;
-      if (idx_mapper[0] >= this->_rowrank) {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_no_combine, idx_mapper);
-
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
-        }
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
-
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
-
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = this->_labels.size() - 1;
-
-      } else {
-        std::vector<Bond> new_bonds;
-        std::vector<std::string> new_labels;
-        vec_concatenate_(mapper, idx_mapper, idx_no_combine);
-
-        new_bonds.push_back(this->_bonds[idx_mapper[0]]);
-        new_labels.push_back(this->_labels[idx_mapper[0]]);
-        new_shape.push_back(-1);
-        for (cytnx_uint64 i = 0; i < idx_no_combine.size(); i++) {
-          new_shape.push_back(this->_bonds[idx_no_combine[i]].dim());
-          new_bonds.push_back(this->_bonds[idx_no_combine[i]]);
-          new_labels.push_back(this->_labels[idx_no_combine[i]]);
-        }
-
-        this->_block.permute_(mapper);
-        this->_block.reshape_(new_shape);
-
-        this->_bonds = new_bonds;
-        this->_labels = new_labels;
-        this->_rowrank = 1;
-      }
-
-      if (this->is_tag()) {
-        this->_is_braket_form = this->_update_braket();
-      }
-    }  // permute_back
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::to_dense() {
@@ -1119,7 +1083,7 @@ namespace cytnx {
           cytnx_error_msg(this->_bonds[comm_idx1[i]].type() == rhs->_bonds[comm_idx2[i]].type(),
                           "[ERROR][DenseUniTensor][contract] cannot contract common label: <%s> @ "
                           "self bond#%d & rhs bond#%d, BRA-KET mismatch!%s",
-                          this->labels()[comm_idx1[i]], comm_idx1[i], comm_idx2[i], "\n");
+                          this->labels()[comm_idx1[i]].c_str(), comm_idx1[i], comm_idx2[i], "\n");
       }
 
       // process meta
@@ -1336,19 +1300,21 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Transpose_() {
-    std::vector<cytnx_int64> new_permute =
-      vec_concatenate(vec_range<cytnx_int64>(this->rowrank(), this->rank()),
-                      vec_range<cytnx_int64>(0, this->rowrank()));
-    this->permute_(new_permute);
-    if (this->is_tag()) {
-      this->_rowrank = this->rank() - this->_rowrank;
+    if (this->is_tag()){
+      //this->_rowrank = this->rank() - this->_rowrank;
       for (int i = 0; i < this->rank(); i++) {
         this->_bonds[i].set_type((this->_bonds[i].type() == BD_KET) ? BD_BRA : BD_KET);
       }
       this->_is_braket_form = this->_update_braket();
-    } else {
-      this->_rowrank = this->rank() - this->_rowrank;
+
+    }else{
+        std::vector<cytnx_int64> new_permute =
+        vec_concatenate(vec_range<cytnx_int64>(this->rowrank(), this->rank()),
+                        vec_range<cytnx_int64>(0, this->rowrank()));
+        this->permute_(new_permute);
+        this->_rowrank = this->rank() - this->_rowrank;
     }
+
   }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
@@ -1466,23 +1432,38 @@ namespace cytnx {
 
   // Arithmetic:
   void DenseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
+
     this->_block += rhs->get_block_();
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
+    //cout << rhs << endl;
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
     // L.%s","\n");
     this->_block += rhs;
   }
 
   void DenseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
     this->_block -= rhs->get_block_();
   }
   void DenseUniTensor::Sub_(const Scalar &rhs) {
@@ -1497,10 +1478,16 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
     this->_block *= rhs->get_block_();
   }
   void DenseUniTensor::Mul_(const Scalar &rhs) {
@@ -1510,10 +1497,16 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-    cytnx_error_msg(rhs->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor R.%s",
-                    "\n");
-    cytnx_error_msg(this->is_tag(), "[ERROR] cannot perform arithmetic on tagged unitensor L.%s",
-                    "\n");
+    //checking if Bond have same direction:
+    if(this->is_tag()){
+        cytnx_error_msg(rhs->uten_type() != UTenType.Dense,"[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s","\n");
+        cytnx_error_msg(!rhs->is_tag(),"[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag DenseUniTensor!%s","\n");
+        cytnx_error_msg(rhs->rank() != this->rank(), "[ERROR] the rank of two UniTensor does not match!%s","\n");
+
+        for(cytnx_int64 i=0;i<this->rank();i++){
+            cytnx_error_msg(this->bonds()[i] != rhs->bonds()[i],"[ERROR] Bond @ %d does not match, therefore cannot perform arithmetic!\n",i);
+        }
+    }
     this->_block /= rhs->get_block_();
   }
   void DenseUniTensor::Div_(const Scalar &rhs) {

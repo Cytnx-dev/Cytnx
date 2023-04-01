@@ -36,7 +36,7 @@ namespace cytnx {
             buffer[ip] = Hop->matvec(buffer[ip - 1]).astype(Hop->dtype());  // Hqi
 
             for (cytnx_uint32 ig = 0; ig < ip; ig++)
-              kry_mat[{ip - 1, ig}] = Vectordot(buffer[ip], buffer[ig], true);
+              kry_mat.at({ip - 1, ig}) = Vectordot(buffer[ip], buffer[ig], true).item();
 
             // explicitly re-orthogonization
             for (cytnx_uint32 ig = 0; ig < ip; ig++) {

@@ -4,7 +4,11 @@ target_sources_local(cytnx
     algo_internal_interface.cpp
     Sort.cpp
     Concatenate.cpp
-
+    Vstack.cpp
+    Hstack.cpp
+    Vsplit.cpp
+    Hsplit.cpp
+    Matric.cpp
 )
 
 add_subdirectory(algo_internal_cpu)

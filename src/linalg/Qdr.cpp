@@ -4,6 +4,8 @@
 #include <iostream>
 #include <vector>
 #include "UniTensor.hpp"
+#include "algo.hpp"
+
 
 using namespace std;
 typedef cytnx::Accessor ac;
@@ -81,6 +83,11 @@ namespace cytnx {
 namespace cytnx {
   namespace linalg {
     std::vector<UniTensor> Qdr(const UniTensor &Tin, const bool &is_tau) {
+      
+      
+
+
+
       if (Tin.is_blockform()) {
         cytnx_error_msg(true, "[Qdr for sparse UniTensor is developling%s]", "\n");
       } else {
@@ -113,16 +120,7 @@ namespace cytnx {
         int t = 0;
         vector<cytnx::UniTensor> outCyT(outT.size());
 
-        // cytnx_int64 newlbl = INT64_MAX;
-        // for (int i = 0; i < oldlabel.size(); i++) {
-        //   if (oldlabel[i] < newlbl) newlbl = oldlabel[i];
-        // }
-        // newlbl -= 1;
-
-        string newlbl = "newlbl";
-        for (int i = 0; i < oldlabel.size(); i++) {
-          if (oldlabel[i] == newlbl) newlbl = newlbl + "new";
-        }
+        string newlbl = "_aux_L";
 
         // Q
         vector<cytnx_int64> Qshape;
@@ -141,8 +139,8 @@ namespace cytnx {
         outCyT[1] = UniTensor(outT[1], true, 1);
         // outCyT[1].set_labels({newlbl, newlbl - 1});
         // newlbl -= 1;
-        outCyT[1].set_labels({newlbl, newlbl + "new"});
-        newlbl = newlbl + "new";
+        outCyT[1].set_labels({newlbl, string("_aux_R")});
+        newlbl = outCyT[1].labels().back();
 
         // R
         Qshape.clear();

@@ -43,7 +43,7 @@ namespace cytnx {
           out.Init({Tl.shape()[0], Tr.shape()[1]}, Tr.dtype(), Tr.device());
         }
       } else {
-        out.Init({Tl.shape()[0], Tr.shape()[1]}, Tr.dtype(), Tr.device());
+        out.Init({Tl.shape()[0], Tr.shape()[1]}, Tr.dtype(), Tr.device(), false);
       }
       // out.storage().set_zeros();
 

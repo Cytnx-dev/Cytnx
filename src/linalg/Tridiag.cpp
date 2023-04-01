@@ -47,11 +47,11 @@ namespace cytnx {
       // std::cout << s_diag << std::endl;
       Tensor vT, S;
       S.Init({Diag.shape()[0]}, cType <= 2 ? cType + 2 : cType,
-             Diag.device());  // if type is complex, S should be real
+             Device.cpu);  // if type is complex, S should be real
       if (is_V) {
         // cytnx_error_msg((k<1)||(k>Diag.shape()[0]),"[Tridiag] error, number of eigen vector k
         // should be >1 and <=L%s","\n");
-        vT.Init({Diag.shape()[0], Diag.shape()[0]}, cType, in_diag.device());
+        vT.Init({Diag.shape()[0], Diag.shape()[0]}, cType, Device.cpu);
       }
 
       if (Diag.device() == Device.cpu) {
@@ -69,27 +69,28 @@ namespace cytnx {
         return out;
 
       } else {
-        cytnx_error_msg(true, "[ERROR]Curretly, Tridiagonal does not have GPU version.%s", "\n");
-        /*
-        #ifdef UNI_GPU
-            checkCudaErrors(cudaSetDevice(in.device()));
-            cytnx::linalg_internal::lii.cuSvd_ii[in.dtype()](in._impl->storage()._impl,
-                                                    U._impl->storage()._impl,
-                                                    vT._impl->storage()._impl,
-                                                    S._impl->storage()._impl,in.shape()[0],in.shape()[1]);
 
-            std::vector<Tensor> out;
-            out.push_back(S);
-            if(is_U) out.push_back(U);
-            if(is_vT) out.push_back(vT);
+        auto _in_diag = in_diag.to(Device.cpu);
+        auto _s_diag = s_diag.to(Device.cpu);
 
-            return out;
-        #else
-            cytnx_error_msg(true,"[Svd] fatal error,%s","try to call the gpu section without CUDA
-        support.\n"); return std::vector<Tensor>(); #endif
-        */
+        // using cpu to do it:
+        cytnx::linalg_internal::lii.Td_ii[cType](
+          _in_diag._impl->storage()._impl, _s_diag._impl->storage()._impl, S._impl->storage()._impl,
+          vT._impl->storage()._impl, in_diag.shape()[0], throw_excp);
+
+        // move result to GPU:
+        S.to_(in_diag.device());
+        vT.to_(in_diag.device());
+
+        std::vector<Tensor> out;
+        out.push_back(S);
+        if (is_V) {
+          out.push_back(vT);
+          if (!is_row) out.back().permute_(1, 0);
+        }
       }
-    }
+
+    };
 
   }  // namespace linalg
 }  // namespace cytnx

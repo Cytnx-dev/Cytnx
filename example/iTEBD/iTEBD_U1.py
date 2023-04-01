@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+home = str(Path.home())
+sys.path.append(home + '/Cytnx_lib')
 import cytnx
 import numpy as np
 import math
@@ -19,19 +23,32 @@ dt = 0.1
 
 ## Create Si Sj local H with symmetry:
 ## SzSz + S+S- + h.c. 
-bdi = cytnx.Bond(2,cytnx.BD_KET,[[1],[-1]]);
+bdi = cytnx.Bond(cytnx.BD_KET,[[1],[-1]], [1,1]);
 bdo = bdi.clone().set_type(cytnx.BD_BRA);
-H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=[2,3,0,1],rowrank=2);
+H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=[2,3,1,0]);
+# H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=[2,3,0,1]);
+
+# H.print_diagram()
+# H.print_blocks()
+# print(bdi.combineBond(bdi,True))
+# print(bdi.combineBond(bdi,0))
 
 ## assign:
 # Q = 2  # Q = 0:    # Q = -2:
 # [1]    [[ -1, 1]     [1]
 #         [  1,-1]]
-H.get_block_([2])[0] = 1;
-T0 = H.get_block_([0])
-T0[0,0] = T0[1,1] = -1;
-T0[0,1] = T0[1,0] = 1;
-H.get_block_([-2])[0] = 1;
+
+# H.get_block_([2])[0] = 1;
+# T0 = H.get_block_([0])
+# T0[0,0] = T0[1,1] = -1;
+# T0[0,1] = T0[1,0] = 1;
+# H.get_block_([-2])[0] = 1;
+H.get_block_([0,0,0,0])[0,0,0,0] = 1;
+H.get_block_([0,1,0,1])[0,0,0,0] = -1;
+H.get_block_([1,0,1,0])[0,0,0,0] = -1;
+H.get_block_([0,1,1,0])[0,0,0,0] = 1;
+H.get_block_([1,0,0,1])[0,0,0,0] = 1;
+H.get_block_([1,1,1,1])[0,0,0,0] = 1;
 
 ## create gate:
 eH = cytnx.linalg.ExpH(H,-dt)
@@ -42,21 +59,21 @@ eH = cytnx.linalg.ExpH(H,-dt)
 #     |    |     
 #   --A-la-B-lb-- 
 #
-bd_mid = bdi.combineBond(bdi)
-A = cytnx.UniTensor([bdi,bdi,bd_mid.redirect()],rowrank=1,labels=[-1,0,-2]); 
-B = cytnx.UniTensor([bd_mid,bdi,bdo],rowrank=1,labels=[-3,1,-4]);          
+bd_mid = bdi.combineBond(bdi, True);
+A = cytnx.UniTensor([bdi,bdi,bd_mid.redirect()],labels=[-1,0,-2]);
+B = cytnx.UniTensor([bd_mid,bdi,bdo],labels=[-3,1,-4]);
 
 for b in range(len(B.get_blocks_())):
-    cytnx.random.Make_normal(B.get_block_(b),0,0.2); 
+    cytnx.random.Make_normal(B.get_block_(b),0,0.2);
 for a in range(len(A.get_blocks_())):
-    cytnx.random.Make_normal(A.get_block_(a),0,0.2); 
+    cytnx.random.Make_normal(A.get_block_(a),0,0.2);
 
 A.print_diagram()
 B.print_diagram()
 
 
-la = cytnx.UniTensor([bd_mid,bd_mid.redirect()],rowrank=1,labels=[-2,-3],is_diag=True)
-lb = cytnx.UniTensor([bdi,bdo],rowrank=1,labels=[-4,-5],is_diag=True)
+la = cytnx.UniTensor([bd_mid,bd_mid.redirect()],labels=[-2,-3],is_diag=True)
+lb = cytnx.UniTensor([bdi,bdo],labels=[-4,-5],is_diag=True)
 
 for b in range(len(lb.get_blocks_())):
     lb.get_block_(b).fill(1)
@@ -73,14 +90,14 @@ lb.print_diagram()
 Elast = 0
 for i in range(10000):
 
-    A.set_labels([-1,0,-2])
-    B.set_labels([-3,1,-4])
-    la.set_labels([-2,-3])
-    lb.set_labels([-4,-5])
+    A.set_labels(["-1","0","-2"])
+    B.set_labels(["-3","1","-4"])
+    la.set_labels(["-2","-3"])
+    lb.set_labels(["-4","-5"])
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb.set_label(1,new_label=-1)
+    lb.set_label(lb.get_index('-5'),new_label='-1')
     X = cytnx.Contract(lb,X)
 
     ## X =
@@ -88,9 +105,6 @@ for i in range(10000):
     #            |    |     
     #  (-4) --lb-A-la-B-lb-- (-5) 
     #
-    #X.print_diagram()
-
-    
     ## calculate local energy:
     ## <psi|psi>
     Xt = X.Dagger()
@@ -98,7 +112,7 @@ for i in range(10000):
 
     ## <psi|H|psi>
     XH = cytnx.Contract(X,H)
-    XH.set_labels([-4,-5,0,1])
+    XH.set_labels(['-4','-5','0','1'])
     XHX = cytnx.Contract(Xt,XH).item()
     
     E = XHX/XNorm
@@ -113,7 +127,7 @@ for i in range(10000):
 
     ## Time evolution the MPS
     XeH = cytnx.Contract(X,eH)
-    XeH.permute_([-4,2,3,-5],by_label=True)
+    XeH.permute_(['-4','2','3','-5'])
     
     ## Do Svd + truncate
     ## 
@@ -144,8 +158,8 @@ for i in range(10000):
     #       --lb-A'-la-B'-lb-- 
     #
     # again, but A' and B' are updated 
-    A.set_labels([-1,0,-2]); A.set_rowrank(1);
-    B.set_labels([-3,1,-4]); B.set_rowrank(1);
+    A.set_labels(['-1','0','-2']); A.set_rowrank(1);
+    B.set_labels(['-3','1','-4']); B.set_rowrank(1);
 
     lb_inv = lb.clone()
     for b in range(len(lb_inv.get_blocks_())):

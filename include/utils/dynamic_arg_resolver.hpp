@@ -6,7 +6,8 @@
 namespace cytnx {
 
   // elements resolver
-  void _resolve_int64(std::vector<cytnx_int64> &cool);
+  template <class... Ts>
+  void _resolve_int64(std::vector<cytnx_int64> &cool){}
 
   template <class T>
   void _resolve_int64(std::vector<cytnx_int64> &cool, const T &a) {
@@ -29,7 +30,8 @@ namespace cytnx {
   }
 
   //-----------------
-  void _resolve_uint64(std::vector<cytnx_uint64> &cool);
+  template <class... Ts>
+  void _resolve_uint64(std::vector<cytnx_uint64> &cool){} 
 
   template <class T>
   void _resolve_uint64(std::vector<cytnx_uint64> &cool, const T &a) {

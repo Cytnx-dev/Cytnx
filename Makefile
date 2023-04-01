@@ -22,14 +22,15 @@ else
   PYOBJFLAGS := 
 endif
 
+current_dir = $(shell pwd)
 
 ## 
-CytnxPATH=.
+CytnxPATH=$(current_dir)
 INCFLAGS :=-I$(CytnxPATH)/include -I$(CytnxPATH)/src
 
-HPTT_PATH=./thirdparty/hptt
-CUTT_PATH=./thirdparty/cutt
-
+HPTT_PATH=$(CytnxPATH)/thirdparty/hptt
+CUTT_PATH=$(CytnxPATH)/thirdparty/cutt
+MAGMA_PATH?=
 
 ifeq ($(ICPC_Enable),1)
   CC:= $(ICPC)
@@ -40,16 +41,16 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_ILP64 -Wno-c++11-narrowing #-DUNI_DEBUG -Wno-c++11-narrowing
+  CCFLAGS += -std=c++17 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_ILP64 #-DUNI_DEBUG -Wno-c++11-narrowing
   LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm 
 else
-  CCFLAGS += -std=c++11 ${OPTIM} -Wformat=0 -fPIC -w -g #-DUNI_DEBUG -Wno-c++11-narrowing
+  CCFLAGS += -std=c++17 ${OPTIM} -Wformat=0 -fPIC -w -g #-DUNI_DEBUG -Wno-c++11-narrowing
   LDFLAGS += -llapacke -lblas -lstdc++  
 endif
 
 
 NVCC:= $(CUDA_PATH)/bin/nvcc -ccbin $(CC)
-NVFLAGS:= -m64 ${OPTIM} -lineinfo
+NVFLAGS:= -std=c++17 -m64 ${OPTIM} -lineinfo
 SMS ?= 60
 GENCODE_FLAGS:= -arch=sm_$(SMS)
 
@@ -68,8 +69,15 @@ endif
 ifeq ($(HPTT_Enable),1)
   CCFLAGS += -DUNI_HPTT 
   INCFLAGS+= -I$(HPTT_PATH)/include
-  LDFLAGS += $(HPTT_PATH)/lib/libhptt.a
+  LDFLAGS += $(HPTT_PATH)/lib/libhptt.so
 endif
+
+ifeq ($(MAGMA_Enable),1)
+  CCFLAGS += -DUNI_MAGMA
+  INCFLAGS += -I$(MAGMA_PATH)/include
+  LDFLAGS += $(MAGMA_PATH)/lib/libmagma.a $(MAGMA_PATH)/lib/libmagma_sparse.a
+endif
+
 
 
 ALL_CCFLAGS := 
@@ -78,6 +86,19 @@ ifeq ($(GPU_Enable),1)
    CCFLAGS += -DUNI_CUTT
    INCFLAGS+= -I$(CUTT_PATH)/include
    LDFLAGS+= $(CUTT_PATH)/lib/libcutt.a
+  endif
+
+  ifeq ($(CUTN_Enable),1)
+   CCFLAGS += -DUNI_CUTENSOR
+   INCFLAGS+=-I$(CUTENSOR_ROOT)/include
+   LDFLAGS+= $(CUTENSOR_ROOT)/lib/11/libcutensor_static.a
+  endif
+  
+  ifeq ($(CUQN_Enable),1)
+   CCFLAGS += -DUNI_CUQUANTUM
+   INCFLAGS+=-I$(CUQUANTUM_ROOT)/include
+   LDFLAGS+= $(CUQUANTUM_ROOT)/lib/libcutensornet_static.a
+   LDFLAGS+= $(CUQUANTUM_ROOT)/lib/libcustatevec_static.a
   endif
 
   CCFLAGS += -I$(CUDA_PATH)/include -DUNI_GPU
@@ -91,7 +112,7 @@ endif
 
 ALL_LDFLAGS :=
 ifeq ($(GPU_Enable),1)
-  LDFLAGS += -lcublas -lcusolver -lcurand -lcudart
+  LDFLAGS += -lcublasLt -lcublas -lcusolver -lcurand -lcudart -lcusparse #$(MAGMA_PATH)/lib/libmagma.a $(MAGMA_PATH)/lib/libmagma_sparse.a
   ALL_LDFLAGS += $(addprefix -Xlinker , $(LDFLAGS)) 
   ALL_LDFLAGS += -L$(CUDA_PATH)/lib64
   LDFLAGS += -L$(CUDA_PATH)/lib64 
@@ -99,11 +120,12 @@ else
   ALL_LDFLAGS += $(LDFLAGS)
 endif
 
+
 OBJS = Scalar.o Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
 OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o
-OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
+OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o SparseUniTensor.o BlockUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 ## TN 
 OBJS += DMRG.o MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o iMPS.o MPS_base.o
@@ -112,29 +134,29 @@ OBJS += DMRG.o MPO.o RegularMPO.o MPO_base.o MPS.o RegularMPS.o iMPS.o MPS_base.
 
 ## Utils
 OBJS += utils_internal_interface.o
-OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_io.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_contiguous_cpu.o GetElems_cpu.o SetElems_contiguous_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o dynamic_arg_resolver.o blocks_mvelems_cpu.o 
+OBJS += utils.o Cast_cpu.o Alloc_cpu.o Movemem_cpu.o Range_cpu.o vec_sort.o vec_argsort.o vec_io.o vec_print.o vec2d_col_sort.o vec_range.o complex_arithmetic.o is.o vec_intersect.o vec_concatenate.o vec_where.o vec_erase.o vec_clone.o vec_unique.o vec_map.o SetZeros_cpu.o Fill_cpu.o SetArange_cpu.o GetElems_contiguous_cpu.o GetElems_cpu.o SetElems_contiguous_cpu.o SetElems_cpu.o cartesian.o str_utils.o Complexmem_cpu.o dynamic_arg_resolver.o blocks_mvelems_cpu.o 
 ifeq ($(GPU_Enable),1)
   OBJS += cucomplex_arithmetic.o cuAlloc_gpu.o cuCast_gpu.o cuMovemem_gpu.o cuSetZeros_gpu.o cuFill_gpu.o cuSetArange_gpu.o cuGetElems_gpu.o  cuSetElems_gpu.o cuComplexmem_gpu.o cuReduce_gpu.o
 endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Tridiag_internal.o 
+OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Svd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Trace_internal.o Tridiag_internal.o Axpy_internal.o Ger_internal.o
 ifeq ($(GPU_Enable),1)
-  OBJS += cuMod_internal.o cuPow_internal.o cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuInvM_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_dg_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
+  OBJS += cuMod_internal.o cuPow_internal.o cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAbs_internal.o cuGer_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuMaxMin_internal.o cuSum_internal.o cuKron_internal.o cuDet_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuInvM_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_dg_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o 
 endif
 
 ## Algo_internal
 OBJS += algo_internal_interface.o
-OBJS += Sort_internal.o
+OBJS += Sort_internal.o Split_internal.o Concate_internal.o
 
 
 
 ## Linalg
-OBJS += Lstsq.o Mod.o Lanczos_Gnd_Ut.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o iAdd.o Add.o iDiv.o Div.o iSub.o Sub.o iMul.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul_dg.o Matmul.o Tensordot_dg.o Tensordot.o Outer.o Vectordot.o Tridiag.o 
+OBJS += Lstsq.o Mod.o Lanczos.o Lanczos_Gnd_Ut.o Lanczos_Gnd.o Lanczos_ER.o Det.o Sum.o Hosvd.o Min.o Max.o ExpM.o Qdr.o Qr.o Abs_.o Abs.o Pow_.o Pow.o Trace.o Eig.o Dot.o Norm.o ExpH.o Kron.o iAdd.o Add.o iDiv.o Div.o iSub.o Sub.o iMul.o Mul.o Cpr.o Svd.o Svd_truncate.o Inv.o Inv_.o InvM.o InvM_.o Conj.o Conj_.o Exp.o Exp_.o Expf.o Expf_.o Eigh.o Diag.o Matmul_dg.o Matmul.o Tensordot_dg.o Tensordot.o Outer.o Vectordot.o Tridiag.o Directsum.o Axpy.o Ger.o
 
 ## Algo
-OBJS += Sort.o Concatenate.o  
+OBJS += Sort.o Concatenate.o  Hsplit.o Matric.o Vsplit.o Vstack.o Hstack.o
 
 ## Stat
 OBJS += histogram.o 
@@ -159,14 +181,14 @@ endif
 TESTPATH=tests
 
 
-all: test dmrg_tfim
+all: test 
 
 
 #test: test.o $(ALLOBJS)
 #	#$(CC) -o $@ $^ $(CCFLAGS) $(LDFLAGS)
 #	$(NVCC) $(ALL_CCFLAGS) $(ALL_LDFLAGS) $^ -o $@
 
-test: test.o libcytnx.so
+test: test.o libcytnx.so libcytnx.a
 	$(CC) -L. -o $@ $< -fopenmp $(LDFLAGS) -lcytnx 
 	#export LD_LIBRARY_PATH=.
 
@@ -179,19 +201,51 @@ dmrg_tfim: dmrg_tfim.o libcytnx.so
 #	#export LD_LIBRARY_PATH=.
 
 libcytnx.so: $(ALLOBJS)
-	$(CC) -shared -o $@ $^ $(LDFLAGS)
+	$(CC) -shared -Wl,-z,defs -o $@ $^ $(LDFLAGS)
 
-pyobj: $(ALLOBJS)
-	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+libcytnx.a: $(ALLOBJS)
+	ar rcs libcytnx.a $(ALLOBJS)
+
+#  old:
+#pyobj: $(ALLOBJS) 
+#	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+#	#$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) pybind/cytnx.cpp $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
+
+pyobj: pycytnx.o generator_py.o storage_py.o tensor_py.o symmetry_py.o bond_py.o network_py.o linop_py.o unitensor_py.o linalg_py.o algo_py.o physics_related_py.o random_py.o tnalgo_py.o scalar_py.o
+	$(CC) $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $(ALLOBJS) $^ $(LDFLAGS) -shared -o cytnx/cytnx$(shell python3-config --extension-suffix)
 
 
-#cytnx.o: pybind/cytnx.cpp
-#	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes)  $< -o $@
+pycytnx.o: pybind/cytnx.cpp
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
 
-#pyobj: cytnx.o 
-#	$(CC) -L. $< -shared -o cytnx/cytnx$(shell python3-config --extension-suffix) $(LDFLAGS) -lcytnx
-
-
+generator_py.o: pybind/generator_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+storage_py.o: pybind/storage_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+tensor_py.o: pybind/tensor_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+symmetry_py.o: pybind/symmetry_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+bond_py.o: pybind/bond_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+network_py.o: pybind/network_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+linop_py.o: pybind/linop_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+unitensor_py.o: pybind/unitensor_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+linalg_py.o: pybind/linalg_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+algo_py.o: pybind/algo_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+scalar_py.o: pybind/scalar_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+random_py.o: pybind/random_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+physics_related_py.o: pybind/physics_related_py.cpp
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
+tnalgo_py.o: pybind/tnalgo_py.cpp 
+	$(CC) -c $(INCFLAGS) $(CCFLAGS) $(PYOBJFLAGS) $(shell python3 -m pybind11 --includes) $< -o $@ 
 
 doc : 
 	doxygen docs.doxygen
@@ -230,6 +284,8 @@ UniTensor_base.o: $(CytnxPATH)/src/UniTensor_base.cpp $(CytnxPATH)/include/UniTe
 DenseUniTensor.o: $(CytnxPATH)/src/DenseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 SparseUniTensor.o: $(CytnxPATH)/src/SparseUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+BlockUniTensor.o: $(CytnxPATH)/src/BlockUniTensor.cpp $(CytnxPATH)/include/UniTensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 Network.o: $(CytnxPATH)/src/Network.cpp $(CytnxPATH)/include/Network.hpp
@@ -288,14 +344,26 @@ algo_internal_interface.o : $(CytnxPATH)/src/algo/algo_internal_interface.cpp $(
 
 Sort_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
-
+Concate_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+Split_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Split_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Split_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 ## algo
 ##########################
 Sort.o : $(CytnxPATH)/src/algo/Sort.cpp $(CytnxPATH)/include/algo.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 Concatenate.o : $(CytnxPATH)/src/algo/Concatenate.cpp $(CytnxPATH)/include/algo.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
+Vstack.o : $(CytnxPATH)/src/algo/Vstack.cpp $(CytnxPATH)/include/algo.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Hstack.o : $(CytnxPATH)/src/algo/Hstack.cpp $(CytnxPATH)/include/algo.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Matric.o : $(CytnxPATH)/src/algo/Matric.cpp $(CytnxPATH)/include/algo.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Vsplit.o : $(CytnxPATH)/src/algo/Vsplit.cpp $(CytnxPATH)/include/algo.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Hsplit.o : $(CytnxPATH)/src/algo/Hsplit.cpp $(CytnxPATH)/include/algo.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 ## stat
 #############################
 histogram.o: $(CytnxPATH)/src/stat/histogram.cpp $(CytnxPATH)/include/stat.hpp
@@ -370,6 +438,9 @@ Pow_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Pow_internal.cpp $
 Diag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Diag_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Diag_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
+Trace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Trace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Trace_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
 InvM_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/InvM_inplace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 
@@ -383,6 +454,12 @@ Matmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_internal
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
 Matmul_dg_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_dg_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_dg_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
+
+Axpy_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Axpy_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Axpy_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $< 
+
+Ger_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Ger_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Ger_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $< 
 
 Matvec_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<  
@@ -432,6 +509,10 @@ cuCpr_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuCpr_internal.c
 cuAdd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAdd_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAdd_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
+cuAbs_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAbs_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAbs_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+
 cuMul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMul_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMul_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
@@ -447,7 +528,20 @@ cuMod_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMod_internal.c
 cuSvd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSvd_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSvd_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
+cuDet_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDet_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDet_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuKron_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuKron_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuKron_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuSum_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSum_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSum_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuMaxMin_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMaxMin_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMaxMin_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuEigh_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuEigh_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuEigh_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+
+cuGer_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuGer_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuGer_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 cuExp_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuExp_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuExp_internal.hpp
@@ -597,6 +691,12 @@ vec_intersect.o: $(CytnxPATH)/src/utils/vec_intersect.cpp $(CytnxPATH)/include/u
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 vec2d_col_sort.o: $(CytnxPATH)/src/utils/vec2d_col_sort.cpp $(CytnxPATH)/include/utils/vec2d_col_sort.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+vec_argsort.o: $(CytnxPATH)/src/utils/vec_argsort.cpp $(CytnxPATH)/include/utils/vec_argsort.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+vec_sort.o: $(CytnxPATH)/src/utils/vec_sort.cpp $(CytnxPATH)/include/utils/vec_sort.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 str_utils.o: $(CytnxPATH)/src/utils/str_utils.cpp $(CytnxPATH)/include/utils/str_utils.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 dynamic_arg_resolver.o: $(CytnxPATH)/src/utils/dynamic_arg_resolver.cpp $(CytnxPATH)/include/utils/dynamic_arg_resolver.hpp
@@ -710,6 +810,8 @@ Tensordot.o: $(CytnxPATH)/src/linalg/Tensordot.cpp $(CytnxPATH)/include/linalg.h
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Tensordot_dg.o: $(CytnxPATH)/src/linalg/Tensordot_dg.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Directsum.o: $(CytnxPATH)/src/linalg/Directsum.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Vectordot.o: $(CytnxPATH)/src/linalg/Vectordot.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Outer.o: $(CytnxPATH)/src/linalg/Outer.cpp $(CytnxPATH)/include/linalg.hpp
@@ -728,6 +830,13 @@ Pow_.o: $(CytnxPATH)/src/linalg/Pow_.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Abs.o: $(CytnxPATH)/src/linalg/Abs.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+Axpy.o: $(CytnxPATH)/src/linalg/Axpy.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
+Ger.o: $(CytnxPATH)/src/linalg/Ger.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+
 Abs_.o: $(CytnxPATH)/src/linalg/Abs_.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Hosvd.o: $(CytnxPATH)/src/linalg/Hosvd.cpp $(CytnxPATH)/include/linalg.hpp
@@ -737,6 +846,8 @@ Lanczos_ER.o: $(CytnxPATH)/src/linalg/Lanczos_ER.cpp $(CytnxPATH)/include/linalg
 Lanczos_Gnd.o: $(CytnxPATH)/src/linalg/Lanczos_Gnd.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Lanczos_Gnd_Ut.o: $(CytnxPATH)/src/linalg/Lanczos_Gnd_Ut.cpp $(CytnxPATH)/include/linalg.hpp
+	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
+Lanczos.o: $(CytnxPATH)/src/linalg/Lanczos.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 Lstsq.o: $(CytnxPATH)/src/linalg/Lstsq.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<

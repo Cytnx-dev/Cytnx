@@ -39,10 +39,11 @@ namespace cytnx {
 
   // eq c == Scalar;
   bool operator==(const Scalar& lc, const Scalar& rs) {
-    if (lc.dtype() < rs.dtype())
-      return lc.geq(rs);
-    else
-      return rs.geq(lc);
+    // if (lc.dtype() < rs.dtype())
+    //   return lc.geq(rs);
+    // else
+    //   return rs.geq(lc);
+    return lc.eq(rs);
   };
 
   Scalar abs(const Scalar& c) { return c.abs(); };
@@ -51,59 +52,83 @@ namespace cytnx {
 
   // Scalar proxy:
   // Sproxy
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar::Sproxy& rc) {
-    Scalar tmp = rc._insimpl->get_item(rc._loc);
-    this->_insimpl->set_item(this->_loc, tmp);
-    return rc;
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar::Sproxy& rc) {
+    //std::cout << "entry !!" << std::endl;
+    if(this->_insimpl.get()==0){
+        //std::cout << "entry cpcon, not init!!" << std::endl;
+        //std::cout << std::flush;
+        // not init:
+        this->_insimpl = rc._insimpl;
+        this->_loc = rc._loc;
+        return *this;
+    }else{
+        if((rc._insimpl == this->_insimpl) && (rc._loc == this->_loc)){
+            //std::cout << "entry same!!" << std::endl;
+            std::cout << std::flush;
+            return *this;
+        }else{
+            //std::cout << "entry wrn !!" << std::endl;
+            std::cout << std::flush;
+            Scalar tmp = rc._insimpl->get_item(rc._loc);
+            this->_insimpl->set_item(this->_loc, tmp);
+            return *this;
+        }
+    }
+
+
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex128& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex128& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex64& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex64& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_double& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_double& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_float& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_float& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint64& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint64& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int64& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int64& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint32& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint32& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int32& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int32& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint16& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint16& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int16& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int16& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
-  const Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_bool& rc) {
+  Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_bool& rc) {
     this->_insimpl->set_item(this->_loc, rc);
     return *this;
   }
+
+  bool Scalar::Sproxy::exists() const{
+        return this->_insimpl->dtype != Type.Void;
+  };
 
   Scalar Scalar::Sproxy::real() { return Scalar(*this).real(); }
   Scalar Scalar::Sproxy::imag() { return Scalar(*this).imag(); }
@@ -117,63 +142,65 @@ namespace cytnx {
 
   // Storage Init interface.
   //=============================
-  Scalar_base* ScIInit_cd() {
+  inline Scalar_base* ScIInit_cd() {
     Scalar_base* out = new ComplexDoubleScalar();
     return out;
   }
-  Scalar_base* ScIInit_cf() {
+  inline Scalar_base* ScIInit_cf() {
     Scalar_base* out = new ComplexFloatScalar();
     return out;
   }
-  Scalar_base* ScIInit_d() {
+  inline Scalar_base* ScIInit_d() {
     Scalar_base* out = new DoubleScalar();
     return out;
   }
-  Scalar_base* ScIInit_f() {
+  inline Scalar_base* ScIInit_f() {
     Scalar_base* out = new FloatScalar();
     return out;
   }
-  Scalar_base* ScIInit_u64() {
+  inline Scalar_base* ScIInit_u64() {
     Scalar_base* out = new Uint64Scalar();
     return out;
   }
-  Scalar_base* ScIInit_i64() {
+  inline Scalar_base* ScIInit_i64() {
     Scalar_base* out = new Int64Scalar();
     return out;
   }
-  Scalar_base* ScIInit_u32() {
+  inline Scalar_base* ScIInit_u32() {
     Scalar_base* out = new Uint32Scalar();
     return out;
   }
-  Scalar_base* ScIInit_i32() {
+  inline Scalar_base* ScIInit_i32() {
     Scalar_base* out = new Int32Scalar();
     return out;
   }
-  Scalar_base* ScIInit_u16() {
+  inline Scalar_base* ScIInit_u16() {
     Scalar_base* out = new Uint16Scalar();
     return out;
   }
-  Scalar_base* ScIInit_i16() {
+  inline Scalar_base* ScIInit_i16() {
     Scalar_base* out = new Int16Scalar();
     return out;
   }
-  Scalar_base* ScIInit_b() {
+  inline Scalar_base* ScIInit_b() {
     Scalar_base* out = new BoolScalar();
     return out;
   }
   Scalar_init_interface::Scalar_init_interface() {
-    UScIInit.resize(N_Type);
-    UScIInit[this->Double] = ScIInit_d;
-    UScIInit[this->Float] = ScIInit_f;
-    UScIInit[this->ComplexDouble] = ScIInit_cd;
-    UScIInit[this->ComplexFloat] = ScIInit_cf;
-    UScIInit[this->Uint64] = ScIInit_u64;
-    UScIInit[this->Int64] = ScIInit_i64;
-    UScIInit[this->Uint32] = ScIInit_u32;
-    UScIInit[this->Int32] = ScIInit_i32;
-    UScIInit[this->Uint16] = ScIInit_u16;
-    UScIInit[this->Int16] = ScIInit_i16;
-    UScIInit[this->Bool] = ScIInit_b;
+    if(!inited){
+      UScIInit[this->Double] = ScIInit_d;
+      UScIInit[this->Float] = ScIInit_f;
+      UScIInit[this->ComplexDouble] = ScIInit_cd;
+      UScIInit[this->ComplexFloat] = ScIInit_cf;
+      UScIInit[this->Uint64] = ScIInit_u64;
+      UScIInit[this->Int64] = ScIInit_i64;
+      UScIInit[this->Uint32] = ScIInit_u32;
+      UScIInit[this->Int32] = ScIInit_i32;
+      UScIInit[this->Uint16] = ScIInit_u16;
+      UScIInit[this->Int16] = ScIInit_i16;
+      UScIInit[this->Bool] = ScIInit_b;
+      inited = true;
+    }
   }
 
   Scalar_init_interface __ScII;

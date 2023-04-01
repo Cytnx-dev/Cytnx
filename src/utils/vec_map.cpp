@@ -5,7 +5,9 @@
 #include <cstring>
 #include "Bond.hpp"
 #include "Accessor.hpp"
+#include "Tensor.hpp"
 namespace cytnx {
+
 
   template <class T>
   std::vector<T> vec_map(const std::vector<T> &in, const std::vector<cytnx_uint64> &mapper) {
@@ -19,6 +21,7 @@ namespace cytnx {
     }
     return out;
   }
+
 
   template std::vector<cytnx_complex128> vec_map(const std::vector<cytnx_complex128> &,
                                                  const std::vector<cytnx_uint64> &);
@@ -47,4 +50,10 @@ namespace cytnx {
   template std::vector<Bond> vec_map(const std::vector<Bond> &, const std::vector<cytnx_uint64> &);
   template std::vector<Accessor> vec_map(const std::vector<Accessor> &,
                                          const std::vector<cytnx_uint64> &);
+
+  template std::vector<Tensor> vec_map(const std::vector<Tensor> &, const std::vector<cytnx_uint64>&);
+ 
+  template std::vector<std::vector<cytnx_uint64> > vec_map(const std::vector<std::vector<cytnx_uint64> > &, const std::vector<cytnx_uint64> &);
+  template std::vector<std::vector<cytnx_int64> > vec_map(const std::vector<std::vector<cytnx_int64> > &, const std::vector<cytnx_uint64> &);
+
 }  // namespace cytnx

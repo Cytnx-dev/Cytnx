@@ -51,8 +51,10 @@ namespace cytnx {
     Tensor_impl() : _contiguous(true){};
 
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              int device = -1);
+              int device = -1, const bool &init_zero = true);
     void Init(const Storage &in);
+    // void Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
+    // const unsigned int &dtype, int device);
     /*
     template<class T>
     void From_vec(const T &ndvec){
@@ -216,6 +218,8 @@ namespace cytnx {
 
         out->_storage._impl =
           this->_storage._impl->Move_memory(oldshape, this->_mapper, this->_invmapper);
+        // this->_storage._impl->Move_memory_(oldshape, this->_mapper, this->_invmapper);
+        // out->_storage._impl = this->_storage._impl;
         // std::cout << out->_storage << std::endl;
         out->_invmapper = vec_range(this->_invmapper.size());
         out->_mapper = out->_invmapper;
@@ -236,6 +240,7 @@ namespace cytnx {
 
         this->_storage._impl =
           this->_storage._impl->Move_memory(oldshape, this->_mapper, this->_invmapper);
+        // this->_storage._impl->Move_memory_(oldshape, this->_mapper, this->_invmapper);
         this->_mapper = vec_range(this->_invmapper.size());
         this->_invmapper = this->_mapper;
         this->_contiguous = true;
@@ -604,27 +609,34 @@ namespace cytnx {
     /// @endcond
     /**
     @brief Save current Tensor to file
-    @param fname file name
+    @param[in] fname file name (without file extension)
 
-    description:
-        save the Storage to file with file path specify with input param 'fname' with postfix
+    @details
+        save the Tensor to file with file path specify with input param \p fname with postfix
     ".cytn"
-
+    @post the file will be saved with postfix ".cytn"
+    @see Load(const std::string &fname)
     */
     void Save(const std::string &fname) const;
+    /**
+     * @see Save(const std::string &fname)
+    */
     void Save(const char *fname) const;
     void Tofile(const std::string &fname) const;
     void Tofile(const char *fname) const;
     void Tofile(std::fstream &f) const;
     /**
-    @brief Load current Tensor to file
-    @param fname file name
-
-    description:
+    @brief Load current Tensor from file
+    @param fname[in] (within postfix ".cytn")
+    @details
         load the Storage from file with file path specify with input param 'fname'
-
+    @pre the file must be saved with postfix ".cytn"
     */
+
     static Tensor Load(const std::string &fname);
+    /**
+     * @see Load(const std::string &fname)
+    */
     static Tensor Load(const char *fname);
     static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
                            const cytnx_int64 &count = -1);
@@ -662,13 +674,15 @@ namespace cytnx {
     // default device==Device.cpu (-1)
     /**
     @brief initialize a Tensor
-    @param shape the shape of tensor.
-    @param dtype the dtype of tensor. This can be any of type defined in cytnx::Type
-    @param device the device that tensor to be created. This can be cytnx::Device.cpu or
-    cytnx::Device.cuda+<gpuid>
+    @param[in] shape the shape of tensor.
+    @param[in] dtype the dtype of tensor. This can be any of type defined in cytnx::Type
+    @param[in] device the device that tensor to be created. This can be cytnx::Device.cpu or
+    @param[in] init_zero if true, the content of Tensor will be initialized to zero. if false, the
+    content of Tensor will be un-initialize.
+    cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.
 
-    [Note]
-        1. the content of Tensor created will be un-initialize! See \link cytnx::zeros
+    @note
+        The content of Tensor created will be un-initialize! See \link cytnx::zeros
     zeros()\endlink, \link cytnx::ones ones() \endlink or \link cytnx::arange arange() \endlink for
     generating an Tensor.
 
@@ -683,16 +697,48 @@ namespace cytnx {
     \verbinclude example/Tensor/Init.py.out
     */
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              const int &device = -1) {
+              const int &device = -1, const bool &init_zero = true) {
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       this->_impl = tmp;
-      this->_impl->Init(shape, dtype, device);
+      this->_impl->Init(shape, dtype, device, init_zero);
     }
+    // void Init(const Storage& storage) {
+    //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
+    //   this->_impl = tmp;
+    //   this->_impl->Init(storage);
+    // }
+    // void Init(const Storage& storage, const std::vector<cytnx_uint64> &shape,
+    //   const unsigned int &dtype = Type.Double, const int &device = -1) {
+    //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
+    //   this->_impl = tmp;
+    //   this->_impl->Init(storage, shape, dtype, device);
+    // }
+    /**
+     * @brief Construct a new Tensor object
+     * @details This is the constructor of Tensor. It will call 
+     *     cytnx::Tensor::Init() to initialize the Tensor.
+     * @param[in] shape the shape of tensor
+     * @param[in] dtype the dtype of tensor. This can be any of type defined in cytnx::Type.
+     * @param[in] device the device that tensor to be created. This can be cytnx::Device.cpu or
+     *    cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.
+     * @param[in] init_zero if true, the content of Tensor will be initialized to zero. If false,
+     *   the content of Tensor will be un-initialized.
+     * @see cytnx::Tensor::Init
+    */
     Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-           const int &device = -1)
+           const int &device = -1, const bool &init_zero = 1)
         : _impl(new Tensor_impl()) {
-      this->Init(shape, dtype, device);
+      this->Init(shape, dtype, device, init_zero);
     }
+    // Tensor(const Storage& storage)
+    //     : _impl(new Tensor_impl()) {
+    //   this->Init(storage);
+    // }
+    // Tensor(const Storage& storage, const std::vector<cytnx_uint64> &shape,
+    //   const unsigned int &dtype = Type.Double, const int &device = -1)
+    //     : _impl(new Tensor_impl()) {
+    //   this->Init(storage, shape, dtype, device);
+    // }
     //@}
 
     static Tensor from_storage(const Storage &in) {
@@ -705,36 +751,35 @@ namespace cytnx {
 
     /**
     @brief the dtype-id of the Tensor
-    @return [cytnx_uint64] the dtype_id of the Tensor
-
+    @see cytnx::Type
+    @return [unsigned int] the dtype_id of the Tensor
     */
     unsigned int dtype() const { return this->_impl->dtype(); }
 
     /**
     @brief the device-id of the Tensor
-    @return [cytnx_int64] the device_id of the Tensor
-
+    @see cytnx::Device
+    @return [int] the device_id of the Tensor
     */
     int device() const { return this->_impl->device(); }
 
     /**
     @brief the dtype (in string) of the Tensor
+    @see cytnx::Type, dtype() const
     @return [std::string] the dtype of the Tensor
-
     */
     std::string dtype_str() const { return this->_impl->dtype_str(); }
 
     /**
     @brief the device (in string) of the Tensor
+    @see cytnx::Device, device() const
     @return [std::string] the device of the Tensor
-
     */
     std::string device_str() const { return this->_impl->device_str(); }
 
     /**
     @brief the shape of the Tensor
     @return [std::vector<cytnx_uint64>] the shape of the Tensor
-
     */
     const std::vector<cytnx_uint64> &shape() const { return this->_impl->shape(); }
 
@@ -747,8 +792,7 @@ namespace cytnx {
     /**
     @brief return a clone of the current Tensor.
     @return [Tensor]
-
-    description:\n
+    @details
         In C++ API, the behavior of assignment operator is designed to have same behavior as
     python,\n to have a copy of the current tensor, we call clone to return a copy.
 
@@ -770,7 +814,7 @@ namespace cytnx {
 
     /**
     @brief copy a tensor to new device
-    @param device the device-id that is moving to. it can be any device defined in cytnx::Device
+    @param[in] device the device-id that is moving to. it can be any device defined in cytnx::Device
     @return [Tensor]
 
     description:\n
@@ -796,7 +840,7 @@ namespace cytnx {
 
     /**
     @brief move the current Tensor to the device.
-    @param device the device-id that is moving to. it can be any device defined in cytnx::Device
+    @param[in] device the device-id that is moving to. it can be any device defined in cytnx::Device
 
     description:\n
         see also: \link cytnx::Tensor::to Tensor.to \endlink\n
@@ -830,8 +874,11 @@ namespace cytnx {
 
     /**
     @brief perform tensor permute on the cytnx::Tensor and return a new instance.
-    @param rnks the permute indices, should have No. of elements equal to the rank of tensor.
+    @param[in] rnks the permute indices, should have No. of elements equal to the rank of tensor.
     @return [Tensor] a permuted new Tensor
+    @pre 
+        1. The size of input and output Tensor should be the same.
+        2. \p rnks cannot contain duplicated elements.
 
     ## Example:
     ### c++ API:
@@ -859,8 +906,7 @@ namespace cytnx {
     /**
     @brief Make the Tensor contiguous by coalescing the memory (storage).
     @return [Tensor] a new Tensor that is with contiguous memory (storage).
-
-    See also \link Tensor::contiguous_ Tensor::contiguous_() \endlink
+    @see \link Tensor::contiguous_ Tensor::contiguous_() \endlink
 
     ## Example:
     ### c++ API:
@@ -880,8 +926,7 @@ namespace cytnx {
 
     /**
     @brief Make the Tensor contiguous by coalescing the memory (storage), inplacely
-
-    See also \link Tensor::contiguous Tensor::contiguous() \endlink
+    @see \link Tensor::contiguous Tensor::contiguous() \endlink
 
     ## Example:
     ### c++ API:
@@ -900,9 +945,14 @@ namespace cytnx {
 
     /**
     @brief reshape the Tensor, inplacely
-    @param new_shape the new shape of the Tensor.
-
-    See also \link Tensor::reshape Tensor::reshape() \endlink
+    @param[in] new_shape the new shape of the Tensor.
+    @pre 
+        1. The size of input and output Tensor should be the same.
+        2. \p new_shape cannot be empty.
+    @see \link Tensor::reshape Tensor::reshape() \endlink
+    @note 
+        Compare to reshape(), this function will not create a new Tensor, 
+          but reshape the current Tensor inplacely.
 
     ## Example:
     ### c++ API:
@@ -934,10 +984,16 @@ namespace cytnx {
 
     /**
     @brief return a new Tensor that is reshaped.
-    @param new_shape the new shape of the Tensor.
+    @param[in] new_shape the new shape of the Tensor.
     @return [Tensor]
-
-    See also \link Tensor::reshape_ Tensor::reshape_() \endlink
+    @pre 
+        1. The size of input and output Tensor should be the same.
+        2. \p new_shape cannot be empty.
+    @note 
+        1. This function will not change the original Tensor.
+        2. You can use Tensor::reshape_() to reshape the Tensor inplacely.
+        3. You can set \p new_shape to -1 if the shape of the Tensor is undetermined.
+    @see \link Tensor::reshape_ Tensor::reshape_() \endlink
 
     ## Example:
     ### c++ API:
@@ -955,6 +1011,9 @@ namespace cytnx {
       return out;
     }
 
+    /**
+     * @see reshape(const std::vector<cytnx_int64> &new_shape) const
+    */
     Tensor reshape(const std::vector<cytnx_uint64> &new_shape) const {
       std::vector<cytnx_int64> tmp(new_shape.size());
       memcpy(&tmp[0], &new_shape[0], sizeof(cytnx_uint64) * new_shape.size());
@@ -963,6 +1022,9 @@ namespace cytnx {
       return out;
     }
 
+    /**
+     * @see reshape(const std::vector<cytnx_int64> &new_shape) const
+    */
     Tensor reshape(const std::initializer_list<cytnx_int64> &new_shape) const {
       return this->reshape(std::vector<cytnx_int64>(new_shape));
     }
@@ -977,10 +1039,9 @@ namespace cytnx {
 
     /**
     @brief return a new Tensor that cast to different dtype.
-    @param new_type the new dtype. It can be any type defined in cytnx::Type
+    @param[in] new_type the new dtype. It can be any type defined in cytnx::Type
     @return [Tensor]
-
-    ## Note:
+    @note
         If the new_type is the same as dtype of the current Tensor, return self.
 
     ## Example:
@@ -1009,10 +1070,10 @@ namespace cytnx {
 
     /**
     @brief [C++ only] get an element at specific location.
-    @param locator the location of the element
+    @param[in] locator the location of the element
     @return [ref]
 
-    ## Note:
+    @note
         1. This is for C++ API only!
         2. need template instantiation to resolve the type, which should be consist with the dtype
     of the Tensor. An error will be issued if the template type is inconsist with the current dtype
@@ -1029,6 +1090,10 @@ namespace cytnx {
     T &at(const std::vector<cytnx_uint64> &locator) {
       return this->_impl->at<T>(locator);
     }
+
+    /**
+     * @see at(const std::vector<cytnx_uint64> &locator)
+    */
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
       return this->_impl->at<T>(locator);
@@ -1056,7 +1121,7 @@ namespace cytnx {
     @brief get an from a rank-0 Tensor
     @return [T]
 
-    ## Note:
+    @note
         1. This can only be called on a rank-0 Tensor (scalar). For C++ API, a template
     instantiation of type is needed to resolve the type, which should be connsist with the dtype of
     the Tensor. An error will be issued if the template type if inconsist with the current dtype of
@@ -1104,12 +1169,10 @@ namespace cytnx {
 
     /**
     @brief get elements using Accessor (C++ API) / slices (python API)
+    @param[in] accessors the Accessor (C++ API) / slices (python API) to get the elements.
     @return [Tensor]
-
-    See also \link cytnx::Accessor Accessor\endlink for cordinate with Accessor in C++ API.
-
-
-    ## Note:
+    @see \link cytnx::Accessor Accessor\endlink for cordinate with Accessor in C++ API.
+    @note
         1. the return will be a new Tensor instance, which not share memory with the current Tensor.
 
     ## Equivalently:
@@ -1141,11 +1204,9 @@ namespace cytnx {
 
     /**
     @brief set elements with the input Tensor using Accessor (C++ API) / slices (python API)
-    @param accessors the list(vector) of accessors.
+    @param[in] accessors the list(vector) of accessors.
     @param rhs [Tensor]
-
-
-    ## Note:
+    @note:
         the shape of the input Tensor should be the same as the shape that indicated using Accessor.
     The memory is not shared with the input Tensor.
 
@@ -1165,10 +1226,10 @@ namespace cytnx {
 
     /**
     @brief set elements with the input constant using Accessor (C++ API) / slices (python API)
-    @param accessors the list(vector) of accessors.
+    @param[in] accessors the list(vector) of accessors.
     @param rc [Const]
 
-    See also \link cytnx::Tensor::fill Tensor::fill \endlink for filling all elements with assigned
+    @see \link cytnx::Tensor::fill Tensor::fill \endlink for filling all elements with assigned
     constant.
 
     ## Example:
@@ -1197,7 +1258,7 @@ namespace cytnx {
     @brief return the storage of current Tensor.
     @return [Storage]
 
-    ## Note:
+    @note:
         1. The return storage shares the same instance of the storage of current Tensor. Use \link
     Storage::clone Storage.clone() \endlink to create a new instance of the returned Storage.
 
@@ -1206,8 +1267,7 @@ namespace cytnx {
 
     /**
     @brief fill all the element of current Tensor with the value.
-    @param val the assigned value
-
+    @param[in] val the assigned value
 
     ## Example:
     ### c++ API:
@@ -1224,21 +1284,108 @@ namespace cytnx {
       this->_impl->fill(val);
     }
 
+    /**
+     * @brief compare the shape of two tensors.
+     * @param[in] rhs the tensor to be compared.
+    */
     bool equiv(const Tensor &rhs) {
       if (this->shape() != rhs.shape()) return false;
       return true;
     }
 
+    /**
+     * @brief return the real part of the tensor.
+     * @return [Tensor] the real part of the tensor.
+     * @pre the tensor must be complex type (Type.ComplexDouble or 
+     *     Type.ComplexFloat).
+     * @see cytnx::Type
+    */
     Tensor real();
+
+    /**
+     * @brief return the imaginary part of the tensor.
+     * @return [Tensor] the imaginary part of the tensor.
+     * @pre the tensor must be complex type (Type.ComplexDouble or
+     *    Type.ComplexFloat).
+     * @see cytnx::Type
+    */
     Tensor imag();
 
     // Arithmic:
+    /**
+     * @brief addition assignment operator with a Tensor or a scalar.
+     * @details This function will add the template type to the current tensor, inplacely.
+     *     The template can be either a scalar or a tensor. If the template is a
+     *     scalar, then the scalar will be added to all the elements of the
+     *     current tensor. If the template is a tensor, then the shape of the
+     *     template tensor must be the same as the current tensor. The supported
+     *     type of the template are Tensor, Scalar or any scalar type (see 
+     *     \ref cytnx_complex128, \ref cytnx_complex64, \ref cytnx_double, \ref cytnx_float, 
+     *     \ref cytnx_int64, \ref cytnx_int32, \ref cytnx_int16,
+     *     \ref cytnx_uint64, \ref cytnx_uint32, \ref cytnx_uint16, \ref cytnx_bool).
+     * @param[in] rc the added Tensor or scalar.
+     * @pre 
+     *     If the template type is Tensor, then the shape of the template tensor 
+     *       must be the same as the current tensor.
+    */
     template <class T>
     Tensor &operator+=(const T &rc);
+
+    /**
+     * @brief subtraction assignment operator with a Tensor or a scalar.
+     * @details This function will subtract the template type to the current tensor, inplacely.
+     *    The template can be either a scalar or a tensor. If the template is a
+     *    scalar, then the scalar will be subtracted to all the elements of the
+     *    current tensor. If the template is a tensor, then the shape of the
+     *    template tensor must be the same as the current tensor. The supported
+     *    type of the template are Tensor, Scalar or any scalar type (see
+     *    \ref cytnx_complex128, \ref cytnx_complex64, \ref cytnx_double, \ref cytnx_float,
+     *    \ref cytnx_int64, \ref cytnx_int32, \ref cytnx_int16,
+     *    \ref cytnx_uint64, \ref cytnx_uint32, \ref cytnx_uint16, \ref cytnx_bool).
+     * @param[in] rc the subtracted Tensor or scalar.
+     * @pre
+     *   If the template type is Tensor, then the shape of the template tensor
+     *     must be the same as the current tensor.
+    */
     template <class T>
     Tensor &operator-=(const T &rc);
+
+    /**
+     * @brief multiplication assignment operator with a Tensor or a scalar.
+     * @details This function will multiply the template type to the current tensor, inplacely.
+     * The template can be either a scalar or a tensor. If the template is a
+     * scalar, then the scalar will be multiplied to all the elements of the
+     * current tensor. If the template is a tensor, then the shape of the
+     * template tensor must be the same as the current tensor. The supported
+     * type of the template are Tensor, Scalar or any scalar type (see
+     * \ref cytnx_complex128, \ref cytnx_complex64, \ref cytnx_double, \ref cytnx_float,
+     * \ref cytnx_int64, \ref cytnx_int32, \ref cytnx_int16,
+     * \ref cytnx_uint64, \ref cytnx_uint32, \ref cytnx_uint16, \ref cytnx_bool).
+     * @param[in] rc the multiplied Tensor or scalar.
+     * @pre
+     *  If the template type is Tensor, then the shape of the template tensor
+     *   must be the same as the current tensor.
+    */
     template <class T>
     Tensor &operator*=(const T &rc);
+
+    /**
+     * @brief division assignment operator with a Tensor or a scalar.
+     * @details This function will divide the template type to the current tensor, inplacely.
+     * The template can be either a scalar or a tensor. If the template is a
+     * scalar, then the scalar will be divided to all the elements of the
+     * current tensor. If the template is a tensor, then the shape of the
+     * template tensor must be the same as the current tensor. The supported
+     * type of the template are Tensor, Scalar or any scalar type (see
+     * \ref cytnx_complex128, \ref cytnx_complex64, \ref cytnx_double, \ref cytnx_float,
+     * \ref cytnx_int64, \ref cytnx_int32, \ref cytnx_int16,
+     * \ref cytnx_uint64, \ref cytnx_uint32, \ref cytnx_uint16, \ref cytnx_bool).
+     * @param[in] rc the divided Tensor or scalar.
+     * @pre
+     * 1. If the template type is Tensor, then the shape of the template tensor
+     *  must be the same as the current tensor.
+     * 2. \p rc cannot be zero.
+    */
     template <class T>
     Tensor &operator/=(const T &rc);
 
@@ -1260,43 +1407,94 @@ namespace cytnx {
          return *this / Tensor(rc);
     }
     */
-
+    /**
+     * @brief Addition function with a Tensor or a scalar. Same as 
+     * cytnx::operator+(const Tensor &self, const T &rhs).
+     * @param[in] rhs the added Tensor or scalar.
+    */
     template <class T>
     Tensor Add(const T &rhs) {
       return *this + rhs;
     }
+
+    /**
+     * @brief Addition function with a Tensor or a scalar, inplacely. 
+     * Same as operator+=(const T &rhs).
+     * @param[in] rhs the added Tensor or scalar.
+    */
     template <class T>
     Tensor &Add_(const T &rhs) {
       return *this += rhs;
     }
 
+    /**
+     * @brief Subtraction function with a Tensor or a scalar. Same as
+     * cytnx::operator-(const Tensor &self, const T &rhs).
+     * @param[in] rhs the subtracted Tensor or scalar.
+    */
     template <class T>
     Tensor Sub(const T &rhs) {
       return *this - rhs;
     }
+
+    /**
+     * @brief Subtraction function with a Tensor or a scalar, inplacely.
+     * Same as operator-=(const T &rhs).
+     * @param[in] rhs the subtracted Tensor or scalar.
+    */
     template <class T>
     Tensor &Sub_(const T &rhs) {
       return *this -= rhs;
     }
 
+    /**
+     * @brief Multiplication function with a Tensor or a scalar. Same as
+     * cytnx::operator*(const Tensor &self, const T &rhs).
+     * @param[in] rhs the multiplied Tensor or scalar.
+    */
     template <class T>
     Tensor Mul(const T &rhs) {
       return *this * rhs;
     }
+
+    /**
+     * @brief Multiplication function with a Tensor or a scalar, inplacely.
+     * Same as operator*=(const T &rhs).
+     * @param[in] rhs the multiplied Tensor or scalar.
+    */
     template <class T>
     Tensor &Mul_(const T &rhs) {
       return *this *= rhs;
     }
 
+    /**
+     * @brief Division function with a Tensor or a scalar. Same as
+     * cytnx::operator/(const Tensor &self, const T &rhs).
+     * @param[in] rhs the divided Tensor or scalar.
+     * @attension \p rhs cannot be zero.
+    */
     template <class T>
     Tensor Div(const T &rhs) {
       return *this / rhs;
     }
+
+    /**
+     * @brief Division function with a Tensor or a scalar, inplacely.
+     * Same as operator/=(const T &rhs).
+     * @param[in] rhs the divided Tensor or scalar.
+     * @attension \p rhs cannot be zero.
+    */
     template <class T>
     Tensor &Div_(const T &rhs) {
       return *this /= rhs;
     }
 
+    /**
+     * @brief The comparison function.
+     * @details This function is the comparison function. Same as
+     * cytnx::operator==(const Tensor &self, const T &rhs).
+     * @param[in] rhs the compared object.
+     */ 
     template <class T>
     Tensor Cpr(const T &rhs) {
       return *this == rhs;
@@ -1313,8 +1511,21 @@ namespace cytnx {
       return *this % rhs;
     }
 
+    /**
+     * @brief The negation function.
+     * @details This function is the negation function. Namely, if the current
+     * tensor is \f$A\f$, then the output tensor is \f$-A\f$.
+     * @return The negation of the current tensor.
+     */
     Tensor operator-() { return this->Mul(-1.); }
 
+    /**
+     * @brief The flatten function.
+     * @details This function is the flatten function. It will clone (deep copy)
+     * , contiguos the current tensor and reshape it to undetermined rank.
+     * @note compare to the flatten_() function, this function will return a new
+     * tensor and the current tensor will not be changed.
+     */
     Tensor flatten() const {
       Tensor out = this->clone();
       out.contiguous_();
@@ -1322,11 +1533,43 @@ namespace cytnx {
       return out;
     }
 
+    /**
+     * @brief The flatten function, inplacely.
+     * @details This function is the flatten function, inplacely. It will
+     * contiguos the current tensor and reshape it to undetermined rank.
+     * @note compare to the flatten() function, this is an inplacely function,
+     * the current tensor will be changed.
+     */
     void flatten_() {
       this->contiguous_();
       this->reshape_({-1});
     }
 
+    /**
+     * @brief the append function.
+     * @details This function is the append function. It will append the \p rhs
+     * tensor to the current tensor. The \p rhs tensor must have the same shape
+     * as the current tensor, except the first dimension. For example, if the
+     * current tensor is \f$A(i,j,k)\f$ and the \p rhs tensor is \f$B(j,k)\f$, then
+     * the output tensor is \f$C(i,j,k)\f$ where
+     * \f[
+     * C(i,j,k) = \begin{cases}
+     * A(i,j,k) & \text{if } i \neq N \\
+     * B(j,k) & \text{if } i = N
+     * \end{cases}
+     * \f]
+     * where \f$N\f$ is the number of the first dimension of the current tensor.
+     * @param[in] rhs the appended tensor.
+     * @return The appended tensor.
+     * @pre
+     * 1. The \p rhs tensor and the current tensor cannot be empty.
+     * 2. The \p rhs tensor must have the same shape as the current tensor,
+     * except the first dimension. Namely, rhs.shape()[i] == this->shape()[i+1]
+     * and rhs.shape().size() == this->shape().size()-1.
+     * @note If the dtype of the \p rhs is different from the current tensor,
+     * the \p rhs will be casted to the dtype of the current tensor.
+     * @see append(const Storage &rhs)
+     */
     void append(const Tensor &rhs) {
       // Tensor in;
       if (!this->is_contiguous()) this->contiguous_();
@@ -1362,6 +1605,15 @@ namespace cytnx {
                oldsize * Type.typeSize(this->dtype()) / sizeof(char),
              in._impl->_storage.data(), Type.typeSize(in.dtype()) * Nelem);
     }
+    /**
+     * @brief the append function of the Storage.
+     * @details This function is the append function of the Storage. It will
+     * same as the append(const Tensor &rhs) function, but the \p rhs is a
+     * Storage.
+     * @param[in] srhs the appended Storage.
+     * @return The appended tensor.
+     * @see append(const Tensor &rhs)
+     */
     void append(const Storage &srhs) {
       if (!this->is_contiguous()) this->contiguous_();
 
@@ -1413,6 +1665,17 @@ namespace cytnx {
     suggestion: call contiguous() or contiguous_() first.","\n");
     }
     */
+    /**
+     * @brief the append function of the scalar.
+     * @details This function is the append function of the scalar. It can only append
+     * scalar into rank-1 Tensor.
+     * @param[in] rhs the appended scalar.
+     * @return The appended tensor.
+     * @pre 
+     * 1. The current Tensor must be rank-1. (1D array)
+     * 2. The current Tensor must be contiguous.
+     * 3. \p rhs must be a scalar.
+     */
     template <class T>
     void append(const T &rhs) {
       cytnx_error_msg(this->shape().size() != 1,
@@ -1430,24 +1693,114 @@ namespace cytnx {
     bool same_data(const Tensor &rhs) const;
 
     // linalg:
+    /**
+     * @brief the SVD member function. Same as 
+     * \ref cytnx::linalg::Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT)
+     * , where \p Tin is the current Tensor.
+     */
     std::vector<Tensor> Svd(const bool &is_U = true, const bool &is_vT = true) const;
+
+    /**
+     * @brief the Eigh member function. Same as 
+     * \ref cytnx::linalg::Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v)
+     * , where \p Tin is the current Tensor.
+     */
     std::vector<Tensor> Eigh(const bool &is_V = true, const bool &row_v = false) const;
+
+    /**
+     * @brief the InvM_ member function. Same as
+     * \ref cytnx::linalg::InvM_(Tensor &Tin), where \p Tin is the current Tensor.
+     */
     Tensor &InvM_();
+
+    /**
+     * @brief the InvM member function. Same as
+     * \ref cytnx::linalg::InvM(const Tensor &Tin), where \p Tin is the current Tensor.
+     */
     Tensor InvM() const;
+
+    /**
+     * @brief the Inv_ member function. Same as
+     * \ref cytnx::linalg::Inv_(Tensor &Tin, const double &clip)
+     */
     Tensor &Inv_(const double &clip);
+    
+    /**
+     * @brief the Inv member function. Same as
+     * \ref cytnx::linalg::Inv(const Tensor &Tin, const double &clip)
+     */
     Tensor Inv(const double &clip) const;
 
+    /**
+     * @brief the Conj_ member function. Same as
+     * \ref cytnx::linalg::Conj_(Tensor &Tin), where \p Tin is the current Tensor.
+     */
     Tensor &Conj_();
+
+    /**
+     * @brief the Conj member function. Same as
+     * \ref cytnx::linalg::Conj(const Tensor &Tin), where \p Tin is the current Tensor.
+     */
     Tensor Conj() const;
+
+    /**
+     * @brief the Exp_ member function. Same as linalg::Exp_(Tensor &Tin), where \p Tin is the
+     * current Tensor.
+     */
     Tensor &Exp_();
+
+    /**
+     * @brief the Exp member function. Same as linalg::Exp(const Tensor &Tin), where \p Tin is the
+     * current Tensor.
+     */
     Tensor Exp() const;
+
+    /**
+     * @brief the Norm member function. Same as linalg::Norm(const Tensor &Tin), where \p Tin is
+     * the current Tensor.
+     */
     Tensor Norm() const;
+
+    /**
+     * @brief the Pow member function. Same as linalg::Pow(const Tensor &Tin, const cytnx_double
+     * &p), where \p Tin is the current Tensor.
+     */
     Tensor Pow(const cytnx_double &p) const;
+
+    /**
+     * @brief the Pow_ member function. Same as linalg::Pow_(Tensor &Tin, const cytnx_double
+     * &p), where \p Tin is the current Tensor.
+     */
     Tensor &Pow_(const cytnx_double &p);
+
+    /**
+     * @brief the Trace member function. Same as linalg::Trace(const Tensor &Tin, const
+     * cytnx_uint64 &a, const cytnx_uint64 &b), where \p Tin is the current Tensor.
+     */
     Tensor Trace(const cytnx_uint64 &a = 0, const cytnx_uint64 &b = 1) const;
+
+    /**
+     * @brief the Abs member function. Same as linalg::Abs(const Tensor &Tin), where \p Tin is the
+     * current Tensor.
+     */
     Tensor Abs() const;
+
+    /**
+     * @brief the Abs_ member function. Same as linalg::Abs_(Tensor &Tin), where \p Tin is the
+     * current Tensor.
+     */
     Tensor &Abs_();
+
+    /**
+     * @brief the Max member function. Same as linalg::Max(const Tensor &Tin),
+     * where \p Tin is the current Tensor.
+     */
     Tensor Max() const;
+
+    /**
+     * @brief the Min member function. Same as linalg::Min(const Tensor &Tin), 
+     * where \p Tin is the current Tensor.
+     */
     Tensor Min() const;
 
   };  // class Tensor

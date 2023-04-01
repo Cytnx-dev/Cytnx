@@ -409,7 +409,9 @@ namespace cytnx {
   ///@cond
   class Scalar_init_interface : public Type_class {
    public:
-    std::vector<pScalar_init> UScIInit;
+    // std::vector<pScalar_init> UScIInit;
+    inline static pScalar_init UScIInit[N_Type];
+    inline static bool inited = false;
     Scalar_init_interface();
   };
   extern Scalar_init_interface __ScII;
@@ -2466,28 +2468,40 @@ namespace cytnx {
     struct Sproxy {
       boost::intrusive_ptr<Storage_base> _insimpl;
       cytnx_uint64 _loc;
-
+      Sproxy(){}
       Sproxy(boost::intrusive_ptr<Storage_base> _ptr, const cytnx_uint64 &idx)
           : _insimpl(_ptr), _loc(idx) {}
 
-      // When used to set elems:
-      const Sproxy &operator=(const Scalar &rc);
-      const Sproxy &operator=(const cytnx_complex128 &rc);
-      const Sproxy &operator=(const cytnx_complex64 &rc);
-      const Sproxy &operator=(const cytnx_double &rc);
-      const Sproxy &operator=(const cytnx_float &rc);
-      const Sproxy &operator=(const cytnx_uint64 &rc);
-      const Sproxy &operator=(const cytnx_int64 &rc);
-      const Sproxy &operator=(const cytnx_uint32 &rc);
-      const Sproxy &operator=(const cytnx_int32 &rc);
-      const Sproxy &operator=(const cytnx_uint16 &rc);
-      const Sproxy &operator=(const cytnx_int16 &rc);
-      const Sproxy &operator=(const cytnx_bool &rc);
+      Sproxy(const Sproxy &rhs){
+        this->_insimpl = rhs._insimpl;
+        this->_loc = rhs._loc;
+      }
 
-      const Sproxy &operator=(const Sproxy &rc);
+      // When used to set elems:
+      Sproxy& operator=(const Scalar &rc);
+      Sproxy& operator=(const cytnx_complex128 &rc);
+      Sproxy& operator=(const cytnx_complex64 &rc);
+      Sproxy& operator=(const cytnx_double &rc);
+      Sproxy& operator=(const cytnx_float &rc);
+      Sproxy& operator=(const cytnx_uint64 &rc);
+      Sproxy& operator=(const cytnx_int64 &rc);
+      Sproxy& operator=(const cytnx_uint32 &rc);
+      Sproxy& operator=(const cytnx_int32 &rc);
+      Sproxy& operator=(const cytnx_uint16 &rc);
+      Sproxy& operator=(const cytnx_int16 &rc);
+      Sproxy& operator=(const cytnx_bool &rc);
+
+      Sproxy& operator=(const Sproxy &rc);
+
+      Sproxy copy() const{
+        Sproxy out = *this;
+        return out;
+      } 
 
       Scalar real();
       Scalar imag();
+      bool exists() const;
+
       // When used to get elements:
       // operator Scalar() const;
     };
@@ -2808,6 +2822,28 @@ namespace cytnx {
         return !(tmp._impl->less(rhs._impl));
       } else {
         return !(this->_impl->less(rhs._impl));
+      }
+    }
+
+    // comparison ==
+    template <class T>
+    bool eq(const T &rc) const {
+      Scalar tmp;
+      int rid = Type.cy_typeid(rc);
+      if (rid < this->dtype()) {
+        tmp = this->astype(rid);
+        return tmp._impl->eq(rc);
+      } else {
+        return this->_impl->eq(rc);
+      }
+    }
+    bool eq(const Scalar &rhs) const {
+      Scalar tmp;
+      if (rhs.dtype() < this->dtype()) {
+        tmp = this->astype(rhs.dtype());
+        return tmp._impl->eq(rhs._impl);
+      } else {
+        return this->_impl->eq(rhs._impl);
       }
     }
 

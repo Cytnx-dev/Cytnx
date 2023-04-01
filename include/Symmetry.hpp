@@ -27,6 +27,42 @@ namespace cytnx {
   extern SymmetryType_class SymType;
   ///@endcond
 
+
+  // helper class, has implicitly conversion to vector<int64>! 
+  class Qs{
+    private:
+        std::vector<cytnx_int64> tmpQs;
+
+    public:
+        
+        template <class... Ts>
+        Qs(const cytnx_int64 &e1, const Ts... elems) {
+          this->tmpQs = dynamic_arg_int64_resolver(e1, elems...);
+        }
+
+        Qs(const std::vector<cytnx_int64> &qin){
+            this->tmpQs = qin;
+        }
+
+        // interprete as 2d vector directly implicitly convert!
+        explicit operator std::vector<cytnx_int64>() const {
+            return this->tmpQs;
+        };
+        
+        std::pair<std::vector<cytnx_int64>, cytnx_uint64> operator>>(const cytnx_uint64 &dim){
+            return make_pair(this->tmpQs,dim);
+        }
+
+  };
+
+  /* 
+  template<class... Ts>
+  std::vector<cytnx_int64> Qs(const cytnx_int64 &e1, const Ts &...elems){
+    std::vector<cytnx_int64> argv = dynamic_arg_int64_resolver(e1, elems...);
+    return argv;
+  }
+  */
+
   ///@cond
   class Symmetry_base : public intrusive_ptr_base<Symmetry_base> {
    public:
@@ -39,7 +75,7 @@ namespace cytnx {
 
     std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64> &inL,
                                           const std::vector<cytnx_int64> &inR);
-    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR);
+    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
 
     cytnx_int64 reverse_rule(const cytnx_int64 &in);
 
@@ -50,7 +86,7 @@ namespace cytnx {
     virtual bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
     virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
                                const std::vector<cytnx_int64> &inR);
-    virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
+    virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
     virtual void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     virtual void print_info() const;
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
@@ -76,7 +112,7 @@ namespace cytnx {
     bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
     void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
                        const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
   };
@@ -100,7 +136,7 @@ namespace cytnx {
     bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
     void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
                        const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR);
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
   };
@@ -298,8 +334,8 @@ namespace cytnx {
     @return the combined quantum number.
 
     */
-    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR) {
-      return this->_impl->combine_rule(inL, inR);
+    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse = false) const {
+      return this->_impl->combine_rule(inL, inR, is_reverse);
     }
 
     /**
@@ -310,15 +346,15 @@ namespace cytnx {
     @param inR the #2 quantum number.
 
     */
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR) {
-      this->_impl->combine_rule_(out, inL, inR);
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse=false) {
+      this->_impl->combine_rule_(out, inL, inR, is_reverse);
     }
 
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
       this->_impl->reverse_rule_(out, in);
     }
 
-    cytnx_int64 reverse_rule(const cytnx_int64 &in) { return this->_impl->reverse_rule(in); }
+    cytnx_int64 reverse_rule(const cytnx_int64 &in) const { return this->_impl->reverse_rule(in); }
 
     void Save(const std::string &fname) const;
     void Save(const char *fname) const;

@@ -1,6 +1,6 @@
 CYTNX_ROOT=../
 CC := g++
-CCFLAGS := -std=c++11 
+CCFLAGS := -std=c++17 
 INCFLAGS := $(CCFLAGS) -I$(CYTNX_ROOT)/include
 LDFLAGS := -L$(CYTNX_ROOT)
 SO := $(CYTNX_ROOT)/libcytnx.so

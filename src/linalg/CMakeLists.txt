@@ -3,6 +3,8 @@ target_sources_local(cytnx
     linalg_internal_interface.hpp
     Add.cpp
     Arnoldi.cpp
+    Axpy.cpp
+    Ger.cpp
     iAdd.cpp
     Min.cpp
     Max.cpp
@@ -42,6 +44,7 @@ target_sources_local(cytnx
     Svd.cpp
     Svd_truncate.cpp
     Tensordot.cpp
+    Directsum.cpp
     Tensordot_dg.cpp
     Vectordot.cpp
     Pow.cpp

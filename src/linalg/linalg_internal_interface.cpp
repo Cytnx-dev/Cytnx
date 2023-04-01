@@ -482,6 +482,23 @@ namespace cytnx {
       Td_ii[Type.Double] = Tridiag_internal_d;
       Td_ii[Type.Float] = Tridiag_internal_f;
 
+
+      //=====================
+      Trace_ii = vector<Tracefunc_oii>(N_Type);
+
+      Trace_ii[Type.ComplexDouble] = Trace_internal_cd;
+      Trace_ii[Type.ComplexFloat] = Trace_internal_cf;
+      Trace_ii[Type.Double] = Trace_internal_d;
+      Trace_ii[Type.Float] = Trace_internal_f;
+      Trace_ii[Type.Uint64] = Trace_internal_u64;
+      Trace_ii[Type.Int64] = Trace_internal_i64;
+      Trace_ii[Type.Uint32] = Trace_internal_u32;
+      Trace_ii[Type.Int32] = Trace_internal_i32;
+      Trace_ii[Type.Uint16] = Trace_internal_u16;
+      Trace_ii[Type.Int16] = Trace_internal_i16;
+      Trace_ii[Type.Bool] = Trace_internal_b;
+
+
       //================
       Kron_ii = vector<vector<Kronfunc_oii>>(N_Type, vector<Kronfunc_oii>(N_Type, NULL));
 
@@ -688,6 +705,24 @@ namespace cytnx {
       Lstsq_ii[Type.Double] = Lstsq_internal_d;
       Lstsq_ii[Type.Float] = Lstsq_internal_f;
 
+
+      //===============
+      axpy_ii = std::vector<axpy_oii>(5);
+      axpy_ii[Type.ComplexDouble] = Axpy_internal_cd;
+      axpy_ii[Type.ComplexFloat] = Axpy_internal_cf;
+      axpy_ii[Type.Double] = Axpy_internal_d;
+      axpy_ii[Type.Float] = Axpy_internal_f;
+
+      //===============
+      ger_ii = std::vector<ger_oii>(5);
+      ger_ii[Type.ComplexDouble] = Ger_internal_cd;
+      ger_ii[Type.ComplexFloat] = Ger_internal_cf;
+      ger_ii[Type.Double] = Ger_internal_d;
+      ger_ii[Type.Float] = Ger_internal_f;
+
+
+
+
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
 
@@ -822,6 +857,166 @@ namespace cytnx {
       cuAri_ii[Type.Bool][Type.Uint16] = cuArithmetic_internal_btu16;
       cuAri_ii[Type.Bool][Type.Int16] = cuArithmetic_internal_bti16;
       cuAri_ii[Type.Bool][Type.Bool] = cuArithmetic_internal_btb;
+
+      //================
+      cuKron_ii = vector<vector<Kronfunc_oii>>(N_Type, vector<Kronfunc_oii>(N_Type, NULL));
+
+      cuKron_ii[Type.ComplexDouble][Type.ComplexDouble] = cuKron_internal_cdtcd;
+      cuKron_ii[Type.ComplexDouble][Type.ComplexFloat] = cuKron_internal_cdtcf;
+      cuKron_ii[Type.ComplexDouble][Type.Double] = cuKron_internal_cdtd;
+      cuKron_ii[Type.ComplexDouble][Type.Float] = cuKron_internal_cdtf;
+      cuKron_ii[Type.ComplexDouble][Type.Int64] = cuKron_internal_cdti64;
+      cuKron_ii[Type.ComplexDouble][Type.Uint64] = cuKron_internal_cdtu64;
+      cuKron_ii[Type.ComplexDouble][Type.Int32] = cuKron_internal_cdti32;
+      cuKron_ii[Type.ComplexDouble][Type.Uint32] = cuKron_internal_cdtu32;
+      cuKron_ii[Type.ComplexDouble][Type.Int16] = cuKron_internal_cdti16;
+      cuKron_ii[Type.ComplexDouble][Type.Uint16] = cuKron_internal_cdtu16;
+      cuKron_ii[Type.ComplexDouble][Type.Bool] = cuKron_internal_cdtb;
+
+      cuKron_ii[Type.ComplexFloat][Type.ComplexDouble] = cuKron_internal_cftcd;
+      cuKron_ii[Type.ComplexFloat][Type.ComplexFloat] = cuKron_internal_cftcf;
+      cuKron_ii[Type.ComplexFloat][Type.Double] = cuKron_internal_cftd;
+      cuKron_ii[Type.ComplexFloat][Type.Float] = cuKron_internal_cftf;
+      cuKron_ii[Type.ComplexFloat][Type.Int64] = cuKron_internal_cfti64;
+      cuKron_ii[Type.ComplexFloat][Type.Uint64] = cuKron_internal_cftu64;
+      cuKron_ii[Type.ComplexFloat][Type.Int32] = cuKron_internal_cfti32;
+      cuKron_ii[Type.ComplexFloat][Type.Uint32] = cuKron_internal_cftu32;
+      cuKron_ii[Type.ComplexFloat][Type.Int16] = cuKron_internal_cfti16;
+      cuKron_ii[Type.ComplexFloat][Type.Uint16] = cuKron_internal_cftu16;
+      cuKron_ii[Type.ComplexFloat][Type.Bool] = cuKron_internal_cftb;
+
+      cuKron_ii[Type.Double][Type.ComplexDouble] = cuKron_internal_dtcd;
+      cuKron_ii[Type.Double][Type.ComplexFloat] = cuKron_internal_dtcf;
+      cuKron_ii[Type.Double][Type.Double] = cuKron_internal_dtd;
+      cuKron_ii[Type.Double][Type.Float] = cuKron_internal_dtf;
+      cuKron_ii[Type.Double][Type.Int64] = cuKron_internal_dti64;
+      cuKron_ii[Type.Double][Type.Uint64] = cuKron_internal_dtu64;
+      cuKron_ii[Type.Double][Type.Int32] = cuKron_internal_dti32;
+      cuKron_ii[Type.Double][Type.Uint32] = cuKron_internal_dtu32;
+      cuKron_ii[Type.Double][Type.Int16] = cuKron_internal_dti16;
+      cuKron_ii[Type.Double][Type.Uint16] = cuKron_internal_dtu16;
+      cuKron_ii[Type.Double][Type.Bool] = cuKron_internal_dtb;
+
+      cuKron_ii[Type.Float][Type.ComplexDouble] = cuKron_internal_ftcd;
+      cuKron_ii[Type.Float][Type.ComplexFloat] = cuKron_internal_ftcf;
+      cuKron_ii[Type.Float][Type.Double] = cuKron_internal_ftd;
+      cuKron_ii[Type.Float][Type.Float] = cuKron_internal_ftf;
+      cuKron_ii[Type.Float][Type.Int64] = cuKron_internal_fti64;
+      cuKron_ii[Type.Float][Type.Uint64] = cuKron_internal_ftu64;
+      cuKron_ii[Type.Float][Type.Int32] = cuKron_internal_fti32;
+      cuKron_ii[Type.Float][Type.Uint32] = cuKron_internal_ftu32;
+      cuKron_ii[Type.Float][Type.Uint16] = cuKron_internal_ftu16;
+      cuKron_ii[Type.Float][Type.Int16] = cuKron_internal_fti16;
+      cuKron_ii[Type.Float][Type.Bool] = cuKron_internal_ftb;
+
+      cuKron_ii[Type.Int64][Type.ComplexDouble] = cuKron_internal_i64tcd;
+      cuKron_ii[Type.Int64][Type.ComplexFloat] = cuKron_internal_i64tcf;
+      cuKron_ii[Type.Int64][Type.Double] = cuKron_internal_i64td;
+      cuKron_ii[Type.Int64][Type.Float] = cuKron_internal_i64tf;
+      cuKron_ii[Type.Int64][Type.Int64] = cuKron_internal_i64ti64;
+      cuKron_ii[Type.Int64][Type.Uint64] = cuKron_internal_i64tu64;
+      cuKron_ii[Type.Int64][Type.Int32] = cuKron_internal_i64ti32;
+      cuKron_ii[Type.Int64][Type.Uint32] = cuKron_internal_i64tu32;
+      cuKron_ii[Type.Int64][Type.Uint16] = cuKron_internal_i64tu16;
+      cuKron_ii[Type.Int64][Type.Int16] = cuKron_internal_i64ti16;
+      cuKron_ii[Type.Int64][Type.Bool] = cuKron_internal_i64tb;
+
+      cuKron_ii[Type.Uint64][Type.ComplexDouble] = cuKron_internal_u64tcd;
+      cuKron_ii[Type.Uint64][Type.ComplexFloat] = cuKron_internal_u64tcf;
+      cuKron_ii[Type.Uint64][Type.Double] = cuKron_internal_u64td;
+      cuKron_ii[Type.Uint64][Type.Float] = cuKron_internal_u64tf;
+      cuKron_ii[Type.Uint64][Type.Int64] = cuKron_internal_u64ti64;
+      cuKron_ii[Type.Uint64][Type.Uint64] = cuKron_internal_u64tu64;
+      cuKron_ii[Type.Uint64][Type.Int32] = cuKron_internal_u64ti32;
+      cuKron_ii[Type.Uint64][Type.Uint32] = cuKron_internal_u64tu32;
+      cuKron_ii[Type.Uint64][Type.Uint16] = cuKron_internal_u64tu16;
+      cuKron_ii[Type.Uint64][Type.Int16] = cuKron_internal_u64ti16;
+      cuKron_ii[Type.Uint64][Type.Bool] = cuKron_internal_u64tb;
+
+      cuKron_ii[Type.Int32][Type.ComplexDouble] = cuKron_internal_i32tcd;
+      cuKron_ii[Type.Int32][Type.ComplexFloat] = cuKron_internal_i32tcf;
+      cuKron_ii[Type.Int32][Type.Double] = cuKron_internal_i32td;
+      cuKron_ii[Type.Int32][Type.Float] = cuKron_internal_i32tf;
+      cuKron_ii[Type.Int32][Type.Int64] = cuKron_internal_i32ti64;
+      cuKron_ii[Type.Int32][Type.Uint64] = cuKron_internal_i32tu64;
+      cuKron_ii[Type.Int32][Type.Int32] = cuKron_internal_i32ti32;
+      cuKron_ii[Type.Int32][Type.Uint32] = cuKron_internal_i32tu32;
+      cuKron_ii[Type.Int32][Type.Uint16] = cuKron_internal_i32tu16;
+      cuKron_ii[Type.Int32][Type.Int16] = cuKron_internal_i32ti16;
+      cuKron_ii[Type.Int32][Type.Bool] = cuKron_internal_i32tb;
+
+      cuKron_ii[Type.Uint32][Type.ComplexDouble] = cuKron_internal_u32tcd;
+      cuKron_ii[Type.Uint32][Type.ComplexFloat] = cuKron_internal_u32tcf;
+      cuKron_ii[Type.Uint32][Type.Double] = cuKron_internal_u32td;
+      cuKron_ii[Type.Uint32][Type.Float] = cuKron_internal_u32tf;
+      cuKron_ii[Type.Uint32][Type.Int64] = cuKron_internal_u32ti64;
+      cuKron_ii[Type.Uint32][Type.Uint64] = cuKron_internal_u32tu64;
+      cuKron_ii[Type.Uint32][Type.Int32] = cuKron_internal_u32ti32;
+      cuKron_ii[Type.Uint32][Type.Uint32] = cuKron_internal_u32tu32;
+      cuKron_ii[Type.Uint32][Type.Uint16] = cuKron_internal_u32tu16;
+      cuKron_ii[Type.Uint32][Type.Int16] = cuKron_internal_u32ti16;
+      cuKron_ii[Type.Uint32][Type.Bool] = cuKron_internal_u32tb;
+
+
+      //=====================
+      cuMM_ii = vector<MaxMinfunc_oii>(N_Type);
+
+      cuMM_ii[Type.ComplexDouble] = cuMaxMin_internal_cd;
+      cuMM_ii[Type.ComplexFloat] = cuMaxMin_internal_cf;
+      cuMM_ii[Type.Double] = cuMaxMin_internal_d;
+      cuMM_ii[Type.Float] = cuMaxMin_internal_f;
+      cuMM_ii[Type.Uint64] = cuMaxMin_internal_u64;
+      cuMM_ii[Type.Int64] = cuMaxMin_internal_i64;
+      cuMM_ii[Type.Uint32] = cuMaxMin_internal_u32;
+      cuMM_ii[Type.Int32] = cuMaxMin_internal_i32;
+      cuMM_ii[Type.Uint16] = cuMaxMin_internal_u16;
+      cuMM_ii[Type.Int16] = cuMaxMin_internal_i16;
+      cuMM_ii[Type.Bool] = cuMaxMin_internal_b;
+
+      //=====================
+      cuSum_ii = vector<MaxMinfunc_oii>(N_Type);
+
+      cuSum_ii[Type.ComplexDouble] = cuSum_internal_cd;
+      cuSum_ii[Type.ComplexFloat] = cuSum_internal_cf;
+      cuSum_ii[Type.Double] = cuSum_internal_d;
+      cuSum_ii[Type.Float] = cuSum_internal_f;
+      cuSum_ii[Type.Uint64] = cuSum_internal_u64;
+      cuSum_ii[Type.Int64] = cuSum_internal_i64;
+      cuSum_ii[Type.Uint32] = cuSum_internal_u32;
+      cuSum_ii[Type.Int32] = cuSum_internal_i32;
+      cuSum_ii[Type.Uint16] = cuSum_internal_u16;
+      cuSum_ii[Type.Int16] = cuSum_internal_i16;
+      cuSum_ii[Type.Bool] = cuSum_internal_b;
+
+
+      //=====================
+      cuAbs_ii = vector<Absfunc_oii>(N_Type);
+
+      cuAbs_ii[Type.ComplexDouble] = cuAbs_internal_cd;
+      cuAbs_ii[Type.ComplexFloat] = cuAbs_internal_cf;
+      cuAbs_ii[Type.Double] = cuAbs_internal_d;
+      cuAbs_ii[Type.Float] = cuAbs_internal_f;
+      cuAbs_ii[Type.Int64] = cuAbs_internal_i64;
+      cuAbs_ii[Type.Uint64] = cuAbs_internal_pass;
+      cuAbs_ii[Type.Int32] = cuAbs_internal_i32;
+      cuAbs_ii[Type.Uint32] = cuAbs_internal_pass;
+      cuAbs_ii[Type.Int16] = cuAbs_internal_i16;
+      cuAbs_ii[Type.Uint16] = cuAbs_internal_pass;
+      cuAbs_ii[Type.Bool] = cuAbs_internal_pass;
+
+      //===============
+      cuGer_ii = std::vector<ger_oii>(5);
+      cuGer_ii[Type.ComplexDouble] = cuGer_internal_cd;
+      cuGer_ii[Type.ComplexFloat] = cuGer_internal_cf;
+      cuGer_ii[Type.Double] = cuGer_internal_d;
+      cuGer_ii[Type.Float] = cuGer_internal_f;
+      
+      //===================
+      cuDet_ii = vector<Detfunc_oii>(5);
+      cuDet_ii[Type.ComplexDouble] = cuDet_internal_cd;
+      cuDet_ii[Type.ComplexFloat] = cuDet_internal_cf;
+      cuDet_ii[Type.Double] = cuDet_internal_d;
+      cuDet_ii[Type.Float] = cuDet_internal_f;
 
       // Pow
       //====================

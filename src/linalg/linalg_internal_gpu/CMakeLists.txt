@@ -1,7 +1,9 @@
 target_sources_local(cytnx
   PRIVATE
     cuNorm_internal.hpp
+    cuAbs_internal.hpp
     cuAdd_internal.hpp
+    cuGer_internal.hpp
     cuArithmetic_internal.hpp
     cuConj_inplace_internal.hpp
     cuCpr_internal.hpp
@@ -20,7 +22,15 @@ target_sources_local(cytnx
     cuOuter_internal.hpp
     cuSub_internal.hpp
     cuSvd_internal.hpp
+    cuDet_internal.hpp
+    cuSum_internal.hpp
+    cuMaxMin_internal.hpp
+    cuKron_internal.hpp
+
+
+    cuAbs_internal.cu
     cuAdd_internal.cu
+    cuGer_internal.cu
     cuArithmetic_internal.cu
     cuConj_inplace_internal.cu
     cuCpr_internal.cu
@@ -41,4 +51,8 @@ target_sources_local(cytnx
     cuSvd_internal.cu
     cuNorm_internal.cu
     cuMod_internal.cu
+    cuDet_internal.cu
+    cuSum_internal.cu
+    cuMaxMin_internal.cu
+    cuKron_internal.cu
 )

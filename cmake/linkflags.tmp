@@ -1,0 +1,6 @@
+/home/kaywu/.pyenv/versions/anaconda3-5.3.1/lib/libmkl_intel_ilp64.so;/home/kaywu/.pyenv/versions/anaconda3-5.3.1/lib/libmkl_intel_thread.so;/home/kaywu/.pyenv/versions/anaconda3-5.3.1/lib/libmkl_core.so;/usr/lib/x86_64-linux-gnu/libiomp5.so;-lpthread;-lm;-ldl
+/usr/local/cuda/lib64/libcusolver.so
+/usr/local/cuda/lib64/libcurand.so
+/usr/local/cuda/lib64/libcublas.so
+/usr/local/cuda/lib64/libcudart_static.a -ldl
+/usr/local/cuda/lib64/libcudadevrt.a -lrt
