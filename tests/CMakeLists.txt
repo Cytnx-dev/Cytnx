@@ -25,6 +25,7 @@ add_executable(
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
 
+  linalg_test/Arnoldi_test.cpp
 )
 target_link_libraries(
   test_main
@@ -36,3 +37,18 @@ target_link_libraries(test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
 gtest_discover_tests(test_main)
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
+      DESTINATION ${CMAKE_BINARY_DIR})

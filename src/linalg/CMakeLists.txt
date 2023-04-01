@@ -4,6 +4,7 @@ target_sources_local(cytnx
     Add.cpp
     Axpy.cpp
     Ger.cpp
+    Arnoldi.cpp
     iAdd.cpp
     Min.cpp
     Max.cpp
