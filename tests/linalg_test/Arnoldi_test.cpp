@@ -263,7 +263,8 @@ bool CheckResult(MatOp& H, const std::vector<Tensor>& arnoldi_eigs,
     auto arnoldi_eigvec = k == 1 ? arnoldi_eigvecs : arnoldi_eigvecs(i);
     auto exact_eigval = fst_few_eigvals[i];
     //check eigen value by comparing with the full spectrum results.
-    auto eigval_err = abs(arnoldi_eigval - exact_eigval);
+    //avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'SM'
+    auto eigval_err = abs(arnoldi_eigval) - abs(exact_eigval);
     if (eigval_err >= tolerance)
       return false;
     //check the is the eigenvector correct
