@@ -21,6 +21,7 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
@@ -181,7 +182,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -191,6 +195,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -199,8 +204,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">8.4. Network</a><ul>
@@ -270,7 +276,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../%23.html">v0.7.6</a></li>
+              <a  class="nav-link" href="../%23.html">v0.9.0</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -296,7 +302,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../%23.html">v0.7.6</a></li>
+                  <a  class="nav-link" href="../%23.html">v0.9.0</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -480,7 +486,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -490,6 +499,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -498,8 +508,9 @@
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.3. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.4. Manipulate UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">8.4. Network</a><ul>
@@ -662,50 +673,50 @@ The second example which <span class="math notranslate nohighlight">\(H_x\sigma_
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">namespace</span><span class="w"> </span><span class="nn">cy</span><span class="o">=</span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">Hising</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">namespace</span><span class="w"> </span><span class="nn">cy</span><span class="o">=</span><span class="nn">cytnx</span><span class="p">;</span>
+<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">Hising</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">{</span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
-<span class="linenos"> 5</span><span class="w">        </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">;</span><span class="w"></span>
-<span class="linenos"> 6</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="linenos"> 5</span><span class="w">        </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
 <span class="linenos"> 7</span>
-<span class="linenos"> 8</span><span class="w">    </span><span class="n">Hising</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">Hx</span><span class="p">)</span><span class="o">:</span><span class="w"></span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="n">Hising</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">J</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_double</span><span class="w"> </span><span class="n">Hx</span><span class="p">)</span><span class="o">:</span>
 <span class="linenos"> 9</span><span class="w">        </span><span class="n">cy</span><span class="o">::</span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">L</span><span class="p">),</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">)</span><span class="w"> </span><span class="c1">//rememeber to invoke base class constructor</span>
-<span class="linenos">10</span><span class="w">    </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">10</span><span class="w">    </span><span class="p">{</span>
 <span class="linenos">11</span><span class="w">        </span><span class="c1">//custom members</span>
-<span class="linenos">12</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">J</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">13</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hx</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">14</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">15</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">12</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">J</span><span class="p">;</span>
+<span class="linenos">13</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hx</span><span class="p">;</span>
+<span class="linenos">14</span><span class="w">        </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">L</span><span class="p">;</span>
+<span class="linenos">15</span><span class="w">    </span><span class="p">}</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">SzSz</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">18</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">19</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="mf">1.</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)));</span><span class="w"></span>
-<span class="linenos">20</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">17</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">SzSz</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
+<span class="linenos">18</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="p">;</span>
+<span class="linenos">19</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="mf">1.</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">2.</span><span class="o">*</span><span class="p">(((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">i</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)</span><span class="o">^</span><span class="p">((</span><span class="n">ipt_id</span><span class="o">&gt;&gt;</span><span class="n">j</span><span class="p">)</span><span class="o">&amp;</span><span class="mh">0x1</span><span class="p">)));</span>
+<span class="linenos">20</span><span class="w">    </span><span class="p">}</span>
 <span class="linenos">21</span>
-<span class="linenos">22</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">Sx</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">23</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">24</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">25</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">22</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">Sx</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipt_id</span><span class="p">,</span><span class="w"> </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out_id</span><span class="p">){</span>
+<span class="linenos">23</span><span class="w">        </span><span class="n">out_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ipt_id</span><span class="o">^</span><span class="p">((</span><span class="mh">0x1</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">i</span><span class="p">);</span>
+<span class="linenos">24</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span>
+<span class="linenos">25</span><span class="w">    </span><span class="p">}</span>
 <span class="linenos">26</span>
 <span class="linenos">27</span><span class="w">    </span><span class="c1">// let&#39;s overload this with custom operation:</span>
-<span class="linenos">28</span><span class="w">    </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span><span class="w"></span>
-<span class="linenos">29</span><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">device</span><span class="p">());</span><span class="w"></span>
-<span class="linenos">30</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">oid</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">31</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">amp</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">28</span><span class="w">    </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span>
+<span class="linenos">29</span><span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span><span class="n">v</span><span class="p">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="p">.</span><span class="n">device</span><span class="p">());</span>
+<span class="linenos">30</span><span class="w">        </span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">oid</span><span class="p">;</span>
+<span class="linenos">31</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">amp</span><span class="p">;</span>
 <span class="linenos">32</span>
-<span class="linenos">33</span><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">a</span><span class="o">&lt;</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span><span class="n">a</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">34</span><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
-<span class="linenos">35</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">36</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">33</span><span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">a</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">a</span><span class="o">&lt;</span><span class="n">v</span><span class="p">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">];</span><span class="n">a</span><span class="o">++</span><span class="p">){</span>
+<span class="linenos">34</span><span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">&lt;</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+<span class="linenos">35</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">SzSz</span><span class="p">(</span><span class="n">i</span><span class="p">,(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">%</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">L</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
+<span class="linenos">36</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">J</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
 <span class="linenos">37</span>
-<span class="linenos">38</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">39</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">40</span><span class="w">            </span><span class="p">}</span><span class="w"></span>
-<span class="linenos">41</span><span class="w">        </span><span class="p">}</span><span class="w"></span>
-<span class="linenos">42</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">43</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
-<span class="linenos">44</span><span class="p">};</span><span class="w"></span>
+<span class="linenos">38</span><span class="w">                </span><span class="n">amp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Sx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">oid</span><span class="p">);</span>
+<span class="linenos">39</span><span class="w">                </span><span class="n">out</span><span class="p">(</span><span class="n">oid</span><span class="p">)</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="o">-</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">Hx</span><span class="p">)</span><span class="o">*</span><span class="n">v</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="linenos">40</span><span class="w">            </span><span class="p">}</span>
+<span class="linenos">41</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos">42</span><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span>
+<span class="linenos">43</span><span class="w">    </span><span class="p">}</span>
+<span class="linenos">44</span><span class="p">};</span>
 </pre></div>
 </div>
 <p>Note that here, we defone two member functions <strong>SzSz()</strong> and  <strong>Sx()</strong> that operate on site <span class="math notranslate nohighlight">\(i,j\)</span> with basis ID <span class="math notranslate nohighlight">\(ipt_id\)</span> and return the output basis ID and corresponding coefficients.</p>
@@ -732,11 +743,11 @@ The second example which <span class="math notranslate nohighlight">\(H_x\sigma_
 <ul class="simple">
 <li><p>In c++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">2</span><span class="kt">double</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">3</span><span class="kt">double</span><span class="w"> </span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.3</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cytnx_uint32</span><span class="w"> </span><span class="n">L</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="linenos">2</span><span class="kt">double</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="linenos">3</span><span class="kt">double</span><span class="w"> </span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.3</span><span class="p">;</span>
+<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hising</span><span class="p">(</span><span class="n">L</span><span class="p">,</span><span class="n">J</span><span class="p">,</span><span class="n">Hx</span><span class="p">);</span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">cy</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Lanczos_ER</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -795,7 +806,7 @@ Shape : (16,3)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.1.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
