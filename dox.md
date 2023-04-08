@@ -1,7 +1,7 @@
 # Cytnx
 
-## Stable Version:
-    [v0.7.6](https://github.com/kaihsin/Cytnx/tree/v0.7.6)
+## Current Version:
+    [v0.9](https://github.com/kaihsin/Cytnx/tree/v0.9.0)
  
 
 
@@ -230,18 +230,25 @@
     See test.cpp for using C++ .
     See test.py for using python  
 
-## Developer
+## Developers & Maintainers
 
+    [Creator and Project manager]
     Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com 
 
-## Contributors
-
+    Chang Teng Lin (NTU, Taiwan): major maintainer and developer
+    Ke Hsu (NTU, Taiwan): major maintainer and developer 
+    Hao Ti (NTU, Taiwan): documentation and linalg 
     Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
-    Yen-Hsin Wu (NTU, Taiwan): Network optimization
-    Yu-Hsueh Chen (NTU, Taiwan): example, and testing
-    Po-Kwan Wu (OSU): Icon optimization    
-    Wen-Han Kao (UMN, USA) : testing of conda install 
-    Ke Hsu (NTU, Taiwan): Lstsq, linalg funcitons and examples  
+    
+
+## Contributors
+ 
+    Yen-Hsin Wu (NTU, Taiwan)
+    Po-Kwan Wu (OSU)   
+    Wen-Han Kao (UMN, USA)
+    Yu-Hsueh Chen (NTU, Taiwan)
+    PoChung Chen  (NCHU, Taiwan)
+
 
 ## Refereces:
 
