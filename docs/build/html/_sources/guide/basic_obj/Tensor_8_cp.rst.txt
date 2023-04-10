@@ -1,24 +1,24 @@
 When will data be copied?
 --------------------------
-There are two operations of **cytnx.Tensor** that are very important: **permute** and **reshape**. These two operations are stratigically designed to avoid the redundant copy as much as possible. **cytnx.Tensor** follows the same discipline as **numpy.array** and **torch.Tensor** on these two operations. 
+There are two elementary operations of **cytnx.Tensor** that are very important: **permute** and **reshape**. These two operations are strategically designed to avoid redundant copy operations as much as possible. **cytnx.Tensor** follows the same principles as **numpy.array** and **torch.Tensor** concerning these two operations. 
 
 
-The following figure shows the strucutre of a Tensor object:
+The following figure shows the structure of a Tensor object:
 
 .. image:: image/Tnbasic.png
     :width: 500
     :align: center
 
 
-Two important concepts need to be brought up: the Tensor **object** itself, and the things that inside Tensor object. Each Tensor object contains two ingredients: 
+Two important concepts need to be distinguished: the Tensor **object** itself, and the things that are stored inside a Tensor object. Each Tensor object contains two ingredients: 
 
-    1. the **meta** that describe all the attributes of the Tensor 
-    2. a **Storage** that contains the data (elements) that store in the memory. 
+    1. the **meta** contains all the data that describe the attributes of the Tensor, like the shape and the number of elements 
+    2. a **Storage** that contains the data (the actual tensor elements) which are stored in memory. 
 
 
 Reference & Copy of object 
 ****************************
-If you are familiar with python, then one of the most important feature in python is the *referencing* of objects. All the cytnx objects follow the same behavior:
+One of the most important features in python is the *referencing* of objects. All the cytnx objects follow the same behavior:
 
 
 * In python:
@@ -49,7 +49,7 @@ If you are familiar with python, then one of the most important feature in pytho
 
 Here, **B** is a reference of **A**, so essentially **B** and **A** are the same object. We can use **is** to check if two objects are the same. Since they are the same object, all the change made to **B** will affect **A** as well.  
 
-To really create a copy of **A**, we can use **clone()** method. **clone()** creates a new object with same meta and a new allocated **Storage** with the same content as storage of **A**:
+To really create a copy of **A**, we can use the **clone()** method. **clone()** creates a new object with copied meta data and a newly allocated **Storage** with the same content as the storage of **A**:
 
 * In python:
 
@@ -81,7 +81,7 @@ To really create a copy of **A**, we can use **clone()** method. **clone()** cre
 Permute 
 ******************************
 
-Now let's take a look at what happened if we perform **permute()** on a Tensor:
+Now let us take a look at what happens if we perform a **permute()** operation on a Tensor:
 
 * In python:
 
@@ -142,7 +142,7 @@ Now let's take a look at what happened if we perform **permute()** on a Tensor:
     False
 
 
-We see **A** and **B** are now two different objects (as it should be, they have different shape!). Now let's see what happened if we try to change the element in **A**:
+We see that **A** and **B** are now two different objects (as it should be, they have different shapes!). Now let's see what happens if we change an element in **A**:
 
 * In python:
 
@@ -192,7 +192,7 @@ We see **A** and **B** are now two different objects (as it should be, they have
       [0.00000e+00 0.00000e+00 0.00000e+00 ]
       [0.00000e+00 0.00000e+00 0.00000e+00 ]]]
 
-Notice that the element in **B** is also changed! So what actually happend? When we call **permute()**, a new object is created, which has different *meta*, but two objects actually share the *same* data storage! There is NO copy of memory made:
+Notice that the element in **B** is also changed! So what actually happened? When we called **permute()**, a new object was created, which has different *meta*, but the two Tensors actually share the *same* data storage! There is NO copy of the tensor elements in memory performed:
 
 .. image:: image/Tnsdat.png
     :width: 500
@@ -221,12 +221,12 @@ We can use **Tensor.same_data()** to check if two objects share the same memory 
     True
 
 
-As you can see, **permute()** never create duplicate memeory storage. 
+As you can see, **permute()** never copies the memory storage. 
 
 
 Contiguous
 ********************
-Now, let's talk about **contiguous**. In the above example, we see that **permute()** create a new Tensor object with different *meta* but share the same memory storage. The **B** Tensor, which after the permutation its memory layout is no-longer the same as it's shape. The Tensor in this status is called **non-contiguous**. We can use **is_contiguous()** to check if a Tensor is in this status. 
+Next, let's have a look at the **contiguous** property. In the above example, we see that **permute()** created a new Tensor object with different *meta* but sharing the same memory storage. The memory layout of the **B** Tensor no longer corresponds to the tensors shape after the permutation. A Tensor in with this status is called **non-contiguous**. We can use **is_contiguous()** to check if a Tensor is with this status. 
 
  
 * In python:
@@ -259,7 +259,7 @@ Now, let's talk about **contiguous**. In the above example, we see that **permut
     False
 
 
-We can make a contiguous Tensor **C** that has the same shape of **B** by calling **contiguous()**, which requires moving of the elements in the memory content to their right place that match the shape of Tensor. 
+We can make a contiguous Tensor **C** that has the same shape as **B** by calling **contiguous()**. Creating such a contiguous Tensor requires moving the elements in memory to their right position, matching the shape of Tensor. 
 
 .. image:: image/Tncontg.png
     :width: 650
@@ -316,22 +316,22 @@ We can make a contiguous Tensor **C** that has the same shape of **B** by callin
 
 .. hint::
     
-    We can also make **B** itself contiguous by calling **B.contiguous_()** (with underscore). Notice that this will make a new internal stoarge of **B**, so after calling **B.contiguous_()**, **B.same_data(A)** will be false!
+    We can also make **B** itself contiguous by calling **B.contiguous_()** (with underscore). Notice that this will create a new internal storage for **B**, so after calling **B.contiguous_()**, **B.same_data(A)** will be false!
 
 
 .. note::
 
-    calling **contiguous()** on a Tensor that is already in contiguous status will return itself, and no new object is created!
+    calling **contiguous()** on a Tensor that already has contiguous status will return itself, and no new object will be created!
 
 
 Reshape
 *****************
 
-Reshape is an operation that combine/split axes of a Tensor while keep the same total number of elements. **Tensor.reshape()** always create a new object, but whether the internal storage is shared or not follows the rule:
+Reshape is an operation that combines/splits indices of a Tensor while keeping the same total number of elements. **Tensor.reshape()** always creates a new object, but whether the internal storage is shared or not follows the rules:
 
 
 1. If the Tensor object is in *contiguous* status, then only the *meta* is changed, and the storage is shared 
-2. If the Tensor object is in *non-contiguous* status, then the *contiguous()* will be called first, then the *meta* will be changed.
+2. If the Tensor object is in *non-contiguous* status, then the *contiguous()* will be called first before the *meta* will be changed.
 
 
 
