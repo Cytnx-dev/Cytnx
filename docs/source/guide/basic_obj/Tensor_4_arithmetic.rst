@@ -1,14 +1,14 @@
 Tensor arithmetic
 ----------------------
 
-In cytnx, Tensor can performs arithmetic operation such as **+, -, x, /, +=, -=, *=, /=** with another Tensor or scalalr, just like the standard way you do in python. 
+In cytnx, arithmetic operations such as **+, -, x, /, +=, -=, *=, /=** can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in python. 
 
 Type promotion
 ********************
-Arithmetic operation in Cytnx follows the similar pattern of type promotion as standard C++/python. 
-When Tensor performs arithmetic operation with another Tensor or scalar, the output Tensor will have the dtype as the one that has stronger type. 
+Arithmetic operations in Cytnx follow a similar pattern of type promotion as standard C++/python. 
+When an arithmetic operation between a Tensor and another Tensor or scalar is performed, the output Tensor will have the same dtype as the input with the stronger type. 
 
-The Types order from strong to weak as:
+The Type order from strong to weak is:
  
     * Type.ComplexDouble 
     * Type.ComplexFloat 
@@ -26,7 +26,7 @@ The Types order from strong to weak as:
 
 Tensor-scalar arithmetic
 *****************************
-Tensor can also performs arithmetic operation with scalar. 
+Arithmetic operations between a Tensor and a scalar can be performed. 
 For example:
 
 * In python:
@@ -93,7 +93,7 @@ Output>>
 
 Tensor-Tensor arithmetic
 ****************************
-Tensor can performs arithmetic operation with another Tensor with the same shape. 
+Arithmetic operations between two Tensors of the same shape are possible. 
 For example:
 
 * In python:
@@ -159,8 +159,8 @@ Output>>
 
 Equivalent APIs (C++ only)
 ****************************
-Cytnx also provides some equivelant APIs for users who are familiar and coming from pytorch and other library communities. 
-For example, suppose we want to do + operation, there are two other ways: Use **Tensor.Add()/Tensor.Add_()** and **linalg.Add()**
+Cytnx also provides some equivalent APIs for users who are familiar with/coming from pytorch and similar libraries. 
+For example, there are two different ways to perform the + operation: **Tensor.Add()/Tensor.Add_()** and **linalg.Add()**
 
 * In C++:
 
@@ -180,13 +180,13 @@ For example, suppose we want to do + operation, there are two other ways: Use **
 
 .. Note::
 
-    1. All the arithmetic operation function such as **Add,Sub,Mul,Div...**, as well as linear algebra functions all start with capital characters. While in pytorch, they are all lower-case.
-    2. All the arithmetic operations with a underscore (such as **Add_, Sub_, Mul_, Div_**)are the inplace version that modify the current instance. 
+    1. All the arithmetic operation functions such as **Add,Sub,Mul,Div...**, as well as the linear algebra functions all start with capital characters. Beware, since they all start with lower-case characters in pytorch.
+    2. All the arithmetic operations with an underscore (such as **Add_, Sub_, Mul_, Div_**) are inplace versions that modify the current instance. 
 
 .. Hint::
     
-    1. ComplexDouble/ComplexFloat/Double/Float, these 4 types internally calls BLAS/cuBLAS/MKL ?axpy when the inputs are in the same types. 
-    2. Arithmetic between other types (Including different types) are accelerated with OpenMP on CPU. For GPU, custom kernels are used to perform operation. 
+    1. If the input is of type ComplexDouble/ComplexFloat/Double/Float and both inputs are of the same type, the arithmetic operations internally call BLAS/cuBLAS/MKL ?axpy. 
+    2. Arithmetic operations between other types (including different types) are accelerated with OpenMP on the CPU. On a GPU, custom kernels are used to perform the operations. 
 
 
 .. toctree::

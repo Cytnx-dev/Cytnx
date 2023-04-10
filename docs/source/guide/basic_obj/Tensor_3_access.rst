@@ -1,11 +1,11 @@
 Access elements
 ----------------------
-Next, let's take a look on how we can access elements inside a Tensor.
+Next, let's take a look on how we can access elements of a Tensor.
 
 Get elements 
 ***************************
-Just like python list/numpy.array/torch.tensor, on the python side, we can simply use *slice* to get the elements. See :numpy-slice:`This page <>` .
-In c++, cytnx take this approach from python and bring it to our C++ API. You can simply use the **slice string** to access elements. 
+Just like in python list/numpy.array/torch.tensor, on the python side, we can simply use *slice* to get the elements. See :numpy-slice:`This page <>` for more details.
+In c++, cytnx takes this approach from python and brings it to our C++ API. You can simply use the **slice string** to access elements. 
 
 For example:
 
@@ -72,11 +72,11 @@ Output>>
 
 .. Note::
 
-    1. To convert in between python and C++ APIs, notice that in C++, we use operator() instead of operator[] if you are using slice string to acess elements. 
-    2. The return will always be Tensor object, even it is only one elements in the Tensor.
+    1. To convert between python and C++ APIs, notice that in C++ you need to use operator() instead of operator[] if you are using slice strings to access elements. 
+    2. The return will always be a Tensor object, even it is only one elements in the Tensor.
 
 
-In the case where you have only one element in a Tensor, we can use **item()** to get the element in the standard python type/c++ type. 
+In the case where you have only one element in a Tensor, you can use **item()** to get the element in the standard python type/c++ type. 
 
 * In python:
 
@@ -119,13 +119,13 @@ Output>>
 
 .. Note::
     
-    1. In C++, using **item<>()** to get the element require explicitly specify the type that match the dtype of the Tensor. If the type specify does not match, an error will be prompt. 
-    2. Starting from v0.7+, user can use item() in C++ without explificly specify type with template. 
+    1. In C++, using **item<>()** to get the element requires to explicitly specify the type that matches the dtype of the Tensor. If the type specifier does not match, an error will be prompted. 
+    2. Starting from v0.7+, users can use item() in C++ without explicitly specifying the type with a template. 
 
 
-Set elememts
+Set elements
 ***************************
-Setting elements is pretty much the same as numpy.array/torch.tensor. You can assign a Tensor to a specific slice, our set all the elements in that slice to be the same value. 
+Setting elements is pretty much the same as in numpy.array/torch.tensor. You can assign a Tensor to a specific slice, or set all the elements in that slice to be the same value. 
 
 For example:
 
@@ -214,24 +214,24 @@ Output>>
 
 Low-level API (C++ only) 
 *******************************
-On C++ side, cytnx provide lower-level APIs with slightly smaller overhead for getting elements. 
+On C++ side, cytnx provides lower-level APIs with slightly smaller overhead for getting elements. 
 These low-level APIs require using with **Accessor** object. 
 
 * Accessor:
-    **Accessor** object is equivalent to python *slice*. It is sometimes convenient to use alias to simplify the expression when using it.
+    **Accessor** object is equivalent to python *slice*. It is sometimes convenient to use aliases to simplify the expression when using it.
     
     .. code-block:: C++
         :linenos:
 
             typedef ac=cytnx::Accessor;
 
-            ac(4);     // this equal to index '4' in python
-            ac::all(); // this equal to ':' in python 
-            ac::range(0,4,2); // this equal to '0:4:2' in python 
+            ac(4);     // this is equal to index '4' in python
+            ac::all(); // this is equal to ':' in python 
+            ac::range(0,4,2); // this is equal to '0:4:2' in python 
 
 
 
-In the following, let's see how it can be used to get/set the elements from/to Tensor.
+In the following, let's see how it can be used to get/set the elements from/in a Tensor.
 
 1. operator[] (middle level API) :
     
@@ -251,11 +251,11 @@ In the following, let's see how it can be used to get/set the elements from/to T
 
 .. Note::
 
-    Remember to put a braket{}. This because C++ operator[] can only accept one argument. 
+    Remember to write a braket{} around the elements to be accessed. This is needed because the C++ operator[] can only accept one argument. 
 
 
-2. get/set (lowest level API) :
-    get() and set() is the lowest-level API. Operator() and Operator[] are all build base on these.
+2. get/set (low level API) :
+    get() and set() are part of the low-level API. Operator() and Operator[] are all built based on these.
     
 .. code-block:: c++
     :linenos:
@@ -274,11 +274,11 @@ In the following, let's see how it can be used to get/set the elements from/to T
 
 .. Hint::
 
-    1. Similarly, you can also pass a c++ *vector<cytnx_int64>* as argument. 
+    1. Similarly, you can also pass a c++ *vector<cytnx_int64>* as an argument. 
 
 .. Tip::
 
-    If your code requires frequently get/set elements, using low-level API can reduce the overhead.
+    If your code makes frequent use of get/set elements, using the low-level API can reduce the overhead.
 
 
 

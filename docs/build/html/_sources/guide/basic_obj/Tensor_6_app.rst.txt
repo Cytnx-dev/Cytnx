@@ -1,11 +1,11 @@
 Append elements
 -----------------
-The size of Tensor can be expanded using **Tensor.append**. 
+The size of a Tensor can be expanded using **Tensor.append**. 
 
-One can append a scalar in to a rank-1 Tensor.
+One can append a scalar to a rank-1 Tensor.
 For example:
 
-* In python:
+* In python: 
 
 .. code-block:: python
     :linenos:
@@ -45,11 +45,11 @@ Output>>
 
 .. Note::
     
-   It is not possible to append a scalar into a Tensor with rank>1, as this operation is by itself ambiguous.
+   It is not possible to append a scalar to a Tensor with rank > 1, as this operation is by itself ambiguous.
 
-For Tensor with rank>1, you can append a Tensor into it, provided the shape is matching. This operation is equivalent as :numpy-vstack:`numpy.vstack <>`.
+For Tensors with rank > 1, you can append a Tensor to it, provided the shape is matching. This operation is equivalent to :numpy-vstack:`numpy.vstack <>`.
 
-For example, consider a Tensor with shape (3,4,5), you can append a Tensor with shape (4,5) into it, and the resulting output will be in shape (4,4,5).
+For example, consider a Tensor with shape (3,4,5). You can append a Tensor with shape (4,5) to it, and the resulting output will have shape (4,4,5).
 
 * In python:
 
@@ -131,7 +131,7 @@ Output>>
 
 .. Note::
     
-    You cannot append a complex type scalar/Tensor into a real type Tensor. 
+    You cannot append a complex type scalar/Tensor to a real type Tensor. 
 
 
 

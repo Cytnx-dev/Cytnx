@@ -1,10 +1,10 @@
 Save/Load
 -----------------
-We can also save/read Tensor to/from file.
+We can also save/read Tensors to/from a file.
 
 Save a Tensor
 *****************
-To save a Tensor to file, simply call **Tensor.Save(filepath)**. 
+To save a Tensor to a file, simply call **Tensor.Save(filepath)**. 
 
 * In python:
 
@@ -28,7 +28,7 @@ This will save Tensor *A* to the current directory as **T1.cytn**, with extensio
 
 Load a Tensor
 ******************
-Now, let's try to load the Tensor from the file. 
+Now, let's load the Tensor from the file. 
 
 * In python:
 

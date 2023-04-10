@@ -92,18 +92,18 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">3.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
@@ -398,18 +398,18 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">3.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
@@ -608,8 +608,8 @@
             
   <section id="append-elements">
 <h1><span class="section-number">3.6. </span>Append elements<a class="headerlink" href="#append-elements" title="Permalink to this heading">¶</a></h1>
-<p>The size of Tensor can be expanded using <strong>Tensor.append</strong>.</p>
-<p>One can append a scalar in to a rank-1 Tensor.
+<p>The size of a Tensor can be expanded using <strong>Tensor.append</strong>.</p>
+<p>One can append a scalar to a rank-1 Tensor.
 For example:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -646,10 +646,10 @@ Shape : (5)
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>It is not possible to append a scalar into a Tensor with rank&gt;1, as this operation is by itself ambiguous.</p>
+<p>It is not possible to append a scalar to a Tensor with rank &gt; 1, as this operation is by itself ambiguous.</p>
 </div>
-<p>For Tensor with rank&gt;1, you can append a Tensor into it, provided the shape is matching. This operation is equivalent as <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html">numpy.vstack</a>.</p>
-<p>For example, consider a Tensor with shape (3,4,5), you can append a Tensor with shape (4,5) into it, and the resulting output will be in shape (4,4,5).</p>
+<p>For Tensors with rank &gt; 1, you can append a Tensor to it, provided the shape is matching. This operation is equivalent to <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.vstack.html">numpy.vstack</a>.</p>
+<p>For example, consider a Tensor with shape (3,4,5). You can append a Tensor with shape (4,5) to it, and the resulting output will have shape (4,4,5).</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -724,7 +724,7 @@ Shape : (4,4,5)
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You cannot append a complex type scalar/Tensor into a real type Tensor.</p>
+<p>You cannot append a complex type scalar/Tensor to a real type Tensor.</p>
 </div>
 <div class="toctree-wrapper compound">
 </div>

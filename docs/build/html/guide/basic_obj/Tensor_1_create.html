@@ -26,7 +26,7 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="3.2. Manipulate Tensor" href="Tensor_2_manip.html" />
+    <link rel="next" title="3.2. Manipulating Tensors" href="Tensor_2_manip.html" />
     <link rel="prev" title="3. Tensor" href="Tensor.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
@@ -92,11 +92,11 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
@@ -333,7 +333,7 @@
                <a href="Tensor.html" title="Previous Chapter: 3. Tensor" class="btn btn-primary" role="botton" accesskey="P">
                    &laquo; 3. Tensor
                </a>
-               <a href="Tensor_2_manip.html" title="Next Chapter: 3.2. Manipulate Tensor" class="btn btn-primary" role="botton" accesskey="N">
+               <a href="Tensor_2_manip.html" title="Next Chapter: 3.2. Manipulating Tensors" class="btn btn-primary" role="botton" accesskey="N">
                    3.2. Manipula... &raquo;
                </a>
            </div>
@@ -398,11 +398,11 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
@@ -583,7 +583,7 @@
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="Tensor_2_manip.html"
-                          title="next chapter"><span class="section-number">3.2. </span>Manipulate Tensor</a></p>
+                          title="next chapter"><span class="section-number">3.2. </span>Manipulating Tensors</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
@@ -608,7 +608,7 @@
             
   <section id="create-a-tensor">
 <h1><span class="section-number">3.1. </span>Create a Tensor<a class="headerlink" href="#create-a-tensor" title="Permalink to this heading">¶</a></h1>
-<p>Just like <a class="reference external" href="https://numpy.org/doc/1.18/reference/generated/numpy.array.html">numpy.array</a> / <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a>, Tensor is generally created using generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
+<p>Just like with <a class="reference external" href="https://numpy.org/doc/1.18/reference/generated/numpy.array.html">numpy.array</a> / <a class="reference external" href="https://pytorch.org/docs/stable/tensors.html">torch.tensor</a>, a Tensor is generally created using a generator such as <strong>zero()</strong>, <strong>arange()</strong>, <strong>ones()</strong>.</p>
 <p>For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -625,8 +625,8 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>In cytnx, the conversion of python list is equivalent to C++ <em>vector</em>; or in some case like here, it is a <em>initializer list</em>.</p></li>
-<li><p>The conversion in between is pretty straight forward, one simply replace [] in python with {}, and you are all set!</p></li>
+<li><p>In cytnx, a python list is equivalent to a C++ <em>vector</em>; or in some cases like here, it is an <em>initializer list</em>.</p></li>
+<li><p>The conversion between python and C++ is pretty straight forward, one simply replaces [] in python with {}, and you are all set!</p></li>
 </ol>
 </div>
 <p>Other options such as <strong>arange()</strong> (similar as np.arange), and <strong>ones</strong> (similar as np.ones) can also be done.</p>
@@ -648,13 +648,13 @@
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Tips<span class="colon">:</span></dt>
-<dd class="field-odd"><p>In C++, you could make use of <em>auto</em> to simplify your code!</p>
+<dd class="field-odd"><p>In C++, you can make use of <em>auto</em> to simplify your code!</p>
 </dd>
 </dl>
 <section id="tensor-with-different-dtype-and-device">
 <h2><span class="section-number">3.1.1. </span>Tensor with different dtype and device<a class="headerlink" href="#tensor-with-different-dtype-and-device" title="Permalink to this heading">¶</a></h2>
 <p>By default, the Tensor will be created with <em>double</em> type (or <em>float</em> in python) on CPU if there is no additional arguments provided upon creating the Tensor.</p>
-<p>You can create a Tensor with different data type, and/or on different devices simply by specify the <strong>dtype</strong> and the <strong>device</strong> arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on cuda-enabled GPU.</p>
+<p>You can create a Tensor with a different data type, and/or on different devices simply by specifying the <strong>dtype</strong> and the <strong>device</strong> arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on a cuda-enabled GPU.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -667,22 +667,22 @@
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="p">.</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">},</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Type</span><span class="p">.</span><span class="n">Int64</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Device</span><span class="p">.</span><span class="n">cuda</span><span class="p">);</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ol class="arabic">
-<li><p>Remember the difference of . in python and :: in C++ when you use Type and Device classes.</p></li>
-<li><p>If you have multiple GPUs, you can specify which GPU you want to init Tensor by adding gpu-id to cytnx::Device::cuda.</p>
+<dl>
+<dt>in</dt><dd><ol class="arabic">
+<li><p>Remember the difference between . in python and :: in C++ when you use Type and Device classes.</p></li>
+<li><p>If you have multiple GPUs, you can specify on which GPU you want to init the Tensor by adding the gpu-id to cytnx::Device::cuda.</p>
 <blockquote>
 <div><p>For example:</p>
 <blockquote>
-<div><p>device=cytnx.Device.cuda+2   #will create Tensor on GPU id=2</p>
-<p>device=cytnx.Device.cuda+4   #will create Tensor on GPU id=4</p>
+<div><p>device=cytnx.Device.cuda+2   #will create the Tensor on GPU id=2</p>
+<p>device=cytnx.Device.cuda+4   #will create the Tensor on GPU id=4</p>
 </div></blockquote>
 </div></blockquote>
 </li>
-<li><p>In C++, there is no keyword argument as python, so make sure you put the argument in the correct order. Check <a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API documentation</a> for function signatures!</p></li>
+<li><p>In C++, there is no keyword argument as python, so make sure you put the arguments in the correct order. Check <a class="reference external" href="https://kaihsin.github.io/Cytnx/docs/html/index.html">API documentation</a> for function signatures!</p></li>
 </ol>
-</div>
+</dd>
+</dl>
 <p>Currently, there are several data types supported by cytnx:</p>
 <table class="docutils align-default">
 <thead>
@@ -738,7 +738,7 @@
 </tr>
 </tbody>
 </table>
-<p>For devices, Cytnx currently supports</p>
+<p>Concerning devices, Cytnx currently supports</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>cytnx type</p></th>
@@ -785,15 +785,15 @@ Double (Float64)
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>Use Tensor.dtype() will return a type-id, where Tensor.dtype_str() will return the type name.</p></li>
-<li><p>Complex data type cannot directly convert to real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.</p></li>
+<li><p>Tensor.dtype() returns a type-id, while Tensor.dtype_str() returns the type name.</p></li>
+<li><p>A complex data type cannot directly be converted to a real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.</p></li>
 </ol>
 </div>
 </section>
-<section id="transfer-btwn-devices">
-<h2><span class="section-number">3.1.3. </span>Transfer btwn devices<a class="headerlink" href="#transfer-btwn-devices" title="Permalink to this heading">¶</a></h2>
-<p>To move a Tensor between different devices is very easy. We can use <strong>Tensor.to()</strong> to move the Tensor to a different device.</p>
-<p>For example, let’s create a Tensor on cpu and transfer to GPU with gpu-id=0.</p>
+<section id="transfer-between-devices">
+<h2><span class="section-number">3.1.3. </span>Transfer between devices<a class="headerlink" href="#transfer-between-devices" title="Permalink to this heading">¶</a></h2>
+<p>Moving a Tensor between different devices is very easy. We can use <strong>Tensor.to()</strong> to move the Tensor to a different device.</p>
+<p>For example, let’s create a Tensor on the cpu and transfer it to the GPU with gpu-id=0.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -845,7 +845,7 @@ Shape : (2,2)
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
 <li><p>You can use <strong>Tensor.device()</strong> to get the current device-id (cpu = -1), where as <strong>Tensor.device_str()</strong> returns the device name.</p></li>
-<li><p><strong>Tensor.to()</strong> will return a copy on a target device. If you want to move the current Tensor to device, use <strong>Tensor.to_()</strong> (with underscore).</p></li>
+<li><p><strong>Tensor.to()</strong> will return a copy on the target device. If you want to move the current Tensor to another device, use <strong>Tensor.to_()</strong> (with underscore).</p></li>
 </ol>
 </div>
 </section>

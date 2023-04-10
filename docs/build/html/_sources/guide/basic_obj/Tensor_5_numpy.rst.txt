@@ -1,8 +1,8 @@
 To/From numpy.array
 ----------------------
-Cytnx also provides conversion from and to numpy.array in python API. 
+Cytnx also provides conversion from and to numpy.array in the python API. 
 
-* To convert from Tensor to numpy array, using **Tensor.numpy()**
+* To convert from Tensor to numpy array, use **Tensor.numpy()**
 
 .. code-block:: python
     :linenos:
@@ -33,7 +33,7 @@ Output>>
 
 
 
-* To convert from numpy array to Tensor, using **cytnx.from_numpy()**
+* To convert from numpy array to Tensor, use **cytnx.from_numpy()**
 
 .. code-block:: python 
     :linenos:

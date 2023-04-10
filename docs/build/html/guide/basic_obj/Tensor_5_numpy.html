@@ -92,18 +92,18 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">3.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
@@ -398,18 +398,18 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">3.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
@@ -608,9 +608,9 @@
             
   <section id="to-from-numpy-array">
 <h1><span class="section-number">3.5. </span>To/From numpy.array<a class="headerlink" href="#to-from-numpy-array" title="Permalink to this heading">¶</a></h1>
-<p>Cytnx also provides conversion from and to numpy.array in python API.</p>
+<p>Cytnx also provides conversion from and to numpy.array in the python API.</p>
 <ul class="simple">
-<li><p>To convert from Tensor to numpy array, using <strong>Tensor.numpy()</strong></p></li>
+<li><p>To convert from Tensor to numpy array, use <strong>Tensor.numpy()</strong></p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
 <span class="linenos">2</span>    <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
@@ -636,7 +636,7 @@ Shape : (3,4)
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>To convert from numpy array to Tensor, using <strong>cytnx.from_numpy()</strong></p></li>
+<li><p>To convert from numpy array to Tensor, use <strong>cytnx.from_numpy()</strong></p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="linenos">2</span>    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>

@@ -1,6 +1,6 @@
 Create a Tensor
 -------------------
-Just like :numpy-arr:`numpy.array <>` / :torch-tn:`torch.tensor <>`, Tensor is generally created using generator such as **zero()**, **arange()**, **ones()**.
+Just like with :numpy-arr:`numpy.array <>` / :torch-tn:`torch.tensor <>`, a Tensor is generally created using a generator such as **zero()**, **arange()**, **ones()**.
 
 For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:
 
@@ -21,9 +21,9 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
 
 .. Note::
 
-    1. In cytnx, the conversion of python list is equivalent to C++ *vector*; or in some case like here, it is a *initializer list*. 
+    1. In cytnx, a python list is equivalent to a C++ *vector*; or in some cases like here, it is an *initializer list*. 
 
-    2. The conversion in between is pretty straight forward, one simply replace [] in python with {}, and you are all set!
+    2. The conversion between python and C++ is pretty straight forward, one simply replaces [] in python with {}, and you are all set!
 
 
 
@@ -48,14 +48,14 @@ Other options such as **arange()** (similar as np.arange), and **ones** (similar
     auto C = cytnx::ones({3,4,5});  //Tensor of shape (3,4,5) with all elements set to one.
 
 
-:Tips: In C++, you could make use of *auto* to simplify your code! 
+:Tips: In C++, you can make use of *auto* to simplify your code! 
 
 
 Tensor with different dtype and device 
 *******************************************
 By default, the Tensor will be created with *double* type (or *float* in python) on CPU if there is no additional arguments provided upon creating the Tensor. 
 
-You can create a Tensor with different data type, and/or on different devices simply by specify the **dtype** and the **device** arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on cuda-enabled GPU. 
+You can create a Tensor with a different data type, and/or on different devices simply by specifying the **dtype** and the **device** arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on a cuda-enabled GPU. 
 
 * In python:
 
@@ -71,16 +71,17 @@ You can create a Tensor with different data type, and/or on different devices si
 
 .. Note:: 
 
-    1. Remember the difference of . in python and :: in C++ when you use Type and Device classes. 
-    2. If you have multiple GPUs, you can specify which GPU you want to init Tensor by adding gpu-id to cytnx::Device::cuda. 
+in 
+    1. Remember the difference between . in python and :: in C++ when you use Type and Device classes. 
+    2. If you have multiple GPUs, you can specify on which GPU you want to init the Tensor by adding the gpu-id to cytnx::Device::cuda. 
         
         For example: 
         
-            device=cytnx.Device.cuda+2   #will create Tensor on GPU id=2
+            device=cytnx.Device.cuda+2   #will create the Tensor on GPU id=2
 
-            device=cytnx.Device.cuda+4   #will create Tensor on GPU id=4
+            device=cytnx.Device.cuda+4   #will create the Tensor on GPU id=4
 
-    3. In C++, there is no keyword argument as python, so make sure you put the argument in the correct order. Check `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!  
+    3. In C++, there is no keyword argument as python, so make sure you put the arguments in the correct order. Check `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!  
 
 
 Currently, there are several data types supported by cytnx:
@@ -114,7 +115,7 @@ Currently, there are several data types supported by cytnx:
 +------------------+----------------------+-------------------+
 
 
-For devices, Cytnx currently supports
+Concerning devices, Cytnx currently supports
 
 .. tabularcolumns:: |l|l|
 
@@ -163,15 +164,15 @@ For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to con
 
 .. Note::
     
-    1. Use Tensor.dtype() will return a type-id, where Tensor.dtype_str() will return the type name. 
-    2. Complex data type cannot directly convert to real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.
+    1. Tensor.dtype() returns a type-id, while Tensor.dtype_str() returns the type name. 
+    2. A complex data type cannot directly be converted to a real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.
 
 
-Transfer btwn devices
+Transfer between devices
 ***************************
-To move a Tensor between different devices is very easy. We can use **Tensor.to()** to move the Tensor to a different device.
+Moving a Tensor between different devices is very easy. We can use **Tensor.to()** to move the Tensor to a different device.
 
-For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0. 
+For example, let's create a Tensor on the cpu and transfer it to the GPU with gpu-id=0. 
 
 * In python:
 
@@ -231,7 +232,7 @@ For example, let's create a Tensor on cpu and transfer to GPU with gpu-id=0.
     
     1. You can use **Tensor.device()** to get the current device-id (cpu = -1), where as **Tensor.device_str()** returns the device name. 
 
-    2. **Tensor.to()** will return a copy on a target device. If you want to move the current Tensor to device, use **Tensor.to_()** (with underscore). 
+    2. **Tensor.to()** will return a copy on the target device. If you want to move the current Tensor to another device, use **Tensor.to_()** (with underscore). 
 
 
 Tensor from Storage [v0.6.6+]

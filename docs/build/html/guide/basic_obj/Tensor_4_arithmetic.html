@@ -92,18 +92,18 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">3.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
@@ -398,18 +398,18 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-btwn-devices">3.1.3. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulate Tensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#reshape">3.2.1. reshape</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elememts">3.3.2. Set elememts</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
 </ul>
 </li>
@@ -608,12 +608,12 @@
             
   <section id="tensor-arithmetic">
 <h1><span class="section-number">3.4. </span>Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Permalink to this heading">¶</a></h1>
-<p>In cytnx, Tensor can performs arithmetic operation such as <strong>+, -, x, /, +=, -=, *=, /=</strong> with another Tensor or scalalr, just like the standard way you do in python.</p>
+<p>In cytnx, arithmetic operations such as <strong>+, -, x, /, +=, -=, *=, /=</strong> can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in python.</p>
 <section id="type-promotion">
 <h2><span class="section-number">3.4.1. </span>Type promotion<a class="headerlink" href="#type-promotion" title="Permalink to this heading">¶</a></h2>
-<p>Arithmetic operation in Cytnx follows the similar pattern of type promotion as standard C++/python.
-When Tensor performs arithmetic operation with another Tensor or scalar, the output Tensor will have the dtype as the one that has stronger type.</p>
-<p>The Types order from strong to weak as:</p>
+<p>Arithmetic operations in Cytnx follow a similar pattern of type promotion as standard C++/python.
+When an arithmetic operation between a Tensor and another Tensor or scalar is performed, the output Tensor will have the same dtype as the input with the stronger type.</p>
+<p>The Type order from strong to weak is:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>Type.ComplexDouble</p></li>
@@ -632,7 +632,7 @@ When Tensor performs arithmetic operation with another Tensor or scalar, the out
 </section>
 <section id="tensor-scalar-arithmetic">
 <h2><span class="section-number">3.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this heading">¶</a></h2>
-<p>Tensor can also performs arithmetic operation with scalar.
+<p>Arithmetic operations between a Tensor and a scalar can be performed.
 For example:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -691,7 +691,7 @@ Shape : (3,4)
 </section>
 <section id="tensor-tensor-arithmetic">
 <h2><span class="section-number">3.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this heading">¶</a></h2>
-<p>Tensor can performs arithmetic operation with another Tensor with the same shape.
+<p>Arithmetic operations between two Tensors of the same shape are possible.
 For example:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -750,8 +750,8 @@ Shape : (3,4)
 </section>
 <section id="equivalent-apis-c-only">
 <h2><span class="section-number">3.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Permalink to this heading">¶</a></h2>
-<p>Cytnx also provides some equivelant APIs for users who are familiar and coming from pytorch and other library communities.
-For example, suppose we want to do + operation, there are two other ways: Use <strong>Tensor.Add()/Tensor.Add_()</strong> and <strong>linalg.Add()</strong></p>
+<p>Cytnx also provides some equivalent APIs for users who are familiar with/coming from pytorch and similar libraries.
+For example, there are two different ways to perform the + operation: <strong>Tensor.Add()/Tensor.Add_()</strong> and <strong>linalg.Add()</strong></p>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
@@ -769,15 +769,15 @@ For example, suppose we want to do + operation, there are two other ways: Use <s
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>All the arithmetic operation function such as <strong>Add,Sub,Mul,Div…</strong>, as well as linear algebra functions all start with capital characters. While in pytorch, they are all lower-case.</p></li>
-<li><p>All the arithmetic operations with a underscore (such as <strong>Add_, Sub_, Mul_, Div_</strong>)are the inplace version that modify the current instance.</p></li>
+<li><p>All the arithmetic operation functions such as <strong>Add,Sub,Mul,Div…</strong>, as well as the linear algebra functions all start with capital characters. Beware, since they all start with lower-case characters in pytorch.</p></li>
+<li><p>All the arithmetic operations with an underscore (such as <strong>Add_, Sub_, Mul_, Div_</strong>) are inplace versions that modify the current instance.</p></li>
 </ol>
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <ol class="arabic simple">
-<li><p>ComplexDouble/ComplexFloat/Double/Float, these 4 types internally calls BLAS/cuBLAS/MKL ?axpy when the inputs are in the same types.</p></li>
-<li><p>Arithmetic between other types (Including different types) are accelerated with OpenMP on CPU. For GPU, custom kernels are used to perform operation.</p></li>
+<li><p>If the input is of type ComplexDouble/ComplexFloat/Double/Float and both inputs are of the same type, the arithmetic operations internally call BLAS/cuBLAS/MKL ?axpy.</p></li>
+<li><p>Arithmetic operations between other types (including different types) are accelerated with OpenMP on the CPU. On a GPU, custom kernels are used to perform the operations.</p></li>
 </ol>
 </div>
 <div class="toctree-wrapper compound">
