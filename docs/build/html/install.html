@@ -275,7 +275,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="%23.html">v0.7.6</a></li>
+              <a  class="nav-link" href="%23.html">v0.9.0</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -301,7 +301,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="%23.html">v0.7.6</a></li>
+                  <a  class="nav-link" href="%23.html">v0.9.0</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -620,17 +620,17 @@ Note that both python API and C++ API will be installed together regardless of w
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>We do not support native Windows packages at this stage. If you are using Windows OS, please use WSL.</p></li>
-<li><p>[0.7.6+] Currently, supporting python versions are updated to linux: 3.7/3.8/3.9; MacOS-osx64 3.7/3.8. You can change python=* argument to the version you want.</p></li>
+<li><p>We do not support native Windows package at this stage. if you are using Windows OS, please use WSL.</p></li>
+<li><p>[0.9] Currently, supporting python versions are updated to linux: 3.8/3.9/3.10; MacOS-osx64 3.7+ (no conda support). You can change the python=* argument to the version you want.</p></li>
 </ol>
 </div>
-<ul class="simple">
-<li><p>For MacOS (non-arm arch)</p></li>
+<ul>
+<li><p>For MacOS:</p>
+<blockquote>
+<div><p>Please build from source, currently 0.9+ does not have conda package support.</p>
+</div></blockquote>
+</li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
-<span class="linenos">2</span><span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--channel<span class="w"> </span>conda-forge<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8<span class="w"> </span>llvm-openmp
-</pre></div>
-</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">

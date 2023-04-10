@@ -23,17 +23,22 @@ In the following we show how to install cytnx from conda.
 
 .. Note::
 
-    1. We do not support native Windows packages at this stage. If you are using Windows OS, please use WSL. 
-    2. [0.7.6+] Currently, supporting python versions are updated to linux: 3.7/3.8/3.9; MacOS-osx64 3.7/3.8. You can change python=* argument to the version you want.  
+    1. We do not support native Windows package at this stage. if you are using Windows OS, please use WSL. 
+    2. [0.9] Currently, supporting python versions are updated to linux: 3.8/3.9/3.10; MacOS-osx64 3.7+ (no conda support). You can change the python=* argument to the version you want.  
 
 
-* For MacOS (non-arm arch)
+* For MacOS:
 
-.. code-block:: shell
-    :linenos:
-    
-    $conda config --add channels conda-forge
-    $conda create --channel conda-forge --name cytnx python=3.8 llvm-openmp
+    Please build from source, currently 0.9+ does not have conda package support.
+
+..
+    * For MacOS (non-arm arch)
+    .. code-block:: shell
+        :linenos:
+        
+        $conda config --add channels conda-forge
+        $conda create --channel conda-forge --name cytnx python=3.8 llvm-openmp
+
 
 .. note:: 
 
