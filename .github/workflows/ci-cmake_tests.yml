@@ -26,7 +26,6 @@ jobs:
       run: |
         $CONDA/bin/conda config --add channels conda-forge
         $CONDA/bin/conda install python=3.10 _openmp_mutex=*=*_llvm
-        $CONDA/bin/conda upgrade --all
         $CONDA/bin/conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
 
     - name: Configure CMake

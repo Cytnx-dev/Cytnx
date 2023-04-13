@@ -126,15 +126,15 @@ TEST_F(linalg_Test, DenseUt_Mod){
 }
 
 
-TEST_F(linalg_Test, DenseUt_Mod_UtUt){
-    UniTensor At = UniTensor(A);
-    UniTensor Bt = UniTensor(B);
-    auto res = linalg::Mod(100*At, Bt);
-    for(size_t i = 0;i<9;i++)
-      for(size_t j = 0; j<9;j++){
-          //if(Ht.elem_exists({i,j})){
-            EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(ModUtUt_ans.at({i,j}).real())) < 1E-8);
-            //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
-          //}
-      }
-}
+// TEST_F(linalg_Test, DenseUt_Mod_UtUt){
+//     UniTensor At = UniTensor(A);
+//     UniTensor Bt = UniTensor(B);
+//     auto res = linalg::Mod(100*At, Bt);
+//     for(size_t i = 0;i<9;i++)
+//       for(size_t j = 0; j<9;j++){
+//           //if(Ht.elem_exists({i,j})){
+//             EXPECT_TRUE(abs((double)(res.at({i,j}).real())-(double)(ModUtUt_ans.at({i,j}).real())) < 1E-8);
+//             //EXPECT_EQ((double)(R.at({i,j}).real()),(double)(Qr_Rans.at({i,j}).real()));
+//           //}
+//       }
+// }

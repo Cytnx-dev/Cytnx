@@ -148,7 +148,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=OFF "
+FLAG="${FLAG} -DRUN_TESTS=ON "
 #-----------------------------------
 
 
@@ -162,7 +162,7 @@ FLAG="${FLAG} -DUSE_ICPC=OFF "
 
 
 echo ${FLAG}
-# rm -rf build
+rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}
