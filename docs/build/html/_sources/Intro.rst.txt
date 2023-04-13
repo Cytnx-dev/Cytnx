@@ -22,6 +22,11 @@ Features
 * Easy to use user-interface similar to numpy/scipy/pytorch. 
 * Enhanced tools specifically designed for Quantum/classical Physics simulations.  
 
+Further references
+----------------------------
+    The source code can be found on github:
+    https://github.com/kaihsin/Cytnx  
 
-
+    A technical documentation of the namespaces and classes is available here:
+    https://kaihsin.github.io/Cytnx/docs/html/index.html  
 
