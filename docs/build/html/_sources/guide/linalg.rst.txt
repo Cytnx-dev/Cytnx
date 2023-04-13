@@ -1,7 +1,7 @@
 Linear algebra
 ===============
 
-Currently, cytnx have these linear algebra functions:
+Currently, cytnx supports the following linear algebra functions:
 
 +--------------+-----------+-----+------+-------------+----+----------------+
 |    func      |  inplace  | CPU | GPU  | callby tn   | Tn | CyTn (xlinalg) |
@@ -50,7 +50,7 @@ Currently, cytnx have these linear algebra functions:
 +--------------+-----------+-----+------+-------------+----+----------------+
 |  Diag        |   x       |  Y  |  Y   |    N        | Y  |   N            |
 +--------------+-----------+-----+------+-------------+----+----------------+
-| *Tensordot   |   x       |  Y  |  Y   |    N        | Y  |   N            |
+| `a`_Tensordot|   x       |  Y  |  Y   |    N        | Y  |   N            |
 +--------------+-----------+-----+------+-------------+----+----------------+
 |  Outer       |   x       |  Y  |  Y   |    N        | Y  |   N            |
 +--------------+-----------+-----+------+-------------+----+----------------+
@@ -81,6 +81,8 @@ Currently, cytnx have these linear algebra functions:
 | *Trace       |   x       |  Y  |  N   |    Y        | Y  |   Y            |
 +--------------+-----------+-----+------+-------------+----+----------------+
 
+.. _a:
+* this is a high level linalg
 
 .. toctree::
     :maxdepth: 3

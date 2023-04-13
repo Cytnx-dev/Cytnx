@@ -137,12 +137,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -157,7 +157,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -443,12 +443,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -463,7 +463,7 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -608,7 +608,7 @@
             
   <section id="save-load">
 <h1><span class="section-number">4.5. </span>Save/Load<a class="headerlink" href="#save-load" title="Permalink to this heading">¶</a></h1>
-<p>We can save/read Storage to/from file.</p>
+<p>We can save/read a Storage instance to/from a file.</p>
 <section id="save-a-storage">
 <h2><span class="section-number">4.5.1. </span>Save a Storage<a class="headerlink" href="#save-a-storage" title="Permalink to this heading">¶</a></h2>
 <p>To save a Storage to file, simply call <strong>Storage.Save(filepath)</strong>.</p>
@@ -632,7 +632,7 @@
 </section>
 <section id="load-a-storage">
 <h2><span class="section-number">4.5.2. </span>Load a Storage<a class="headerlink" href="#load-a-storage" title="Permalink to this heading">¶</a></h2>
-<p>Now, let’s try to load the Storage from the file.</p>
+<p>Now, let’s load the Storage from the file.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -655,9 +655,9 @@ size  : 4
 </pre></div>
 </div>
 </section>
-<section id="save-load-from-to-binary-only">
-<h2><span class="section-number">4.5.3. </span>save &amp; load from/to binary only<a class="headerlink" href="#save-load-from-to-binary-only" title="Permalink to this heading">¶</a></h2>
-<p>We can also simply dump all the elements as binary file without any additional header information associate to the storage format. This is similar to numpy.tofile/numpy.fromfile.</p>
+<section id="save-load-from-to-binary">
+<h2><span class="section-number">4.5.3. </span>save &amp; load from/to binary<a class="headerlink" href="#save-load-from-to-binary" title="Permalink to this heading">¶</a></h2>
+<p>We can also save all the elements in a binary file without any additional header information associated to the storage format. This is similar to numpy.tofile/numpy.fromfile.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -689,9 +689,7 @@ size  : 4
 <span class="linenos">11</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">output</span><span class="p">:</span>
-</pre></div>
-</div>
+<p>Output&gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>dtype : Double (Float64)
 device: cytnx device: CPU
 size  : 10
@@ -705,7 +703,7 @@ size  : 10
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>You can also choose to load part of the file with additional argument <em>count</em> when using <strong>Fromfile</strong></p>
+<p>You can also choose to load a part of the file with an additional argument <em>count</em> when using <strong>Fromfile</strong></p>
 </div>
 <div class="toctree-wrapper compound">
 </div>

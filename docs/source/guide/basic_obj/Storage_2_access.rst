@@ -1,9 +1,9 @@
-Access elements
------------------
-To access the element in Storage, different API should be used in python and C++ due to the fundamental difference in two languages.
+Accessing elements
+------------------
+To access the elements in Storage, different APIs are used in python and C++ due to the fundamental differences in the two languages.
 
 
-Get/Set element
+Get/Set elements
 ****************
 * In python, simply use **operator[]**:
 
@@ -19,7 +19,7 @@ Get/Set element
 
 
 
-* In c++, we use **at<>()**:
+* In c++, use **at<>()**:
 
 .. code-block:: c++
     :linenos:
@@ -49,10 +49,10 @@ Output >>
 
 .. Note::
     
-    1. The return is the reference of the element, just like c++ *vector*. 
-    2. The template type that match the dtype of Storage instance should be specify when calling **at<>()**. If the type mismatch, an error will be prompt. 
+    1. The return value is the reference to the accessed element. This behavior is similar to a c++ *vector*. 
+    2. The same template type as the dtype of the Storage instance should be specified when calling **at<>()**. If the types mismatch, an error will be prompted. 
 
-* [New][v0.6.6+] The introduce of C++ only Scalar class allow get elements using **at()**  without specialization (C++ only)
+* [New][v0.6.6+] The introduction of the Scalar class allows to get elements using **at()**  without type specialization (C++ only):
 
 .. code-block:: c++
     :linenos:
@@ -89,10 +89,10 @@ Output >>
 
 Get raw-pointer (C++ only)
 ***************************
-In some cases where user might want to get the raw-pointer from Storage. It is possible to do so. Cytnx provide two ways you can get a raw-pointer. 
+In some cases the user might want to get the raw-pointer to the Storage. Cytnx provides two ways to get a raw-pointer. 
 
 1. Use **Storage.data<>()**:
-    Using **.data<T>** should provide a template type *T* that match the dtype of Storage. The return will be a pointer with type *T*. 
+    If you use **.data<T>**, the template type *T* should match the dtype of the Storage. The return value will be a pointer with type *T*. 
 
 * In c++:
 
@@ -104,7 +104,7 @@ In some cases where user might want to get the raw-pointer from Storage. It is p
 
     
 2. Use **Storage.data()**:
-    Using **.data()** without specialization return a void pointer, please use with caution. 
+    Using **.data()** without specialization returns a void pointer, please use with caution! 
 
 * In c++:
 
@@ -117,12 +117,12 @@ In some cases where user might want to get the raw-pointer from Storage. It is p
 
 .. Note::
 
-    If the current Storage instance is allocate on GPU, the return pointer will be a device pointer. 
-    See :cuda-mem:`this page <>`.
+    If the current Storage instance is allocated on a GPU, the return pointer will be a device pointer. 
+    See :cuda-mem:`the CUDA documentation <>`.
 
 .. Warning::
 
-    The return pointer is shared with the Storage instance. Thus it's life time will be the same as that instance. If the instance is destroy first, the memory will be free, and the pointer will be invalid as well. Please use with caution.  
+    The return pointer is shared with the Storage instance. Thus its life time will be limited by that of the Storage instance. If the instance is destroyed first, the memory will be freed, and the pointer will be invalid as well. Please use with caution!  
 
 
 

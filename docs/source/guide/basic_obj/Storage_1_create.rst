@@ -1,8 +1,8 @@
 Create a Storage
 -------------------
-The storage can be created in a similar way as in Tensor. Note that Storage does not have the concept of *shape*, and basically just like **vector** in C++.
+The storage can be created in a similar way as in Tensor. Note that Storage does not have the concept of *shape*, and behaves basically just like a **vector** in C++.
 
-To create a Storage, with dtype=Type.Double on cpu, 
+To create a Storage, with dtype=Type.Double on the cpu: 
 
 * In python:
 
@@ -36,9 +36,9 @@ Output>>
 
 .. Note::
     
-    [Deprecated] Storage by itself only allocate memory (using malloc) without initialize it's elements. 
+    [Deprecated] Storage by itself only allocates memory (using malloc) without initializing its elements. 
     
-    [v0.6.6+] Storage now has same behavior as vector at initialize, all elements are init by zero.
+    [v0.6.6+] Storage behaves like a vector and initializes all elements to zero. 
 
 .. Tip::
 
@@ -49,9 +49,9 @@ Output>>
 
 Type conversion
 ****************
-Conversion between different data type is possible for Storage. Just like Tensor, call **Storage.astype()** to convert in between different data types. 
+Conversion between different data types is possible for Storage. Just like Tensor, call **Storage.astype()** to convert between different data types. 
 
-The available data types are the same as Tensor. 
+The available data types are the same as for Tensor. 
 
 * In python:
 
@@ -95,9 +95,9 @@ Output >>
     [ 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j  ]
 
 
-Transfer btwn devices
-***********************
-We can also moving the storage between different devices. Just like Tensor, we can use **Storage.to()**. 
+Transfer between devices
+************************
+We can also transfer the storage between different devices. Similar to Tensor, we can use **Storage.to()**. 
 
 * In python:
 
@@ -139,14 +139,14 @@ Output>>
 
 .. Hint::
 
-    1. Like Tensor, **.device_str()** return the device string while **.device()** return device ID (cpu=-1).
+    1. Like Tensor, **.device_str()** returns the device string while **.device()** returns device ID (cpu=-1).
 
-    2. **.to()** return a copy on target device. Use **.to_()** instead to move the current instance to a target device. 
+    2. **.to()** returns a copy on the target device. Use **.to_()** instead to move the current instance to a target device. 
 
 
 Get Storage of Tensor
 **************************
-Internally, data of Tensor is stored in Storage. We can get the storage of Tensor using **Tensor.storage()**. 
+Internally, the data of a Tensor is stored in Storage. We can get the storage of a Tensor using **Tensor.storage()**. 
 
 * In python:
 
@@ -191,10 +191,10 @@ Output >>
 
 .. Note::
 
-    1. The return is the *referece* of Tensor's internal storage. That is, any modification to this storage will modify the Tensor accrodingly. 
+    1. The return vakye is the *reference* to the Tensor's internal storage. This implies that any modification to this storage will modify the Tensor accordingly. 
 
 
-**[Important]** For Tensor in non-contiguous status, since the meta-data is detached from it's memory that handled by storage, calling **Tensor.storage()** will return it's current memory layout, not the real view of Tensor. 
+**[Important]** For a Tensor in non-contiguous status, the meta-data is detached from its memory handled by storage. In this case, calling **Tensor.storage()** will return the current memory layout, not the ordering according to the Tensor indices in the meta-data. 
 
 Let's use python API to demostrate this. The thing goes the with c++ API. 
 

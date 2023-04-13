@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="4.4. From/To c++.vector" href="Storage_4_vec.html" />
-    <link rel="prev" title="4.2. Access elements" href="Storage_2_access.html" /> 
+    <link rel="prev" title="4.2. Accessing elements" href="Storage_2_access.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -137,12 +137,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -330,8 +330,8 @@
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="Storage_2_access.html" title="Previous Chapter: 4.2. Access elements" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 4.2. Access elements
+               <a href="Storage_2_access.html" title="Previous Chapter: 4.2. Accessing elements" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 4.2. Accessin...
                </a>
                <a href="Storage_4_vec.html" title="Next Chapter: 4.4. From/To c++.vector" class="btn btn-primary" role="botton" accesskey="N">
                    4.4. From/To ... &raquo;
@@ -443,12 +443,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -578,7 +578,7 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="Storage_2_access.html"
-                          title="previous chapter"><span class="section-number">4.2. </span>Access elements</a></p>
+                          title="previous chapter"><span class="section-number">4.2. </span>Accessing elements</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -608,10 +608,10 @@
             
   <section id="increase-size">
 <h1><span class="section-number">4.3. </span>Increase size<a class="headerlink" href="#increase-size" title="Permalink to this heading">¶</a></h1>
-<p>Just like C++ vector, we can increase the size of Storage.</p>
+<p>Just like C++ vectors, we can increase the size of the Storage.</p>
 <section id="append">
 <h2><span class="section-number">4.3.1. </span>Append<a class="headerlink" href="#append" title="Permalink to this heading">¶</a></h2>
-<p>This append a new element at the end of the Storage.
+<p>It is possible to append a new element to the end of the Storage.
 For example</p>
 <ul class="simple">
 <li><p>In python:</p></li>
@@ -650,7 +650,7 @@ size  : 5
 </section>
 <section id="resize">
 <h2><span class="section-number">4.3.2. </span>Resize<a class="headerlink" href="#resize" title="Permalink to this heading">¶</a></h2>
-<p>Equvalent to c++ <em>vector.resize</em>, we can do the same thing in cytnx.</p>
+<p>Equivalently to <em>vector.resize</em> in c++, we can resize the Storage in cytnx.</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
@@ -678,14 +678,14 @@ size  : 5
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>[Deprecated] If the size is increase after resize, the additional elements will NOT be set to zero. Please be careful.</p>
-<p>[New][v0.6.6+] The resize of storage now follows the same behavior as vector, new elements will be init by zero.</p>
+<p>[Deprecated] If the size is increased in the resize operation, the additional elements will NOT be set to zero. Please use with care.</p>
+<p>[New][v0.6.6+] Additional elements are initialized by zeros when the memory is increased by resize. This behavior is similar to that of a vector.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <ol class="arabic simple">
-<li><p>You can use <strong>Storage.size()</strong> to get the current size of Storage.</p></li>
-<li><p>Internally, cytnx allocate memory in multiple of 2. This choice is to optimize the bandwidth of CPU/GPU transfer and possibly performance of some kernels. you can use <strong>Storage.capacity()</strong> to check the current real memory size.</p></li>
+<li><p>You can use <strong>Storage.size()</strong> to get the current number of elements in the Storage.</p></li>
+<li><p>Internally, cytnx allocates memory in multiples of 2. This optimizes the bandwidth use of CPU/GPU transfers and possibly increases the performance of some kernels. You can use <strong>Storage.capacity()</strong> to check the currently allocated number of elements in real memory, which might be larger than the number of elements in the Storage.</p></li>
 </ol>
 </div>
 <div class="toctree-wrapper compound">

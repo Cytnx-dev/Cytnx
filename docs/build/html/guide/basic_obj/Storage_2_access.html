@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>4.2. Access elements &#8212; Cytnx  documentation</title>
+    <title>4.2. Accessing elements &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -137,12 +137,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -326,7 +326,7 @@
                          accesskey="U"
                          class="active"
                        ><span class="section-number">4. </span>Storage</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">4.2. </span>Access elements</li>
+            <li class="breadcrumb-item active"><span class="section-number">4.2. </span>Accessing elements</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -443,12 +443,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -606,11 +606,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="access-elements">
-<h1><span class="section-number">4.2. </span>Access elements<a class="headerlink" href="#access-elements" title="Permalink to this heading">¶</a></h1>
-<p>To access the element in Storage, different API should be used in python and C++ due to the fundamental difference in two languages.</p>
-<section id="get-set-element">
-<h2><span class="section-number">4.2.1. </span>Get/Set element<a class="headerlink" href="#get-set-element" title="Permalink to this heading">¶</a></h2>
+  <section id="accessing-elements">
+<h1><span class="section-number">4.2. </span>Accessing elements<a class="headerlink" href="#accessing-elements" title="Permalink to this heading">¶</a></h1>
+<p>To access the elements in Storage, different APIs are used in python and C++ due to the fundamental differences in the two languages.</p>
+<section id="get-set-elements">
+<h2><span class="section-number">4.2.1. </span>Get/Set elements<a class="headerlink" href="#get-set-elements" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
 <li><p>In python, simply use <strong>operator[]</strong>:</p></li>
 </ul>
@@ -623,7 +623,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>In c++, we use <strong>at&lt;&gt;()</strong>:</p></li>
+<li><p>In c++, use <strong>at&lt;&gt;()</strong>:</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
 <span class="linenos">2</span><span class="n">A</span><span class="p">.</span><span class="n">set_zeros</span><span class="p">();</span>
@@ -648,12 +648,12 @@ size  : 6
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>The return is the reference of the element, just like c++ <em>vector</em>.</p></li>
-<li><p>The template type that match the dtype of Storage instance should be specify when calling <strong>at&lt;&gt;()</strong>. If the type mismatch, an error will be prompt.</p></li>
+<li><p>The return value is the reference to the accessed element. This behavior is similar to a c++ <em>vector</em>.</p></li>
+<li><p>The same template type as the dtype of the Storage instance should be specified when calling <strong>at&lt;&gt;()</strong>. If the types mismatch, an error will be prompted.</p></li>
 </ol>
 </div>
 <ul class="simple">
-<li><p>[New][v0.6.6+] The introduce of C++ only Scalar class allow get elements using <strong>at()</strong>  without specialization (C++ only)</p></li>
+<li><p>[New][v0.6.6+] The introduction of the Scalar class allows to get elements using <strong>at()</strong>  without type specialization (C++ only):</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
 <span class="linenos">2</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
@@ -683,10 +683,10 @@ size  : 6
 </section>
 <section id="get-raw-pointer-c-only">
 <h2><span class="section-number">4.2.2. </span>Get raw-pointer (C++ only)<a class="headerlink" href="#get-raw-pointer-c-only" title="Permalink to this heading">¶</a></h2>
-<p>In some cases where user might want to get the raw-pointer from Storage. It is possible to do so. Cytnx provide two ways you can get a raw-pointer.</p>
+<p>In some cases the user might want to get the raw-pointer to the Storage. Cytnx provides two ways to get a raw-pointer.</p>
 <ol class="arabic simple">
 <li><dl class="simple">
-<dt>Use <strong>Storage.data&lt;&gt;()</strong>:</dt><dd><p>Using <strong>.data&lt;T&gt;</strong> should provide a template type <em>T</em> that match the dtype of Storage. The return will be a pointer with type <em>T</em>.</p>
+<dt>Use <strong>Storage.data&lt;&gt;()</strong>:</dt><dd><p>If you use <strong>.data&lt;T&gt;</strong>, the template type <em>T</em> should match the dtype of the Storage. The return value will be a pointer with type <em>T</em>.</p>
 </dd>
 </dl>
 </li>
@@ -700,7 +700,7 @@ size  : 6
 </div>
 <ol class="arabic simple" start="2">
 <li><dl class="simple">
-<dt>Use <strong>Storage.data()</strong>:</dt><dd><p>Using <strong>.data()</strong> without specialization return a void pointer, please use with caution.</p>
+<dt>Use <strong>Storage.data()</strong>:</dt><dd><p>Using <strong>.data()</strong> without specialization returns a void pointer, please use with caution!</p>
 </dd>
 </dl>
 </li>
@@ -714,12 +714,12 @@ size  : 6
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If the current Storage instance is allocate on GPU, the return pointer will be a device pointer.
-See <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html">this page</a>.</p>
+<p>If the current Storage instance is allocated on a GPU, the return pointer will be a device pointer.
+See <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html">the CUDA documentation</a>.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The return pointer is shared with the Storage instance. Thus it’s life time will be the same as that instance. If the instance is destroy first, the memory will be free, and the pointer will be invalid as well. Please use with caution.</p>
+<p>The return pointer is shared with the Storage instance. Thus its life time will be limited by that of the Storage instance. If the instance is destroyed first, the memory will be freed, and the pointer will be invalid as well. Please use with caution!</p>
 </div>
 <div class="toctree-wrapper compound">
 </div>
