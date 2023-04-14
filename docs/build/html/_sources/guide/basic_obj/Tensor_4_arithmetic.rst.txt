@@ -1,11 +1,11 @@
 Tensor arithmetic
 ----------------------
 
-In cytnx, arithmetic operations such as **+, -, x, /, +=, -=, *=, /=** can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in python. 
+In Cytnx, arithmetic operations such as **+, -, x, /, +=, -=, *=, /=** can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. 
 
 Type promotion
 ********************
-Arithmetic operations in Cytnx follow a similar pattern of type promotion as standard C++/python. 
+Arithmetic operations in Cytnx follow a similar pattern of type promotion as standard C++/Python. 
 When an arithmetic operation between a Tensor and another Tensor or scalar is performed, the output Tensor will have the same dtype as the input with the stronger type. 
 
 The Type order from strong to weak is:
@@ -29,7 +29,7 @@ Tensor-scalar arithmetic
 Arithmetic operations between a Tensor and a scalar can be performed. 
 For example:
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:        
@@ -96,7 +96,7 @@ Tensor-Tensor arithmetic
 Arithmetic operations between two Tensors of the same shape are possible. 
 For example:
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:        

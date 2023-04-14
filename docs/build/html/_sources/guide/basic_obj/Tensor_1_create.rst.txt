@@ -4,7 +4,7 @@ Just like with :numpy-arr:`numpy.array <>` / :torch-tn:`torch.tensor <>`, a Tens
 
 For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -12,7 +12,7 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
     A = cytnx.zeros([3,4,5]);
         
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -21,15 +21,15 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
 
 .. Note::
 
-    1. In cytnx, a python list is equivalent to a C++ *vector*; or in some cases like here, it is an *initializer list*. 
+    1. In Cytnx, a Python list is equivalent to a C++ *vector*; or in some cases like here, it is an *initializer list*. 
 
-    2. The conversion between python and C++ is pretty straight forward, one simply replaces [] in python with {}, and you are all set!
+    2. The conversion between Python and C++ is pretty straight forward, one simply replaces [] in Python with {}, and you are all set!
 
 
 
 Other options such as **arange()** (similar as np.arange), and **ones** (similar as np.ones) can also be done. 
 
-* In python : 
+* In Python : 
 
 .. code-block:: python 
     :linenos:
@@ -38,7 +38,7 @@ Other options such as **arange()** (similar as np.arange), and **ones** (similar
     B = cytnx.arange(0,10,2); #rank-1 Tensor from [0,10) with step 2
     C = cytnx.ones([3,4,5]);  #Tensor of shape (3,4,5) with all elements set to one.
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -53,17 +53,17 @@ Other options such as **arange()** (similar as np.arange), and **ones** (similar
 
 Tensor with different dtype and device 
 *******************************************
-By default, the Tensor will be created with *double* type (or *float* in python) on CPU if there is no additional arguments provided upon creating the Tensor. 
+By default, the Tensor will be created with *double* type (or *float* in Python) on CPU if there is no additional arguments provided upon creating the Tensor. 
 
 You can create a Tensor with a different data type, and/or on different devices simply by specifying the **dtype** and the **device** arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on a cuda-enabled GPU. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
 
     A = cytnx.zeros([3,4,5],dtype=cytnx.Type.Int64,device=cytnx.Device.cuda)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
 
@@ -72,7 +72,7 @@ You can create a Tensor with a different data type, and/or on different devices 
 .. Note:: 
 
 in 
-    1. Remember the difference between . in python and :: in C++ when you use Type and Device classes. 
+    1. Remember the difference between . in Python and :: in C++ when you use Type and Device classes. 
     2. If you have multiple GPUs, you can specify on which GPU you want to init the Tensor by adding the gpu-id to cytnx::Device::cuda. 
         
         For example: 
@@ -81,15 +81,15 @@ in
 
             device=cytnx.Device.cuda+4   #will create the Tensor on GPU id=4
 
-    3. In C++, there is no keyword argument as python, so make sure you put the arguments in the correct order. Check `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!  
+    3. In C++, there is no keyword argument as Python, so make sure you put the arguments in the correct order. Check `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!  
 
 
-Currently, there are several data types supported by cytnx:
+Currently, there are several data types supported by Cytnx:
 
 .. tabularcolumns:: |l|l|l|
 
 +------------------+----------------------+-------------------+
-| cytnx type       | c++ type             | Type object       |
+| Cytnx type       | C++ type             | Type object       |
 +==================+======================+===================+
 | cytnx_double     | double               | Type.Double       |
 +------------------+----------------------+-------------------+
@@ -120,7 +120,7 @@ Concerning devices, Cytnx currently supports
 .. tabularcolumns:: |l|l|
 
 +------------------+----------------------+
-| cytnx type       | Device object        |
+| device           | Device object        |
 +==================+======================+
 | CPU              | Device.cpu           | 
 +------------------+----------------------+
@@ -133,7 +133,7 @@ It is possible to convert a Tensor to a different data type. To convert the data
 
 For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to convert it to **Type.Double**
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -143,7 +143,7 @@ For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to con
     print(A.dtype_str())
     print(B.dtype_str())
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -174,7 +174,7 @@ Moving a Tensor between different devices is very easy. We can use **Tensor.to()
 
 For example, let's create a Tensor on the cpu and transfer it to the GPU with gpu-id=0. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -188,7 +188,7 @@ For example, let's create a Tensor on the cpu and transfer it to the GPU with gp
     print(A) # on GPU
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -237,9 +237,11 @@ For example, let's create a Tensor on the cpu and transfer it to the GPU with gp
 
 Tensor from Storage [v0.6.6+]
 *******************************
-    To create Tensor directly from storage, use **Tensor.from_storage()**. 
+    The Storage of a tensor contains the actual tensor elements. They are stored in the form of a vector. Further details about Storage objects are explained in :ref:`Storage`.  
 
-* In python:
+    We can create a Tensor directly from a Storage object by using **Tensor.from_storage()**: 
+
+* In Python:
 
 .. code-block:: python
     :linenos:

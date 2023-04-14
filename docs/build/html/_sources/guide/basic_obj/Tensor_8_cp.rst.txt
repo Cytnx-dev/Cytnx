@@ -18,10 +18,10 @@ Two important concepts need to be distinguished: the Tensor **object** itself, a
 
 Reference & Copy of object 
 ****************************
-One of the most important features in python is the *referencing* of objects. All the cytnx objects follow the same behavior:
+One of the most important features in Python is the *referencing* of objects. All the Cytnx objects follow the same behavior:
 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -51,7 +51,7 @@ Here, **B** is a reference of **A**, so essentially **B** and **A** are the same
 
 To really create a copy of **A**, we can use the **clone()** method. **clone()** creates a new object with copied meta data and a newly allocated **Storage** with the same content as the storage of **A**:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -61,7 +61,7 @@ To really create a copy of **A**, we can use the **clone()** method. **clone()**
     
     print(B is A)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -83,7 +83,7 @@ Permute
 
 Now let us take a look at what happens if we perform a **permute()** operation on a Tensor:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -96,7 +96,7 @@ Now let us take a look at what happens if we perform a **permute()** operation o
 
     print(B is A)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -144,7 +144,7 @@ Now let us take a look at what happens if we perform a **permute()** operation o
 
 We see that **A** and **B** are now two different objects (as it should be, they have different shapes!). Now let's see what happens if we change an element in **A**:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -154,7 +154,7 @@ We see that **A** and **B** are now two different objects (as it should be, they
     print(A)
     print(B)
     
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -200,14 +200,14 @@ Notice that the element in **B** is also changed! So what actually happened? Whe
 
 We can use **Tensor.same_data()** to check if two objects share the same memory storage:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
     
     print(B.same_data(A))
     
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -229,7 +229,7 @@ Contiguous
 Next, let's have a look at the **contiguous** property. In the above example, we see that **permute()** created a new Tensor object with different *meta* but sharing the same memory storage. The memory layout of the **B** Tensor no longer corresponds to the tensors shape after the permutation. A Tensor in with this status is called **non-contiguous**. We can use **is_contiguous()** to check if a Tensor is with this status. 
 
  
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -240,7 +240,7 @@ Next, let's have a look at the **contiguous** property. In the above example, we
     print(A.is_contiguous())
     print(B.is_contiguous())
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -277,7 +277,7 @@ We can make a contiguous Tensor **C** that has the same shape as **B** by callin
     print(C.same_data(B))
      
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:

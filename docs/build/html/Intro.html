@@ -62,9 +62,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -152,7 +152,7 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
@@ -362,9 +362,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -452,7 +452,7 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
@@ -605,18 +605,18 @@
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
 <blockquote>
 <div><p>Cytnx is a library designed for Quantum/classical Physics simulations.</p>
-<p>The library is built from bottom-up, with both C++ and python in mind right at the beginning of development. That’s why nearly 95% of the APIs are exactly the same at both C++ and python ends.</p>
-<p>Most of Cytnx APIs share very similar interfaces as the most common and popular libraries: numpy/scipy/pytorch. This is specifically designed so as to reduce the learning curve for users. Furthermore, we implement these easy-to-use python libraries interfacing to the C++ side in hope to benefit users who want to bring their python programming experience to the C++ side and speed up their programs.</p>
+<p>The library is built from bottom-up, with both C++ and Python in mind right at the beginning of development. That’s why nearly 95% of the APIs are exactly the same at both C++ and Python ends.</p>
+<p>Most of Cytnx APIs share very similar interfaces as the most common and popular libraries: numpy/scipy/pytorch. This is specifically designed so as to reduce the learning curve for users. Furthermore, we implement these easy-to-use Python libraries interfacing to the C++ side in hope to benefit users who want to bring their Python programming experience to the C++ side and speed up their programs.</p>
 <p>Cytnx also supports multi-devices (CPUs/GPUs) directly on the base container level. Especially, not only the container but also our linear algebra functions share the same APIs regardless of the devices where the input Tensors are stored, just like pytorch. This provides users the ability to accelerate the code without worrying too much about details of multi-device programming.</p>
-<p>From the physics side, cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces.</p>
-<p>In this user guide, both python and C++ APIs will be discussed, provided side-by-side for users to better understand how to use Cytnx, and to understand the conversion in between the Python API and the C++ API.</p>
+<p>From the physics side, Cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces.</p>
+<p>In this user guide, both Python and C++ APIs will be discussed, provided side-by-side for users to better understand how to use Cytnx, and to understand the conversion in between the Python API and the C++ API.</p>
 </div></blockquote>
 <section id="features">
 <h2>Features<a class="headerlink" href="#features" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>C++ and python are co-existing, there is no one first.</p></li>
+<li><p>C++ and Python are co-existing, there is no one first.</p></li>
 <li><p>95% of API are the same in C++ and Python.
-This means that one can do a fast prototype in python, and directly convert to C++ with extremely minimal re-writing of the codebase.</p></li>
+This means that one can do a fast prototype in Python, and directly convert to C++ with extremely minimal re-writing of the codebase.</p></li>
 <li><p>GPUs/CPUs multi-device support.</p></li>
 <li><p>Easy to use user-interface similar to numpy/scipy/pytorch.</p></li>
 <li><p>Enhanced tools specifically designed for Quantum/classical Physics simulations.</p></li>

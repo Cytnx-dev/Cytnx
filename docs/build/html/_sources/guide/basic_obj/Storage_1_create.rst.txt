@@ -4,7 +4,7 @@ The storage can be created in a similar way as in Tensor. Note that Storage does
 
 To create a Storage, with dtype=Type.Double on the cpu: 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -53,7 +53,7 @@ Conversion between different data types is possible for Storage. Just like Tenso
 
 The available data types are the same as for Tensor. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -99,7 +99,7 @@ Transfer between devices
 ************************
 We can also transfer the storage between different devices. Similar to Tensor, we can use **Storage.to()**. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -148,7 +148,7 @@ Get Storage of Tensor
 **************************
 Internally, the data of a Tensor is stored in Storage. We can get the storage of a Tensor using **Tensor.storage()**. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -191,14 +191,14 @@ Output >>
 
 .. Note::
 
-    1. The return vakye is the *reference* to the Tensor's internal storage. This implies that any modification to this storage will modify the Tensor accordingly. 
+    1. The return value is a *reference* to the Tensor's internal storage. This implies that any modification to this storage will modify the Tensor accordingly. 
 
 
 **[Important]** For a Tensor in non-contiguous status, the meta-data is detached from its memory handled by storage. In this case, calling **Tensor.storage()** will return the current memory layout, not the ordering according to the Tensor indices in the meta-data. 
 
-Let's use python API to demostrate this. The thing goes the with c++ API. 
+Let's use Python API to demonstrate this. The c++ API can be used in a similar way. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:

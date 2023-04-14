@@ -6,7 +6,7 @@ Save a Storage
 *****************
 To save a Storage to file, simply call **Storage.Save(filepath)**. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -16,7 +16,7 @@ To save a Storage to file, simply call **Storage.Save(filepath)**.
     A.Save("S1")
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -32,7 +32,7 @@ Load a Storage
 ******************
 Now, let's load the Storage from the file. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -40,7 +40,7 @@ Now, let's load the Storage from the file.
     A = cytnx.Storage.Load("S1.cyst")
     print(A)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -62,7 +62,7 @@ save & load from/to binary
 **************************
 We can also save all the elements in a binary file without any additional header information associated to the storage format. This is similar to numpy.tofile/numpy.fromfile.
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:

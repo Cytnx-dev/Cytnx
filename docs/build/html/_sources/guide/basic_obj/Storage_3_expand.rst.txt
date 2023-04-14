@@ -7,7 +7,7 @@ Append
 It is possible to append a new element to the end of the Storage. 
 For example
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -20,7 +20,7 @@ For example
     print(A)    
     
    
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -49,9 +49,9 @@ Output>>
 
 Resize
 ********
-Equivalently to *vector.resize* in c++, we can resize the Storage in cytnx.
+Equivalently to *vector.resize* in C++, we can resize the Storage in Cytnx.
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -62,7 +62,7 @@ Equivalently to *vector.resize* in c++, we can resize the Storage in cytnx.
     A.resize(5);
     print(A.size());
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -89,7 +89,7 @@ Output>>
 .. Tip::
 
     1. You can use **Storage.size()** to get the current number of elements in the Storage.
-    2. Internally, cytnx allocates memory in multiples of 2. This optimizes the bandwidth use of CPU/GPU transfers and possibly increases the performance of some kernels. You can use **Storage.capacity()** to check the currently allocated number of elements in real memory, which might be larger than the number of elements in the Storage. 
+    2. Internally, Cytnx allocates memory in multiples of 2. This optimizes the bandwidth use of CPU/GPU transfers and possibly increases the performance of some kernels. You can use **Storage.capacity()** to check the currently allocated number of elements in real memory, which might be larger than the number of elements in the Storage. 
 
 
 

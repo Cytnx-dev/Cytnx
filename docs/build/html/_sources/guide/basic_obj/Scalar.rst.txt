@@ -4,19 +4,19 @@ Scalar
 
 Scalar is a generic data type which can hold various data types in C++.  
 
-In python, the data type of any variable is dynamic, i.e. it can be changed at any time. In contrast to this, C++ data types are static and cannot be changed once they are declared. In the C++/python cross-platform library Cytnx, we provide a generic data type Scalar on the C++ side which allows variables to be used like dynamic data types in python, with all the convenience and advantages related to this. 
+In Python, the data type of any variable is dynamic, i.e. it can be changed at any time. In contrast to this, C++ data types are static and cannot be changed once they are declared. In the C++/Python cross-platform library Cytnx, we provide a generic data type Scalar on the C++ side which allows variables to be used like dynamic data types in Python, with all the convenience and advantages related to this. 
 
 
 Define/Declare a scalar
 *************************
 Defining a Scalar is straight forward. One can convert directly from a supported standard C++ Type to a Scalar. 
 
-Currently, the following standard C++ data types are supported by cytnx Scalar:
+Currently, the following standard C++ data types are supported by Cytnx Scalar:
 
 .. tabularcolumns:: |l|l|l|
 
 +------------------+----------------------+-------------------+
-| cytnx type       | c++ type             | Type object       |
+| Cytnx type       | C++ type             | Type object       |
 +==================+======================+===================+
 | cytnx_double     | double               | Type.Double       |
 +------------------+----------------------+-------------------+
@@ -43,7 +43,7 @@ Currently, the following standard C++ data types are supported by cytnx Scalar:
 
 Consider the example where we want to create a Scalar with *double* type. The conversion between C++ standard type to Scalar is very flexible, depending on the application scenario:
 
-* 1. Convert from a c++ variable
+* 1. Convert from a C++ variable
 
 .. code-block:: c++
     :linenos:
@@ -84,13 +84,13 @@ Output:
 
 .. Note::
     
-    1. We can also just assign a c++ type to Scalar as in the case of **A2**. 
+    1. We can also just assign a C++ type to Scalar as in the case of **A2**. 
 
-    2. In the case of variable **A3**, the assigned value *10* by default in c++ is an integer type. If we want the Scalar to be of type *double*, we can pass an additional dtype to further specify the type explicitly. 
+    2. In the case of variable **A3**, the assigned value *10* by default in C++ is an integer type. If we want the Scalar to be of type *double*, we can pass an additional dtype to further specify the type explicitly. 
 
-* 3. Convert to a c++ data type:
+* 3. Convert to a C++ data type:
 
-    Converting to a c++ data type works just like other type castings in C++:
+    Converting to a C++ data type works just like other type castings in C++:
 
 
 .. code-block:: c++
@@ -122,7 +122,7 @@ Output:
 
 .. note::
 
-    Note the slightly different syntax in case of complex type castings. Use **complex128()** and **complex64()** to convert to a standard c++ type **complex<double>** and **complex<float>** respectively.
+    Note the slightly different syntax in case of complex type castings. Use **complex128()** and **complex64()** to convert to a standard C++ type **complex<double>** and **complex<float>** respectively.
 
 
 Change data type
@@ -151,7 +151,7 @@ Output:
 
 Application scenarios
 **********************
-The Scalar type allows for many possibilities in c++ that are otherwise hard to achieve. We will consider some examples in the following.
+The Scalar type allows for many possibilities in C++ that are otherwise hard to achieve. We will consider some examples in the following.
 
 * 1. If we want to have a list (vector) with elements having different data types, we can use *tuple*s in C++. However, that requires the number of elements and data types to be known and fixed a priori. Using scalar, we can also create a vector with a variable number of elements and variable data types:
 
@@ -176,7 +176,7 @@ Output:
 
 
 
-* 2. In C++, unlike python, we can not create a function that can take arbitrary types of arguments. This becomes possible with Scalar:
+* 2. In C++, unlike Python, we can not create a function that can take arbitrary types of arguments. This becomes possible with Scalar:
 
 .. code-block:: c++
     :linenos:

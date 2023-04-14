@@ -3,11 +3,11 @@ Objects behavior
 
 Everything is reference
 ************************
-To provide a direct translation between the C++ API and python, as well as to reduce the redundant memory allocation, all the objects (except Accessor and LinOp) in cytnx are **references**, also in C++, just like in python. 
+To provide a direct translation between the C++ API and Python, as well as to reduce the redundant memory allocation, all the objects (except Accessor and LinOp) in Cytnx are **references**, also in C++, just like in Python. 
 
-Let's look at the following example. Consider the **Tensor** object in cytnx
+Let's look at the following example. Consider the **Tensor** object in Cytnx
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -18,7 +18,7 @@ Let's look at the following example. Consider the **Tensor** object in cytnx
     print(B is A) # true
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -37,14 +37,14 @@ Output >>
 
 .. Note::
     
-    In python, this is very straight forward. We implement the *is* clause in the cytnx C++ API, such that C++ and python can have exactly the same behavior. You can use **is()** to check if two objects are the same. 
+    In Python, this is very straight forward. We implement the *is* clause in the Cytnx C++ API, such that C++ and Python can have exactly the same behavior. You can use **is()** to check if two objects are the same. 
 
 
 clone
 *********
 In the case where a copy of an object is needed, you can use **clone()**. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -58,7 +58,7 @@ In the case where a copy of an object is needed, you can use **clone()**.
 
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -80,7 +80,7 @@ Output>>
 
 .. Note::
 
-    Here, we use **Tensor** as an example, but in general all the objects in cytnx (except Accessor and LinOp) also follow the same behavior, and you can use **is** and **clone** as well. 
+    Here, we use **Tensor** as an example, but in general all the objects in Cytnx (except Accessor and LinOp) also follow the same behavior, and you can use **is** and **clone** as well. 
 
 
 .. toctree::

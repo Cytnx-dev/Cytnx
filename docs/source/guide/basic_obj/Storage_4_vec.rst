@@ -1,9 +1,9 @@
-From/To c++.vector
+From/To C++.vector
 --------------------
-Cytnx provides a way to convert directly between a c++ *vector* and a Storage instance. 
+Cytnx provides a way to convert directly between a C++ *vector* and a Storage instance. 
 
 
-To convert a c++ vector to a Storage, use **Storage::from_vector**:
+To convert a C++ vector to a Storage, use **Storage::from_vector**:
 
 * In C++
 
@@ -38,8 +38,8 @@ Output >>
 
 .. Tip::
 
-    Cytnx overloads the **operator<<** for c++ vectors. You can directly print any vector when **using namespace cytnx;**.  
-    Alternatively, you can also use the **print()** function just like in python.
+    Cytnx overloads the **operator<<** for C++ vectors. You can directly print any vector when **using namespace cytnx;**.  
+    Alternatively, you can also use the **print()** function just like in Python.
 
 
 

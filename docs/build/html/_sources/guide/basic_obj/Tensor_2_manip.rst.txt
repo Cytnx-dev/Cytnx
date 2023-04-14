@@ -10,7 +10,7 @@ This operation is called *reshape*
 
 We can use the **Tensor.reshape** function to do this. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -56,7 +56,7 @@ Notice that calling **reshape()** returns a new object *B*, so the original obje
 
 The function **Tensor.reshape_** (with a underscore) performs a reshape as well, but instead of returning a new reshaped object, it performs an inplace reshape of the instance that calls the function. For example:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -114,7 +114,7 @@ Now, let's again use the same rank-3  with shape=(2,3,4) as an example. This tim
 
 This can be achieved with **Tensor.permute** 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -124,7 +124,7 @@ This can be achieved with **Tensor.permute**
     print(A)
     print(B)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++ 
     :linenos:
@@ -176,10 +176,10 @@ This can avoid the redundant moving of elements. Note that this approach is also
 
 After the permute, the meta-data does not correspond to the memory order anymore. If the meta-data is distached that way from the real memory layout, we call the Tensor in this status *non-contiguous*. We can use **Tensor.is_contiguous()** to check if the current Tensor is in contiguous status. 
 
-You can force the Tensor to return to it's contiguous status by calling **Tensor.contiguous()/Tensor.contiguous_()**, although generally you don't have to worry about contiguous, as cytnx automatically handles it for you. 
+You can force the Tensor to return to it's contiguous status by calling **Tensor.contiguous()/Tensor.contiguous_()**, although generally you don't have to worry about contiguous, as Cytnx automatically handles it for you. 
 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
