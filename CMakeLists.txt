@@ -73,17 +73,18 @@ option(USE_CUQUANTUM "Build Cytnx with CUQuantum (required CUDA)" ON)
 if (USE_ICPC)
   message(STATUS, "Build Cytnx with Intel Compilers")
   message(STATUS, "Finding Intel Compilers....")
-  find_program(CMAKE_C_COMPILER NAMES icc)
-  find_program(CMAKE_CXX_COMPILER NAMES icpc)
-  find_program(CMAKE_AR NAMES xiar)
-  find_program(CMAKE_LINKER NAMES xild)
-
-  if (NOT (CMAKE_C_COMPILER AND
-           CMAKE_CXX_COMPILER AND
-           CMAKE_AR AND
-           CMAKE_LINKER ))
+  # Check for Intel Compiler Classic 
+  if (NOT (CMAKE_C_COMPILER AND CMAKE_CXX_COMPILER ))
+     find_program(CMAKE_C_COMPILER NAMES icc)
+     find_program(CMAKE_CXX_COMPILER NAMES icpc)
+  endif()
+  if (NOT (CMAKE_C_COMPILER AND CMAKE_CXX_COMPILER ))
+     # Check for Intel OneAPI Compiler
+     find_program(CMAKE_C_COMPILER NAMES icx)
+     find_program(CMAKE_CXX_COMPILER NAMES icpx)
+  endif()
+  if (NOT (CMAKE_C_COMPILER AND CMAKE_CXX_COMPILER ))
     message("Cannot find Intel compilers.")
-    message("You may need to run `. /opt/intel/bin/compilervars.sh intel64/ia32'")
     message("Falling back to system compilers.")
     find_program(CMAKE_C_COMPILER NAMES cc)
     find_program(CMAKE_CXX_COMPILER NAMES cpp)
