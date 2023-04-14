@@ -139,7 +139,7 @@ FLAG="${FLAG} -DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
 #=========================================================
 # [Note] This will run the threaded code in cytnx lib while it will not disable muiltithreading in mkl. (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_OMP=OFF "
+FLAG="${FLAG} -DUSE_OMP=ON "
 #-----------------------------------
 
 
@@ -157,7 +157,7 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 #=========================================================
 # [Note] Build using intel icpc compiler (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_ICPC=OFF "
+FLAG="${FLAG} -DUSE_ICPC=ON "
 #-----------------------------------
 
 

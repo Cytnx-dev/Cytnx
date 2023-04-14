@@ -384,7 +384,7 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
       cytnx_error_msg(it == out_raw->_labels.end(),
-                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i]);
+                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
       mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
     }
 
@@ -569,7 +569,7 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
       cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
+                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
       mapper_u64.push_back(std::distance(this->_labels.begin(), it));
     }
 
@@ -2190,11 +2190,11 @@ namespace cytnx {
         // std::cout << rhs->_bonds[comm_idx2[i]];
         if (User_debug)
           cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),
-                          "[ERROR] contract bond @ label %d have qnum mismatch.\n", comm_labels[i]);
+                          "[ERROR] contract bond @ label %d have qnum mismatch.\n", comm_labels[i].c_str());
 
         cytnx_error_msg(this->_bonds[comm_idx1[i]].type() + rhs->_bonds[comm_idx2[i]].type(),
                         "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",
-                        comm_labels[i]);
+                        comm_labels[i].c_str());
       }
       // std::cout << "end checking" << std::endl;
 

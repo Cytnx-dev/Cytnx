@@ -86,9 +86,9 @@ namespace cytnx {
         // Both bonds of Diag will be contracted.
         if (idxl.size() == 2) {
           tmpL = Tl;
-          tmpR = Tr.permute(mapperR).reshape({Tlshape[idxl[1]], -1});
+          tmpR = Tr.permute(mapperR).reshape({static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
           tmpout = Matmul_dg(tmpL, tmpR);
-          tmpout.reshape_({Tlshape[idxl[0]], Tlshape[idxl[1]], -1});
+          tmpout.reshape_({static_cast<cytnx_int64>(Tlshape[idxl[0]]), static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
           out = Trace(tmpout, 0, 1);
         } else {
           tmpL = Tl;
@@ -100,7 +100,7 @@ namespace cytnx {
           tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
           tmpR = Tr;
           tmpout = Matmul_dg(tmpL, tmpR);
-          tmpout.reshape_({-1, Tlshape[idxl[1]], Tlshape[idxl[0]]});
+          tmpout.reshape_({-1, static_cast<cytnx_int64>(Tlshape[idxl[1]]), static_cast<cytnx_int64>(Tlshape[idxl[0]])});
           out = Trace(tmpout, 1, 2);
         } else {
           tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});

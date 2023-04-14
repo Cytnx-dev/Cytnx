@@ -595,7 +595,7 @@ namespace cytnx {
         for (cytnx_int64 i = 0; i < mapper.size(); i++) {
           it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
           cytnx_error_msg(it == out_raw->_labels.end(),
-                          "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i]);
+                          "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
           mapper_i64.push_back(std::distance(out_raw->_labels.begin(), it));
         }
  
@@ -661,7 +661,7 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
       cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
+                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
       mapper_i64.push_back(std::distance(this->_labels.begin(), it));
     }
 
