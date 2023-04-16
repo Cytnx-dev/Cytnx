@@ -31,6 +31,7 @@ namespace cytnx {
     cytnx_error_msg(tokens.size() == 0, "[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s",
                     line_num, "\n");
   }
+
   void _parse_TOUT_line_(vector<std::string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
                          const cytnx_uint64 &line_num) {
     lbls.clear();
