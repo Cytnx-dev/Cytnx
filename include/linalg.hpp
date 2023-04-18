@@ -382,6 +382,18 @@ namespace cytnx {
     [Note] the TL and TR should be both rank-2 Tensor.
     */
     Tensor Matmul(const Tensor &TL, const Tensor &TR);
+    /*
+    @brief internal use only
+    */
+    void d_Matmul(Tensor &TL, Tensor &TR, Tensor &out,
+                const cytnx_double alpha = 1.0, const cytnx_double beta = 0.0,
+                const bool check = false);
+    /*
+    @brief internal use only
+    */
+    void cd_Matmul(Tensor &TL, Tensor &TR, Tensor &out,
+                const cytnx_complex128 alpha = 1.0, const cytnx_complex128 beta = 0.0,
+                const bool check = false);
 
     // Matmul:
     //==================================================

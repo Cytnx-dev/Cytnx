@@ -940,42 +940,132 @@ namespace cytnx {
                 itoiL_common[a] = vec_clone(this->_inner_to_outer_idx[a],comm_idx1);
             }
             
+            std::map<std::vector<cytnx_uint64>, std::vector<cytnx_uint64>> mp;
+
             for(cytnx_int64 b=0;b<Rtn->_blocks.size();b++){
                 itoiR_common[b] = vec_clone(Rtn->_inner_to_outer_idx[b],comm_idx2);
+                if(!mp[itoiR_common[b]].size())
+                    mp[itoiR_common[b]] = std::vector<cytnx_uint64>(1,b);
+                else mp[itoiR_common[b]].push_back(b);
             }
 
             std::vector<cytnx_uint64> Lgbuffer;
+
+            std::vector<cytnx_uint64> itoiR_idx;
+            std::vector<cytnx_uint64> oldshapeL,oldshapeR;
+            std::vector<std::vector<cytnx_uint64>> oldshapeC;
+            std::vector<bool> reshaped(tmp->_blocks.size(),false);
+            for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
+              oldshapeC.push_back(tmp->_blocks[a].shape());
+            }
+
+            std::vector<cytnx_uint64> non_contract_l,non_contract_r;
+            std::vector<cytnx_uint64> mapperL,inv_mapperL(this->_blocks[0].shape().size());
+            std::vector<cytnx_uint64> mapperR,inv_mapperR(Rtn->_blocks[0].shape().size());
             for(cytnx_int64 a=0;a<this->_blocks.size();a++){
-                for(cytnx_int64 b=0;b<Rtn->_blocks.size();b++){
-                    //check if common index are the same:
-                    if(itoiL_common[a] == itoiR_common[b]){
-                        //std::cout << "[contract] " << a <<" " << b << endl;
-                        
-                        vec_concatenate_(Lgbuffer, vec_clone(this->_inner_to_outer_idx[a],non_comm_idx1)
+                cytnx_int64 comm_dim = 1;
+                itoiR_idx = mp[itoiL_common[a]];
+
+                if(this->is_diag()==Rtn->is_diag()){
+                  for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
+                    comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
+                  }
+                  non_contract_l = vec_erase(vec_range(this->_blocks[a].shape().size()), comm_idx1);
+                  vec_concatenate_(mapperL, non_contract_l, comm_idx1);
+                  for (int aa = 0; aa < mapperL.size(); aa++) {
+                    inv_mapperL[mapperL[aa]] = aa;
+                  }
+                  this->_blocks[a].permute_(mapperL);
+                  oldshapeL = this->_blocks[a].shape();
+                  this->_blocks[a].reshape_({-1, comm_dim});
+                }
+
+                for(cytnx_uint64 b : itoiR_idx){
+                  if(this->is_diag()==Rtn->is_diag()){
+                    non_contract_r = vec_erase(vec_range(Rtn->_blocks[b].shape().size()), comm_idx2);
+                    vec_concatenate_(mapperR, comm_idx2, non_contract_r);
+                    for (int aa = 0; aa < mapperR.size(); aa++) {
+                      inv_mapperR[mapperR[aa]] = aa;
+                    }
+                    Rtn->_blocks[b].permute_(mapperR);
+                    oldshapeR = Rtn->_blocks[b].shape();
+                    Rtn->_blocks[b].reshape_({comm_dim, -1}); 
+                  }
+
+                  vec_concatenate_(Lgbuffer, vec_clone(this->_inner_to_outer_idx[a],non_comm_idx1)
                                                  , vec_clone(Rtn->_inner_to_outer_idx[b],non_comm_idx2));
 
-                        //find Lgbuffer in tmp, which specify the target block!
-                        auto it = std::find(tmp->_inner_to_outer_idx.begin(),tmp->_inner_to_outer_idx.end(),Lgbuffer);
-                        if(it != tmp->_inner_to_outer_idx.end()){
-                            cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
-                            //cout << "  "  << "targ blk_id:" << targ_b << endl;
-                            if(this->is_diag()!=Rtn->is_diag()){
-                                tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2, this->is_diag());
+                  //find Lgbuffer in tmp, which specify the target block!
+                  auto it = std::find(tmp->_inner_to_outer_idx.begin(),tmp->_inner_to_outer_idx.end(),Lgbuffer);
+                  if(it != tmp->_inner_to_outer_idx.end()){
+                    cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
+                    //cout << "  "  << "targ blk_id:" << targ_b << endl;
+                    if(this->is_diag()!=Rtn->is_diag()){
+                        tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2, this->is_diag());
+                    }else{
+                        // tmp->_blocks[targ_b] += linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
+                        //           mv_elem_self, mv_elem_rhs);
 
-                            }else{
-                                tmp->_blocks[targ_b] += linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
-                                          mv_elem_self, mv_elem_rhs);
-                                // tmp->_blocks[targ_b] = linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
-                                //           mv_elem_self, mv_elem_rhs);
-                            }
-                        }else{
-                            cytnx_error_msg(true,"[ERROR][BlockUniTensor] trying to contract L.blk [%d] with R.blk [%d] but no target blk found!\n",a,b); 
+
+                        // oldshapeC = tmp->_blocks[targ_b].shape();
+                        if(!reshaped[targ_b]){
+                          tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0], (cytnx_int64)Rtn->_blocks[b].shape()[1]});
+                          reshaped[targ_b] = true;
                         }
-
+                        if(tmp->dtype()==Type.Double and this->_blocks[a].dtype()==Type.Double and Rtn->_blocks[b].dtype()==Type.Double){
+                          linalg::d_Matmul(this->_blocks[a], Rtn->_blocks[b], tmp->_blocks[targ_b], 1.0, 1.0, false);
+                          // tmp->_blocks[targ_b].reshape_(oldshapeC);
+                        } else if(tmp->dtype()==Type.ComplexDouble and this->_blocks[a].dtype()==Type.ComplexDouble and Rtn->_blocks[b].dtype()==Type.ComplexDouble){
+                          linalg::cd_Matmul(this->_blocks[a], Rtn->_blocks[b], tmp->_blocks[targ_b], 1.0, 1.0, false);
+                          // tmp->_blocks[targ_b].reshape_(oldshapeC);
+                        } else {
+                          tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b]).reshape(tmp->_blocks[targ_b].shape());
+                        }
                     }
+                  }
+                  if(this->is_diag()==Rtn->is_diag()){
+                    Rtn->_blocks[b].reshape_(oldshapeR);
+                    Rtn->_blocks[b].permute_(inv_mapperR);
+                  }
                 }
+                if(this->is_diag()==Rtn->is_diag()){
+                  this->_blocks[a].reshape_(oldshapeL);
+                  this->_blocks[a].permute_(inv_mapperL);
+                }
+                // for(cytnx_int64 b=0;b<Rtn->_blocks.size();b++){
+                //     //check if common index are the same:
+                //     if(itoiL_common[a] == itoiR_common[b]){
+                //         //std::cout << "[contract] " << a <<" " << b << endl;
+                        
+                //         vec_concatenate_(Lgbuffer, vec_clone(this->_inner_to_outer_idx[a],non_comm_idx1)
+                //                                  , vec_clone(Rtn->_inner_to_outer_idx[b],non_comm_idx2));
+
+                //         //find Lgbuffer in tmp, which specify the target block!
+                //         auto it = std::find(tmp->_inner_to_outer_idx.begin(),tmp->_inner_to_outer_idx.end(),Lgbuffer);
+                //         if(it != tmp->_inner_to_outer_idx.end()){
+                //             cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
+                //             //cout << "  "  << "targ blk_id:" << targ_b << endl;
+                //             if(this->is_diag()!=Rtn->is_diag()){
+                //                 tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2, this->is_diag());
+
+                //             }else{
+                //                 tmp->_blocks[targ_b] += linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
+                //                           mv_elem_self, mv_elem_rhs);
+                //                 // tmp->_blocks[targ_b] = linalg::Tensordot(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2,
+                //                 //           mv_elem_self, mv_elem_rhs);
+                //             }
+                //         }else{
+                //             cytnx_error_msg(true,"[ERROR][BlockUniTensor] trying to contract L.blk [%d] with R.blk [%d] but no target blk found!\n",a,b); 
+                //         }
+
+                //     }
+                // }
             }
             
+            for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
+                tmp->_blocks[a].reshape_(oldshapeC[a]);
+            }
+
             boost::intrusive_ptr<UniTensor_base> out(tmp);
             return out;
 
