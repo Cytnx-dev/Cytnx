@@ -107,20 +107,16 @@ namespace cytnx {
                       "\n");
 
       if (Tl.device() == Device.cpu) {
-        auto out_ = out._impl->storage()._impl;
-        auto Tl_ = Tl._impl->storage()._impl;
-        auto Tr_ = Tr._impl->storage()._impl;
-        cytnx_double *_out = (cytnx_double *)out_->Mem;
-        cytnx_double *_inl = (cytnx_double *)Tl_->Mem;
-        cytnx_double *_inr = (cytnx_double *)Tr_->Mem;
+        cytnx_double *_out = (cytnx_double *)out._impl->storage()._impl->Mem;
+        cytnx_double *_inl = (cytnx_double *)Tl._impl->storage()._impl->Mem;
+        cytnx_double *_inr = (cytnx_double *)Tr._impl->storage()._impl->Mem;
 
         // cytnx_double alpha = alpha, beta = beta;
         blas_int blsMl = Tl.shape()[0], blsNr = Tr.shape()[1], blsComm = Tl.shape()[1];
         dgemm((char *)"N", (char *)"N", &blsNr, &blsMl, &blsComm, &alpha, _inr, &blsNr, _inl,
               &blsComm, &beta, _out, &blsNr);
         return;
-      } 
-      else {
+      } else {
 #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuMatmul_ii[_tl.dtype()](
@@ -148,15 +144,23 @@ namespace cytnx {
       cytnx_error_msg(check && Tr.shape().size() != 2,
                       "[Matmul] error, tensor Tr ,Matmul can only operate on rank-2 Tensor.%s",
                       "\n");
+      cytnx_error_msg(check && out.shape().size() != 2,
+                      "[Matmul] error, tensor out ,Matmul can only operate on rank-2 Tensor.%s",
+                      "\n");
       cytnx_error_msg(check && !Tl.is_contiguous(),
                       "[Matmul] error tensor Tl must be contiguous. Call contiguous_() or contiguous() first!%s",
                       "\n");
       cytnx_error_msg(check && !Tr.is_contiguous(),
                       "[Matmul] error tensor Tr must be contiguous. Call contiguous_() or contiguous() first!%s",
                       "\n");
+      cytnx_error_msg(check && !out.is_contiguous(),
+                      "[Matmul] error tensor out must be contiguous. Call contiguous_() or contiguous() first!%s",
+                      "\n");
 
       // check device:
       cytnx_error_msg(check && Tl.device() != Tr.device(),
+                      "[Matmul] error two tensor should be on same device.%s", "\n");
+      cytnx_error_msg(check && Tl.device() != out.device(),
                       "[Matmul] error two tensor should be on same device.%s", "\n");
 
       // check dimension match
