@@ -86,7 +86,16 @@ PYBIND11_MODULE(cytnx, m) {
   mdev.attr("cuda") = (cytnx_int64)cytnx::Device.cuda;
   mdev.attr("Ngpus") = cytnx::Device.Ngpus;
   mdev.attr("Ncpus") = cytnx::Device.Ncpus;
-
+  mdev.def(
+    "Print_Property",
+    [](){
+      cytnx::Device.Print_Property();
+    });
+  mdev.def(
+    "getname",
+    [](const int& device_id) -> std::string {
+      return cytnx::Device.getname(device_id);
+    });
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
 
 
