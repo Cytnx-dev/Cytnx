@@ -614,7 +614,7 @@ TEST_F(BlockUniTensorTest, permute_2) {
         }
 }
 
-TEST_F(BlockUniTensorTest, contract1) {
+TEST_F(BlockUniTensorTest, contract1_d) {
     // two sparse matrix
 
     UT_contract_L1.set_labels({'a','b'});
@@ -626,7 +626,7 @@ TEST_F(BlockUniTensorTest, contract1) {
         EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
 }
 
-TEST_F(BlockUniTensorTest, contract2) {
+TEST_F(BlockUniTensorTest, contract2_d) {
     // two sparse matrix with degeneracy
 
     UT_contract_L2.set_labels({'a','b'});
@@ -639,7 +639,7 @@ TEST_F(BlockUniTensorTest, contract2) {
 }
 
 
-TEST_F(BlockUniTensorTest, contract3) {
+TEST_F(BlockUniTensorTest, contract3_d) {
     //// two 3 legs tensor
 
     UT_contract_L3.set_labels({'a','b','c'});
@@ -650,6 +650,44 @@ TEST_F(BlockUniTensorTest, contract3) {
     for(int i = 0; i < ansbks.size(); i++)
         EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
 }
+
+TEST_F(BlockUniTensorTest, contract1_cd) {
+    // two sparse matrix
+
+    UT_contract_cd_L1.set_labels({'a','b'});
+    UT_contract_cd_R1.set_labels({'b','c'});
+    UniTensor out = UT_contract_cd_L1.contract(UT_contract_R1);
+    auto outbks = out.get_blocks();
+    auto ansbks = UT_contract_cd_ans1.get_blocks();
+    for(int i = 0; i < ansbks.size(); i++)
+        EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
+}
+
+TEST_F(BlockUniTensorTest, contract2_cd) {
+    // two sparse matrix with degeneracy
+
+    UT_contract_cd_L2.set_labels({'a','b'});
+    UT_contract_cd_R2.set_labels({'b','c'});
+    UniTensor out = UT_contract_cd_L2.contract(UT_contract_R2);
+    auto outbks = out.get_blocks();
+    auto ansbks = UT_contract_cd_ans2.get_blocks();
+    for(int i = 0; i < ansbks.size(); i++)
+        EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
+}
+
+
+TEST_F(BlockUniTensorTest, contract3_cd) {
+    //// two 3 legs tensor
+
+    UT_contract_cd_L3.set_labels({'a','b','c'});
+    UT_contract_cd_R3.set_labels({'c','d','e'});
+    UniTensor out = UT_contract_cd_L3.contract(UT_contract_R3);
+    auto outbks = out.get_blocks();
+    auto ansbks = UT_contract_cd_ans3.get_blocks();
+    for(int i = 0; i < ansbks.size(); i++)
+        EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
+}
+
 
 TEST_F(BlockUniTensorTest, Add){
     using namespace std::complex_literals;

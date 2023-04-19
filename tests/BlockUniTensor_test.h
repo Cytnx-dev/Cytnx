@@ -83,6 +83,7 @@ class BlockUniTensorTest : public ::testing::Test {
 
   UniTensor UT_pB = UniTensor({pBI,pBJ,pBK});
   UniTensor UT_pB_ans = UniTensor({pBI,pBJ,pBK});
+
   UniTensor UT_contract_L1 = UniTensor({C1B1, C2B2});
   UniTensor UT_contract_R1 = UniTensor({C1B1, C2B2});
   UniTensor UT_contract_ans1 = UniTensor({C1B1, C2B2});
@@ -92,6 +93,16 @@ class BlockUniTensorTest : public ::testing::Test {
   UniTensor UT_contract_L3 = UniTensor({C3B1, C3B2, C3B3});
   UniTensor UT_contract_R3 = UniTensor({C3B3.redirect(), C3B1.redirect(), C3B2.redirect()});
   UniTensor UT_contract_ans3 = UniTensor({C3B1, C3B2, C3B1.redirect(), C3B2.redirect()});
+
+  UniTensor UT_contract_cd_L1 = UniTensor({C1B1, C2B2}, {1,2}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_R1 = UniTensor({C1B1, C2B2}, {1,2}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_ans1 = UniTensor({C1B1, C2B2}, {1,2}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_L2 = UniTensor({C2B1, C2B2}, {1,2}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_R2 = UniTensor({C2B1, C2B2}, {1,2}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_ans2 = UniTensor({C2B1, C2B2}, {1,2}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_L3 = UniTensor({C3B1, C3B2, C3B3}, {1,2,3}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_R3 = UniTensor({C3B3.redirect(), C3B1.redirect(), C3B2.redirect()}, {1,2,3}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
+  UniTensor UT_contract_cd_ans3 = UniTensor({C3B1, C3B2, C3B1.redirect(), C3B2.redirect()}, {1,2,3,4}, 1, cytnx::Type.ComplexDouble, cytnx::Device.cpu, false);
 
   UniTensor UT_permute_1 = UniTensor({C3B1, C3B2, C3B3});
   UniTensor UT_permute_ans1 = UniTensor({C3B3, C3B1, C3B2});
