@@ -17,9 +17,12 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->Mem;
+      auto _out = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(out->Mem));
+      auto _Lin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Lin->Mem));
+      auto _Rin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Rin->Mem));
+      //cytnx_complex128* _out = static_cast<cytnx_complex128 *>(out->Mem);
+      //cytnx_complex128* _Lin = static_cast<cytnx_complex128 *>(Lin->Mem);
+      //cytnx_complex128* _Rin = static_cast<cytnx_complex128 *>(Rin->Mem);
       if (Lin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
@@ -76,23 +79,27 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->Mem;
+      auto _out = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(out->Mem));
+      auto _Lin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Lin->Mem));
+      auto _Rin = std::unique_ptr<cytnx_complex64[]>(static_cast<cytnx_complex64*>(Rin->Mem));	    
+	    
+      //cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
+      //cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
+      //cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->Mem;
 
       if (Lin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+          _out[i] = _Lin[0] + static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] + _Rin[0];
+          _out[i] = _Lin[i] + static_cast<cytnx_complex128>(_Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
@@ -100,7 +107,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = _Lin[i] + static_cast<cytnx_complex128>(_Rin[i]);
           }
         } else {
           /// handle non-contiguous:
@@ -125,7 +132,7 @@ namespace cytnx {
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] +
-                      _Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)];
+                      static_cast<cytnx_complex128>(_Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)]);
           }
         }
       }
@@ -205,14 +212,14 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+          _out[i] = static_cast<cytnx_complex128>(_Lin[0]) + static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] + _Rin[0];
+          _out[i] = static_cast<cytnx_complex128>(_Lin[i]) + static_cast<cytnx_complex128>(_Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
@@ -220,7 +227,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = static_cast<cytnx_complex128>(_Lin[i]) + static_cast<cytnx_complex128>(_Rin[i]);
           }
         } else {
           /// handle non-contiguous:
@@ -244,8 +251,8 @@ namespace cytnx {
 #endif
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
-            _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] +
-                      _Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)];
+            _out[i] = static_cast<cytnx_complex128>(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)]) +
+                      static_cast<cytnx_complex128>(_Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)]);
           }
         }
       }
@@ -256,23 +263,26 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      //cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
+      //cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
+      //cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      auto _out = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(out->Mem));
+      auto _Lin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Lin->Mem));
+      auto _Rin = std::unique_ptr<cytnx_uint64[]>(static_cast<cytnx_uint64*>(Rin->Mem));
 
       if (Lin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
-        for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+        for (auto i = 0; i < len; i++) {
+          _out[i] =static_cast<cytnx_complex128>( _Lin[0]) + static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
-        for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] + _Rin[0];
+        for (auto i = 0; i < len; i++) {
+          _out[i] = static_cast<cytnx_complex128>( _Lin[i]) + static_cast<cytnx_complex128>( _Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
@@ -280,7 +290,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = _Lin[i] + static_cast<cytnx_complex128>(_Rin[i]);
           }
         } else {
           /// handle non-contiguous:
@@ -305,7 +315,7 @@ namespace cytnx {
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] +
-                      _Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)];
+                      static_cast<cytnx_complex128>(_Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)]);
           }
         }
       }
@@ -316,23 +326,27 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+//      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
+//      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
+//      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      auto _out = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(out->Mem));
+      auto _Lin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Lin->Mem));
+      auto _Rin = std::unique_ptr<cytnx_uint32[]>(static_cast<cytnx_uint32*>(Rin->Mem));
+
 
       if (Lin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+          _out[i] = _Lin[0] + static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] + _Rin[0];
+          _out[i] = _Lin[i] + static_cast<cytnx_complex128>(_Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
@@ -340,7 +354,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = _Lin[i] + static_cast<cytnx_complex128>( _Rin[i]);
           }
         } else {
           /// handle non-contiguous:
@@ -365,7 +379,7 @@ namespace cytnx {
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] +
-                      _Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)];
+                      static_cast<cytnx_complex128>(_Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)]);
           }
         }
       }
@@ -376,23 +390,25 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
-
+//      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
+//      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
+//      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      auto _out = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(out->Mem));
+      auto _Lin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Lin->Mem));
+      auto _Rin = std::unique_ptr<cytnx_int64[]>(static_cast<cytnx_int64*>(Rin->Mem));
       if (Lin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+          _out[i] = _Lin[0] +  static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] + _Rin[0];
+          _out[i] = _Lin[i] +  static_cast<cytnx_complex128>(_Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
@@ -400,7 +416,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = _Lin[i] +  static_cast<cytnx_complex128>(_Rin[i]);
           }
         } else {
           /// handle non-contiguous:
@@ -425,7 +441,7 @@ namespace cytnx {
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] +
-                      _Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)];
+                       static_cast<cytnx_complex128>(_Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)]);
           }
         }
       }
@@ -436,23 +452,26 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      auto _out = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(out->Mem));
+      auto _Lin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Lin->Mem));
+      auto _Rin = std::unique_ptr<cytnx_int32[]>(static_cast<cytnx_int32 *>(Rin->Mem));
+      //cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
+      //cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
+      //cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
 
       if (Lin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
-        for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+        for (auto i = 0; i < len; i++) {
+          _out[i] = _Lin[0] + static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
-        for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] + _Rin[0];
+        for (auto i = 0; i < len; i++) {
+          _out[i] = _Lin[i] + static_cast<cytnx_complex128>(_Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
@@ -460,7 +479,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = _Lin[i] +  static_cast<cytnx_complex128>(_Rin[i]);
           }
         } else {
           /// handle non-contiguous:
@@ -482,10 +501,10 @@ namespace cytnx {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
-          for (cytnx_uint64 i = 0; i < len; i++) {
+          for (auto i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] +
-                      _Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)];
+                       static_cast<cytnx_complex128>(_Rin[cartesian2c(vec_map(tmpv, invmapper_R), old_accu_shapeR)]);
           }
         }
       }
@@ -496,9 +515,12 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      auto _out = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(out->Mem));
+      auto _Lin = std::unique_ptr<cytnx_complex128[]>(static_cast<cytnx_complex128*>(Lin->Mem));
+      auto _Rin = std::unique_ptr<cytnx_int16[]>(static_cast<cytnx_int16 *>(Rin->Mem));
+//      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
+//      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
+//      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
 
       if (Lin->size() == 1) {
 #ifdef UNI_OMP
