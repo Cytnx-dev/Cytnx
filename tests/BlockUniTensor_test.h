@@ -139,6 +139,7 @@ class BlockUniTensorTest : public ::testing::Test {
     t2 = Tensor::Load(data_dir+"put_block_t2.cytn");
 
     UT_pB_ans = UniTensor::Load(data_dir+"put_block_ans.cytnx");
+
     UT_contract_L1 = UniTensor::Load(data_dir+"contract_L1.cytnx");
     UT_contract_R1 = UniTensor::Load(data_dir+"contract_R1.cytnx");
     UT_contract_ans1 =  UniTensor::Load(data_dir+"contract_ans1.cytnx");
@@ -148,6 +149,16 @@ class BlockUniTensorTest : public ::testing::Test {
     UT_contract_L3 = UniTensor::Load(data_dir+"contract_L3.cytnx");
     UT_contract_R3 = UniTensor::Load(data_dir+"contract_R3.cytnx");
     UT_contract_ans3 =  UniTensor::Load(data_dir+"contract_ans3.cytnx");
+
+    UT_contract_cd_L1 = UniTensor::Load(data_dir+"contract_cd_L1.cytnx");
+    UT_contract_cd_R1 = UniTensor::Load(data_dir+"contract_cd_R1.cytnx");
+    UT_contract_cd_ans1 =  UniTensor::Load(data_dir+"contract_cd_ans1.cytnx");
+    UT_contract_cd_L2 = UniTensor::Load(data_dir+"contract_cd_L2.cytnx");
+    UT_contract_cd_R2 = UniTensor::Load(data_dir+"contract_cd_R2.cytnx");
+    UT_contract_cd_ans2 =  UniTensor::Load(data_dir+"contract_cd_ans2.cytnx");
+    UT_contract_cd_L3 = UniTensor::Load(data_dir+"contract_cd_L3.cytnx");
+    UT_contract_cd_R3 = UniTensor::Load(data_dir+"contract_cd_R3.cytnx");
+    UT_contract_cd_ans3 =  UniTensor::Load(data_dir+"contract_cd_ans3.cytnx");
     
     UT_permute_1 = UniTensor::Load(data_dir+"permute_T1.cytnx");
     UT_permute_ans1 = UniTensor::Load(data_dir+"permute_ans1.cytnx");
