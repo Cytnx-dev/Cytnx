@@ -1,20 +1,21 @@
 LinOp class
 --------------
-Cytnx provide a way for user to customize a linear operator with **LinOp** class. 
+Cytnx provides users with the ability to define customized a linear operators using the **LinOp** class. 
 
-Before dive into the **LinOp** class, let's first take a look at a simple example:
+Before diving into the **LinOp** class, let's take a look at a simple example:
 
-In linear algebra, a linear operator can be think as a matrix :math:`\boldsymbol{\hat{H}}` that operate on a vector :math:`\boldsymbol{x}`, resulting as a output vector :math:`\boldsymbol{y}` as
+In linear algebra, a linear operator can be represented as a matrix :math:`\boldsymbol{\hat{H}}` that operates on a vector :math:`\boldsymbol{x}`, resulting in an output vector :math:`\boldsymbol{y}` as
 
 .. math::
 
     y = \hat{H} x
 
 
-If we consider :math:`\boldsymbol{\hat{H}}` to a matrix, this matrix-vector multiplication can be simply achieve using **linalg.Dot**. 
-Let's consider a vector :math:`\boldsymbol{x}` with dimension 4, and matrix :math:`\boldsymbol{\hat{H}}` with shape (4,4) as 
+If we consider :math:`\boldsymbol{\hat{H}}` to be a matrix, this matrix-vector multiplication can simply be achieved by using **linalg.Dot**. 
 
-* In python :
+As an example, we multiply a matrix :math:`\boldsymbol{\hat{H}}` with shape (4,4) and a vector :math:`\boldsymbol{x}` with 4 elements: 
+
+* In Python :
 
 .. code-block:: python
     :linenos:
@@ -29,7 +30,7 @@ Let's consider a vector :math:`\boldsymbol{x}` with dimension 4, and matrix :mat
     print(y)
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -70,31 +71,40 @@ Output>>
     Shape : (4)
     [2.40000e+01 2.80000e+01 3.20000e+01 3.60000e+01 ]
 
+Such an explicit matrix-vector multiplication can be done for small matrices :math:`\boldsymbol{\hat{H}}`. 
 
-The above example consider a matrix :math:`\boldsymbol{\hat{H}}` that is small, with shape (4,4). 
+**What if the matrix is very large but sparse? Or if more internal structure can be used?**
 
-**What if the matrix is very large but sparse?**
-
-Clearly using dense structure is not only very memory insufficient, but also post large computational cost as most of the elements are zero. 
-One way to solve such problem is to use sparse representation with pre-defined sparse structure. Indeed, most of the linear algebra library does provide those standardized sparse data structure. 
+Clearly, if most of the elements of the matrix are zero, using a dense structure is not only memory-inefficient but also leads to unnecessarily large computational costs as many zeros need to be multiplied and added.  
+One way to solve this problem is to use a sparse representation with a pre-defined sparse structure. Indeed, most linear algebra libraries provide these standardized sparse data structures.  
 
 There is, however, a more general way to represent linear operator :math:`\boldsymbol{\hat{H}}`. 
-Instead of think it as a matrix, and defines different internal data structure, we can think this linear operator :math:`\boldsymbol{\hat{H}}` as a **function** that maps the input vector :math:`\boldsymbol{x}` to a output vector :math:`\boldsymbol{y}`. 
+Instead of thinking of it as a matrix and making use of various different internal data structures, we can think of this linear operator :math:`\boldsymbol{\hat{H}}` as a linear **function** that maps an input vector :math:`\boldsymbol{x}` to an output vector :math:`\boldsymbol{y}`.
 
-This is exactly what LinOp is designed to do. User can define the mapping operation from input :math:`\boldsymbol{x}` to :math:`\boldsymbol{y}` inside LinOp. 
+This is precisely what the LinOp class is designed to do. Users can define the mapping operation from an input vector :math:`\boldsymbol{x}` to an output vector :math:`\boldsymbol{y}` inside the LinOp class.
 
-There are two ways we can define a linear operator: 1. Pass a callable function with proper signature to LinOp object. 2. Inherit the LinOp class, and overload the **matvec** member function.
 
-Let's consider a simple example of a operator that operate on a input vector :math:`\boldsymbol{x}` with dimension 4 that interchange the 1st and 4th elements and add one to both the 2nd and 3rd elements. Then output a dim=4 vector :math:`\boldsymbol{y}`. 
+.. Hint::
+
+    This functionality can also be helpful if the matrix has a known internal structure which can be used to speed up the algorithm. For example, in typical tensor network algorithms, the linear operator is often defined by the contraction of a tensor network. Instead of explicitly doing all the contractions and storing the result in a possibly large matrix :math:`\boldsymbol{\hat{H}}`, it can be much more efficient to contract the tensor network directly with the input tensor :math:`\boldsymbol{x}`. Then, the order of the index summations can be chosen in a way that minimizes the number of operations needed. An example of this is given in the :ref:`SectionDMRG` algorithm. 
+    
+
+There are two ways to define a linear operator:
+
+1. Pass a callable function with appropriate signature to the LinOp object.
+
+2. Inherit the LinOp class and overload the **matvec** member function.
+
+Let's consider a simple example of an operator that acts on an input vector :math:`\boldsymbol{x}` with 4 elements. It interchanges the 1st and 4th element, and adds one to both the 2nd and 3rd elements. The output then is again a dim=4 vector :math:`\boldsymbol{y}`. 
 
 
 Pass a function
 *****************
-The simplest way is to define a function and pass it into LinOp class. 
+The simplest implementation of a linear operator is to define a function and pass it to the LinOp class. 
 
 First, let's define the function:
 
-* In python:
+* In Python:
 
 .. code-block:: python 
    :linenos:     
@@ -107,7 +117,7 @@ First, let's define the function:
         return out
     
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
    :linenos:     
@@ -124,10 +134,12 @@ First, let's define the function:
 
 .. Note::
 
-    The function should have signature **Tensor f(const Tensor &)** with NO additional argument. Thus it is less flexible if additional arguments are required. In such case, See next section *Inherit the LinOp class* instead.
+    The function should have the signature **Tensor f(const Tensor &)** with NO additional arguments. Thus, it is less flexible if the linear algebra operator depends on further parameters or data. In such cases, see the next section *Inherit the LinOp class* instead.
 
 
-Next, we create a **LinOp** object, and pass this *myfunc* into it. 
+Next, we create a **LinOp** object, and pass the function *myfunc* to it. 
+
+* In Python:
 
 .. code-block:: python 
    :linenos:     
@@ -138,7 +150,7 @@ Next, we create a **LinOp** object, and pass this *myfunc* into it.
                     custom_f=myfunc)
     
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
    :linenos:     
@@ -147,23 +159,23 @@ Next, we create a **LinOp** object, and pass this *myfunc* into it.
                           Device.cpu,
                           myfunc);
 
-The meaning of the arguments are:
+The meaning of the arguments is:
 
 +---+-------------------+--------------------------------------------------------------------+
-| 1 | "mv"              | indicate matrix-vector multiplication                              |
+| 1 | "mv"              | indicates matrix-vector multiplication                             |
 +---+-------------------+--------------------------------------------------------------------+
-| 2 | nx=4              | indicate the input dimension = 4                                   |
+| 2 | nx=4              | sets the input dimension to 4                                      |
 +---+-------------------+--------------------------------------------------------------------+
-| 3 | dtype=Type.Double | indicate the data type of input/output vector of custom function   |
+| 3 | dtype=Type.Double | data type of input/output vector of the custom function            |
 +---+-------------------+--------------------------------------------------------------------+
-| 4 | device=Device.cpu | indicate the device type of input/output vector of custom function |
+| 4 | device=Device.cpu | device type of the input/output vectors of the custom function     |
 +---+-------------------+--------------------------------------------------------------------+
-| 5 | custom_f=myfunc   | the custom funtion.                                                |
+| 5 | custom_f=myfunc   | the custom function                                                |
 +---+-------------------+--------------------------------------------------------------------+
 
 Finally, we can use this object by calling **LinOp.matvec**:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -173,7 +185,7 @@ Finally, we can use this object by calling **LinOp.matvec**:
     print(x)
     print(y)
     
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -206,13 +218,13 @@ Output>>
 
 Inherit the LinOp class
 ************************
-Cytnx also expose the interface **LinOp.matvec**, which provides more flexibility for users who want to include additional data/functions associate with the mapping. This can be achieve with inheritance of **LinOp** class. 
+Cytnx exposes the interface **LinOp.matvec**, which provides more flexibility for users who want to include additional data/functions associated with the mapping. This can be achieved with inheritance from the **LinOp** class. 
 
-Let's demonstrate how to use this with the similar example. Again, we consider a operator that interchange the 1st and 4th elements. But this time, we want the 2nd and 3rd elements add with a constant as an external parameter. 
+Let's demonstrate this in a similar example as previously. Again, we consider an operator that interchanges the 1st and 4th elements. But this time, we want to add a constant, which is an external parameter, to the 2nd and 3rd elements. 
 
-First, let's create a class that inherit **LinOp** object, with a class member **AddConst**. 
+First, let's create a class that inherits from **LinOp**, with a class member **AddConst**. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -222,16 +234,16 @@ First, let's create a class that inherit **LinOp** object, with a class member *
 
         def __init__(self,aconst):
             # here, we fix nx=4, dtype=double on CPU, 
-            # so the constructor only take external argument 'aconst'
+            # so the constructor only takes the external argument 'aconst'
             
             ## Remember to init the mother class. 
-            ## Here, we don't specify the custom_f!
+            ## Here, we don't specify custom_f!
             LinOp.__init__(self,"mv",4,cytnx.Type.Double,\
                                        cytnx.Device.cpu )
 
             self.AddConst = aconst
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -250,9 +262,9 @@ First, let's create a class that inherit **LinOp** object, with a class member *
     };
 
 
-Next, the most important part is to overload the **matvec** member function, as it defines the mapping from input :math:`\boldsymbol{x}` to output :math:`\boldsymbol{y}`.
+Next, the most important part is to overload the **matvec** member function, as it defines the mapping from input :math:`\boldsymbol{x}` to the output :math:`\boldsymbol{y}`.
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -263,10 +275,10 @@ Next, the most important part is to overload the **matvec** member function, as 
 
         def __init__(self,aconst):
             # here, we fix nx=4, dtype=double on CPU, 
-            # so the constructor only take external argument 'aconst'
+            # so the constructor only takes the external argument 'aconst'
             
             ## Remember to init the mother class. 
-            ## Here, we don't specify the custom_f!
+            ## Here, we don't specify custom_f!
             cytnx.LinOp.__init__(self,"mv",4,cytnx.Type.Double,\
                                              cytnx.Device.cpu )
 
@@ -280,7 +292,7 @@ Next, the most important part is to overload the **matvec** member function, as 
             return out
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -308,9 +320,9 @@ Next, the most important part is to overload the **matvec** member function, as 
 
     };
 
-Finally, the class can be simply used as following, here, we set the constant to add as 7. 
+Finally, the class can be simply be used. We demonstrate this in in the following and set the constant to add to 7: 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -324,7 +336,7 @@ Finally, the class can be simply used as following, here, we set the constant to
 
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -356,11 +368,11 @@ Output>>
 
 Ex: sparse data structure with mapping function 
 ****************************************************
-With this flexibility, the user can actually define their own sparse data structure of an operator. 
+With the flexibility provided by overloading the **matvec** member function, users can actually define their own sparse data structures of an operator. 
 
-For example, if we want to define a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. other elements are zero, we don't have to really define a dense tensor with size :math:`10^6`. We can simply use **LinOp** class as
+As an example, we want to define a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. All other elements are zero. We do not have to construct a dense tensor with size :math:`10^6`. Instead, we can simply use the **LinOp** class:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -404,16 +416,16 @@ Output>>
 
 .. Hint::
 
-    Here, we use python API as example, but the same thing can be done with C++ API as well. 
+    In this example, we use the python API. C++ can be used similarly. 
     
 
 Prestore/preconstruct sparse elements
 ****************************************
-In above, we show how to represent linear operator in terms of function action by overload the **matvec** member function of LinOp class. Now of course this is simple and straight forward. But in the case where the custom mapping contains lots of for-loop, clearly, handling them in python side does not seem to be a good idea. 
+In the previous example, we showed how to construct a linear operator by overloading the **matvec** member function of the LinOp class. This is straight forward and simple, but in cases where the custom mapping contains many for-loops, clearly, handling them in python is not optimal for performance reasons. 
 
-In v0.6.3a, we introduce a new option **"mv_elem"** for LinOp class. It allows user to pre-store the location and elements, similar as the standard sparse storage structure, and let cytnx to handle and optimize the matvec performance. Again, let's use the same example as considered previously: a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7.  
+Since v0.6.3a, the option **"mv_elem"** is available in the constructor of the LinOp class. It allows users to pre-store the indices and values of the non-zero elements, similar to the standard sparse storage structure. If this is used, Cytnx handles the internal structure and optimizes the matvec performance. Again, let's use the previous example: a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) and ONLY two non-zero elements A[1,100]=4 and A[100,1]=7.  
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -435,10 +447,9 @@ In v0.6.3a, we introduce a new option **"mv_elem"** for LinOp class. It allows u
     print(y[1].item(),y[100].item())
 
 
-Notice that instead of overload **matvec** driving function, we use **set_elem** member function from LinOp class to set the location and the element. This information will be stored internally inside LinOp class, and we let LinOp class to internally optimize and handle **matvec**. 
+Notice that instead of overloading the **matvec** function, we use the **set_elem** member function in the LinOp class to set the indices and values of the elements. This information is then stored internally in the LinOp class, and we let the LinOp class provide and optimize **matvec**. 
 
-
-Next session, we will see how we can benefit from LinOp class by pass this object to Cytnx's iteractive solver and solve for the eigen value problem with our customized operator. 
+In the next section, we will see how we can benefit from the LinOp class by passing this object to Cytnx's iterative solver. This way the eigenvalue problem can be solved efficiently with our customized linear operator. 
 
 
 

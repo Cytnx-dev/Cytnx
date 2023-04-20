@@ -1,12 +1,11 @@
 Iterative solver
 ==================
-Beside the basic linear algebra functions for direct solving of dense Tensor, Cytnx also provides the iterative solver that solve the eigen value problem. Together with LinOp class, user can define a custom linear operator as a function/class, similar as 
+In addition to offering basic linear algebra functions for dense tensors, Cytnx also includes an iterative solver for solving eigenvalue problems. By using the LinOp class, users can define a custom linear operator as a function or class, similar to 
 :spLO:`scipy.LinearOperator <>`.
 
-This is more general than the conventional case of using the standard sparse storage format.
+This approach is more versatile than using the standard sparse storage format.
 
- 
-In the following, we show how one can define a customize linear operator using **LinOp** class, and solving the eigen value problem using iterative solver.  
+In the following section, we demonstrate how to define a custom linear operator using the **LinOp** class and how to solve the eigenvalue problem using the iterative solver.  
 
 
 .. toctree::

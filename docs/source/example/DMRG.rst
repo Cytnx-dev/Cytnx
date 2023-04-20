@@ -1,3 +1,5 @@
+.. _SectionDMRG:
+
 DMRG
 ------------
 **By : Hsu Ke, Kai-Hsin Wu**
