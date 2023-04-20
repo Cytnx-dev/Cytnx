@@ -3,6 +3,7 @@
 #include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
 #include "utils/is.hpp"
+#include "Type.hpp"
 using namespace std;
 
 namespace cytnx {
@@ -420,6 +421,8 @@ namespace cytnx {
     // for(int i=0;i<this->_shape.size();i++)
     //     std::cout << this->_mapper[i] << " " << this->_invmapper[i] << std::endl;
 
+    boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
+
     for (cytnx_uint32 i = 0; i < rnks.size(); i++) {
       if (rnks[i] >= rnks.size()) {
         cytnx_error_msg(1, "%s", "reshape a tensor with invalid rank index.");
@@ -430,19 +433,18 @@ namespace cytnx {
       new_shape[i] = this->_shape[rnks[i]];
     }
 
-    boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
-    out->_invmapper = new_idxmap;
-    out->_shape = new_shape;
-    out->_mapper = new_fwdmap;
+    out->_invmapper = std::move(new_idxmap);
+    out->_shape = std::move(new_shape);
+    out->_mapper = std::move(new_fwdmap);
 
     /// checking if permute back to contiguous:
     bool iconti = true;
     for (cytnx_uint32 i = 0; i < rnks.size(); i++) {
-      if (new_fwdmap[i] != new_idxmap[i]) {
-        iconti = false;
-        break;
-      }
-      if (new_fwdmap[i] != i) {
+      // if (new_fwdmap[i] != new_idxmap[i]) {
+      //   iconti = false;
+      //   break;
+      // }
+      if (out->_mapper[i] != i) {
         iconti = false;
         break;
       }
@@ -466,9 +468,13 @@ namespace cytnx {
       cytnx_error_msg(true, "%s", "tensor permute with duplicated index.\n");
     }
 
-    std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
-    std::vector<cytnx_uint64> new_shape(this->_shape.size());
-    std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
+    // std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
+    // std::vector<cytnx_uint64> new_shape(this->_shape.size());
+    // std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
+    
+    smallvec<cytnx_uint64> new_fwdmap(this->_shape.size());
+    smallvec<cytnx_uint64> new_shape(this->_shape.size());
+    smallvec<cytnx_uint64> new_idxmap(this->_shape.size());
 
     // for(int i=0;i<this->_shape.size();i++)
     //     std::cout << this->_mapper[i] << " " << this->_invmapper[i] << std::endl;
@@ -478,23 +484,31 @@ namespace cytnx {
         cytnx_error_msg(1, "%s", "reshape a tensor with invalid rank index.");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
-      new_idxmap[this->_mapper[rnks[i]]] = i;
+
+      // new_idxmap[this->_mapper[rnks[i]]] = i;
+      this->_invmapper[this->_mapper[rnks[i]]] = i;
       new_fwdmap[i] = this->_mapper[rnks[i]];
       new_shape[i] = this->_shape[rnks[i]];
     }
 
-    this->_invmapper = new_idxmap;
-    this->_shape = new_shape;
-    this->_mapper = new_fwdmap;
+    // this->_invmapper = std::move(new_idxmap);
+    for(cytnx_uint64 i =0;i<this->_shape.size();i++){
+      this->_shape[i] = new_shape[i];
+      this->_mapper[i] = new_fwdmap[i];
+    }
+        
+    // this->_shape = std::move(new_shape);
+    // this->_mapper = std::move(new_fwdmap);
+
 
     /// checking if permute back to contiguous:
     bool iconti = true;
     for (cytnx_uint32 i = 0; i < rnks.size(); i++) {
-      if (new_fwdmap[i] != new_idxmap[i]) {
-        iconti = false;
-        break;
-      }
-      if (new_fwdmap[i] != i) {
+      // if (this->_mapper[i] != this->_invmapper[i]) {
+      //   iconti = false;
+      //   break;
+      // }
+      if (this->_mapper[i] != i) {
         iconti = false;
         break;
       }

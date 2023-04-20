@@ -26,14 +26,14 @@ namespace cytnx {
       Tensor U, S, vT;
       S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
              in.device());  // if type is complex, S should be real
-      S.storage().set_zeros();
+      // S.storage().set_zeros();
       if (is_U) {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
-        U.storage().set_zeros();
+        // U.storage().set_zeros();
       }
       if (is_vT) {
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-        vT.storage().set_zeros();
+        // vT.storage().set_zeros();
       }
 
       if (Tin.device() == Device.cpu) {
@@ -541,7 +541,7 @@ namespace cytnx {
     } // _svd_Block_UT
 
 
-    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U,
+std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U,
                                       const bool &is_vT) {
 
       // using rowrank to split the bond to form a matrix.
