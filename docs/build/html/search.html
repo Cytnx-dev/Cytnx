@@ -20,7 +20,6 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/searchtools.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
@@ -184,10 +183,7 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -197,7 +193,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -211,10 +206,11 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">8.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#contract">8.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#contracts">8.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#ncon">8.4.3. ncon()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network">8.4.4. Network()</a></li>
 </ul>
 </li>
 </ul>
@@ -467,10 +463,7 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/cyx.html">8. Cytnx extensions</a><ul>
@@ -480,7 +473,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -494,10 +486,11 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/cyx/Network.html">8.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#contract">8.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#contracts">8.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#ncon">8.4.3. ncon()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Network.html#network">8.4.4. Network()</a></li>
 </ul>
 </li>
 </ul>
@@ -597,7 +590,7 @@
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

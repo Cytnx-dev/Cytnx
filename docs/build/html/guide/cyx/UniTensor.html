@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,7 +21,6 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -181,10 +180,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -194,7 +190,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -208,10 +203,15 @@
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.3. Network from string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#contract">8.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#contracts">8.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#ncon">8.4.3. Ncon()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network">8.4.4. Network()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.5. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.6. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.7. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-with-according-to-label-order">8.4.8. PutUniTensor with according to label order</a></li>
 </ul>
 </li>
 </ul>
@@ -487,10 +487,7 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
@@ -500,7 +497,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
@@ -514,10 +510,15 @@
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.3. Network from string</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#contract">8.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#contracts">8.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#ncon">8.4.3. Ncon()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network">8.4.4. Network()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.5. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.6. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.7. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-with-according-to-label-order">8.4.8. PutUniTensor with according to label order</a></li>
 </ul>
 </li>
 </ul>
@@ -641,7 +642,7 @@ A UniTensor can be constructed using <strong>Bond</strong> object, or in the sim
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
