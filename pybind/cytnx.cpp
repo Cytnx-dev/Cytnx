@@ -45,6 +45,8 @@ void random_binding(py::module &m);
 void tnalgo_binding(py::module &m);
 void scalar_binding(py::module &m);
 
+void ncon_binding(py::module &m);
+
 PYBIND11_MODULE(cytnx, m) {
   m.attr("__version__") = "0.7";
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
@@ -98,6 +100,21 @@ PYBIND11_MODULE(cytnx, m) {
     });
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
 
+  // m.def(
+  //   "ncon",
+  //   [](const std::vector<UniTensor> &tensor_list_in,
+  //       const std::vector<std::vector<cytnx_int64>> &connect_list_in,
+  //       const bool check_network, const bool optimize,
+  //       std::vector<cytnx_int64> cont_order ,
+  //       const std::vector<std::string> &out_labels) -> UniTensor {
+  //     return ncon(tensor_list_in, connect_list_in, check_network, optimize, cont_order, out_labels);
+  //   },
+  //   py::arg("tensor_list_in")= std::vector<UniTensor>(),
+  //   py::arg("connect_list_in")= std::vector<std::vector<cytnx_int64>>(),
+  //   py::arg("check_network")= false,
+  //   py::arg("optimize") = false,
+  //   py::arg("cont_order") = std::vector<cytnx_int64>(),
+  //   py::arg("out_labels") = std::vector<std::string>());
 
   generator_binding(m);
   scalar_binding(m);
@@ -113,4 +130,5 @@ PYBIND11_MODULE(cytnx, m) {
   physics_related_binding(m);
   random_binding(m);
   tnalgo_binding(m);
+  ncon_binding(m);
 }

@@ -486,6 +486,7 @@ IF(BUILD_PYTHON)
                                        pybind/random_py.cpp
                                        pybind/tnalgo_py.cpp
                                        pybind/scalar_py.cpp
+                                       pybind/ncon_py.cpp
                                        )
     target_link_libraries(pycytnx PRIVATE cytnx)
     set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
