@@ -34,30 +34,46 @@ bool AreNearlyEqStorage(const Storage& stor1, const Storage& stor2,
   if (tol == 0) {
     return (const_cast<Storage&>(stor1) == const_cast<Storage&>(stor2));
   } else {
-    if (stor1.dtype() != stor2.dtype()) 
+    if (stor1.dtype() != stor2.dtype()){ 
+      std::cout << "[AreNearlyEqStorage] storage1 type: " << stor1.dtype() << " does not match " << stor2.dtype() << std::endl;
       return false;
-    if (stor1.size() != stor2.size())
+    }
+    if (stor1.size() != stor2.size()){
+      std::cout << "[AreNearlyEqStorage] storage1 size: " << stor1.size() << " does not match " << stor2.size() << std::endl;
       return false;
+    }
     auto dtype = stor1.dtype();
     auto size = stor1.size();
 
     switch (dtype) {
       case Type.ComplexDouble:
         for (cytnx_uint64 i = 0; i < size; i++) {
-          if (abs(stor1.at<cytnx_complex128>(i) - stor2.at<cytnx_complex128>(i)) > tol) 
+          if (abs(stor1.at<cytnx_complex128>(i) - stor2.at<cytnx_complex128>(i)) > tol){
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_complex128>(i) << " != " 
+                      << stor2.at<cytnx_complex128>(i) << std::endl;
             return false;
+          }
         }
         break;
       case Type.ComplexFloat:
         for (cytnx_uint64 i = 0; i < size; i++) {
-          if (abs(stor1.at<cytnx_complex64>(i) - stor2.at<cytnx_complex64>(i)) > tol) 
+          if (abs(stor1.at<cytnx_complex64>(i) - stor2.at<cytnx_complex64>(i)) > tol){
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_complex64>(i) << " != " 
+                      << stor2.at<cytnx_complex64>(i) << std::endl;
             return false;
+          }
         }
         break;
       case Type.Double:
         for (cytnx_uint64 i = 0; i < size; i++) {
-          if (abs(stor1.at<cytnx_double>(i) - stor2.at<cytnx_double>(i)) > tol) 
+          if (abs(stor1.at<cytnx_double>(i) - stor2.at<cytnx_double>(i)) > tol){ 
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_double>(i) << " != " 
+                      << stor2.at<cytnx_double>(i) << std::endl;
             return false;
+          }
         }
         break;
       case Type.Float:
@@ -303,8 +319,10 @@ bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
 //UniTensor
 bool AreNearlyEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2, 
                           const cytnx_double tol) {
-  if (Ut1.uten_type() != Ut2.uten_type())
+  if (Ut1.uten_type() != Ut2.uten_type()){
+    std::cout << "[AreNearlyEqUniTensor] uten_type not the same. " << Ut1.uten_type() << " " << Ut2.uten_type() << std::endl;
     return false;
+  }
   //dense
   if (Ut1.uten_type() == UTenType.Dense) {
     Tensor block1 = Ut1.get_block();
@@ -316,11 +334,16 @@ bool AreNearlyEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2,
   else if (Ut1.uten_type() == UTenType.Block) {
     const std::vector<Tensor>& blocks1 = Ut1.get_blocks();
     const std::vector<Tensor>& blocks2 = Ut2.get_blocks();
-    if (blocks1.size() != blocks2.size())
+    if (blocks1.size() != blocks2.size()){
+      std::cout << "# of blocks are not the same btwn two UTs. " << std::endl;
       return false;
+    }
     auto blocks_num = blocks1.size();
     for (size_t i = 0; i < blocks_num; ++i) {
       if (!AreNearlyEqTensor(blocks1[i], blocks2[i], tol)) {
+        std::cout << "on " << i << " blk, the tensor does not mtach!" << std::endl;
+        std::cout << blocks1[i] << std::endl;
+        std::cout << blocks2[i] << std::endl;
         return false;
       }
     }
