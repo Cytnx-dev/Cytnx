@@ -227,7 +227,11 @@ namespace cytnx {
                 for(int s=0;s<bonds[0].Nsym();s++){
                     Rside[i] += bonds[0]._impl->_syms[s].stype_str() + "(" + to_string(bonds[Nin+i]._impl->_qnums[qn_indices[Nin+i]][s]) + ")";
                 }
-                MidR[i] += to_string(block.shape()[Nin+i]);
+                // check if is_diag = true:
+                if(block.shape().size()==1 && bonds.size()==2)
+                    MidR[i] += to_string(block.shape()[i]);
+                else 
+                    MidR[i] += to_string(block.shape()[Nin+i]);
                 if(mR < MidR[i].size()) mR =  MidR[i].size();
             }           
 
