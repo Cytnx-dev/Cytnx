@@ -1035,7 +1035,7 @@ namespace cytnx {
   extern Storage_init_interface __SII;
   ///@endcond;
 
-  /// an memeory storage with multi-type/multi-device support
+  ///@brief an memeory storage with multi-type/multi-device support
   class Storage {
    private:
     // Interface:
@@ -1048,10 +1048,10 @@ namespace cytnx {
 
     /**
     @brief initialize a Storage
-    @param size the number of elements for the Storage
-    @param dtype the dtype of the Storage instance. This can be any of type defined in cytnx::Type
-    @param device the device of the Storage instance. This can be cytnx::Device.cpu or
-    cytnx::Device.cuda+<gpuid>
+    @param[in] size the number of elements for the Storage
+    @param[in] dtype the dtype of the Storage instance. This can be any of type defined in cytnx::Type
+    @param[in] device the device of the Storage instance. This can be cytnx::Device.cpu or
+    cytnx::Device.cuda+<gpuid> (see cytnx::Device for more details)
 
     ## Example:
     ### c++ API:
@@ -1075,6 +1075,14 @@ namespace cytnx {
     //   this->_impl = __SII.USIInit[dtype]();
     //   this->_impl->_Init_byptr(rawptr, len_in, device, iscap, cap_in);
     // }
+
+    /**
+     * @brief The constructor of Storage class. It will call the function
+     * @ref Init(const unsigned long long &size, const unsigned int &dtype, 
+     *           int device, const bool &init_zero) "Init"
+     * to initialize the Storage instance.
+     * @see Init(const unsigned long long &size, const unsigned int &dtype, int device, const bool &init_zero)
+     */
     Storage(const unsigned long long &size, const unsigned int &dtype = Type.Double,
             int device = -1, const bool &init_zero=true)
         : _impl(new Storage_base()) {
@@ -1085,6 +1093,10 @@ namespace cytnx {
     //       : _impl(new Storage_base()){
     //   _Init_byptr(rawptr,len_in,dtype,device,iscap,cap_in);
     // }
+
+    /**
+     * @brief The default constructor of Storage class. It will create an empty Storage instance.
+     */
     Storage() : _impl(new Storage_base()){};
     ///@cond
     Storage(boost::intrusive_ptr<Storage_base> in_impl) { this->_impl = in_impl; }
@@ -1116,14 +1128,17 @@ namespace cytnx {
 
     /**
     @brief Save current Storage to file
-    @param fname file name
-
-    description:
-        save the Storage to file with file path specify with input param 'fname' with postfix
+    @param[in] fname file name
+    @details
+        Save the Storage to file with file path specify with input param \p fname with postfix
     ".cyst"
-
+    @post The file extension will be ".cyst".
     */
     void Save(const std::string &fname) const;
+
+    /**
+     * @brief Save current Storage to file, same as \ref Save(const std::string &fname)
+     */
     void Save(const char *fname) const;
     void Tofile(const std::string &fname) const;
     void Tofile(const char *fname) const;
@@ -1131,13 +1146,16 @@ namespace cytnx {
 
     /**
     @brief Load current Storage from file
-    @param fname file name
-
-    description:
+    @param[in] fname file name
+    @details
         load the Storage from file with file path specify with input param 'fname'.
-
+    @pre The file extension must be ".cyst".
     */
     static Storage Load(const std::string &fname);
+
+    /**
+     * @brief Load current Storage from file, same as \ref Load(const std::string &fname)
+     */
     static Storage Load(const char *fname);
     static Storage Fromfile(const std::string &fname, const unsigned int &dtype,
                             const cytnx_int64 &count = -1);
@@ -1146,10 +1164,9 @@ namespace cytnx {
 
     /**
     @brief cast the type of current Storage
-    @param new_type the new type of the Storage instance. This can be any of type defined in
-    cytnx::Type
-
-    description:
+    @param[in] new_type the new type of the Storage instance. This can be any of type defined in
+    cytnx::Type.
+    @details
         1. if the new_type is the same as the dtype of current Storage, then return self;
            otherwise, return a new instance that has the same content as current Storage with
     dtype=new_type
@@ -1168,32 +1185,28 @@ namespace cytnx {
     Storage astype(const unsigned int &new_type) const { return this->_impl->astype(new_type); }
 
     /**
-    @brief the dtype-id of current Storage
+    @brief the dtype-id of current Storage, see cytnx::Type for more details.
     @return [cytnx_uint64] the dtype-id.
-
     */
     const unsigned int &dtype() const { return this->_impl->dtype; }
 
     /**
-    @brief the dtype (std::string) of current Storage
+    @brief the dtype (std::string) of current Storage, see cytnx::Type for more details.
     @return [std::string] dtype name
-
     */
     const std::string dtype_str() const {
       std::string out = this->_impl->dtype_str();
       return out;
     }
     /**
-    @brief the device-id of current Storage
+    @brief the device-id of current Storage, see cytnx::Device for more details.
     @return [cytnx_int64] the device-id.
-
     */
     const int &device() const { return this->_impl->device; }
 
     /**
-    @brief the device (std::string) of current Storage
+    @brief the device (std::string) of current Storage, see cytnx::Device for more details.
     @return [std::string] device name
-
     */
     const std::string device_str() const {
       std::string out = this->_impl->device_str();
@@ -1202,10 +1215,8 @@ namespace cytnx {
 
     /**
     @brief append a value
-    @param val the value to append. it can be any type defined in cytnx::Type
-
-    [Note]
-        1. cannot append a complex value into a real Storage.
+    @param[in] val the value to append. it can be any type defined in cytnx::Type
+    @note cannot append a complex value into a real Storage.
     */
     template <class T>
     void append(const T &val) {
@@ -1251,33 +1262,28 @@ namespace cytnx {
 
     /**
     @brief resize the current Storage.
-    @param newsize.
-
+    @param[in] newsize.
     */
     void resize(const cytnx_uint64 &newsize) { this->_impl->resize(newsize); }
 
     /**
-    @brief move the current Storage to different deivce.
-    @param device the device-id. It can be any device defined in \link cytnx::Device cytnx::Device
-    \endlink
-
-    see also \link cytnx::Storage::to Storage.to() \endlink
+    @brief Move the current Storage to different deivce.
+    @param[in] device the device-id. It can be any device defined in cytnx::Device.
+    @see Storage::to()
     */
     void to_(const int &device) { this->_impl->to_(device); }
 
     /**
     @brief move a new Storage with same content as current Storage on different deivce.
-    @param device the device-id. It can be any device defined in \link cytnx::Device cytnx::Device
-    \endlink
-
-    [Note]
-        if the \param device is the same as the current Storage's device, return self.
-
-    see also \link cytnx::Storage::to_ Storage.to_() \endlink
+    @param[in] device the device-id. It can be any device defined in cytnx::Device
+    @note
+        if the \p device is the same as the current Storage's device, return self.
+    @see Storage::to_()
     */
     Storage to(const int &device) { return Storage(this->_impl->to(device)); }
+
     /**
-    @brief return a copy of current storage.
+    @brief return a deep copy of the current storage.
     @return
         [Storage]
 
@@ -1319,8 +1325,7 @@ namespace cytnx {
 
     /**
     @brief set all the elements to zero.
-
-    [Note] although it is also possible to use Storage.fill(0) to set all the elements to zero,
+    @note  although it is also possible to use Storage.fill(0) to set all the elements to zero,
            using set_zeros will have significant faster performance.
 
     */
@@ -1328,7 +1333,7 @@ namespace cytnx {
 
     /**
     @brief compare two Storage
-    @param Storage another Storage to compare to
+    @param[in] Storage another Storage to compare to
 
     [Note] the == operator will compare the content between two storages. use cytnx::is() for
     checking two variables share the same instance.
@@ -1344,26 +1349,26 @@ namespace cytnx {
     \verbinclude example/Storage/eq.py.out
     */
     bool operator==(const Storage &rhs);
+
+    /**
+     * @brief The not-equal operator for Storage.
+     */
     bool operator!=(const Storage &rhs);
 
     /**
     @brief set all the elements to the assigned value val
-    @param val the value to set on all the elements. it can be any type defined in cytnx::Type
-
-    [Note]
-        1. cannot assign a complex value into a real Storage.
+    @param[in] val the value to set on all the elements. it can be any type defined in cytnx::Type
+    @note cannot assign a complex value into a real Storage.
     */
     template <class T>
     void fill(const T &val) {
       this->_impl->fill(val);
     }
 
-    /*
-        @brief renew/create a Storage using c++ vector.
-        @param vin the C++ vector with supported types.
-
-        [Note]
-            This function is C++ only
+    /**
+    @brief renew/create a Storage using c++ vector.
+    @param[in] vin the C++ vector with supported types.
+    @note This function is C++ only
     */
     template <class T>
     static Storage from_vector(const std::vector<T> &vin, const int device = -1) {
@@ -1472,8 +1477,7 @@ namespace cytnx {
 
     /**
     @brief Get the real part form a Complex type Storage
-
-    [Note] Cannot be called from a real type Storage.
+    @note Cannot be called from a real type Storage.
 
     ## Example:
     ### c++ API:
@@ -1486,10 +1490,10 @@ namespace cytnx {
     \verbinclude example/Storage/real.py.out
     */
     Storage real() const { return Storage(this->_impl->real()); };
+
     /**
     @brief Get the imaginary part form a Complex type Storage
-
-    [Note] Cannot be called from a real type Storage.
+    @note Cannot be called from a real type Storage.
 
     ## Example:
     ### c++ API:
@@ -1503,13 +1507,27 @@ namespace cytnx {
     */
     Storage imag() const { return Storage(this->_impl->imag()); };
 
+    /**
+     * @brief Get the element at the given index.
+     * @param[in] idx The index of the element.
+     * @return The element at the given index.
+     */
     Scalar get_item(const cytnx_uint64 &idx) const { return this->_impl->get_item(idx); };
 
+    /**
+     * @brief Set the element at the given index.
+     * @param[in] idx The index of the element.
+     * @param[in] elem The element to be set.
+     */
     template <class T>
     void set_item(const cytnx_uint64 &idx, const T &elem) {
       this->_impl->set_item(idx, elem);
     };
 
+    /**
+     * @brief The access operator for the Storage.
+     * @param[in] idx The index of the element.
+    */
     Scalar::Sproxy operator()(const cytnx_uint64 &idx);
   };
 

@@ -24,8 +24,21 @@ namespace cytnx {
     };
     std::string getname(const int &stype);
   };
-  extern SymmetryType_class SymType;
   ///@endcond
+  /**
+   * @brief Symmetry type.
+   * @details It is about the type of the Symmetry object
+   *     The supported enumerations are as following:
+   *
+   *  enumeration  |  description
+   * --------------|--------------------
+   *  Void         |  -99, void type (that means not initialized)
+   *  U            |  -1, U1 symmetry
+   *  Z            |  0, Zn symmetry
+   *
+   *  @see Symmetry::stype(), Symmetry::stype_str()
+   */
+  extern SymmetryType_class SymType;
 
 
   // helper class, has implicitly conversion to vector<int64>! 
@@ -256,7 +269,7 @@ namespace cytnx {
     }
 
     /**
-    @brief return the symmetry type-id of current Symmetry object.
+    @brief return the symmetry type-id of current Symmetry object, see cytnx::SymType.
     @return [int]
         the symmetry type-id.
 
@@ -267,7 +280,7 @@ namespace cytnx {
     @brief return the descrete n of current Symmetry object.
     @return [int]
 
-    ###[Note]
+    @note
         1. for U1, n=1 will be returned.
         2. for Zn, n is the descrete symmetry number. (ex: Z2, n=2)
 
@@ -275,7 +288,7 @@ namespace cytnx {
     int &n() const { return this->_impl->n; }
 
     /**
-    @brief return the symmetry type name of current Symmetry object.
+    @brief return the symmetry type name of current Symmetry object in string form, see cytnx::SymType.
     @return [std::string]
         the symmetry type name.
 
@@ -285,16 +298,16 @@ namespace cytnx {
     }
 
     /**
-    @brief check the quantum number is within the valid value range of current Symmetry.
-    @param qnum a singule quantum number.
+    @brief check the quantum number \p qnum is within the valid value range of current Symmetry.
+    @param[in] qnum a singule quantum number.
     @return [bool]
 
     */
     bool check_qnum(const cytnx_int64 &qnum) { return this->_impl->check_qnum(qnum); }
 
     /**
-    @brief check all the quantum numbers are within the valid value range of current Symmetry.
-    @param qnums the list of quantum numbers
+    @brief check all the quantum numbers \qnums are within the valid value range of current Symmetry.
+    @param[in] qnums the list of quantum numbers
     @return [bool]
 
     */
@@ -304,10 +317,9 @@ namespace cytnx {
 
     /**
     @brief apply combine rule of current symmetry to two quantum number lists.
-    @param inL the #1 quantum number list that is to be combined.
-    @param inR the #2 quantum number list that is to be combined.
+    @param[in] inL the #1 quantum number list that is to be combined.
+    @param[in] inR the #2 quantum number list that is to be combined.
     @return the combined quantum numbers.
-
     */
     std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64> &inL,
                                           const std::vector<cytnx_int64> &inR) {
@@ -316,11 +328,10 @@ namespace cytnx {
 
     /**
     @brief apply combine rule of current symmetry to two quantum number lists, and store it into
-    parameter \param out.
-    @param out the output quantum number list.
-    @param inL the #1 quantum number list that is to be combined.
-    @param inR the #2 quantum number list that is to be combined.
-
+    parameter \p out.
+    @param[out] out the output quantum number list.
+    @param[in] inL the #1 quantum number list that is to be combined.
+    @param[in] inR the #2 quantum number list that is to be combined.
     */
     void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
                        const std::vector<cytnx_int64> &inR) {
@@ -329,10 +340,9 @@ namespace cytnx {
 
     /**
     @brief apply combine rule of current symmetry to two quantum numbers.
-    @param inL the #1 quantum number.
-    @param inR the #2 quantum number.
+    @param[in] inL the #1 quantum number.
+    @param[in] inR the #2 quantum number.
     @return the combined quantum number.
-
     */
     cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse = false) const {
       return this->_impl->combine_rule(inL, inR, is_reverse);
@@ -341,24 +351,57 @@ namespace cytnx {
     /**
     @brief apply combine rule of current symmetry to two quantum numbers, and store the combined
     quntun number into parameter \param out.
-    @param out the output quantum number.
-    @param inL the #1 quantum number.
-    @param inR the #2 quantum number.
-
+    @param[out] out the output quantum number.
+    @param[in] inL the #1 quantum number.
+    @param[in] inR the #2 quantum number.
     */
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse=false) {
       this->_impl->combine_rule_(out, inL, inR, is_reverse);
     }
 
+    /**
+    @brief Apply reverse rule of current symmetry to a given quantum number and store in parameter \p out.
+    @details that means, \f$ o = -i \f$, where \f$ o \f$ is the output quantum number \p out, 
+    and \f$ i \f$ is the input quantum number \p in.
+    @param[out] out the output quantum number.
+    @param[in] in the input quantum number.
+    */
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
       this->_impl->reverse_rule_(out, in);
     }
 
+    /**
+    @brief Apply reverse rule of current symmetry to a given quantum number and return the result.
+    @details that means, \f$ o = -i \f$, where \f$ o \f$ is the reverse quantum number,
+    and \f$ i \f$ is the input quantum number \p in.
+    @param[in] in the input quantum number.
+    @return the reverse quantum number.
+    */
     cytnx_int64 reverse_rule(const cytnx_int64 &in) const { return this->_impl->reverse_rule(in); }
 
+    /**
+     * @brief Save the current Symmetry object to a file.
+     * @param[in] fname the file name.
+     * @post the file extension will be automatically added as ".cysym".
+     */
     void Save(const std::string &fname) const;
+
+    /**
+     * @brief Same as Save(const std::string &fname) const;
+     */
     void Save(const char *fname) const;
+
+    /**
+     * @brief Load a Symmetry object from a file.
+     * @param[in] fname the file name.
+     * @pre the file extension must be ".cysym".
+     * @return the loaded Symmetry object.
+     */
     static Symmetry Load(const std::string &fname);
+
+    /**
+     * @brief Same as static Symmetry Load(const std::string &fname);
+     */
     static Symmetry Load(const char *fname);
 
     /// @cond
@@ -366,9 +409,19 @@ namespace cytnx {
     void _Load(std::fstream &f);
     /// @endcond
 
+    /**
+     * @brief Print the information of current Symmetry object.
+     */
     void print_info() const { this->_impl->print_info(); }
 
+    /**
+     * @brief the equality operator of the Symmetry object.
+    */
     bool operator==(const Symmetry &rhs) const;
+
+    /**
+     * @brief the inequality operator of the Symmetry object.
+    */
     bool operator!=(const Symmetry &rhs) const;
   };
 
