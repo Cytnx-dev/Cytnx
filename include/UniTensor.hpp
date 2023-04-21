@@ -139,7 +139,7 @@ namespace cytnx {
     void set_label(const std::string &oldlbl, const std::string &new_label) {
       cytnx_int64 idx;
       auto res = std::find(this->_labels.begin(), this->_labels.end(), oldlbl);
-      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", oldlbl);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", oldlbl.c_str());
       idx = std::distance(this->_labels.begin(), res);
 
       cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
@@ -3062,7 +3062,7 @@ namespace cytnx {
 	 * @warning \p by_label will be deprecated! 
      */
     UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
-                      const bool &by_label=false) {
+                      const bool &by_label=false) const {
       UniTensor out;
       out._impl = this->_impl->permute(mapper, rowrank, by_label);
       return out;
@@ -3079,7 +3079,7 @@ namespace cytnx {
      * @param[in] rowrank the row rank
      * @return UniTensor
      */
-    UniTensor permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
+    UniTensor permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) const {
       UniTensor out;
       out._impl = this->_impl->permute(mapper, rowrank);
       return out;
@@ -3088,7 +3088,7 @@ namespace cytnx {
     /**
 	@see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
 	*/
-    UniTensor permute( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
+    UniTensor permute( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1) const{
         std::vector<char*> mprs = mapper;
         std::vector<std::string> vs(mprs.size());
         transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return std::string(x); });

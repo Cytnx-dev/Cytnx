@@ -1085,5 +1085,11 @@ void unitensor_binding(py::module &m){
 
   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
         py::arg("cacheR") = false);
+  m.def(
+    "Contracts",
+    [](const std::vector<UniTensor> &TNs) -> UniTensor {
+      return Contracts(TNs);
+    },
+    py::arg("TNs"));
 
 }

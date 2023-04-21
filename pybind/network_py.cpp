@@ -51,16 +51,16 @@ void network_binding(py::module &m){
     .def("Savefile", &Network::Savefile, py::arg("fname"))
     .def(
       "PutUniTensor",
-      [](Network &self, const std::string &name, const UniTensor &utensor) {
-        self.PutUniTensor(name, utensor);
+      [](Network &self, const std::string &name, const UniTensor &utensor, const std::vector<std::string> &lbl_order) {
+        self.PutUniTensor(name, utensor,lbl_order);
       },
-      py::arg("name"), py::arg("utensor"))
+      py::arg("name"), py::arg("utensor"), py::arg("lbl_order") = std::vector<std::string>())
     .def(
       "PutUniTensor",
-      [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor) {
-        self.PutUniTensor(idx, utensor);
+      [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor, const std::vector<std::string> &lbl_order) {
+        self.PutUniTensor(idx, utensor,lbl_order);
       },
-      py::arg("idx"), py::arg("utensor"))
+      py::arg("idx"), py::arg("utensor"),py::arg("lbl_order") = std::vector<std::string>())
     .def(
       "PutUniTensors",
       [](Network &self, const std::vector<std::string> &names,

@@ -21,15 +21,22 @@ namespace cytnx {
 
         for(int j=0; j<2; j++){
 
-          // A valid line should contain ':':
+
+          tmpvs[j] = str_strip(tmpvs[j]);  // remove spaces
+
+          // A valid line should contain ':'
           cytnx_error_msg(
             tmpvs[j].find_first_of(":") == string::npos,
             "[ERROR][Gncon][Fromfile] invalid Gncon description at line: %d. should contain \':\'",
             i);
           vector<string> task;
           tmpvs_ = str_split(tmpvs[j], false, ":");  // note that checking empty string!
+
           cytnx_error_msg(tmpvs_.size() != 2,
                           "[ERROR][Gncon] invalid line in Gncon file at line: %d. \n", i);
+
+          tmpvs_[0] = str_strip(tmpvs_[0]); // remove spaces
+          tmpvs_[1] = str_strip(tmpvs_[1]); // remove spaces
 
           // check if name contain invalid keyword or not assigned.
           cytnx_error_msg(tmpvs_[0].length() == 0,
@@ -79,6 +86,7 @@ namespace cytnx {
 
     vector<string> tmp = str_split(line, false, ";");
     for(int i = 0; i < tmp.size(); i++){
+      tmp[i] = str_strip(tmp[i]);  // remove spaces
       vector<string> tmp_ = str_split(tmp[i], false, "/");
       string name = str_strip(tmp_[0]);
       string content = str_strip(tmp_[1]);
@@ -87,7 +95,10 @@ namespace cytnx {
       vector<string> reps = str_split(content, false, ",");
       int tidx = name2pos[name];
       for(int j = 0; j < reps.size(); j++){
+        reps[j] = str_strip(reps[j]);  // remove spaces
         vector<string> ls = str_split(reps[j], false, ">");
+        ls[0] =  str_strip(ls[0]); // remove spaces
+        ls[1] =  str_strip(ls[1]); // remove spaces
         pair<string, string> tmp(ls[0],ls[1]);
         // std::cout<<"ls[0] = "<<ls[0]<<"ls[1] = "<<ls[1]<<std::endl;
         table[tidx].push_back(tmp);
@@ -126,39 +137,6 @@ namespace cytnx {
     // }
   }
 
-  /// This is debug function for printing special characters
-  void tri(const char *text) {
-    for (const char *p = text; *p != '\0'; ++p) {
-      int c = (unsigned char)*p;
-
-      switch (c) {
-        case '\\':
-          printf("\\\\");
-          break;
-        case '\n':
-          printf("\\n");
-          break;
-        case '\r':
-          printf("\\r");
-          break;
-        case '\t':
-          printf("\\t");
-          break;
-
-          // TODO: Add other C character escapes here.  See:
-          // <https://en.wikipedia.org/wiki/Escape_sequences_in_C#Table_of_escape_sequences>
-
-        default:
-          if (isprint(c)) {
-            putchar(c);
-          } else {
-            printf("\\x%X", c);
-          }
-          break;
-      }
-    }
-  }
-
   /// This is debug function
   void print_gn(std::vector<vector<pair<string, string>>>& table, vector<string>& names, map<string, cytnx_uint64>& name2pos) {
     std::cout<<"### table  ###"<<std::endl;
@@ -171,53 +149,6 @@ namespace cytnx {
     for(int i = 0;i<names.size();i++){
         std::cout<<names[i]<<" pos : "<<name2pos[names[i]]<<std::endl;
     }
-  }
-
-  void _parse_TN_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TN_iBondNum, const string line, const int line_num) {
-    lbls.clear();
-    vector<string> tmp = str_split(line, false, ";");
-    cytnx_error_msg(tmp.size() != 2, "[ERROR][Gncon][Fromfile] line:%d %s\n", line_num,
-                    "Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1> "
-                    "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
-
-    // handle col-space lbl
-    vector<string> ket_lbls = str_split(tmp[0], false, ",");
-    if (ket_lbls.size() == 1)
-      if (ket_lbls[0].length() == 0) ket_lbls.clear();
-    for (cytnx_uint64 i = 0; i < ket_lbls.size(); i++) {
-      string tmp = str_strip(ket_lbls[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Gncon][Fromfile] line:%d Invalid labels for TN line.%s", line_num,
-                      "\n");
-      cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                      "[ERROR][Gncon][Fromfile] line:%d %s\n", line_num,
-                      "Invalid TN line. label contain non integer.");
-      lbls.push_back(stoi(tmp, nullptr));
-    }
-    TN_iBondNum = lbls.size();
-
-    // handle row-space lbl
-    vector<string> bra_lbls = str_split(tmp[1], false, ",");
-    if (bra_lbls.size() == 1)
-      if (bra_lbls[0].length() == 0) bra_lbls.clear();
-    for (cytnx_uint64 i = 0; i < bra_lbls.size(); i++) {
-      string tmp = str_strip(bra_lbls[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Gncon][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                      line_num, "\n");
-
-      // tri(tmp.c_str());
-
-      // cout << tmp.size() << endl;
-      // cout << tmp.find_first_not_of("0123456789-") << endl;
-      cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                      "[ERROR][Gncon][Fromfile] line:%d %s\n", line_num,
-                      "Invalid TN line. label contain non integer.");
-      lbls.push_back(stoi(tmp, nullptr));
-    }
-
-    cytnx_error_msg(lbls.size() == 0, "[ERROR][Gncon][Fromfile] line:%d %s\n", line_num,
-                    "Invalid TN line. no label present in this line, which is invalid.%s", "\n");
   }
 
   void _extract_TNs_from_ORDER_(vector<string> &TN_names, const vector<string> &tokens) {

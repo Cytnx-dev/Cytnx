@@ -32,6 +32,7 @@ namespace cytnx {
     std::string filename;
     std::vector<UniTensor> tensors;
     std::vector<std::string> TOUT_labels;
+
     cytnx_uint64 TOUT_iBondNum;
 
     // bool ordered;
@@ -307,13 +308,27 @@ namespace cytnx {
     Network(const std::string &fname, const int &network_type = NtType.Regular) {
       this->Fromfile(fname, network_type);
     }
+    
+    void PutUniTensor(const std::string &name, const UniTensor &utensor, const std::vector<std::string> &lbl_order={}) {
+      if(lbl_order.size()){
+        auto tmpu = utensor.permute(lbl_order);
+        this->_impl->PutUniTensor(name, tmpu);
+      }else
+        this->_impl->PutUniTensor(name, utensor);
+    }
+    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const std::vector<std::string> &lbl_order={}) {
+      if(lbl_order.size()){
+        auto tmpu = utensor.permute(lbl_order);
+        this->_impl->PutUniTensor(idx, tmpu);
+      }else
+        this->_impl->PutUniTensor(idx, utensor);
+    }
+    
 
-    void PutUniTensor(const std::string &name, const UniTensor &utensor) {
-      this->_impl->PutUniTensor(name, utensor);
-    }
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
-      this->_impl->PutUniTensor(idx, utensor);
-    }
+
+
+
+
     void PutUniTensors(const std::vector<std::string> &name,
                        const std::vector<UniTensor> &utensors) {
       this->_impl->PutUniTensors(name, utensors);

@@ -31,6 +31,7 @@ namespace cytnx {
     cytnx_error_msg(tokens.size() == 0, "[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s",
                     line_num, "\n");
   }
+
   void _parse_TOUT_line_(vector<std::string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
                          const cytnx_uint64 &line_num) {
     lbls.clear();
@@ -47,9 +48,9 @@ namespace cytnx {
       cytnx_error_msg(tmp.length() == 0,
                       "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
                       line_num, "\n");
-      cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                      "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                      "Invalid TOUT line. label contain non integer.");
+      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                 "Invalid TOUT line. label contain non integer.");
       lbls.push_back(tmp);
     }
     TOUT_iBondNum = lbls.size();
@@ -63,9 +64,9 @@ namespace cytnx {
       cytnx_error_msg(tmp.length() == 0,
                       "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
                       line_num, "\n");
-      cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-                      "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                      "Invalid TOUT line. label contain non integer.");
+      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                 "Invalid TOUT line. label contain non integer.");
       lbls.push_back(tmp);
     }
   }

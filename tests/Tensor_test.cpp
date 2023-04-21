@@ -25,7 +25,7 @@ TEST_F(TensorTest, Constructor){
     EXPECT_EQ(C.shape()[1],4);
     EXPECT_EQ(C.shape()[2],5);
     EXPECT_EQ(C.is_contiguous(),true);
-
+#ifdef USE_CUDA
     Tensor D({3,4,5},Type.Double,Device.cuda);
     EXPECT_EQ(D.dtype(),Type.Double);
     EXPECT_EQ(D.device(),Device.cuda);
@@ -52,9 +52,11 @@ TEST_F(TensorTest, Constructor){
     EXPECT_EQ(F.shape()[1],4);
     EXPECT_EQ(F.shape()[2],5);
     EXPECT_EQ(F.is_contiguous(),true);
+#endif
 }
 
 TEST_F(TensorTest, CopyConstructor){
+#ifdef USE_CUDA
     Tensor A({3,4,5},Type.Double,Device.cuda,false);
     Tensor B(A);
     EXPECT_EQ(B.dtype(),Type.Double);
@@ -73,6 +75,7 @@ TEST_F(TensorTest, CopyConstructor){
     EXPECT_EQ(C.shape()[1],4);
     EXPECT_EQ(C.shape()[2],5);
     EXPECT_EQ(C.is_contiguous(),true);
+#endif
 
     Tensor D;
     D = tarcomplex3456;

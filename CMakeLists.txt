@@ -42,8 +42,8 @@ endif()
 ######################################################################
 #include(version.cmake)
 set(CYTNX_VERSION_MAJOR 0)
-set(CYTNX_VERSION_MINOR 7)
-set(CYTNX_VERSION_PATCH 7)
+set(CYTNX_VERSION_MINOR 9)
+set(CYTNX_VERSION_PATCH 0)
 set(CYTNX_VERSION COUNT 0)
 set(CYTNX_VERSION
   ${CYTNX_VERSION_MAJOR}.${CYTNX_VERSION_MINOR}.${CYTNX_VERSION_PATCH}
@@ -60,7 +60,7 @@ set(CYTNX_VARIANT_INFO "")
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
 option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" OFF)
-option(USE_OMP "Build Cytnx with OpenMP" ON)
+option(USE_OMP "Build Cytnx with OpenMP" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
@@ -486,6 +486,7 @@ IF(BUILD_PYTHON)
                                        pybind/random_py.cpp
                                        pybind/tnalgo_py.cpp
                                        pybind/scalar_py.cpp
+                                       pybind/ncon_py.cpp
                                        )
     target_link_libraries(pycytnx PRIVATE cytnx)
     set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
