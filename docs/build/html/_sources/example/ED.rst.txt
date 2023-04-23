@@ -1,3 +1,5 @@
+.. _SectionED:
+
 Exact Diagonalization
 ----------------------
 Consider the example of a 1D transverse field Ising model with Hamiltonain defines as 
