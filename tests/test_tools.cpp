@@ -332,8 +332,8 @@ bool AreNearlyEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2,
   } 
   // block
   else if (Ut1.uten_type() == UTenType.Block) {
-    const std::vector<Tensor>& blocks1 = Ut1.get_blocks();
-    const std::vector<Tensor>& blocks2 = Ut2.get_blocks();
+    const std::vector<Tensor>& blocks1 = Ut1.get_blocks_();
+    const std::vector<Tensor>& blocks2 = Ut2.get_blocks_();
     if (blocks1.size() != blocks2.size()){
       std::cout << "# of blocks are not the same btwn two UTs. " << std::endl;
       return false;

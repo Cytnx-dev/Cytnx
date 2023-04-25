@@ -408,6 +408,8 @@ bool CheckResult(const std::string& case_name) {
   UniTensor src_T = UniTensor::Load(src_file_name);
   UniTensor ans_T = UniTensor::Load(ans_file_name); //sigular values UniTensor
 
+  src_T.print_diagram(true);
+   
   //Do svd
   std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
 
