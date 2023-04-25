@@ -28,8 +28,8 @@ void ncon_binding(py::module &m){
         const std::vector<std::string> &out_labels) -> UniTensor {
       return ncon(tensor_list_in, connect_list_in, check_network, optimize, cont_order, out_labels);
     },
-    py::arg("tensor_list_in")= std::vector<UniTensor>(),
-    py::arg("connect_list_in")= std::vector<std::vector<cytnx_int64>>(),
+    py::arg("tensor_list_in"),
+    py::arg("connect_list_in"),
     py::arg("check_network")= false,
     py::arg("optimize") = false,
     py::arg("cont_order") = std::vector<cytnx_int64>(),

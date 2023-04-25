@@ -295,9 +295,9 @@ void tensor_binding(py::module &m){
       [](const Storage &sin, const bool &is_clone) {
         Tensor out;
         if (is_clone)
-          cytnx::Tensor::from_storage(sin.clone());
+          out = cytnx::Tensor::from_storage(sin.clone());
         else
-          cytnx::Tensor::from_storage(sin);
+          out = cytnx::Tensor::from_storage(sin);
         return out;
       },
       py::arg("sin"), py::arg("is_clone") = false)
