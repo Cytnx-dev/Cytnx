@@ -64,18 +64,25 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
 void tensor_binding(py::module &m){
     py::class_<cytnx::Tensor>(m, "Tensor")
     .def("numpy",
-         [](Tensor &self) -> py::array {
+         [](Tensor &self, const bool &share_mem) -> py::array {
            // device on GPU? move to cpu:ref it;
            Tensor tmpIN;
            if (self.device() >= 0) {
-             tmpIN = self.to(Device.cpu);
+             if(share_mem){
+                cytnx_error_msg(true,"[ERROR] the Tensor is on GPU. to have share_mem=True, move the Tensor back to CPU by .to(Device.cpu).%s","\n");
+             }else{
+                tmpIN = self.to(Device.cpu);
+             }
            } else {
              tmpIN = self;
            }
-           if (tmpIN.is_contiguous())
-             tmpIN = self.clone();
-           else
-             tmpIN = self.contiguous();
+           if (tmpIN.is_contiguous()){
+             if(share_mem) tmpIN = self;
+             else tmpIN = self.clone();
+           }else{
+             if(share_mem){ cytnx_error_msg(true,"[ERROR] calling numpy(share_mem=true) require the current Tensor is contiguous. \n Call contiguous() first before convert to numpy.%s","\n"); }
+             else tmpIN = self.contiguous();
+           }
 
            // calculate stride:
            std::vector<ssize_t> stride(tmpIN.shape().size());
@@ -120,10 +127,12 @@ void tensor_binding(py::module &m){
            py::array out(npbuf);
            // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to
            // free.
-           void *pswap = malloc(sizeof(bool));
-           tmpIN.storage()._impl->Mem = pswap;
+           if(share_mem==false){
+            void *pswap = malloc(sizeof(bool));
+            tmpIN.storage()._impl->Mem = pswap;
+           }
            return out;
-         })
+         },py::arg("share_mem")=false)
     // construction
     .def(py::init<>())
     .def(py::init<const cytnx::Tensor &>())
