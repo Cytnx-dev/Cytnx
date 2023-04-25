@@ -2329,6 +2329,43 @@ namespace cytnx {
     */
     Tensor Ger(const Tensor &x, const Tensor &y, const Scalar &a=Scalar());
 
+
+    /**
+     * @brief Blas Gemm, performing \f$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} \f$, inplacely.
+     * @details
+     * This function performs 
+     * \f[
+     * \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c},
+     * \f]
+     * where \f$ \textbf{x},\textbf{y},\textbf{c} \f$ are rank-2 Tensor and a, b are Scalars. The dtype of return
+     * Tensor will be the strongest among \p x, \p y and \p a \p b \p c.
+     * @param[in ] a Scalar.
+     * @param[in ] x Tensor, rank-2 with shape (M,N)
+     * @param[in ] y Tensor, rank-2 with shape (N,K)
+     * @param[in ] b Scalar.
+     * @param[in/out ] c Tensor, rank-2 with shape (M,K), must be properly initialized with the correct shape.
+    */
+    void Gemm_(const Scalar &a, const Tensor &x, const Tensor &y, const Scalar &b, Tensor &c);
+
+    /**
+     * @brief Blas Gemm, performing \f$ a\textbf{x}\textbf{y} -> \f$ return.
+     * @details
+     * This function performs 
+     * \f[
+     * return = a\textbf{x}\textbf{y},
+     * \f]
+     * where \f$ \textbf{x},\textbf{y} \f$ are rank-2 Tensor and a is Scalar. The dtype of return
+     * Tensor will be the strongest among \p x, \p y and \p a.
+     * @param[in ] a Scalar.
+     * @param[in ] x Tensor, rank-2 with shape (M,N)
+     * @param[in ] y Tensor, rank-2 with shape (N,K)
+     * @return
+     * [Tensor] with shape (M,K)
+    */
+    Tensor Gemm(const Scalar &a, const Tensor &x, const Tensor &y);
+
+
+    
   }  // namespace linalg
 
   // operators:

@@ -257,7 +257,12 @@ void linalg_binding(py::module &m){
 
   m_linalg.def("Axpy_", &cytnx::linalg::Axpy_, py::arg("a"), py::arg("x"), py::arg("y"));
 
-  
+  m_linalg.def("Gemm_", &cytnx::linalg::Gemm_, py::arg("a"), py::arg("x"), py::arg("y"),py::arg("b"),py::arg("c"));
+
+  m_linalg.def("Gemm", [](const Scalar &a, const Tensor &x, const Tensor &y){
+                          return cytnx::linalg::Gemm(a,x,y);
+                       }, py::arg("a"), py::arg("x"), py::arg("y"));
+
   m_linalg.def(
     "Trace",
     [](const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b,

@@ -33,6 +33,7 @@
 #include "linalg/linalg_internal_cpu/Lstsq_internal.hpp"
 #include "linalg/linalg_internal_cpu/Axpy_internal.hpp"
 #include "linalg/linalg_internal_cpu/Ger_internal.hpp"
+#include "linalg/linalg_internal_cpu/Gemm_internal.hpp"
 #include "linalg/linalg_internal_cpu/Trace_internal.hpp"
 
 #ifdef UNI_GPU
@@ -75,6 +76,11 @@ namespace cytnx {
     typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &, const Scalar &);
+
+    typedef void (*Gemmfunc_oii)(boost::intrusive_ptr<Storage_base> &,
+                                   const boost::intrusive_ptr<Storage_base> &,
+                                   const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
+                                   const cytnx_int64 &, const cytnx_int64 &, const Scalar &, const Scalar &);
 
 
     typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
@@ -169,6 +175,7 @@ namespace cytnx {
       std::vector<Absfunc_oii> Abs_ii;
       std::vector<Diagfunc_oii> Diag_ii;
       std::vector<Matmulfunc_oii> Matmul_ii;
+      std::vector<Gemmfunc_oii> Gemm_ii;
       std::vector<Matmul_dgfunc_oii> Matmul_dg_ii;
       std::vector<Matvecfunc_oii> Matvec_ii;
       std::vector<std::vector<Outerfunc_oii>> Outer_ii;

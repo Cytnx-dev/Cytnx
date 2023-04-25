@@ -720,7 +720,12 @@ namespace cytnx {
       ger_ii[Type.Double] = Ger_internal_d;
       ger_ii[Type.Float] = Ger_internal_f;
 
-
+      //===============
+      Gemm_ii = std::vector<Gemmfunc_oii>(5);
+      Gemm_ii[Type.ComplexDouble] = Gemm_internal_cd;
+      Gemm_ii[Type.ComplexFloat] = Gemm_internal_cf;
+      Gemm_ii[Type.Double] = Gemm_internal_d;
+      Gemm_ii[Type.Float] = Gemm_internal_f;
 
 
 #ifdef UNI_GPU

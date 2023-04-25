@@ -17,6 +17,7 @@ target_sources_local(cytnx
     InvM_inplace_internal.hpp
     Inv_inplace_internal.hpp
     Matmul_internal.hpp
+    Gemm_internal.hpp
     Matmul_dg_internal.hpp
     Matvec_internal.hpp
     Mul_internal.hpp
@@ -55,6 +56,7 @@ target_sources_local(cytnx
     InvM_inplace_internal.cpp
     Inv_inplace_internal.cpp
     Matmul_internal.cpp
+    Gemm_internal.cpp
     Matmul_dg_internal.cpp
     Matvec_internal.cpp
     Mul_internal.cpp
