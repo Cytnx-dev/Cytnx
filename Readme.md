@@ -25,12 +25,16 @@ See The following user guide for install and using of cytnx:
     
 
 ## Current dev Version:
+    v0.9.1
+    
+    1. [New] Add additional argument share_mem for Tensor.numpy() python API. 
+
     v0.9
 
     1. [New] New Network file format (removing the rowrank requirement
     2. [New] label can now be string, instead of integer. 
     3. [New] UniTensor with symmetry are now faster. 
-
+    
     
 
 
