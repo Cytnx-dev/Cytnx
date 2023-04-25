@@ -385,13 +385,13 @@ namespace cytnx {
     /*
     @brief internal use only
     */
-    void d_Matmul(Tensor &TL, Tensor &TR, Tensor &out,
+    void dgemm(Tensor &TL, Tensor &TR, Tensor &out,
                 const cytnx_double alpha = 1.0, const cytnx_double beta = 0.0,
                 const bool check = false);
     /*
     @brief internal use only
     */
-    void cd_Matmul(Tensor &TL, Tensor &TR, Tensor &out,
+    void zgemm(Tensor &TL, Tensor &TR, Tensor &out,
                 const cytnx_complex128 alpha = 1.0, const cytnx_complex128 beta = 0.0,
                 const bool check = false);
 
