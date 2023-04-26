@@ -527,14 +527,14 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+          _out[i] = _Lin[0] +  static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] + _Rin[0];
+          _out[i] = _Lin[i] +  static_cast<cytnx_complex128>(_Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
@@ -542,7 +542,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = _Lin[i] +  static_cast<cytnx_complex128>(_Rin[i]);
           }
         } else {
           /// handle non-contiguous:
@@ -587,7 +587,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
         for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[0] + _Rin[i];
+          _out[i] = _Lin[0] +  static_cast<cytnx_complex128>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
 #ifdef UNI_OMP
@@ -602,7 +602,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
           for (unsigned long long i = 0; i < len; i++) {
-            _out[i] = _Lin[i] + _Rin[i];
+            _out[i] = _Lin[i] +  static_cast<cytnx_complex128>(_Rin[i]);
           }
         } else {
           /// handle non-contiguous:
