@@ -103,7 +103,7 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG} -DUSE_MAGMA=OFF "
+FLAG="${FLAG} -DUSE_MAGMA=ON "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
 # 6-d) CuTensor (DEFALT = on)
@@ -148,7 +148,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=ON "
+FLAG="${FLAG} -DRUN_TESTS=OFF "
 #-----------------------------------
 
 

@@ -403,7 +403,7 @@ namespace cytnx {
                     tmp = itoi_indicators[i][0];
                     Rblk_dim ++;
                 }
-                Tlist[i] = Tin.get_blocks()[x.second[order[i]]];
+                Tlist[i] = Tin.get_blocks_()[x.second[order[i]]];
                 for(int j=0;j<Tin.rowrank();j++){
                     row_szs[i]*= Tlist[i].shape()[j];
                 }
