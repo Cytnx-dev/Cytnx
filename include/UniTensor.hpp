@@ -260,10 +260,10 @@ namespace cytnx {
                       const std::vector<std::string> &in_labels = {},
                       const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
                       const int &device = Device.cpu, const bool &is_diag = false,
-                      const bool &no_alloc = false);
+                      const bool &no_alloc = false, const std::string &name = "");
     
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
-                                const cytnx_int64 &rowrank = -1);
+                                const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
@@ -496,10 +496,10 @@ namespace cytnx {
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false);
+              const bool &no_alloc = false, const std::string &name = "");
     // this only work for non-symm tensor
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
-                        const cytnx_int64 &rowrank = -1);
+                        const cytnx_int64 &rowrank = -1, const std::string &name = "");
     std::vector<cytnx_uint64> shape() const {
       if (this->_is_diag) {
         std::vector<cytnx_uint64> shape = this->_block.shape();
@@ -1118,16 +1118,10 @@ namespace cytnx {
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false);
-
-    void Shadow_Init(const std::vector<Bond> &bonds,  const std::vector<std::vector<cytnx_int64>> &_block_qnums,
-               const std::vector<std::string> &in_labels = {},
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false);
+              const bool &no_alloc = false, const std::string &name = "");
 
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
-                        const cytnx_int64 &rowrank = -1) {
+                        const cytnx_int64 &rowrank = -1, const std::string &name = "") {
       cytnx_error_msg(
         true, "[ERROR][SparseUniTensor] cannot use Init_by_tensor() on a SparseUniTensor.%s", "\n");
     }
@@ -1853,10 +1847,10 @@ namespace cytnx {
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false);
+              const bool &no_alloc = false, const std::string &name = "");
 
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
-                        const cytnx_int64 &rowrank = -1) {
+                        const cytnx_int64 &rowrank = -1, const std::string &name = "") {
       cytnx_error_msg(
         true, "[ERROR][BlockUniTensor] cannot use Init_by_tensor() on a BlockUniTensor.%s", "\n");
     }
@@ -2465,9 +2459,9 @@ namespace cytnx {
 
     */
     explicit UniTensor(const Tensor &in_tensor, const bool &is_diag = false,
-                       const cytnx_int64 &rowrank = -1)
+                       const cytnx_int64 &rowrank = -1, const std::string &name = "")
         : _impl(new UniTensor_base()) {
-      this->Init(in_tensor, is_diag, rowrank);
+      this->Init(in_tensor, is_diag, rowrank, name);
     }
     /**
     @brief Initialize a UniTensor with cytnx::Tensor.
@@ -2475,6 +2469,7 @@ namespace cytnx {
     @param[in] is_diag if the current UniTensor is a diagonal Tensor. 
 	                   This will requires input of Tensor to be 1D.
     @param[in] rowrank the rowrank of the outcome UniTensor.
+    @param[in] name user specified name of the UniTensor.
 
     @note
         1. The constructed UniTensor will have same rank as the input Tensor, with default labels,
@@ -2486,10 +2481,10 @@ namespace cytnx {
 	@see UniTensor(const Tensor &, const bool &, const cytnx_int64 &)
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false,
-              const cytnx_int64 &rowrank = -1) {
+              const cytnx_int64 &rowrank = -1, const std::string &name = "") {
       //std::cout << "[entry!]" << std::endl;
       boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
-      out->Init_by_Tensor(in_tensor, is_diag, rowrank);
+      out->Init_by_Tensor(in_tensor, is_diag, rowrank, name);
       this->_impl = out;
     }
     //@}
@@ -2513,7 +2508,7 @@ namespace cytnx {
     */
     UniTensor(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false)
+              const int &device = Device.cpu, const bool &is_diag = false, const std::string &name = "")
         : _impl(new UniTensor_base()) {
 #ifdef UNI_DEBUG
       cytnx_warning_msg(
@@ -2523,7 +2518,7 @@ namespace cytnx {
         "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
         "\n");
 #endif
-      this->Init(bonds, in_labels, rowrank, dtype, device, is_diag);
+      this->Init(bonds, in_labels, rowrank, dtype, device, is_diag, name);
     }
     /**
      * @deprecated
@@ -2535,7 +2530,7 @@ namespace cytnx {
      */
     UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false)
+              const int &device = Device.cpu, const bool &is_diag = false, const std::string &name = "")
         : _impl(new UniTensor_base()) {
 #ifdef UNI_DEBUG
       cytnx_warning_msg(
@@ -2547,7 +2542,7 @@ namespace cytnx {
 #endif
       std::vector<std::string> vs;
       for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
-      this->Init(bonds, vs, rowrank, dtype, device, is_diag);
+      this->Init(bonds, vs, rowrank, dtype, device, is_diag, name);
     }
     /**
     @brief Initialize the UniTensor with the given arguments.
@@ -2564,6 +2559,7 @@ namespace cytnx {
     @param[in] is_diag if the constructed UniTensor is a diagonal UniTensor. This can 
 	   only be assigned true when the UniTensor is square, untagged and rank-2 
 	   UniTensor.
+    @param[in] name user specified name of the UniTensor.
 	@pre Please ensure that all of the Bond in \p bonds should be all symmetric or 
 	  non-symmetric. You cannot mix them.
 	@see
@@ -2573,7 +2569,7 @@ namespace cytnx {
     */
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false) {
+              const int &device = Device.cpu, const bool &is_diag = false, const std::string &name = "") {
       // checking type:
       bool is_sym = false;
       int sym_fver = -1;
@@ -2613,7 +2609,7 @@ namespace cytnx {
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
         this->_impl = out;
       }
-      this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag, false);
+      this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag, false, name);
     }
     /**
     @deprecated
@@ -2625,11 +2621,11 @@ namespace cytnx {
      */
     void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
               const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false) {
+              const int &device = Device.cpu, const bool &is_diag = false, const std::string &name = "") {
       std::vector<std::string> vs;
       cytnx_warning_msg(true,"[Deprecated warning] specify label with integers will be depreated soon. use string instead.%s","\n");
       for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
-      this->Init(bonds, vs, rowrank, dtype, device, is_diag);
+      this->Init(bonds, vs, rowrank, dtype, device, is_diag, name);
     }
 
     //@}

@@ -20,9 +20,10 @@ namespace cytnx {
   void DenseUniTensor::Init(const std::vector<Bond> &bonds,
                             const std::vector<std::string> &in_labels, const cytnx_int64 &rowrank,
                             const unsigned int &dtype, const int &device, const bool &is_diag,
-                            const bool &no_alloc) {
+                            const bool &no_alloc, const std::string &name) {
     // check for all bonds
     this->_is_tag = false;
+    this->_name = name;
     cytnx_uint32 N_ket = 0;
     if (bonds.size() != 0) this->_is_tag = (bonds[0].type() != bondType::BD_REG);
     
@@ -135,7 +136,8 @@ namespace cytnx {
   }
 
   void DenseUniTensor::Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag,
-                                      const cytnx_int64 &rowrank) {
+                                      const cytnx_int64 &rowrank, const std::string &name) {
+    this->_name = name;
     cytnx_error_msg(
       in_tensor.dtype() == Type.Void,
       "[ERROR][Init_by_Tensor] cannot init a UniTensor from an un-initialize Tensor.%s", "\n");

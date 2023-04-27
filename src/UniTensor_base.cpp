@@ -34,12 +34,12 @@ namespace cytnx {
   void UniTensor_base::Init(const std::vector<Bond> &bonds,
                             const std::vector<std::string> &in_labels, const cytnx_int64 &rowrank,
                             const unsigned int &dtype, const int &device, const bool &is_diag,
-                            const bool &no_alloc) {
+                            const bool &no_alloc, const std::string &name) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
   void UniTensor_base::Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag,
-                                      const cytnx_int64 &rowrank) {
+                                      const cytnx_int64 &rowrank, const std::string &name) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }

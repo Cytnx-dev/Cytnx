@@ -18,7 +18,8 @@ namespace cytnx {
   typedef Accessor ac;
   void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
                              const cytnx_int64 &rowrank, const unsigned int &dtype,
-                             const int &device, const bool &is_diag, const bool &no_alloc) {
+                             const int &device, const bool &is_diag, const bool &no_alloc, const std::string &name) {
+    this->_name = name;
     // the entering is already check all the bonds have symmetry.
     //  need to check:
     //  1. the # of symmetry and their type across all bonds

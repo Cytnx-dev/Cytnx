@@ -18,7 +18,7 @@ namespace cytnx {
   typedef Accessor ac;
   void SparseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
                              const cytnx_int64 &rowrank, const unsigned int &dtype,
-                             const int &device, const bool &is_diag, const bool &no_alloc) {
+                             const int &device, const bool &is_diag, const bool &no_alloc, const std::string &name) {
     // the entering is already check all the bonds have symmetry.
     //  need to check:
     //  1. the # of symmetry and their type across all bonds
@@ -156,94 +156,6 @@ namespace cytnx {
   //            [](cytnx_int64 x) -> string { return to_string(x); });
   //  Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
   //}
-
-  void SparseUniTensor::Shadow_Init(const std::vector<Bond> &bonds,
-                             const std::vector<std::vector<cytnx_int64>> &_blockqnums,
-                             const std::vector<string> &in_labels,
-                             const cytnx_int64 &rowrank, const unsigned int &dtype,
-                             const int &device, const bool &is_diag, const bool &no_alloc) {
-
-    cytnx_uint32 N_ket = 0;
-    for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
-      N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
-    }
-
-    if (rowrank < 0) {
-      this->_rowrank = N_ket;
-      this->_inner_rowrank = N_ket;
-    } else {
-      this->_rowrank = rowrank;
-      this->_inner_rowrank = rowrank;
-      // update braket_form >>>
-    }
-
-    this->_labels = in_labels;
-
-    // cytnx_error_msg(is_diag,"[ERROR][SparseUniTensor] Cannot set is_diag=true when the UniTensor
-    // is with symmetry.%s","\n");
-    this->_is_diag = is_diag;
-
-    // copy bonds, otherwise it will share objects:
-    this->_bonds = vec_clone(bonds);
-    this->_is_braket_form = this->_update_braket();
-
-    // need to maintain the mapper for contiguous for block_form.
-    this->_mapper = utils_internal::range_cpu(this->_bonds.size());
-    this->_inv_mapper = this->_mapper;
-    this->_contiguous = true;
-
-    // Symmetry, initialize memories for blocks.
-    vector<Bond> tot_bonds = this->getTotalQnums();
-    // vector<cytnx_uint64> degenerates;
-    // vector<vector<cytnx_int64>> uniq_bonds_row = tot_bonds[0].getUniqueQnums();
-    // vector<vector<cytnx_int64>> uniq_bonds_col = tot_bonds[1].getUniqueQnums();
-    // vec_print(std::cout,uniq_bonds_row);// << endl;
-    // vec_print(std::cout,uniq_bonds_col);// << endl;
-    // exit(1);
-    // vec_print(std::cout,tot_bonds[0].qnums());
-    // vec_print(std::cout,tot_bonds[1].qnums());
-    //[DDK]
-
-    // get common qnum set of row-col (bra-ket) space.
-    // this->_blockqnums = vec2d_intersect(uniq_bonds_row, uniq_bonds_col, false, false);
-    this->_blockqnums = _blockqnums;
-    // vec_print(std::cout,this->_blockqnums);
-    
-    // calculate&init the No. of blocks and their sizes.
-    this->_blocks.resize(this->_blockqnums.size());
-    cytnx_uint64 rowdim, coldim;
-    this->_inner2outer_row.resize(this->_blocks.size());
-    this->_inner2outer_col.resize(this->_blocks.size());
-    // this->_inner2outer_row = _inner2outer_row;
-    // this->_inner2outer_col = _inner2outer_col;
-    // this->_outer2inner_row = _inner2outer_row;
-    // this->_outer2inner_col = _inner2outer_col;    
-    for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
-      rowdim = tot_bonds[0].getDegeneracy(this->_blockqnums[i], this->_inner2outer_row[i]);
-      coldim = tot_bonds[1].getDegeneracy(this->_blockqnums[i], this->_inner2outer_col[i]);
-
-      for (cytnx_uint64 j = 0; j < this->_inner2outer_row[i].size(); j++) {
-        this->_outer2inner_row[this->_inner2outer_row[i][j]] =
-          pair<cytnx_uint64, cytnx_uint64>(i, j);
-      }
-
-      for (cytnx_uint64 j = 0; j < this->_inner2outer_col[i].size(); j++) {
-        this->_outer2inner_col[this->_inner2outer_col[i][j]] =
-          pair<cytnx_uint64, cytnx_uint64>(i, j);
-      }
-
-      if (is_diag) {
-        // checking if each block are square matrix!:
-        cytnx_error_msg(rowdim != coldim,
-                        "[ERROR][SparseUniTensor] is_diag =True can only apply to UniTensor with "
-                        "each block to be a square matrix!\n block[%d] row.dim:[%d] col.dim:[%d]\n",
-                        i, rowdim, coldim);
-        if (!no_alloc) this->_blocks[i] = zeros({rowdim}, dtype, device);
-      } else {
-        if (!no_alloc) this->_blocks[i] = zeros({rowdim, coldim}, dtype, device);
-      }
-    }
-  }
 
   vector<Bond> SparseUniTensor::getTotalQnums(const bool &physical) {
     if (physical) {

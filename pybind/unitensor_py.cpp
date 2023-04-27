@@ -102,47 +102,47 @@ void unitensor_binding(py::module &m){
   // entry.UniTensor
   py::class_<UniTensor>(m, "UniTensor")
     .def(py::init<>())
-    .def(py::init<const cytnx::Tensor &, const bool &, const cytnx_int64 &>(), py::arg("Tin"),
-         py::arg("is_diag") = false, py::arg("rowrank") = (cytnx_int64)(-1))
+    .def(py::init<const cytnx::Tensor &, const bool &, const cytnx_int64 &, const std::string &>(), py::arg("Tin"),
+         py::arg("is_diag") = false, py::arg("rowrank") = (cytnx_int64)(-1), py::arg("name")="")
     .def(py::init<const std::vector<Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &,
-                  const unsigned int &, const int &, const bool &>(),
+                  const unsigned int &, const int &, const bool &, const std::string &>(),
          py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
          py::arg("rowrank") = (cytnx_int64)(-1),
          py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
 
     .def(py::init<const std::vector<Bond> &, const std::vector<std::string> &, const cytnx_int64 &,
-                  const unsigned int &, const int &, const bool &>(),
+                  const unsigned int &, const int &, const bool &, const std::string &>(),
          py::arg("bonds"), py::arg("labels") = std::vector<std::string>(),
          py::arg("rowrank") = (cytnx_int64)(-1),
          py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
 
 
-    .def("Init",[](UniTensor &self, const Tensor &in_tensor, const bool &is_diag, const cytnx_int64 &rowrank){
-                    self.Init(in_tensor,is_diag,rowrank);
-                },py::arg("Tin"),py::arg("is_diag")=false,py::arg("rowrank")=(cytnx_int64)(-1))
+    .def("Init",[](UniTensor &self, const Tensor &in_tensor, const bool &is_diag, const cytnx_int64 &rowrank, const std::string &name){
+                    self.Init(in_tensor,is_diag,rowrank,name);
+                },py::arg("Tin"),py::arg("is_diag")=false,py::arg("rowrank")=(cytnx_int64)(-1), py::arg("name")="")
 
 
     .def("Init",[](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
                    const cytnx_int64 &rowrank, const unsigned int &dtype,
-                   const int &device, const bool &is_diag){
-                    self.Init(bonds,in_labels,rowrank,dtype,device,is_diag);
+                   const int &device, const bool &is_diag, const std::string &name){
+                    self.Init(bonds,in_labels,rowrank,dtype,device,is_diag,name);
                 },
          py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
          py::arg("rowrank") = (cytnx_int64)(-1),
          py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
 
     .def("Init",[](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels,
                    const cytnx_int64 &rowrank, const unsigned int &dtype,
-                   const int &device, const bool &is_diag){
-                    self.Init(bonds,in_labels,rowrank,dtype,device,is_diag);
+                   const int &device, const bool &is_diag, const std::string &name){
+                    self.Init(bonds,in_labels,rowrank,dtype,device,is_diag,name);
                 },
          py::arg("bonds"), py::arg("labels") = std::vector<std::string>(),
          py::arg("rowrank") = (cytnx_int64)(-1),
          py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
     .def("c_set_name", &UniTensor::set_name)
 
 
