@@ -1087,9 +1087,9 @@ void unitensor_binding(py::module &m){
         py::arg("cacheR") = false);
   m.def(
     "Contracts",
-    [](const std::vector<UniTensor> &TNs) -> UniTensor {
-      return Contracts(TNs);
+    [](const std::vector<UniTensor> &TNs, const std::string &order, const bool &optimal) -> UniTensor {
+      return Contracts(TNs, order, optimal);
     },
-    py::arg("TNs"));
+    py::arg("TNs"),py::arg("order")="",py::arg("optimal")=false);
 
 }

@@ -1,6 +1,7 @@
 #include "UniTensor.hpp"
 #include "Tensor.hpp"
 #include "linalg.hpp"
+#include "Network.hpp"
 #include <string>
 
 namespace cytnx {
@@ -595,15 +596,25 @@ namespace cytnx {
 
 
   void _resolve_CT(std::vector<UniTensor> &TNlist){};
-  UniTensor Contracts(const std::vector<UniTensor> &TNs) {
+  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order, const bool &optimal) {
     cytnx_error_msg(TNs.size() < 2, "[ERROR][Contracts] should have more than 2 TNs to contract.%s",
                     "\n");
-    UniTensor out = TNs[0].contract(TNs[1]);
-    if (TNs.size() > 2) {
-      for (int i = 2; i < TNs.size(); i++) {
-        out = out.contract(TNs[i]);
-      }
+    // UniTensor out = TNs[0].contract(TNs[1]);
+    // if (TNs.size() > 2) {
+    //   for (int i = 2; i < TNs.size(); i++) {
+    //     out = out.contract(TNs[i]);
+    //   }
+    // }
+    Network tmp;
+    std::vector<std::vector<std::string>> lbls;
+    std::vector<std::string> names;
+    for(int i = 0; i <TNs.size(); i++){
+      names.push_back(TNs[i].name());
+      lbls.push_back(TNs[i].labels());
     }
+    tmp.construct(names, lbls, std::vector<std::string>(), -1, order, optimal);
+    tmp.PutUniTensors(names, TNs);
+    UniTensor out = tmp.Launch(optimal);
     return out;
   }
 
