@@ -126,6 +126,46 @@ TEST_F(linalg_Test, DenseUt_Mod){
 }
 
 
+TEST_F(linalg_Test, Tensor_Gemm){
+  Tensor res_d = linalg::Gemm(0.5,arange3x3d,eye3x3d);
+  Tensor ans_d = arange3x3d*0.5;
+
+  for(size_t i = 0;i<3;i++)
+    for(size_t j = 0; j<3;j++){
+          EXPECT_EQ(res_d(i,j).item(), ans_d(i,j).item());
+    }
+
+  Tensor res_cd = linalg::Gemm(0.5,arange3x3cd,eye3x3cd);
+  Tensor ans_cd = arange3x3cd*0.5;
+
+  for(size_t i = 0;i<3;i++)
+    for(size_t j = 0; j<3;j++){
+          EXPECT_EQ(res_cd(i,j).item().real(), ans_cd(i,j).item().real());
+          EXPECT_EQ(res_cd(i,j).item().imag(), ans_cd(i,j).item().imag());
+    }
+}
+
+TEST_F(linalg_Test, Tensor_Gemm_){
+  Tensor C_d = arange3x3d.clone();
+  linalg::Gemm_(1,arange3x3d,eye3x3d,0.5,C_d);
+  Tensor ans_d = arange3x3d*1.5;
+  for(size_t i = 0;i<3;i++)
+    for(size_t j = 0; j<3;j++){
+          EXPECT_EQ(C_d(i,j).item(), ans_d(i,j).item());
+    }
+
+
+  Tensor C_cd = arange3x3cd.clone();
+  linalg::Gemm_(1,arange3x3cd,eye3x3cd,0.5,C_cd);
+  Tensor ans_cd = arange3x3cd*1.5;
+
+  for(size_t i = 0;i<3;i++)
+    for(size_t j = 0; j<3;j++){
+          EXPECT_EQ(C_cd(i,j).item().real(), ans_cd(i,j).item().real());
+          EXPECT_EQ(C_cd(i,j).item().imag(), ans_cd(i,j).item().imag());
+    }
+}
+
 // TEST_F(linalg_Test, DenseUt_Mod_UtUt){
 //     UniTensor At = UniTensor(A);
 //     UniTensor Bt = UniTensor(B);

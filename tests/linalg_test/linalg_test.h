@@ -5,11 +5,23 @@
 #include <gtest/gtest.h>
 
 using namespace cytnx;
+using namespace std;
 
 
 
 class linalg_Test : public ::testing::Test {
  public:
+  // ==================== general ===================
+  Tensor arange3x3d = arange(0,9,1, Type.Double).reshape(3,3);
+  Tensor ones3x3d = ones(9, Type.Double).reshape(3,3);
+  Tensor eye3x3d = eye(3, Type.Double);
+  Tensor zeros3x3d = zeros(9, Type.Double).reshape(3,3);
+
+  Tensor arange3x3cd = arange(0,9,1, Type.ComplexDouble).reshape(3,3)+1i*arange(0,9,1, Type.ComplexDouble).reshape(3,3);
+  Tensor ones3x3cd = ones(9, Type.ComplexDouble).reshape(3,3);
+  Tensor eye3x3cd = eye(3, Type.ComplexDouble);
+  Tensor zeros3x3cd = zeros(9, Type.ComplexDouble).reshape(3,3);
+
   std::string data_dir = "../../tests/test_data_base/linalg/";
   // ==================== svd_truncate ===================
   Bond svd_I = Bond(BD_OUT,{Qs(1),Qs(-1)},{1,1});
