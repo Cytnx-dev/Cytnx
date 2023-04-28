@@ -2343,7 +2343,7 @@ namespace cytnx {
      * @param[in ] x Tensor, rank-2 with shape (M,N)
      * @param[in ] y Tensor, rank-2 with shape (N,K)
      * @param[in ] b Scalar.
-     * @param[in/out ] c Tensor, rank-2 with shape (M,K), must be properly initialized with the correct shape.
+     * @param[in,out ] c Tensor, rank-2 with shape (M,K), must be properly initialized with the correct shape.
     */
     void Gemm_(const Scalar &a, const Tensor &x, const Tensor &y, const Scalar &b, Tensor &c);
 
