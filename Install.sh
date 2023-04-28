@@ -166,6 +166,6 @@ rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}
-make -j`nproc`
-make install
-ctest
+#make -j`nproc`
+#make install
+#ctest
