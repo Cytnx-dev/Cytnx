@@ -2,7 +2,6 @@ Contraction
 =============
 Cytnx provides rich UniTenosr contraction interfaces, in this section we introcuce several methods to contract a desired tensor network.
 
-
 Contract()
 ------------------
 
