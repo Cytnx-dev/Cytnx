@@ -106,6 +106,7 @@ namespace cytnx {
                        const std::vector<std::string> &alias = {},
                        const std::string &contract_order = "");
     void clear() {
+      this->tensors.clear();
       this->name2pos.clear();
       this->CtTree.clear();
       this->names.clear();
