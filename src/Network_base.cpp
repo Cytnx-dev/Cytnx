@@ -44,6 +44,11 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR][Network][Launch] call from uninitialize network.%s", "\n");
     return UniTensor();
   }
+
+  void Network_base::construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim) {
+    cytnx_error_msg(true, "[ERROR][Network][construct] call from uninitialize network.%s", "\n");
+  }
+
   boost::intrusive_ptr<Network_base> Network_base::clone() {
     cytnx_error_msg(true, "[ERROR][Network][clone] call from uninitialize network. %s", "\n");
     return nullptr;

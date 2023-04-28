@@ -85,6 +85,7 @@ namespace cytnx {
     virtual void clear();
     virtual std::string getOptimalOrder();
     virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    virtual void construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim);
     virtual void PrintNet(std::ostream &os);
     virtual boost::intrusive_ptr<Network_base> clone();
     virtual void Savefile(const std::string &fname);
@@ -116,6 +117,7 @@ namespace cytnx {
     }
     std::string getOptimalOrder();
     UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    void construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim);
     boost::intrusive_ptr<Network_base> clone() {
       RegularNetwork *tmp = new RegularNetwork();
       tmp->name2pos = this->name2pos;
@@ -348,6 +350,17 @@ namespace cytnx {
         cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
       }
     }
+
+    void construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl = std::vector<std::string>(), const cytnx_int64 &outrk = 0, const std::string &order = "", const bool optim = false, const int &network_type = NtType.Regular){
+      if (network_type == NtType.Regular) {
+        boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
+        this->_impl = tmp;
+      } else {
+        cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
+      }
+      this->_impl->construct(alias, lbls, outlbl, outrk, order, optim);
+    }
+
     void clear() {
       // boost::intrusive_ptr<Network_base> tmp(new Network_base());
       this->_impl->clear();

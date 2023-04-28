@@ -4360,13 +4360,15 @@ namespace cytnx {
   @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
   operation.
   @param TNs the Tensors.
+  @param order desired contraction order.
+  @param optimal wheather to find the optimal contraction order automatically.
   @return
       [UniTensor]
 
   See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
 
   */
-  UniTensor Contracts(const std::vector<UniTensor> &TNs);
+  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order, const bool &optimal);
 
   /// @cond
   void _resolve_CT(std::vector<UniTensor> &TNlist);
@@ -4389,10 +4391,10 @@ namespace cytnx {
 
   */
   template <class... T>
-  UniTensor Contracts(const UniTensor &in, const T &...args) {
+  UniTensor Contracts(const UniTensor &in, const T &...args, const std::string &order, const bool &optimal) {
     std::vector<UniTensor> TNlist;
     _resolve_CT(TNlist, in, args...);
-    return Contracts(TNlist);
+    return Contracts(TNlist, order, optimal);
   }
 
 }  // namespace cytnx

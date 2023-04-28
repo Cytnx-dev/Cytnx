@@ -294,6 +294,15 @@ namespace cytnx {
       Svd_ii[Type.Float] = Svd_internal_f;
 
       //=====================
+      Sdd_ii = vector<Svdfunc_oii>(5);
+
+      Sdd_ii[Type.ComplexDouble] = Sdd_internal_cd;
+      Sdd_ii[Type.ComplexFloat] = Sdd_internal_cf;
+      Sdd_ii[Type.Double] = Sdd_internal_d;
+      Sdd_ii[Type.Float] = Sdd_internal_f;
+
+
+      //=====================
       Eigh_ii = vector<Eighfunc_oii>(5);
 
       Eigh_ii[Type.ComplexDouble] = Eigh_internal_cd;

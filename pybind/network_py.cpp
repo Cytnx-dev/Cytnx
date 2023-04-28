@@ -70,6 +70,9 @@ void network_binding(py::module &m){
          py::arg("network_type") = (int)NtType.Regular)
     .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",
          py::arg("network_type") = (int)NtType.Regular)
+
+    .def("construct", &Network::construct,py::arg("alias"), py::arg("lbls"), py::arg("outlbl")=std::vector<std::string>(), py::arg("outrk"), py::arg("order")="", py::arg("optim")=false, py::arg("network_type")=(int)NtType.Regular)
+
     .def("clear", &Network::clear)
     .def("clone", &Network::clone)
     .def("__copy__", &Network::clone)

@@ -690,6 +690,15 @@ namespace cytnx {
     std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U = true,
                                       const bool &is_vT = true);
 
+
+    /**
+    @brief Perform Singular-Value decomposition on a UniTensor using divide-and-conquer method.
+    @details This function performs the Singular-Value decomposition on a UniTensor \p Tin.
+    The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
+    refer to the documentation of the function Sdd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
+    */
+    std::vector<cytnx::UniTensor> Sdd(const cytnx::UniTensor &Tin, const bool &is_UvT = true);
+
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
      * @details This function performs the Singular-Value decomposition on a UniTensor \p Tin and
@@ -1440,6 +1449,37 @@ namespace cytnx {
     "Svd_truncate"
     */
     std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
+
+    // Sdd:
+    //==================================================
+    /**
+    @brief Perform Singular-Value decomposition on a rank-2 Tensor (a @em matrix) using divid-and-conquer method.
+    @details This function will perform Singular-Value decomposition on a matrix (a rank-2
+    Tensor). That means givent a matrix \p Tin as \f$ M \f$, then the result will be:
+    \f[
+    M = U S V^\dagger,
+    \f]
+    where \f$ U \f$ is a left uniform matrix, \f$ S \f$ is a diagonal matrix with singular
+    values, and \f$ V^\dagger \f$ is the conjugate transpose of the right uniform matrix \f$ V
+    \f$. Furthermore, \f$ U \f$ and \f$ V \f$ are unitary matrices, and \f$ S \f$ is a
+    non-negative diagonal matrix.
+
+    @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
+    @param[in] is_UvT whether need to return left unitary matrix and right unitary matrix.
+    @return 
+    @parblock
+    [std::vector<Tensors>]
+
+    1. The first tensor is a 1-d tensor contanin the singular values
+    2. If \p is_UvT is true, then the tensor \f$ U \f$ and \f$ V^\dagger \f$ will be pushed back to the vector.
+    @endparblock
+    @pre The input tensor should be a rank-2 tensor (matrix).
+    @see \ref Sdd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT, const bool &return_err)
+    "Sdd_truncate"
+    */
+    std::vector<Tensor> Sdd(const Tensor &Tin, const bool &is_UvT = true);
+
+
 
     // Svd_truncate:
     //==================================================

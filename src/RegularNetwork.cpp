@@ -633,7 +633,7 @@ namespace cytnx {
           os << this->label_arr[i][j] << " ";
           // printf("%d ",this->label_arr[i][j]);
         }
-        os << "; ";
+        // os << "; ";
         // printf("%s","; ");
         for (cytnx_int64 j = this->iBondNums[i]; j < this->label_arr[i].size(); j++) {
           os << this->label_arr[i][j] << " ";
@@ -804,6 +804,92 @@ namespace cytnx {
 
     // UniTensor out;
     return out;
+  }
+
+  void RegularNetwork::construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim) {
+    for(int i = 0; i < alias.size(); i++){
+      this->names.push_back(alias[i]);
+      this->name2pos[alias[i]] = names.size() - 1;  // register
+      cytnx_uint64 tmp_iBN = lbls[i].size();
+      // this is an internal function that is defined in this cpp file.
+      this->label_arr.push_back(lbls[i]);
+      this->iBondNums.push_back(tmp_iBN);
+    }
+    this->TOUT_labels = outlbl;
+    this->TOUT_iBondNum = outlbl.size() - outrk;
+
+    if (order.length()) {
+      // checking if all TN are set in ORDER.
+      _parse_ORDER_line_(this->ORDER_tokens, order, 0);
+      std::vector<string> TN_names;
+      _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
+      for (int i = 0; i < this->names.size(); i++) {
+        auto it = std::find(TN_names.begin(), TN_names.end(), this->names[i]);
+        cytnx_error_msg(
+          it == std::end(TN_names),
+          "[ERROR][Network][Fromfile] TN: <%s> defined but is not used in ORDER line\n",
+          this->names[i].c_str());
+        TN_names.erase(it);
+      }
+      if (TN_names.size() != 0) {
+        cout << "[ERROR] Following TNs appeared in ORDER line, but is not defined." << endl;
+        for (int i = 0; i < TN_names.size(); i++) {
+          cout << "        " << TN_names[i] << endl;
+        }
+        cytnx_error_msg(true, "%s", "\n");
+      }
+    }// check all RN.
+
+    cytnx_error_msg(
+      this->names.size() < 2,
+      "[ERROR][Network][Fromfile] invalid network file. Should have at least 2 tensors defined.%s",
+      "\n");
+
+    this->tensors.resize(this->names.size());
+    this->CtTree.base_nodes.resize(this->names.size());
+
+    // checking label matching:
+    map<string, cytnx_int64> lblcnt;
+    for (int i = 0; i < this->names.size(); i++) {
+      for (int j = 0; j < this->label_arr[i].size(); j++) {
+        if (lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
+          lblcnt[this->label_arr[i][j]] = 1;
+        else
+          lblcnt[this->label_arr[i][j]] += 1;
+      }
+    }
+    vector<string> expected_TOUT;
+
+    for (map<string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
+      if (it->second == 1) expected_TOUT.push_back(it->first);
+    }
+    // std::cout<<this->TOUT_labels.size();
+    if(this->TOUT_labels.size() == 0){
+      // std::cout<<expected_TOUT;
+      this->TOUT_labels = expected_TOUT;
+      // std::cout<<this->TOUT_labels;
+    }else{
+      // std::cout<<this->TOUT_labels;
+      bool err = false;
+      if (expected_TOUT.size() != TOUT_labels.size()) {
+        err = true;
+      }
+      vector<string> itrsct = vec_intersect(expected_TOUT, this->TOUT_labels);
+      if (itrsct.size() != expected_TOUT.size()) {
+        err = true;
+      }
+      if (err) {
+        cout << "[ERROR][Network][Fromfile] The TOUT contains labels that does not match with the "
+                "delcartion from TNs.\n";
+        cout << "  > The reduced labels [rank:" << expected_TOUT.size() << "] should be:";
+        for (int i = 0; i < expected_TOUT.size(); i++) cout << expected_TOUT[i] << " ";
+        cout << endl;
+        cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
+        for (int i = 0; i < TOUT_labels.size(); i++) cout << TOUT_labels[i] << " ";
+        cout << endl;
+        cytnx_error_msg(true, "%s", "\n");
+      }
+    }
   }
 
 }  // namespace cytnx

@@ -35,6 +35,20 @@ void linalg_binding(py::module &m){
     py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
 
   m_linalg.def(
+    "Sdd",
+    [](const cytnx::Tensor &Tin, const bool &is_UvT) {
+      return cytnx::linalg::Svd(Tin, is_UvT);
+    },
+    py::arg("Tin"), py::arg("is_UvT") = true);
+  m_linalg.def(
+    "Sdd",
+    [](const cytnx::UniTensor &Tin, const bool &is_UvT) {
+      return cytnx::linalg::Svd(Tin, is_UvT);
+    },
+    py::arg("Tin"), py::arg("is_UvT") = true);
+
+
+  m_linalg.def(
     "Svd_truncate",
     [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U,
        const bool &is_vT, const bool &return_err) {
