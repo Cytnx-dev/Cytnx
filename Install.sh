@@ -112,7 +112,7 @@ FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 CUTENSOR_ROOT=${HOME}/CUTENSOR
-FLAG="${FLAG} -DUSE_CUTENSOR=ON "
+FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = on)
@@ -148,7 +148,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=ON "
+FLAG="${FLAG} -DRUN_TESTS=OFF "
 #-----------------------------------
 
 
@@ -162,8 +162,8 @@ FLAG="${FLAG} -DUSE_ICPC=OFF "
 
 
 echo ${FLAG}
-rm -rf build
-mkdir build
+# rm -rf build
+# mkdir build
 cd build
 cmake ../ ${FLAG}
 #make -j`nproc`

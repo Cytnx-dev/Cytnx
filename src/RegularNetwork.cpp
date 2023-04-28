@@ -633,7 +633,7 @@ namespace cytnx {
           os << this->label_arr[i][j] << " ";
           // printf("%d ",this->label_arr[i][j]);
         }
-        os << "; ";
+        // os << "; ";
         // printf("%s","; ");
         for (cytnx_int64 j = this->iBondNums[i]; j < this->label_arr[i].size(); j++) {
           os << this->label_arr[i][j] << " ";
