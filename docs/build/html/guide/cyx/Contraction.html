@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>6.3.3. UniTensor with Symmetry &#8212; Cytnx  documentation</title>
+    <title>6.4. Contraction &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -25,8 +25,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="6.3.4. Accessing the block(s)" href="UniTensor_getblk.html" />
-    <link rel="prev" title="6.3.2. Tagged UniTensor" href="UniTensor_tag.html" /> 
+    <link rel="next" title="6.5. Network" href="Network.html" />
+    <link rel="prev" title="6.3.5. Manipulate UniTensor" href="UniTensor_manip.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -181,18 +181,18 @@
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ncon">6.4.3. ncon()</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">6.5. Network</a><ul>
@@ -324,21 +324,19 @@
                 <li class="breadcrumb-item"><a href="../../Guide.html"
                        >User Guide</a></li>
                 <li class="breadcrumb-item"><a href="../cyx.html"
-                       ><span class="section-number">6. </span>UniTensor</a></li>
-                <li class="breadcrumb-item"><a href="UniTensor.html"
                        
                          accesskey="U"
                          class="active"
-                       ><span class="section-number">6.3. </span>UniTensor</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">6.3.3. </span>UniTensor with Symmetry</li>
+                       ><span class="section-number">6. </span>UniTensor</a></li>
+            <li class="breadcrumb-item active"><span class="section-number">6.4. </span>Contraction</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="UniTensor_tag.html" title="Previous Chapter: 6.3.2. Tagged UniTensor" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 6.3.2. Tagged...
+               <a href="UniTensor_manip.html" title="Previous Chapter: 6.3.5. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 6.3.5. Manipu...
                </a>
-               <a href="UniTensor_getblk.html" title="Next Chapter: 6.3.4. Accessing the block(s)" class="btn btn-primary" role="botton" accesskey="N">
-                   6.3.4. Access... &raquo;
+               <a href="Network.html" title="Next Chapter: 6.5. Network" class="btn btn-primary" role="botton" accesskey="N">
+                   6.5. Network &raquo;
                </a>
            </div>
        </div>
@@ -492,18 +490,18 @@
 <li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ncon">6.4.3. ncon()</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Network.html">6.5. Network</a><ul>
@@ -584,13 +582,13 @@
           
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="UniTensor_tag.html"
-                          title="previous chapter"><span class="section-number">6.3.2. </span>Tagged UniTensor</a></p>
+    <p class="topless"><a href="UniTensor_manip.html"
+                          title="previous chapter"><span class="section-number">6.3.5. </span>Manipulate UniTensor</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="UniTensor_getblk.html"
-                          title="next chapter"><span class="section-number">6.3.4. </span>Accessing the block(s)</a></p>
+    <p class="topless"><a href="Network.html"
+                          title="next chapter"><span class="section-number">6.5. </span>Network</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
@@ -602,7 +600,7 @@
 
 <script type="text/javascript">$('#searchbox').show(0);</script>
   <ul class="this-page-menu list-unstyled text-right">
-    <li><a href="../../_sources/guide/cyx/UniTensor_sym.rst.txt"
+    <li><a href="../../_sources/guide/cyx/Contraction.rst.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
@@ -613,135 +611,214 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="unitensor-with-symmetry">
-<h1><span class="section-number">6.3.3. </span>UniTensor with Symmetry<a class="headerlink" href="#unitensor-with-symmetry" title="Permalink to this heading">¶</a></h1>
-<p>Tensor with symmetries has several advantages in physical simulations. In a system with symmetry, Hamiltonian can be block-diagonalized into symmetry sectors of charge (quantum numbers). When Impose symmetry structure into our tensor, by ultilizing this block-diagonalize structure, we can substantially reduce the number of variational parameters, allowing us to go to larger system sizes/effective virtual bond dimension.</p>
-<p>The quanutm number conserving Tensor can be understanding in a simple way. Each bond (leg) of the Tensor carries quantum numbers and is directional, either pointing in or pointing out. As shown in the following figure:</p>
-<a class="reference internal image-reference" href="../../_images/ut_bd.png"><img alt="../../_images/ut_bd.png" class="align-center" src="../../_images/ut_bd.png" style="width: 600px;" /></a>
-<p>The conservation of quantum number (symmetry charge) indicates that only elements with <strong>zero flux</strong> will be allow to exist (total quantum number flows into the tensor subject to the combine rule of symmetry is equal to total quantum number flow out), therefore belongs to a valid block. Other elements that belongs to non-zero flux will not be created in our UniTensor.</p>
-<a class="reference internal image-reference" href="../../_images/ut_blocks.png"><img alt="../../_images/ut_blocks.png" class="align-center" src="../../_images/ut_blocks.png" style="width: 600px;" /></a>
-<p>To impose the symmetry, there are only two things we need to do:</p>
-<ol class="arabic simple">
-<li><p>Identify the symmetries in the system (for example, U(1) symmetry)</p></li>
-<li><p>Creat <strong>directional</strong> Bonds that carries quantum numbers flow associate to that symmetries.</p></li>
-</ol>
-<p>As an simple example, lets creat a 3-rank tensor with U(1) symmetry as the following figure:</p>
-<a class="reference internal image-reference" href="../../_images/u1_tdex.png"><img alt="../../_images/u1_tdex.png" class="align-center" src="../../_images/u1_tdex.png" style="width: 500px;" /></a>
-<p>Here, we use the notation <em>{Qnum}&gt;&gt;dimension</em>. First, three bonds  <strong>bond_c</strong> (in), <strong>bond_d</strong> (in) and <strong>bond_e</strong> (out) are created with corresponding qnums (see 7.2 for further info related to Bond). Then we initialize our UniTensor <strong>Td</strong> using them:</p>
+  <section id="contraction">
+<h1><span class="section-number">6.4. </span>Contraction<a class="headerlink" href="#contraction" title="Permalink to this heading">¶</a></h1>
+<p>Cytnx provides rich UniTenosr contraction interfaces, in this section we introcuce several methods to contract a desired tensor network.</p>
+<section id="contract">
+<h2><span class="section-number">6.4.1. </span>Contract()<a class="headerlink" href="#contract" title="Permalink to this heading">¶</a></h2>
+<p>For the contraction of two UniTensor, we have the function <strong>cytnx.Contract()</strong> to do the job, what it does is simply contract
+the common labels of two UniTensors. Here is a example:</p>
 <ul class="simple">
 <li><p>In python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bond_c</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="p">[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos">2</span><span class="n">bond_d</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="p">[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos">3</span><span class="n">bond_e</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span> <span class="p">[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span> <span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos">4</span><span class="n">Td</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_c</span><span class="p">,</span> <span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">])</span>
-<span class="linenos">5</span><span class="n">Td</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Td&quot;</span><span class="p">)</span>
-<span class="linenos">6</span><span class="n">Td</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">A</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">10</span><span class="n">B</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">11</span><span class="n">C</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
-tensor Name : Td
+tensor Name :
 tensor Rank : 3
-contiguous  : True
-valid blocks : 4
-is diag   : False
+block_form  : false
+is_diag     : False
 on device   : cytnx device: CPU
-      row           col
-         -----------
-         |         |
-   0  --&gt;| 2     4 |--&gt;  2
-         |         |
-   1  --&gt;| 2       |
-         |         |
-         -----------
+         -------------
+        /             \
+  1 ____| 3         3 |____ 2
+        |             |
+        |           3 |____ 3
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  2 ____| 3         3 |____ 4
+        |             |
+  3 ____| 3         3 |____ 5
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  1 ____| 3         3 |____ 4
+        |             |
+        |           3 |____ 5
+        \             /
+         -------------
 </pre></div>
 </div>
-<p>We note that in this UniTensor, there are only <strong>4</strong> valid blocks** that carries zero-flux, as also shown in the figure. We can use <strong>Td.print_blocks()</strong> to see how many blocks, and their structure:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-------- start of print ---------
-Tensor name: Td
-braket_form : True
-is_diag    : False
-[OVERALL] contiguous : True
-========================
-BLOCK [#0]
- |- []   : Qn index
- |- Sym(): Qnum of correspond symmetry
-                 -----------
-                 |         |
-   [0] U1(1)  --&gt;| 1     1 |--&gt;  [0] U1(2)
-                 |         |
-   [0] U1(1)  --&gt;| 1       |
-                 |         |
-                 -----------
-
-Total elem: 1
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,1)
-[[[0.00000e+00 ]]]
-
-========================
-BLOCK [#1]
- |- []   : Qn index
- |- Sym(): Qnum of correspond symmetry
-                  -----------
-                  |         |
-   [0] U1(1)   --&gt;| 1     2 |--&gt;  [1] U1(0)
-                  |         |
-   [1] U1(-1)  --&gt;| 1       |
-                  |         |
-                  -----------
-
-Total elem: 2
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
-
-========================
-BLOCK [#2]
- |- []   : Qn index
- |- Sym(): Qnum of correspond symmetry
-                  -----------
-                  |         |
-   [1] U1(-1)  --&gt;| 1     2 |--&gt;  [1] U1(0)
-                  |         |
-   [0] U1(1)   --&gt;| 1       |
-                  |         |
-                  -----------
-
-Total elem: 2
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
-
-========================
-BLOCK [#3]
- |- []   : Qn index
- |- Sym(): Qnum of correspond symmetry
-                  -----------
-                  |         |
-   [1] U1(-1)  --&gt;| 1     1 |--&gt;  [2] U1(-2)
-                  |         |
-   [1] U1(-1)  --&gt;| 1       |
-                  |         |
-                  -----------
-
-Total elem: 1
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,1)
-[[[0.00000e+00 ]]]
+<p>Here we see that legs from two UniTensors with same labels <strong>2</strong> and <strong>3</strong> are contracted.</p>
+<p>Often we have to change the labels of UniTensors in order to do the desired contraction, to reduce the inconvinence of maintaining
+labels, we provide <strong>.relabels()</strong> to relabel the UniTensors, this in fact return us a copy of UniTensor to do the contraction job,
+while the labels of the original UniTensor itself are preserved. Here is the example:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 2</span><span class="n">A</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="linenos"> 3</span><span class="n">At</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">relabels</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="n">B</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="linenos"> 7</span><span class="n">Bt</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">relabels</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">])</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">C</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">At</span><span class="p">,</span> <span class="n">Bt</span><span class="p">)</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="n">A</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">12</span><span class="n">B</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">13</span><span class="n">C</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Here, the number in the square braket <strong>[]</strong> in print_blocks() indicates the Qn index. A Qn index is the index where the corresponding quantum number (Qnum) resides on given bond.</p>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  1 ____| 3         3 |____ 2
+        |             |
+        |           3 |____ 3
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  3 ____| 3         3 |____ 4
+        |             |
+        |           3 |____ 5
+        \             /
+         -------------
+-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+         -------------
+        /             \
+  1 ____| 3         3 |____ 2
+        |             |
+        |           3 |____ 4
+        |             |
+        |           3 |____ 5
+        \             /
+         -------------
+</pre></div>
 </div>
-<div class="toctree-wrapper compound">
+<p>Note that in this example, two UniTensors <strong>A</strong> and <strong>B</strong> have no labels in common, but we somehow want to contract them while
+preserving their labels, that’s the reason why we use <strong>.relabels</strong> here.</p>
+</section>
+<section id="contracts">
+<h2><span class="section-number">6.4.2. </span>Contracts()<a class="headerlink" href="#contracts" title="Permalink to this heading">¶</a></h2>
+<p>The function <strong>Contracts</strong> allow us to contract multiple Unitensors.</p>
+<p>This function take an argument <strong>TNs</strong> which is a list contains UniTensors to be contracted,
+we also provide arguments <strong>order</strong> for users to specify a desired contraction order, and an <strong>optimal</strong> option to use an auto-optimized contraction order.</p>
+<p>Consider the following contraction task consists of UniTensors <strong>A1</strong>, <strong>A2</strong> and <strong>M</strong>:</p>
+<a class="reference internal image-reference" href="../../_images/contracts.png"><img alt="../../_images/contracts.png" class="align-center" src="../../_images/contracts.png" style="width: 300px;" /></a>
+<p>translate to the code we have:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># Creating A1, A2, M</span>
+<span class="linenos"> 2</span><span class="n">A1</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">]),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;A1&quot;</span><span class="p">)</span>
+<span class="linenos"> 3</span><span class="n">A2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">]),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;A2&quot;</span><span class="p">)</span>
+<span class="linenos"> 4</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]),</span> <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;M&quot;</span><span class="p">)</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="c1"># Assign labels</span>
+<span class="linenos"> 7</span><span class="n">A1</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="s2">&quot;phy1&quot;</span><span class="p">,</span><span class="s2">&quot;v1&quot;</span><span class="p">,</span><span class="s2">&quot;v2&quot;</span><span class="p">])</span>
+<span class="linenos"> 8</span><span class="n">M</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="s2">&quot;phy1&quot;</span><span class="p">,</span><span class="s2">&quot;phy2&quot;</span><span class="p">,</span><span class="s2">&quot;v3&quot;</span><span class="p">,</span><span class="s2">&quot;v4&quot;</span><span class="p">])</span>
+<span class="linenos"> 9</span><span class="n">A2</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="s2">&quot;phy2&quot;</span><span class="p">,</span><span class="s2">&quot;v5&quot;</span><span class="p">,</span><span class="s2">&quot;v6&quot;</span><span class="p">])</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span><span class="c1"># Use Contracts</span>
+<span class="linenos">12</span><span class="n">res</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contracts</span><span class="p">(</span><span class="n">TNs</span> <span class="o">=</span> <span class="p">[</span><span class="n">A1</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">A2</span><span class="p">],</span> <span class="n">order</span> <span class="o">=</span> <span class="s2">&quot;(M,(A1,A2))&quot;</span><span class="p">,</span> <span class="n">optimal</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+</pre></div>
 </div>
+<p>Note that to specify the contraction orders, the UniTensors’ name should be specified(in this case we specified them in the constructor argument).</p>
+</section>
+<section id="ncon">
+<h2><span class="section-number">6.4.3. </span>ncon()<a class="headerlink" href="#ncon" title="Permalink to this heading">¶</a></h2>
+<p>The <strong>ncon</strong> is another useful function to reduce users’ programming effort required to implement a tesnor network contraction, which is orginally proposed for MATLAB <span id="id1">[<a class="reference internal" href="#id3" title="Robert N. C. Pfeifer, Glen Evenbly, Sukhwinder Singh, and Guifre Vidal. Ncon: a tensor network contractor for matlab. 2015. arXiv:1402.0939.">PESV15</a>]</span>.</p>
+<p>To use ncon, we first make a labelled diagram of the desired network contraction such that:
+Each internal index (index to be contracted) is labelled with a unique positive integer (typically sequential integers starting from 1, although this is not necessary).</p>
+<p>External indices of the diagram (if there are any) are labelled with sequential negative integers [-1,-2,-3,…] which denote the desired index order on the final tensor (with -1 as the first index, -2 as the second etc).</p>
+<p>Following this, the <strong>ncon</strong> routine is called as follows,</p>
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">OutputTensor</span> <span class="pre">=</span> <span class="pre">ncon(tensor_list_in,</span> <span class="pre">connect_list_in,</span> <span class="pre">cont_order)</span></span></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor_list_in</strong> (<em>list</em>) – 1D array containing the tensors comprising the network</p></li>
+<li><p><strong>connect_list_in</strong> (<em>list</em>) – 1D array of vectors, where the kth element is a vector of the integer labels from the diagram on the kth tensor from tensor_list_in (ordered following the corresponding index order on this tensor).</p></li>
+<li><p><strong>cont_order</strong> (<em>list</em>) – a vector containing the positive integer labels from the diagram, used to specify order in which <strong>ncon</strong> contracts the indices. Note that cont_order is an optional input that can be omitted if desired, in which case ncon will contract in ascending order of index lab.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>For example, we want to contract the following tesnor network (again) consists of tensors <strong>A1</strong>, <strong>A2</strong> and <strong>M</strong>:</p>
+<a class="reference internal image-reference" href="../../_images/ncon.png"><img alt="../../_images/ncon.png" class="align-center" src="../../_images/ncon.png" style="width: 300px;" /></a>
+<p>In the figure we labelled the internal leg using the unique positive numbers and extermal legs the negative ones, translate this figure
+to the ncon function calling we have:</p>
+<ul class="simple">
+<li><p>In python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Creating A1, A2, M</span>
+<span class="linenos">2</span><span class="n">A1</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">]))</span>
+<span class="linenos">3</span><span class="n">A2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">]))</span>
+<span class="linenos">4</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]))</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="c1"># Calling ncon</span>
+<span class="linenos">7</span><span class="n">res</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ncon</span><span class="p">([</span><span class="n">A1</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">A2</span><span class="p">],[[</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">]])</span>
+</pre></div>
+</div>
+<p>We see that <strong>ncon</strong> accomplish the similar thing as <strong>Contracts</strong>, just now the labeling of the UniTensors in the network
+is incorporated into the function argument, thus make the code more compact.</p>
+<div class="docutils container" id="id2">
+<div class="citation" id="id3" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">PESV15</a><span class="fn-bracket">]</span></span>
+<p>Robert N. C. Pfeifer, Glen Evenbly, Sukhwinder Singh, and Guifre Vidal. Ncon: a tensor network contractor for matlab. 2015. <a class="reference external" href="https://arxiv.org/abs/1402.0939">arXiv:1402.0939</a>.</p>
+</div>
+</div>
+</div>
+</section>
 </section>
 
 

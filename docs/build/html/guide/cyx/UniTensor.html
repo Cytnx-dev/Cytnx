@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>8.3. UniTensor &#8212; Cytnx  documentation</title>
+    <title>6.3. UniTensor &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -25,8 +25,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="8.3.1. Create UniTensor" href="UniTensor_create.html" />
-    <link rel="prev" title="8.2. Bond" href="Bond.html" /> 
+    <link rel="next" title="6.3.1. Create UniTensor" href="UniTensor_create.html" />
+    <link rel="prev" title="6.2. Bond" href="Bond.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -169,51 +169,53 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">6.5. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">6.5.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">6.5.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">6.5.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-according-to-label-ordering">6.5.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Contraction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#contract">8.4.1. Contract()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#contracts">8.4.2. Contracts()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#ncon">8.4.3. Ncon()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network">8.4.4. Network()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.5. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.6. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.7. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-with-according-to-label-order">8.4.8. PutUniTensor with according to label order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">7. Linear algebra</a><ul class="simple">
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">8. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">8.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">8.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">8.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">8.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">8.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -325,16 +327,16 @@
                        
                          accesskey="U"
                          class="active"
-                       ><span class="section-number">8. </span>Cytnx extensions</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">8.3. </span>UniTensor</li>
+                       ><span class="section-number">6. </span>UniTensor</a></li>
+            <li class="breadcrumb-item active"><span class="section-number">6.3. </span>UniTensor</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="Bond.html" title="Previous Chapter: 8.2. Bond" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 8.2. Bond
+               <a href="Bond.html" title="Previous Chapter: 6.2. Bond" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 6.2. Bond
                </a>
-               <a href="UniTensor_create.html" title="Next Chapter: 8.3.1. Create UniTensor" class="btn btn-primary" role="botton" accesskey="N">
-                   8.3.1. Create... &raquo;
+               <a href="UniTensor_create.html" title="Next Chapter: 6.3.1. Create UniTensor" class="btn btn-primary" role="botton" accesskey="N">
+                   6.3.1. Create... &raquo;
                </a>
            </div>
        </div>
@@ -476,51 +478,53 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">6.5. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">6.5.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">6.5.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">6.5.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-according-to-label-ordering">6.5.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Contraction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#contract">8.4.1. Contract()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#contracts">8.4.2. Contracts()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#ncon">8.4.3. Ncon()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network">8.4.4. Network()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.5. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.6. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.7. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-with-according-to-label-order">8.4.8. PutUniTensor with according to label order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">7. Linear algebra</a><ul class="simple">
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">8. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">8.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">8.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">8.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">8.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">8.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -579,12 +583,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="Bond.html"
-                          title="previous chapter"><span class="section-number">8.2. </span>Bond</a></p>
+                          title="previous chapter"><span class="section-number">6.2. </span>Bond</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="UniTensor_create.html"
-                          title="next chapter"><span class="section-number">8.3.1. </span>Create UniTensor</a></p>
+                          title="next chapter"><span class="section-number">6.3.1. </span>Create UniTensor</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
@@ -608,7 +612,7 @@
           <div class="body">
             
   <section id="unitensor">
-<h1><span class="section-number">8.3. </span>UniTensor<a class="headerlink" href="#unitensor" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">6.3. </span>UniTensor<a class="headerlink" href="#unitensor" title="Permalink to this heading">¶</a></h1>
 <p>UniTensor is an extension object base on <strong>cytnx.Tensor</strong>.
 A UniTensor consist of three imporant parts:</p>
 <a class="reference internal image-reference" href="../../_images/UT.png"><img alt="../../_images/UT.png" class="align-center" src="../../_images/UT.png" style="width: 600px;" /></a>
@@ -622,11 +626,11 @@ A UniTensor can be constructed using <strong>Bond</strong> object, or in the sim
 <p>Let’s take a look at this:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
 </ul>
 </div>
 </section>

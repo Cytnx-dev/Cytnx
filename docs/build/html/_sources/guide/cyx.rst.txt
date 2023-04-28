@@ -1,4 +1,4 @@
-Cytnx extensions
+UniTensor
 =================
 Cytnx provides objects that are designed specifically for Tensor network simulations, base on the **cytnx.Tensor**.
 
@@ -15,6 +15,6 @@ In the following, let's look into these objects:
     cyx/TNotation.rst
     cyx/Bond.rst
     cyx/UniTensor.rst
+    cyx/Contraction.rst
     cyx/Network.rst
-
 

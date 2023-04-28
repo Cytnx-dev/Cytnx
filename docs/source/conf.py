@@ -45,6 +45,7 @@ bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.hotrg.bib",\
                    "example/ref.itebd.bib",\
                    "example/ref.idmrg.bib",\
+                   "guide/cyx/ref.ncon.bib",\
                   ]
 extensions.append('sphinx.ext.extlinks')
 #extensions.append('sphinx.ext.imgmath')
