@@ -533,7 +533,7 @@ namespace cytnx {
     std::cout << std::string(buffer);
     sprintf(buffer, "tensor Rank : %ld\n", this->_labels.size());
     std::cout << std::string(buffer);
-    sprintf(buffer, "block_form  : false%s", "\n");
+    sprintf(buffer, "block_form  : False%s", "\n");
     std::cout << std::string(buffer);
     sprintf(buffer, "is_diag     : %s\n", this->_is_diag ? "True" : "False");
     std::cout << std::string(buffer);
