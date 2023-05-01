@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,6 +21,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -177,6 +178,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
@@ -216,7 +218,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -480,6 +485,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
@@ -519,7 +525,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -671,19 +680,19 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <ul class="simple">
 <li><p>For Linux/WSL:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> config --add channels conda-forge
-<span class="nv">$conda</span> create --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
-<span class="nv">$conda</span> activate cytnx
-<span class="nv">$conda</span> upgrade --all
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8<span class="w"> </span><span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
+<span class="nv">$conda</span><span class="w"> </span>activate<span class="w"> </span>cytnx
+<span class="nv">$conda</span><span class="w"> </span>upgrade<span class="w"> </span>--all
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>For MacOS:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> config --add channels conda-forge
-<span class="nv">$conda</span> create --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8 llvm-openmp
-<span class="nv">$conda</span> activate cytnx
-<span class="nv">$conda</span> upgrade --all
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+<span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.8<span class="w"> </span>llvm-openmp
+<span class="nv">$conda</span><span class="w"> </span>activate<span class="w"> </span>cytnx
+<span class="nv">$conda</span><span class="w"> </span>upgrade<span class="w"> </span>--all
 </pre></div>
 </div>
 <div class="admonition note">
@@ -696,7 +705,7 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <ol class="arabic simple" start="2">
 <li><p>Install the following dependencies:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 <span class="nv">libblas</span><span class="o">=</span>*<span class="o">=</span>*mkl
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>make<span class="w"> </span>boost<span class="w"> </span>libboost<span class="w"> </span>git<span class="w"> </span>compilers<span class="w"> </span>numpy<span class="w"> </span>mkl<span class="w"> </span>mkl-include<span class="w"> </span>mkl-service<span class="w"> </span>pybind11<span class="w"> </span><span class="nv">libblas</span><span class="o">=</span>*<span class="o">=</span>*mkl
 </pre></div>
 </div>
 <div class="admonition note">
@@ -716,7 +725,7 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <ol class="arabic simple" start="4">
 <li><p>In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install cudatoolkit cudatoolkit-dev
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>cudatoolkit<span class="w"> </span>cudatoolkit-dev
 </pre></div>
 </div>
 <p><strong>Option B. Install deps via system package manager</strong></p>
@@ -732,7 +741,7 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <h3>Compiling process<a class="headerlink" href="#compiling-process" title="Permalink to this heading">¶</a></h3>
 <p>Once you installed all the dependencies, it is time to start building the Cytnx source code.</p>
 <p>Starting from v0.7.6a, Cytnx provides a shell script <strong>Install.sh</strong>, which contains all the cmake arguments check list. To install, un-comment and put custom parameters on the corresponding lines, and simply execute this script:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span> Install.sh
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span><span class="w"> </span>Install.sh
 </pre></div>
 </div>
 <p><strong>Arguments/options for cmake install</strong></p>
@@ -740,14 +749,14 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <ol class="arabic simple">
 <li><p>Create a build directory:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$make</span> build
-<span class="nv">$cd</span> build
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$make</span><span class="w"> </span>build
+<span class="nv">$cd</span><span class="w"> </span>build
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
 <li><p>Use cmake to automatically generate compiling files:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$cmake</span> <span class="o">[</span>option<span class="o">]</span> &lt;Cytnx repo directory&gt;
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$cmake</span><span class="w"> </span><span class="o">[</span>option<span class="o">]</span><span class="w"> </span>&lt;Cytnx<span class="w"> </span>repo<span class="w"> </span>directory&gt;
 </pre></div>
 </div>
 <p>The following are the available compiling option flags that you can specify in <strong>[option]</strong>:</p>
@@ -855,10 +864,10 @@ Shape : (4)
 <section id="using-c-api-after-self-build-install">
 <h3>Using C++ API after self-build install<a class="headerlink" href="#using-c-api-after-self-build-install" title="Permalink to this heading">¶</a></h3>
 <p>In the case that Cytnx is installed locally from binary build, not from anaconda, one can use the following lines to extract the linking and compiling variables:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LDFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LIB :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LDFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LIB<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
+CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import sys\nsys.path.append(\&#39;</span><span class="k">$(</span>CYTNX_ROOT<span class="k">)</span><span class="s2">\&#39;)\nimport cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -882,7 +891,7 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,6 +21,7 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -177,6 +178,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
@@ -216,7 +218,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -480,6 +485,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
@@ -519,7 +525,10 @@
 <li class="toctree-l4"><a class="reference internal" href="guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide/itersol/Lanczos.html">8.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -620,8 +629,8 @@ Note that both python API and C++ API will be installed together regardless of w
 <ul class="simple">
 <li><p>For linux/WSL:</p></li>
 </ul>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span> config --add channels conda-forge
-<span class="linenos">2</span><span class="nv">$conda</span> create --channel conda-forge --name cytnx <span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9 <span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge
+<span class="linenos">2</span><span class="nv">$conda</span><span class="w"> </span>create<span class="w"> </span>--channel<span class="w"> </span>conda-forge<span class="w"> </span>--name<span class="w"> </span>cytnx<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9<span class="w"> </span><span class="nv">_openmp_mutex</span><span class="o">=</span>*<span class="o">=</span>*_llvm
 </pre></div>
 </div>
 <div class="admonition note">
@@ -651,10 +660,10 @@ Note that both python API and C++ API will be installed together regardless of w
 </div></blockquote>
 </li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> activate cytnx
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>activate<span class="w"> </span>cytnx
 </pre></div>
 </div>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span> install -c kaihsinwu cytnx
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>kaihsinwu<span class="w"> </span>cytnx
 </pre></div>
 </div>
 <div class="admonition note">
@@ -707,24 +716,24 @@ There are fundamental differences between C++ and python, where C++ requires com
 <ul class="simple">
 <li><p>test.cpp</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
-<span class="linenos">2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-<span class="linenos">3</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cytnx.hpp&quot;</span>
+<span class="linenos">2</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="linenos">3</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="p">;</span>
 <span class="linenos">4</span>
-<span class="linenos">5</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(){</span><span class="w"></span>
-<span class="linenos">6</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
-<span class="linenos">7</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">8</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">9</span><span class="p">}</span><span class="w"></span>
+<span class="linenos">5</span><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(){</span>
+<span class="linenos">6</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zeros</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">7</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">8</span><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos">9</span><span class="p">}</span>
 </pre></div>
 </div>
 <p>Now, to compile and link the above <strong>test.cpp</strong> which produces an executable <strong>test</strong>, we can simply use the following bash script:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">export</span> <span class="nv">CYTNX_INC</span><span class="o">=</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-<span class="linenos">2</span><span class="nb">export</span> <span class="nv">CYTNX_LIB</span><span class="o">=</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-<span class="linenos">3</span><span class="nb">export</span> <span class="nv">CYTNX_LINK</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
-<span class="linenos">4</span><span class="nb">export</span> <span class="nv">CYTNX_CXXFLAGS</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_INC</span><span class="o">=</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
+<span class="linenos">2</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_LIB</span><span class="o">=</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
+<span class="linenos">3</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_LINK</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
+<span class="linenos">4</span><span class="nb">export</span><span class="w"> </span><span class="nv">CYTNX_CXXFLAGS</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span><span class="s2">&quot;</span>
 <span class="linenos">5</span>
-<span class="linenos">6</span>g++ -I<span class="si">${</span><span class="nv">CYTNX_INC</span><span class="si">}</span> <span class="si">${</span><span class="nv">CYTNX_CXXFLAGS</span><span class="si">}</span> test.cpp <span class="si">${</span><span class="nv">CYTNX_LIB</span><span class="si">}</span> <span class="si">${</span><span class="nv">CYTNX_LINK</span><span class="si">}</span> -o <span class="nb">test</span>
+<span class="linenos">6</span>g++<span class="w"> </span>-I<span class="si">${</span><span class="nv">CYTNX_INC</span><span class="si">}</span><span class="w"> </span><span class="si">${</span><span class="nv">CYTNX_CXXFLAGS</span><span class="si">}</span><span class="w"> </span>test.cpp<span class="w"> </span><span class="si">${</span><span class="nv">CYTNX_LIB</span><span class="si">}</span><span class="w"> </span><span class="si">${</span><span class="nv">CYTNX_LINK</span><span class="si">}</span><span class="w"> </span>-o<span class="w"> </span><span class="nb">test</span>
 </pre></div>
 </div>
 <p>The first four lines are the python inline execution to get the three attributes and store them into <strong>CYTNX_INC</strong>, <strong>CYTNX_LIB</strong>, <strong>CYTNX_LINK</strong> and <strong>CYTNX_CXXFLAGS</strong> variables. The last line is the standard simple compiling of the C++ code <strong>test.cpp</strong>. After executing these steps, we can then run this program with the executable <strong>test</strong>.</p>
@@ -742,10 +751,10 @@ Shape : (4)
 </pre></div>
 </div>
 <p>For users who what to use cmake/make to integrate cytnx into more complicated projects, one can use the following lines to extract the essential to the cmake variables:</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LDFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
-CYTNX_LIB :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
-CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -c <span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>CYTNX_INC<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_include__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LDFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_linkflags__)\&quot;)&quot;</span><span class="k">)</span>
+CYTNX_LIB<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_lib__)\&quot;)&quot;</span><span class="k">)</span>/libcytnx.a
+CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> </span><span class="k">$(</span>shell<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;exec(\&quot;import cytnx\nprint(cytnx.__cpp_flags__)\&quot;)&quot;</span><span class="k">)</span>
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
@@ -765,7 +774,7 @@ CYTNX_CXXFLAGS :<span class="o">=</span> <span class="k">$(</span>shell python -
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

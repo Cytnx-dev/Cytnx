@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,6 +21,7 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -177,6 +178,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
@@ -216,7 +218,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">8.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">8.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -487,6 +492,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
@@ -526,7 +532,10 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">8.2. Lanczos solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">8.2. Lanczos solver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -640,10 +649,10 @@
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span><span class="w"></span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">;</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -666,10 +675,10 @@
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span><span class="w"></span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">});</span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -697,13 +706,13 @@
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span><span class="w"></span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 <span class="linenos">6</span>
-<span class="linenos">7</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">7</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">is</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -751,10 +760,10 @@ False
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">300</span><span class="p">;</span>
 <span class="linenos">2</span>
-<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -797,7 +806,7 @@ Shape : (2,4,3)
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">same_data</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">same_data</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -824,11 +833,11 @@ Shape : (2,4,3)
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span><span class="w"></span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">zeros</span><span class="p">({</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -851,12 +860,12 @@ False
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">contiguous</span><span class="p">()</span><span class="w"></span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">contiguous</span><span class="p">()</span>
 <span class="linenos">2</span>
-<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="p">.</span><span class="n">is_contiguous</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 <span class="linenos">5</span>
-<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="p">.</span><span class="n">same_data</span><span class="p">(</span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="p">.</span><span class="n">same_data</span><span class="p">(</span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -911,7 +920,7 @@ False
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
