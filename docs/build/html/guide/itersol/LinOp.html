@@ -4,13 +4,13 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>7.1. LinOp class &#8212; Cytnx  documentation</title>
+    <title>8.1. LinOp class &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -21,14 +21,13 @@
     <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.2. Lanczos solver" href="Lanczos.html" />
-    <link rel="prev" title="7. Iterative solver" href="../itersol.html" /> 
+    <link rel="next" title="8.2. Lanczos solver" href="Lanczos.html" />
+    <link rel="prev" title="8. Iterative solver" href="../itersol.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -172,50 +171,53 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">6.5. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">6.5.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">6.5.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">6.5.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#putunitensor-according-to-label-ordering">6.5.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">7. Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../itersol.html">8. Iterative solver</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">8.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pass-a-function">8.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inherit-the-linop-class">8.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ex-sparse-data-structure-with-mapping-function">8.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">8.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -327,16 +329,16 @@
                        
                          accesskey="U"
                          class="active"
-                       ><span class="section-number">7. </span>Iterative solver</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">7.1. </span>LinOp class</li>
+                       ><span class="section-number">8. </span>Iterative solver</a></li>
+            <li class="breadcrumb-item active"><span class="section-number">8.1. </span>LinOp class</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="../itersol.html" title="Previous Chapter: 7. Iterative solver" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 7. Iterative solver
+               <a href="../itersol.html" title="Previous Chapter: 8. Iterative solver" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 8. Iterative solver
                </a>
-               <a href="Lanczos.html" title="Next Chapter: 7.2. Lanczos solver" class="btn btn-primary" role="botton" accesskey="N">
-                   7.2. Lanczos solver &raquo;
+               <a href="Lanczos.html" title="Next Chapter: 8.2. Lanczos solver" class="btn btn-primary" role="botton" accesskey="N">
+                   8.2. Lanczos solver &raquo;
                </a>
            </div>
        </div>
@@ -479,50 +481,53 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">6.5. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">6.5.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">6.5.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">6.5.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#putunitensor-according-to-label-ordering">6.5.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">7. Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../itersol.html">8. Iterative solver</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">8.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pass-a-function">8.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#inherit-the-linop-class">8.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ex-sparse-data-structure-with-mapping-function">8.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">8.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -581,12 +586,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="../itersol.html"
-                          title="previous chapter"><span class="section-number">7. </span>Iterative solver</a></p>
+                          title="previous chapter"><span class="section-number">8. </span>Iterative solver</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="Lanczos.html"
-                          title="next chapter"><span class="section-number">7.2. </span>Lanczos solver</a></p>
+                          title="next chapter"><span class="section-number">8.2. </span>Lanczos solver</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
@@ -610,7 +615,7 @@
           <div class="body">
             
   <section id="linop-class">
-<h1><span class="section-number">7.1. </span>LinOp class<a class="headerlink" href="#linop-class" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">8.1. </span>LinOp class<a class="headerlink" href="#linop-class" title="Permalink to this heading">¶</a></h1>
 <p>Cytnx provides users with the ability to define customized a linear operators using the <strong>LinOp</strong> class.</p>
 <p>Before diving into the <strong>LinOp</strong> class, let’s take a look at a simple example:</p>
 <p>In linear algebra, a linear operator can be represented as a matrix <span class="math notranslate nohighlight">\(\boldsymbol{\hat{H}}\)</span> that operates on a vector <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>, resulting in an output vector <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span> as</p>
@@ -634,14 +639,14 @@
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">);</span>
+<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="p">.</span><span class="n">linalg</span><span class="p">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">5</span>
-<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">7</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">8</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">7</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">8</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -687,7 +692,7 @@ Instead of thinking of it as a matrix and making use of various different intern
 </ol>
 <p>Let’s consider a simple example of an operator that acts on an input vector <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span> with 4 elements. It interchanges the 1st and 4th element, and adds one to both the 2nd and 3rd elements. The output then is again a dim=4 vector <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>.</p>
 <section id="pass-a-function">
-<h2><span class="section-number">7.1.1. </span>Pass a function<a class="headerlink" href="#pass-a-function" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.1.1. </span>Pass a function<a class="headerlink" href="#pass-a-function" title="Permalink to this heading">¶</a></h2>
 <p>The simplest implementation of a linear operator is to define a function and pass it to the LinOp class.</p>
 <p>First, let’s define the function:</p>
 <ul class="simple">
@@ -704,15 +709,15 @@ Instead of thinking of it as a matrix and making use of various different intern
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
-<span class="linenos">2</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="nf">myfunc</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">){</span>
-<span class="linenos">3</span><span class="w">     </span><span class="n">Tensor</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">2</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="nf">myfunc</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">){</span><span class="w"></span>
+<span class="linenos">3</span><span class="w">     </span><span class="n">Tensor</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w"></span>
 <span class="linenos">4</span><span class="w">     </span><span class="n">out</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="c1">//swap</span>
 <span class="linenos">5</span><span class="w">     </span><span class="n">out</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">//swap</span>
 <span class="linenos">6</span><span class="w">     </span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">//add 1</span>
 <span class="linenos">7</span><span class="w">     </span><span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">//add 1</span>
-<span class="linenos">8</span><span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span>
-<span class="linenos">9</span><span class="w"> </span><span class="p">}</span>
+<span class="linenos">8</span><span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">9</span><span class="w"> </span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -732,9 +737,9 @@ Instead of thinking of it as a matrix and making use of various different intern
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span>
-<span class="linenos">2</span><span class="w">                       </span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span>
-<span class="linenos">3</span><span class="w">                       </span><span class="n">myfunc</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">2</span><span class="w">                       </span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">3</span><span class="w">                       </span><span class="n">myfunc</span><span class="p">);</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The meaning of the arguments is:</p>
@@ -775,10 +780,10 @@ Instead of thinking of it as a matrix and making use of various different intern
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">3</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -798,7 +803,7 @@ Shape : (4)
 </div>
 </section>
 <section id="inherit-the-linop-class">
-<h2><span class="section-number">7.1.2. </span>Inherit the LinOp class<a class="headerlink" href="#inherit-the-linop-class" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.1.2. </span>Inherit the LinOp class<a class="headerlink" href="#inherit-the-linop-class" title="Permalink to this heading">¶</a></h2>
 <p>Cytnx exposes the interface <strong>LinOp.matvec</strong>, which provides more flexibility for users who want to include additional data/functions associated with the mapping. This can be achieved with inheritance from the <strong>LinOp</strong> class.</p>
 <p>Let’s demonstrate this in a similar example as previously. Again, we consider an operator that interchanges the 1st and 4th elements. But this time, we want to add a constant, which is an external parameter, to the 2nd and 3rd elements.</p>
 <p>First, let’s create a class that inherits from <strong>LinOp</strong>, with a class member <strong>AddConst</strong>.</p>
@@ -823,18 +828,18 @@ Shape : (4)
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
-<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span>
-<span class="linenos"> 3</span><span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="linenos"> 4</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">AddConst</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">AddConst</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="w">        </span><span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">aconst</span><span class="p">)</span><span class="o">:</span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">aconst</span><span class="p">)</span><span class="o">:</span><span class="w"></span>
 <span class="linenos"> 7</span><span class="w">            </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">){</span><span class="w"> </span><span class="c1">//invoke base class constructor!</span>
 <span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aconst</span><span class="p">;</span>
-<span class="linenos">10</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos"> 9</span><span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aconst</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">10</span><span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="linenos">11</span>
-<span class="linenos">12</span><span class="p">};</span>
+<span class="linenos">12</span><span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Next, the most important part is to overload the <strong>matvec</strong> member function, as it defines the mapping from input <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span> to the output <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>.</p>
@@ -866,27 +871,27 @@ Shape : (4)
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
-<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span>
-<span class="linenos"> 3</span><span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="linenos"> 4</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">AddConst</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 3</span><span class="w">    </span><span class="k">public</span><span class="o">:</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">AddConst</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="w">        </span><span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">aconst</span><span class="p">)</span><span class="o">:</span>
+<span class="linenos"> 6</span><span class="w">        </span><span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">aconst</span><span class="p">)</span><span class="o">:</span><span class="w"></span>
 <span class="linenos"> 7</span><span class="w">            </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">){</span><span class="w"> </span><span class="c1">//invoke base class constructor!</span>
 <span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aconst</span><span class="p">;</span>
-<span class="linenos">10</span><span class="w">        </span><span class="p">}</span>
+<span class="linenos"> 9</span><span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aconst</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">10</span><span class="w">        </span><span class="p">}</span><span class="w"></span>
 <span class="linenos">11</span>
-<span class="hll"><span class="linenos">12</span><span class="w">        </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span>
-</span><span class="hll"><span class="linenos">13</span><span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="hll"><span class="linenos">12</span><span class="w">        </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span><span class="w"></span>
+</span><span class="hll"><span class="linenos">13</span><span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w"></span>
 </span><span class="hll"><span class="linenos">14</span><span class="w">            </span><span class="n">out</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="c1">//swap</span>
 </span><span class="hll"><span class="linenos">15</span><span class="w">            </span><span class="n">out</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">//swap</span>
 </span><span class="hll"><span class="linenos">16</span><span class="w">            </span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="p">;</span><span class="w"> </span><span class="c1">//add const</span>
 </span><span class="hll"><span class="linenos">17</span><span class="w">            </span><span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="p">;</span><span class="w"> </span><span class="c1">//add const</span>
-</span><span class="hll"><span class="linenos">18</span><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span>
-</span><span class="hll"><span class="linenos">19</span><span class="w">        </span><span class="p">}</span>
+</span><span class="hll"><span class="linenos">18</span><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span><span class="w"></span>
+</span><span class="hll"><span class="linenos">19</span><span class="w">        </span><span class="p">}</span><span class="w"></span>
 </span><span class="linenos">20</span>
-<span class="linenos">21</span><span class="p">};</span>
+<span class="linenos">21</span><span class="p">};</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Finally, the class can be simply be used. We demonstrate this in in the following and set the constant to add to 7:</p>
@@ -904,12 +909,12 @@ Shape : (4)
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">myop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyOp</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">3</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myop</span><span class="p">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">myop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyOp</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">3</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myop</span><span class="p">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -929,7 +934,7 @@ Shape : (4)
 </div>
 </section>
 <section id="ex-sparse-data-structure-with-mapping-function">
-<h2><span class="section-number">7.1.3. </span>Ex: sparse data structure with mapping function<a class="headerlink" href="#ex-sparse-data-structure-with-mapping-function" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.1.3. </span>Ex: sparse data structure with mapping function<a class="headerlink" href="#ex-sparse-data-structure-with-mapping-function" title="Permalink to this heading">¶</a></h2>
 <p>With the flexibility provided by overloading the <strong>matvec</strong> member function, users can actually define their own sparse data structures of an operator.</p>
 <p>As an example, we want to define a sparse matrix <span class="math notranslate nohighlight">\(\boldsymbol{A}\)</span> with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. All other elements are zero. We do not have to construct a dense tensor with size <span class="math notranslate nohighlight">\(10^6\)</span>. Instead, we can simply use the <strong>LinOp</strong> class:</p>
 <ul class="simple">
@@ -974,7 +979,7 @@ Shape : (4)
 </div>
 </section>
 <section id="prestore-preconstruct-sparse-elements">
-<h2><span class="section-number">7.1.4. </span>Prestore/preconstruct sparse elements<a class="headerlink" href="#prestore-preconstruct-sparse-elements" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.1.4. </span>Prestore/preconstruct sparse elements<a class="headerlink" href="#prestore-preconstruct-sparse-elements" title="Permalink to this heading">¶</a></h2>
 <p>In the previous example, we showed how to construct a linear operator by overloading the <strong>matvec</strong> member function of the LinOp class. This is straight forward and simple, but in cases where the custom mapping contains many for-loops, clearly, handling them in python is not optimal for performance reasons.</p>
 <p>Since v0.6.3a, the option <strong>“mv_elem”</strong> is available in the constructor of the LinOp class. It allows users to pre-store the indices and values of the non-zero elements, similar to the standard sparse storage structure. If this is used, Cytnx handles the internal structure and optimizes the matvec performance. Again, let’s use the previous example: a sparse matrix <span class="math notranslate nohighlight">\(\boldsymbol{A}\)</span> with shape=(1000,1000) and ONLY two non-zero elements A[1,100]=4 and A[100,1]=7.</p>
 <ul class="simple">
@@ -1014,7 +1019,7 @@ Shape : (4)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

@@ -130,5 +130,56 @@ Alternatively, we can implement the contraction directly in the program with Fro
 
 This approach should be convenient when you don't want to maintain the .net file outside the program.
 
+
+PutUniTensor according to label ordering
+*******************************************
+
+When we put a UniTensor into a Network, we can also specify its leg order according to a label ordering, this interface turns out to be convinient
+since users don't need to memorize or look up the index of s desired leg. To be more specific, consider
+a example, we grab two three leg tensors **A1** and **A2**, they both have one leg that spans the physical space and the other two legs describe
+the virtual space (such tensors are often appearing as the building block tensors of matrix product state), we create the tensors and set the corresponding lebels
+as following:
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    A1 = cytnx.UniTensor(cytnx.ones([2,8,8]));
+    A1.set_labels(["phy","v1","v2"])
+    A2 = cytnx.UniTensor(cytnx.ones([2,8,8]));
+    A2.set_labels(["phy","v1","v2"])
+
+The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2 for spin-half case for example) and the other two legs are
+the virtual ones (with dimension 8).
+
+Now suppose somehow we want to contract these two tensors by its physical legs, we create the following Network:
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    N = cytnx.Network()
+    N.FromString(["A1: 1,-1,2",\
+                "A2: 3,-1,4",\
+                "TOUT: 1,3;2,4"])
+
+Note that in this Network it is the second leg of the two tensors to be contracted, which will not be consistent since **A1** and **A2**
+are created such that their physical leg is the first one, while we can do the following:
+
+
+* In python:
+
+.. code-block:: python
+    :linenos:
+
+    N.PutUniTensor("A1",A1,["v1","phy","v2"])
+    N.PutUniTensor("A2",A2,["v1","phy","v2"])
+
+So when we do the PutUniTensor() we add the third arguement which is a labels ordering, what this function will do is nothing but permute
+the tensor legs according to this label ordering before putting them into the Network.  
+
+
 .. toctree::
 

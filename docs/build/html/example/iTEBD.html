@@ -4,7 +4,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -21,7 +21,6 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../_static/sphinxbootstrap4.js"></script>
@@ -46,6 +45,7 @@
                   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -62,9 +62,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -138,12 +138,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../guide/basic_obj/Storage.html">4. Storage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -152,13 +152,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -171,50 +171,53 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">6. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">6.5. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">6.5.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">6.5.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">6.5.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#putunitensor-according-to-label-ordering">6.5.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">7. Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">8. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">8.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">8.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">8.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">8.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">8.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -350,6 +353,7 @@
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -366,9 +370,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -442,12 +446,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../guide/basic_obj/Storage.html">4. Storage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -456,13 +460,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -475,50 +479,53 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">6. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">6.3.5. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">6.5. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">6.5.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">6.5.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">6.5.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#putunitensor-according-to-label-ordering">6.5.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">8. Cytnx extensions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">7. Linear algebra</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">8. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">8.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">8.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">8.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">8.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">8.1.4. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">8.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">9. linalg extension</a><ul class="simple">
@@ -643,24 +650,24 @@ The infinite size ground state can be represent by MPS as variational ansatz, wh
 <ul class="simple">
 <li><p>In c++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cytnx.hpp&quot;</span>
-<span class="linenos"> 2</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;cytnx.hpp&quot;</span><span class="cp"></span>
+<span class="linenos"> 2</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">chi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-<span class="linenos"> 5</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
-<span class="linenos"> 6</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">bonds</span><span class="p">(),{</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span>
-<span class="linenos"> 7</span><span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span>
-<span class="linenos"> 8</span><span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span>
-<span class="linenos"> 9</span><span class="n">A</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
-<span class="linenos">10</span><span class="n">B</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+<span class="linenos"> 4</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">chi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 5</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<span class="linenos"> 6</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">bonds</span><span class="p">(),{</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">},</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<span class="linenos"> 7</span><span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">B</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span><span class="w"></span>
+<span class="linenos"> 8</span><span class="n">random</span><span class="o">::</span><span class="n">Make_normal</span><span class="p">(</span><span class="n">A</span><span class="p">.</span><span class="n">get_block_</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.2</span><span class="p">);</span><span class="w"></span>
+<span class="linenos"> 9</span><span class="n">A</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">10</span><span class="n">B</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span><span class="w"></span>
 <span class="linenos">11</span>
-<span class="linenos">12</span><span class="k">auto</span><span class="w"> </span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
-<span class="linenos">13</span><span class="k">auto</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
-<span class="linenos">14</span><span class="n">la</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span>
-<span class="linenos">15</span><span class="n">lb</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span>
+<span class="linenos">12</span><span class="k">auto</span><span class="w"> </span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">13</span><span class="k">auto</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">({</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span><span class="n">Bond</span><span class="p">(</span><span class="n">chi</span><span class="p">)},{</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">1</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">14</span><span class="n">la</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span><span class="w"></span>
+<span class="linenos">15</span><span class="n">lb</span><span class="p">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">ones</span><span class="p">(</span><span class="n">chi</span><span class="p">));</span><span class="w"></span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="n">la</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
-<span class="linenos">18</span><span class="n">lb</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+<span class="linenos">17</span><span class="n">la</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">18</span><span class="n">lb</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
@@ -765,31 +772,31 @@ First, acting <span class="math notranslate nohighlight">\(U_a\)</span> as shown
 <ul class="simple">
 <li><p>In c++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kt">double</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">;</span>
-<span class="linenos"> 2</span><span class="kt">double</span><span class="w"> </span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-0.3</span><span class="p">;</span>
-<span class="linenos"> 3</span><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="kt">double</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-1.0</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 2</span><span class="kt">double</span><span class="w"> </span><span class="n">Hx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-0.3</span><span class="p">;</span><span class="w"></span>
+<span class="linenos"> 3</span><span class="kt">double</span><span class="w"> </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.1</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 4</span>
 <span class="linenos"> 5</span><span class="c1">// Create single site operator</span>
-<span class="linenos"> 6</span><span class="k">auto</span><span class="w"> </span><span class="n">Sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">physics</span><span class="o">::</span><span class="n">pauli</span><span class="p">(</span><span class="sc">&#39;z&#39;</span><span class="p">).</span><span class="n">real</span><span class="p">();</span>
-<span class="linenos"> 7</span><span class="k">auto</span><span class="w"> </span><span class="n">Sx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">physics</span><span class="o">::</span><span class="n">pauli</span><span class="p">(</span><span class="sc">&#39;x&#39;</span><span class="p">).</span><span class="n">real</span><span class="p">();</span>
-<span class="linenos"> 8</span><span class="k">auto</span><span class="w"> </span><span class="n">I</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos"> 9</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Sz</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">10</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Sx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos"> 6</span><span class="k">auto</span><span class="w"> </span><span class="n">Sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">physics</span><span class="o">::</span><span class="n">pauli</span><span class="p">(</span><span class="sc">&#39;z&#39;</span><span class="p">).</span><span class="n">real</span><span class="p">();</span><span class="w"></span>
+<span class="linenos"> 7</span><span class="k">auto</span><span class="w"> </span><span class="n">Sx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">physics</span><span class="o">::</span><span class="n">pauli</span><span class="p">(</span><span class="sc">&#39;x&#39;</span><span class="p">).</span><span class="n">real</span><span class="p">();</span><span class="w"></span>
+<span class="linenos"> 8</span><span class="k">auto</span><span class="w"> </span><span class="n">I</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="linenos"> 9</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Sz</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">10</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Sx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">11</span>
 <span class="linenos">12</span>
 <span class="linenos">13</span><span class="c1">// Construct the local Hamiltonian</span>
-<span class="linenos">14</span><span class="k">auto</span><span class="w"> </span><span class="n">TFterm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sx</span><span class="p">,</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">Sx</span><span class="p">);</span>
-<span class="linenos">15</span><span class="k">auto</span><span class="w"> </span><span class="n">ZZterm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sz</span><span class="p">,</span><span class="n">Sz</span><span class="p">);</span>
-<span class="linenos">16</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hx</span><span class="o">*</span><span class="n">TFterm</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">J</span><span class="o">*</span><span class="n">ZZterm</span><span class="p">;</span>
-<span class="linenos">17</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">14</span><span class="k">auto</span><span class="w"> </span><span class="n">TFterm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sx</span><span class="p">,</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">Sx</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">15</span><span class="k">auto</span><span class="w"> </span><span class="n">ZZterm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">Kron</span><span class="p">(</span><span class="n">Sz</span><span class="p">,</span><span class="n">Sz</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">16</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Hx</span><span class="o">*</span><span class="n">TFterm</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">J</span><span class="o">*</span><span class="n">ZZterm</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">17</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">18</span>
 <span class="linenos">19</span>
 <span class="linenos">20</span><span class="c1">// Build Evolution Operator</span>
 <span class="linenos">21</span><span class="c1">// [Note] eH is cytnx.Tensor and U is UniTensor.</span>
 <span class="linenos">22</span><span class="k">auto</span><span class="w"> </span><span class="n">eH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">ExpH</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="o">-</span><span class="n">dt</span><span class="p">);</span><span class="w"> </span><span class="c1">//or equivantly ExpH(-dt*H)</span>
-<span class="linenos">23</span><span class="n">eH</span><span class="p">.</span><span class="n">reshape_</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">24</span><span class="k">auto</span><span class="w"> </span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">(</span><span class="n">eH</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">25</span><span class="n">U</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span>
+<span class="linenos">23</span><span class="n">eH</span><span class="p">.</span><span class="n">reshape_</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">24</span><span class="k">auto</span><span class="w"> </span><span class="n">U</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UniTensor</span><span class="p">(</span><span class="n">eH</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">25</span><span class="n">U</span><span class="p">.</span><span class="n">print_diagram</span><span class="p">();</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -887,35 +894,35 @@ At the beginning of each iteration, we evaluate the energy expectation value <sp
 <ul class="simple">
 <li><p>In c++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span>
-<span class="linenos"> 2</span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span>
-<span class="linenos"> 3</span><span class="n">la</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">});</span>
-<span class="linenos"> 4</span><span class="n">lb</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">});</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span><span class="w"></span>
+<span class="linenos"> 2</span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span><span class="w"></span>
+<span class="linenos"> 3</span><span class="n">la</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">});</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="n">lb</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">});</span><span class="w"></span>
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span>
 <span class="linenos"> 7</span><span class="c1">// contract all</span>
-<span class="linenos"> 8</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">));</span>
-<span class="linenos"> 9</span><span class="n">lb</span><span class="p">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">);</span>
-<span class="linenos">10</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">);</span>
+<span class="linenos"> 8</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">));</span><span class="w"></span>
+<span class="linenos"> 9</span><span class="n">lb</span><span class="p">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">10</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">11</span>
-<span class="linenos">12</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">Xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="linenos">12</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">Xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w"></span>
 <span class="linenos">13</span>
 <span class="linenos">14</span><span class="c1">//&gt; calculate norm and energy for this step</span>
 <span class="linenos">15</span><span class="c1">// Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element</span>
-<span class="linenos">16</span><span class="n">Scalar</span><span class="w"> </span><span class="n">XNorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="p">();</span>
-<span class="linenos">17</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">);</span>
+<span class="linenos">16</span><span class="n">Scalar</span><span class="w"> </span><span class="n">XNorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">17</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">18</span>
-<span class="linenos">19</span><span class="n">XH</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span>
-<span class="linenos">20</span><span class="n">Scalar</span><span class="w"> </span><span class="n">XHX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="p">();</span>
-<span class="linenos">21</span><span class="kt">double</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">);</span>
+<span class="linenos">19</span><span class="n">XH</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span><span class="w"></span>
+<span class="linenos">20</span><span class="n">Scalar</span><span class="w"> </span><span class="n">XHX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">21</span><span class="kt">double</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">double</span><span class="p">(</span><span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">22</span>
 <span class="linenos">23</span><span class="c1">//&gt; check if converged.</span>
-<span class="linenos">24</span><span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">CvgCrit</span><span class="p">){</span>
-<span class="linenos">25</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[Converged!]&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">26</span><span class="w">    </span><span class="k">break</span><span class="p">;</span>
-<span class="linenos">27</span><span class="p">}</span>
-<span class="linenos">28</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Step: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Enr: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Elast</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">29</span><span class="n">Elast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">E</span><span class="p">;</span>
+<span class="linenos">24</span><span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">CvgCrit</span><span class="p">){</span><span class="w"></span>
+<span class="linenos">25</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[Converged!]&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">26</span><span class="w">    </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">27</span><span class="p">}</span><span class="w"></span>
+<span class="linenos">28</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Step: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Enr: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Elast</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">29</span><span class="n">Elast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">E</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>in the next step we perform the two-sites imaginary time evolution, using the operator (or “gate”) eH we defined above:</p>
@@ -937,13 +944,13 @@ At the beginning of each iteration, we evaluate the energy expectation value <sp
 <li><p>In c++</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1">//&gt; Time evolution the MPS</span>
-<span class="linenos">2</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XeH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">);</span>
-<span class="linenos">3</span><span class="n">XeH</span><span class="p">.</span><span class="n">permute_</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">-1</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<span class="linenos">2</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XeH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">3</span><span class="n">XeH</span><span class="p">.</span><span class="n">permute_</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">-1</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">XeH</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">6</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">UniTensor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">xlinalg</span><span class="o">::</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">);</span>
-<span class="linenos">7</span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-<span class="linenos">8</span><span class="n">Scalar</span><span class="w"> </span><span class="n">Norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="p">();</span>
+<span class="linenos">5</span><span class="n">XeH</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">6</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">UniTensor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">xlinalg</span><span class="o">::</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">7</span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">8</span><span class="n">Scalar</span><span class="w"> </span><span class="n">Norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="p">();</span><span class="w"></span>
 <span class="linenos">9</span><span class="n">la</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="n">Norm</span><span class="p">;</span><span class="w"> </span><span class="c1">//normalize</span>
 </pre></div>
 </div>
@@ -976,27 +983,27 @@ At the beginning of each iteration, we evaluate the energy expectation value <sp
 <ul class="simple">
 <li><p>In c++</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="linenos"> 2</span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<span class="linenos"> 2</span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">lb_inv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="n">lb</span><span class="p">;</span>
+<span class="linenos"> 4</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">lb_inv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="n">lb</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span><span class="n">lb_inv</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">});</span><span class="w"> </span><span class="c1">// -1 to contract with A, 7 is arbitary here.</span>
-<span class="linenos"> 7</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="p">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span>
+<span class="linenos"> 7</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="p">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span><span class="w"></span>
 <span class="linenos"> 8</span>
 <span class="linenos"> 9</span><span class="n">lb_inv</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">})</span><span class="w"> </span><span class="c1">// -4 to contract with B, 8 is arbitary here.</span>
-<span class="linenos">10</span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="p">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span>
+<span class="linenos">10</span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="p">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">11</span>
-<span class="linenos">12</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span>
-<span class="linenos">13</span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span>
+<span class="linenos">12</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">13</span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">14</span>
 <span class="linenos">15</span>
 <span class="linenos">16</span><span class="c1">//&gt; translation symm, exchange A and B site</span>
-<span class="linenos">17</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">;</span>
-<span class="linenos">18</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="linenos">17</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">18</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">19</span>
-<span class="linenos">20</span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">la</span><span class="p">;</span>
-<span class="linenos">21</span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lb</span><span class="p">;</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="linenos">20</span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">la</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">21</span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lb</span><span class="p">;</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Let’s put everything together in a loop for iteration:</p>
@@ -1089,48 +1096,48 @@ At the beginning of each iteration, we evaluate the energy expectation value <sp
 <li><p>In c++</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">//&gt; Evov:</span>
-<span class="linenos"> 2</span><span class="kt">double</span><span class="w"> </span><span class="n">Elast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="linenos"> 2</span><span class="kt">double</span><span class="w"> </span><span class="n">Elast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"></span>
 <span class="linenos"> 3</span>
-<span class="linenos"> 4</span><span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
-<span class="linenos"> 5</span><span class="w">    </span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span>
-<span class="linenos"> 6</span><span class="w">    </span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span>
-<span class="linenos"> 7</span><span class="w">    </span><span class="n">la</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">});</span>
-<span class="linenos"> 8</span><span class="w">    </span><span class="n">lb</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">});</span>
+<span class="linenos"> 4</span><span class="k">for</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">10000</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span><span class="w"></span>
+<span class="linenos"> 5</span><span class="w">    </span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span><span class="w"></span>
+<span class="linenos"> 6</span><span class="w">    </span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span><span class="w"></span>
+<span class="linenos"> 7</span><span class="w">    </span><span class="n">la</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-2</span><span class="p">,</span><span class="mi">-3</span><span class="p">});</span><span class="w"></span>
+<span class="linenos"> 8</span><span class="w">    </span><span class="n">lb</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">});</span><span class="w"></span>
 <span class="linenos"> 9</span>
 <span class="linenos">10</span>
 <span class="linenos">11</span><span class="w">    </span><span class="c1">// contract all</span>
-<span class="linenos">12</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">));</span>
-<span class="linenos">13</span><span class="w">    </span><span class="n">lb</span><span class="p">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">);</span>
-<span class="linenos">14</span><span class="w">    </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">);</span>
+<span class="linenos">12</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">la</span><span class="p">),</span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb</span><span class="p">));</span><span class="w"></span>
+<span class="linenos">13</span><span class="w">    </span><span class="n">lb</span><span class="p">.</span><span class="n">set_label</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">-1</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">14</span><span class="w">    </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb</span><span class="p">,</span><span class="n">X</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">15</span>
-<span class="linenos">16</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">Xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+<span class="linenos">16</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">Xt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span><span class="w"></span>
 <span class="linenos">17</span>
 <span class="linenos">18</span><span class="w">    </span><span class="c1">//&gt; calculate norm and energy for this step</span>
 <span class="linenos">19</span><span class="w">    </span><span class="c1">// Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element</span>
-<span class="linenos">20</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">XNorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="linenos">21</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">);</span>
+<span class="linenos">20</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">XNorm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Xt</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">21</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">H</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">22</span>
-<span class="linenos">23</span><span class="w">    </span><span class="n">XH</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span>
-<span class="linenos">24</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">XHX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
-<span class="linenos">25</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">;</span>
+<span class="linenos">23</span><span class="w">    </span><span class="n">XH</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">-5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">});</span><span class="w"></span>
+<span class="linenos">24</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">XHX</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">Xt</span><span class="p">,</span><span class="n">XH</span><span class="p">).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
+<span class="linenos">25</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">XHX</span><span class="o">/</span><span class="n">XNorm</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">26</span>
 <span class="linenos">27</span><span class="w">    </span><span class="c1">//&gt; check if converged.</span>
-<span class="linenos">28</span><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">CvgCrit</span><span class="p">){</span>
-<span class="linenos">29</span><span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[Converged!]&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">30</span><span class="w">        </span><span class="k">break</span><span class="p">;</span>
-<span class="linenos">31</span><span class="w">    </span><span class="p">}</span>
-<span class="linenos">32</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Step: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Enr: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Elast</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">33</span><span class="w">    </span><span class="n">Elast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">E</span><span class="p">;</span>
+<span class="linenos">28</span><span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">abs</span><span class="p">(</span><span class="n">E</span><span class="o">-</span><span class="n">Elast</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">CvgCrit</span><span class="p">){</span><span class="w"></span>
+<span class="linenos">29</span><span class="w">        </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;[Converged!]&quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">30</span><span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">31</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">32</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Step: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;Enr: &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">Elast</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">33</span><span class="w">    </span><span class="n">Elast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">E</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">34</span>
 <span class="linenos">35</span><span class="w">    </span><span class="c1">//&gt; Time evolution the MPS</span>
-<span class="linenos">36</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XeH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">);</span>
-<span class="linenos">37</span><span class="w">    </span><span class="n">XeH</span><span class="p">.</span><span class="n">permute_</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">-1</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span>
+<span class="linenos">36</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">XeH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">eH</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">37</span><span class="w">    </span><span class="n">XeH</span><span class="p">.</span><span class="n">permute_</span><span class="p">({</span><span class="mi">-4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">-5</span><span class="p">},</span><span class="mi">-1</span><span class="p">,</span><span class="nb">true</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">38</span>
 <span class="linenos">39</span><span class="w">    </span><span class="c1">//&gt; Do Svd + truncate</span>
-<span class="linenos">40</span><span class="w">    </span><span class="n">XeH</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">41</span><span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">UniTensor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">xlinalg</span><span class="o">::</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">);</span>
-<span class="linenos">42</span><span class="w">    </span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-<span class="linenos">43</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">Norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="linenos">40</span><span class="w">    </span><span class="n">XeH</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">41</span><span class="w">    </span><span class="n">vector</span><span class="o">&lt;</span><span class="n">UniTensor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">xlinalg</span><span class="o">::</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">XeH</span><span class="p">,</span><span class="n">chi</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">42</span><span class="w">    </span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span><span class="w"></span>
+<span class="linenos">43</span><span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">Norm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Norm</span><span class="p">(</span><span class="n">la</span><span class="p">.</span><span class="n">get_block_</span><span class="p">()).</span><span class="n">item</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span><span class="w"></span>
 <span class="linenos">44</span><span class="w">    </span><span class="n">la</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="n">Norm</span><span class="p">;</span><span class="w"> </span><span class="c1">//normalize</span>
 <span class="linenos">45</span>
 <span class="linenos">46</span>
@@ -1140,21 +1147,21 @@ At the beginning of each iteration, we evaluate the energy expectation value <sp
 <span class="linenos">50</span><span class="w">    </span><span class="c1">//       --lb-A&#39;-la-B&#39;-lb--</span>
 <span class="linenos">51</span><span class="w">    </span><span class="c1">//</span>
 <span class="linenos">52</span><span class="w">    </span><span class="c1">// again, but A&#39; and B&#39; are updated</span>
-<span class="linenos">53</span><span class="w">    </span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
-<span class="linenos">54</span><span class="w">    </span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="linenos">53</span><span class="w">    </span><span class="n">A</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">-2</span><span class="p">});</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">54</span><span class="w">    </span><span class="n">B</span><span class="p">.</span><span class="n">set_labels</span><span class="p">({</span><span class="mi">-3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">-4</span><span class="p">});</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">set_Rowrank</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">55</span>
-<span class="linenos">56</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">lb_inv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="n">lb</span><span class="p">;</span>
-<span class="linenos">57</span><span class="w">    </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span>
-<span class="linenos">58</span><span class="w">    </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span>
+<span class="linenos">56</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">lb_inv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="o">/</span><span class="n">lb</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">57</span><span class="w">    </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">lb_inv</span><span class="p">,</span><span class="n">A</span><span class="p">);</span><span class="w"></span>
+<span class="linenos">58</span><span class="w">    </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cyx</span><span class="o">::</span><span class="n">Contract</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">lb_inv</span><span class="p">);</span><span class="w"></span>
 <span class="linenos">59</span>
 <span class="linenos">60</span>
 <span class="linenos">61</span><span class="w">    </span><span class="c1">//&gt; translation symm, exchange A and B site</span>
-<span class="linenos">62</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">;</span>
-<span class="linenos">63</span><span class="w">    </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="linenos">62</span><span class="w">    </span><span class="n">UniTensor</span><span class="w"> </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">63</span><span class="w">    </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span><span class="w"></span>
 <span class="linenos">64</span>
-<span class="linenos">65</span><span class="w">    </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">la</span><span class="p">;</span>
-<span class="linenos">66</span><span class="w">    </span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lb</span><span class="p">;</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
-<span class="linenos">67</span><span class="p">}</span>
+<span class="linenos">65</span><span class="w">    </span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">la</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">66</span><span class="w">    </span><span class="n">la</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lb</span><span class="p">;</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span><span class="w"></span>
+<span class="linenos">67</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 <div class="docutils container" id="id3">
@@ -1179,7 +1186,7 @@ At the beginning of each iteration, we evaluate the energy expectation value <sp
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
