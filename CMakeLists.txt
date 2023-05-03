@@ -70,6 +70,29 @@ option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
 option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
 
 
+#if (USE_ICPC)
+#  message(STATUS, "Build Cytnx with Intel Compilers")
+#  message(STATUS, "Finding Intel Compilers....")
+#  find_program(CMAKE_C_COMPILER NAMES icc)
+#  find_program(CMAKE_CXX_COMPILER NAMES icpc)
+#  find_program(CMAKE_AR NAMES xiar)
+#  find_program(CMAKE_LINKER NAMES xild)
+
+#  if (NOT (CMAKE_C_COMPILER AND
+#           CMAKE_CXX_COMPILER AND
+#           CMAKE_AR AND
+#           CMAKE_LINKER ))
+#    message("Cannot find Intel compilers.")
+#    message("You may need to run `. /opt/intel/bin/compilervars.sh intel64/ia32'")
+#    message("Falling back to system compilers.")
+#    find_program(CMAKE_C_COMPILER NAMES cc)
+#    find_program(CMAKE_CXX_COMPILER NAMES cpp)
+#    find_program(CMAKE_AR NAMES ar)
+#    find_program(CMAKE_LINKER NAMES ld)
+#    set(USE_ICPC OFF)
+#  endif ()
+#endif ()
+
 
 if (USE_MKL)
   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
