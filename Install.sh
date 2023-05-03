@@ -97,7 +97,7 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 #-----------------------------------
 # FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
-# 6-c) Magma (DEFALT = on)
+# 6-c) Magma (DEFALT = off)
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
 #        in case MAGMA is not automatically find, please specify MAGMAROOT path 
 #        where the magma is installed
@@ -106,16 +106,16 @@ MAGMA_ROOT=${HOME}/MAGMA
 FLAG="${FLAG} -DUSE_MAGMA=OFF "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
-# 6-d) CuTensor (DEFALT = on)
+# 6-d) CuTensor (DEFALT = off)
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 CUTENSOR_ROOT=${HOME}/CUTENSOR
-FLAG="${FLAG} -DUSE_CUTENSOR=ON "
+FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #-----------------------------------
-# 6-e) CuQuantum (DEFALT = on)
+# 6-e) CuQuantum (DEFALT = off)
 # [Note] set to "=off" will 
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
@@ -139,7 +139,7 @@ FLAG="${FLAG} -DCMAKE_EXPORT_COMPILE_COMMANDS=1 "
 #=========================================================
 # [Note] This will run the threaded code in cytnx lib while it will not disable muiltithreading in mkl. (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_OMP=ON "
+FLAG="${FLAG} -DUSE_OMP=OFF "
 #-----------------------------------
 
 
