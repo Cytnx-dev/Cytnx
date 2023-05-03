@@ -84,7 +84,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF "
+FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -103,7 +103,7 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG} -DUSE_MAGMA=OFF "
+FLAG="${FLAG} -DUSE_MAGMA=ON "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
 # 6-d) CuTensor (DEFALT = off)
@@ -119,9 +119,10 @@ FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 # [Note] set to "=off" will 
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-CUQUANTUM_ROOT=/usr/local/cuqunatum-......
-FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
-#FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
+# CUQUANTUM_ROOT=/usr/local/cuqunatum-......
+CUQUANTUM_ROOT=${HOME}/CUQUANTUM
+FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
+FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
 
 
 
@@ -163,10 +164,10 @@ FLAG="${FLAG} -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_AR=xiar -
 
 
 echo ${FLAG}
-# rm -rf build
-# mkdir build
+rm -rf build
+mkdir build
 cd build
 cmake ../ ${FLAG}
-#make -j`nproc`
-#make install
-#ctest
+make -j`nproc`
+make install
+ctest
