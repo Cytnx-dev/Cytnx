@@ -2,7 +2,7 @@
 ######################################################################
 ### CMAKE VERSION
 ######################################################################
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.20)
 
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
@@ -59,39 +59,40 @@ set(CYTNX_VARIANT_INFO "")
 
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
 option(BUILD_PYTHON "Build Python wrapper" ON)
-option(USE_MKL "Build using MKL" OFF)
+option(USE_MKL "Build using MKL" ON)
 option(USE_OMP "Build Cytnx with OpenMP" OFF)
 option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(USE_CUTT "Build Cytnx with CUTT" OFF)
-option(USE_MAGMA "Build Cytnx with MAGMA (required CUDA)" ON)
-option(USE_CUTENSOR "Build Cytnx with CuTensor (required CUDA)" ON)
-option(USE_CUQUANTUM "Build Cytnx with CUQuantum (required CUDA)" ON)
+option(USE_MAGMA "Build Cytnx with MAGMA (requires CUDA)" ON)
+option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
+option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
 
 
-if (USE_ICPC)
-  message(STATUS, "Build Cytnx with Intel Compilers")
-  message(STATUS, "Finding Intel Compilers....")
-  find_program(CMAKE_C_COMPILER NAMES icc)
-  find_program(CMAKE_CXX_COMPILER NAMES icpc)
-  find_program(CMAKE_AR NAMES xiar)
-  find_program(CMAKE_LINKER NAMES xild)
+#if (USE_ICPC)
+#  message(STATUS, "Build Cytnx with Intel Compilers")
+#  message(STATUS, "Finding Intel Compilers....")
+#  find_program(CMAKE_C_COMPILER NAMES icc)
+#  find_program(CMAKE_CXX_COMPILER NAMES icpc)
+#  find_program(CMAKE_AR NAMES xiar)
+#  find_program(CMAKE_LINKER NAMES xild)
 
-  if (NOT (CMAKE_C_COMPILER AND
-           CMAKE_CXX_COMPILER AND
-           CMAKE_AR AND
-           CMAKE_LINKER ))
-    message("Cannot find Intel compilers.")
-    message("You may need to run `. /opt/intel/bin/compilervars.sh intel64/ia32'")
-    message("Falling back to system compilers.")
-    find_program(CMAKE_C_COMPILER NAMES cc)
-    find_program(CMAKE_CXX_COMPILER NAMES cpp)
-    find_program(CMAKE_AR NAMES ar)
-    find_program(CMAKE_LINKER NAMES ld)
-    set(USE_ICPC OFF)
-  endif ()
-endif ()
+#  if (NOT (CMAKE_C_COMPILER AND
+#           CMAKE_CXX_COMPILER AND
+#           CMAKE_AR AND
+#           CMAKE_LINKER ))
+#    message("Cannot find Intel compilers.")
+#    message("You may need to run `. /opt/intel/bin/compilervars.sh intel64/ia32'")
+#    message("Falling back to system compilers.")
+#    find_program(CMAKE_C_COMPILER NAMES cc)
+#    find_program(CMAKE_CXX_COMPILER NAMES cpp)
+#    find_program(CMAKE_AR NAMES ar)
+#    find_program(CMAKE_LINKER NAMES ld)
+#    set(USE_ICPC OFF)
+#  endif ()
+#endif ()
+
 
 if (USE_MKL)
   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
@@ -155,7 +156,7 @@ target_include_directories(cytnx SYSTEM
 				${Boost_INCLUDE_DIRS}
 )
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation")
 
 
 target_compile_features(cytnx PUBLIC cxx_std_17)
@@ -230,8 +231,9 @@ endif()
 if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
   if (USE_MKL)
     set(BLA_VENDOR Intel10_64ilp)
-    find_package( BLAS REQUIRED)
-    find_package( LAPACK REQUIRED)
+    #find_package( BLAS REQUIRED)
+    #find_package( LAPACK REQUIRED)
+    find_package(MKL REQUIRED)
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
   else()
     set(BLA_VENDOR OpenBLAS)

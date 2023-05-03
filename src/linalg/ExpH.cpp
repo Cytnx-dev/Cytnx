@@ -172,7 +172,7 @@ namespace cytnx {
             std::vector<Tensor> Tlist(itoi_indicators.size());
             cytnx_uint64 Rblk_dim = 0;
             cytnx_int64 tmp = -1;
-            cytnx_uint64 row_szs;
+            cytnx_int64 row_szs;
             std::vector<cytnx_uint64> rdims,cdims; //this is used to split!
             vec2d<cytnx_uint64> old_shape(order.size());
             for(int i=0;i<order.size();i++){

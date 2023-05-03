@@ -84,7 +84,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF "
+FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -97,16 +97,16 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 #-----------------------------------
 # FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
-# 6-c) Magma (DEFALT = on)
+# 6-c) Magma (DEFALT = off)
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
 #        in case MAGMA is not automatically find, please specify MAGMAROOT path 
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG} -DUSE_MAGMA=OFF "
+FLAG="${FLAG} -DUSE_MAGMA=ON "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
-# 6-d) CuTensor (DEFALT = on)
+# 6-d) CuTensor (DEFALT = off)
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
@@ -115,13 +115,14 @@ CUTENSOR_ROOT=${HOME}/CUTENSOR
 FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #-----------------------------------
-# 6-e) CuQuantum (DEFALT = on)
+# 6-e) CuQuantum (DEFALT = off)
 # [Note] set to "=off" will 
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-CUQUANTUM_ROOT=/usr/local/cuqunatum-......
-FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
-#FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
+# CUQUANTUM_ROOT=/usr/local/cuqunatum-......
+CUQUANTUM_ROOT=${HOME}/CUQUANTUM
+FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
+FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
 
 
 
@@ -157,15 +158,16 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 #=========================================================
 # [Note] Build using intel icpc compiler (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_ICPC=OFF "
+#FLAG="${FLAG} -DUSE_ICPC=ON "
+FLAG="${FLAG} -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
 #-----------------------------------
 
 
 echo ${FLAG}
-# rm -rf build
-# mkdir build
+rm -rf build
+mkdir build
 cd build
 cmake ../ ${FLAG}
-#make -j`nproc`
-#make install
-#ctest
+make -j`nproc`
+make install
+ctest
