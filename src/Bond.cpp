@@ -163,7 +163,7 @@ namespace cytnx {
               }
             }
             if (QNpool.find(tmpqnum) == QNpool.end()) {
-              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({d})));
+              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({static_cast<int>(d)})));
             } else {
               QNpool[tmpqnum].push_back(d);
             }
@@ -284,7 +284,7 @@ namespace cytnx {
                                            bd_in->_qnums[d % bd_in->_qnums.size()][i]);
             }
             if (QNpool.find(tmpqnum) == QNpool.end()) {
-              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({d})));
+              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({ static_cast<int>(d)})));
             } else {
               QNpool[tmpqnum].push_back(d);
             }

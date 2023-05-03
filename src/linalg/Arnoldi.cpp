@@ -16,9 +16,9 @@ namespace cytnx {
       const auto min_r = std::min(r, src.shape()[0]);
       const auto min_c = std::min(c, src.shape()[1]);
       Tensor dst = cytnx::zeros({min_r, min_c}, src.dtype(), src.device());
-      for(cytnx_uint64 i = 0; i < min_r; ++i)
+      for(auto i = 0; i < min_r; ++i)
       {
-        for(cytnx_uint64 j = 0; j < min_c; ++j) {
+        for(auto j = 0; j < min_c; ++j) {
           dst[{i, j}] = src[{i, j}];
         }
       }
@@ -132,7 +132,7 @@ namespace cytnx {
       buffer[0] = buffer[0] / buffer[0].Norm().item();  // normalized q1
 
       //start arnoldi iteration
-      for (cytnx_uint64 i = 1; i < imp_maxiter; i++) {
+      for (auto i = 1; i < imp_maxiter; i++) {
         cytnx_uint64 krydim = i;
         auto nextTens = Hop->matvec(buffer[i - 1]).astype(Hop->dtype());
         buffer.push_back(nextTens);

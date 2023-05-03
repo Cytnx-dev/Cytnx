@@ -395,7 +395,7 @@ namespace cytnx {
             }
             auto order = vec_sort(itoi_indicators,true);
             std::vector<Tensor> Tlist(itoi_indicators.size());
-            std::vector<cytnx_uint64> row_szs(order.size(),1);
+            std::vector<cytnx_int64> row_szs(order.size(),1);
             cytnx_uint64 Rblk_dim = 0;
             cytnx_int64 tmp = -1;
             for(int i=0;i<order.size();i++){

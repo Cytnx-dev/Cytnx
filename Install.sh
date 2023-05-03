@@ -97,7 +97,7 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 #-----------------------------------
 # FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
-# 6-c) Magma (DEFALT = on)
+# 6-c) Magma (DEFALT = off)
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
 #        in case MAGMA is not automatically find, please specify MAGMAROOT path 
 #        where the magma is installed
@@ -106,7 +106,7 @@ MAGMA_ROOT=${HOME}/MAGMA
 FLAG="${FLAG} -DUSE_MAGMA=OFF "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
-# 6-d) CuTensor (DEFALT = on)
+# 6-d) CuTensor (DEFALT = off)
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
@@ -115,7 +115,7 @@ CUTENSOR_ROOT=${HOME}/CUTENSOR
 FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #-----------------------------------
-# 6-e) CuQuantum (DEFALT = on)
+# 6-e) CuQuantum (DEFALT = off)
 # [Note] set to "=off" will 
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
@@ -157,7 +157,8 @@ FLAG="${FLAG} -DRUN_TESTS=OFF "
 #=========================================================
 # [Note] Build using intel icpc compiler (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_ICPC=OFF "
+#FLAG="${FLAG} -DUSE_ICPC=ON "
+FLAG="${FLAG} -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
 #-----------------------------------
 
 
