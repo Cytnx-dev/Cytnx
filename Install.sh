@@ -148,7 +148,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=OFF "
+FLAG="${FLAG} -DRUN_TESTS=ON "
 #-----------------------------------
 
 
