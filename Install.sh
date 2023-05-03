@@ -158,7 +158,7 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 # [Note] Build using intel icpc compiler (DEFAULT =off)
 #-----------------------------------
 #FLAG="${FLAG} -DUSE_ICPC=ON "
-FLAG="${FLAG} -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx"
+FLAG="${FLAG} -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
 #-----------------------------------
 
 
