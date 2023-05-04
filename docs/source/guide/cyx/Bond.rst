@@ -1,14 +1,14 @@
 Bond
 =======
-A **Bond** is an object that represent the legs of a tensor. It carries informations such as direction, dimension and quantum numbers (if with Symmetry). 
+A **Bond** is an object that represents the legs or indices of a tensor. It carries information such as the direction, dimension and quantum numbers (if symmetries given). 
 
-There are in general two types of Bonds: **directional** and **undirectional** depending on whether the bond has direction (pointing inward to or outward from the tensor body) or not. The inward Bond is also defined as **Ket**/**In** type, and the outward Bond is defined as **Bra**/**Out** type, which represent the *Braket* notation in the quantum mechanic: 
+There are in general two types of Bonds: **directional** and **undirectional** depending on whether the bond has a direction (pointing inward or outward with respect to the tensor) or not. The inward Bond is also defined as **Ket**/**In** type, while the outward Bond is defined as **Bra**/**Out** type as in the *Braket* notation in the quantum mechanics: 
 
 .. image:: image/bond.png
     :width: 400
     :align: center
 
-Let's introduce the complete API for constructing a simple Bond (with or without direction)
+The API for constructing a simple Bond (with or without direction) is:
 
 .. py:function:: Bond(dim, bd_type)
      
@@ -22,26 +22,28 @@ Let's introduce the complete API for constructing a simple Bond (with or without
 Symmetry object
 **********************
 
-In Cytnx we have the Symmetry as object, it mainly contains the name, type, combine rule and the reverse rule of that symmetry, let's create a U1 symmetry and a Z_2 symmetry and print their info:
+Symmetries play an important role in physical simulations. Tensors and bonds can be defined in a way that preserves the symmetries. This helps to reduce the numerical costs, can increase precision and it allows to do calculations restricted to specific parity sectors.
 
-* In python:
+In Cytnx, the type of symmetry is defined by a Symmetry object. It contains the name, type, combine rule and the reverse rule of that symmetry. The combine rule contains the information how two quantum numbers are combined to a new quantum number. Let us create Symmetry objects for a U1 and a Z_2 symmetry and print their info:
+
+* In Python:
 
 .. code-block:: python
     :linenos:
 
 
-    sym_u1 = Symmetry.U1()
-    sym_z2 = Symmetry.Zn(2)
+    sym_u1 = cytnx.Symmetry.U1()
+    sym_z2 = cytnx.Symmetry.Zn(2)
     print(sym_u1)
     print(sym_z2)
     
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
 
-    Symmetry sym_u1 = Symmetry::U1();
-    Symmetry sym_z2 = Symmetry::Zn(2);
+    Symmetry sym_u1 = cytnx::Symmetry::U1();
+    Symmetry sym_z2 = cytnx::Symmetry::Zn(2);
 
     cout << sym_u1 << endl;
     cout << sym_z2 << endl;
@@ -68,29 +70,31 @@ Output >>
 Create Bond with Qnums
 *****************************
 
-When system has some symmetry, the Bond can carry quantum numbers. To construct a Bond with symmetry and associate quantum numbers, the following API can be use:
+In order to implement symmetries on the level of tensors, we assign a quantum number to each value of an index. The quantum numbers can have a degeneracy, such that several values of an index correspond to the same quantum number.
+
+To construct a Bond with symmetries and associate quantum numbers, the following API can be used:
 
 .. py:function:: Bond(bd_type, qnums_list , degeneracies, sym_list)
      
-    :param bondType bd_type: The type (direction) of the bond, this can ONLY be BD_KET--inward (BD_IN) or BD_BRA--outward (BD_OUT) when carry quantum numbers.
-    :param list qnums_list: The quantum number list
-    :param list degeneracies: The degeneracies(dimensions) of each qnums. 
-    :param list sym_list: The list symmetries objects that defines  the type of each qnums.
+    :param bondType bd_type: type (direction) of the bond, this can ONLY be BD_KET--inward (BD_IN) or BD_BRA--outward (BD_OUT) when quantum numbers are used 
+    :param list qnums_list: quantum number list 
+    :param list degeneracies: degeneracies (dimensions) of the qnums 
+    :param list sym_list: list of Symmetry objects that define the symmetry of each qnum
 
 
     
-The two arguments *qnums_list* and *degeneracies* can be combined into single one, for example:
+The two arguments *qnums_list* and *degeneracies* can be combined into a single argument, for example:
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
     
     # This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.
-    bd_sym_u1_a = Bond(BD_KET,[Qs(0)>>3,Qs(-4)>>4,Qs(-2)>>3,Qs(3)>>2],[Symmetry.U1()])
+    bd_sym_u1_a = cytnx.Bond(cytnx.BD_KET,[cytnx.Qs(0)>>3,cytnx.Qs(-4)>>4,cytnx.Qs(-2)>>3,cytnx.Qs(3)>>2],[cytnx.Symmetry.U1()])
 
     # equivalent:
-    bd_sym_u1_a = Bond(BD_IN,[Qs(0),Qs(-4),Qs(-2),Qs(3)],[3,4,3,2],[Symmetry.U1()])
+    bd_sym_u1_a = cytnx.Bond(cytnx.BD_IN,[cytnx.Qs(0),cytnx.Qs(-4),cytnx.Qs(-2),cytnx.Qs(3)],[3,4,3,2],[cytnx.Symmetry.U1()])
 
     print(bd_sym_u1_a)
 
@@ -99,9 +103,9 @@ The two arguments *qnums_list* and *degeneracies* can be combined into single on
 .. code-block:: c++
     :linenos:
     
-    Bond bd_sym_u1_a = Bond(BD_KET,{Qs(0)>>3,Qs(-4)>>4,Qs(-2)>>3,Qs(3)>>2},{Symmetry::U1()});
+    Bond bd_sym_u1_a = cytnx::Bond(cytnx::BD_KET,{cytnx::Qs(0)>>3,cytnx::Qs(-4)>>4,cytnx::Qs(-2)>>3,cytnx::Qs(3)>>2},{cytnx::Symmetry::U1()});
     
-    Bond bd_sym_u1_a = Bond(BD_IN,{Qs(0),Qs(-4),Qs(-2),Qs(3)},{0,4,3,2},{Symmetry::U1()});
+    Bond bd_sym_u1_a = cytnx::Bond(cytnx::BD_IN,{cytnx::Qs(0),cytnx::Qs(-4),cytnx::Qs(-2),cytnx::Qs(3)},{0,4,3,2},{cytnx::Symmetry::U1()});
 
     print(bd_sym_u1_a);
 
@@ -120,11 +124,13 @@ In some cases, we might want to include multiple symmetries in the system. For e
 .. code-block:: python 
     :linenos:
 
-    # This creates an KET (IN) Bond with U1xZ2 with quantum number (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.
-    bd_sym_u1z2_a = Bond(BD_KET,[Qs(0 ,0)>>3,\
-                                 Qs(-4,1)>>4,\
-                                 Qs(-2,0)>>3,\
-                                 Qs(3 ,1)>>2],[Symmetry.U1(),Symmetry.Zn(2)])
+    # This creates a KET (IN) Bond with U1xZ2 symmetry and quantum numbers (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.
+    bd_sym_u1z2_a = cytnx.Bond(cytnx.BD_KET,\
+                               [cytnx.Qs(0 ,0)>>3,\
+                                cytnx.Qs(-4,1)>>4,\
+                                cytnx.Qs(-2,0)>>3,\
+                                cytnx.Qs(3 ,1)>>2],\
+                               [cytnx.Symmetry.U1(),cytnx.Symmetry.Zn(2)])
 
     print(bd_sym_u1z2_a)
 
@@ -134,10 +140,12 @@ In some cases, we might want to include multiple symmetries in the system. For e
 .. code-block:: c++
     :linenos:
 
-    auto bd_sym_u1z2_a = Bond(BD_KET,{Qs(0 ,0)>>3,
-                                     Qs(-4,1)>>4,
-                                     Qs(-2,0)>>3,
-                                     Qs(3 ,1)>>2},{Symmetry::U1(),Symmetry::Zn(2)});
+    auto bd_sym_u1z2_a = cytnx::Bond(cytnx::BD_KET,
+                                     {cytnx::Qs(0 ,0)>>3,
+                                      cytnx::Qs(-4,1)>>4,
+                                      cytnx::Qs(-2,0)>>3,
+                                      cytnx::Qs(3 ,1)>>2},
+                                     {cytnx::Symmetry::U1(),cytnx::Symmetry::Zn(2)});
 
     print(bd_sym_u1z2_a);
     
@@ -153,14 +161,17 @@ In some cases, we might want to include multiple symmetries in the system. For e
 
 Combine Bonds
 *****************
-    Now lets see how to combine two different Bonds. Let's create another U1 bond **bd_sym_u1_c**, and conbine it with **bd_sym_u1_a**:
 
-* In python:
+In typical algorithms, two bonds often get combined to one bond. This can be done with Bonds involving Symmetries as well. The quantum numbers are merged according to the combine rules.
+
+As an example, let us create another U1 bond **bd_sym_u1_c** and combine it with **bd_sym_u1_a**:
+
+* In Python:
 
 .. code-block:: python
     :linenos:
 
-    bd_sym_u1_c = Bond(BD_KET,[Qs(-1)>>2,Qs(1)>>3,Qs(2)>>4,Qs(-2)>>5,Qs(0)>>6])
+    bd_sym_u1_c = cytnx.Bond(cytnx.BD_KET,[cytnx.Qs(-1)>>2,cytnx.Qs(1)>>3,cytnx.Qs(2)>>4,cytnx.Qs(-2)>>5,cytnx.Qs(0)>>6])
     print(bd_sym_u1_c)
 
     bd_sym_all = bd_sym_u1_a.combineBond(bd_sym_u1_c)
@@ -181,25 +192,29 @@ Output >>
     Deg>>   20   8  39  18  49  15  30  19  16  12   6   8
 
 
-Here we can observe the quantum numbers of **bd_sym_u1_a** combine with **bd_sym_u1_c** and generated 12 quantum numbers, respecting the combine rule (addition) of U1 symmetry.
+Here, we can observe the quantum numbers of **bd_sym_u1_a** combine with **bd_sym_u1_c** and generate 12 quantum numbers, respecting the combine rule (addition) of the U1 symmetry.
 
 
-.. Note::
+.. note::
 
-    The Bonds need to be in the same direction to be combined. As physical interpretation, one cannot combine a ket state with a bra state!
+    The Bonds need to be in the same direction to be combined. As a physical interpretation, one cannot combine a ket state with a bra state! 
+
+.. warning::
+
+    When no symmetry argument is given in the creation of a bond with quantum numbers, U1 is assumed by default as the symmetry group. 
 
 
 
-.. Tips::
+.. tip::
     
-    using **combineBond_()** (with underscore) will modify the instance directly (as the general convention with underscore indicates inplace) 
+    Using **combineBond_()** (with underscore) will modify the instance directly (as the general convention with underscore indicates inplace). 
 
-combineBond by default will group any same quantum number together. Generally, the quantum number of merging two Bonds should be similar to Kron, and sometimes user might want to keep the order instead. In such scenario, one can set additioanll argument **is_grp = False**:
+By default, combineBond will group any quantum numbers of the same type together. Generally, the quantum number of merging two Bonds should be similar to Kron, and sometimes user might want to keep the order instead. In such scenarios, one can set the additional argument **is_grp = False**:
 
 
-* In python:
+* In Python:
 
-.. code-block:: python
+.. code-block:: Python
     :linenos:
 
     bd_sym_all = bd_sym_u1_a.combineBond(bd_sym_u1_c,is_grp=False)
@@ -213,6 +228,9 @@ combineBond by default will group any same quantum number together. Generally, t
      U1::   -1  +1  +2  -2  +0  -5  -3  -2  -6  -4  -3  -1  +0  -4  -2  +2  +4  +5  +1  +3
     Deg>>    6   9  12  15  18   8  12  16  20  24   6   9  12  15  18   4   6   8  10  12
 
+.. warning::
+
+    This is not efficient since duplicate quantum number can occur. A warning will be thrown when is_grp=False is used.
 
 
 

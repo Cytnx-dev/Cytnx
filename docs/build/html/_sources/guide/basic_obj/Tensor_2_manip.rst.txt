@@ -244,7 +244,7 @@ Output>>
     True
 
 
-.. Tip::
+.. tip::
 
     1. Generally, you don't have to worry about contiguous issues. You can access the elements and call linalg just like this contiguous/non-contiguous property does not exist. 
     
