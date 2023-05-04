@@ -57,7 +57,7 @@ FLAG="${FLAG} -DBUILD_PYTHON=ON"
 
 
 #=========================================================
-# 5) HPTT (DEFAULT =off):
+# 5) HPTT (DEFAULT =on):
 #=========================================================
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
@@ -84,7 +84,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=ON "
+FLAG="${FLAG} -DUSE_CUDA=OFF "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -103,7 +103,7 @@ FLAG="${FLAG} -DUSE_CUDA=ON "
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG} -DUSE_MAGMA=ON "
+FLAG="${FLAG} -DUSE_MAGMA=OFF "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
 # 6-d) CuTensor (DEFALT = off)
@@ -121,7 +121,7 @@ FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUQUANTUM_ROOT=/usr/local/cuqunatum-......
 CUQUANTUM_ROOT=${HOME}/CUQUANTUM
-FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
+FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
 FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
 
 
@@ -149,17 +149,17 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=OFF "
+FLAG="${FLAG} -DRUN_TESTS=ON "
 #-----------------------------------
 
 
 #=========================================================
 # 9) Use icpc ?
 #=========================================================
-# [Note] Build using intel icpc compiler (DEFAULT =off)
+# [Note] Build using intel icpc compiler, uncomment to enable (DEFAULT =off)
 #-----------------------------------
-#FLAG="${FLAG} -DUSE_ICPC=ON "
-FLAG="${FLAG} -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
+#FLAG="${FLAG} -DUSE_ICPC=ON " # This will not work anymore
+# FLAG="${FLAG} -DCMAKE_C_COMPILER=icx -DCMAKE_CXX_COMPILER=icpx -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
 #-----------------------------------
 
 

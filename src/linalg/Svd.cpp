@@ -26,17 +26,20 @@ namespace cytnx {
       Tensor U, S, vT;
       S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
              in.device());  // if type is complex, S should be real
-      S.storage().set_zeros();
+      // S.storage().set_zeros();
       if (is_U) {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
-        U.storage().set_zeros();
+        // U.storage().set_zeros();
       }
       if (is_vT) {
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-        vT.storage().set_zeros();
+        // vT.storage().set_zeros();
       }
 
       if (Tin.device() == Device.cpu) {
+        // cytnx::linalg_internal::lii.Svd_ii[in.dtype()](
+        //   in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
+        //   S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
         cytnx::linalg_internal::lii.Svd_ii[in.dtype()](
           in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
           S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
@@ -403,7 +406,7 @@ namespace cytnx {
                     tmp = itoi_indicators[i][0];
                     Rblk_dim ++;
                 }
-                Tlist[i] = Tin.get_blocks()[x.second[order[i]]];
+                Tlist[i] = Tin.get_blocks_()[x.second[order[i]]];
                 for(int j=0;j<Tin.rowrank();j++){
                     row_szs[i]*= Tlist[i].shape()[j];
                 }

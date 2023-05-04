@@ -682,7 +682,7 @@ namespace cytnx {
     cytnx::UniTensor Mod(const cytnx::UniTensor &Lt, const T &rc);
 
     /**
-    @brief Perform Singular-Value decomposition on a UniTensor.
+    @brief Perform Singular-Value decomposition on a UniTensor using divide-and-conquer method.
     @details This function performs the Singular-Value decomposition on a UniTensor \p Tin.
     The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
     refer to the documentation of the function Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
@@ -692,12 +692,13 @@ namespace cytnx {
 
 
     /**
-    @brief Perform Singular-Value decomposition on a UniTensor using divide-and-conquer method.
+    @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
     @details This function performs the Singular-Value decomposition on a UniTensor \p Tin.
     The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
-    refer to the documentation of the function Sdd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
+    refer to the documentation of the function GeSvd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
     */
-    std::vector<cytnx::UniTensor> Sdd(const cytnx::UniTensor &Tin, const bool &is_UvT = true);
+    std::vector<cytnx::UniTensor> GeSvd(const cytnx::UniTensor &Tin, const bool &is_U = true,
+                                      const bool &is_vT = true);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
