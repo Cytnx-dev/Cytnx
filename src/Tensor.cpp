@@ -1301,8 +1301,11 @@ namespace cytnx {
   }
   ///@endcond
 
-  std::vector<Tensor> Tensor::Svd(const bool &is_U, const bool &is_vT) const {
-    return linalg::Svd(*this, is_U, is_vT);
+  // std::vector<Tensor> Tensor::Svd(const bool &is_U, const bool &is_vT) const {
+  //   return linalg::Svd(*this, is_U, is_vT);
+  // }
+  std::vector<Tensor> Tensor::Svd(const bool &compute_uv) const {
+    return linalg::Svd(*this, compute_uv);
   }
   std::vector<Tensor> Tensor::Eigh(const bool &is_V, const bool &row_v) const {
     return linalg::Eigh(*this, is_V, row_v);

@@ -9,9 +9,9 @@ namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                     const double &err, const bool &is_U, const bool &is_vT,
+                                     const double &err, const bool &compute_uv,
                                      const bool &return_err) {
-      std::vector<Tensor> tmps = Svd(Tin, is_U, is_vT);
+      std::vector<Tensor> tmps = Svd(Tin, compute_uv);
 
       cytnx_uint64 id = 0;
       cytnx_uint64 Kdim = keepdim;
@@ -43,11 +43,11 @@ namespace cytnx {
         terr = tmps[id](truc_dim);
         tmps[id] = tmps[id].get({ac::range(0, truc_dim)});
 
-        if (is_U) {
+        if (compute_uv) {
           id++;
           tmps[id] = tmps[id].get({ac::all(), ac::range(0, truc_dim)});
         }
-        if (is_vT) {
+        if (compute_uv) {
           id++;
           tmps[id] = tmps[id].get({ac::range(0, truc_dim), ac::all()});
         }
@@ -66,7 +66,7 @@ namespace cytnx {
 
     void _svd_truncate_Dense_UT(std::vector<UniTensor> &outCyT,const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
-                                               const bool &is_U, const bool &is_vT,
+                                               const bool &compute_uv,
                                                const bool &return_err){
         // DenseUniTensor:
         cytnx_uint64 keep_dim = keepdim;
@@ -86,7 +86,7 @@ namespace cytnx {
         tmp = tmp.reshape({rowdim, -1});
 
         vector<Tensor> outT =
-          cytnx::linalg::Svd_truncate(tmp, keepdim, err, is_U, is_vT, return_err);
+          cytnx::linalg::Svd_truncate(tmp, keepdim, err, compute_uv, return_err);
 
         // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
 
@@ -104,7 +104,7 @@ namespace cytnx {
         Cy_S.put_block_(outT[t]);
         t++;
 
-        if (is_U) {
+        if (compute_uv) {
           cytnx::UniTensor &Cy_U = outCyT[t];
           // shape
           vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
@@ -119,7 +119,7 @@ namespace cytnx {
           t++;  // U
         }
 
-        if (is_vT) {
+        if (compute_uv) {
           cytnx::UniTensor &Cy_vT = outCyT[t];
 
           // shape
@@ -141,7 +141,7 @@ namespace cytnx {
         if (Tin.is_tag()) {
           Cy_S.tag();
           t = 1;
-          if (is_U) {
+          if (compute_uv) {
             cytnx::UniTensor &Cy_U = outCyT[t];
             Cy_U._impl->_is_tag = true;
             for (int i = 0; i < Cy_U.rowrank(); i++) {
@@ -151,7 +151,7 @@ namespace cytnx {
             Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
             t++;
           }
-          if (is_vT) {
+          if (compute_uv) {
             cytnx::UniTensor &Cy_vT = outCyT[t];
             Cy_vT._impl->_is_tag = true;
             Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
@@ -170,7 +170,7 @@ namespace cytnx {
     
     void _svd_truncate_Sparse_UT(std::vector<UniTensor> &outCyT,const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
-                                               const bool &is_U, const bool &is_vT,
+                                               const bool &compute_uv,
                                                const bool &return_err){
 
       cytnx_uint64 keep_dim = keepdim;
@@ -198,8 +198,8 @@ namespace cytnx {
       std::vector<Tensor> sls(comm_qnums.size());
       std::vector<Tensor> vTls;
 
-      if (is_U) Uls.resize(comm_qnums.size());
-      if (is_vT) vTls.resize(comm_qnums.size());
+      if (compute_uv) Uls.resize(comm_qnums.size());
+      if (compute_uv) vTls.resize(comm_qnums.size());
 
       std::vector<Tensor> &i_blocks = ipt.get_blocks_();
       // std::vector<cytnx_uint64> degs(comm_qnums.size()); //deg of each blocks
@@ -211,7 +211,7 @@ namespace cytnx {
       for (int blk = 0; blk < comm_qnums.size(); blk++) {
         // std::cout << "QN block: " << blk << std::endl;
         int idd = 0;
-        auto out = linalg::Svd(i_blocks[blk], is_U, is_vT);
+        auto out = linalg::Svd(i_blocks[blk], compute_uv);
 
         sls[blk] = out[idd];
         if (Sall.dtype() == Type.Void)
@@ -229,11 +229,11 @@ namespace cytnx {
         //
 
         idd++;
-        if (is_U) {
+        if (compute_uv) {
           Uls[blk] = out[idd];
           idd++;
         }
-        if (is_vT) {
+        if (compute_uv) {
           vTls[blk] = out[idd];
         }
       } // for each block
@@ -301,12 +301,12 @@ namespace cytnx {
             sls[blk] = sls[blk].get({ac::range(0, degs[blk])});
             o_sls.push_back(sls[blk]);
 
-            if (is_U) {
+            if (compute_uv) {
               Uls[blk] = Uls[blk].get({ac::all(), ac::range(0, degs[blk])});
               if (Uls[blk].shape().size() == 1) Uls[blk].reshape_(Uls[blk].shape()[0], 1);
               o_Uls.push_back(Uls[blk]);
             }
-            if (is_vT) {
+            if (compute_uv) {
               vTls[blk] = vTls[blk].get({ac::range(0, degs[blk]), ac::all()});
               if (vTls[blk].shape().size() == 1) vTls[blk].reshape_(1, vTls[blk].shape()[0]);
               o_vTls.push_back(vTls[blk]);
@@ -326,10 +326,10 @@ namespace cytnx {
 
           o_sls.push_back(sls[blk]);
 
-          if (is_U) {
+          if (compute_uv) {
             o_Uls.push_back(Uls[blk]);
           }
-          if (is_vT) {
+          if (compute_uv) {
             o_vTls.push_back(vTls[blk]);
           }
         }
@@ -366,7 +366,7 @@ namespace cytnx {
       s._impl = boost::intrusive_ptr<UniTensor_base>(tmps);
       outCyT.push_back(s);
 
-      if (is_U) {
+      if (compute_uv) {
         SparseUniTensor *tmpu = new SparseUniTensor();
         std::vector<string> LBLS = vec_clone(oldlabel, ipt.rowrank());
         LBLS.push_back(s.labels()[0]);
@@ -386,7 +386,7 @@ namespace cytnx {
         outCyT.push_back(u);
       }
 
-      if (is_vT) {
+      if (compute_uv) {
         SparseUniTensor *tmpv = new SparseUniTensor();
         std::vector<string> LBLS(ipt.rank() - ipt.rowrank() + 1);  // old_label,ipt.rowrank());
         // LBLS[0] = newlbl - 1;
@@ -414,12 +414,12 @@ namespace cytnx {
 
     void _svd_truncate_Block_UT(std::vector<UniTensor> &outCyT,const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
-                                               const bool &is_U, const bool &is_vT,
+                                               const bool &compute_uv,
                                                const bool &return_err){
 
        cytnx_uint64 keep_dim = keepdim;
 
-       outCyT = linalg::Svd(Tin, is_U,is_vT); 
+       outCyT = linalg::Svd(Tin, compute_uv); 
 
        // process truncate:
        // 1) concate all s vals from all blk
@@ -498,7 +498,7 @@ namespace cytnx {
         
           
           int t=1;
-          if(is_U){
+          if(compute_uv){
             UniTensor &U = outCyT[t];
             to_be_remove.clear();
             U.bonds().back() = S.bonds()[1].clone();
@@ -524,7 +524,7 @@ namespace cytnx {
             t++;
           } 
 
-          if(is_vT){
+          if(compute_uv){
             UniTensor &vT = outCyT[t];
             to_be_remove.clear();
             vT.bonds().front() = S.bonds()[0].clone();
@@ -561,7 +561,7 @@ namespace cytnx {
 
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
-                                               const bool &is_U, const bool &is_vT,
+                                               const bool &compute_uv,
                                                const bool &return_err) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank()==Tin.rank()),
@@ -571,17 +571,17 @@ namespace cytnx {
       std::vector<UniTensor> outCyT;
       if( Tin.uten_type() == UTenType.Dense){
         _svd_truncate_Dense_UT(outCyT, Tin, keepdim, err,
-                                               is_U, is_vT,
+                                               compute_uv,
                                                return_err);
 
       }else if(Tin.uten_type() == UTenType.Block){
         _svd_truncate_Block_UT(outCyT, Tin, keepdim, err,
-                                               is_U, is_vT,
+                                               compute_uv,
                                                return_err);
 
       }else{
         _svd_truncate_Sparse_UT(outCyT, Tin, keepdim, err,
-                                               is_U, is_vT,
+                                               compute_uv,
                                                return_err);
 
       }
