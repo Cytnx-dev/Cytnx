@@ -17,7 +17,7 @@ class linalg_Test : public ::testing::Test {
   Tensor eye3x3d = eye(3, Type.Double);
   Tensor zeros3x3d = zeros(9, Type.Double).reshape(3,3);
 
-  Tensor arange3x3cd = arange(0,9,1, Type.ComplexDouble).reshape(3,3)+1i*arange(0,9,1, Type.ComplexDouble).reshape(3,3);
+  Tensor arange3x3cd = arange(0,9,1, Type.ComplexDouble).reshape(3,3)+cytnx_complex128(0,1)*arange(0,9,1, Type.ComplexDouble).reshape(3,3);
   Tensor ones3x3cd = ones(9, Type.ComplexDouble).reshape(3,3);
   Tensor eye3x3cd = eye(3, Type.ComplexDouble);
   Tensor zeros3x3cd = zeros(9, Type.ComplexDouble).reshape(3,3);
