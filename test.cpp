@@ -387,7 +387,7 @@ int main(int argc, char *argv[]) {
 
   tat.print_diagram(true);
 
-  auto Osvd = linalg::Svd(tat,true,true);
+  auto Osvd = linalg::Svd(tat,true);
   
   Osvd[0].print_diagram();
   Osvd[0].print_blocks(false);
@@ -713,7 +713,7 @@ int main(int argc, char *argv[]) {
   a.at<double>({1, 1}) = 3;
   a.at<double>({1, 2}) = -2;
 
-  vector<Tensor> out = linalg::Svd(a, false, false);
+  vector<Tensor> out = linalg::Svd(a, false);
   cout << out[0];
 
   Tensor Zo = zeros(10, Type.Double, Device.cpu);

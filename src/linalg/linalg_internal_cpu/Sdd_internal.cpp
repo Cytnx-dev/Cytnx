@@ -1,4 +1,4 @@
-#include "Svd_internal.hpp"
+#include "Sdd_internal.hpp"
 #include "cytnx_error.hpp"
 #include "lapack_wrapper.hpp"
 
@@ -6,8 +6,8 @@ namespace cytnx {
 
   namespace linalg_internal {
 
-    /// Svd
-    void Svd_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
+    /// Sdd
+    void Sdd_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
                          boost::intrusive_ptr<Storage_base> &U,
                          boost::intrusive_ptr<Storage_base> &vT,
                          boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
@@ -55,7 +55,7 @@ namespace cytnx {
         free(vTMem);
       }
     }
-    void Svd_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
+    void Sdd_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
                          boost::intrusive_ptr<Storage_base> &U,
                          boost::intrusive_ptr<Storage_base> &vT,
                          boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
@@ -100,7 +100,7 @@ namespace cytnx {
       }
       free(Mij);
     }
-    void Svd_internal_d(const boost::intrusive_ptr<Storage_base> &in,
+    void Sdd_internal_d(const boost::intrusive_ptr<Storage_base> &in,
                         boost::intrusive_ptr<Storage_base> &U,
                         boost::intrusive_ptr<Storage_base> &vT,
                         boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
@@ -145,7 +145,7 @@ namespace cytnx {
       }
       free(Mij);
     }
-    void Svd_internal_f(const boost::intrusive_ptr<Storage_base> &in,
+    void Sdd_internal_f(const boost::intrusive_ptr<Storage_base> &in,
                         boost::intrusive_ptr<Storage_base> &U,
                         boost::intrusive_ptr<Storage_base> &vT,
                         boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,

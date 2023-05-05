@@ -8,7 +8,7 @@
 #include "Scalar.hpp"
 #include "linalg/linalg_internal_cpu/Arithmetic_internal.hpp"
 #include "linalg/linalg_internal_cpu/iArithmetic_internal.hpp"
-#include "linalg/linalg_internal_cpu/Svd_internal.hpp"
+#include "linalg/linalg_internal_cpu/Sdd_internal.hpp"
 #include "linalg/linalg_internal_cpu/GeSvd_internal.hpp"
 #include "linalg/linalg_internal_cpu/Eigh_internal.hpp"
 #include "linalg/linalg_internal_cpu/Eig_internal.hpp"
@@ -165,7 +165,7 @@ namespace cytnx {
      public:
       std::vector<std::vector<Arithmeticfunc_oii>> Ari_ii;
       std::vector<std::vector<Arithmeticfunc_oii>> iAri_ii;
-      std::vector<Svdfunc_oii> Svd_ii;
+      std::vector<Svdfunc_oii> Sdd_ii;
       std::vector<Svdfunc_oii> GeSvd_ii;
       std::vector<Eighfunc_oii> Eigh_ii;
       std::vector<Eighfunc_oii> Eig_ii;

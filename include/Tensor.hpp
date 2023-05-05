@@ -1706,10 +1706,10 @@ namespace cytnx {
     // linalg:
     /**
      * @brief the SVD member function. Same as 
-     * \ref cytnx::linalg::Svd(const Tensor &Tin, const bool &compute_uv)
+     * \ref cytnx::linalg::Svd(const Tensor &Tin, const bool &is_UvT)
      * , where \p Tin is the current Tensor.
      */
-    std::vector<Tensor> Svd(const bool &compute_uv = true) const;
+    std::vector<Tensor> Svd(const bool &is_UvT = true) const;
 
     /**
      * @brief the Eigh member function. Same as 

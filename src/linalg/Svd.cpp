@@ -10,7 +10,7 @@ using namespace std;
 namespace cytnx {
   namespace linalg {
 
-    std::vector<Tensor> Svd(const Tensor &Tin, const bool &compute_uv) {
+    std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Svd] error, Svd can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be contiguous. Call
@@ -27,11 +27,11 @@ namespace cytnx {
       S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
              in.device());  // if type is complex, S should be real
       // S.storage().set_zeros();
-      if (compute_uv) {
+      if (is_UvT) {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         // U.storage().set_zeros();
       }
-      if (compute_uv) {
+      if (is_UvT) {
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         // vT.storage().set_zeros();
       }
@@ -40,14 +40,16 @@ namespace cytnx {
         // cytnx::linalg_internal::lii.Svd_ii[in.dtype()](
         //   in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
         //   S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
-        cytnx::linalg_internal::lii.Svd_ii[in.dtype()](
+        cytnx::linalg_internal::lii.Sdd_ii[in.dtype()](
           in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
           S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
 
         std::vector<Tensor> out;
         out.push_back(S);
-        if (compute_uv) out.push_back(U);
-        if (compute_uv) out.push_back(vT);
+        if (is_UvT){
+            out.push_back(U);
+            out.push_back(vT);
+        }
 
         return out;
 
@@ -60,8 +62,10 @@ namespace cytnx {
 
         std::vector<Tensor> out;
         out.push_back(S);
-        if (is_U) out.push_back(U);
-        if (is_vT) out.push_back(vT);
+        if (is_UvT){
+            out.push_back(U);
+            out.push_back(vT);
+        }
 
         return out;
 #else
@@ -541,7 +545,7 @@ namespace cytnx {
     } // _svd_Block_UT
 
 
-    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &compute_uv) {
+    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_UvT) {
 
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
@@ -552,13 +556,13 @@ namespace cytnx {
       
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _svd_Dense_UT(outCyT, Tin, compute_uv);
+        _svd_Dense_UT(outCyT, Tin, is_UvT);
 
       } else if (Tin.uten_type() == UTenType.Block){
-        _svd_Block_UT(outCyT, Tin, compute_uv);
+        _svd_Block_UT(outCyT, Tin, is_UvT);
 
       }  else {
-        _svd_Sparse_UT(outCyT, Tin, compute_uv);
+        _svd_Sparse_UT(outCyT, Tin, is_UvT);
 
       }// is block form ?
 
