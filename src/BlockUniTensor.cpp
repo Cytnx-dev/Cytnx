@@ -979,7 +979,8 @@ namespace cytnx {
             std::vector<cytnx_uint64> oldshapeL;
             std::vector<std::vector<cytnx_uint64>> oldshapeR(Rtn->_blocks.size(),std::vector<cytnx_uint64>());
             std::vector<std::vector<cytnx_uint64>> oldshapeC;
-            smallvec<bool> reshaped(tmp->_blocks.size(),false);
+            // smallvec<bool> reshaped(tmp->_blocks.size(),false);
+            std::vector<bool> reshaped(tmp->_blocks.size(),false);
             // smallvec<bool> calculated(tmp->_blocks.size(),false);
             for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
               oldshapeC.push_back(tmp->_blocks[a].shape());
@@ -1018,18 +1019,31 @@ namespace cytnx {
                 }
               }
             }else{
-              smallvec<char> transs(Rtn->_blocks.size(), 'N'); 
-              smallvec<blas_int> ms(Rtn->_blocks.size(),0),ns(Rtn->_blocks.size(),0),ks(Rtn->_blocks.size(),0);
-              smallvec<cytnx_double> doublealpha(Rtn->_blocks.size(),1.0);
-              smallvec<cytnx_double> doublebeta(Rtn->_blocks.size(),0.0);
-              smallvec<cytnx_float> floatalpha(Rtn->_blocks.size(),1.0);
-              smallvec<cytnx_float> floatbeta(Rtn->_blocks.size(),0.0);
-              smallvec<cytnx_complex128> complexalpha(Rtn->_blocks.size(),1.0);
-              smallvec<cytnx_complex128> complexbeta(Rtn->_blocks.size(),0.0);
-              smallvec<cytnx_complex64> complexalpha_f(Rtn->_blocks.size(),1.0);
-              smallvec<cytnx_complex64> complexbeta_f(Rtn->_blocks.size(),0.0);
-              smallvec<void*> LMems(Rtn->_blocks.size(),0),RMems(Rtn->_blocks.size(),0),CMems(Rtn->_blocks.size(),0);
-              smallvec<blas_int> group_size(Rtn->_blocks.size(),1);
+              // smallvec<char> transs(Rtn->_blocks.size(), 'N'); 
+              // smallvec<blas_int> ms(Rtn->_blocks.size(),0),ns(Rtn->_blocks.size(),0),ks(Rtn->_blocks.size(),0);
+              // smallvec<cytnx_double> doublealpha(Rtn->_blocks.size(),1.0);
+              // smallvec<cytnx_double> doublebeta(Rtn->_blocks.size(),0.0);
+              // smallvec<cytnx_float> floatalpha(Rtn->_blocks.size(),1.0);
+              // smallvec<cytnx_float> floatbeta(Rtn->_blocks.size(),0.0);
+              // smallvec<cytnx_complex128> complexalpha(Rtn->_blocks.size(),1.0);
+              // smallvec<cytnx_complex128> complexbeta(Rtn->_blocks.size(),0.0);
+              // smallvec<cytnx_complex64> complexalpha_f(Rtn->_blocks.size(),1.0);
+              // smallvec<cytnx_complex64> complexbeta_f(Rtn->_blocks.size(),0.0);
+              // smallvec<void*> LMems(Rtn->_blocks.size(),0),RMems(Rtn->_blocks.size(),0),CMems(Rtn->_blocks.size(),0);
+              // smallvec<blas_int> group_size(Rtn->_blocks.size(),1);
+
+              std::vector<char> transs(Rtn->_blocks.size(), 'N'); 
+              std::vector<blas_int> ms(Rtn->_blocks.size(),0),ns(Rtn->_blocks.size(),0),ks(Rtn->_blocks.size(),0);
+              std::vector<cytnx_double> doublealpha(Rtn->_blocks.size(),1.0);
+              std::vector<cytnx_double> doublebeta(Rtn->_blocks.size(),0.0);
+              std::vector<cytnx_float> floatalpha(Rtn->_blocks.size(),1.0);
+              std::vector<cytnx_float> floatbeta(Rtn->_blocks.size(),0.0);
+              std::vector<cytnx_complex128> complexalpha(Rtn->_blocks.size(),1.0);
+              std::vector<cytnx_complex128> complexbeta(Rtn->_blocks.size(),0.0);
+              std::vector<cytnx_complex64> complexalpha_f(Rtn->_blocks.size(),1.0);
+              std::vector<cytnx_complex64> complexbeta_f(Rtn->_blocks.size(),0.0);
+              std::vector<void*> LMems(Rtn->_blocks.size(),0),RMems(Rtn->_blocks.size(),0),CMems(Rtn->_blocks.size(),0);
+              std::vector<blas_int> group_size(Rtn->_blocks.size(),1);
 
               for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                 cytnx_int64 comm_dim = 1;
