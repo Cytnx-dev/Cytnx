@@ -34,18 +34,18 @@ namespace cytnx {
       cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s", "\n");
   #endif
     if(in->size()>64){
-      smallvec<int> perm(mapper.begin(), mapper.end());
-      smallvec<int> size(old_shape.begin(), old_shape.end());
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
       auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], NULL, 0, des, NULL,
                                     hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
       plan->execute();
       accu_old = in->size();
       } else {
-      smallvec<cytnx_int64> newshape(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
       for (cytnx_int64 i = 0; i < old_shape.size(); i++){
         newshape[i] = old_shape[mapper[i]];
       }
-      smallvec<cytnx_int64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
         shifter_new[i] = accu_new;
@@ -53,7 +53,7 @@ namespace cytnx {
         accu_new *= newshape[i];
       }
 
-      smallvec<cytnx_int64> old_inds(old_shape.size());
+      std::vector<cytnx_int64> old_inds(old_shape.size());
       cytnx_int64 j, new_loc=0;
       for (cytnx_int64 n = 0; n < accu_old; n++) {
         bool recalc = 0;
@@ -175,25 +175,25 @@ namespace cytnx {
       cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s", "\n");
   #endif
     if(in->size()>64){
-      smallvec<int> perm(mapper.begin(), mapper.end());
-      smallvec<int> size(old_shape.begin(), old_shape.end());
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
       auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], NULL, 0, des, NULL,
                                     hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
       plan->execute();
       accu_old = in->size();
     }else{
-      smallvec<cytnx_int64> newshape(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
       for (cytnx_int64 i = 0; i < old_shape.size(); i++){
         newshape[i] = old_shape[mapper[i]];
       }
-      smallvec<cytnx_int64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
       }
-      smallvec<cytnx_int64> old_inds(old_shape.size());
+      std::vector<cytnx_int64> old_inds(old_shape.size());
       cytnx_int64 j, new_loc=0;
       for (cytnx_int64 n = 0; n < accu_old; n++) {
         bool recalc = 0;
@@ -316,25 +316,25 @@ namespace cytnx {
       cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s", "\n");
   #endif
     if(in->size()>64){
-      smallvec<int> perm(mapper.begin(), mapper.end());
-      smallvec<int> size(old_shape.begin(), old_shape.end());
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
       auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], NULL, 0, des, NULL,
                                     hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
       plan->execute();
       accu_old = in->size();
     }else{
-      smallvec<cytnx_int64> newshape(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
       for (cytnx_int64 i = 0; i < old_shape.size(); i++){
         newshape[i] = old_shape[mapper[i]];
       }
-      smallvec<cytnx_int64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
       }
-      smallvec<cytnx_int64> old_inds(old_shape.size());
+      std::vector<cytnx_int64> old_inds(old_shape.size());
       cytnx_int64 j, new_loc=0;
       for (cytnx_int64 n = 0; n < accu_old; n++) {
         bool recalc = 0;
@@ -456,25 +456,25 @@ namespace cytnx {
       cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s", "\n");
   #endif
     if(in->size()>64){
-      smallvec<int> perm(mapper.begin(), mapper.end());
-      smallvec<int> size(old_shape.begin(), old_shape.end());
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
       auto plan = hptt::create_plan(&perm[0], perm.size(), 1, src, &size[0], NULL, 0, des, NULL,
                                     hptt::ESTIMATE, cytnx::Device.Ncpus, nullptr, true);
       plan->execute();
       accu_old = in->size();
     }else{
-      smallvec<cytnx_int64> newshape(old_shape.size());
+      std::vector<cytnx_int64> newshape(old_shape.size());
       for (cytnx_int64 i = 0; i < old_shape.size(); i++){
         newshape[i] = old_shape[mapper[i]];
       }
-      smallvec<cytnx_int64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> shifter_new(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
       }
-      smallvec<cytnx_int64> old_inds(old_shape.size());
+      std::vector<cytnx_int64> old_inds(old_shape.size());
       cytnx_int64 j, new_loc=0;
       for (cytnx_int64 n = 0; n < accu_old; n++) {
         bool recalc = 0;

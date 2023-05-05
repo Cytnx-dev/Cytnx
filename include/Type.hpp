@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <typeindex>
 #include "cytnx_error.hpp"
-#include "boost/container/small_vector.hpp"
+// #include "boost/container/small_vector.hpp"
 //#ifdef UNI_MKL
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
@@ -18,20 +18,20 @@
 //#endif
 
 namespace cytnx {
-  // using namespace boost::container;
+  // // using namespace boost::container;
 
-  //This option specifies the desired alignment for the internal value_type
-  typedef boost::container::small_vector_options<boost::container::inplace_alignment<16u>>::type alignment_16_option_t;
-  // //This option specifies that a vector will increase its capacity 50%
-  // //each time the previous capacity was exhausted.
-  // typedef small_vector_options< growth_factor<growth_factor_50> >::type growth_50_option_t;
-  // //Check 16 byte alignment option
-  // small_vector<int, 10, void, alignment_16_option_t > sv;
-  // //Fill the vector until full capacity is reached
-  // small_vector<int, 10, void, growth_50_option_t > growth_50_vector(10, 0);
+  // //This option specifies the desired alignment for the internal value_type
+  // typedef boost::container::small_vector_options<boost::container::inplace_alignment<16u>>::type alignment_16_option_t;
+  // // //This option specifies that a vector will increase its capacity 50%
+  // // //each time the previous capacity was exhausted.
+  // // typedef small_vector_options< growth_factor<growth_factor_50> >::type growth_50_option_t;
+  // // //Check 16 byte alignment option
+  // // small_vector<int, 10, void, alignment_16_option_t > sv;
+  // // //Fill the vector until full capacity is reached
+  // // small_vector<int, 10, void, growth_50_option_t > growth_50_vector(10, 0);
 
-  template <class T, size_t N = 16>
-  using smallvec = boost::container::small_vector<T, N>;
+  // template <class T, size_t N = 16>
+  // using smallvec = boost::container::small_vector<T, N>;
   
   template <class T>
   using vec3d = std::vector<std::vector<std::vector<T> > >;

@@ -472,9 +472,12 @@ namespace cytnx {
     // std::vector<cytnx_uint64> new_shape(this->_shape.size());
     // std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
 
-    smallvec<cytnx_uint64> new_fwdmap(this->_shape.size());
-    smallvec<cytnx_uint64> new_shape(this->_shape.size());
-    smallvec<cytnx_uint64> new_idxmap(this->_shape.size());
+    // smallvec<cytnx_uint64> new_fwdmap(this->_shape.size());
+    // smallvec<cytnx_uint64> new_shape(this->_shape.size());
+    // smallvec<cytnx_uint64> new_idxmap(this->_shape.size());
+    std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
+    std::vector<cytnx_uint64> new_shape(this->_shape.size());
+    std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
 
     // for(int i=0;i<this->_shape.size();i++)
     //     std::cout << this->_mapper[i] << " " << this->_invmapper[i] << std::endl;
