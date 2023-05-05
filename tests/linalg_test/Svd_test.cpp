@@ -183,35 +183,42 @@ input:
   is_VT:'true' and 'false' both will be test.
 ====================*/
 TEST(Svd, none_isU_isVT) {
-  bool need_U, need_VT;
+  // bool need_U, need_VT;
+  bool compute_uv;
   std::string case_name = "sym_UT_U1_F64";
   std::string src_file_name = src_data_root + case_name + ".cytnx";
   UniTensor src_T = UniTensor::Load(src_file_name);
   //get S, U, VT
-  std::vector<UniTensor> svdsUV = linalg::Svd(src_T, need_U = true, need_VT = true);
+  // std::vector<UniTensor> svdsUV = linalg::Svd(src_T, need_U = true, need_VT = true);
+  // EXPECT_EQ(svdsUV.size(), 3) << "The number of the output of svd not correct. Line:"
+  //     << __LINE__ << std::endl;
+  std::vector<UniTensor> svdsUV = linalg::Svd(src_T, compute_uv = true);
   EXPECT_EQ(svdsUV.size(), 3) << "The number of the output of svd not correct. Line:"
       << __LINE__ << std::endl;
 
-  //get only S, U
-  std::vector<UniTensor> svdsU = linalg::Svd(src_T, need_U = true, need_VT = false);
-  EXPECT_EQ(svdsU.size(), 2) << "The number of the output of svd not correct. Line:"
-      << __LINE__ << std::endl;
-  EXPECT_TRUE(AreEqUniTensor(svdsU[0], svdsUV[0])) << "In the svd, output 'S' not"
-      " correct. Line: " << __LINE__ << std::endl;
-  EXPECT_TRUE(AreEqUniTensor(svdsU[1], svdsUV[1])) << "In the svd, output 'U' not"
-      " correct. Line: " << __LINE__ << std::endl;
+  // //get only S, U
+  // std::vector<UniTensor> svdsU = linalg::Svd(src_T, need_U = true, need_VT = false);
+  // EXPECT_EQ(svdsU.size(), 2) << "The number of the output of svd not correct. Line:"
+  //     << __LINE__ << std::endl;
+  // EXPECT_TRUE(AreEqUniTensor(svdsU[0], svdsUV[0])) << "In the svd, output 'S' not"
+  //     " correct. Line: " << __LINE__ << std::endl;
+  // EXPECT_TRUE(AreEqUniTensor(svdsU[1], svdsUV[1])) << "In the svd, output 'U' not"
+  //     " correct. Line: " << __LINE__ << std::endl;
 
-  //get only S, VT
-  std::vector<UniTensor> svdsV = linalg::Svd(src_T, need_U = false, need_VT = true);
-  EXPECT_EQ(svdsV.size(), 2) << "The number of the output of svd not correct. Line:"
-      << __LINE__ << std::endl;
-  EXPECT_TRUE(AreEqUniTensor(svdsV[0], svdsUV[0])) << "In the svd, output 'S' not"
-      " correct. Line: " << __LINE__ << std::endl;
-  EXPECT_TRUE(AreEqUniTensor(svdsV[1], svdsUV[2])) << "In the svd, output 'VT' not"
-      " correct. Line: " << __LINE__ << std::endl;
+  // //get only S, VT
+  // std::vector<UniTensor> svdsV = linalg::Svd(src_T, need_U = false, need_VT = true);
+  // EXPECT_EQ(svdsV.size(), 2) << "The number of the output of svd not correct. Line:"
+  //     << __LINE__ << std::endl;
+  // EXPECT_TRUE(AreEqUniTensor(svdsV[0], svdsUV[0])) << "In the svd, output 'S' not"
+  //     " correct. Line: " << __LINE__ << std::endl;
+  // EXPECT_TRUE(AreEqUniTensor(svdsV[1], svdsUV[2])) << "In the svd, output 'VT' not"
+  //     " correct. Line: " << __LINE__ << std::endl;
 
   //get only S
-  std::vector<UniTensor> svdsS = linalg::Svd(src_T, need_U = false, need_VT = false);
+  // std::vector<UniTensor> svdsS = linalg::Svd(src_T, need_U = false, need_VT = false);
+  // EXPECT_EQ(svdsS.size(), 1) << "The number of the output of svd not correct. Line:"
+  //     << __LINE__ << std::endl;
+  std::vector<UniTensor> svdsS = linalg::Svd(src_T, compute_uv = false);
   EXPECT_EQ(svdsS.size(), 1) << "The number of the output of svd not correct. Line:"
       << __LINE__ << std::endl;
 
@@ -295,9 +302,14 @@ TEST(Svd, err_bool_type_UT) {
   std::vector<std::string> labels = {};
   auto src_T = UniTensor(bonds, labels, row_rank, Type.Bool, Device.cpu, false);
   InitUniTensorUniform(src_T);
-  bool need_U, need_VT;
+  // bool need_U, need_VT;
+  bool compute_uv;
+  // EXPECT_THROW({
+  //   std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
+  // }, std::logic_error) << "Should throw error when input bool type unitensor but not."
+  //     " Line:" << __LINE__ << std::endl;
   EXPECT_THROW({
-    std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
+    std::vector<UniTensor> svds = linalg::Svd(src_T, compute_uv = true);
   }, std::logic_error) << "Should throw error when input bool type unitensor but not."
       " Line:" << __LINE__ << std::endl;
 }
@@ -404,14 +416,15 @@ bool CheckResult(const std::string& case_name) {
   std::string src_file_name = src_data_root + case_name + ".cytnx";
   //anscer file
   std::string ans_file_name = ans_data_root + case_name + ".cytnx";
-  bool need_U, need_VT;
+  // bool need_U, need_VT;
+  bool compute_uv;
   UniTensor src_T = UniTensor::Load(src_file_name);
   UniTensor ans_T = UniTensor::Load(ans_file_name); //sigular values UniTensor
 
   src_T.print_diagram(true);
    
   //Do svd
-  std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
+  std::vector<UniTensor> svds = linalg::Svd(src_T, compute_uv = true);
 
   //check labels
   if (!(CheckLabels(src_T, svds))) {

@@ -344,8 +344,8 @@ namespace cytnx {
       }  // r->l
 
       this->mps.data()[0].set_rowrank(1);
-      auto tout = linalg::Svd(this->mps.data()[0], false, true);
-      this->mps.data()[0] = tout[1];
+      auto tout = linalg::Svd(this->mps.data()[0], true);
+      this->mps.data()[0] = tout[2];
       this->mps.S_loc() = -1;
 
       // a.2 Optimize from left-to-right:
@@ -456,7 +456,7 @@ namespace cytnx {
       }
 
       this->mps.data().back().set_rowrank(2);
-      tout = linalg::Svd(this->mps.data().back(), true, false);  // last one.
+      tout = linalg::Svd(this->mps.data().back(), true);  // last one.
       this->mps.data().back() = tout[1];
       this->mps.S_loc() = this->mps.data().size();
 
@@ -587,8 +587,8 @@ namespace cytnx {
       }  // r->l
 
       this->mps.data()[0].set_rowrank(1);
-      auto tout = linalg::Svd(this->mps.data()[0], false, true);
-      this->mps.data()[0] = tout[1];
+      auto tout = linalg::Svd(this->mps.data()[0], true);
+      this->mps.data()[0] = tout[2];
       this->mps.S_loc() = -1;
 
       // a.2 Optimize from left-to-right:
@@ -697,7 +697,7 @@ namespace cytnx {
       }
 
       this->mps.data().back().set_rowrank(2);
-      tout = linalg::Svd(this->mps.data().back(), true, false);  // last one.
+      tout = linalg::Svd(this->mps.data().back(), true);  // last one.
       this->mps.data().back() = tout[1];
       this->mps.S_loc() = this->mps.data().size();
 

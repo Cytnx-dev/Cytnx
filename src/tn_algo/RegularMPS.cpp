@@ -216,7 +216,7 @@ namespace cytnx {
         auto vt = out[2];
         this->_TNs[p + 1] = Contract(Contract(s, vt), this->_TNs[p + 1]);
       }
-      auto out = linalg::Svd(this->_TNs.back(), true, false);
+      auto out = linalg::Svd(this->_TNs.back(), true);
       this->_TNs.back() = out[1];
       this->S_loc = this->_TNs.size();
     }

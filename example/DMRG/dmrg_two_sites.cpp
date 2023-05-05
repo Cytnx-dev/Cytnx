@@ -70,7 +70,7 @@ std::vector<UniTensor> DMRG(std::vector<UniTensor>& A, UniTensor& ML, UniTensor&
   }
 
   // SVD for the right boundary tensor A[Nsites-1], only save U (?)
-  A[Nsites - 1] = linalg::Svd(A[Nsites - 1], true, false)[1];
+  A[Nsites - 1] = linalg::Svd(A[Nsites - 1], true)[1];
 
   std::vector<cytnx_double> Ekeep(0);
 
@@ -126,7 +126,7 @@ std::vector<UniTensor> DMRG(std::vector<UniTensor>& A, UniTensor& ML, UniTensor&
 
     // SVD for the left boundary tensor, only save vT (?)
     A[0].set_rowrank(1);
-    A[0] = linalg::Svd(A[0], false, true)[1];  // shape[1,2,2], rowrank = 1
+    A[0] = linalg::Svd(A[0], true)[2];  // shape[1,2,2], rowrank = 1
 
     // Optimization sweep: left-to-right
     printf("\n L -> R \n");
@@ -180,7 +180,7 @@ std::vector<UniTensor> DMRG(std::vector<UniTensor>& A, UniTensor& ML, UniTensor&
 
     // SVD for the right boundary tensor, only save U (?)
     A[Nsites - 1].set_rowrank(2);
-    A[Nsites - 1] = linalg::Svd(A[Nsites - 1], true, false)[1];  // shape[1,2,2], rowrank = 2
+    A[Nsites - 1] = linalg::Svd(A[Nsites - 1], true)[1];  // shape[1,2,2], rowrank = 2
 
   }  // end of iteration for
 

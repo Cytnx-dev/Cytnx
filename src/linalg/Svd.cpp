@@ -10,7 +10,7 @@ using namespace std;
 namespace cytnx {
   namespace linalg {
 
-    std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) {
+    std::vector<Tensor> Svd(const Tensor &Tin, const bool &compute_uv) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Svd] error, Svd can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be contiguous. Call
@@ -27,11 +27,11 @@ namespace cytnx {
       S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
              in.device());  // if type is complex, S should be real
       // S.storage().set_zeros();
-      if (is_U) {
+      if (compute_uv) {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         // U.storage().set_zeros();
       }
-      if (is_vT) {
+      if (compute_uv) {
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         // vT.storage().set_zeros();
       }
@@ -46,8 +46,8 @@ namespace cytnx {
 
         std::vector<Tensor> out;
         out.push_back(S);
-        if (is_U) out.push_back(U);
-        if (is_vT) out.push_back(vT);
+        if (compute_uv) out.push_back(U);
+        if (compute_uv) out.push_back(vT);
 
         return out;
 
@@ -80,8 +80,7 @@ namespace cytnx {
   namespace linalg {
 
     // actual impls: 
-    void _svd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
-                                      const bool &is_vT){
+    void _svd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &compute_uv){
         //[Note] outCyT must be empty!    
     
         // DenseUniTensor:
@@ -105,7 +104,7 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
         tmp.reshape_({rowdim, -1});
 
-        vector<Tensor> outT = cytnx::linalg::Svd(tmp, is_U, is_vT);
+        vector<Tensor> outT = cytnx::linalg::Svd(tmp, compute_uv);
         if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
         int t = 0;
@@ -121,7 +120,7 @@ namespace cytnx {
         Cy_S.put_block_(outT[t]);
         t++;
         
-        if (is_U) {
+        if (compute_uv) {
           cytnx::UniTensor &Cy_U = outCyT[t];
           vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
           shapeU.push_back(-1);
@@ -132,7 +131,7 @@ namespace cytnx {
           Cy_U.set_labels(labelU);
           t++;  // U
         }
-        if (is_vT) {
+        if (compute_uv) {
           cytnx::UniTensor &Cy_vT = outCyT[t];
           vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
           shapevT[0] = -1;
@@ -152,7 +151,7 @@ namespace cytnx {
         if (Tin.is_tag()) {
           Cy_S.tag();
           t = 1;
-          if (is_U) {
+          if (compute_uv) {
             cytnx::UniTensor &Cy_U = outCyT[t];
             Cy_U._impl->_is_tag = true;
             for (int i = 0; i < Cy_U.rowrank(); i++) {
@@ -162,7 +161,7 @@ namespace cytnx {
             Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
             t++;
           }
-          if (is_vT) {
+          if (compute_uv) {
             cytnx::UniTensor &Cy_vT = outCyT[t];
             Cy_vT._impl->_is_tag = true;
             Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
@@ -178,8 +177,7 @@ namespace cytnx {
         
     }
 
-    void _svd_Sparse_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
-                                      const bool &is_vT){
+    void _svd_Sparse_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &compute_uv){
         //[NOTE] outCyT must be empty vector!        
 
         // cytnx_error_msg(true,"[Svd][Developing] Svd for SparseUniTensor is developing.%s","\n");
@@ -207,8 +205,8 @@ namespace cytnx {
         std::vector<Tensor> sls(comm_qnums.size());
         std::vector<Tensor> vTls;
 
-        if (is_U) Uls.resize(comm_qnums.size());
-        if (is_vT) vTls.resize(comm_qnums.size());
+        if (compute_uv) Uls.resize(comm_qnums.size());
+        if (compute_uv) vTls.resize(comm_qnums.size());
 
         std::vector<Tensor> &i_blocks = ipt.get_blocks_();
         // std::vector<cytnx_uint64> degs(comm_qnums.size()); //deg of each blocks
@@ -218,7 +216,7 @@ namespace cytnx {
         for (int blk = 0; blk < comm_qnums.size(); blk++) {
           // std::cout << "QN block: " << blk << std::endl;
           int idd = 0;
-          auto out = linalg::Svd(i_blocks[blk], is_U, is_vT);
+          auto out = linalg::Svd(i_blocks[blk], compute_uv);
 
           sls[blk] = out[idd];
           cytnx_uint64 deg = sls[blk].shape()[0];
@@ -229,11 +227,11 @@ namespace cytnx {
           tmp_qns.insert(tmp_qns.end(), this_qnums.begin(), this_qnums.end());
 
           idd++;
-          if (is_U) {
+          if (compute_uv) {
             Uls[blk] = out[idd];
             idd++;
           }
-          if (is_vT) {
+          if (compute_uv) {
             vTls[blk] = out[idd];
           }
 
@@ -274,7 +272,7 @@ namespace cytnx {
         s._impl = boost::intrusive_ptr<UniTensor_base>(tmps);
         outCyT.push_back(s);
 
-        if (is_U) {
+        if (compute_uv) {
           SparseUniTensor *tmpu = new SparseUniTensor();
           std::vector<string> LBLS = vec_clone(oldlabel, ipt.rowrank());
           LBLS.push_back(s.labels()[0]);
@@ -293,7 +291,7 @@ namespace cytnx {
           outCyT.push_back(u);
         }
 
-        if (is_vT) {
+        if (compute_uv) {
           SparseUniTensor *tmpv = new SparseUniTensor();
           std::vector<string> LBLS(ipt.rank() - ipt.rowrank() + 1);  // old_label,ipt.rowrank());
           // LBLS[0] = newlbl - 1;
@@ -318,8 +316,7 @@ namespace cytnx {
 
     }; // _svd_Sparse_UT
     
-    void _svd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
-                                      const bool &is_vT){
+    void _svd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &compute_uv){
 
         // outCyT must be empty and Tin must be checked with proper rowrank!
 
@@ -419,12 +416,12 @@ namespace cytnx {
             
             // Now we can perform linalg!
             aux_qnums.push_back(x.first);
-            auto out = linalg::Svd(BTen, is_U, is_vT);
+            auto out = linalg::Svd(BTen, compute_uv);
             aux_degs.push_back(out[0].shape()[0]);
             S_blocks.push_back(out[0]);
             tr=1;
 
-            if(is_U){
+            if(compute_uv){
                 //std::cout << row_szs << std::endl;
                 //std::cout << out[tr].shape() << std::endl;
                 std::vector<cytnx_uint64> split_dims;
@@ -451,7 +448,7 @@ namespace cytnx {
                 tr++;
             }// is_U
 
-            if(is_vT){
+            if(compute_uv){
                 
                 std::vector<cytnx_uint64> split_dims;
                 for(int i=0;i<Cblk_dim;i++){
@@ -499,7 +496,7 @@ namespace cytnx {
         
         outCyT.push_back(S);
 
-        if(is_U){
+        if(compute_uv){
             BlockUniTensor *U_ptr = new BlockUniTensor();
             for(int i=0;i<Tin.rowrank();i++){
                 U_ptr->_bonds.push_back(Tin.bonds()[i].clone());
@@ -517,7 +514,7 @@ namespace cytnx {
             outCyT.push_back(U);
         } 
 
-        if(is_vT){
+        if(compute_uv){
             BlockUniTensor *vT_ptr = new BlockUniTensor();
             vT_ptr->_bonds.push_back(Bd_aux);
             vT_ptr->_labels.push_back("_aux_R");
@@ -544,8 +541,7 @@ namespace cytnx {
     } // _svd_Block_UT
 
 
-    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U,
-                                      const bool &is_vT) {
+    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &compute_uv) {
 
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
@@ -556,13 +552,13 @@ namespace cytnx {
       
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _svd_Dense_UT(outCyT, Tin, is_U,is_vT);
+        _svd_Dense_UT(outCyT, Tin, compute_uv);
 
       } else if (Tin.uten_type() == UTenType.Block){
-        _svd_Block_UT(outCyT, Tin, is_U,is_vT);
+        _svd_Block_UT(outCyT, Tin, compute_uv);
 
       }  else {
-        _svd_Sparse_UT(outCyT, Tin, is_U,is_vT);
+        _svd_Sparse_UT(outCyT, Tin, compute_uv);
 
       }// is block form ?
 
