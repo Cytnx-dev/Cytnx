@@ -68,11 +68,11 @@ namespace cytnx {
           in.set_rowrank(mode[i]);
 
           if (truncate_dim.size() != 0) {
-            auto tsvdout = Svd_truncate(in, truncate_dim[i], true, false);
+            auto tsvdout = Svd_truncate(in, truncate_dim[i], true);
             out.push_back(tsvdout[1]);
             if (is_Ls) Ls.push_back(tsvdout[0]);
           } else {
-            auto tsvdout = Svd(in, true, false);
+            auto tsvdout = Svd(in, true);
             out.push_back(tsvdout[1]);
             if (is_Ls) Ls.push_back(tsvdout[0]);
           }

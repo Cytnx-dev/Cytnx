@@ -946,7 +946,7 @@ void tensor_binding(py::module &m){
            return self;
          })
     // linalg >>
-    .def("Svd", &cytnx::Tensor::Svd, py::arg("is_U") = true, py::arg("is_vT") = true)
+    .def("Svd", &cytnx::Tensor::Svd, py::arg("is_UvT") = true)
     .def("Eigh", &cytnx::Tensor::Eigh, py::arg("is_V") = true, py::arg("row_v") = false)
     .def("cInvM_", &cytnx::Tensor::InvM_)
     .def("InvM", &cytnx::Tensor::InvM)

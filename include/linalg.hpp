@@ -685,11 +685,9 @@ namespace cytnx {
     @brief Perform Singular-Value decomposition on a UniTensor using divide-and-conquer method.
     @details This function performs the Singular-Value decomposition on a UniTensor \p Tin.
     The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
-    refer to the documentation of the function Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
+    refer to the documentation of the function Svd(const Tensor &Tin, const bool &is_UvT).
     */
-    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_U = true,
-                                      const bool &is_vT = true);
-
+    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_UvT = true);
 
     /**
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
@@ -706,14 +704,33 @@ namespace cytnx {
      * do the truncation on the singular values. The result will depend on the rowrank of the UniTensor
      * \p Tin. For more details, please refer to the documentation of the function
      * Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, 
-     *              const bool &is_U, const bool &is_vT, const bool &return_err).
+     *              const bool &is_UvT, const bool &return_err).
      * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *                   const bool &is_U, const bool &is_vT, const bool &return_err)
+     *                   const bool &is_UvT, const bool &return_err)
      */
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err = 0,
-                                               const bool &is_U = true, const bool &is_vT = true,
+                                               const bool &is_UvT = true,
                                                const bool &return_err = false);
+
+
+    /**
+     * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
+     * @details This function performs the Singular-Value decomposition on a UniTensor \p Tin and
+     * do the truncation on the singular values. The result will depend on the rowrank of the UniTensor
+     * \p Tin. For more details, please refer to the documentation of the function
+     * GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, 
+     *              const bool &is_U, const bool &is_vT, const bool &return_err).
+     * @see GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
+     *                   const bool &is_U, const bool &is_vT, const bool &return_err)
+     */
+    std::vector<cytnx::UniTensor> GeSvd_truncate(const cytnx::UniTensor &Tin,
+                                               const cytnx_uint64 &keepdim, const double &err = 0,
+                                               const bool &is_U = true, const bool &is_vT=true,
+                                               const bool &return_err = false);
+
+
+
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
       const bool &is_core = true, const bool &is_Ls = false,
@@ -1435,26 +1452,24 @@ namespace cytnx {
     non-negative diagonal matrix.
 
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
-    @param[in] is_U whether need to return a left unitary matrix.
-    @param[in] is_vT whether need to return a right unitary matrix.
+    @param[in] is_UvT whether need to return a left unitary matrix.
     @return 
     @parblock
     [std::vector<Tensors>]
 
     1. The first tensor is a 1-d tensor contanin the singular values
-    2. If \p is_U is true, then the tensor \f$ U \f$ will be pushed back to the vector.
-    3. If \p is_vT is true, then the tensor \f$ V^\dagger \f$ will be pushed back to the vector.
+    2. If \p is_UvT is true, then the tensors \f$ U,V^\dagger \f$ will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
-    @see \ref Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U, const bool &is_vT, const bool &return_err)
+    @see \ref Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT, const bool &return_err)
     "Svd_truncate"
     */
-    std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
+    std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT = true);
 
-    // Sdd:
+    // GeSvd:
     //==================================================
     /**
-    @brief Perform Singular-Value decomposition on a rank-2 Tensor (a @em matrix) using divid-and-conquer method.
+    @brief Perform Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
     @details This function will perform Singular-Value decomposition on a matrix (a rank-2
     Tensor). That means givent a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
@@ -1466,23 +1481,61 @@ namespace cytnx {
     non-negative diagonal matrix.
 
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
-    @param[in] is_UvT whether need to return left unitary matrix and right unitary matrix.
+    @param[in] is_U whether need to return left unitary matrix.
+    @param[in] is_vT whether need to return right unitary matrix
     @return 
     @parblock
     [std::vector<Tensors>]
 
     1. The first tensor is a 1-d tensor contanin the singular values
-    2. If \p is_UvT is true, then the tensor \f$ U \f$ and \f$ V^\dagger \f$ will be pushed back to the vector.
+    2. If \p is_U is true, then the tensor \f$ U \f$ will be pushed back to the vector, and if \p is_vT is true, \f$ V^\dagger \f$ will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
-    @see \ref Sdd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT, const bool &return_err)
-    "Sdd_truncate"
+    @see \ref GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U, const bool &is_vT, const bool &return_err)
+    "GeSvd_truncate"
     */
-    std::vector<Tensor> Sdd(const Tensor &Tin, const bool &is_UvT = true);
+    std::vector<Tensor> GeSvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
 
 
 
     // Svd_truncate:
+    //==================================================
+    /**
+    @brief Perform the truncate Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
+    @details This function will perform the truncate Singular-Value decomposition 
+    on a matrix (a rank-2 Tensor). It will perform the SVD first, and then truncate the
+    singular values to the given cutoff \p err. That means givent a matrix \p Tin as \f$ M \f$, 
+    then the result will be:
+    \f[
+    M = U S V^\dagger,
+    \f]
+    where \f$ S \f$ is a singular values matrix with the singular values truncated to the
+    given cutoff \p err. The dimension of \f$ S \f$ is at most \p keepdim. 
+
+    @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
+    @param[in] keepdim the number (at most) of singular values to keep.
+    @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
+    @param[in] is_UvT whether need to return a left unitary matrix and a right unitary matrix.
+    @param[in] return_err whether need to return the error. If \p return_err is \em true, then
+    the error will be pushed back to the vector. It is the smallest singular value in the
+    singular values matrix \f$ S \f$.
+    @return 
+    @parblock
+    [std::vector<Tensors>]
+
+    1. The first tensor is a 1-d tensor contanin the singular values
+    2. If \p is_UvT is true, then the tensor \f$ U,V^\dagger \f$ will be pushed back to the vector.
+    4. If \p return_err is true, then the error will be pushed back to the vector.
+    @endparblock
+    @pre The input tensor should be a rank-2 tensor (matrix).
+    @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
+    */
+    std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
+                                     const double &err = 0, const bool &is_UvT = true, 
+                                     const bool &return_err = false);
+
+
+    // GeSvd_truncate:
     //==================================================
     /**
     @brief Perform the truncate Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
@@ -1509,16 +1562,17 @@ namespace cytnx {
     [std::vector<Tensors>]
 
     1. The first tensor is a 1-d tensor contanin the singular values
-    2. If \p is_U is true, then the tensor \f$ U \f$ will be pushed back to the vector.
-    3. If \p is_vT is true, then the tensor \f$ V^\dagger \f$ will be pushed back to the vector.
+    2. If \p is_U is true, then the tensor \f$ U\f$ will be pushed back to the vector.
+    3. If \p is_U is true, then the tensor \f$ V^\dagger \f$ will be pushed back to the vector.
     4. If \p return_err is true, then the error will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
     */
-    std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                     const double &err = 0, const bool &is_U = true,
-                                     const bool &is_vT = true, const bool &return_err = false);
+    std::vector<Tensor> GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
+                                     const double &err = 0, const bool &is_U = true, const bool &is_vT = true,
+                                     const bool &return_err = false);
+
 
     // Hosvd:
     std::vector<Tensor> Hosvd(

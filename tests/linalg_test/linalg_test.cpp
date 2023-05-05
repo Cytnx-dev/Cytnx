@@ -1,7 +1,7 @@
 #include "linalg_test.h"
 
 TEST_F(linalg_Test, BkUt_Svd_truncate1){
-  std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true, true, true);
+  std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
   std::vector<double> vnm_S;
   for(size_t i = 0; i < res[0].shape()[0];i++)
     vnm_S.push_back((double)(res[0].at({i,i}).real()));
@@ -13,7 +13,7 @@ TEST_F(linalg_Test, BkUt_Svd_truncate1){
 }
 
 TEST_F(linalg_Test, BkUt_Svd_truncate2){
-  std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 1e-1, true, true, true);
+  std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 1e-1, true);
   std::vector<double> vnm_S;
   for(size_t i = 0; i < res[0].shape()[0];i++)
     vnm_S.push_back((double)(res[0].at({i,i}).real()));
@@ -31,7 +31,7 @@ TEST_F(linalg_Test, BkUt_Svd_truncate3){
   Bond L = Bond(BD_OUT,{Qs(-5),Qs(-3),Qs(-1),Qs(1),Qs(3),Qs(5)},{1,4,10,9,5,1});
   UniTensor cyT = UniTensor({I,J,K,L},{"a","b","c","d"},2,Type.Double,Device.cpu,false);
   auto cyT2 = UniTensor::Load(data_dir+"Svd_truncate/Svd_truncate2.cytnx");
-  std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true, true, true);
+  std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true);
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }
@@ -43,7 +43,7 @@ TEST_F(linalg_Test, BkUt_Svd_truncate4){
   Bond L = Bond(BD_OUT,{Qs(-4),Qs(-2),Qs(0),Qs(2),Qs(4),Qs(6)},{1,5,10,9,4,1});
   UniTensor cyT = UniTensor({I,J,K,L},{"a","b","c","d"},2,Type.Double,Device.cpu,false);
   cyT = UniTensor::Load(data_dir+"Svd_truncate/Svd_truncate3.cytnx");
-  std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true, true, true);
+  std::vector<UniTensor> res =  linalg::Svd_truncate(cyT, 30, 0, true);
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }

@@ -23,48 +23,64 @@ void linalg_binding(py::module &m){
   pybind11::module m_linalg = m.def_submodule("linalg", "linear algebra related.");
   m_linalg.def(
     "Svd",
-    [](const cytnx::Tensor &Tin, const bool &is_U, const bool &is_vT) {
-      return cytnx::linalg::Svd(Tin, is_U, is_vT);
-    },
-    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
-  m_linalg.def(
-    "Svd",
-    [](const cytnx::UniTensor &Tin, const bool &is_U, const bool &is_vT) {
-      return cytnx::linalg::Svd(Tin, is_U, is_vT);
-    },
-    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
-
-  m_linalg.def(
-    "Sdd",
     [](const cytnx::Tensor &Tin, const bool &is_UvT) {
       return cytnx::linalg::Svd(Tin, is_UvT);
     },
     py::arg("Tin"), py::arg("is_UvT") = true);
   m_linalg.def(
-    "Sdd",
+    "Svd",
     [](const cytnx::UniTensor &Tin, const bool &is_UvT) {
       return cytnx::linalg::Svd(Tin, is_UvT);
     },
     py::arg("Tin"), py::arg("is_UvT") = true);
 
+  m_linalg.def(
+    "GeSvd",
+    [](const cytnx::Tensor &Tin, const bool &is_U, const bool &is_vT) {
+      return cytnx::linalg::GeSvd(Tin, is_U, is_vT);
+    },
+    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT")=true);
+  m_linalg.def(
+    "GeSvd",
+    [](const cytnx::UniTensor &Tin, const bool &is_U, const bool &is_vT) {
+      return cytnx::linalg::GeSvd(Tin, is_U, is_vT);
+    },
+    py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT")=true);
+
 
   m_linalg.def(
-    "Svd_truncate",
+    "GeSvd_truncate",
     [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U,
        const bool &is_vT, const bool &return_err) {
-      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_U, is_vT, return_err);
+      return cytnx::linalg::GeSvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = false);
   m_linalg.def(
-    "Svd_truncate",
+    "GeSvd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U,
        const bool &is_vT, const bool &return_err) {
-      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_U, is_vT, return_err);
+      return cytnx::linalg::GeSvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0, py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = false);
   
+  m_linalg.def(
+    "Svd_truncate",
+    [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_UvT, const bool &return_err) {
+      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_UvT") = true,
+    py::arg("return_err") = false);
+  m_linalg.def(
+    "Svd_truncate",
+    [](const UniTensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_UvT, const bool &return_err) {
+      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0, py::arg("is_UvT") = true,
+    py::arg("return_err") = false);
+
+
   m_linalg.def("Eigh", &cytnx::linalg::Eigh, py::arg("Tin"), py::arg("is_V") = true,
                py::arg("row_v") = false);
   m_linalg.def("Eig", &cytnx::linalg::Eig, py::arg("Tin"), py::arg("is_V") = true,
