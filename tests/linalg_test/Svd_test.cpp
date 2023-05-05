@@ -239,7 +239,6 @@ TEST(Svd, err_dense_diag_test) {
   auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double,
                      cytnx::Device.cpu, is_diag);
   random::Make_uniform(T, 0, 10, 0);
-  std::cout << T << std::endl;
   EXPECT_THROW({
     std::vector<UniTensor> svds = linalg::Svd(T);
   }, std::logic_error);
@@ -407,8 +406,6 @@ bool CheckResult(const std::string& case_name) {
   bool need_U, need_VT;
   UniTensor src_T = UniTensor::Load(src_file_name);
   UniTensor ans_T = UniTensor::Load(ans_file_name); //sigular values UniTensor
-
-  src_T.print_diagram(true);
    
   //Do svd
   std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);

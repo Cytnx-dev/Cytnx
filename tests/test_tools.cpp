@@ -78,59 +78,91 @@ bool AreNearlyEqStorage(const Storage& stor1, const Storage& stor2,
         break;
       case Type.Float:
         for (cytnx_uint64 i = 0; i < size; i++) {
-          if (abs(stor1.at<cytnx_float>(i) - stor2.at<cytnx_float>(i)) > tol) 
+          if (abs(stor1.at<cytnx_float>(i) - stor2.at<cytnx_float>(i)) > tol){
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_float>(i) << " != " 
+                      << stor2.at<cytnx_float>(i) << std::endl;
             return false;
+		  }
         }
         break;
       case Type.Int64:
         for (cytnx_uint64 i = 0; i < size; i++) {
-          if (abs(stor1.at<cytnx_int64>(i) - stor2.at<cytnx_int64>(i)) > tol) 
+          if (abs(stor1.at<cytnx_int64>(i) - stor2.at<cytnx_int64>(i)) > tol) {
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_int64>(i) << " != " 
+                      << stor2.at<cytnx_int64>(i) << std::endl;
             return false;
+		  }
         }
         break;
       case Type.Uint64:
         for (cytnx_uint64 i = 0; i < size; i++) {
           if (abs(static_cast<double>(stor1.at<cytnx_uint64>(i)) - 
-                  static_cast<double>(stor2.at<cytnx_uint64>(i))) > tol) 
+                  static_cast<double>(stor2.at<cytnx_uint64>(i))) > tol) {
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_uint64>(i) << " != " 
+                      << stor2.at<cytnx_uint64>(i) << std::endl;
             return false;
+		  }
         }
         break;
       case Type.Int32:
         for (cytnx_uint64 i = 0; i < size; i++) {
-          if (abs(stor1.at<cytnx_int32>(i) - stor2.at<cytnx_int32>(i)) > tol) 
+          if (abs(stor1.at<cytnx_int32>(i) - stor2.at<cytnx_int32>(i)) > tol) {
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_int32>(i) << " != " 
+                      << stor2.at<cytnx_int32>(i) << std::endl;
             return false;
+		  }
         }
         break;
       case Type.Uint32:
         for (cytnx_uint64 i = 0; i < size; i++) {
           if (abs(static_cast<double>(stor1.at<cytnx_uint32>(i)) - 
-                  static_cast<double>(stor2.at<cytnx_uint32>(i))) > tol) 
+                  static_cast<double>(stor2.at<cytnx_uint32>(i))) > tol) {
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_uint32>(i) << " != " 
+                      << stor2.at<cytnx_uint32>(i) << std::endl;
             return false;
+		  }
         }
         break;
       case Type.Int16:
         for (cytnx_uint64 i = 0; i < size; i++) {
-          if (abs(stor1.at<cytnx_int16>(i) - stor2.at<cytnx_int16>(i)) > tol) 
+          if (abs(stor1.at<cytnx_int16>(i) - stor2.at<cytnx_int16>(i)) > tol) {
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_int16>(i) << " != " 
+                      << stor2.at<cytnx_int16>(i) << std::endl;
             return false;
+		  }
         }
         break;
       case Type.Uint16:
         for (cytnx_uint64 i = 0; i < size; i++) {
           if (abs(static_cast<double>(stor1.at<cytnx_uint16>(i)) - 
-                  static_cast<double>(stor2.at<cytnx_uint16>(i))) > tol) 
+                  static_cast<double>(stor2.at<cytnx_uint16>(i))) > tol) {
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_uint16>(i) << " != " 
+                      << stor2.at<cytnx_uint16>(i) << std::endl;
             return false;
+		  }
         }
         break;
       case Type.Bool:
         for (cytnx_uint64 i = 0; i < size; i++) {
           if (abs(static_cast<double>(stor1.at<cytnx_bool>(i)) - 
-                  static_cast<double>(stor2.at<cytnx_bool>(i))) > tol) 
+                  static_cast<double>(stor2.at<cytnx_bool>(i))) > tol) {
+            std::cout << "[AreNearlyEqStorage] element" << i << " : "
+                      << stor1.at<cytnx_bool>(i) << " != " 
+                      << stor2.at<cytnx_bool>(i) << std::endl;
             return false;
+		  }
         }
         break;
       default:
         cytnx_error_msg(true, "[ERROR] fatal internal, Storage has invalid type.%s", "\n");
-	return false;
+	    return false;
     }//switch
     return true;
   }//else
@@ -200,15 +232,26 @@ void InitTensorUniform(std::vector<Tensor>& Ts, unsigned int rand_seed) {
 
 //comparison
 bool AreNearlyEqTensor(const Tensor& T1, const Tensor& T2, const cytnx_double tol) {
-  if (T1.device() != T2.device())
+  if (T1.device() != T2.device()) {
+    std::cout << "[AreNearlyEqTensor] T1 device " << T1.device() 
+			  << "not equal to T2 device " << T2.device() << std::endl;
     return false;
-  if (T1.dtype() != T2.dtype())
+  }
+  if (T1.dtype() != T2.dtype()) {
+    std::cout << "[AreNearlyEqTensor] T1 dtype " << T1.dtype() 
+			  << "not equal to T2 dtype " << T2.dtype() << std::endl;
     return false;
-  if (T1.shape() != T2.shape())
+  }
+  if (T1.shape() != T2.shape()) {
+    std::cout << "[AreNearlyEqTensor] T1 shape " << T1.shape() 
+			  << "not equal to T2 shape " << T2.shape() << std::endl;
     return false;
-  if (T1.is_contiguous() != T2.is_contiguous())
+  }
+  if (T1.is_contiguous() != T2.is_contiguous()) {
+    std::cout << "[AreNearlyEqTensor] T1 contiguous flag " << T1.is_contiguous() 
+			  << "not equal to T2 flag " << T2.is_contiguous() << std::endl;
     return false;
-
+  }
   return AreNearlyEqStorage(T1.storage(), T2.storage(), tol);
 }
 
@@ -219,10 +262,16 @@ bool AreEqTensor(const Tensor& T1, const Tensor& T2) {
 
 bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
                  const Tensor& T2, const std::vector<cytnx_uint64>& idices2) {
-  if(T1.dtype() != T2.dtype())
+  if (T1.dtype() != T2.dtype()) {
+    std::cout << "[AreElemSame] T1 dtype " << T1.dtype() 
+			  << "not equal to T2 dtype " << T2.dtype() << std::endl;
     return false;
-  if(T1.device() != T2.device())
+  }
+  if (T1.device() != T2.device()) {
+    std::cout << "[AreElemSame] T1 device " << T1.device() 
+			  << "not equal to T2 device " << T2.device() << std::endl;
     return false;
+  }
   //we don't need to check tensor shape here because we want to compare the
   //  different shape result elements.
   try {
@@ -232,57 +281,97 @@ bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
       case Type.ComplexDouble: {
         auto t1_val = T1.at<std::complex<double>>(idices1);
         auto t2_val = T2.at<std::complex<double>>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.ComplexFloat: {
         auto t1_val = T1.at<std::complex<float>>(idices1);
         auto t2_val = T2.at<std::complex<float>>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Double: {
         auto t1_val = T1.at<double>(idices1);
         auto t2_val = T2.at<double>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Float: {
         auto t1_val = T1.at<float>(idices1);
         auto t2_val = T2.at<float>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Int64: {
         auto t1_val = T1.at<int64_t>(idices1);
         auto t2_val = T2.at<int64_t>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Uint64: {
         auto t1_val = T1.at<uint64_t>(idices1);
         auto t2_val = T2.at<uint64_t>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Int32: {
         auto t1_val = T1.at<int32_t>(idices1);
         auto t2_val = T2.at<int32_t>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Uint32: {
         auto t1_val = T1.at<uint32_t>(idices1);
         auto t2_val = T2.at<uint32_t>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Int16: {
@@ -295,18 +384,29 @@ bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
       case Type.Uint16: {
         auto t1_val = T1.at<uint16_t>(idices1);
         auto t2_val = T2.at<uint16_t>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       case Type.Bool: {
         auto t1_val = T1.at<bool>(idices1);
         auto t2_val = T2.at<bool>(idices2);
-        if(t1_val != t2_val)
+        if(t1_val != t2_val) {
+          std::cout << "[AreElemSame]" 
+				    << "T1[" << idices1 << "] = " << t1_val <<", "
+				    << "T2[" << idices2 << "] = " << t2_val
+				    << ", not same." << std::endl;
           return false;
+		}
         break;
       }
       default:
+		std::cout << "[AreElemSame] wrong input type" << std::endl;
         return false;
     } //switch
   } //try
@@ -320,15 +420,18 @@ bool AreElemSame(const Tensor& T1, const std::vector<cytnx_uint64>& idices1,
 bool AreNearlyEqUniTensor(const UniTensor& Ut1, const UniTensor& Ut2, 
                           const cytnx_double tol) {
   if (Ut1.uten_type() != Ut2.uten_type()){
-    std::cout << "[AreNearlyEqUniTensor] uten_type not the same. " << Ut1.uten_type() << " " << Ut2.uten_type() << std::endl;
+    std::cout << "[AreNearlyEqUniTensor] uten_type not the same. " 
+		<< Ut1.uten_type() << " " << Ut2.uten_type() << std::endl;
     return false;
   }
   //dense
   if (Ut1.uten_type() == UTenType.Dense) {
     Tensor block1 = Ut1.get_block();
-    Tensor block2 = Ut1.get_block();
-    if (!AreNearlyEqTensor(block1, block2, tol))
+    Tensor block2 = Ut2.get_block();
+    if (!AreNearlyEqTensor(block1, block2, tol)) {
+      std::cout << "[AreNearlyEqUniTensor] two block not the same. " << std::endl;
       return false;
+	}
   } 
   // block
   else if (Ut1.uten_type() == UTenType.Block) {

@@ -27,6 +27,9 @@ class TestFailMsg {
   void AppendMsg(const std::string& fail_msg) {
     fail_msgs.push_back(fail_msg);
   }
+  bool is_empty() { 
+	return !(test_case.empty() && fail_msgs.empty());
+  };
   std::string TraceFailMsgs();
 };
 
