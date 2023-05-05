@@ -113,9 +113,13 @@ There are two methods how you can set-up all the dependencies before starting th
 
 4. In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:
 
+.. .. code-block:: shell
+
+..     $conda install cudatoolkit cudatoolkit-dev 
+
 .. code-block:: shell
 
-    $conda install cudatoolkit cudatoolkit-dev 
+    $conda conda install -c nvidia cuda
 
 
 **Option B. Install deps via system package manager**
