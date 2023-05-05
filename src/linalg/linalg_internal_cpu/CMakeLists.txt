@@ -28,7 +28,7 @@ target_sources_local(cytnx
     Sub_internal.hpp
     iSub_internal.hpp
     Svd_internal.hpp
-    Sdd_internal.hpp
+    GeSvd_internal.hpp
     Tridiag_internal.hpp
     Trace_internal.hpp
     Vectordot_internal.hpp
@@ -70,7 +70,7 @@ target_sources_local(cytnx
     Sub_internal.cpp
     iSub_internal.cpp
     Svd_internal.cpp
-    Sdd_internal.cpp
+    GeSvd_internal.cpp
     Vectordot_internal.cpp
     Norm_internal.cpp
     Pow_internal.cpp

@@ -44,7 +44,7 @@ target_sources_local(cytnx
     Sub.cpp
     iSub.cpp
     Svd.cpp
-    Sdd.cpp
+    GeSvd.cpp
     Svd_truncate.cpp
     Gemm.cpp
     Tensordot.cpp
