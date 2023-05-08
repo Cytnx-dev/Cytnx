@@ -103,8 +103,12 @@ To perform the contraction and get the outcome, we use the Launch():
 
     UniTensor Res = N.Launch(true)
 
-Note that if the argument optimal = True, the contraction ORDER is always auto-optimized.
-If optimal = False, the specified ORDER in network file will be used, otherwise contract one by one in sequence.
+Here if the argument **optimal = True**, the contraction order is always auto-optimized.
+If **optimal = False**, the specified ORDER in network file will be used, if there is even no specified order, tensors are contracted one by one in sequence.
+
+
+.. Note::
+    The auto-optimized contraction order obtained by calling **.Launch(optimal = True)** will save in the Network object, so if there is no need to re-optimize the order (i.e. Bond dimensions of the input tensors remain the same.), next time when we call **.Launch()** again, we should set **optimal = False** to avoid the overhead of recalculating the optimal order.
 
 Network from string
 ********************
