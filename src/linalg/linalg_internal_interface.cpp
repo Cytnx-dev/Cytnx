@@ -294,12 +294,12 @@ namespace cytnx {
       Sdd_ii[Type.Float] = Sdd_internal_f;
 
       //=====================
-      GeSvd_ii = vector<Svdfunc_oii>(5);
+      Gesvd_ii = vector<Svdfunc_oii>(5);
 
-      GeSvd_ii[Type.ComplexDouble] = GeSvd_internal_cd;
-      GeSvd_ii[Type.ComplexFloat] = GeSvd_internal_cf;
-      GeSvd_ii[Type.Double] = GeSvd_internal_d;
-      GeSvd_ii[Type.Float] = GeSvd_internal_f;
+      Gesvd_ii[Type.ComplexDouble] = Gesvd_internal_cd;
+      Gesvd_ii[Type.ComplexFloat] = Gesvd_internal_cf;
+      Gesvd_ii[Type.Double] = Gesvd_internal_d;
+      Gesvd_ii[Type.Float] = Gesvd_internal_f;
 
 
       //=====================

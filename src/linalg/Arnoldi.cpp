@@ -197,20 +197,20 @@ namespace cytnx {
       // check type:
       cytnx_error_msg(
         !Type.is_float(Hop->dtype()),
-        "[ERROR][Lanczos] Lanczos can only accept operator with floating types (complex/real)%s",
+        "[ERROR][Arnoldi] Arnoldi can only accept operator with floating types (complex/real)%s",
         "\n");
 
       //check which
       std::vector<std::string> accept_which = {"LM", "LR", "LI", "SM", "SR", "SI"};
       if (std::find(accept_which.begin(), accept_which.end(), which) ==  accept_which.end()) {
-        cytnx_error_msg(true, "[ERROR][Lanczos] 'which' should be 'LM', 'LR, 'LI'"
+        cytnx_error_msg(true, "[ERROR][Arnoldi] 'which' should be 'LM', 'LR, 'LI'"
 			", 'SM', 'SR, 'SI'", "\n");
       }
 
       /// check k
-      cytnx_error_msg(k < 1, "[ERROR][Lanczos] k should be >0%s", "\n");
+      cytnx_error_msg(k < 1, "[ERROR][Arnoldi] k should be >0%s", "\n");
       cytnx_error_msg(k > Hop->nx(),
-                      "[ERROR][Lanczos] k can only be up to total dimension of input vector D%s",
+                      "[ERROR][Arnoldi] k can only be up to total dimension of input vector D%s",
                       "\n");
 
       // check Tin should be rank-1:
@@ -219,14 +219,14 @@ namespace cytnx {
         _T_init =
           cytnx::random::normal({Hop->nx()}, Hop->dtype(), Hop->device());  // randomly initialize.
       } else {
-        cytnx_error_msg(T_init.shape().size() != 1, "[ERROR][Lanczos] Tin should be rank-1%s", "\n");
+        cytnx_error_msg(T_init.shape().size() != 1, "[ERROR][Arnoldi] Tin should be rank-1%s", "\n");
         cytnx_error_msg(T_init.shape()[0] != Hop->nx(),
-                        "[ERROR][Lanczos] Tin should have dimension consistent with Hop: [%d] %s",
+                        "[ERROR][Arnoldi] Tin should have dimension consistent with Hop: [%d] %s",
                         Hop->nx(), "\n");
         _T_init = T_init.astype(Hop->dtype());
       }
 
-      cytnx_error_msg(cvg_crit <= 0, "[ERROR][Lanczos] cvg_crit should be > 0%s", "\n");
+      cytnx_error_msg(cvg_crit <= 0, "[ERROR][Arnoldi] cvg_crit should be > 0%s", "\n");
       double _cvgcrit = cvg_crit;
       cytnx_uint64 output_size = is_V ? 2 : 1;
       auto out = std::vector<Tensor>(output_size, Tensor());

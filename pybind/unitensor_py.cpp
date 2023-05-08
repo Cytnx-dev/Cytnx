@@ -99,6 +99,36 @@ void f_UniTensor_setelem_scal_cf(UniTensor &self, const std::vector<cytnx_uint64
 
 
 void unitensor_binding(py::module &m){
+
+  py::class_<cHclass>(m,"Helpclass")
+    .def("exists",&cHclass::exists)
+    .def("dtype",&cHclass::dtype)
+    .def("get_elem_d",&cHclass::get_elem_d)
+    .def("get_elem_f",&cHclass::get_elem_f)
+    .def("get_elem_cd",&cHclass::get_elem_cd)
+    .def("get_elem_cf",&cHclass::get_elem_cf)
+    .def("get_elem_i64",&cHclass::get_elem_i64)
+    .def("get_elem_u64",&cHclass::get_elem_u64)
+    .def("get_elem_i32",&cHclass::get_elem_i32)
+    .def("get_elem_u32",&cHclass::get_elem_u32)
+    .def("get_elem_i16",&cHclass::get_elem_i16)
+    .def("get_elem_u16",&cHclass::get_elem_u16)
+    .def("get_elem_b",&cHclass::get_elem_b)
+    
+    .def("set_elem",&cHclass::set_elem<double>)
+    .def("set_elem",&cHclass::set_elem<float>)
+    .def("set_elem",&cHclass::set_elem<cytnx_complex128>)
+    .def("set_elem",&cHclass::set_elem<cytnx_complex64>)
+    .def("set_elem",&cHclass::set_elem<cytnx_uint64>)
+    .def("set_elem",&cHclass::set_elem<cytnx_int64>)
+    .def("set_elem",&cHclass::set_elem<cytnx_uint32>)
+    .def("set_elem",&cHclass::set_elem<cytnx_int32>)
+    .def("set_elem",&cHclass::set_elem<cytnx_uint16>)
+    .def("set_elem",&cHclass::set_elem<cytnx_int16>)
+    .def("set_elem",&cHclass::set_elem<cytnx_bool>)
+  ;
+
+
   // entry.UniTensor
   py::class_<UniTensor>(m, "UniTensor")
     .def(py::init<>())

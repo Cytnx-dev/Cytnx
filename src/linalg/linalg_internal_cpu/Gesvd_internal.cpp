@@ -1,4 +1,4 @@
-#include "GeSvd_internal.hpp"
+#include "Gesvd_internal.hpp"
 #include "cytnx_error.hpp"
 #include "lapack_wrapper.hpp"
 
@@ -6,8 +6,8 @@ namespace cytnx {
 
   namespace linalg_internal {
 
-    /// GeSvd
-    void GeSvd_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
+    /// Gesvd
+    void Gesvd_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
                          boost::intrusive_ptr<Storage_base> &U,
                          boost::intrusive_ptr<Storage_base> &vT,
                          boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
@@ -36,7 +36,7 @@ namespace cytnx {
       free(Mij);
       free(superb);
     }
-    void GeSvd_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
+    void Gesvd_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
                          boost::intrusive_ptr<Storage_base> &U,
                          boost::intrusive_ptr<Storage_base> &vT,
                          boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
@@ -65,7 +65,7 @@ namespace cytnx {
       free(Mij);
       free(superb);
     }
-    void GeSvd_internal_d(const boost::intrusive_ptr<Storage_base> &in,
+    void Gesvd_internal_d(const boost::intrusive_ptr<Storage_base> &in,
                         boost::intrusive_ptr<Storage_base> &U,
                         boost::intrusive_ptr<Storage_base> &vT,
                         boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
@@ -92,7 +92,7 @@ namespace cytnx {
       free(superb);
       free(Mij);
     }
-    void GeSvd_internal_f(const boost::intrusive_ptr<Storage_base> &in,
+    void Gesvd_internal_f(const boost::intrusive_ptr<Storage_base> &in,
                         boost::intrusive_ptr<Storage_base> &U,
                         boost::intrusive_ptr<Storage_base> &vT,
                         boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,

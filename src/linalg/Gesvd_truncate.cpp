@@ -8,10 +8,10 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
-    std::vector<Tensor> GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
+    std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err, const bool &is_U, const bool &is_vT,
                                      const bool &return_err) {
-      std::vector<Tensor> tmps = GeSvd(Tin, is_U,is_vT);
+      std::vector<Tensor> tmps = Gesvd(Tin, is_U,is_vT);
 
       cytnx_uint64 id = 0;
       cytnx_uint64 Kdim = keepdim;
@@ -86,7 +86,7 @@ namespace cytnx {
         tmp = tmp.reshape({rowdim, -1});
 
         vector<Tensor> outT =
-          cytnx::linalg::GeSvd_truncate(tmp, keepdim, err, is_U, is_vT, return_err);
+          cytnx::linalg::Gesvd_truncate(tmp, keepdim, err, is_U, is_vT, return_err);
 
         // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
 
@@ -184,7 +184,7 @@ namespace cytnx {
 
        cytnx_uint64 keep_dim = keepdim;
 
-       outCyT = linalg::GeSvd(Tin, is_U, is_vT); 
+       outCyT = linalg::Gesvd(Tin, is_U, is_vT); 
 
        // process truncate:
        // 1) concate all s vals from all blk
@@ -324,13 +324,13 @@ namespace cytnx {
     }
 
 
-    std::vector<cytnx::UniTensor> GeSvd_truncate(const cytnx::UniTensor &Tin,
+    std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
                                                const bool &is_U, const bool &is_vT,
                                                const bool &return_err) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank()==Tin.rank()),
-                      "[GeSvd][ERROR] GeSvd for UniTensor should have rank>1 and rank>rowrank>0%s",
+                      "[Gesvd][ERROR] Gesvd for UniTensor should have rank>1 and rank>rowrank>0%s",
                       "\n");
 
       std::vector<UniTensor> outCyT;
@@ -353,7 +353,7 @@ namespace cytnx {
       return outCyT;
 
 
-    }  // GeSvd_truncate
+    }  // Gesvd_truncate
 
   }  // namespace linalg
 }  // namespace cytnx

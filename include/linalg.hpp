@@ -693,9 +693,9 @@ namespace cytnx {
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
     @details This function performs the Singular-Value decomposition on a UniTensor \p Tin.
     The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
-    refer to the documentation of the function GeSvd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
+    refer to the documentation of the function Gesvd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
     */
-    std::vector<cytnx::UniTensor> GeSvd(const cytnx::UniTensor &Tin, const bool &is_U = true,
+    std::vector<cytnx::UniTensor> Gesvd(const cytnx::UniTensor &Tin, const bool &is_U = true,
                                       const bool &is_vT = true);
 
     /**
@@ -719,12 +719,12 @@ namespace cytnx {
      * @details This function performs the Singular-Value decomposition on a UniTensor \p Tin and
      * do the truncation on the singular values. The result will depend on the rowrank of the UniTensor
      * \p Tin. For more details, please refer to the documentation of the function
-     * GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, 
+     * Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, 
      *              const bool &is_U, const bool &is_vT, const bool &return_err).
-     * @see GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
+     * @see Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *                   const bool &is_U, const bool &is_vT, const bool &return_err)
      */
-    std::vector<cytnx::UniTensor> GeSvd_truncate(const cytnx::UniTensor &Tin,
+    std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err = 0,
                                                const bool &is_U = true, const bool &is_vT=true,
                                                const bool &return_err = false);
@@ -1466,7 +1466,7 @@ namespace cytnx {
     */
     std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT = true);
 
-    // GeSvd:
+    // Gesvd:
     //==================================================
     /**
     @brief Perform Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
@@ -1491,10 +1491,10 @@ namespace cytnx {
     2. If \p is_U is true, then the tensor \f$ U \f$ will be pushed back to the vector, and if \p is_vT is true, \f$ V^\dagger \f$ will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
-    @see \ref GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U, const bool &is_vT, const bool &return_err)
-    "GeSvd_truncate"
+    @see \ref Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U, const bool &is_vT, const bool &return_err)
+    "Gesvd_truncate"
     */
-    std::vector<Tensor> GeSvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
+    std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
 
 
 
@@ -1535,7 +1535,7 @@ namespace cytnx {
                                      const bool &return_err = false);
 
 
-    // GeSvd_truncate:
+    // Gesvd_truncate:
     //==================================================
     /**
     @brief Perform the truncate Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
@@ -1569,7 +1569,7 @@ namespace cytnx {
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
     */
-    std::vector<Tensor> GeSvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
+    std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err = 0, const bool &is_U = true, const bool &is_vT = true,
                                      const bool &return_err = false);
 

@@ -10,10 +10,10 @@ using namespace std;
 namespace cytnx {
   namespace linalg {
 
-    std::vector<Tensor> GeSvd(const Tensor &Tin, const bool &is_U, const bool &is_vT) {
+    std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U, const bool &is_vT) {
       cytnx_error_msg(Tin.shape().size() != 2,
-                      "[GeSvd] error, GeSvd can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[GeSvd] error tensor must be contiguous. Call
+                      "[Gesvd] error, Gesvd can only operate on rank-2 Tensor.%s", "\n");
+      // cytnx_error_msg(!Tin.is_contiguous(), "[Gesvd] error tensor must be contiguous. Call
       // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
@@ -37,10 +37,10 @@ namespace cytnx {
       }
 
       if (Tin.device() == Device.cpu) {
-        // cytnx::linalg_internal::lii.GeSvd_ii[in.dtype()](
+        // cytnx::linalg_internal::lii.Gesvd_ii[in.dtype()](
         //   in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
         //   S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
-        cytnx::linalg_internal::lii.GeSvd_ii[in.dtype()](
+        cytnx::linalg_internal::lii.Gesvd_ii[in.dtype()](
           in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
           S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
 
@@ -65,7 +65,7 @@ namespace cytnx {
 
         return out;
 #else
-        cytnx_error_msg(true, "[GeSvd] fatal error,%s",
+        cytnx_error_msg(true, "[Gesvd] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
 #endif
@@ -80,7 +80,7 @@ namespace cytnx {
   namespace linalg {
 
     // actual impls: 
-    void _GeSvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
+    void _Gesvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
                                       const bool &is_vT){
         //[Note] outCyT must be empty!    
     
@@ -105,7 +105,7 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
         tmp.reshape_({rowdim, -1});
 
-        vector<Tensor> outT = cytnx::linalg::GeSvd(tmp, is_U, is_vT);
+        vector<Tensor> outT = cytnx::linalg::Gesvd(tmp, is_U, is_vT);
         if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
         int t = 0;
@@ -178,11 +178,11 @@ namespace cytnx {
         
     }
 
-    void _GeSvd_Sparse_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
+    void _Gesvd_Sparse_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
                                       const bool &is_vT){
         //[NOTE] outCyT must be empty vector!        
 
-        // cytnx_error_msg(true,"[GeSvd][Developing] GeSvd for SparseUniTensor is developing.%s","\n");
+        // cytnx_error_msg(true,"[Gesvd][Developing] Gesvd for SparseUniTensor is developing.%s","\n");
 
         UniTensor ipt = Tin.contiguous();
 
@@ -202,7 +202,7 @@ namespace cytnx {
         // std::cout << Ubds << std::endl;
         // std::cout << vTbds << std::endl;
 
-        // now, calculate GeSvd for each blocks:
+        // now, calculate Gesvd for each blocks:
         std::vector<Tensor> Uls;
         std::vector<Tensor> sls(comm_qnums.size());
         std::vector<Tensor> vTls;
@@ -218,7 +218,7 @@ namespace cytnx {
         for (int blk = 0; blk < comm_qnums.size(); blk++) {
           // std::cout << "QN block: " << blk << std::endl;
           int idd = 0;
-          auto out = linalg::GeSvd(i_blocks[blk], is_U, is_vT);
+          auto out = linalg::Gesvd(i_blocks[blk], is_U, is_vT);
 
           sls[blk] = out[idd];
           cytnx_uint64 deg = sls[blk].shape()[0];
@@ -316,9 +316,9 @@ namespace cytnx {
         }
 
 
-    }; // _GeSvd_Sparse_UT
+    }; // _Gesvd_Sparse_UT
     
-    void _GeSvd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
+    void _Gesvd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin, const bool &is_U,
                                       const bool &is_vT){
 
         // outCyT must be empty and Tin must be checked with proper rowrank!
@@ -419,7 +419,7 @@ namespace cytnx {
             
             // Now we can perform linalg!
             aux_qnums.push_back(x.first);
-            auto out = linalg::GeSvd(BTen, is_U, is_vT);
+            auto out = linalg::Gesvd(BTen, is_U, is_vT);
             aux_degs.push_back(out[0].shape()[0]);
             S_blocks.push_back(out[0]);
             tr=1;
@@ -541,34 +541,34 @@ namespace cytnx {
 
 
 
-    } // _GeSvd_Block_UT
+    } // _Gesvd_Block_UT
 
 
-    std::vector<cytnx::UniTensor> GeSvd(const cytnx::UniTensor &Tin, const bool &is_U,
+    std::vector<cytnx::UniTensor> Gesvd(const cytnx::UniTensor &Tin, const bool &is_U,
                                       const bool &is_vT) {
 
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[GeSvd][ERROR] GeSvd for UniTensor should have rank>1 and rowrank>0%s",
+                      "[Gesvd][ERROR] Gesvd for UniTensor should have rank>1 and rowrank>0%s",
                       "\n");
 
-      cytnx_error_msg(Tin.is_diag(),"[GeSvd][ERROR] GeSvd for diagonal UniTensor is trivial and currently not support. Use other manipulation.%s","\n");
+      cytnx_error_msg(Tin.is_diag(),"[Gesvd][ERROR] Gesvd for diagonal UniTensor is trivial and currently not support. Use other manipulation.%s","\n");
       
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _GeSvd_Dense_UT(outCyT, Tin, is_U,is_vT);
+        _Gesvd_Dense_UT(outCyT, Tin, is_U,is_vT);
 
       } else if (Tin.uten_type() == UTenType.Block){
-        _GeSvd_Block_UT(outCyT, Tin, is_U,is_vT);
+        _Gesvd_Block_UT(outCyT, Tin, is_U,is_vT);
 
       }  else {
-        _GeSvd_Sparse_UT(outCyT, Tin, is_U,is_vT);
+        _Gesvd_Sparse_UT(outCyT, Tin, is_U,is_vT);
 
       }// is block form ?
 
       return outCyT;
 
-    }; // GeSvd
+    }; // Gesvd
 
 
 
