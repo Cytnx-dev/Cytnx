@@ -116,11 +116,12 @@ Getting a given block
 There are two ways to get a certain block from a UniTensor. 
 
 1. getting a block by their index in the current order
-
+   
 .. py:function:: UniTensor.get_block(index)
 
     :param [int] index: the index of the blocks in current UniTensor
 
+For example, if we want to get the 1-th block, then:
 
 .. code-block:: python
     :linenos:
@@ -144,6 +145,23 @@ There are two ways to get a certain block from a UniTensor.
 
     :param List[int] qindices: a list of integer specify the indices of qnums on each axis/leg. 
 
+    Alternatively, to get the 1-th block with qnums [Qs(1),Qs(-1),Qs(0)] on each leg, which corresponding to the Qn-indices [0,1,1], then: 
+
+.. code-block:: python
+    :linenos:
+
+    B1 = Td.get_block_([0,1,1])
+    print(B1)
+
+
+.. code-block:: text
+
+    Total elem: 2
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (1,1,2)
+    [[[0.00000e+00 0.00000e+00 ]]]
+
 
 .. Note:: 
     
@@ -151,82 +169,80 @@ There are two ways to get a certain block from a UniTensor.
 
     Note again that the blocks are nothing but the normal **Tensor** object, so we can manipulate it as we did to the Tensors, here we demostrate the usage of **.get_block_()**, since the return should be the reference, we can directly assign/modify the content of these blocks.
 
-[NEED MODIFY!!]
 
-* In python:
 
-.. code-block:: python
-    :linenos:
+Putting a given block
+************************
 
-    ## assign:
-    # Q = 2  # Q = 0:    # Q = -2:
-    # [1/4]    [[ -1/4, 1/2]     [1/4]
-    #         [  1/2, -1/4]]
+Sometimes, the application might require user to put data into a given symmetry block. To do this, one can make use of *put_block()*
 
-    H.get_block_([2])[0] = 1/4;
-    T0 = H.get_block_([0])
-    T0[0,0] = T0[1,1] = -1/4;
-    T0[0,1] = T0[1,0] = 1/2;
-    H.get_block_([-2])[0] = 1/4;
+1. put a block by their index in the current order
+   
+.. py:function:: UniTensor.put_block(Tn, index)
 
-Alternatively, the above can also be done by the **.put_block_()** or **.put_block()**, with the argument to be a tensor and a quantum number label to indicate
-which block to put in (replaced by the input tensor).
+    :param [int] index: the index of the blocks in current UniTensor
 
-* In python:
+For example, if we want to put the tensor into the 1-th block location, then:
 
 .. code-block:: python
     :linenos:
 
-    ## assign:
-    # Q = 2  # Q = 0:    # Q = -2:
-    # [1/4]    [[ -1/4, 1/2]     [1/4]
-    #         [  1/2, -1/4]]
+    B2 = ones([1,1,2])
+    B1 = Td.get_block_(1)
+    print(B1)
+    Td.put_block(B2,1)
+    print(Td.get_block_(1))
+    
 
-    Ta = cytnx.zeros([1,1])
-    Ta[0,0] = 1/4
-    Tb = cytnx.zeros([2,2])
-    Tb[0,0] = Tb[1,1] = -1/4
-    Tb[0,1] = Tb[1,0] = 1/2
-    Tc = cytnx.zeros([1,1])
-    Tc[0,0] = 1/4
-
-    H.put_block_(Ta, [2])
-    H.put_block_(Tb, [0])
-    H.put_block_(Tc, [-2])
-
-    print(H.get_blocks())
-
-
-Output >> 
 
 .. code-block:: text
 
-    Total elem: 1
+    Total elem: 2
     type  : Double (Float64)
     cytnx device: CPU
-    Shape : (1,1)
-    [[2.50000e-01 ]]
+    Shape : (1,1,2)
+    [[[0.00000e+00 0.00000e+00 ]]]
 
 
-
-    Total elem: 4
+    Total elem: 2
     type  : Double (Float64)
     cytnx device: CPU
-    Shape : (2,2)
-    [[-2.50000e-01 5.00000e-01 ]
-    [5.00000e-01 -2.50000e-01 ]]
+    Shape : (1,1,2)
+    [[[1.00000e+00 1.00000e+00 ]]]
 
 
 
-    Total elem: 1
+2. puting a block into location assigned by their Qn-indices
+
+.. py:function:: UniTensor.put_block(Tn, qindices)
+
+    :param List[int] qindices: a list of integer specify the indices of qnums on each axis/leg. 
+
+    Alternatively, to put the tensor into the 1-th block with qnums [Qs(1),Qs(-1),Qs(0)] on each leg, which corresponding to the Qn-indices [0,1,1], then: 
+
+.. code-block:: python
+    :linenos:
+
+    B2 = ones([1,1,2])
+    B1 = Td.get_block_([0,1,1])
+    print(B1)
+    Td.put_block(B2,[0,1,1])
+    print(Td.get_block_(1))
+
+
+.. code-block:: text
+
+    Total elem: 2
     type  : Double (Float64)
     cytnx device: CPU
-    Shape : (1,1)
-    [[2.50000e-01 ]]
+    Shape : (1,1,2)
+    [[[0.00000e+00 0.00000e+00 ]]]
 
-
-    [, , ]
-
+    Total elem: 2
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (1,1,2)
+    [[[1.00000e+00 1.00000e+00 ]]]
 
 
 .. toctree::
