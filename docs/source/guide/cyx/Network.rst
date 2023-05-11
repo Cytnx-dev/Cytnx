@@ -1,11 +1,13 @@
 Network
-==========
+========================
+
 Network is a class for contracting UniTensors, it is useful when we have to perform the same large contraction task many times.
 We can create configuration for the contraction task and put the "constant" UniTensors in at the initialization step of some algorithms, 
 later when runing the sweeping or the iterative steps, we put the variational tensors in and launch the network to get the results.
 
 Network from .net file
-************************
+--------------------------
+
 Let's take the corner transfer matrix for example, first we draw the desired tensor network diagram:
 
 .. image:: image/ctm.png
@@ -19,15 +21,15 @@ We now convert the diagram to the .net file to represent the contraction task, w
 .. code-block:: text
     :linenos:
 
-    c1: ;0,2
-    t1: ;1,3,0
-    c2: ;4,1
-    t2: ;9,6,4
-    c3: ;11, 9
-    t3: ;10, 8, 11
-    c4: ;7, 10
-    t4: ;2,5,7
-    w: ;3,6,8,5
+    c1: 0,2
+    t1: 1,3,0
+    c2: 4,1
+    t2: 9,6,4
+    c3: 11, 9
+    t3: 10, 8, 11
+    c4: 7, 10
+    t4: 2,5,7
+    w: 3,6,8,5
     TOUT:
     ORDER: ((((((((c1,t1),c2),t4),w),t2),c4),t3),c3)
 
@@ -42,7 +44,7 @@ Note that:
 4. ORDER is optional and used to specify the contraction order manually.
 
 Put UniTensors and Launch
-**************************
+--------------------------
 To use, we simply create the Network object (at the same time we load the .net file), and put the UniTensors:
 
 * In python:
@@ -74,15 +76,15 @@ Output >>
 .. code-block:: text
 
     ==== Network ====
-    [o] c1 : ; 0 2 
-    [x] t1 : ; 1 3 0 
-    [o] c2 : ; 4 1 
-    [x] t2 : ; 9 6 4 
-    [x] c3 : ; 11 9 
-    [x] t3 : ; 10 8 11 
-    [x] c4 : ; 7 10 
-    [x] t4 : ; 2 5 7 
-    [x] w : ; 3 6 8 5 
+    [o] c1 : 0 2 
+    [x] t1 : 1 3 0 
+    [o] c2 : 4 1 
+    [x] t2 : 9 6 4 
+    [x] c3 : 11 9 
+    [x] t3 : 10 8 11 
+    [x] c4 : 7 10 
+    [x] t4 : 2 5 7 
+    [x] w : 3 6 8 5 
     TOUT : ; 
     ORDER : ((((((((c1,t1),c2),t4),w),t2),c4),t3),c3)
     =================
@@ -111,7 +113,7 @@ If **optimal = False**, the specified ORDER in network file will be used, if the
     The auto-optimized contraction order obtained by calling **.Launch(optimal = True)** will save in the Network object, so if there is no need to re-optimize the order (i.e. Bond dimensions of the input tensors remain the same.), next time when we call **.Launch()** again, we should set **optimal = False** to avoid the overhead of recalculating the optimal order.
 
 Network from string
-********************
+--------------------------
 Alternatively, we can implement the contraction directly in the program with FromString(): 
 
 * In python:
@@ -120,23 +122,22 @@ Alternatively, we can implement the contraction directly in the program with Fro
     :linenos:
 
     N = cytnx.Network()
-    N.FromString(["c1: ;0, 2",\
-                "t1: ;1, 3, 0",\
-                "c2: ;4, 1",\
-                "t2: ;9, 6, 4",\
-                "c3: ;11, 9",\
-                "t3: ;10, 8, 11",\
-                "c4: ;7, 10",\
-                "t4: ;2, 5, 7",\
-                "w: ;3, 6, 8, 5",\
+    N.FromString(["c1: 0, 2",\
+                "t1: 1, 3, 0",\
+                "c2: 4, 1",\
+                "t2: 9, 6, 4",\
+                "c3: 11, 9",\
+                "t3: 10, 8, 11",\
+                "c4: 7, 10",\
+                "t4: 2, 5, 7",\
+                "w: 3, 6, 8, 5",\
                 "TOUT:",\
                 "ORDER: ((((((((c1,t1),c2),t4),w),t2),c4),t3),c3)"])
 
 This approach should be convenient when you don't want to maintain the .net file outside the program.
 
-
 PutUniTensor according to label ordering
-*******************************************
+------------------------------------------
 
 When we put a UniTensor into a Network, we can also specify its leg order according to a label ordering, this interface turns out to be convinient
 since users don't need to memorize or look up the index of s desired leg. To be more specific, consider
