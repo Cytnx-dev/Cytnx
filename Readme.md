@@ -28,6 +28,16 @@ See The following user guide for install and using of cytnx:
     v0.9.1
     
     1. [New] Add additional argument share_mem for Tensor.numpy() python API. 
+    2. [Fix] UniTensor.at() python API not properly wrapped.
+    3. [Fix] Bug in testing for BlockUniTensor.
+    4. [Fix] Bug in UniTensor print info (duplicate name, is_diag=true BlockUniTensor dimension display)
+    5. [Change] Svd now using gesdd instead of gesvd. 
+    6. [New] Add linalg.Gesvd function, along with Gesvd_truncate. 
+    7. [Fix] Strict casting rule cause compiling fail when compile with icpc
+    8. [New] Add additional argument for Network.PutUniTensor to match the label.
+    9. [Fix] Network TOUT string lbl bug  
+    10. [Fix] #156 storage python wrapper cause not return.
+    11. [Add] linalg.Gemm
 
     v0.9
 
