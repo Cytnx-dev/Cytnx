@@ -12,17 +12,10 @@ See The following user guide for install and using of cytnx:
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
 ## News
-    [v0.9] This is the pre-released version for Cytnx
- 
+    [v0.9.x]
+
     Implementation of new data structure for symmetric UniTensor, which different from previous version
- 
-
-## Known issues:
-    v0.9
-
-
-
-    
+     
 
 ## Current dev Version:
     v0.9.1
