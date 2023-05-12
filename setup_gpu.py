@@ -133,8 +133,18 @@ class CMakeBuild(build_ext):
         #print(">>>!!!")
         ""
 
-f = open("_VERSION_FILE_","r")
-ver= f.readline()
+f = open("version.cmake","r")
+ver=""
+for line in f.readlines():
+    if "MAJOR" in line:
+        ver+=( (line.split("MAJOR")[-1]).split(")")[0] ).strip();
+        ver+=".";
+    elif "MINOR" in line:
+        ver+=( (line.split("MINOR")[-1]).split(")")[0] ).strip();
+        ver+=".";
+    elif "PATCH" in line:
+        ver+=( (line.split("PATCH")[-1]).split(")")[0] ).strip();
+
 f.close()
 
 
