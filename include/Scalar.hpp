@@ -2511,9 +2511,8 @@ namespace cytnx {
       // operator Scalar() const;
     };
 
-    ///@endcond
-
     Scalar_base *_impl;
+    ///@endcond
 
     /// @brief default constructor
     Scalar() : _impl(new Scalar_base()){};
@@ -2556,8 +2555,8 @@ namespace cytnx {
      * @brief Get the max value of the Scalar with the given \p dtype.
      * @details This function is used to get the max value of the Scalar with the given \p dtype.
      * That is, for example, if you want to get the max value of a Scalar with 
-     * dtype=cytnx::Type.Int16, then you will get the max value of a 16-bit integer 32767.
-     * @param dtype The data type of the Scalar.
+     * \p dtype = cytnx::Type.Int16, then you will get the max value of a 16-bit integer 32767.
+     * @param[in] dtype The data type of the Scalar.
      * @return The max value of the Scalar with the given \p dtype.
     */
     static Scalar maxval(const unsigned int &dtype) {
@@ -2570,7 +2569,7 @@ namespace cytnx {
      * @brief Get the min value of the Scalar with the given \p dtype.
      * @details This function is used to get the min value of the Scalar with the given \p dtype.
      * That is, for example, if you want to get the min value of a Scalar with 
-     * dtype=cytnx::Type.Int16, then you will get the min value of a 16-bit integer -32768.
+     * \p dtype = cytnx::Type.Int16, then you will get the min value of a 16-bit integer -32768.
      * @param[in] dtype The data type of the Scalar.
      * @return The min value of the Scalar with the given \p dtype.
     */
@@ -2596,11 +2595,13 @@ namespace cytnx {
       this->_impl->assign_selftype(in);
     };
 
+    /// @cond
     // move sproxy when use to get elements here.
     Scalar(const Sproxy &prox);
 
     //[Internal!!]
     Scalar(Scalar_base *in) { this->_impl = in; }
+    /// @endcond
 
     // specialization of init:
     ///@cond
@@ -2648,14 +2649,14 @@ namespace cytnx {
       if (this->_impl != nullptr) delete this->_impl;
       this->_impl = new BoolScalar(in);
     }
-    /// @endcond
 
-    /// @brief The copy constructor of the Scalar class.
+    // The copy constructor
     Scalar(const Scalar &rhs) : _impl(new Scalar_base()) {
       if (this->_impl != nullptr) delete this->_impl;
 
       this->_impl = rhs._impl->copy();
     }
+    /// @endcond
 
     /// @brief The copy assignment of the Scalar class.
     Scalar &operator=(const Scalar &rhs) {
@@ -2758,6 +2759,9 @@ namespace cytnx {
      * @brief Type conversion function.
      * @param[in] dtype The type of the output Scalar (see cytnx::Type for more details).
      * @return The converted Scalar.
+     * @attention The function cannot convert from complex to real, please use 
+     * cytnx::Scalar::real() or cytnx::Scalar::imag() to get the real or imaginary 
+     * part of the Scalar instead.
      */
     Scalar astype(const unsigned int &dtype) const {
       Scalar out(this->_impl->astype(dtype));
@@ -2834,10 +2838,12 @@ namespace cytnx {
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_bool.
     explicit operator cytnx_bool() const { return this->_impl->to_cytnx_bool(); }
 
-    /// @brief The destructor of the Scalar class.
+    /// @cond
+    //destructor
     ~Scalar() {
       if (this->_impl != nullptr) delete this->_impl;
     };
+    /// @endcond
 
     // arithmetic:
     ///@brief The addition assignment operator of the Scalar class with a given number (template).
@@ -2870,7 +2876,6 @@ namespace cytnx {
 
     /**
      * @brief The division assignment operator of the Scalar class with a given number (template).
-     * @note The divisor cannot be zero.
     */
     void operator/=(const T &rc) {
       this->_impl->idiv(rc);
@@ -2878,7 +2883,6 @@ namespace cytnx {
 
     /**
      * @brief The division assignment operator of the Scalar class with a given Scalar.
-     * @note The divisor cannot be zero.
     */
     void operator/=(const Scalar &rhs) { this->_impl->idiv(rhs._impl); }
 
@@ -3197,7 +3201,6 @@ namespace cytnx {
     /**
      * @brief Return the division of the current Scalar and a given template number \p rc.
      * @see operator/(const Scalar &lhs, const Scalar &rhs)
-     * @note The divisor \p rc must not be zero.
     */
     template <class T>
     Scalar rdiv(const T &rc) const {
@@ -3215,7 +3218,6 @@ namespace cytnx {
     /**
      * @brief Return the division of the current Scalar and a given Scalar \p rhs.
      * @see operator/(const Scalar &lhs, const Scalar &rhs)
-     * @note The divisor \p rhs must not be zero.
     */
     Scalar rdiv(const Scalar &rhs) const {
       Scalar out;
@@ -3284,7 +3286,7 @@ namespace cytnx {
   /**
    * @brief The multiplication operator between two Scalar objects.
    * @details Return 
-   * \f[ l\timesr \f],
+   * \f[ l \cdot r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
   Scalar operator*(const Scalar &lc, const Scalar &rs);  //{return rs.rmul(lc);};
@@ -3304,7 +3306,6 @@ namespace cytnx {
    * @details Return 
    * \f[ l/r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
-   * @note The divisor \p rs must not be zero.
    */
   Scalar operator/(const Scalar &lc, const Scalar &rs);  //{return Scalar(lc).rdiv(rs);};
 
@@ -3379,8 +3380,9 @@ namespace cytnx {
   /// @brief Convert a Scalar object to a cytnx::complex64.
   cytnx_complex64 complex64(const Scalar &in);
 
-  /// @brief The stream operator for Scalar objects.
+  /// @cond
   std::ostream &operator<<(std::ostream &os, const Scalar &in);
+  /// @endcond
 
 }  // namespace cytnx
 

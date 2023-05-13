@@ -1054,7 +1054,10 @@ namespace cytnx {
     @return [Tensor]
     @note
         If the new_type is the same as dtype of the current Tensor, return self.
-
+    @attention
+        This function cannot convert complex type to real type, please use 
+        Tensor::real() or Tensor::imag() to get the real or imaginary part of 
+        the complex Tensor instead.
     ## Example:
     ### c++ API:
     \include example/Tensor/astype.cpp
@@ -1080,15 +1083,15 @@ namespace cytnx {
     // }
 
     /**
-    @brief [C++ only] get an element at specific location.
+    @brief Get an element at specific location.
     @param[in] locator the location of the element
     @return [ref]
 
     @note
         1. This is for C++ API only!
-        2. need template instantiation to resolve the type, which should be consist with the dtype
-    of the Tensor. An error will be issued if the template type is inconsist with the current dtype
-    of Tensor.
+        2. need template instantiation to resolve the type, which should be consist with 
+          the dtype of the Tensor. An error will be issued if the template type is inconsist 
+          with the current dtype of Tensor.
         3. For python API, use [] directly to get element.
 
     ## Example:
@@ -1570,6 +1573,7 @@ namespace cytnx {
      * \end{cases}
      * \f]
      * where \f$N\f$ is the number of the first dimension of the current tensor.
+     * Here indices \f$i\f$, \f$j\f$ and \f$k\f$ start from 0.
      * @param[in] rhs the appended tensor.
      * @return The appended tensor.
      * @pre
@@ -1619,10 +1623,28 @@ namespace cytnx {
     /**
      * @brief the append function of the Storage.
      * @details This function is the append function of the Storage. It will
-     * same as the append(const Tensor &rhs) function, but the \p rhs is a
-     * Storage.
+     * append the \p srhs Storage to the current tensor. The current tensor must
+     * be rank-2 and the \p srhs Storage must have the same size as the second
+     * dimension of the current tensor. For example, if the current tensor is
+     * \f$A\f$ with size \f$M \times N\f$ and the \p srhs Storage is \f$B\f$
+     * with size \f$N\f$, then the output tensor is \f$C\f$ with size \f$M \times
+     * (N+1)\f$ where
+     * \f[
+     * C(i,j) = \begin{cases}
+     * A(i,j) & \text{if } j \neq N \\
+     * B(i) & \text{if } j = N
+     * \end{cases}
+     * \f]
+     * Here indices \f$i\f$ and \f$j\f$ start from 0.
      * @param[in] srhs the appended Storage.
      * @return The appended tensor.
+     * @pre
+     * 1. The \p srhs Storage and the current tensor cannot be empty.
+     * 2. The current tensor must be rank-2.
+     * 3. The \p srhs Storage must have the same size as the second dimension of
+     * the current tensor. Namely, srhs.size() == this->shape()[1].
+     * @note If the dtype of the \p srhs is different from the current tensor,
+     * the \p srhs will be casted to the dtype of the current tensor.
      * @see append(const Tensor &rhs)
      */
     void append(const Storage &srhs) {
@@ -1826,8 +1848,10 @@ namespace cytnx {
   Tensor operator*(const Tensor &lhs, const Scalar::Sproxy &rhs);
   Tensor operator/(const Tensor &lhs, const Scalar::Sproxy &rhs);
 
+  ///@cond
   std::ostream &operator<<(std::ostream &os, const Tensor &in);
   std::ostream &operator<<(std::ostream &os, const Tensor::Tproxy &in);
+  ///@endcond
   //{ os << Tensor(in);};
 }  // namespace cytnx
 
