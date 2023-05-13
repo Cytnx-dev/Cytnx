@@ -18,6 +18,8 @@ See The following user guide for install and using of cytnx:
      
 
 ## Current dev Version:
+    v0.9.2
+
     v0.9.1
     
     1. [New] Add additional argument share_mem for Tensor.numpy() python API. 
