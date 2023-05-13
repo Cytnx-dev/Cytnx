@@ -385,6 +385,8 @@ namespace cytnx {
     virtual void lDiv_(const Scalar &lhs);
 
     virtual Tensor Norm() const;
+    virtual boost::intrusive_ptr<UniTensor_base> normalize();
+    virtual void normalize_();
 
     virtual boost::intrusive_ptr<UniTensor_base> Conj();
     virtual void Conj_();
@@ -513,6 +515,7 @@ namespace cytnx {
     void to_(const int &device) { this->_block.to_(device); }
     boost::intrusive_ptr<UniTensor_base> to(const int &device) {
       if (this->device() == device) {
+    std::vector<Tensor> _interface_block;  // this is serves as interface for get_blocks_();
         return this;
       } else {
         boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -802,6 +805,13 @@ namespace cytnx {
       return out;
     }
     void Transpose_();
+
+    boost::intrusive_ptr<UniTensor_base> normalize() {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->normalize_();
+      return out;
+    }
+    void normalize_();
 
     boost::intrusive_ptr<UniTensor_base> Dagger() {
       boost::intrusive_ptr<UniTensor_base> out = this->Conj();
@@ -1686,6 +1696,15 @@ namespace cytnx {
     }
 
     Tensor Norm() const;
+    
+    boost::intrusive_ptr<UniTensor_base> normalize() {
+      boost::intrusive_ptr<UniTensor_base> out = this->Conj();
+      out->normalize_();
+      return out;
+    }
+    void normalize_(){
+        cytnx_error_msg(true,"[ERROR] SparseUniTensor is about to deprecated.%s","\n");
+    }
 
     void tag() {
       // no-use!
@@ -2251,6 +2270,14 @@ namespace cytnx {
       out->Transpose_();
       return out;
     }
+    
+    void normalize_();
+    boost::intrusive_ptr<UniTensor_base> normalize() {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->normalize_();
+      return out;
+    }
+
 
     boost::intrusive_ptr<UniTensor_base> Dagger() {
       boost::intrusive_ptr<UniTensor_base> out = this->Conj();
@@ -4029,6 +4056,30 @@ namespace cytnx {
       this->_impl->Transpose_();
       return *this;
     }
+
+    /**
+    @brief normalize the current UniTensor instance with 2-norm.
+	@return UniTensor
+    @note Compare to normalize_(), this fucntion will return new UniTensor object.
+	@see normalize_()
+	*/
+    UniTensor normalize() const {
+      UniTensor out;
+      out._impl = this->_impl->normalize();
+      return out;
+    }
+
+    /**
+    @brief normalize the UniTensor, inplacely.
+	@return UniTensor
+    @note Compare to normalize(), this fucntion is inplace function.
+	@see normalize()
+	*/
+    UniTensor &normalize_() {
+      this->_impl->normalize_();
+      return *this;
+    }
+
 
     /**
     @brief Take the partial trance to the UniTensor.

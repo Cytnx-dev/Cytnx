@@ -142,6 +142,11 @@ def Transpose_(self):
     return self
 
 @add_method(UniTensor)
+def normalize_(self):
+    self.cnormalize_();
+    return self
+
+@add_method(UniTensor)
 def Dagger_(self):
     self.cDagger_();
     return self

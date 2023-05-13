@@ -1,0 +1,24 @@
+from .utils import *
+from cytnx import *
+import matplotlib.pyplot as plt
+from matplotlib.patches import Rectangle
+
+def inspect_blocks(UTen):
+    plt.figure(figsize=[14,6])
+
+    Nin = UTen.rowrank()
+    Nout = UTen.rank() - UTen.rowrank()
+    
+    Rectangle([0,0], height, width)
+
+
+
+    plt.show()
+
+
+
+
+
+
+
+

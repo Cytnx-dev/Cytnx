@@ -1320,6 +1320,10 @@ namespace cytnx {
     }
 
   }
+  void DenseUniTensor::normalize_() {
+    this->_block /= linalg::Norm(this->_block);
+  }
+
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
   void DenseUniTensor::_load_dispatch(std::fstream &f) { this->_block._Load(f); }

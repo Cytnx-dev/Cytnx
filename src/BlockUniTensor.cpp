@@ -1201,6 +1201,18 @@ namespace cytnx {
     }
 
   };
+
+  void BlockUniTensor::normalize_(){
+    Scalar out(0,this->dtype());
+    for(auto &block: this->_blocks){
+        out += Scalar(linalg::Pow(linalg::Norm(block),2).item());
+    }
+    out = sqrt(out);
+    for(auto &block: this->_blocks){
+        block/=out;
+    }
+  };
+
   void BlockUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
 
     // 1) from label to indx.
