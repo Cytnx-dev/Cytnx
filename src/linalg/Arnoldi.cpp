@@ -15,13 +15,20 @@ namespace cytnx {
     {
       const auto min_r = std::min(r, src.shape()[0]);
       const auto min_c = std::min(c, src.shape()[1]);
-      Tensor dst = cytnx::zeros({min_r, min_c}, src.dtype(), src.device());
+      //Tensor dst = src[{ac::range(0,min_r),ac::range(0,min_c)}];        
+ 
+      Tensor dst = Tensor({min_r, min_c}, src.dtype(), src.device(),false);
+      char* tgt = (char*)dst.storage().data();
+      char* csc = (char*)src.storage().data();
+      unsigned long long Offset_csc = Type.typeSize(src.dtype())*src.shape()[1];
+      unsigned long long Offset_tgt = Type.typeSize(src.dtype())*min_c;
       for(auto i = 0; i < min_r; ++i)
       {
-        for(auto j = 0; j < min_c; ++j) {
-          dst[{i, j}] = src[{i, j}];
-        }
+        memcpy(tgt+Offset_tgt*i, csc+Offset_csc*i,
+               Type.typeSize(src.dtype())*min_c  ); 
       }
+      
+      
       return dst;
     }
 

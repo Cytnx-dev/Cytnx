@@ -504,8 +504,10 @@ namespace cytnx {
     char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
-    if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
-    os << std::string(buffer);
+    if (this->_is_tag){ 
+        sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
+        os << std::string(buffer);
+    }
     sprintf(buffer, "is_diag    : %s\n", this->_is_diag ? "True" : "False");
     os << std::string(buffer);
     sprintf(buffer, "contiguous : %s\n", this->is_contiguous() ? "True" : "False");
@@ -1318,6 +1320,10 @@ namespace cytnx {
     }
 
   }
+  void DenseUniTensor::normalize_() {
+    this->_block /= linalg::Norm(this->_block);
+  }
+
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
   void DenseUniTensor::_load_dispatch(std::fstream &f) { this->_block._Load(f); }

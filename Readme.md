@@ -12,22 +12,26 @@ See The following user guide for install and using of cytnx:
 [Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
 ## News
-    [v0.9] This is the pre-released version for Cytnx
- 
+    [v0.9.x]
+
     Implementation of new data structure for symmetric UniTensor, which different from previous version
- 
-
-## Known issues:
-    v0.9
-
-
-
-    
+     
 
 ## Current dev Version:
     v0.9.1
     
     1. [New] Add additional argument share_mem for Tensor.numpy() python API. 
+    2. [Fix] UniTensor.at() python API not properly wrapped.
+    3. [Fix] Bug in testing for BlockUniTensor.
+    4. [Fix] Bug in UniTensor print info (duplicate name, is_diag=true BlockUniTensor dimension display)
+    5. [Change] Svd now using gesdd instead of gesvd. 
+    6. [New] Add linalg.Gesvd function, along with Gesvd_truncate. 
+    7. [Fix] Strict casting rule cause compiling fail when compile with icpc
+    8. [New] Add additional argument for Network.PutUniTensor to match the label.
+    9. [Fix] Network TOUT string lbl bug  
+    10. [Fix] #156 storage python wrapper cause not return.
+    11. [Add] linalg.Gemm/Gemm_()
+    12. [Add] UniTensor.normalize()/normalize_() 
 
     v0.9
 

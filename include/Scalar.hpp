@@ -2904,6 +2904,8 @@ namespace cytnx {
       return out.real();
     }
 
+ 
+
     /**
      * @brief The member function to get the square root of the Scalar.
      * @note Compare to the isqrt() function, this function will return a new Scalar object.
@@ -2915,6 +2917,7 @@ namespace cytnx {
       out._impl->isqrt();
       return out;
     }
+
 
     // comparison <
     /** 
@@ -3372,6 +3375,8 @@ namespace cytnx {
    * where \f$ c \f$ is the input Scalar \p c .
    */
   Scalar sqrt(const Scalar &c);
+
+
 
   // complex conversion:
   /// @brief Convert a Scalar object to a cytnx::complex128.

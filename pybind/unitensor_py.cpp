@@ -1078,6 +1078,9 @@ void unitensor_binding(py::module &m){
     .def("Norm", &UniTensor::Norm)
     .def("cTranspose_", &UniTensor::Transpose_)
     .def("Transpose", &UniTensor::Transpose)
+    .def("cnormalize_", &UniTensor::normalize_)
+    .def("normalize", &UniTensor::normalize)
+
     .def("cDagger_", &UniTensor::Dagger_)
     .def("Dagger", &UniTensor::Dagger)
     .def("ctag", &UniTensor::tag)
