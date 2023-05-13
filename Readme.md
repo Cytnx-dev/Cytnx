@@ -30,7 +30,7 @@ See The following user guide for install and using of cytnx:
     8. [New] Add additional argument for Network.PutUniTensor to match the label.
     9. [Fix] Network TOUT string lbl bug  
     10. [Fix] #156 storage python wrapper cause not return.
-    11. [Add] linalg.Gemm
+    11. [Add] linalg.Gemm/Gemm_()
     12. [Add] UniTensor.normalize()/normalize_() 
 
     v0.9
