@@ -4,12 +4,12 @@ Next, let's take a look on how we can access elements of a Tensor.
 
 Get elements 
 ***************************
-Just like in python list/numpy.array/torch.tensor, on the python side, we can simply use *slice* to get the elements. See :numpy-slice:`This page <>` for more details.
-In c++, cytnx takes this approach from python and brings it to our C++ API. You can simply use the **slice string** to access elements. 
+Just like in Python list/numpy.array/torch.tensor, on the Python side, we can simply use *slice* to get the elements. See :numpy-slice:`This page <>` for more details.
+In C++, Cytnx takes this approach from Python and brings it to our C++ API. You can simply use the **slice string** to access elements. 
 
 For example:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -72,13 +72,13 @@ Output>>
 
 .. Note::
 
-    1. To convert between python and C++ APIs, notice that in C++ you need to use operator() instead of operator[] if you are using slice strings to access elements. 
+    1. To convert between Python and C++ APIs, notice that in C++ you need to use operator() instead of operator[] if you are using slice strings to access elements. 
     2. The return will always be a Tensor object, even it is only one elements in the Tensor.
 
 
-In the case where you have only one element in a Tensor, you can use **item()** to get the element in the standard python type/c++ type. 
+In the case where you have only one element in a Tensor, you can use **item()** to get the element in the standard Python type/C++ type. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -129,7 +129,7 @@ Setting elements is pretty much the same as in numpy.array/torch.tensor. You can
 
 For example:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -145,7 +145,7 @@ For example:
     A[0,::2,2] = 4
     print(A)
     
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -214,20 +214,20 @@ Output>>
 
 Low-level API (C++ only) 
 *******************************
-On C++ side, cytnx provides lower-level APIs with slightly smaller overhead for getting elements. 
+On C++ side, Cytnx provides lower-level APIs with slightly smaller overhead for getting elements. 
 These low-level APIs require using with **Accessor** object. 
 
 * Accessor:
-    **Accessor** object is equivalent to python *slice*. It is sometimes convenient to use aliases to simplify the expression when using it.
+    **Accessor** object is equivalent to Python *slice*. It is sometimes convenient to use aliases to simplify the expression when using it.
     
     .. code-block:: C++
         :linenos:
 
             typedef ac=cytnx::Accessor;
 
-            ac(4);     // this is equal to index '4' in python
-            ac::all(); // this is equal to ':' in python 
-            ac::range(0,4,2); // this is equal to '0:4:2' in python 
+            ac(4);     // this is equal to index '4' in Python
+            ac::all(); // this is equal to ':' in Python 
+            ac::range(0,4,2); // this is equal to '0:4:2' in Python 
 
 
 
@@ -242,10 +242,10 @@ In the following, let's see how it can be used to get/set the elements from/in a
         auto A = cytnx::arange(24).reshape(2,3,4);
         auto B = cytnx::zeros({3,2});
 
-        // [get] this is equal to A[0,:,1:4:2] in python:
+        // [get] this is equal to A[0,:,1:4:2] in Python:
         auto C = A[{ac(0},ac::all(),ac::range(1,4,2)}];
         
-        // [set] this is equal to A[1,:,0:4:2] = B in python:
+        // [set] this is equal to A[1,:,0:4:2] = B in Python:
         A[{ac(1),ac::all(),ac::range(0,4,2)}] = B;
 
 
@@ -264,17 +264,17 @@ In the following, let's see how it can be used to get/set the elements from/in a
         auto A = cytnx::arange(24).reshape(2,3,4);
         auto B = cytnx::zeros({3,2});
 
-        // [get] this is equal to A[0,:,1:4:2] in python:
+        // [get] this is equal to A[0,:,1:4:2] in Python:
         auto C = A.get({ac(0},ac::all(),ac::range(1,4,2)});
         
-        // [set] this is equal to A[1,:,0:4:2] = B in python:
+        // [set] this is equal to A[1,:,0:4:2] = B in Python:
         A.set({ac(1),ac::all(),ac::range(0,4,2)}, B);
 
 
 
 .. Hint::
 
-    1. Similarly, you can also pass a c++ *vector<cytnx_int64>* as an argument. 
+    1. Similarly, you can also pass a C++ *vector<cytnx_int64>* as an argument. 
 
 .. Tip::
 

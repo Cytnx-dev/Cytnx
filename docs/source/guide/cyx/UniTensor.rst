@@ -28,4 +28,5 @@ Let's take a look at this:
     UniTensor_tag.rst
     UniTensor_sym.rst
     UniTensor_getblk.rst
+    UniTensor_getele.rst
     UniTensor_manip.rst

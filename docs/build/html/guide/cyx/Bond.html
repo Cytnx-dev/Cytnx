@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>8.2. Bond &#8212; Cytnx  documentation</title>
+    <title>6.2. Bond &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -26,8 +26,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="8.3. UniTensor" href="UniTensor.html" />
-    <link rel="prev" title="8.1. Tensor Notation" href="TNotation.html" /> 
+    <link rel="next" title="6.3. UniTensor" href="UniTensor.html" />
+    <link rel="prev" title="6.1. Tensor Notation" href="TNotation.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -45,6 +45,7 @@
                   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -61,9 +62,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -137,12 +138,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../basic_obj/Storage.html">4. Storage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -151,13 +152,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -170,53 +171,64 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../net.html">7. Network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">7.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">7.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">8. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">9. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">9.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#combine-bonds">8.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">10. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -248,6 +260,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
@@ -275,7 +291,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.0</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -301,7 +317,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.0</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -325,16 +341,16 @@
                        
                          accesskey="U"
                          class="active"
-                       ><span class="section-number">8. </span>Cytnx extensions</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">8.2. </span>Bond</li>
+                       ><span class="section-number">6. </span>UniTensor</a></li>
+            <li class="breadcrumb-item active"><span class="section-number">6.2. </span>Bond</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="TNotation.html" title="Previous Chapter: 8.1. Tensor Notation" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 8.1. Tensor Notation
+               <a href="TNotation.html" title="Previous Chapter: 6.1. Tensor Notation" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 6.1. Tensor Notation
                </a>
-               <a href="UniTensor.html" title="Next Chapter: 8.3. UniTensor" class="btn btn-primary" role="botton" accesskey="N">
-                   8.3. UniTensor &raquo;
+               <a href="UniTensor.html" title="Next Chapter: 6.3. UniTensor" class="btn btn-primary" role="botton" accesskey="N">
+                   6.3. UniTensor &raquo;
                </a>
            </div>
        </div>
@@ -351,6 +367,7 @@
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -367,9 +384,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -443,12 +460,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../basic_obj/Storage.html">4. Storage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -457,13 +474,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -476,53 +493,64 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../net.html">7. Network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">7.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">7.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">8. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">9. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">9.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#combine-bonds">8.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">10. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -556,6 +584,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensordot.html">Tensordot with input cache</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
@@ -578,12 +610,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="TNotation.html"
-                          title="previous chapter"><span class="section-number">8.1. </span>Tensor Notation</a></p>
+                          title="previous chapter"><span class="section-number">6.1. </span>Tensor Notation</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
     <p class="topless"><a href="UniTensor.html"
-                          title="next chapter"><span class="section-number">8.3. </span>UniTensor</a></p>
+                          title="next chapter"><span class="section-number">6.3. </span>UniTensor</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
@@ -607,11 +639,11 @@
           <div class="body">
             
   <section id="bond">
-<h1><span class="section-number">8.2. </span>Bond<a class="headerlink" href="#bond" title="Permalink to this heading">¶</a></h1>
-<p>A <strong>Bond</strong> is an object that represent the legs of a tensor. It carries informations such as direction, dimension and quantum numbers (if with Symmetry).</p>
-<p>There are in general two types of Bonds: <strong>directional</strong> and <strong>undirectional</strong> depending on whether the bond has direction (pointing inward to or outward from the tensor body) or not. The inward Bond is also defined as <strong>Ket</strong>/<strong>In</strong> type, and the outward Bond is defined as <strong>Bra</strong>/<strong>Out</strong> type, which represent the <em>Braket</em> notation in the quantum mechanic:</p>
+<h1><span class="section-number">6.2. </span>Bond<a class="headerlink" href="#bond" title="Permalink to this heading">¶</a></h1>
+<p>A <strong>Bond</strong> is an object that represents the legs or indices of a tensor. It carries information such as the direction, dimension and quantum numbers (if symmetries given).</p>
+<p>There are in general two types of Bonds: <strong>directional</strong> and <strong>undirectional</strong> depending on whether the bond has a direction (pointing inward or outward with respect to the tensor) or not. The inward Bond is also defined as <strong>Ket</strong>/<strong>In</strong> type, while the outward Bond is defined as <strong>Bra</strong>/<strong>Out</strong> type as in the <em>Braket</em> notation in the quantum mechanics:</p>
 <a class="reference internal image-reference" href="../../_images/bond.png"><img alt="../../_images/bond.png" class="align-center" src="../../_images/bond.png" style="width: 400px;" /></a>
-<p>Let’s introduce the complete API for constructing a simple Bond (with or without direction)</p>
+<p>The API for constructing a simple Bond (with or without direction) is:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Bond">
 <span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Bond" title="Permalink to this definition">¶</a></dt>
@@ -626,22 +658,23 @@
 </dd></dl>
 
 <section id="symmetry-object">
-<h2><span class="section-number">8.2.1. </span>Symmetry object<a class="headerlink" href="#symmetry-object" title="Permalink to this heading">¶</a></h2>
-<p>In Cytnx we have the Symmetry as object, it mainly contains the name, type, combine rule and the reverse rule of that symmetry, let’s create a U1 symmetry and a Z_2 symmetry and print their info:</p>
+<h2><span class="section-number">6.2.1. </span>Symmetry object<a class="headerlink" href="#symmetry-object" title="Permalink to this heading">¶</a></h2>
+<p>Symmetries play an important role in physical simulations. Tensors and bonds can be defined in a way that preserves the symmetries. This helps to reduce the numerical costs, can increase precision and it allows to do calculations restricted to specific parity sectors.</p>
+<p>In Cytnx, the type of symmetry is defined by a Symmetry object. It contains the name, type, combine rule and the reverse rule of that symmetry. The combine rule contains the information how two quantum numbers are combined to a new quantum number. Let us create Symmetry objects for a U1 and a Z_2 symmetry and print their info:</p>
 <ul class="simple">
-<li><p>In python:</p></li>
+<li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">sym_u1</span> <span class="o">=</span> <span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()</span>
-<span class="linenos">2</span><span class="n">sym_z2</span> <span class="o">=</span> <span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">sym_u1</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()</span>
+<span class="linenos">2</span><span class="n">sym_z2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">sym_u1</span><span class="p">)</span>
 <span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">sym_z2</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>In c++:</p></li>
+<li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">();</span>
-<span class="linenos">2</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">();</span>
+<span class="linenos">2</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
 <span class="linenos">3</span>
 <span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 <span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
@@ -665,32 +698,33 @@ reverse rule : Q*(-1)
 </div>
 </section>
 <section id="create-bond-with-qnums">
-<h2><span class="section-number">8.2.2. </span>Create Bond with Qnums<a class="headerlink" href="#create-bond-with-qnums" title="Permalink to this heading">¶</a></h2>
-<p>When system has some symmetry, the Bond can carry quantum numbers. To construct a Bond with symmetry and associate quantum numbers, the following API can be use:</p>
+<h2><span class="section-number">6.2.2. </span>Create Bond with Qnums<a class="headerlink" href="#create-bond-with-qnums" title="Permalink to this heading">¶</a></h2>
+<p>In order to implement symmetries on the level of tensors, we assign a quantum number to each value of an index. The quantum numbers can have a degeneracy, such that several values of an index correspond to the same quantum number.</p>
+<p>To construct a Bond with symmetries and associate quantum numbers, the following API can be used:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="id0">
 <span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnums_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degeneracies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>bd_type</strong> (<em>bondType</em>) – The type (direction) of the bond, this can ONLY be BD_KET–inward (BD_IN) or BD_BRA–outward (BD_OUT) when carry quantum numbers.</p></li>
-<li><p><strong>qnums_list</strong> (<em>list</em>) – The quantum number list</p></li>
-<li><p><strong>degeneracies</strong> (<em>list</em>) – The degeneracies(dimensions) of each qnums.</p></li>
-<li><p><strong>sym_list</strong> (<em>list</em>) – The list symmetries objects that defines  the type of each qnums.</p></li>
+<li><p><strong>bd_type</strong> (<em>bondType</em>) – type (direction) of the bond, this can ONLY be BD_KET–inward (BD_IN) or BD_BRA–outward (BD_OUT) when quantum numbers are used</p></li>
+<li><p><strong>qnums_list</strong> (<em>list</em>) – quantum number list</p></li>
+<li><p><strong>degeneracies</strong> (<em>list</em>) – degeneracies (dimensions) of the qnums</p></li>
+<li><p><strong>sym_list</strong> (<em>list</em>) – list of Symmetry objects that define the symmetry of each qnum</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 
-<p>The two arguments <em>qnums_list</em> and <em>degeneracies</em> can be combined into single one, for example:</p>
+<p>The two arguments <em>qnums_list</em> and <em>degeneracies</em> can be combined into a single argument, for example:</p>
 <ul class="simple">
-<li><p>In python:</p></li>
+<li><p>In Python:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.</span>
-<span class="linenos">2</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],[</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="linenos">2</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos">3</span>
 <span class="linenos">4</span><span class="c1"># equivalent:</span>
-<span class="linenos">5</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="linenos">5</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos">6</span>
 <span class="linenos">7</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">)</span>
 </pre></div>
@@ -698,9 +732,9 @@ reverse rule : Q*(-1)
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,{</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},{</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_KET</span><span class="p">,{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
 <span class="linenos">2</span>
-<span class="linenos">3</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_IN</span><span class="p">,{</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">),</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
+<span class="linenos">3</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_IN</span><span class="p">,{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
 <span class="linenos">4</span>
 <span class="linenos">5</span><span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">);</span>
 </pre></div>
@@ -712,24 +746,28 @@ Deg&gt;&gt;    3   4   3   2
 </pre></div>
 </div>
 <p>In some cases, we might want to include multiple symmetries in the system. For example: U1 x Z2, which can be achieve by adding additional quantum numbers inside <em>Qs()</em></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># This creates an KET (IN) Bond with U1xZ2 with quantum number (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.</span>
-<span class="linenos">2</span><span class="n">bd_sym_u1z2_a</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
-<span class="linenos">3</span>                             <span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>\
-<span class="linenos">4</span>                             <span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
-<span class="linenos">5</span>                             <span class="n">Qs</span><span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],[</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
-<span class="linenos">6</span>
-<span class="linenos">7</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># This creates a KET (IN) Bond with U1xZ2 symmetry and quantum numbers (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.</span>
+<span class="linenos">2</span><span class="n">bd_sym_u1z2_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span>\
+<span class="linenos">3</span>                           <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
+<span class="linenos">4</span>                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>\
+<span class="linenos">5</span>                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
+<span class="linenos">6</span>                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],</span>\
+<span class="linenos">7</span>                           <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+<span class="linenos">8</span>
+<span class="linenos">9</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">bd_sym_u1z2_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,{</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
-<span class="linenos">2</span><span class="w">                                 </span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>
-<span class="linenos">3</span><span class="w">                                 </span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
-<span class="linenos">4</span><span class="w">                                 </span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},{</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">(),</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
-<span class="linenos">5</span>
-<span class="linenos">6</span><span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">bd_sym_u1z2_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_KET</span><span class="p">,</span>
+<span class="linenos">2</span><span class="w">                                 </span><span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos">3</span><span class="w">                                  </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>
+<span class="linenos">4</span><span class="w">                                  </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
+<span class="linenos">5</span><span class="w">                                  </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},</span>
+<span class="linenos">6</span><span class="w">                                 </span><span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">(),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
+<span class="linenos">7</span>
+<span class="linenos">8</span><span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 12 |type: KET&gt;
@@ -740,14 +778,13 @@ Deg&gt;&gt;    3   4   3   2
 </div>
 </section>
 <section id="combine-bonds">
-<h2><span class="section-number">8.2.3. </span>Combine Bonds<a class="headerlink" href="#combine-bonds" title="Permalink to this heading">¶</a></h2>
-<blockquote>
-<div><p>Now lets see how to combine two different Bonds. Let’s create another U1 bond <strong>bd_sym_u1_c</strong>, and conbine it with <strong>bd_sym_u1_a</strong>:</p>
-</div></blockquote>
+<h2><span class="section-number">6.2.3. </span>Combine Bonds<a class="headerlink" href="#combine-bonds" title="Permalink to this heading">¶</a></h2>
+<p>In typical algorithms, two bonds often get combined to one bond. This can be done with Bonds involving Symmetries as well. The quantum numbers are merged according to the combine rules.</p>
+<p>As an example, let us create another U1 bond <strong>bd_sym_u1_c</strong> and combine it with <strong>bd_sym_u1_a</strong>:</p>
 <ul class="simple">
-<li><p>In python:</p></li>
+<li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_u1_c</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">,</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">6</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_u1_c</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">6</span><span class="p">])</span>
 <span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
 <span class="linenos">3</span>
 <span class="linenos">4</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
@@ -765,16 +802,24 @@ Dim = 240 |type: KET&gt;
 Deg&gt;&gt;   20   8  39  18  49  15  30  19  16  12   6   8
 </pre></div>
 </div>
-<p>Here we can observe the quantum numbers of <strong>bd_sym_u1_a</strong> combine with <strong>bd_sym_u1_c</strong> and generated 12 quantum numbers, respecting the combine rule (addition) of U1 symmetry.</p>
+<p>Here, we can observe the quantum numbers of <strong>bd_sym_u1_a</strong> combine with <strong>bd_sym_u1_c</strong> and generate 12 quantum numbers, respecting the combine rule (addition) of the U1 symmetry.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The Bonds need to be in the same direction to be combined. As physical interpretation, one cannot combine a ket state with a bra state!</p>
+<p>The Bonds need to be in the same direction to be combined. As a physical interpretation, one cannot combine a ket state with a bra state!</p>
 </div>
-<p>combineBond by default will group any same quantum number together. Generally, the quantum number of merging two Bonds should be similar to Kron, and sometimes user might want to keep the order instead. In such scenario, one can set additioanll argument <strong>is_grp = False</strong>:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When no symmetry argument is given in the creation of a bond with quantum numbers, U1 is assumed by default as the symmetry group.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Using <strong>combineBond_()</strong> (with underscore) will modify the instance directly (as the general convention with underscore indicates inplace).</p>
+</div>
+<p>By default, combineBond will group any quantum numbers of the same type together. Generally, the quantum number of merging two Bonds should be similar to Kron, and sometimes user might want to keep the order instead. In such scenarios, one can set the additional argument <strong>is_grp = False</strong>:</p>
 <ul class="simple">
-<li><p>In python:</p></li>
+<li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">,</span><span class="n">is_grp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">,</span><span class="n">is_grp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -782,6 +827,10 @@ Deg&gt;&gt;   20   8  39  18  49  15  30  19  16  12   6   8
  U1::   -1  +1  +2  -2  +0  -5  -3  -2  -6  -4  -3  -1  +0  -4  -2  +2  +4  +5  +1  +3
 Deg&gt;&gt;    6   9  12  15  18   8  12  16  20  24   6   9  12  15  18   4   6   8  10  12
 </pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This is not efficient since duplicate quantum number can occur. A warning will be thrown when is_grp=False is used.</p>
 </div>
 <div class="toctree-wrapper compound">
 </div>

@@ -6,7 +6,7 @@ Save a Tensor
 *****************
 To save a Tensor to a file, simply call **Tensor.Save(filepath)**. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -15,7 +15,7 @@ To save a Tensor to a file, simply call **Tensor.Save(filepath)**.
     A.Save("T1")
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -30,7 +30,7 @@ Load a Tensor
 ******************
 Now, let's load the Tensor from the file. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -38,7 +38,7 @@ Now, let's load the Tensor from the file.
     A = cytnx.Tensor.Load("T1.cytn")
     print(A)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:

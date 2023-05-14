@@ -30,7 +30,7 @@ html_theme_path = [sphinxbootstrap4theme.get_path()]
 project = 'Cytnx'
 copyright = '2019-, Kai-Hsin Wu'
 author = 'Kai-Hsin Wu'
-_version = 'v0.9.0'
+_version = 'v0.9.1'
 #version = 'v0.5.5a'
 
 # -- General configuration ---------------------------------------------------
@@ -45,6 +45,7 @@ bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.hotrg.bib",\
                    "example/ref.itebd.bib",\
                    "example/ref.idmrg.bib",\
+                   "guide/cyx/ref.ncon.bib",\
                   ]
 extensions.append('sphinx.ext.extlinks')
 #extensions.append('sphinx.ext.imgmath')

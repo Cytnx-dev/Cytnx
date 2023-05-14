@@ -1,13 +1,13 @@
 Increase size
 -----------------
-Just like C++ vector, we can increase the size of Storage.
+Just like C++ vectors, we can increase the size of the Storage.
 
 Append
 ********
-This append a new element at the end of the Storage. 
+It is possible to append a new element to the end of the Storage. 
 For example
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -20,7 +20,7 @@ For example
     print(A)    
     
    
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -49,9 +49,9 @@ Output>>
 
 Resize
 ********
-Equvalent to c++ *vector.resize*, we can do the same thing in cytnx.
+Equivalently to *vector.resize* in C++, we can resize the Storage in Cytnx.
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -62,7 +62,7 @@ Equvalent to c++ *vector.resize*, we can do the same thing in cytnx.
     A.resize(5);
     print(A.size());
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -82,14 +82,14 @@ Output>>
 
 .. Note::
     
-    [Deprecated] If the size is increase after resize, the additional elements will NOT be set to zero. Please be careful. 
+    [Deprecated] If the size is increased in the resize operation, the additional elements will NOT be set to zero. Please use with care. 
 
-    [New][v0.6.6+] The resize of storage now follows the same behavior as vector, new elements will be init by zero.
+    [New][v0.6.6+] Additional elements are initialized by zeros when the memory is increased by resize. This behavior is similar to that of a vector.
 
 .. Tip::
 
-    1. You can use **Storage.size()** to get the current size of Storage.
-    2. Internally, cytnx allocate memory in multiple of 2. This choice is to optimize the bandwidth of CPU/GPU transfer and possibly performance of some kernels. you can use **Storage.capacity()** to check the current real memory size. 
+    1. You can use **Storage.size()** to get the current number of elements in the Storage.
+    2. Internally, Cytnx allocates memory in multiples of 2. This optimizes the bandwidth use of CPU/GPU transfers and possibly increases the performance of some kernels. You can use **Storage.capacity()** to check the currently allocated number of elements in real memory, which might be larger than the number of elements in the Storage. 
 
 
 

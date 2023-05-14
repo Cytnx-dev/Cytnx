@@ -1,12 +1,12 @@
 Save/Load
 -----------------
-We can save/read Storage to/from file.
+We can save/read a Storage instance to/from a file.
 
 Save a Storage
 *****************
 To save a Storage to file, simply call **Storage.Save(filepath)**. 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -16,7 +16,7 @@ To save a Storage to file, simply call **Storage.Save(filepath)**.
     A.Save("S1")
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -30,9 +30,9 @@ This will save Storage *A* to the current directory as **T1.cyst**, with extensi
 
 Load a Storage
 ******************
-Now, let's try to load the Storage from the file. 
+Now, let's load the Storage from the file. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -40,7 +40,7 @@ Now, let's try to load the Storage from the file.
     A = cytnx.Storage.Load("S1.cyst")
     print(A)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -58,11 +58,11 @@ Output>>
     [ 6.00000e+00 6.00000e+00 6.00000e+00 6.00000e+00 ]
 
 
-save & load from/to binary only
-*********************************
-We can also simply dump all the elements as binary file without any additional header information associate to the storage format. This is similar to numpy.tofile/numpy.fromfile.
+save & load from/to binary
+**************************
+We can also save all the elements in a binary file without any additional header information associated to the storage format. This is similar to numpy.tofile/numpy.fromfile.
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -95,7 +95,7 @@ We can also simply dump all the elements as binary file without any additional h
         
     cout << B << endl;
 
->>> output:
+Output>>
 
 .. code-block:: text
 
@@ -112,7 +112,7 @@ We can also simply dump all the elements as binary file without any additional h
 
 .. Note:: 
 
-    You can also choose to load part of the file with additional argument *count* when using **Fromfile**
+    You can also choose to load a part of the file with an additional argument *count* when using **Fromfile**
 
 
 

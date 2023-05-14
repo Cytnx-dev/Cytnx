@@ -1,8 +1,8 @@
 Lanczos solver
 ----------------
-Currently (v0.5.5a) Cytnx provide the Lanczos iterative solver that solve the eigen value problem of the custom operator defined using **LinOp** class.
+Currently (v0.5.5a), Cytnx solves the eigenvalue problem for a custom linear operator defined using the **LinOp** class by using the Lanczos iterative solver.
 
-To use, you can pass either the **LinOp** itself or any of it's interitance object to **linalg.Lanczos_ER**
+For this, you can pass either the **LinOp** itself or any of its interitance object to **linalg.Lanczos_ER**
 
 * Lanczos_ER signature:
 
@@ -11,22 +11,22 @@ To use, you can pass either the **LinOp** itself or any of it's interitance obje
     
     Perform Lanczos for hermitian/symmetric matrices or linear function.
     
-    :param LinOp Hop: the Linear Operator defined by LinOp class or it's inheritance.
-    :param uint64 k: the number of lowest k eigen values
-    :param bool is_V: if set to true, the eigen vectors will be returned
-    :param uint64 maxiter: the maximum interation steps for each k
+    :param LinOp Hop: the Linear Operator defined by LinOp class or its inheritance.
+    :param uint64 k: the number of lowest k eigenvalues
+    :param bool is_V: if set to true, the eigenvectors will be returned
+    :param uint64 maxiter: the maximum number of iteration steps for each k
     :param double CvgCrit: the convergence criterion of the energy
-    :param bool is_row: whether the return eigen vectors should be in row-major form
+    :param bool is_row: whether the returned eigenvectors should be in row-major form
     :param Tensor Tin: the initial vector, this should be rank-1
-    :param uint32 max_krydim: the maximum krylov subspace dimension for each iteration
+    :param uint32 max_krydim: the maximum Krylov subspace dimension for each iteration
     :return: [eigvals (Tensor), eigvecs (Tensor)(option)]
     :rtype: vector<Tensor> (C++ API)/list of Tensor(python API) 
 
 
-For example, let's consider a simple example of wrapping a (4x4) matrix inside a custom operator, you can easily generalize the **matvec** to be any custom sparse structure. 
+For example, we consider a simple example of wrapping a (4x4) matrix inside a custom operator. We can easily generalize the **matvec** to be any custom sparse structure. 
 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -46,11 +46,11 @@ For example, let's consider a simple example of wrapping a (4x4) matrix inside a
     v0 = cytnx.arange(4) # trial state
     ev = cytnx.linalg.Lanczos_ER(op,k=1,Tin=v0)
 
-    print(ev[0]) #eigen val
-    print(ev[1]) #eigen vec
+    print(ev[0]) #eigenval
+    print(ev[1]) #eigenvec
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -73,8 +73,8 @@ For example, let's consider a simple example of wrapping a (4x4) matrix inside a
     auto v0 = arange(4); // trial state
     auto ev = linalg::Lanczos_ER(&op,1, true, 10000,1.0e-14, false,v0);
 
-    cout << ev[0] << endl; //eigen val
-    cout << ev[1] << endl; //eigen vec
+    cout << ev[0] << endl; //eigenval
+    cout << ev[1] << endl; //eigenvec
 
 Output >>
 
@@ -98,13 +98,13 @@ Output >>
 
 .. Note::
 
-    1. The ER stand for explicitly restarted. The Lanczos method is base on :lanczos-er:`This reference <>` which can capture the degenerate correctly. 
+    1. The ER stand for explicitly restarted. The Lanczos method used is based on :lanczos-er:`this reference <>` which can reproduce the degenerate correctly. 
 
-    2. Lanczos only work for symmetric/Hermitian operator.
+    2. The Lanczos solver only works for symmetric/Hermitian operators.
 
-    3. in case where the operator is small, try to reduce the max_krydim to get correct convergence.
+    3. In cases where the operator is small, try to reduce the max_krydim to get a correct convergence.
 
 .. seealso::
 
-    Examples/Exact diagonalization for example of exact diagonalization calculation in 1D transverse field ising model. 
+    The solver is used in the example :ref:`SectionED` for the one dimensional transverse field Ising model. 
 

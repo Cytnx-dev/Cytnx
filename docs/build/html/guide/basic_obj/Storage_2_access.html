@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>4.2. Access elements &#8212; Cytnx  documentation</title>
+    <title>4.2. Accessing elements &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -45,6 +45,7 @@
                   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -61,9 +62,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -137,12 +138,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -151,13 +152,13 @@
 <li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -170,53 +171,64 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../net.html">7. Network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">7.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">8. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">9. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">9.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">10. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -248,6 +260,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
@@ -275,7 +291,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.0</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -301,7 +317,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.0</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -326,7 +342,7 @@
                          accesskey="U"
                          class="active"
                        ><span class="section-number">4. </span>Storage</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">4.2. </span>Access elements</li>
+            <li class="breadcrumb-item active"><span class="section-number">4.2. </span>Accessing elements</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
@@ -351,6 +367,7 @@
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -367,9 +384,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -443,12 +460,12 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Storage.html">4. Storage</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -457,13 +474,13 @@
 <li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -476,53 +493,64 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">6.3. UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../net.html">7. Network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">7.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">7.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">8. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">9. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">9.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/UniTensor.html">8.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_getblk.html">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../cyx/Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../cyx/Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">10. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -554,6 +582,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
@@ -606,13 +638,13 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="access-elements">
-<h1><span class="section-number">4.2. </span>Access elements<a class="headerlink" href="#access-elements" title="Permalink to this heading">¶</a></h1>
-<p>To access the element in Storage, different API should be used in python and C++ due to the fundamental difference in two languages.</p>
-<section id="get-set-element">
-<h2><span class="section-number">4.2.1. </span>Get/Set element<a class="headerlink" href="#get-set-element" title="Permalink to this heading">¶</a></h2>
+  <section id="accessing-elements">
+<h1><span class="section-number">4.2. </span>Accessing elements<a class="headerlink" href="#accessing-elements" title="Permalink to this heading">¶</a></h1>
+<p>To access the elements in Storage, different APIs are used in Python and C++ due to the fundamental differences in the two languages.</p>
+<section id="get-set-elements">
+<h2><span class="section-number">4.2.1. </span>Get/Set elements<a class="headerlink" href="#get-set-elements" title="Permalink to this heading">¶</a></h2>
 <ul class="simple">
-<li><p>In python, simply use <strong>operator[]</strong>:</p></li>
+<li><p>In Python, simply use <strong>operator[]</strong>:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Storage</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 <span class="linenos">2</span><span class="n">A</span><span class="o">.</span><span class="n">set_zeros</span><span class="p">()</span>
@@ -623,7 +655,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>In c++, we use <strong>at&lt;&gt;()</strong>:</p></li>
+<li><p>In C++, use <strong>at&lt;&gt;()</strong>:</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
 <span class="linenos">2</span><span class="n">A</span><span class="p">.</span><span class="n">set_zeros</span><span class="p">();</span>
@@ -648,12 +680,12 @@ size  : 6
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>The return is the reference of the element, just like c++ <em>vector</em>.</p></li>
-<li><p>The template type that match the dtype of Storage instance should be specify when calling <strong>at&lt;&gt;()</strong>. If the type mismatch, an error will be prompt.</p></li>
+<li><p>The return value is the reference to the accessed element. This behavior is similar to a C++ <em>vector</em>.</p></li>
+<li><p>The same template type as the dtype of the Storage instance should be specified when calling <strong>at&lt;&gt;()</strong>. If the types mismatch, an error will be prompted.</p></li>
 </ol>
 </div>
 <ul class="simple">
-<li><p>[New][v0.6.6+] The introduce of C++ only Scalar class allow get elements using <strong>at()</strong>  without specialization (C++ only)</p></li>
+<li><p>[New][v0.6.6+] The introduction of the Scalar class allows to get elements using <strong>at()</strong>  without type specialization (C++ only):</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
 <span class="linenos">2</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
@@ -683,16 +715,16 @@ size  : 6
 </section>
 <section id="get-raw-pointer-c-only">
 <h2><span class="section-number">4.2.2. </span>Get raw-pointer (C++ only)<a class="headerlink" href="#get-raw-pointer-c-only" title="Permalink to this heading">¶</a></h2>
-<p>In some cases where user might want to get the raw-pointer from Storage. It is possible to do so. Cytnx provide two ways you can get a raw-pointer.</p>
+<p>In some cases the user might want to get the raw-pointer to the Storage. Cytnx provides two ways to get a raw-pointer.</p>
 <ol class="arabic simple">
 <li><dl class="simple">
-<dt>Use <strong>Storage.data&lt;&gt;()</strong>:</dt><dd><p>Using <strong>.data&lt;T&gt;</strong> should provide a template type <em>T</em> that match the dtype of Storage. The return will be a pointer with type <em>T</em>.</p>
+<dt>Use <strong>Storage.data&lt;&gt;()</strong>:</dt><dd><p>If you use <strong>.data&lt;T&gt;</strong>, the template type <em>T</em> should match the dtype of the Storage. The return value will be a pointer with type <em>T</em>.</p>
 </dd>
 </dl>
 </li>
 </ol>
 <ul class="simple">
-<li><p>In c++:</p></li>
+<li><p>In C++:</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
 <span class="linenos">2</span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">pA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">data</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">();</span>
@@ -700,13 +732,13 @@ size  : 6
 </div>
 <ol class="arabic simple" start="2">
 <li><dl class="simple">
-<dt>Use <strong>Storage.data()</strong>:</dt><dd><p>Using <strong>.data()</strong> without specialization return a void pointer, please use with caution.</p>
+<dt>Use <strong>Storage.data()</strong>:</dt><dd><p>Using <strong>.data()</strong> without specialization returns a void pointer, please use with caution!</p>
 </dd>
 </dl>
 </li>
 </ol>
 <ul class="simple">
-<li><p>In c++:</p></li>
+<li><p>In C++:</p></li>
 </ul>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Storage</span><span class="p">(</span><span class="mi">6</span><span class="p">);</span>
 <span class="linenos">2</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">pA</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">data</span><span class="p">();</span>
@@ -714,12 +746,12 @@ size  : 6
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If the current Storage instance is allocate on GPU, the return pointer will be a device pointer.
-See <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html">this page</a>.</p>
+<p>If the current Storage instance is allocated on a GPU, the return pointer will be a device pointer.
+See <a class="reference external" href="https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__MEMORY.html">the CUDA documentation</a>.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The return pointer is shared with the Storage instance. Thus it’s life time will be the same as that instance. If the instance is destroy first, the memory will be free, and the pointer will be invalid as well. Please use with caution.</p>
+<p>The return pointer is shared with the Storage instance. Thus its life time will be limited by that of the Storage instance. If the instance is destroyed first, the memory will be freed, and the pointer will be invalid as well. Please use with caution!</p>
 </div>
 <div class="toctree-wrapper compound">
 </div>

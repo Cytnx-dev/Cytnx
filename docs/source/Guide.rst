@@ -51,7 +51,8 @@ Continue reading:
     guide/basic_obj/Tensor.rst
     guide/basic_obj/Storage.rst
     guide/basic_obj/Scalar.rst
+    guide/cyx.rst
+    guide/net.rst
     guide/linalg.rst
     guide/itersol.rst
-    guide/cyx.rst
     guide/xlinalg.rst

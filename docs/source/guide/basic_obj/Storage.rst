@@ -1,12 +1,12 @@
 Storage
 ==========
-Storage is the low-level container that handles the memory allocate/free and transfer between different devices. Inside the Tensor, all the elements are store inside Storage object. 
+Storage is a low-level container which handles the allocation and freeing of memory, as well as transferring data between different devices. All elements within a Tensor are stored inside a Storage object.
 
-Most of the case user will not directly use this object, but in some cases it could be useful in C++. 
+Typically, users won't directly interact with this object, but there may be instances where it proves useful in C++.
 
 .. Note::
     
-    Unlike Tensor, The memory layout of Storage is always contiguous. 
+    Unlike Tensor, the memory layout of Storage is always contiguous. 
 
 
 In the following, let's see how to use it: 

@@ -23,6 +23,7 @@ Cytnx user guide and examples
    convention.rst
    Guide.rst
    Examples.rst
+   CommApp.rst
    Perf_tune.rst
 
 .. toctree::

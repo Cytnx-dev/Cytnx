@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>8.3.4. Accessing the block(s) &#8212; Cytnx  documentation</title>
+    <title>6.3.4. Accessing the block(s) &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -26,8 +26,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="8.3.5. Manipulate UniTensor" href="UniTensor_manip.html" />
-    <link rel="prev" title="8.3.3. UniTensor with Symmetry" href="UniTensor_sym.html" /> 
+    <link rel="next" title="6.3.5. Get element from UniTensor" href="UniTensor_getele.html" />
+    <link rel="prev" title="6.3.3. UniTensor with Symmetry" href="UniTensor_sym.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -45,6 +45,7 @@
                   <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -61,9 +62,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -137,12 +138,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../basic_obj/Storage.html">4. Storage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -151,13 +152,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -170,53 +171,64 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../net.html">7. Network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">7.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">7.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">8. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">9. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">9.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">10. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -248,6 +260,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
@@ -275,7 +291,7 @@
               
                   <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.0</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -301,7 +317,7 @@
                   
                       <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.0</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -322,21 +338,21 @@
                 <li class="breadcrumb-item"><a href="../../Guide.html"
                        >User Guide</a></li>
                 <li class="breadcrumb-item"><a href="../cyx.html"
-                       ><span class="section-number">8. </span>Cytnx extensions</a></li>
+                       ><span class="section-number">6. </span>UniTensor</a></li>
                 <li class="breadcrumb-item"><a href="UniTensor.html"
                        
                          accesskey="U"
                          class="active"
-                       ><span class="section-number">8.3. </span>UniTensor</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">8.3.4. </span>Accessing the block(s)</li>
+                       ><span class="section-number">6.3. </span>UniTensor</a></li>
+            <li class="breadcrumb-item active"><span class="section-number">6.3.4. </span>Accessing the block(s)</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="UniTensor_sym.html" title="Previous Chapter: 8.3.3. UniTensor with Symmetry" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 8.3.3. UniTen...
+               <a href="UniTensor_sym.html" title="Previous Chapter: 6.3.3. UniTensor with Symmetry" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 6.3.3. UniTen...
                </a>
-               <a href="UniTensor_manip.html" title="Next Chapter: 8.3.5. Manipulate UniTensor" class="btn btn-primary" role="botton" accesskey="N">
-                   8.3.5. Manipu... &raquo;
+               <a href="UniTensor_getele.html" title="Next Chapter: 6.3.5. Get element from UniTensor" class="btn btn-primary" role="botton" accesskey="N">
+                   6.3.5. Get el... &raquo;
                </a>
            </div>
        </div>
@@ -353,6 +369,7 @@
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../Intro.html#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../Intro.html#further-references">Further references</a></li>
 </ul>
 </li>
 </ul>
@@ -369,9 +386,9 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../adv_install.html">Advanced Install of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#build-install-cytnx-from-source">Build/Install Cytnx from source</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#depedencies">Depedencies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using python API after self-build install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
 </ul>
 </li>
@@ -445,12 +462,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../basic_obj/Storage.html">4. Storage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_1_create.html">4.1. Create a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-btwn-devices">4.1.2. Transfer btwn devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Access elements</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-element">4.2.1. Get/Set element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Accessing elements</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-set-elements">4.2.1. Get/Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_2_access.html#get-raw-pointer-c-only">4.2.2. Get raw-pointer (C++ only)</a></li>
 </ul>
 </li>
@@ -459,13 +476,13 @@
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_3_expand.html#resize">4.3.2. Resize</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To c++.vector</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary-only">4.5.3. save &amp; load from/to binary only</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
@@ -478,53 +495,64 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../linalg.html">6. Linear algebra</a><ul class="simple">
+<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">6. UniTensor</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="TNotation.html">6.1. Tensor Notation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
+<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../itersol.html">7. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">7.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">7.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">7.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">7.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">7.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Bond.html">6.2. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">7.2. Lanczos solver</a><ul>
+<li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">6.3. UniTensor</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">6.3.1. Create UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">6.3.4. Accessing the block(s)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Contraction.html">6.4. Contraction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contract">6.4.1. Contract()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#contracts">6.4.2. Contracts()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Contraction.html#ncon">6.4.3. ncon()</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../net.html">7. Network</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Network.html">7.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">7.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../linalg.html">8. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../itersol.html">9. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">9.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="reference internal" href="../cyx.html">8. Cytnx extensions</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="TNotation.html">8.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#tensor-contraction">8.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="TNotation.html#direction-of-bond">8.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Bond.html">8.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#symmetry-object">8.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#create-bond-with-qnums">8.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Bond.html#combine-bonds">8.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3 current"><a class="reference internal" href="UniTensor.html">8.3. UniTensor</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_create.html">8.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_tag.html">8.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_sym.html">8.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4 current"><a class="current reference internal" href="#">8.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="UniTensor_manip.html">8.3.5. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="Network.html">8.4. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-net-file">8.4.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#put-unitensors-and-launch">8.4.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Network.html#network-from-string">8.4.3. Network from string</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">9. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">10. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -558,6 +586,10 @@
 <li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="../../Perf_tune.html">Performance tune</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensordot.html">Tensordot with input cache</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
@@ -580,12 +612,12 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="UniTensor_sym.html"
-                          title="previous chapter"><span class="section-number">8.3.3. </span>UniTensor with Symmetry</a></p>
+                          title="previous chapter"><span class="section-number">6.3.3. </span>UniTensor with Symmetry</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="UniTensor_manip.html"
-                          title="next chapter"><span class="section-number">8.3.5. </span>Manipulate UniTensor</a></p>
+    <p class="topless"><a href="UniTensor_getele.html"
+                          title="next chapter"><span class="section-number">6.3.5. </span>Get element from UniTensor</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
@@ -609,10 +641,10 @@
           <div class="body">
             
   <section id="accessing-the-block-s">
-<h1><span class="section-number">8.3.4. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">6.3.4. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Permalink to this heading">¶</a></h1>
 <p>In this section we introduce some basic ways to access and manipulate the blocks in UniTensors.</p>
 <section id="unitensor-without-symmetries">
-<h2><span class="section-number">8.3.4.1. </span>UniTensor without symmetries<a class="headerlink" href="#unitensor-without-symmetries" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">6.3.4.1. </span>UniTensor without symmetries<a class="headerlink" href="#unitensor-without-symmetries" title="Permalink to this heading">¶</a></h2>
 <p>For the UniTensor without symmetries, we expect the UniTensor is just an Tensor with bonds labeled by ids,
 in this case, the <strong>.get_block()</strong>  or <strong>.get_block_()</strong> will return the Tensor object of the UniTensor for us to manipulate.</p>
 <ul class="simple">
@@ -635,7 +667,7 @@ Shape : (3,3)
 </div>
 </section>
 <section id="unitensor-with-symmetries">
-<h2><span class="section-number">8.3.4.2. </span>UniTensor with symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">6.3.4.2. </span>UniTensor with symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Permalink to this heading">¶</a></h2>
 <p><strong>Getting all blocks:</strong></p>
 <p>Let’s use the same example of U1 symmetry UniTensor we introduce earlier in previous section to demostrate how to get block(s) from a block structured UniTensor:</p>
 <a class="reference internal image-reference" href="../../_images/u1_tdex.png"><img alt="../../_images/u1_tdex.png" class="align-center" src="../../_images/u1_tdex.png" style="width: 500px;" /></a>
@@ -698,7 +730,7 @@ Shape : (1,1,1)
 </div>
 </section>
 <section id="getting-a-given-block">
-<h2><span class="section-number">8.3.4.3. </span>Getting a given block<a class="headerlink" href="#getting-a-given-block" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">6.3.4.3. </span>Getting a given block<a class="headerlink" href="#getting-a-given-block" title="Permalink to this heading">¶</a></h2>
 <p>There are two ways to get a certain block from a UniTensor.</p>
 <ol class="arabic simple">
 <li><p>getting a block by their index in the current order</p></li>
@@ -713,6 +745,7 @@ Shape : (1,1,1)
 </dl>
 </dd></dl>
 
+<p>For example, if we want to get the 1-th block, then:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Td</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
 </pre></div>
@@ -735,80 +768,96 @@ Shape : (1,1,2)
 <dd class="field-odd"><p><strong>qindices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – a list of integer specify the indices of qnums on each axis/leg.</p>
 </dd>
 </dl>
+<p>Alternatively, to get the 1-th block with qnums [Qs(1),Qs(-1),Qs(0)] on each leg, which corresponding to the Qn-indices [0,1,1], then:</p>
 </dd></dl>
 
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Td</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 2
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,2)
+[[[0.00000e+00 0.00000e+00 ]]]
+</pre></div>
+</div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>get_block_() with underscore indicate a reference view of that block!</p>
 <p>Note again that the blocks are nothing but the normal <strong>Tensor</strong> object, so we can manipulate it as we did to the Tensors, here we demostrate the usage of <strong>.get_block_()</strong>, since the return should be the reference, we can directly assign/modify the content of these blocks.</p>
 </div>
-<p>[NEED MODIFY!!]</p>
-<ul class="simple">
-<li><p>In python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">## assign:</span>
-<span class="linenos"> 2</span><span class="c1"># Q = 2  # Q = 0:    # Q = -2:</span>
-<span class="linenos"> 3</span><span class="c1"># [1/4]    [[ -1/4, 1/2]     [1/4]</span>
-<span class="linenos"> 4</span><span class="c1">#         [  1/2, -1/4]]</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="n">H</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
-<span class="linenos"> 7</span><span class="n">T0</span> <span class="o">=</span> <span class="n">H</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos"> 8</span><span class="n">T0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">T0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
-<span class="linenos"> 9</span><span class="n">T0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">T0</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
-<span class="linenos">10</span><span class="n">H</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="o">-</span><span class="mi">2</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">;</span>
+</section>
+<section id="putting-a-given-block">
+<h2><span class="section-number">6.3.4.4. </span>Putting a given block<a class="headerlink" href="#putting-a-given-block" title="Permalink to this heading">¶</a></h2>
+<p>Sometimes, the application might require user to put data into a given symmetry block. To do this, one can make use of <em>put_block()</em></p>
+<ol class="arabic simple">
+<li><p>put a block by their index in the current order</p></li>
+</ol>
+<dl class="py function">
+<dt class="sig sig-object py" id="UniTensor.put_block">
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.put_block" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>[</em><em>int</em><em>]</em>) – the index of the blocks in current UniTensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>For example, if we want to put the tensor into the 1-th block location, then:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B2</span> <span class="o">=</span> <span class="n">ones</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">2</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Td</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">Td</span><span class="o">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">B2</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">Td</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Alternatively, the above can also be done by the <strong>.put_block_()</strong> or <strong>.put_block()</strong>, with the argument to be a tensor and a quantum number label to indicate
-which block to put in (replaced by the input tensor).</p>
-<ul class="simple">
-<li><p>In python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">## assign:</span>
-<span class="linenos"> 2</span><span class="c1"># Q = 2  # Q = 0:    # Q = -2:</span>
-<span class="linenos"> 3</span><span class="c1"># [1/4]    [[ -1/4, 1/2]     [1/4]</span>
-<span class="linenos"> 4</span><span class="c1">#         [  1/2, -1/4]]</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="n">Ta</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos"> 7</span><span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span>
-<span class="linenos"> 8</span><span class="n">Tb</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="linenos"> 9</span><span class="n">Tb</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tb</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span>
-<span class="linenos">10</span><span class="n">Tb</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Tb</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">2</span>
-<span class="linenos">11</span><span class="n">Tc</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos">12</span><span class="n">Tc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="mi">4</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span><span class="n">H</span><span class="o">.</span><span class="n">put_block_</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="linenos">15</span><span class="n">H</span><span class="o">.</span><span class="n">put_block_</span><span class="p">(</span><span class="n">Tb</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="linenos">16</span><span class="n">H</span><span class="o">.</span><span class="n">put_block_</span><span class="p">(</span><span class="n">Tc</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
-<span class="linenos">17</span>
-<span class="linenos">18</span><span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="o">.</span><span class="n">get_blocks</span><span class="p">())</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 2
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,2)
+[[[0.00000e+00 0.00000e+00 ]]]
+
+
+Total elem: 2
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,2)
+[[[1.00000e+00 1.00000e+00 ]]]
 </pre></div>
 </div>
-<p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 1
+<ol class="arabic simple" start="2">
+<li><p>puting a block into location assigned by their Qn-indices</p></li>
+</ol>
+<dl class="py function">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>qindices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – a list of integer specify the indices of qnums on each axis/leg.</p>
+</dd>
+</dl>
+<p>Alternatively, to put the tensor into the 1-th block with qnums [Qs(1),Qs(-1),Qs(0)] on each leg, which corresponding to the Qn-indices [0,1,1], then:</p>
+</dd></dl>
+
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B2</span> <span class="o">=</span> <span class="n">ones</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">2</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Td</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">Td</span><span class="o">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">B2</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">Td</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
-Shape : (1,1)
-[[2.50000e-01 ]]
+Shape : (1,1,2)
+[[[0.00000e+00 0.00000e+00 ]]]
 
-
-
-Total elem: 4
+Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
-Shape : (2,2)
-[[-2.50000e-01 5.00000e-01 ]
-[5.00000e-01 -2.50000e-01 ]]
-
-
-
-Total elem: 1
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1)
-[[2.50000e-01 ]]
-
-
-[, , ]
+Shape : (1,1,2)
+[[[1.00000e+00 1.00000e+00 ]]]
 </pre></div>
 </div>
 <div class="toctree-wrapper compound">
