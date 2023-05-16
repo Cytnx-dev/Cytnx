@@ -629,18 +629,36 @@ namespace cytnx {
     */
     void Save(const std::string &fname) const;
     /**
-     * @see Save(const std::string &fname)
+     * @see Save(const std::string &fname) const
     */
     void Save(const char *fname) const;
+
+    /**
+     * @brief Save current Tensor to the binary file
+     * @details This function will save the Tensor to the binary file with file 
+     *   name \p fname .
+     * @param fname[in] the file name of the binary file.
+     * @pre The file name @p fname must be valid.
+     * @see cytnx::Tensor::Fromfile
+     */
     void Tofile(const std::string &fname) const;
+
+    /**
+     * @see Tofile(const std::string &fname) const
+    */
     void Tofile(const char *fname) const;
+
+    /**
+     * @see Tofile(const std::string &fname) const
+    */
     void Tofile(std::fstream &f) const;
+
     /**
     @brief Load current Tensor from file
     @param fname[in] (within postfix ".cytn")
     @details
         load the Storage from file with file path specify with input param 'fname'
-    @pre the file must be saved with postfix ".cytn"
+    @pre the file must be a Tensor object which is saved by cytnx::Tensor::Save.
     */
 
     static Tensor Load(const std::string &fname);
@@ -648,6 +666,27 @@ namespace cytnx {
      * @see Load(const std::string &fname)
     */
     static Tensor Load(const char *fname);
+
+    /**
+     * @brief Load current Tensor from the binary file
+     * @details This function will load the Tensor from the binary file which is saved by
+     *    cytnx::Tensor::Tofile. Given the file name \p fname , data type \p dtype and 
+     *    number of elements \p count, this function will load the first \p count elements
+     *    from the binary file \p fname with data type \p dtype.
+     * @param fname[in] the file name of the binary file.
+     * @param dtype[in] the data type of the binary file. This can be any of the type defined in
+     *   cytnx::Type.
+     * @param count[in] the number of elements to be loaded from the binary file. If set to -1,
+     *  all elements in the binary file will be loaded.
+     * @return Tensor
+     * @pre 
+     *  1. The @p dtype cannot be Type.Void.
+     *  2. The @p dtype must be the same as the data type of the binary file.
+     *  3. The @p Nelem cannot be 0.
+     *  4. The @p Nelem cannot be larger than the number of elements in the binary file.
+     *  5. The file name @p fname must be valid.
+     * @see cytnx::Tensor::Tofile
+    */
     static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
                            const cytnx_int64 &count = -1);
     static Tensor Fromfile(const char *fname, const unsigned int &dtype,
@@ -752,6 +791,11 @@ namespace cytnx {
     // }
     //@}
 
+    /**
+    @brief Convert a Storage to Tensor
+    @param[in] in the Storage to be converted
+    @return [Tensor] a Tensor with the same dtype and device as the input Storage
+    */
     static Tensor from_storage(const Storage &in) {
       Tensor out;
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
@@ -868,6 +912,10 @@ namespace cytnx {
     */
     void to_(const int &device) { this->_impl->to_(device); }
 
+    /**
+    @brief return whether the Tensor is contiguous or not.
+    @return [bool] true if the Tensor is contiguous, false otherwise.
+    */
     const bool &is_contiguous() const { return this->_impl->is_contiguous(); }
 
     Tensor permute_(const std::vector<cytnx_uint64> &rnks) {
@@ -1003,7 +1051,8 @@ namespace cytnx {
     @note 
         1. This function will not change the original Tensor.
         2. You can use Tensor::reshape_() to reshape the Tensor inplacely.
-        3. You can set \p new_shape to -1 if the shape of the Tensor is undetermined.
+        3. You can set \p new_shape to -1, which will be automatically determined 
+          by the size of the Tensor. The behavior is the same as numpy.reshape().
     @see \link Tensor::reshape_ Tensor::reshape_() \endlink
 
     ## Example:
@@ -1058,6 +1107,7 @@ namespace cytnx {
         This function cannot convert complex type to real type, please use 
         Tensor::real() or Tensor::imag() to get the real or imaginary part of 
         the complex Tensor instead.
+
     ## Example:
     ### c++ API:
     \include example/Tensor/astype.cpp
@@ -1084,6 +1134,8 @@ namespace cytnx {
 
     /**
     @brief Get an element at specific location.
+    @details This function is used to get an element at specific location. If the template type is
+    not given, the return will be a Scalar.
     @param[in] locator the location of the element
     @return [ref]
 
@@ -1132,7 +1184,9 @@ namespace cytnx {
     /// @endcond
 
     /**
-    @brief get an from a rank-0 Tensor
+    @brief get the element from a rank-0 Tensor.
+    @details This function is used to get the element from a rank-0 Tensor. If the template type is
+    not given, the return will be a Scalar.
     @return [T]
 
     @note
@@ -1272,9 +1326,9 @@ namespace cytnx {
     @brief return the storage of current Tensor.
     @return [Storage]
 
-    @note:
-        1. The return storage shares the same instance of the storage of current Tensor. Use \link
-    Storage::clone Storage.clone() \endlink to create a new instance of the returned Storage.
+    @note
+      The return storage shares the same instance of the storage of current Tensor. Use
+      Storage.clone() to create a new instance of the returned Storage.
 
     */
     Storage &storage() const { return this->_impl->storage(); }
@@ -1536,7 +1590,7 @@ namespace cytnx {
     /**
      * @brief The flatten function.
      * @details This function is the flatten function. It will clone (deep copy)
-     * , contiguos the current tensor and reshape it to undetermined rank.
+     * , contiguos the current tensor and reshape it to 1-rank Tensor.
      * @note compare to the flatten_() function, this function will return a new
      * tensor and the current tensor will not be changed.
      */
@@ -1550,7 +1604,7 @@ namespace cytnx {
     /**
      * @brief The flatten function, inplacely.
      * @details This function is the flatten function, inplacely. It will
-     * contiguos the current tensor and reshape it to undetermined rank.
+     * contiguos the current tensor and reshape it to 1-rank Tensor.
      * @note compare to the flatten() function, this is an inplacely function,
      * the current tensor will be changed.
      */
@@ -1723,6 +1777,14 @@ namespace cytnx {
       this->_impl->_storage.append(rhs);
     }
 
+    /**
+     * @brief Check whether two tensors share the same internal memory.
+     * @details This function will check whether two tensors share the same
+     * internal memory. If the two tensors share the same internal memory, then
+     * the function will return true. Otherwise, it will return false. See user
+     * guide for more details.
+     * @param[in] rhs the tensor to be compared.
+    */
     bool same_data(const Tensor &rhs) const;
 
     // linalg:
