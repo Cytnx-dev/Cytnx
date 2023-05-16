@@ -624,7 +624,6 @@ namespace cytnx {
     @details
         save the Tensor to file with file path specify with input param \p fname with postfix
     ".cytn"
-    @post the file will be saved with postfix ".cytn"
     @see Load(const std::string &fname)
     */
     void Save(const std::string &fname) const;
@@ -655,7 +654,7 @@ namespace cytnx {
 
     /**
     @brief Load current Tensor from file
-    @param fname[in] (within postfix ".cytn")
+    @param fname[in] file name
     @details
         load the Storage from file with file path specify with input param 'fname'
     @pre the file must be a Tensor object which is saved by cytnx::Tensor::Save.

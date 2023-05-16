@@ -4335,15 +4335,17 @@ namespace cytnx {
 
     /**
     @brief save a UniTensor to file
+    @details Save a UniTensor to file. The file extension will be extended as '.cytnx'
     @param[in] fname the file name (exclude the file extension).
-    @post The file extension will be extended as '.cytnx'
+    @see Load(const std::string &fname)
     */
     void Save(const std::string &fname) const;
 
     /**
     @brief save a UniTensor to file
+    @details Save a UniTensor to file. The file extension will be extended as '.cytnx'
     @param[in] fname the file name (exclude the file extension).
-    @post The file extension will be extended as '.cytnx'
+    @see Load(const char *fname)
     */
     void Save(const char *fname) const;
 
@@ -4351,8 +4353,8 @@ namespace cytnx {
     @brief load a UniTensor from file
     @param[in] fname the file name
     @return the loaded UniTensor
-    @warning This is static function, if called through UniTensor object, 
-    it will return a new UniTensor object instead of modifying the current one.
+    @pre The file must be a UniTensor object. That is, the file must be created by UniTensor::Save().
+    @see Save(const std::string &fname) const
     */
     static UniTensor Load(const std::string &fname);
 
@@ -4360,8 +4362,8 @@ namespace cytnx {
     @brief load a UniTensor from file
     @param[in] fname: the file name
     @return the loaded UniTensor
-    @warning This is static function, if called through UniTensor object, 
-        it will return a new UniTensor object instead of modifying the current one.
+    @pre The file must be a UniTensor object. That is, the file must be created by UniTensor::Save().
+    @see Save(const char* fname) const
     */
     static UniTensor Load(const char *fname);
 

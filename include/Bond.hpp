@@ -806,8 +806,9 @@ namespace cytnx {
 
     /**
     @brief Save the Bond object to the file.
+    @details Save the Bond object to the file. The file extension will be automatically 
+      added as ".cybd".
 	  @param[in] fname the file name of the Bond object (exclude the file extension).
-	  @post The file extension will be extended as '.cybd'.
     @see Load(const std::string &fname)
     */
     void Save(const std::string &fname) const;
