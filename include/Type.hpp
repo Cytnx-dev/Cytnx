@@ -179,7 +179,9 @@ namespace cytnx {
   };
   /// @endcond
 
+  /// @cond
   int type_promote(const int &typeL, const int &typeR);
+  /// @endcond
 
   /**
    * @brief data type

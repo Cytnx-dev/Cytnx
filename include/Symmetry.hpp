@@ -425,7 +425,9 @@ namespace cytnx {
     bool operator!=(const Symmetry &rhs) const;
   };
 
+  /// @cond
   std::ostream &operator<<(std::ostream &os, const Symmetry &in);
+  /// @endcond
 
 }  // namespace cytnx
 #endif

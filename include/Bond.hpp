@@ -16,20 +16,24 @@ namespace cytnx {
   /**
    * @brief bond type
    * @details This is about the enumeration of the type of the object Bond. 
-   *     For the UniTensor is non-symmetry, the corresponding bondType must be BD_REG.
-   *     For the UniTensor is symmetry, the corresponding bondType must be BD_KET or
-   *     BD_BRA. Please note that if you want to do the contraction for symmetric 
-   *     UniTensor, you only can contract the bond with BD_KET and BD_BRA. Namely,
-   *     you cannot do the contraction if two bonds are both BD_KET or both BD_BRA.
+   * 1. For the UniTensor which is non-symmetry, the corresponding bondType will be set as
+   *   bondType.BD_REG defaultly. You also can set the bondType as bondType.BD_KET 
+   *   or bondType.BD_BRA if you want to give the UniTensor more physics meaning.
+   * 2. For the UniTensor is symmetry, the corresponding bondType must be bondType.BD_KET 
+   *   or bondType.BD_BRA. 
+   * 3. Please note that if you want to do the contraction for 
+   *   symmetric UniTensor, you must make sure that the two bonds you want to contract
+   *   are one bondType.BD_KET and the other bondType.BD_BRA. Namely, you cannot do the
+   *   contraction if two bonds are both bondType.BD_KET or both bondType.BD_BRA.
    * @note currently using gBD_* to indicate this is bond with new qnum structure!
    */
   enum bondType : int { 
     BD_KET = -1,  /*!< -1, represent ket state in physics */
-	BD_BRA = 1,   /*!< 1, represent bra state in physics */ 
-	BD_REG = 0,   /*!< 0, use if the UniTensor is non-symmetry */
-	BD_NONE = 0,  /*!< 0, same as BD_REG */
-	BD_IN = -1,   /*!< -1, same as BD_KET */
-	BD_OUT = 1    /*!< 1, same as BD_BRA */
+	  BD_BRA = 1,   /*!< 1, represent bra state in physics */ 
+	  BD_REG = 0,   /*!< 0, only can be used in non-symmetry UniTensor */
+	  BD_NONE = 0,  /*!< 0, same as BD_REG */
+	  BD_IN = -1,   /*!< -1, same as BD_KET */
+	  BD_OUT = 1    /*!< 1, same as BD_BRA */
   };
 
   /// @cond
@@ -164,11 +168,13 @@ namespace cytnx {
    * @brief the object contains auxiliary properties for each Tensor rank (bond)
    * @details The Bond object is used to construct the bond of the UniTensor. 
    *     1. For non-symmetric UniTensor (regular UniTensor, that means 
-   *       cytnx::UTenType.Dense, see cytnx::UTenType), the bond type need to be set as 
-   *       bondType.BD_REG, and you cannot input the quantum unbers and Symmtry object.
-   *     2. For symmtric UniTensor (cytnx::UTenType.Block, see cytnx::UTenType), the 
+   *       cytnx::UTenType.Dense, see cytnx::UTenType), the bond type need will be set as
+   *       bondType.BD_REG defaultly. And you can set the bond type as bondType.BD_KET or
+   *       bondType.BD_BRA if you want to describe the it as ket or bra basis.
+   *       For non-symmetric case, you cannot input the quantum numbers and Symmetry object.
+   *     2. For symmteric UniTensor (cytnx::UTenType.Block, see cytnx::UTenType), the 
    *       bond type need to be set as bondType.BD_KET or bondType.BD_BRA depend on 
-   *       what physcal system you describe. And you should input the quantum numbers 
+   *       what physical system you describe. And you should input the quantum numbers 
    *       and Symmetry objects.
    */
   class Bond {
@@ -386,7 +392,7 @@ namespace cytnx {
     }
 
     /**
-    @brief return the current tag type
+    @brief return the current bond type (see cytnx::bondType).
     @return cytnx::bondType
     */
     bondType type() const { return this->_impl->type(); };
@@ -521,14 +527,18 @@ namespace cytnx {
     /**
     @brief Combine the input bond with self, inplacely.
     @param[in] bd_in the bond that to be combined with self.
-	@param[in] is_grp
-	@pre 
-	  1. The type of two bonds (see cytnx::bondType) need to be same.
-	  2. The Symmetry of two bonds should be same.
-	@note Compare to \n
+	  @param[in] is_grp this parameter is only used when the bond is 
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+      If is_grp is true, the basis with duplicated quantum number will be
+      grouped together as a single basis. See 
+      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
+	  @pre 
+	    1. The type of two bonds (see cytnx::bondType) need to be same.
+	    2. The Symmetry of two bonds should be same.
+	  @note Compare to \n
       combineBond(const Bond &bd_in, const bool &is_grp) const, \n
-	  this function in inplace function.
-	@see combineBond(const Bond &bd_in, const bool &is_grp)const
+	    this function in inplace function.
+	  @see combineBond(const Bond &bd_in, const bool &is_grp)const
 
     ## Example:
     ### c++ API:
@@ -547,15 +557,19 @@ namespace cytnx {
     /**
     @brief combine the input bond with self, and return a new combined Bond instance.
     @param[in] bd_in the bond that to be combined.
-	@param[in] is_grp
+	  @param[in] is_grp this parameter is only used when the bond is 
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+      If is_grp is true, the basis with duplicated quantum number will be
+      grouped together as a single basis. See 
+      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
     @return [Bond] a new combined bond instance.
-	@pre 
-	  1. The type of two bonds (see cytnx::bondType) need to be same.
-	  2. The Symmetry of two bonds should be same.
-	@note Compare to \n
+	  @pre 
+	    1. The type of two bonds (see cytnx::bondType) need to be same.
+	    2. The Symmetry of two bonds should be same.
+	  @note Compare to \n
       combineBond_(const Bond &bd_in, const bool &is_grp), \n
-	  this function will create a new Bond object.
-	@see combineBond_(const Bond &bd_in, const bool &is_grp)
+	    this function will create a new Bond object.
+	  @see combineBond_(const Bond &bd_in, const bool &is_grp)
 
     ## Example:
     ### c++ API:
@@ -576,14 +590,18 @@ namespace cytnx {
     /**
     @brief combine multiple input bonds with self, and return a new combined Bond instance.
     @param[in] bds the bonds that to be combined with self.
-	@param[in] is_grp
+	  @param[in] is_grp this parameter is only used when the bond is 
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+      If is_grp is true, the basis with duplicated quantum number will be
+      grouped together as a single basis. See 
+      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
     @return [Bond] a new combined bond instance.
-	@pre 
-	  1. The type of all bonds (see cytnx::bondType) need to be same.
-	  2. The Symmetry of all bonds should be same.
-	@note Compare to \n
+	  @pre 
+	    1. The type of all bonds (see cytnx::bondType) need to be same.
+	    2. The Symmetry of all bonds should be same.
+	  @note Compare to \n
       combineBonds_(const std::vector<Bond> &bds, const bool &is_grp),\n
-	  this function will create a new Bond object.
+	    this function will create a new Bond object.
     @see combineBonds_(const std::vector<Bond> &bds, const bool &is_grp)
 
     ## Example:
@@ -607,7 +625,11 @@ namespace cytnx {
     /**
     @brief combine multiple input bonds with self, inplacely
     @param[in] bds the bonds that to be combined with self.
-	@param[in] is_grp
+	  @param[in] is_grp this parameter is only used when the bond is 
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+      If is_grp is true, the basis with duplicated quantum number will be
+      grouped together as a single basis. See 
+      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
 	@pre 
 	  1. The type of all bonds (see cytnx::bondType) need to be same.
 	  2. The Symmetry of all bonds should be same.
@@ -722,7 +744,7 @@ namespace cytnx {
 	      group_duplicates(std::vector<cytnx_uint64> &mapper) const,
 		  this function is inplace function.
 		2. This function will sort ascending of the quantum number. 
-	@see group_duplicates(std::vector<cytnx_uint64> &mapper) const
+	@see group_duplicates(std::vector<cytnx_uint64> &mapper) const,
 	    has_duplicate_qnums() const.
     @return std::vector<cytnx_uint64> mapper 
     */
@@ -784,8 +806,9 @@ namespace cytnx {
 
     /**
     @brief Save the Bond object to the file.
-	@param[in] fname the file name of the Bond object (exclude the file extension).
-	@post The file extension will be extended as '.cybd'.
+    @details Save the Bond object to the file. The file extension will be automatically 
+      added as ".cybd".
+	  @param[in] fname the file name of the Bond object (exclude the file extension).
     @see Load(const std::string &fname)
     */
     void Save(const std::string &fname) const;
@@ -797,8 +820,9 @@ namespace cytnx {
 
     /**
     @brief Load the Bond object from the file.
-	@param[in] fname the file name of the Bond object (include the file extension)
-	@pre The file extension need to be '.cybd'.
+	  @param[in] fname the file name of the Bond object.
+	  @pre The file need to be the file of Bond object, which is saved by the 
+      function Bond::Save(const std::string &fname) const.
     */
     static cytnx::Bond Load(const std::string &fname);
 
@@ -815,16 +839,18 @@ namespace cytnx {
     /**
     @brief The comparison operator 'equal to'.
     @details The comparison operators to compare two Bonds. If two Bond object are 
-	  same, return true. Otherwise, return false.
-	@see operator!=(const Bond &rhs) const
+	  same, return true. Otherwise, return false. This equal to operator will
+    compare all the "value" of the Bond object. Even the Bond object are different
+    object (different address), but they are same "value", it will return true.
+	  @see operator!=(const Bond &rhs) const
     */
     bool operator==(const Bond &rhs) const;
 
     /**
     @brief The comparison operator 'not equal to'.
-    @details The comparison operators to compare two Bonds. If two Bond object are 
-	  same, return false. Otherwise, return true.
-	@see operator==(const Bond &rhs) const
+    @details The comparison operators to compare two Bonds. More precisely, it is
+    the opposite result of the operator==(const Bond &rhs) const.
+	  @see operator==(const Bond &rhs) const
     */
     bool operator!=(const Bond &rhs) const;
 
