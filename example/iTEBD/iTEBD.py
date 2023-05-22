@@ -4,8 +4,6 @@ home = str(Path.home())
 sys.path.append(home + '/Cytnx_lib')
 import cytnx
 import numpy as np
-import scipy as sp
-from scipy import linalg
 
 ##
 # Author: Kai-Hsin Wu
@@ -61,6 +59,7 @@ A.print_diagram()
 B.print_diagram()
 #print(A)
 #print(B)
+
 la = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=['b','c'],is_diag=True)
 lb = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=['d','e'],is_diag=True)
 la.put_block(cytnx.ones(chi));
@@ -82,7 +81,7 @@ for i in range(10000):
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb_l = lb.relabel(lb.get_index('e'),X.labels()[0])
+    lb_l = lb.relabel(lb.get_index('e'),'a')
     X = cytnx.Contract(lb_l,X)
 
 
@@ -102,8 +101,7 @@ for i in range(10000):
     XH.set_labels(['d','e','0','1']) 
     
     
-    XHX = cytnx.Contract(Xt,XH)
-    XHX = XHX.item() ## rank-0
+    XHX = cytnx.Contract(Xt,XH).item() ## rank-0
     E = XHX/XNorm
 
     # print(E)
@@ -129,9 +127,8 @@ for i in range(10000):
 
     XeH.set_rowrank(2)
     la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
-
-    Norm = cytnx.linalg.Norm(la.get_block_()).item()
-    la *= 1./Norm
+    la.normalize_()
+    
     #A.print_diagram()
     #la.print_diagram()
     #B.print_diagram()
@@ -145,14 +142,10 @@ for i in range(10000):
     # again, but A' and B' are updated 
     lb_inv = 1./lb
     # lb_inv.print_diagram();
-    lb_inv.set_labels([B.labels()[2],A.labels()[0]])
+    lb_inv.set_labels(['e','d'])
    
     A = cytnx.Contract(lb_inv,A)
     B = cytnx.Contract(B,lb_inv)
-
-
-    #A.print_diagram()
-    #B.print_diagram()
 
     # translation symmetry, exchange A and B site
     A,B = B,A
