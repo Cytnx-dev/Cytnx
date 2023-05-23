@@ -82,7 +82,11 @@ for i in range(10000):
     lb.set_labels(["d","e"])
 
     ## contract all
-    X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
+    tmpA = cytnx.Contract(A,la)
+    tmpB = cytnx.Contract(B,lb)
+    X = cytnx.Contract(tmpA,tmpB) << "this line cause problem!\n";
+    #X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
+    exit(1)
     lb.set_label(lb.get_index('e'),new_label='a')
     X = cytnx.Contract(lb,X)
 
