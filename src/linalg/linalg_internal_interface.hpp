@@ -221,6 +221,7 @@ namespace cytnx {
 #endif
 
       linalg_internal_interface();
+      int set_mkl_ilp64();
     };
     extern linalg_internal_interface lii;
   }  // namespace linalg_internal

@@ -52,6 +52,8 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
+  m.def("set_mkl_ilp64",&cytnx::set_mkl_ilp64);
+
   // global vars
   // m.attr("cytnxdevice") = cytnx::cytnxdevice;
   // m.attr("Type")   = py::cast(cytnx::Type);

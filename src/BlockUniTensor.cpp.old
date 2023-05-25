@@ -1119,7 +1119,6 @@ namespace cytnx {
                   // Rtn->_blocks[b].reshape_(oldshapeR);
                   // Rtn->_blocks[b].permute_(inv_mapperR);
                 }
-                //mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
                 if(tmp->dtype()==Type.Double and this->dtype()==Type.Double and Rtn->dtype()==Type.Double){
                   blas_int group_count = itoiR_idx.size();

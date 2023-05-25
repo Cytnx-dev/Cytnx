@@ -1,4 +1,7 @@
 #include "linalg_internal_interface.hpp"
+#ifdef UNI_MKL
+    #include <mkl.h>
+#endif
 
 using namespace std;
 
@@ -7,7 +10,26 @@ namespace cytnx {
 
     linalg_internal_interface lii;
 
+    int linalg_internal_interface::set_mkl_ilp64(){
+      #ifdef UNI_MKL
+        int code = mkl_set_interface_layer(MKL_INTERFACE_ILP64);
+        std::cout << "MKL interface code: " << code; 
+        if(code%2)   
+            std::cout << " >> using [ilp64] interface" << std::endl;
+        else
+            std::cout << " >> using [ lp64] interface" << std::endl;
+
+      #endif
+      return 0;
+    }
+
     linalg_internal_interface::linalg_internal_interface() {
+
+      #ifdef UNI_MKL
+        this->set_mkl_ilp64();
+      #endif
+      
+
       Ari_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type, NULL));
 
       Ari_ii[Type.ComplexDouble][Type.ComplexDouble] = Arithmetic_internal_cdtcd;

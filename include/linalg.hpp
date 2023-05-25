@@ -11,6 +11,7 @@
 #include <functional>
 
 namespace cytnx {
+  int set_mkl_ilp64(); 
   
   /**
    * @brief The addtion operator between two UniTensor.

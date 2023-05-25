@@ -1,11 +1,11 @@
-import sys
+import os,sys
 from pathlib import Path
 home = str(Path.home())
 sys.path.append(home + '/Cytnx_lib')
 import cytnx
-import numpy as np
 import math
 from cytnx import Qs,BD_IN, BD_OUT
+import numpy as np 
 
 ##
 # Author: Kai-Hsin Wu
@@ -84,9 +84,9 @@ for i in range(10000):
     ## contract all
     tmpA = cytnx.Contract(A,la)
     tmpB = cytnx.Contract(B,lb)
-    X = cytnx.Contract(tmpA,tmpB) << "this line cause problem!\n";
+    X = cytnx.Contract(tmpA,tmpB);# << "this line cause problem!\n";
     #X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    exit(1)
+    #exit(1)
     lb.set_label(lb.get_index('e'),new_label='a')
     X = cytnx.Contract(lb,X)
 
@@ -103,7 +103,7 @@ for i in range(10000):
 
     ## <psi|H|psi>
     XH = cytnx.Contract(X,H)
-    XH.print_diagram()
+    #XH.print_diagram()
     XH.set_labels(['d','e','0','1'])
     XHX = cytnx.Contract(Xt,XH).item()
     E = XHX/XNorm
@@ -111,7 +111,7 @@ for i in range(10000):
 
 
     ## check if converged.
-    if(np.abs(E-Elast) < CvgCrit):
+    if(abs(E-Elast) < CvgCrit):
         print("[Converged!]")
         break
     print("Step: %d Enr: %5.8f"%(i,Elast))

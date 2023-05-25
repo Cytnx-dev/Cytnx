@@ -4,6 +4,9 @@
 #include "UniTensor.hpp"
 
 namespace cytnx {
+  int set_mkl_ilp64(){
+    return cytnx::linalg_internal::lii.set_mkl_ilp64();
+  }
   namespace linalg {
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
