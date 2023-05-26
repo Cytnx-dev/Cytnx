@@ -9,6 +9,7 @@
 #include "Scalar.hpp"
 #include "LinOp.hpp"
 #include <functional>
+#include "lapack_wrapper.hpp"
 
 namespace cytnx {
   int set_mkl_ilp64(); 
@@ -2460,6 +2461,74 @@ namespace cytnx {
     */
     Tensor Gemm(const Scalar &a, const Tensor &x, const Tensor &y);
 
+    /**
+     * @brief Blas Gemm_Batch, performing many(batch) \f$ \textbf{c} = \alpha\textbf{a}\textbf{b} + \beta\textbf{c} \f$, inplacely.
+     * @details
+     * see https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html
+     * This function performs tensor type check and type conversion, then call the corresponding blas function.
+     * 
+     * @param[in] transa_array array of char, each element can be 'N' or 'T' or 'C', indicate whether transpose or hermitian transpose \p a_tensors
+     * @param[in] transb_array array of char, each element can be 'N' or 'T' or 'C', indicate whether transpose or hermitian transpose \p b_tensors
+     * @param[in] m_array array of blas_int, each element is the number of rows of \p a_tensors
+     * @param[in] n_array array of blas_int, each element is the number of columns of \p b_tensors
+     * @param[in] k_array array of blas_int, each element is the number of columns of \p a_tensors and the number of rows of \p b_tensors
+     * @param[in] alpha_array array of Scalar, each element is the scalar \p alpha
+     * @param[in] a_tensors array of Tensor, each element is a rank-2 Tensor with shape (m_array[i],k_array[i])
+     * @param[in] lda_array array of blas_int, each element is the leading dimension of array storing matrix \p a_tensors 
+     * @param[in] b_tensors array of Tensor, each element is a rank-2 Tensor with shape (k_array[i],n_array[i])
+     * @param[in] ldb_array array of blas_int, each element is the leading dimension of array storing matrix \p b_tensors
+     * @param[in] beta_array array of Scalar, each element is the scalar \p beta
+     * @param[in,out] c_tensors array of Tensor, each element is a rank-2 Tensor with shape (m_array[i],n_array[i]), \b{must be properly initialized with the correct shape}.
+     * @param[in] ldc_array array of blas_int, each element is the leading dimension of array storing matrix \p c_tensors
+     * @param[in] group_count blas_int, the number of groups
+     * @param[in] group_size array of blas_int, each element is the number of matrices in each group
+     * @param[in] check_parameters bool, whether to check parameters, default is true
+     * @param[in] guarentee_same_good_type bool, whether to guarentee all tensors and scalars are of the same type, default is false
+    */
+    void Gemm_Batch(const std::vector<char> &transa_array, const std::vector<char> &transb_array,
+                 const std::vector<blas_int> &m_array, const std::vector<blas_int> &n_array, const std::vector<blas_int> &k_array,
+                 const std::vector<Scalar> &alpha_array, const std::vector<Tensor> &a_tensors, const std::vector<blas_int> &lda_array,
+                 const std::vector<Tensor> &b_tensors, const std::vector<blas_int> &ldb_array,
+                 const std::vector<Scalar> &beta_array, std::vector<Tensor> &c_tensors, const std::vector<blas_int> &ldc_array,
+                 const blas_int group_count, const std::vector<blas_int> &group_size, const bool check_parameters = true,
+                 const bool guarentee_same_good_type = false);
+
+    /**
+     * @brief Blas Gemm_Batch, performing many(batch) \f$ \textbf{c} = \alpha\textbf{a}\textbf{b} + \beta\textbf{c} \f$, inplacely.
+     * @details
+     * see https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html
+     * This function performs tensor type check and type conversion, then call the corresponding blas function.
+     * But do not check the shape, type, device,... of tensors, and do not convert the type of tensors.
+     * 
+     * @param[in] transa_array array of char, each element can be 'N' or 'T' or 'C', indicate whether transpose or hermitian transpose \p a_tensors
+     * @param[in] transb_array array of char, each element can be 'N' or 'T' or 'C', indicate whether transpose or hermitian transpose \p b_tensors
+     * @param[in] m_array array of blas_int, each element is the number of rows of \p a_tensors
+     * @param[in] n_array array of blas_int, each element is the number of columns of \p b_tensors
+     * @param[in] k_array array of blas_int, each element is the number of columns of \p a_tensors and the number of rows of \p b_tensors
+     * @param[in] alpha_array array of Scalar, each element is the scalar \p alpha
+     * @param[in] a_array array of void*, each element is a pointer to a matrix with shape (m_array[i],k_array[i])
+     * @param[in] lda_array array of blas_int, each element is the leading dimension of array storing matrix \p a_array
+     * @param[in] b_array array of void*, each element is a pointer to a matrix with shape (k_array[i],n_array[i])
+     * @param[in] ldb_array array of blas_int, each element is the leading dimension of array storing matrix \p b_array
+     * @param[in] beta_array array of Scalar, each element is the scalar \p beta
+     * @param[in,out] c_array array of void*, each element is a pointer to a matrix with shape (m_array[i],n_array[i]), \b{must be properly initialized with the correct shape}.
+     * @param[in] ldc_array array of blas_int, each element is the leading dimension of array storing matrix \p c_array
+     * @param[in] group_count blas_int, the number of groups
+     * @param[in] group_size array of blas_int, each element is the number of matrices in each group
+     * @param[in] dtype unsigned int, the data type of the matrices, can be ComplexDouble, ComplexFloat, Double, Float.
+     *             if guarentee_same_good_type is false, then this parameter is ignored.
+     * @param[in] device unsigned int, the device of the matrices
+     * @param[in] check_parameters bool, whether to check parameters, default is true
+     * @param[in] guarentee_same_good_type bool, whether to guarentee all scalars are of the same type, default is false
+    */
+    void Gemm_Batch(const std::vector<char> &transa_array, const std::vector<char> &transb_array,
+                 const std::vector<blas_int> &m_array, const std::vector<blas_int> &n_array, const std::vector<blas_int> &k_array,
+                 const std::vector<Scalar> &alpha_array, const void **a_array, const std::vector<blas_int> &lda_array,
+                 const void **b_array, const std::vector<blas_int> &ldb_array,
+                 const std::vector<Scalar> &beta_array, void **c_array, const std::vector<blas_int> &ldc_array,
+                 const blas_int group_count, const std::vector<blas_int> &group_size,
+                 const unsigned int dtype, const int device,
+                 const bool check_parameters = true, const bool guarentee_same_good_type = false);
 
     
   }  // namespace linalg

@@ -40,6 +40,17 @@ namespace cytnx {
       if(b.dtype() < fin_dtype ) fin_dtype = b.dtype();
       if(c.dtype() < fin_dtype ) fin_dtype = c.dtype();
 
+      // check Void type
+      cytnx_error_msg(x.dtype()==Type.Void,"[Gemm_] error tensor x with Type.Void cannot perform arithmetic.%s","\n");
+      cytnx_error_msg(y.dtype()==Type.Void,"[Gemm_] error tensor y with Type.Void cannot perform arithmetic.%s","\n");
+      cytnx_error_msg(c.dtype()==Type.Void,"[Gemm_] error tensor c with Type.Void cannot perform arithmetic.%s","\n");
+      cytnx_error_msg(a.dtype()==Type.Void,"[Gemm_] error scalar a with Type.Void cannot perform arithmetic.%s","\n");
+      cytnx_error_msg(b.dtype()==Type.Void,"[Gemm_] error scalar b with Type.Void cannot perform arithmetic.%s","\n");
+
+      // convert to double if dtype > 4
+      if(fin_dtype > 4){
+        fin_dtype = Type.Double;
+      }
 
       //convert dtype:
       Tensor px, py;
@@ -71,7 +82,12 @@ namespace cytnx {
                                                     py._impl->storage()._impl,
                                                     px.shape()[0], px.shape()[1], py.shape()[1],pa,pb);
       }else{
-            cytnx_error_msg(true,"[Developing gemm.gpu]%s","\n");
+#ifdef UNI_GPU
+        checkCudaErrors(cudaSetDevice(x.device()));
+        cytnx_error_msg(true,"[Gemm_] fatal error,%s","Not yet implemented.\n");
+#else
+        cytnx_error_msg(true,"[Gemm_] fatal error,%s","try to use GPU but not compiled with GPU support.\n");
+#endif
       }
 
    }
@@ -131,7 +147,12 @@ namespace cytnx {
                                                     py._impl->storage()._impl,
                                                     px.shape()[0], px.shape()[1], py.shape()[1],pa,pb);
       }else{
-            cytnx_error_msg(true,"[Developing gemm.gpu]%s","\n");
+#ifdef UNI_GPU
+        checkCudaErrors(cudaSetDevice(x.device()));
+        cytnx_error_msg(true,"[Gemm_] fatal error,%s","Not yet implemented.\n");
+#else
+        cytnx_error_msg(true,"[Gemm_] fatal error,%s","try to use GPU but not compiled with GPU support.\n");
+#endif
       }
 
       return out;

@@ -246,8 +246,8 @@ else()
 endif()
 
 if (USE_MKL)
-    target_compile_definitions(cytnx PRIVATE UNI_MKL)
-    target_compile_definitions(cytnx PRIVATE MKL_ILP64)
+    target_compile_definitions(cytnx PUBLIC UNI_MKL)
+    target_compile_definitions(cytnx PUBLIC MKL_ILP64)
     # set(USE_OMP ON FORCE)
 endif()
 

@@ -35,6 +35,7 @@
 #include "linalg/linalg_internal_cpu/Axpy_internal.hpp"
 #include "linalg/linalg_internal_cpu/Ger_internal.hpp"
 #include "linalg/linalg_internal_cpu/Gemm_internal.hpp"
+#include "linalg/linalg_internal_cpu/Gemm_Batch_internal.hpp"
 #include "linalg/linalg_internal_cpu/Trace_internal.hpp"
 
 #ifdef UNI_GPU
@@ -83,6 +84,9 @@ namespace cytnx {
                                    const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
                                    const cytnx_int64 &, const cytnx_int64 &, const Scalar &, const Scalar &);
 
+    typedef void (*Gemm_Batchfunc_oii)(const char *transa_array, const char *transb_array, const blas_int *m_array, const blas_int *n_array, const blas_int *k_array,
+                 const std::vector<Scalar> &alpha_array, const void **a_array, const blas_int *lda_array, const void **b_array, const blas_int *ldb_array,
+                 const std::vector<Scalar> &beta_array, void **c_array, const blas_int *ldc_array, const blas_int group_count, const blas_int *group_size);
 
     typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
                                 boost::intrusive_ptr<Storage_base> &,
@@ -178,6 +182,7 @@ namespace cytnx {
       std::vector<Diagfunc_oii> Diag_ii;
       std::vector<Matmulfunc_oii> Matmul_ii;
       std::vector<Gemmfunc_oii> Gemm_ii;
+      std::vector<Gemm_Batchfunc_oii> Gemm_Batch_ii;
       std::vector<Matmul_dgfunc_oii> Matmul_dg_ii;
       std::vector<Matvecfunc_oii> Matvec_ii;
       std::vector<std::vector<Outerfunc_oii>> Outer_ii;

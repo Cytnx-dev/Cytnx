@@ -758,6 +758,13 @@ namespace cytnx {
       Gemm_ii[Type.Double] = Gemm_internal_d;
       Gemm_ii[Type.Float] = Gemm_internal_f;
 
+      //===============
+      Gemm_Batch_ii = std::vector<Gemm_Batchfunc_oii>(5);
+      Gemm_Batch_ii[Type.ComplexDouble] = Gemm_Batch_internal_cd;
+      Gemm_Batch_ii[Type.ComplexFloat] = Gemm_Batch_internal_cf;
+      Gemm_Batch_ii[Type.Double] = Gemm_Batch_internal_d;
+      Gemm_Batch_ii[Type.Float] = Gemm_Batch_internal_f;
+
 
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));

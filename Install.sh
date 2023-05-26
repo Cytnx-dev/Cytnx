@@ -84,7 +84,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF "
+FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -103,16 +103,16 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 #        where the magma is installed
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
-FLAG="${FLAG} -DUSE_MAGMA=OFF "
+FLAG="${FLAG} -DUSE_MAGMA=ON "
 FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 #-----------------------------------
 # 6-d) CuTensor (DEFALT = off)
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-#CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
-#CUTENSOR_ROOT=${HOME}/CUTENSOR
-FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
+# CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
+CUTENSOR_ROOT=${HOME}/CUTENSOR
+FLAG="${FLAG} -DUSE_CUTENSOR=ON "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = off)
@@ -121,7 +121,7 @@ FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUQUANTUM_ROOT=/usr/local/cuqunatum-......
 CUQUANTUM_ROOT=${HOME}/CUQUANTUM
-FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
+FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
 FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
 
 
@@ -164,10 +164,10 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 
 
 echo ${FLAG}
-rm -rf build
+# rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}
-#make -j`nproc`
+make -j`nproc`
 #make install
 # ctest

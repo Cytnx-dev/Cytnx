@@ -13,7 +13,7 @@
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
-#include "lapack_wrapper.hpp"
+// #include "lapack_wrapper.hpp"
 
 using namespace std;
 namespace cytnx {
@@ -1034,16 +1034,29 @@ namespace cytnx {
 
               std::vector<char> transs(Rtn->_blocks.size(), 'N'); 
               std::vector<blas_int> ms(Rtn->_blocks.size(),0),ns(Rtn->_blocks.size(),0),ks(Rtn->_blocks.size(),0);
-              std::vector<cytnx_double> doublealpha(Rtn->_blocks.size(),1.0);
-              std::vector<cytnx_double> doublebeta(Rtn->_blocks.size(),0.0);
-              std::vector<cytnx_float> floatalpha(Rtn->_blocks.size(),1.0);
-              std::vector<cytnx_float> floatbeta(Rtn->_blocks.size(),0.0);
-              std::vector<cytnx_complex128> complexalpha(Rtn->_blocks.size(),1.0);
-              std::vector<cytnx_complex128> complexbeta(Rtn->_blocks.size(),0.0);
-              std::vector<cytnx_complex64> complexalpha_f(Rtn->_blocks.size(),1.0);
-              std::vector<cytnx_complex64> complexbeta_f(Rtn->_blocks.size(),0.0);
               std::vector<void*> LMems(Rtn->_blocks.size(),0),RMems(Rtn->_blocks.size(),0),CMems(Rtn->_blocks.size(),0);
               std::vector<blas_int> group_size(Rtn->_blocks.size(),1);
+              // std::vector<cytnx_double> doublealpha(Rtn->_blocks.size(),1.0);
+              // std::vector<cytnx_double> doublebeta(Rtn->_blocks.size(),0.0);
+              // std::vector<cytnx_float> floatalpha(Rtn->_blocks.size(),1.0);
+              // std::vector<cytnx_float> floatbeta(Rtn->_blocks.size(),0.0);
+              // std::vector<cytnx_complex128> complexalpha(Rtn->_blocks.size(),1.0);
+              // std::vector<cytnx_complex128> complexbeta(Rtn->_blocks.size(),0.0);
+              // std::vector<cytnx_complex64> complexalpha_f(Rtn->_blocks.size(),1.0);
+              // std::vector<cytnx_complex64> complexbeta_f(Rtn->_blocks.size(),0.0);
+              std::vector<Scalar> alphas(Rtn->_blocks.size(),1.0);
+              std::vector<Scalar> betas(Rtn->_blocks.size(),0.0);
+
+              bool all_sub_tensor_same_dtype = true;
+              bool all_sub_tensor_same_device = true;
+              for(cytnx_int64 a=0;a<this->_blocks.size();a++){
+                if(this->_blocks[a].dtype() != this->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
+                if(this->_blocks[a].device() != this->_blocks[0].device()) all_sub_tensor_same_device = false;
+              }
+              for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
+                if(Rtn->_blocks[a].dtype() != Rtn->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
+                if(Rtn->_blocks[a].device() != Rtn->_blocks[0].device()) all_sub_tensor_same_device = false;
+              }
 
               for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                 cytnx_int64 comm_dim = 1;
@@ -1084,27 +1097,28 @@ namespace cytnx {
                   // auto it = std::find(tmp->_inner_to_outer_idx.begin(),tmp->_inner_to_outer_idx.end(),Lgbuffer);
                   // cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
                   cytnx_int64 targ_b = mpC[Lgbuffer];
-                  doublebeta[binx]=1.0;
-                  complexbeta[binx]=1.0;
-                  floatbeta[binx]=1.0;
-                  complexbeta_f[binx]=1.0;
+                  // doublebeta[binx]=1.0;
+                  // complexbeta[binx]=1.0;
+                  // floatbeta[binx]=1.0;
+                  // complexbeta_f[binx]=1.0;
+                  betas[binx] = 1.0;
                   if(!reshaped[targ_b]){
                     tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0], (cytnx_int64)Rtn->_blocks[b].shape()[1]});
                     reshaped[targ_b] = true;
-                    doublebeta[binx]=0.0;
-                    complexbeta[binx]=0.0;
-                    floatbeta[binx]=0.0;
-                    complexbeta_f[binx]=0.0;
+                    // doublebeta[binx]=0.0;
+                    // complexbeta[binx]=0.0;
+                    // floatbeta[binx]=0.0;
+                    // complexbeta_f[binx]=0.0;
+                    betas[binx] = 0.0;
+
                     // if(tmp->dtype()==Type.Double and this->dtype()==Type.Double and Rtn->dtype()==Type.Double){
                     //   doublebeta[binx]=0.0;
                     // }else if(tmp->dtype()==Type.ComplexDouble and this->dtype()==Type.ComplexDouble and Rtn->dtype()==Type.ComplexDouble){
                     //   complexbeta[binx]=0.0;
                     // }
                   }
-                  if((tmp->dtype()==Type.Double and this->dtype()==Type.Double and Rtn->dtype()==Type.Double) or
-                     (tmp->dtype()==Type.ComplexDouble and this->dtype()==Type.ComplexDouble and Rtn->dtype()==Type.ComplexDouble) or
-                     (tmp->dtype()==Type.Float and this->dtype()==Type.Float and Rtn->dtype()==Type.Float) or
-                     (tmp->dtype()==Type.ComplexFloat and this->dtype()==Type.ComplexFloat and Rtn->dtype()==Type.ComplexFloat)
+                  if((tmp->dtype() <= 4 and this->dtype() <= 4 and Rtn->dtype() <= 4) and
+                     (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and Rtn->dtype()!=Type.Void)
                      ){
                     ms[binx] = this->_blocks[a].shape()[0];
                     ns[binx] = Rtn->_blocks[b].shape()[1];
@@ -1121,35 +1135,51 @@ namespace cytnx {
                 }
                 //mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
-                if(tmp->dtype()==Type.Double and this->dtype()==Type.Double and Rtn->dtype()==Type.Double){
-                  blas_int group_count = itoiR_idx.size();
-                  // std::vector<blas_int> group_size(group_count,1);
-                  group_size.resize(group_count,1);
-                  dgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),doublealpha.data(),
-                    (const cytnx_double**)RMems.data(),ns.data(),(const cytnx_double**)LMems.data(),
-                    ks.data(),doublebeta.data(),(cytnx_double**)CMems.data(),ns.data(),&group_count,group_size.data());
-                }else if(tmp->dtype()==Type.ComplexDouble and this->dtype()==Type.ComplexDouble and Rtn->dtype()==Type.ComplexDouble){
-                  blas_int group_count = itoiR_idx.size();
-                  // std::vector<blas_int> group_size(group_count,1);
-                  group_size.resize(group_count,1);
-                  zgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),complexalpha.data(),
-                    (const cytnx_complex128**)RMems.data(),ns.data(),(const cytnx_complex128**)LMems.data(),
-                    ks.data(),complexbeta.data(),(cytnx_complex128**)CMems.data(),ns.data(),&group_count,group_size.data());
-                }else if(tmp->dtype()==Type.Float and this->dtype()==Type.Float and Rtn->dtype()==Type.Float){
-                  blas_int group_count = itoiR_idx.size();
-                  // std::vector<blas_int> group_size(group_count,1);
-                  group_size.resize(group_count,1);
-                  sgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),floatalpha.data(),
-                    (const cytnx_float**)RMems.data(),ns.data(),(const cytnx_float**)LMems.data(),
-                    ks.data(),floatbeta.data(),(cytnx_float**)CMems.data(),ns.data(),&group_count,group_size.data());
-                }else if(tmp->dtype()==Type.ComplexFloat and this->dtype()==Type.ComplexFloat and Rtn->dtype()==Type.ComplexFloat){
-                  blas_int group_count = itoiR_idx.size();
-                  // std::vector<blas_int> group_size(group_count,1);
-                  group_size.resize(group_count,1);
-                  cgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),complexalpha_f.data(),
-                    (const cytnx_complex64**)RMems.data(),ns.data(),(const cytnx_complex64**)LMems.data(),
-                    ks.data(),complexbeta_f.data(),(cytnx_complex64**)CMems.data(),ns.data(),&group_count,group_size.data());
+                blas_int group_count = itoiR_idx.size();
+                if((tmp->dtype() <= 4 and this->dtype() <= 4 and Rtn->dtype() <= 4) and
+                   (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and Rtn->dtype()!=Type.Void)
+                  ){
+                  if(all_sub_tensor_same_dtype and all_sub_tensor_same_device){
+                    group_size.resize(group_count,1);
+                    linalg::Gemm_Batch(transs, transs, ns, ms, ks, alphas, (const void **)RMems.data(), ns, (const void **)LMems.data(),
+                                       ks, betas, (void **)CMems.data(), ns, group_count, group_size, this->dtype(),
+                                       tmp->device(), false, true);
+                  }else{
+                    linalg::Gemm_Batch(transs, transs, ns, ms, ks, alphas, (const void **)RMems.data(), ns, (const void **)LMems.data(),
+                                       ks, betas, (void **)CMems.data(), ns, group_count, group_size, this->dtype(),
+                                       tmp->device(), true, false);
+                  }
                 }
+
+                // if(tmp->dtype()==Type.Double and this->dtype()==Type.Double and Rtn->dtype()==Type.Double){
+                //   blas_int group_count = itoiR_idx.size();
+                //   // std::vector<blas_int> group_size(group_count,1);
+                //   group_size.resize(group_count,1);
+                //   dgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),doublealpha.data(),
+                //     (const cytnx_double**)RMems.data(),ns.data(),(const cytnx_double**)LMems.data(),
+                //     ks.data(),doublebeta.data(),(cytnx_double**)CMems.data(),ns.data(),&group_count,group_size.data());
+                // }else if(tmp->dtype()==Type.ComplexDouble and this->dtype()==Type.ComplexDouble and Rtn->dtype()==Type.ComplexDouble){
+                //   blas_int group_count = itoiR_idx.size();
+                //   // std::vector<blas_int> group_size(group_count,1);
+                //   group_size.resize(group_count,1);
+                //   zgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),complexalpha.data(),
+                //     (const cytnx_complex128**)RMems.data(),ns.data(),(const cytnx_complex128**)LMems.data(),
+                //     ks.data(),complexbeta.data(),(cytnx_complex128**)CMems.data(),ns.data(),&group_count,group_size.data());
+                // }else if(tmp->dtype()==Type.Float and this->dtype()==Type.Float and Rtn->dtype()==Type.Float){
+                //   blas_int group_count = itoiR_idx.size();
+                //   // std::vector<blas_int> group_size(group_count,1);
+                //   group_size.resize(group_count,1);
+                //   sgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),floatalpha.data(),
+                //     (const cytnx_float**)RMems.data(),ns.data(),(const cytnx_float**)LMems.data(),
+                //     ks.data(),floatbeta.data(),(cytnx_float**)CMems.data(),ns.data(),&group_count,group_size.data());
+                // }else if(tmp->dtype()==Type.ComplexFloat and this->dtype()==Type.ComplexFloat and Rtn->dtype()==Type.ComplexFloat){
+                //   blas_int group_count = itoiR_idx.size();
+                //   // std::vector<blas_int> group_size(group_count,1);
+                //   group_size.resize(group_count,1);
+                //   cgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),complexalpha_f.data(),
+                //     (const cytnx_complex64**)RMems.data(),ns.data(),(const cytnx_complex64**)LMems.data(),
+                //     ks.data(),complexbeta_f.data(),(cytnx_complex64**)CMems.data(),ns.data(),&group_count,group_size.data());
+                // }
 
                 for(cytnx_uint64 binx = 0;binx<itoiR_idx.size();binx++){
                   cytnx_uint64 b = itoiR_idx[binx];
