@@ -110,8 +110,8 @@ FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-# CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
-CUTENSOR_ROOT=${HOME}/CUTENSOR
+#CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
+#CUTENSOR_ROOT=${HOME}/CUTENSOR
 FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 #-----------------------------------

@@ -2445,6 +2445,56 @@ namespace cytnx {
   /// @endcond
   //======================================================================
 
+  /// @cond
+  class UniTensor_options{
+    public:
+        bool _is_diag;
+        int _dtype;
+        int _device;
+        int _rowrank;
+        
+        UniTensor_options(){
+            this->_is_diag=false;
+            this->_dtype = Type.Double;
+            this->_device =Device.cpu;
+            this->_rowrank = -1;    
+        }
+        
+        UniTensor_options( const UniTensor_options &rhs){
+            this->_is_diag = rhs._is_diag;
+            this->_dtype= rhs._dtype;
+            this->_device = rhs._device;
+            this->_rowrank = rhs._rowrank;
+        }
+
+        UniTensor_options& operator=(const UniTensor_options &rhs){
+            this->_is_diag = rhs._is_diag;
+            this->_dtype= rhs._dtype;
+            this->_device = rhs._device;
+            this->_rowrank = rhs._rowrank;
+            return *this; 
+        }
+        
+        UniTensor_options& is_diag(const bool &in){
+            this->_is_diag = in;
+            return *this;
+        }       
+        UniTensor_options& dtype(const int &in){
+            this->_dtype = in;
+            return *this;
+        }       
+        UniTensor_options& device(const int &in){
+            this->_device = in;
+            return *this;
+        }       
+        UniTensor_options& rowrank(const int &in){
+            this->_rowrank = in;
+            return *this;
+        }       
+
+  };
+  /// @endcond  
+
   ///@brief An Enhanced tensor specifically designed for physical Tensor network simulation
   class UniTensor {
    public:
@@ -2572,6 +2622,19 @@ namespace cytnx {
       for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
       this->Init(bonds, vs, rowrank, dtype, device, is_diag, name);
     }
+    
+    /// @cond
+    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+              const UniTensor_options &UToptions = UniTensor_options(), const std::string &name = ""){
+        this->Init(bonds,in_labels, UToptions._rowrank,
+                                    UToptions._dtype  ,
+                                    UToptions._device ,
+                                    UToptions._is_diag,
+                                    name);
+    }
+    /// @endcond
+
+
     /**
     @brief Initialize the UniTensor with the given arguments.
 	@details This is the initial function of the UniTensor. If you want to initialize 

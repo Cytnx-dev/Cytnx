@@ -84,7 +84,7 @@ for i in range(10000):
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb_l = lb.relabel(lb.get_index('e'), 'a')
+    lb_l = lb.relabel("e", 'a')
     X = cytnx.Contract(lb_l,X)
 
     ## X =

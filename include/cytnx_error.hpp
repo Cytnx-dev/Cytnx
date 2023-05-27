@@ -65,7 +65,10 @@ static inline void warning_msg(char const *const func, const char *const file, i
   #include <cusolverDn.h>
   #include <cuComplex.h>
   #include <curand.h>
-  #include <cutensor.h>
+
+  #if defined(UNI_CUTENSOR)
+    #include <cutensor.h>
+  #endif
 
   #ifdef __DRIVER_TYPES_H__
 static const char *_cudaGetErrorEnum(cudaError_t error) {

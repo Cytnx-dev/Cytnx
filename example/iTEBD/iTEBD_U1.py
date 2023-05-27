@@ -87,7 +87,7 @@ for i in range(10000):
     X = cytnx.Contract(tmpA,tmpB);# << "this line cause problem!\n";
     #X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
     #exit(1)
-    lb.set_label(lb.get_index('e'),new_label='a')
+    lb.set_label("e",new_label='a')
     X = cytnx.Contract(lb,X)
 
 
