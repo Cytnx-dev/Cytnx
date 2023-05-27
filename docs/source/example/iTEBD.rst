@@ -32,15 +32,15 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     from cytnx import *
 
     chi = 10
-    A = UniTensor([Bond(chi),Bond(2),Bond(chi)],rowrank=1,labels=[-1,0,-2])
-    B = UniTensor(A.bonds(),rowrank=1,labels=[-3,1,-4])
+    A = UniTensor([Bond(chi),Bond(2),Bond(chi)],labels=["a","0","b"])
+    B = UniTensor(A.bonds(),labels=["c","1","d"])
     random.Make_normal(B.get_block_(),0,0.2)
     random.Make_normal(A.get_block_(),0,0.2)
     A.print_diagram()
     B.print_diagram()
 
-    la = UniTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-2,-3],is_diag=True)
-    lb = UniTensor([Bond(chi),Bond(chi)],rowrank=1,labels=[-4,-5],is_diag=True)
+    la = UniTensor([Bond(chi),Bond(chi)],rowrank=1,labels=["b","c"],is_diag=True)
+    lb = UniTensor([Bond(chi),Bond(chi)],rowrank=1,labels=["d","e"],is_diag=True)
     la.put_block(ones(chi))
     lb.put_block(ones(chi))
 
@@ -57,15 +57,16 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     using namespace cytnx;
 
     unsigned int chi = 10;
-    auto A = UniTensor({Bond(chi),Bond(2),Bond(chi)},{-1,0,-2},1);
-    auto B = UniTensor(A.bonds(),{-3,1,-4},1);
+    bool is_diag = true;
+    auto A = UniTensor({Bond(chi),Bond(2),Bond(chi)},{"a","0","b"},-1,Type.Double,Device.cpu,is_diag);
+    auto B = UniTensor(A.bonds(),{"c","1","d"},-1,Type.Double,Device.cpu,is_diag);
     random::Make_normal(B.get_block_(),0,0.2);
     random::Make_normal(A.get_block_(),0,0.2);
     A.print_diagram();
     B.print_diagram();
 
-    auto la = UniTensor({Bond(chi),Bond(chi)},{-2,-3},1,Type.Double,Device.cpu,true);
-    auto lb = UniTensor({Bond(chi),Bond(chi)},{-4,-5},1,Type.Double,Device.cpu,true);
+    auto la = UniTensor({Bond(chi),Bond(chi)},{"b","c"},-1,Type.Double,Device.cpu,true);
+    auto lb = UniTensor({Bond(chi),Bond(chi)},{"d","e"},-1,Type.Double,Device.cpu,true);
     la.put_block(ones(chi));
     lb.put_block(ones(chi));
 
@@ -296,16 +297,15 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 .. code-block:: python 
     :linenos:
 
-    A.set_labels([-1,0,-2])
-    B.set_labels([-3,1,-4])
-    la.set_labels([-2,-3])
-    lb.set_labels([-4,-5])
+    A.set_labels(["a","0","b"])
+    B.set_labels(["c","1","d"])
+    la.set_labels(["b","c"])
+    lb.set_labels(["d","e"])
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    #X.print_diagram()
-    lb.set_label(1,new_label=-1)
-    X = cytnx.Contract(lb,X)
+    lb_l = lb.relabel("e","a")
+    X = cytnx.Contract(lb_l,X)
 
     Xt = X.clone()
 
@@ -313,7 +313,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
     # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
     XNorm = cytnx.Contract(X,Xt).item()
     XH = cytnx.Contract(X,H)
-    XH.set_labels([-4,-5,0,1])
+    XH.set_labels(["d","e","0","1"])
     XHX = cytnx.Contract(Xt,XH).item() ## rank-0
     E = XHX/XNorm
 
@@ -329,16 +329,16 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 .. code-block:: c++ 
     :linenos:
 
-    A.set_labels({-1,0,-2}); 
-    B.set_labels({-3,1,-4}); 
-    la.set_labels({-2,-3}); 
-    lb.set_labels({-4,-5}); 
+    A.set_labels({"a","0","b"}); 
+    B.set_labels({"c","1","d"}); 
+    la.set_labels({"b","c"}); 
+    lb.set_labels({"d","e"}); 
 
 
     // contract all
     UniTensor X = cyx::Contract(cyx::Contract(A,la),cyx::Contract(B,lb));
-    lb.set_label(1,-1); 
-    X = cyx::Contract(lb,X);
+    auto lbl_l = lb.set_label("e","a"); 
+    X = cyx::Contract(lb_l,X);
 
     UniTensor Xt = X.clone();
     
@@ -347,7 +347,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
     Scalar XNorm = cyx::Contract(X,Xt).item();
     UniTensor XH = cyx::Contract(X,H);
 
-    XH.set_labels({-4,-5,0,1});
+    XH.set_labels({"d","e","0","1"});
     Scalar XHX = cyx::Contract(Xt,XH).item(); 
     double E = double(XHX/XNorm);
 
@@ -373,12 +373,11 @@ we also performed SVD for the XeH here, this put the MPS into mixed canonical fo
     :linenos:
 
     XeH = cytnx.Contract(X,eH)
-    XeH.permute_([-4,2,3,-5],by_label=True)
+    XeH.permute_(["d","2","3","e"])
 
     XeH.set_rowrank(2)
     la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
-    Norm = cytnx.linalg.Norm(la.get_block_()).item()
-    la *= 1./Norm
+    la.normalize_()
 
 * In c++
 
@@ -387,13 +386,12 @@ we also performed SVD for the XeH here, this put the MPS into mixed canonical fo
 
     //> Time evolution the MPS
     UniTensor XeH = cyx::Contract(X,eH);
-    XeH.permute_({-4,2,3,-5},-1,true);
+    XeH.permute_({"d","2","3","e"});
 
     XeH.set_Rowrank(2);
     vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
     la = out[0]; A = out[1]; B = out[2];
-    Scalar Norm = cytnx::linalg::Norm(la.get_block_()).item();
-    la *= 1./Norm; //normalize
+    la.normalize_(); //normalize
 
 
 Note that we directly store the SVD results into A, B and la, this can be seen by comparing to our original MPS configuration:
@@ -421,16 +419,11 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
 .. code-block:: python 
     :linenos:
 
-    # again, but A' and B' are updated 
-    A.set_labels([-1,0,-2]); A.set_rowrank(1);
-    B.set_labels([-3,1,-4]); B.set_rowrank(1);
 
     lb_inv = 1./lb
 
-    lb_inv.set_labels([7, -1]) # -1 to contract with A, 7 is arbitary here.
+    lb_inv.set_labels(["e","d"])
     A = cytnx.Contract(lb_inv,A)
-
-    lb_inv.set_labels([-4, 8]) # -4 to contract with B, 8 is arbitary here.
     B = cytnx.Contract(B,lb_inv)
 
     # translation symmetry, exchange A and B site
@@ -441,21 +434,12 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
 
 .. code-block:: c++ 
     :linenos:
-
-    A.set_labels({-1,0,-2}); A.set_Rowrank(1);
-    B.set_labels({-3,1,-4}); B.set_Rowrank(1);
     
     UniTensor lb_inv = 1./lb;
 
-    lb_inv.set_labels({7, -1}); // -1 to contract with A, 7 is arbitary here.
+    lb_inv.set_labels({"e","d"}); 
     A = cyx.Contract(lb_inv,A);
-
-    lb_inv.set_labels({-4, 8}) // -4 to contract with B, 8 is arbitary here.
     B = cyx.Contract(B,lb_inv);
-
-    A = cyx::Contract(lb_inv,A);
-    B = cyx::Contract(B,lb_inv);
-
 
     //> translation symm, exchange A and B site
     UniTensor tmp = A;
@@ -472,18 +456,18 @@ Let's put everything together in a loop for iteration:
     :linenos:
 
     for i in range(10000):
-
-        A.set_labels([-1,0,-2])
-        B.set_labels([-3,1,-4])
-        la.set_labels([-2,-3])
-        lb.set_labels([-4,-5])
+    
+        A.set_labels(['a','0','b'])
+        B.set_labels(['c','1','d'])
+        la.set_labels(['b','c'])
+        lb.set_labels(['d','e']) 
 
         ## contract all
         X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-        #X.print_diagram()
-        lb.set_label(idx=1,new_label=-1)
-        X = cytnx.Contract(lb,X)
+        lb_l = lb.relabel("e","a")
+        X = cytnx.Contract(lb_l,X)
 
+        
         ## X =
         #           (0)  (1)
         #            |    |     
@@ -497,7 +481,8 @@ Let's put everything together in a loop for iteration:
         # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
         XNorm = cytnx.Contract(X,Xt).item()
         XH = cytnx.Contract(X,H)
-        XH.set_labels([-4,-5,0,1])
+        XH.set_labels(['d','e','0','1'])
+
         XHX = cytnx.Contract(Xt,XH).item() ## rank-0
         E = XHX/XNorm
 
@@ -510,43 +495,33 @@ Let's put everything together in a loop for iteration:
 
         ## Time evolution the MPS
         XeH = cytnx.Contract(X,eH)
-        XeH.permute_([-4,2,3,-5],by_label=True)
+        XeH.permute_(['d','2','3','e'])
         #XeH.print_diagram()
         
         ## Do Svd + truncate
         ## 
-        #        (2)   (3)                   (2)                                    (3)
-        #         |     |          =>         |         +   (-6)--s--(-7)  +         |
-        #  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)
+        #        (2)   (3)                   (2)                                               (3)
+        #         |     |          =>         |            + (_aux_L)--s--(_aux_R)  +           |
+        #  (d) --= XeH =-- (e)           (d)--U--(_aux_L)                             (_aux_R)--Vt--(e)
         #
 
         XeH.set_rowrank(2)
         la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
-        Norm = cytnx.linalg.Norm(la.get_block_()).item()
-        la *= 1./Norm
-        #A.print_diagram()
-        #la.print_diagram()
-        #B.print_diagram()
-            
+        la.normalize_()
+ 
 
         # de-contract the lb tensor , so it returns to 
-        #             
-        #            |     |     
-        #       --lb-A'-la-B'-lb-- 
+        #             2     3
+        #             |     |     
+        #       d--lb-A'-la-B'-lb--e
         #
         # again, but A' and B' are updated 
-        A.set_labels([-1,0,-2]); A.set_rowrank(1);
-        B.set_labels([-3,1,-4]); B.set_rowrank(1);
-
-        #A.print_diagram()
-        #B.print_diagram()
-
         lb_inv = 1./lb
+        # lb_inv.print_diagram();
+        lb_inv.set_labels(['e','d'])
+
         A = cytnx.Contract(lb_inv,A)
         B = cytnx.Contract(B,lb_inv)
-
-        #A.print_diagram()
-        #B.print_diagram()
 
         # translation symmetry, exchange A and B site
         A,B = B,A
@@ -562,27 +537,28 @@ Let's put everything together in a loop for iteration:
     double Elast = 0;
     
     for(unsigned int i=0;i<10000;i++){
-        A.set_labels({-1,0,-2}); 
-        B.set_labels({-3,1,-4}); 
-        la.set_labels({-2,-3}); 
-        lb.set_labels({-4,-5}); 
+
+        A.set_labels({"a","0","b"}); 
+        B.set_labels({"c","1","d"}); 
+        la.set_labels({"b","c"}); 
+        lb.set_labels({"d","e"}); 
 
 
         // contract all
         UniTensor X = cyx::Contract(cyx::Contract(A,la),cyx::Contract(B,lb));
-        lb.set_label(1,-1); 
-        X = cyx::Contract(lb,X);
+        auto lbl_l = lb.set_label("e","a"); 
+        X = cyx::Contract(lb_l,X);
 
         UniTensor Xt = X.clone();
         
         //> calculate norm and energy for this step
         // Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
-        double XNorm = cyx::Contract(X,Xt).item<double>();
+        Scalar XNorm = cyx::Contract(X,Xt).item();
         UniTensor XH = cyx::Contract(X,H);
 
-        XH.set_labels({-4,-5,0,1});
-        double XHX = cyx::Contract(Xt,XH).item<double>(); 
-        double E = XHX/XNorm;
+        XH.set_labels({"d","e","0","1"});
+        Scalar XHX = cyx::Contract(Xt,XH).item(); 
+        double E = double(XHX/XNorm);
 
         //> check if converged.
         if(abs(E-Elast) < CvgCrit){
@@ -592,16 +568,16 @@ Let's put everything together in a loop for iteration:
         cout << "Step: " << i << "Enr: " << Elast << endl;
         Elast = E;
 
+
         //> Time evolution the MPS
         UniTensor XeH = cyx::Contract(X,eH);
-        XeH.permute_({-4,2,3,-5},-1,true);
+        XeH.permute_({"d","2","3","e"});
 
         //> Do Svd + truncate
-        XeH.set_Rowrank(2);
+        XeH.set_rowrank(2);
         vector<UniTensor> out = cyx::xlinalg::Svd_truncate(XeH,chi);
         la = out[0]; A = out[1]; B = out[2];
-        double Norm = cytnx::linalg::Norm(la.get_block_()).item<double>();
-        la *= 1./Norm; //normalize
+        la.normalize_(); //normalize
         
 
         // de-contract the lb tensor , so it returns to 
@@ -610,10 +586,9 @@ Let's put everything together in a loop for iteration:
         //       --lb-A'-la-B'-lb-- 
         //
         // again, but A' and B' are updated 
-        A.set_labels({-1,0,-2}); A.set_Rowrank(1);
-        B.set_labels({-3,1,-4}); B.set_Rowrank(1);
         
         UniTensor lb_inv = 1./lb;
+        lb_inv.set_labels({"e","d"});
         A = cyx::Contract(lb_inv,A);
         B = cyx::Contract(B,lb_inv);
 
