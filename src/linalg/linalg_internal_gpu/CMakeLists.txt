@@ -14,6 +14,8 @@ target_sources_local(cytnx
     cuExp_internal.hpp
     cuInvM_inplace_internal.hpp
     cuInv_inplace_internal.hpp
+    cuGemm_internal.hpp
+    cuGemm_Batch_internal.hpp
     cuMatmul_internal.hpp
     cuMatmul_dg_internal.hpp
     cuMatvec_internal.hpp
@@ -41,6 +43,8 @@ target_sources_local(cytnx
     cuExp_internal.cu
     cuInvM_inplace_internal.cu
     cuInv_inplace_internal.cu
+    cuGemm_internal.cu
+    cuGemm_Batch_internal.cu
     cuMatmul_internal.cu
     cuMatmul_dg_internal.cu
     cuMatvec_internal.cu

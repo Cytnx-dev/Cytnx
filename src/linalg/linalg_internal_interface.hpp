@@ -47,6 +47,8 @@
   #include "linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuGemm_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuGemm_Batch_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMatmul_dg_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
@@ -211,6 +213,8 @@ namespace cytnx {
       std::vector<Diagfunc_oii> cuDiag_ii;
       std::vector<Eighfunc_oii> cuEigh_ii;
       std::vector<Matmulfunc_oii> cuMatmul_ii;
+      std::vector<Gemmfunc_oii> cuGemm_ii;
+      std::vector<Gemm_Batchfunc_oii> cuGemm_Batch_ii;
       std::vector<Matmul_dgfunc_oii> cuMatmul_dg_ii;
       std::vector<Matvecfunc_oii> cuMatvec_ii;
       std::vector<std::vector<Outerfunc_oii>> cuOuter_ii;

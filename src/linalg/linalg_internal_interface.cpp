@@ -1139,6 +1139,20 @@ namespace cytnx {
       cuConj_inplace_ii[Type.ComplexFloat] = cuConj_inplace_internal_cf;
 
       //=====================
+      cuGemm_ii = vector<Gemmfunc_oii>(5);
+      cuGemm_ii[Type.ComplexDouble] = cuGemm_internal_cd;
+      cuGemm_ii[Type.ComplexFloat] = cuGemm_internal_cf;
+      cuGemm_ii[Type.Double] = cuGemm_internal_d;
+      cuGemm_ii[Type.Float] = cuGemm_internal_f;
+
+      //=====================
+      cuGemm_Batch_ii = vector<Gemm_Batchfunc_oii>(5);
+      cuGemm_Batch_ii[Type.ComplexDouble] = cuGemm_Batch_internal_cd;
+      cuGemm_Batch_ii[Type.ComplexFloat] = cuGemm_Batch_internal_cf;
+      cuGemm_Batch_ii[Type.Double] = cuGemm_Batch_internal_d;
+      cuGemm_Batch_ii[Type.Float] = cuGemm_Batch_internal_f;
+
+      //=====================
       cuMatmul_ii = vector<Matmulfunc_oii>(N_Type);
       cuMatmul_ii[Type.ComplexDouble] = cuMatmul_internal_cd;
       cuMatmul_ii[Type.ComplexFloat] = cuMatmul_internal_cf;

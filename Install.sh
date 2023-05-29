@@ -170,4 +170,4 @@ cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 #make install
-# ctest
+ctest

@@ -3,6 +3,7 @@
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
+#include "linalg/Gemm_Batch.cpp"
 #include "Generator.hpp"
 #include <vector>
 #include "utils/vec_print.hpp"
@@ -13,7 +14,7 @@
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
-// #include "lapack_wrapper.hpp"
+#include "lapack_wrapper.hpp"
 
 using namespace std;
 namespace cytnx {
@@ -919,7 +920,6 @@ namespace cytnx {
             
 
         }else{
-            //cytnx_error_msg(true,"developing!%s","\n");
             BlockUniTensor *tmp = new BlockUniTensor();
             BlockUniTensor *Rtn = (BlockUniTensor*)rhs.get();
             std::vector<string> out_labels;
@@ -945,7 +945,6 @@ namespace cytnx {
             if((this->dtype()!=Type.Double and this->dtype()!=Type.ComplexDouble) and
                (this->dtype()!=Type.Float and this->dtype()!=Type.ComplexFloat) or
                this->is_diag() or Rtn->is_diag()){
-              // cout<<"IM IN!!!"<<endl;
               tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false, false);
             } else {
               tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false, true);
@@ -953,14 +952,11 @@ namespace cytnx {
 
             // now, build the itoi table:
             std::vector< std::vector<cytnx_uint64> > itoiL_common(this->_blocks.size()), itoiR_common(Rtn->_blocks.size());
-            // std::vector< std::vector<cytnx_uint64> > Bkk;
 
             for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                 itoiL_common[a] = vec_clone(this->_inner_to_outer_idx[a],comm_idx1);
             }
 
-            // std::unordered_map<std::vector<cytnx_uint64>, std::vector<cytnx_uint64>, VectorHasher> mp;
-            // std::unordered_map<std::vector<cytnx_uint64>, cytnx_uint64, VectorHasher> mpC;
             boost::unordered_map<std::vector<cytnx_uint64>, std::vector<cytnx_uint64> > mp;
             boost::unordered_map<std::vector<cytnx_uint64>, cytnx_uint64> mpC;
             
@@ -979,13 +975,10 @@ namespace cytnx {
             std::vector<cytnx_uint64> oldshapeL;
             std::vector<std::vector<cytnx_uint64>> oldshapeR(Rtn->_blocks.size(),std::vector<cytnx_uint64>());
             std::vector<std::vector<cytnx_uint64>> oldshapeC;
-            // smallvec<bool> reshaped(tmp->_blocks.size(),false);
             std::vector<bool> reshaped(tmp->_blocks.size(),false);
-            // smallvec<bool> calculated(tmp->_blocks.size(),false);
             for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
               oldshapeC.push_back(tmp->_blocks[a].shape());
             }
-            // std::vector<cytnx_uint64> non_contract_l,non_contract_r;
             std::vector<cytnx_uint64> mapperL,inv_mapperL(this->_blocks[0].shape().size());
             std::vector<cytnx_uint64> mapperR,inv_mapperR(Rtn->_blocks[0].shape().size());
             vec_concatenate_(mapperL, non_comm_idx1, comm_idx1);
@@ -996,7 +989,6 @@ namespace cytnx {
             for (int aa = 0; aa < mapperR.size(); aa++) {
               inv_mapperR[mapperR[aa]] = aa;
             }
-            // std::vector<std::vector<cytnx_uint64>> inv_mapperR(Rtn->_blocks.size(),std::vector<cytnx_uint64>(Rtn->_blocks[0].shape().size()));
 
             if(this->is_diag()!=Rtn->is_diag()){
               for(cytnx_int64 a=0;a<this->_blocks.size();a++){
@@ -1010,43 +1002,20 @@ namespace cytnx {
                   for(cytnx_uint64 cc=non_comm_idx1.size();cc<non_comm_idx1.size()+non_comm_idx2.size();cc++){
                     Lgbuffer[cc] = Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc-non_comm_idx1.size()]];
                   }
-                  // vec_concatenate_(Lgbuffer, vec_clone(this->_inner_to_outer_idx[a],non_comm_idx1)
-                  //                                , vec_clone(Rtn->_inner_to_outer_idx[b],non_comm_idx2));
-                  // auto it = std::find(tmp->_inner_to_outer_idx.begin(),tmp->_inner_to_outer_idx.end(),Lgbuffer);
-                  // cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
                   cytnx_int64 targ_b = mpC[Lgbuffer];
                   tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b], comm_idx1, comm_idx2, this->is_diag());
                 }
               }
             }else{
-              // smallvec<char> transs(Rtn->_blocks.size(), 'N'); 
-              // smallvec<blas_int> ms(Rtn->_blocks.size(),0),ns(Rtn->_blocks.size(),0),ks(Rtn->_blocks.size(),0);
-              // smallvec<cytnx_double> doublealpha(Rtn->_blocks.size(),1.0);
-              // smallvec<cytnx_double> doublebeta(Rtn->_blocks.size(),0.0);
-              // smallvec<cytnx_float> floatalpha(Rtn->_blocks.size(),1.0);
-              // smallvec<cytnx_float> floatbeta(Rtn->_blocks.size(),0.0);
-              // smallvec<cytnx_complex128> complexalpha(Rtn->_blocks.size(),1.0);
-              // smallvec<cytnx_complex128> complexbeta(Rtn->_blocks.size(),0.0);
-              // smallvec<cytnx_complex64> complexalpha_f(Rtn->_blocks.size(),1.0);
-              // smallvec<cytnx_complex64> complexbeta_f(Rtn->_blocks.size(),0.0);
-              // smallvec<void*> LMems(Rtn->_blocks.size(),0),RMems(Rtn->_blocks.size(),0),CMems(Rtn->_blocks.size(),0);
-              // smallvec<blas_int> group_size(Rtn->_blocks.size(),1);
-
               std::vector<char> transs(Rtn->_blocks.size(), 'N'); 
               std::vector<blas_int> ms(Rtn->_blocks.size(),0),ns(Rtn->_blocks.size(),0),ks(Rtn->_blocks.size(),0);
               std::vector<void*> LMems(Rtn->_blocks.size(),0),RMems(Rtn->_blocks.size(),0),CMems(Rtn->_blocks.size(),0);
               std::vector<blas_int> group_size(Rtn->_blocks.size(),1);
-              // std::vector<cytnx_double> doublealpha(Rtn->_blocks.size(),1.0);
-              // std::vector<cytnx_double> doublebeta(Rtn->_blocks.size(),0.0);
-              // std::vector<cytnx_float> floatalpha(Rtn->_blocks.size(),1.0);
-              // std::vector<cytnx_float> floatbeta(Rtn->_blocks.size(),0.0);
-              // std::vector<cytnx_complex128> complexalpha(Rtn->_blocks.size(),1.0);
-              // std::vector<cytnx_complex128> complexbeta(Rtn->_blocks.size(),0.0);
-              // std::vector<cytnx_complex64> complexalpha_f(Rtn->_blocks.size(),1.0);
-              // std::vector<cytnx_complex64> complexbeta_f(Rtn->_blocks.size(),0.0);
               std::vector<Scalar> alphas(Rtn->_blocks.size(),1.0);
               std::vector<Scalar> betas(Rtn->_blocks.size(),0.0);
 
+              // check if all sub-tensor are same dtype and device
+              // such that we can call to linalg::__Gemm_Batch
               bool all_sub_tensor_same_dtype = true;
               bool all_sub_tensor_same_device = true;
               for(cytnx_int64 a=0;a<this->_blocks.size();a++){
@@ -1058,32 +1027,27 @@ namespace cytnx {
                 if(Rtn->_blocks[a].device() != Rtn->_blocks[0].device()) all_sub_tensor_same_device = false;
               }
 
+              // First select left block to do gemm
               for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                 cytnx_int64 comm_dim = 1;
+                // get the indices of right blocks that *can* contract with this->_blocks[a]
                 itoiR_idx = mp[itoiL_common[a]];
                 for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
                   comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
                 }
-                // vec_concatenate_(mapperL, non_comm_idx1, comm_idx1);
-                // for (int aa = 0; aa < mapperL.size(); aa++) {
-                //   inv_mapperL[mapperL[aa]] = aa;
-                // }
+                // permute&reshape this->_blocks[a] 
                 this->_blocks[a].permute_(mapperL);
                 oldshapeL = this->_blocks[a].shape();
                 this->_blocks[a].reshape_({-1, comm_dim});
-
+                // loop over all right blocks that can contract with this->_blocks[a]
                 for(cytnx_uint64 binx = 0;binx<itoiR_idx.size();binx++){
+                  // get the index of the right block
                   cytnx_uint64 b = itoiR_idx[binx];
-
-                  // vec_concatenate_(mapperR, comm_idx2, non_comm_idx2);
-                  // for (int aa = 0; aa < mapperR.size(); aa++) {
-                  //   // inv_mapperR[mapperR[aa]] = aa;
-                  //   inv_mapperR[b][mapperR[aa]] = aa;
-                  // }
+                  // permute&reshape Rtn->_blocks[b]
                   Rtn->_blocks[b].permute_(mapperR);
-                  // oldshapeR = Rtn->_blocks[b].shape();
                   oldshapeR[b] = Rtn->_blocks[b].shape();
                   Rtn->_blocks[b].reshape_({comm_dim, -1});
+                  // prepare to find the target block
                   Lgbuffer.resize(non_comm_idx1.size()+non_comm_idx2.size());
                   for(cytnx_uint64 cc=0;cc<non_comm_idx1.size();cc++){
                     Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
@@ -1091,32 +1055,16 @@ namespace cytnx {
                   for(cytnx_uint64 cc=non_comm_idx1.size();cc<non_comm_idx1.size()+non_comm_idx2.size();cc++){
                     Lgbuffer[cc] = Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc-non_comm_idx1.size()]];
                   }
-                  // vec_concatenate_(Lgbuffer, vec_clone(this->_inner_to_outer_idx[a],non_comm_idx1)
-                  //                               , vec_clone(Rtn->_inner_to_outer_idx[b],non_comm_idx2));
-
-                  // auto it = std::find(tmp->_inner_to_outer_idx.begin(),tmp->_inner_to_outer_idx.end(),Lgbuffer);
-                  // cytnx_int64 targ_b = it - tmp->_inner_to_outer_idx.begin();
+                  // target block index
                   cytnx_int64 targ_b = mpC[Lgbuffer];
-                  // doublebeta[binx]=1.0;
-                  // complexbeta[binx]=1.0;
-                  // floatbeta[binx]=1.0;
-                  // complexbeta_f[binx]=1.0;
                   betas[binx] = 1.0;
+                  // if the target block is not initialized, call to gemm with beta=0
                   if(!reshaped[targ_b]){
                     tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0], (cytnx_int64)Rtn->_blocks[b].shape()[1]});
                     reshaped[targ_b] = true;
-                    // doublebeta[binx]=0.0;
-                    // complexbeta[binx]=0.0;
-                    // floatbeta[binx]=0.0;
-                    // complexbeta_f[binx]=0.0;
                     betas[binx] = 0.0;
-
-                    // if(tmp->dtype()==Type.Double and this->dtype()==Type.Double and Rtn->dtype()==Type.Double){
-                    //   doublebeta[binx]=0.0;
-                    // }else if(tmp->dtype()==Type.ComplexDouble and this->dtype()==Type.ComplexDouble and Rtn->dtype()==Type.ComplexDouble){
-                    //   complexbeta[binx]=0.0;
-                    // }
                   }
+                  // prepare to call gemm_batch
                   if((tmp->dtype() <= 4 and this->dtype() <= 4 and Rtn->dtype() <= 4) and
                      (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and Rtn->dtype()!=Type.Void)
                      ){
@@ -1126,12 +1074,9 @@ namespace cytnx {
                     LMems[binx] = this->_blocks[a].storage()._impl->Mem;
                     RMems[binx] = Rtn->_blocks[b].storage()._impl->Mem;
                     CMems[binx] = tmp->_blocks[targ_b].storage()._impl->Mem;
-                    // linalg::d_Matmul(this->_blocks[a], Rtn->_blocks[b], tmp->_blocks[targ_b], 1.0, 1.0, false);
                   } else {
                     tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b]).reshape(tmp->_blocks[targ_b].shape());
                   }
-                  // Rtn->_blocks[b].reshape_(oldshapeR);
-                  // Rtn->_blocks[b].permute_(inv_mapperR);
                 }
                 //mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
@@ -1140,47 +1085,18 @@ namespace cytnx {
                    (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and Rtn->dtype()!=Type.Void)
                   ){
                   if(all_sub_tensor_same_dtype and all_sub_tensor_same_device){
+                    // if all sub-tensor are same dtype and device, call to linalg::__Gemm_Batch without checking and converting
                     group_size.resize(group_count,1);
-                    linalg::Gemm_Batch(transs, transs, ns, ms, ks, alphas, (const void **)RMems.data(), ns, (const void **)LMems.data(),
-                                       ks, betas, (void **)CMems.data(), ns, group_count, group_size, this->dtype(),
+                    linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(), (const void **)RMems.data(),
+                                       betas, (void **)CMems.data(), group_count, group_size, this->dtype(),
                                        tmp->device(), false, true);
                   }else{
-                    linalg::Gemm_Batch(transs, transs, ns, ms, ks, alphas, (const void **)RMems.data(), ns, (const void **)LMems.data(),
-                                       ks, betas, (void **)CMems.data(), ns, group_count, group_size, this->dtype(),
+                    linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(), (const void **)RMems.data(),
+                                       betas, (void **)CMems.data(), group_count, group_size, this->dtype(),
                                        tmp->device(), true, false);
                   }
                 }
-
-                // if(tmp->dtype()==Type.Double and this->dtype()==Type.Double and Rtn->dtype()==Type.Double){
-                //   blas_int group_count = itoiR_idx.size();
-                //   // std::vector<blas_int> group_size(group_count,1);
-                //   group_size.resize(group_count,1);
-                //   dgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),doublealpha.data(),
-                //     (const cytnx_double**)RMems.data(),ns.data(),(const cytnx_double**)LMems.data(),
-                //     ks.data(),doublebeta.data(),(cytnx_double**)CMems.data(),ns.data(),&group_count,group_size.data());
-                // }else if(tmp->dtype()==Type.ComplexDouble and this->dtype()==Type.ComplexDouble and Rtn->dtype()==Type.ComplexDouble){
-                //   blas_int group_count = itoiR_idx.size();
-                //   // std::vector<blas_int> group_size(group_count,1);
-                //   group_size.resize(group_count,1);
-                //   zgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),complexalpha.data(),
-                //     (const cytnx_complex128**)RMems.data(),ns.data(),(const cytnx_complex128**)LMems.data(),
-                //     ks.data(),complexbeta.data(),(cytnx_complex128**)CMems.data(),ns.data(),&group_count,group_size.data());
-                // }else if(tmp->dtype()==Type.Float and this->dtype()==Type.Float and Rtn->dtype()==Type.Float){
-                //   blas_int group_count = itoiR_idx.size();
-                //   // std::vector<blas_int> group_size(group_count,1);
-                //   group_size.resize(group_count,1);
-                //   sgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),floatalpha.data(),
-                //     (const cytnx_float**)RMems.data(),ns.data(),(const cytnx_float**)LMems.data(),
-                //     ks.data(),floatbeta.data(),(cytnx_float**)CMems.data(),ns.data(),&group_count,group_size.data());
-                // }else if(tmp->dtype()==Type.ComplexFloat and this->dtype()==Type.ComplexFloat and Rtn->dtype()==Type.ComplexFloat){
-                //   blas_int group_count = itoiR_idx.size();
-                //   // std::vector<blas_int> group_size(group_count,1);
-                //   group_size.resize(group_count,1);
-                //   cgemm_batch(transs.data(),transs.data(),ns.data(),ms.data(),ks.data(),complexalpha_f.data(),
-                //     (const cytnx_complex64**)RMems.data(),ns.data(),(const cytnx_complex64**)LMems.data(),
-                //     ks.data(),complexbeta_f.data(),(cytnx_complex64**)CMems.data(),ns.data(),&group_count,group_size.data());
-                // }
-
+                // restore the shape&permutation of this->_blocks[a]
                 for(cytnx_uint64 binx = 0;binx<itoiR_idx.size();binx++){
                   cytnx_uint64 b = itoiR_idx[binx];
 
@@ -1191,18 +1107,12 @@ namespace cytnx {
                 this->_blocks[a].reshape_(oldshapeL);
                 this->_blocks[a].permute_(inv_mapperL);
               }
-
+              // restore the shape of tmp->_blocks
               for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
                 tmp->_blocks[a].reshape_(oldshapeC[a]);
                 if(!reshaped[a]){
-                  // cout<<"IM ININININ"<<endl;
-                  // tmp->_blocks[a].storage().print_info();
-                  // tmp->_blocks[a].storage().print();
+                  // if targ_block is not result of any block contraction, set to zeros
                   tmp->_blocks[a].storage().set_zeros();
-                  // cout<<"-----------"<<endl;
-                  // tmp->_blocks[a].storage().print_info();
-                  // tmp->_blocks[a].storage().print();
-                  // cout<<"IM OUTOUTOUT"<<endl;
                 }
               }
                 
