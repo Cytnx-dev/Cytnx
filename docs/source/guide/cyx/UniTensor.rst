@@ -1,25 +1,25 @@
-UniTensor
-==========
-UniTensor is an extension object base on **cytnx.Tensor**. 
-A UniTensor consist of three imporant parts: 
+UniTensor class
+===============
+**UniTensor** is an extension object base on **cytnx.Tensor**. 
+A **UniTensor** consist of three important parts: 
 
 .. image:: image/UT.png
     :width: 600
     :align: center
 
 
-1. Block(s), which is a **Cytnx.Tensor** (or a list/vector of **cytnx.Tensor**). Block(s) store all the numbers(elements). 
+1. Block(s), which is a **cytnx.Tensor** (or a list/vector thereof). Block(s) store all the elements of the tensor. 
 
-2. Bonds, which defines the bond information associate to each rank. 
+2. Bonds, which contain the information associated to each index of the tensor. 
 
-3. labels, which gives each rank/bond unique ID. 
+3. labels, which give each bond a name with which it can be accessed. 
 
 
 
-In the most simple example where we don't consider any symmetry in our system, UniTensor can be think of adding these bonds and labels meta data around **cytnx.Tensor**. 
-A UniTensor can be constructed using **Bond** object, or in the simple case directly converted from a **Cytnx.Tensor**. 
+In the simplest case where no symmetries of the system are considered, a **UniTensor** can be thought of as adding the meta data bonds and labels to a **cytnx.Tensor**. 
+A **UniTensor** can be constructed with a **Bond** object, or directly from a **cytnx.Tensor** which gets converted to a **UniTensor**. 
 
-Let's take a look at this:
+Let's have a look at the details of **UniTensor**:
 
 .. toctree::
     :maxdepth: 1
