@@ -20,9 +20,9 @@ To use the library, simply include/import cytnx.
 .. Note::
     In C++, there is a namespace **cytnx**. 
 
-Aliases in python modules and C++ namespaces can be used equivalently, for example if we want to alias cytnx as cy, 
+Aliases in Python modules and C++ namespaces can be used equivalently, for example if we want to alias cytnx as cy, 
 
-In python :
+In Python :
 
 .. code-block:: python
     :linenos:

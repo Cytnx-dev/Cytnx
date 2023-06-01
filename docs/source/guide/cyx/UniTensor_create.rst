@@ -1,6 +1,6 @@
 Create UniTensor
 ------------------
-As mentioned in the intro, a UniTensor = Block(s) + Bond(s) + Label(s). For which Block(s) are the place holder for data, while Bond(s) and Label(s) are the meta data that describe the properties of the UniTensor. 
+As mentioned in the introduction, a **UniTensor** consists of Block(s), Bond(s) and Label(s). The Block(s) contain the data, while Bond(s) and Label(s) are the meta data that describe the properties of the UniTensor. 
 
 .. image:: image/utcomp.png
     :width: 600
@@ -9,32 +9,32 @@ As mentioned in the intro, a UniTensor = Block(s) + Bond(s) + Label(s). For whic
 
 
 
-Generally, there are two types of UniTensor: **un-tagged** and **tagged** UniTensor, depending on whether the bond has *direction*. In a more advanced application, the underlying UniTensor may have block diagonalize or other more complicated structure when Symmetries are invoved, in that case, the UniTensor can further categorized into **non-symmetry** and **with symmetry (block form)**, which we summarized by the table in the following. 
+Generally, there are two types of UniTensor types: **un-tagged** and **tagged**, depending on whether the bond has a *direction*. In more advanced applications, a UniTensor may have block diagonal or other more complicated structure when symmetries are involved. In that case, the UniTensor can further be categorized into **non-symmetric** and **symmetric (block form)**:
 
-
-+-----------+-----------------+-----------------------------------+
-|           |     non-sym     |  with Symmetry(block-diagonalize) |
-+-----------+-----------------+-----------------------------------+
-| tagged    |     **O**       |              **O**                |
-+-----------+-----------------+-----------------------------------+
-| untagged  |     **O**       |              **X**                |
-+-----------+-----------------+-----------------------------------+
++-----------+-----------------+-------------------------------+
+|           |  non-symmetric  |  symmetric (block-diagonal)   |
++-----------+-----------------+-------------------------------+
+| tagged    |     **O**       |            **O**              |
++-----------+-----------------+-------------------------------+
+| untagged  |     **O**       |            **X**              |
++-----------+-----------------+-------------------------------+
 
    
-In the following, we will introduce how to construct a UniTensor. 
+In the following, we will explain how to construct a UniTensor. 
 
 
 Construct from Tensor 
 ************************
 
-Before going into more complicated UniTensor structure, first of all let's start with the most simple example, for which we convert a Tensor into a UniTensor, and use this to introduce the first type of UniTensor we encounter: **untagged** UniTensor.  
+Before going into more complicated UniTensor structures, let's start with the most simple example. For this, we convert a **cytnx.Tensor** into a UniTensor. This gives us the first type of a UniTensor: an **untagged** UniTensor.  
 
-In the following, let's use a simple rank-3 tensor as example to give you a glance on some basic properties of UniTensor. The tensor notation (diagram) looks like:
+In the following, we consider a simple rank-3 tensor as an example to give you a glance on some basic properties of UniTensor. The tensor diagram looks like:
 
 .. image:: image/untag.png
     :width: 200
     :align: center
 
+We can convert such a Tensor to a UniTensor:
 
 .. code-block:: python
     :linenos:
@@ -48,9 +48,9 @@ In the following, let's use a simple rank-3 tensor as example to give you a glan
     uT = cy.UniTensor(T)
 
     
-Here, we simply convert a Tensor **T** into a UniTensor **uT** simply by wrapping it with constructor *cy.UniTensor()*. Formally, we should think of this as we constructing a UniTensor **uT** with **T** being **uT**'s *block* (data). 
+Here, the Tensor **T** is converted to a UniTensor **uT** simply by wrapping it with constructor *cy.UniTensor()*. Formally, we can think of this as constructing a UniTensor **uT** with **T** being its *block* (data). 
 
-We can use **print_diagram()** to visualize the UniTensor in a more straightforward way as a diagram: 
+We can use **print_diagram()** to visualize a UniTensor in a more straightforward way as a diagram: 
 
 
 .. code-block:: python 
@@ -77,27 +77,32 @@ Output >>
 
 
 
+The information provided by the output is explained in the following:
 
-There are a lot of information provided in this output which we will explain in details:
+1. **Bonds:** They are attached to the left side and/or right side of the center square. Now you might wonder why there are bonds going to two sides? In Cytnx, we use a property called **rowrank** which defines this. The first *rowrank* bonds will be considered to direct to the left and the rest will be on the right. We will get back to this property later. For now, let's just assume that rowrank takes an arbitrary integer 0 < rowrank < rank. The number of bonds indicates the rank of the UniTensor, which is also printed in the second line as *tensor Rank*. 
 
-1. **Bonds:** They are attach to the left side and/or right side of the center square. Now you might wonder why there are bonds putting on left/right? In cytnx, we use a property called **rowrank** to determine that. The first *rowrank* bonds will be put on the left and the rest will be on the right. We will get back to this property later. But right now, let's just assume it take arbitrary integer 0 < rowrank < rank). The number of bonds indicates the rank of the UniTensor, which also indicates in the second line *tensor Rank*. 
+    **Example:** 
+        Here, we have three bonds, indicating it is a rank-3 UniTensor.
 
-    **Ex:** 
-        Here, we have three bonds, indicates it's a rank-3 UniTensor.
+2. **Labels&dimensions:** The number on the outside of each bond represents the *label* of that bond, and the numbers inside the box indicate the *dimension* (number of elements) of each bond. 
 
-2. **Labels&dimensions:** The number on the outside of each bond represent the *label* of that bond, and the numbers indicate the *dimension* (number of elements) of each bond. 
+    **Example:**
+        * The bond on the left side   has dimension=2 and label="0".
+        * The bond on the upper-right has dimension=3 and label="1".
+        * The bond on the lower-right has dimension=4 and label="2". 
 
-    **Ex:**
-        * The bond on the left side   has dimension=2 and label=0.
-        * The bond on the upper-right has dimension=3 and label=1.
-        * The bond on the lower-right has dimension=4 and label=2. 
 
 .. note::
 
-    The order of the bonds are arranged from left to right and up to down. for this example, the bond with label=0 is the first bond (index=0); the bond with label=1 is the seoncd bond (index=1); the bond with label=2 is the 3rd bond (index=2).
+    The order of the bonds are arranged from left to right and up to down. In this example, the bond with label="0" is the first bond (index=0); the bond with label="1" is the second bond (index=1); the bond with label="2" is the 3rd bond (index=2).
 
 
-3. **tensor name:** The name (alias) of the UniTensor. User can give UniTensor a name using **UniTensor.set_name()** 
+.. note::
+
+    The labels of bonds are strings, and therefore text. By default, these labels are set to "0", "1", ... if no label names are defined. These are strings containing the corresponding number. Labels can not be integers. This is because in many APIs a bond can either be addressed by its index number (integer) as for a **cytnx.Tensor** or by its name (string).
+
+
+3. **tensor name:** The name (alias) of the UniTensor. Users can name a UniTensor with **UniTensor.set_name()**:
 
 .. code-block:: python 
     :linenos:
@@ -132,11 +137,7 @@ Output >>
     You can use **UniTensor.name()** to get the name property of the UniTensor.  
 
 
-4. **on device:** This indicates the data of current UniTensor is on which device (cpu or gpu). 
-
-.. note::
-    
-    The dtype and device of a UniTensor depends on the underlying *block* (data) of the UniTensor. 
+4. **on device:** This indicates the device where the data of the UniTensor is stored (cpu or gpu). 
 
 
 .. tip::
@@ -144,29 +145,35 @@ Output >>
     Similar to **cytnx.Tensor**, one can use **.to()** to move a UniTensor between devices! 
 
 
+.. note::
+    
+    The dtype and device of a UniTensor depends on the underlying *block* (data) of the UniTensor. 
+
+
 From scratch
 **************  
-Next, let's introduce the complete API for construct a UniTensor:
+
+Next, let's introduce the complete API for constructing a UniTensor from scratch:
 
 
 .. py:function:: UniTensor(bonds, labels, rowrank, dtype, device, is_diag)
      
-    :param List[cytnx.Bond] bonds: The list of bonds 
-    :param List[string] labels: The list of labels associate to each bond 
-    :param int rowrank: the rowrank when flatten into matrix. 
-    :param cytnx.Type dtype: the dtype of the block(s). 
-    :param cytnx.Device device: the device where the block(s) are hold. 
-    :param bool is_diag: whether the UniTensor is diagonal. 
+    :param List[cytnx.Bond] bonds: list of bonds 
+    :param List[string] labels: list of labels associate to each bond 
+    :param int rowrank: rowrank used when flattened into a matrix 
+    :param cytnx.Type dtype: the dtype of the block(s) 
+    :param cytnx.Device device: the device where the block(s) are held 
+    :param bool is_diag: whether the UniTensor is diagonal 
 
-The first argument **bonds** is a list of bond object, which is similar to the *shape* of **cytnx.Tensor** where the elements in *shape* indicates the dimension of the rank. Here, each rank is represent by a **cytnx.Bond** object. In general, **cytnx.Bond** contains three things:
+The first argument **bonds** is a list of bond objects. These correspond to the *shape* of a **cytnx.Tensor** where the elements in *shape* indicate the dimensions of the bonds. Here, each bond is represent by a **cytnx.Bond** object. In general, **cytnx.Bond** contains three things:
 
 1. The dimension of the bond. 
 2. The direction of the bond (it can be BD_REG--undirectional, BD_KET (BD_IN)--inward, BD_BRA (BD_OUT)--outward) 
 3. The symmetry and the associate quantum numbers. 
 
-For more details, see **Bond** section. Here, for simplicity, we will use only the dimension property of a Bond. 
+For more details, see the **Bond** section. Here, for simplicity, we will use only the dimension property of a Bond. 
 
-Now let's construct the rank-3 UniTensor with the same shape as the above example, and assign those three bonds with labels (a,b,c) and also set name to be "uT2"
+Now let's construct the rank-3 UniTensor with the same shape as in the above example. We assign the three bonds with labels ("a", "b", "c") and also set name to be "uT2 scratch".
 
 .. image:: image/ut2.png
     :width: 300
@@ -219,46 +226,43 @@ Output >>
 
 .. note:: 
 
-    The UniTensor will have all the elements in the block initialize to zero. 
-
+    The UniTensor will have all the elements in the block initialized with zeros. 
 
 
 Change labels
 ************** 
 
-Since in Cytnx tensor's leg with same label will be contracted, sometimes we need to change the labels for given bond(s).
+As will be explained later the functions *cytnx.Contract()* and *cytnx.Contracts()* contract bonds with the same name on different UniTensors. Therefore, we might need to change the labels for some bond(s).
 
-To change label associate to a certain leg of a tensor, one can use:
+To change the label associated to a certain leg of a UniTensor, one can use:
 
 .. py:function:: UniTensor.set_label(index, new_label)
 
-    :param [int] index: the index of the bond in current UniTensor  
+    :param [int] index: the index (order) of the bond in the UniTensor  
     :param [string] new_label: the new label that you want to change to
 
 
-Alternatively, if we don't know the index of the target bond in the current order, we can also specify with old label:
+Alternatively, if we don't know the index of the target bond in the current order, we can also specify the old label:
 
 .. py:function:: UniTensor.set_label(old_label, new_label)
 
-    :param [string] old_label: the current label of the bond. 
+    :param [string] old_label: the current label of the bond 
     :param [string] new_label: the new label that you want to change to
 
 
-If we wish to change labels of all the legs, one can use:
+If we wish to change the labels of all legs, we can use:
 
 .. py:function:: UniTensor.set_labels( new_labels)
 
     :param List[string] new_labels: a list of new labels 
 
-
-Note that one cannot have duplicate labels *within* a same UniTensor!
+For example:
 
 .. code-block:: python 
     :linenos:
 
     uT.set_label(1,"xx")
     uT.print_diagram()
-
 
     uT.set_labels(["i","j","k"])
     uT.print_diagram()
@@ -295,10 +299,15 @@ Output >>
                 -------------   
 
 
+.. note:: 
+
+    One cannot have duplicate labels *within* the same UniTensor!
+
+
 Create UniTensor with different labels that share data
 *********************************************************
 
-In some contraction scenario where we want to create a UniTensor with modified label(s) on each leg(s) but we don't want to create a copy of the actual data (which doubled memory usage). Then one can use function **relabel(s)**. This returns a new UniTensor with different meta (in this case labels are different), but the actual memory block(s) are still refering to the old one. For example:
+In some scenarios, especially in contractions with *cytnx.Contract()* and *cytnx.Contracts()*, we want to create a UniTensor with changed labels. However, we might not want to modify the original tensor. Creating a copy of the tensor data is also not desired, since it would double the memory usage. In such a case one can use the function **relabel(s)**. This returns a new UniTensor with different meta (in this case  only the labels are changed), but the actual memory block(s) are still referring to the old ones. The arguments of **relabel(s)** are similar to **set_label(s)**, see above. For example:
 
 
 .. code-block:: python
