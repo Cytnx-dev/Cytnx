@@ -1,15 +1,17 @@
 UniTensor with Symmetry
 ---------------------------
 
-Tensor with symmetries has several advantages in physical simulations. In a system with symmetry, Hamiltonian can be block-diagonalized into symmetry sectors of charge (quantum numbers). When Impose symmetry structure into our tensor, by ultilizing this block-diagonalize structure, we can substantially reduce the number of variational parameters, allowing us to go to larger system sizes/effective virtual bond dimension.  
+Physical systems are often symmetric under certain transformations. Exploiting such symmetries can be advantageous in many cases. Cytnx allows to incorporate the symmetries on the level of the tensors directly.
 
-The quanutm number conserving Tensor can be understanding in a simple way. Each bond (leg) of the Tensor carries quantum numbers and is directional, either pointing in or pointing out. As shown in the following figure:
+In a system with a symmetry, charge is conserved. Therefore, the Hamiltonian can be block-diagonalized into symmetry sectors of defined charge (quantum numbers) -- the charge sectors do not mix. When the symmetric structure is imposed on the level of the tensors, they become block-diagonal as well. This substantially reduces the memory costs and the number of variations parameters in variational algorithms. Thus, larger system sizes or bond dimensions are accessible with the same computational costs. Moreover, numerical errors due to contributions that do not conserve symmetry and are therefore unphysical can be avoided. Finally, simulations can be restricted to certain symmetry sectors if needed.  
+
+A quantum number conserving tensor can be understood in a simple way. Each bond (leg) of the Tensor carries quantum numbers and is directional, as shown in the following figure:
 
 .. image:: image/ut_bd.png
     :width: 600
     :align: center
 
-The conservation of quantum number (symmetry charge) indicates that only elements with **zero flux** will be allow to exist (total quantum number flows into the tensor subject to the combine rule of symmetry is equal to total quantum number flow out), therefore belongs to a valid block. Other elements that belongs to non-zero flux will not be created in our UniTensor.  
+The conservation of charge (quantum numbers) is ensured by restricting the tensors to only have elements with **zero flux**. For these elements, the total quantum number flowing into the tensor has to be equal to the total quantum number flowing out. The combination of quantum numbers in incoming and outgoing links to a total quantum number is defined by the combine rule of the symmetry considered. All other elements, that do not conserve the charge, belong to an invalid block and therefore have to be zero. We do not store these invalid blocks explicitly in a UniTensor.
 
 
 .. image:: image/ut_blocks.png
@@ -17,20 +19,20 @@ The conservation of quantum number (symmetry charge) indicates that only element
     :align: center
 
 
-To impose the symmetry, there are only two things we need to do:
+To impose symmetry on the tensors, there are only two steps we need to do:
 
 1. Identify the symmetries in the system (for example, U(1) symmetry)
-2. Creat **directional** Bonds that carries quantum numbers flow associate to that symmetries.
+2. Create **directional** Bonds that carry quantum numbers associated to these symmetries
 
-As an simple example, lets creat a 3-rank tensor with U(1) symmetry as the following figure:
+As a simple example, lets create a 3-rank tensor with U(1) symmetry:
 
 .. image:: image/u1_tdex.png
     :width: 500
     :align: center
 
-Here, we use the notation *{Qnum}>>dimension*. First, three bonds  **bond_c** (in), **bond_d** (in) and **bond_e** (out) are created with corresponding qnums (see 7.2 for further info related to Bond). Then we initialize our UniTensor **Td** using them:
+Here, we use the notation *{Qnum}>>dimension*. First, three bonds  **bond_c** (in), **bond_d** (in) and **bond_e** (out) are created with corresponding qnums. See chapter Bond for further information related to the bonds and their creation with quantum numbers. We then initialize a UniTensor **Td** using these three bonds:
 
-* In python:
+* In Python:
   
 .. code-block:: python
     :linenos:
@@ -63,7 +65,7 @@ Output >>
              |         |    
              -----------  
 
-We note that in this UniTensor, there are only **4** valid blocks** that carries zero-flux, as also shown in the figure. We can use **Td.print_blocks()** to see how many blocks, and their structure:
+As shown in the previous figure, this UniTensor has only **4** valid blocks which carry zero-flux. We can use **Td.print_blocks()** to see the number of blocks and their structures:
 
 .. code-block:: text
 
@@ -147,7 +149,7 @@ We note that in this UniTensor, there are only **4** valid blocks** that carries
 
 .. Note::
 
-    Here, the number in the square braket **[]** in print_blocks() indicates the Qn index. A Qn index is the index where the corresponding quantum number (Qnum) resides on given bond. 
+    The number in the square braket **[]** in print_blocks() indicates the Qnum index. It refers to the order of the quantum numbers on the corresponding bond. In the previous example, *bond_e* contains three quantum numbers. The element with quantum number U1(2) has the Qnum index [0] on this link, the U1(0) elements have Qnum index [1], and U1(2) element has Qnum index [2]. 
 
 
 
