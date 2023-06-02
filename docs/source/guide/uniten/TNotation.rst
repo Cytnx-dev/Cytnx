@@ -46,7 +46,7 @@ Direction of bond
 -----------------------
 Above, we have introduced the graphical notation which can represent any tensors and index summations and is equivalent to a certain mathematical expression. 
 
-Each bond of a tensor can be interpreted as a vectors space. In quantum systems, we often want to indicate the physical space with a *bra* (:math:`<\psi|`) or *ket* (:math:`|\psi>`). For example, a matrix can generally be represented as :math:`A = |\alpha><\beta|`. A *ket* can only be multiplied (contracted) with a *bra*.  
+Each bond of a tensor can be interpreted as a vectors space. In quantum systems, we often want to indicate the physical space with *ket* (:math:`|\psi>`) or *bra* (:math:`<\psi|`) vectors. These correspond to a vector space and the corresponding dual space. For example, a matrix can generally be represented as :math:`A = |\alpha><\beta|`. A *ket* can only be multiplied (contracted) with a *bra*.  
 
 To distinguish these two kinds of bonds and ensure that only compatible indices get contracted, we introduce a **direction** (arrow) for each bond in the graphical notation. A bond with an arrow pointing towards the node indicates a *ket* and an arrow pointing away from the node indicates a *bra*:
 
