@@ -25,6 +25,7 @@ Let's have a look at the details of **UniTensor**:
     :maxdepth: 1
 
     UniTensor_create.rst
+    UniTensor_labels.rst
     UniTensor_tag.rst
     UniTensor_sym.rst
     UniTensor_getblk.rst

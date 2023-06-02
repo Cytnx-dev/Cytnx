@@ -9,8 +9,8 @@ In the following, let's look into these objects:
 .. toctree::
     :maxdepth: 3
 
-    cyx/TNotation.rst
-    cyx/Bond.rst
-    cyx/UniTensor.rst
-    cyx/Contraction.rst
+    uniten/TNotation.rst
+    uniten/Bond.rst
+    uniten/UniTensor.rst
+    uniten/Contraction.rst
 
