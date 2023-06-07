@@ -93,7 +93,7 @@ To demonstrate this, we can just try:
     cytnx.Contract(Ta, Tb)
     cytnx.Contract(Ta, Tc)
 
-We will find that the first one works well, while the second one throws a RuntimeError stating "BRA-KET mismatch":
+While the first contraction works well, the second one throws a RuntimeError stating "BRA-KET mismatch":
 
 
 Output >> 
