@@ -35,9 +35,9 @@ Output >>
 
 .. Note::
 
-    1. Note that in Python, adding *.value* is necessary! 
+    Note that in Python, adding *.value* is necessary! 
 
-*
+
 The proxy returned by **at** also serves as reference, so we can directly assign or modify the value:
 
 * In Python:

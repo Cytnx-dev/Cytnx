@@ -1,30 +1,121 @@
 Manipulate UniTensor
 --------------------
 
-Having introduced the detail of initialization and structure of three types (un-tagged, tagged and tagged with symmetry) of UniTensor,
-in this section we present several general and useful hints on dealing with UniTensors.
+After having introduced the initialization and structure of the three UniTensor types (un-tagged, tagged and tagged with symmetries),
+we show the basic functionalities to manipulate UniTensors.
 
+Permutation, reshaping and arithmetic can be used as introduced for **Tensor** objects before with slight modifications for symmetric UniTensors.
 
-Permutation, Reshape, Arithmetic ...
+permute:
 ************************************
 
-Basic operations like permutation, reshape and arithmetic for un-tagged type UniTensor can be done exacly the same as Tensors,
-refer to the section 2.2. Manipulate Tensor and 2.4. Tensor arithmetic.
+The bond order can be changed with *permute* for all kinds of UniTensors. For example, we permute the indices of the symmetric tensor that we introduced before:
 
-For the manipulations on elements, we just remember to first access to the blocks (which are just tensors objects) and then access the elements as
-we have learned in 2.3. Access elements.
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+      bond_c = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+      bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+      bond_e = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
+      Td = cytnx.UniTensor([bond_c, bond_d, bond_e]);
+      Td.print_diagram()
+
+      Td_perm=Td.permute([0,2,1])
+      Td_perm.print_diagram()
+
+
+* Output >> 
+
+.. code-block:: text
+
+      -----------------------
+      tensor Name : 
+      tensor Rank : 3
+      contiguous  : True
+      valid blocks : 4
+      is diag   : False
+      on device   : cytnx device: CPU
+            row           col 
+            -----------    
+            |         |    
+      0  -->| 2     4 |-->  2
+            |         |    
+      1  -->| 2       |        
+            |         |    
+            -----------    
+
+      -----------------------
+      tensor Name : 
+      tensor Rank : 3
+      contiguous  : False
+      valid blocks : 4
+      is diag   : False
+      on device   : cytnx device: CPU
+            row           col 
+            -----------    
+            |         |    
+      0  -->| 2     2 |<--* 1
+            |         |    
+      2 *<--| 4       |        
+            |         |    
+            -----------    
+
+
+reshape:
+************************************
+
+Untagged UniTensors can be reshaped just like normal Tensors.
+
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+    T = cytnx.UniTensor(cytnx.arange(12).reshape(4,3))
+    T.reshape_(2,3,2)
+    T.print_diagram()
+
+
+Output >> 
+
+.. code-block:: text
+
+      -----------------------
+      tensor Name : 
+      tensor Rank : 3
+      block_form  : False
+      is_diag     : False
+      on device   : cytnx device: CPU
+            --------     
+            /        \    
+            |      2 |____ 0
+            |        |    
+            |      3 |____ 1
+            |        |    
+            |      2 |____ 2
+            \        /    
+            --------     
+
+.. Note::
+
+    A tagged UniTensor can not be reshaped. This includes symmetric UniTensors as well.
+
+
+Arithmetic
+************************************
+
+
+Arithmetic operations for un-tagged UniTensors can be done exactly the same as with Tensors, see section arithmetic for Tensors.
 
 Rowrank
 *********
 
-Another property that we may want to maintain in UniTensor is its rowrank, it simply tells us
-how the legs of the a UniTensor is splited into two halves, namely one part belongs to the rowspace
-and the other the column space. Most of the linear algebra algorithms takes the matrix as the input, we thus use the rowrank
-to specify how to cast the input UniTensor into a matrix. In Cytnx this specification will sometimes reduce the amounts of
-work (in the code) to do linalg operations on UniTensor, here is a example about performing **SVD decomposition** on a UniTensor.
+Another property that we may want to maintain in UniTensor is its rowrank, it simply tells us how the legs of the a UniTensor are split into two halves, one part belongs to the rowspace and the other to the column space. Most of the linear algebra algorithms takes a matrix as an input. We thus use the rowrank to specify how to cast the input UniTensor into a matrix. In Cytnx, this specification makes it easy to use linalg operations on UniTensors. Here is a example about performing **singular value decomposition (SVD)** on a UniTensor:
 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -99,6 +190,4 @@ Output >>
 
 .. toctree::
 
-Here we note that when doing SVD, the first three legs of **T** are actually automatically reshape into one leg according to **rowrank=3**, 
-after the task, the **u** again automatically be reshaped back to three legs in the rowspace, so when we try to contract back **u-s-vt** we expect to 
-get the original **T** with same shape.
+When calling *Svd*, the first three legs of **T** are automatically reshaped into one leg according to **rowrank=3**. After the SVD, the matrices **u** and **vt** are automatically reshaped back into the corresponding index form of the original tensor. This way, we get the original **T** if we contract **u-s-vt**.
