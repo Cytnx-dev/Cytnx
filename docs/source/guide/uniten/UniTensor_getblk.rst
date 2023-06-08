@@ -125,7 +125,7 @@ To access all valid blocks in a UniTensor with block structure (with symmetry), 
     
     Blks = Td.get_blocks_()
     print(len(Blks))
-    print(Blks)
+    print(*Blks)
 
 Output >> 
 
@@ -162,9 +162,6 @@ Output >>
     cytnx device: CPU
     Shape : (1,1,1)
     [[[0.00000e+00 ]]]
-
-
-    [, , , ]
 
 
 .. note::

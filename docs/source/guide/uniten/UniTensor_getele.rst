@@ -1,26 +1,25 @@
-Get element from UniTensor
-------------------------
+Get/set UniTensor element
+--------------------------
 
-In this section, we will discuss how to get element directly from a UniTensor. Generally, the element can also be access by first getting the block, and then get the element from the block. It is also possible to directly access the element from a UniTensor. 
+In this section, we discuss how to get an element directly from a UniTensor and how to set an element. Generally, elements can be accessed by first getting the corresponding block, and then accessing the correct element from that block. However, it is also possible to directly access an element from a UniTensor.
 
-To get element, one can call **UniTensor.at()**. It returns a *proxy* which can be further operate either as reference, or as a query object for the info about the element. We will see why the design is in place later when dealing with Symmetry UniTensor.   
-
+To get an element, one can call **UniTensor.at()**. It returns a *proxy* which contains a reference to the element. Furthermore, the proxy can be used to check whether an element corresponds to a valid block in a UniTensor with symmetries.
 
 
 UniTensor without symmetries
 *****************************
 
-Access the element from a UniTensor without symmetries should be straightforward by using *at*
+Accessing an element in a UniTensor without symmetries is straightforward by using *at*
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
 
     T = cytnx.UniTensor(cytnx.arange(9).reshape(3,3))
-    print(T.at([0,3]).value)
+    print(T.at([0,2]).value)
    
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -36,12 +35,12 @@ Output >>
 
 .. Note::
 
-    1. note that in python, using value is nessasary! 
+    1. Note that in Python, adding *.value* is necessary! 
 
+*
+The proxy returned by **at** also serves as reference, so we can directly assign or modify the value:
 
-The proxy returns by calling **at** also serves as reference, meaning that you can also assign/modify the value:
-
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -75,9 +74,9 @@ Output >>
 UniTensor with symmetries
 *****************************
 
-When the UniTensor is in the block structure, then one need to be careful about accessing elements, since the elements you are accessing may not be valid under the symmetry. 
+When a UniTensor has block structure, not all possible elements correspond to a valid block. Invalid elements do not fulfill the symmetries. Therefore, these invalid elements should not be accessed.
 
-In such case, one can still use *at* as it is, but the proxy provides a way to help you check it!
+In such cases, one can still use *at* and receive a proxy. The proxy can be used to check if the element is valid.
 
 Let's consider the following example:
 
@@ -85,19 +84,20 @@ Let's consider the following example:
     :width: 500
     :align: center
 
+* In Python:
 
 .. code-block:: python
     :linenos:
     
-    bond_c = cytnx.Bond(cytnx.BD_IN, [Qs(1)>>1, Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_d = cytnx.Bond(cytnx.BD_IN, [Qs(1)>>1, Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_e = cytnx.Bond(cytnx.BD_OUT, [Qs(2)>>1, Qs(0)>>2, Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    Td = cytnx.UniTensor([bond_c, bond_d, bond_e])
+    bond_c = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_e = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
+    Td = cytnx.UniTensor([bond_c, bond_d, bond_e]);
 
 
-In the case you trying to access the element that exists (in here we access the element at [0,0,0]), it is used the same as the case without symmetries:
+An existing element (here: at [0,0,0]) can be accessed as in the case without symmetries:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -105,7 +105,7 @@ In the case you trying to access the element that exists (in here we access the 
     print(Td.at([0,0,0]).value)
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -121,9 +121,9 @@ Output>>
     0.0
 
 
-In the case you trying to access element that does NOT allowed by symmetry (for example element at [0,0,1]), then it will throw error:
+If we try to access an element that does not correspond to a valid block (for example at [0,0,1]), an error is thrown:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -131,7 +131,7 @@ In the case you trying to access element that does NOT allowed by symmetry (for 
     print(Td.at([0,0,1]).value)
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -145,12 +145,9 @@ Output>>
     ValueError: [ERROR] trying access an element that is not exists!, using T.if_exists = sth or checking with T.exists() to verify before access element!
 
 
+To avoid this error, we can check if the element is valid before accessing it. The proxy provides the method **exists()** for this purpose. For example, if we want to assign the value 8 to all valid elements with indices of the form [0,0,i], we can use:
 
-So how can we know if the element we are accessing is existing or not by the symmetry? Here is where the proxy coming in to play a crucial role. One can use the **exists()** to check if the element is valid or not before setting element:
-
-
-
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -158,9 +155,9 @@ So how can we know if the element we are accessing is existing or not by the sym
     for i in [0,1]:
         tmp = Td.at([0,0,i])
         if(tmp.exists()):
-            tmp.value = 8
+            tmp.value = 8.
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -172,7 +169,7 @@ So how can we know if the element we are accessing is existing or not by the sym
     }
 
 
-This will set the element at [0,0,0] to 8 while ignore the [0,0,1] element that does not exist. 
+This will set the element at [0,0,0] to 8 while ignoring the [0,0,1] element that does not exist. 
 
 
 
