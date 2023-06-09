@@ -1,6 +1,6 @@
 Contraction
 =============
-Cytnx provides rich UniTenosr contraction interfaces, in this section we introcuce several methods to contract a desired tensor network.
+Cytnx provides rich UniTensor contraction interfaces, in this section we introduce several methods to contract a desired tensor network.
 
 Contract()
 ------------------
@@ -8,7 +8,7 @@ Contract()
 For the contraction of two UniTensor, we have the function **cytnx.Contract()** to do the job, what it does is simply contract 
 the common labels of two UniTensors. Here is a example:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -78,7 +78,7 @@ labels, we provide **.relabels()** to relabel the UniTensors, this in fact retur
 while the labels of the original UniTensor itself are preserved. Here is the example:
 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -163,7 +163,7 @@ Consider the following contraction task consists of UniTensors **A1**, **A2** an
 
 translate to the code we have:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -209,7 +209,7 @@ For example, we want to contract the following tesnor network (again) consists o
 In the figure we labelled the internal leg using the unique positive numbers and extermal legs the negative ones, translate this figure
 to the ncon function calling we have:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
