@@ -694,6 +694,9 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
+  void BlockUniTensor::relabels_(const std::vector<string> &new_labels) {
+    this->set_labels(new_labels);
+  }
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
     const std::vector<cytnx_int64> &new_labels) {
     vector<string> vs(new_labels.size());
@@ -701,6 +704,13 @@ namespace cytnx {
               [](cytnx_int64 x) -> string { return to_string(x); });
     //std::cout << "entry" << endl;
     return relabels(vs);
+  }
+  void BlockUniTensor::relabels_(const std::vector<cytnx_int64> &new_labels) {
+    vector<string> vs(new_labels.size());
+    transform(new_labels.begin(), new_labels.end(), vs.begin(),
+              [](cytnx_int64 x) -> string { return to_string(x); });
+    //std::cout << "entry" << endl;
+    this->relabels_(vs);
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
@@ -712,6 +722,10 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
+  void BlockUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
+                                const bool &by_label) {
+    this->set_label(inx, new_label, by_label);
+  }
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
                                                                 const string &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
@@ -719,6 +733,9 @@ namespace cytnx {
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
+  }
+  void BlockUniTensor::relabel_(const cytnx_int64 &inx, const string &new_label) {
+    this->set_label(inx, new_label);
   }
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string &inx,
                                                                 const string &new_label) {
@@ -728,6 +745,9 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
+  void BlockUniTensor::relabel_(const string &inx, const string &new_label) {
+    this->set_label(inx, new_label);
+  }
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
                                                                 const cytnx_int64 &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
@@ -735,6 +755,9 @@ namespace cytnx {
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
+  }
+  void BlockUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
+    this->set_label(inx, new_label);
   }
 
 
@@ -1015,18 +1038,20 @@ namespace cytnx {
               std::vector<Scalar> betas(Rtn->_blocks.size(),0.0);
 
               // check if all sub-tensor are same dtype and device
-              // such that we can call to linalg::__Gemm_Batch
-              bool all_sub_tensor_same_dtype = true;
-              bool all_sub_tensor_same_device = true;
-              for(cytnx_int64 a=0;a<this->_blocks.size();a++){
-                if(this->_blocks[a].dtype() != this->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
-                if(this->_blocks[a].device() != this->_blocks[0].device()) all_sub_tensor_same_device = false;
-              }
-              for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
-                if(Rtn->_blocks[a].dtype() != Rtn->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
-                if(Rtn->_blocks[a].device() != Rtn->_blocks[0].device()) all_sub_tensor_same_device = false;
-              }
-
+              // if(User_debug){
+                bool all_sub_tensor_same_dtype = true;
+                bool all_sub_tensor_same_device = true;
+                for(cytnx_int64 a=0;a<this->_blocks.size();a++){
+                  if(this->_blocks[a].dtype() != this->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
+                  if(this->_blocks[a].device() != this->_blocks[0].device()) all_sub_tensor_same_device = false;
+                }
+                for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
+                  if(Rtn->_blocks[a].dtype() != Rtn->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
+                  if(Rtn->_blocks[a].device() != Rtn->_blocks[0].device()) all_sub_tensor_same_device = false;
+                }
+                cytnx_error_msg(all_sub_tensor_same_dtype,"[ERROR] cannot perform contraction on Tensors with different dtype.%s","\n");
+                cytnx_error_msg(all_sub_tensor_same_device,"[ERROR] cannot perform contraction on Tensors with different device.%s","\n");
+              // }
               // First select left block to do gemm
               for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                 cytnx_int64 comm_dim = 1;
@@ -1084,17 +1109,10 @@ namespace cytnx {
                 if((tmp->dtype() <= 4 and this->dtype() <= 4 and Rtn->dtype() <= 4) and
                    (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and Rtn->dtype()!=Type.Void)
                   ){
-                  if(all_sub_tensor_same_dtype and all_sub_tensor_same_device){
-                    // if all sub-tensor are same dtype and device, call to linalg::__Gemm_Batch without checking and converting
-                    group_size.resize(group_count,1);
-                    linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(), (const void **)RMems.data(),
-                                       betas, (void **)CMems.data(), group_count, group_size, this->dtype(),
-                                       tmp->device(), false, true);
-                  }else{
-                    linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(), (const void **)RMems.data(),
-                                       betas, (void **)CMems.data(), group_count, group_size, this->dtype(),
-                                       tmp->device(), true, false);
-                  }
+                  group_size.resize(group_count,1);
+                  linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(), (const void **)RMems.data(),
+                                      betas, (void **)CMems.data(), group_count, group_size, this->dtype(),
+                                      tmp->device());
                 }
                 // restore the shape&permutation of this->_blocks[a]
                 for(cytnx_uint64 binx = 0;binx<itoiR_idx.size();binx++){

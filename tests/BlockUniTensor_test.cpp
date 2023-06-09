@@ -53,6 +53,23 @@ TEST_F(BlockUniTensorTest, relabels){
   EXPECT_THROW(BUT1.relabels({1,2}), std::logic_error);
   EXPECT_THROW(BUT1.relabels({"a","b","c","d","e"}), std::logic_error);
 }
+TEST_F(BlockUniTensorTest, relabels_){
+  BUT1.relabels_({"a", "b", "cd", "d"});
+  EXPECT_EQ(BUT1.labels()[0],"a");
+  EXPECT_EQ(BUT1.labels()[1],"b");
+  EXPECT_EQ(BUT1.labels()[2],"cd");
+  EXPECT_EQ(BUT1.labels()[3],"d");
+  BUT1.relabels_({1,-1,2,1000});
+  EXPECT_EQ(BUT1.labels()[0],"1");
+  EXPECT_EQ(BUT1.labels()[1],"-1");
+  EXPECT_EQ(BUT1.labels()[2],"2");
+  EXPECT_EQ(BUT1.labels()[3],"1000");
+  EXPECT_THROW(BUT1.relabels_({"a","a","b","c"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({1,1,0,-1}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"a"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({1,2}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"a","b","c","d","e"}), std::logic_error);
+}
 
 TEST_F(BlockUniTensorTest, relabel){
   BUT1 = BUT1.relabel("0", "a");
@@ -80,6 +97,28 @@ TEST_F(BlockUniTensorTest, relabel){
   // BUT1.relabel(0,"a").relabel(1,"a");
   // EXPECT_THROW(BUT1.relabel("a","b"),std::logic_error);
   // EXPECT_THROW(BUT1.relabel(5,'a'),std::logic_error);
+}
+TEST_F(BlockUniTensorTest, relabel_){
+  BUT1.relabel_("0", "a");
+  BUT1.relabel_("1", "b");
+  BUT1.relabel_("2", "d");
+  BUT1.relabel_("3", "de");
+  BUT1.relabel_("b", "ggg");
+  EXPECT_EQ(BUT1.labels()[0],"a");
+  EXPECT_EQ(BUT1.labels()[1],"ggg");
+  EXPECT_EQ(BUT1.labels()[2],"d");
+  EXPECT_EQ(BUT1.labels()[3],"de");
+  BUT1.relabel_(0,"ccc");
+  EXPECT_EQ(BUT1.labels()[0],"ccc");
+  BUT1.relabel_(0,-1);
+  EXPECT_EQ(BUT1.labels()[0],"-1");
+  BUT1.relabel_(1,-199922);
+  EXPECT_EQ(BUT1.labels()[1],"-199922");
+  BUT1.relabel_("-1","0");
+  EXPECT_EQ(BUT1.labels()[0],"0");
+  EXPECT_THROW(BUT1.relabel_(5,"a"),std::logic_error);
+  EXPECT_THROW(BUT1.relabel_(-1,"a"),std::logic_error);
+  // EXPECT_THROW(BUT1.relabel(0,"a").relabel(1,"a"),std::logic_error);
 }
 
 TEST_F(BlockUniTensorTest, syms){

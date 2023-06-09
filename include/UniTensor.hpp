@@ -357,6 +357,8 @@ namespace cytnx {
       const std::vector<cytnx_int64> &new_labels);
     virtual boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &new_labels);
+    virtual void relabels_(const std::vector<cytnx_int64> &new_labels);
+    virtual void relabels_(const std::vector<std::string> &new_labels);
     virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                          const cytnx_int64 &new_label,
                                                          const bool &by_label);
@@ -366,6 +368,12 @@ namespace cytnx {
                                                          const cytnx_int64 &new_label);
     virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                          const std::string &new_label);
+    virtual void relabel_(const cytnx_int64 &inx,
+                          const cytnx_int64 &new_label,
+                          const bool &by_label);
+    virtual void relabel_(const std::string &inx, const std::string &new_label);
+    virtual void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
+    virtual void relabel_(const cytnx_int64 &inx, const std::string &new_label);
 
     virtual std::vector<Symmetry> syms() const;
 
@@ -574,8 +582,11 @@ namespace cytnx {
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
                   const bool &by_label=false);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
     //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
+    void relabels_(const std::vector<std::string> &new_labels);
     /**
      * @brief
      *
@@ -585,6 +596,7 @@ namespace cytnx {
      * @return boost::intrusive_ptr<UniTensor_base>
      */
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
+    void relabels_(const std::vector<cytnx_int64> &new_labels);
     /**
      * @brief
      *
@@ -604,6 +616,11 @@ namespace cytnx {
                                                  const std::string &new_label);
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                  const cytnx_int64 &new_label);
+    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
+                  const bool &by_label);
+    void relabel_(const std::string &inx, const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       DenseUniTensor *tmp = this->clone_meta();
@@ -1185,7 +1202,9 @@ namespace cytnx {
      * @return boost::intrusive_ptr<UniTensor_base>
      */
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
+    void relabels_(const std::vector<cytnx_int64> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
+    void relabels_(const std::vector<std::string> &new_labels);
     /**
      * @brief
      *
@@ -1205,6 +1224,11 @@ namespace cytnx {
                                                  const std::string &new_label);
     boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
                                                  const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
+                  const bool &by_label);
+    void relabel_(const std::string &inx, const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
     unsigned int dtype() const {
 #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
@@ -2116,8 +2140,10 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<cytnx_int64> &new_labels);
+    void relabels_(const std::vector<cytnx_int64> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &new_labels);
+    void relabels_(const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                          const cytnx_int64 &new_label,
                                                          const bool &by_label);
@@ -2127,6 +2153,11 @@ namespace cytnx {
                                                          const cytnx_int64 &new_label);
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                          const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
+                  const bool &by_label);
+    void relabel_(const std::string &inx, const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const std::string &new_label);
+    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
  
     std::vector<Symmetry> syms() const;
 
@@ -2845,7 +2876,7 @@ namespace cytnx {
       return *this;
     }
     /**
-	@see 
+	  @see 
     set_labels(const std::vector<std::string> &new_labels)
 	 */
     UniTensor &set_labels(const std::initializer_list<char*> &new_labels) {
@@ -3070,14 +3101,33 @@ namespace cytnx {
       out._impl = this->_impl->relabels(new_labels);
       return out;
     }
+    /**
+     * @deprecated
+	 * It is recommanded to use \ref 
+         relabels_(const std::vector<std::string> &new_labels) const
+     */
+    void relabels_(const std::vector<cytnx_int64> &new_labels) {
+      this->_impl->relabels_(new_labels);
+    }
 
+    /**
+    @brief Set new labels for all the bonds.
+    @param[in] new_labels the new labels for each bond.
+    @note
+        1. the new assign label cannot be the same as the label of any other bonds in the UniTensor.
+        ( cannot have duplicate labels )
+        2. Compare to relabels(const std::vector<std::string> &new_labels) const, this 
+        function set the new label to itself.
+    */
+    void relabels_(const std::vector<std::string> &new_labels) const {
+      this->_impl->relabels(new_labels);
+    }
     /**
     @brief rebables all of the labels in UniTensor.
     @see relabel(const cytnx_int64 &inx, const std::string &new_label) const
     @attention This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor. That is the meta data of the UniTensor is
     different, but the internal data is still shared.
-	  @return UniTensor
      */
     UniTensor relabels(const std::vector<std::string> &new_labels) const {
       UniTensor out;
@@ -3099,6 +3149,18 @@ namespace cytnx {
         out._impl =  this->_impl->relabels(vs);
         return out;
     }
+    /**
+    @see relabels_(const std::vector<std::string> &new_labels) const
+     */
+    void relabels_(const std::initializer_list<char*> &new_lbls){
+        std::vector<char*> new_labels(new_lbls);
+        std::vector<std::string> vs(new_labels.size());
+        transform(new_labels.begin(),new_labels.end(), vs.begin(),[](char * x) -> std::string { return std::string(x); });
+        //std::cout << new_labels.size() << std::endl;
+        //std::cout << vs << std::endl;
+
+        this->_impl->relabels_(vs);
+    }
 
     /**
      @deprecated
@@ -3110,6 +3172,15 @@ namespace cytnx {
       UniTensor out;
       out._impl = this->_impl->relabel(inx, new_label, by_label);
       return out;
+    }
+    /**
+     @deprecated
+	   It is recommened to use
+     relabel_(const cytnx_int64 &inx, const std::string &new_label) const
+     */
+    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
+                  const bool &by_label=false) {
+      this->_impl->relabel_(inx, new_label, by_label);
     }
 
     /**
@@ -3131,9 +3202,32 @@ namespace cytnx {
       out._impl = this->_impl->relabel(inx, new_label);
       return out;
     }
+    /**
+    @brief rebable the lags in the UniTensor by given index.
+    @details This function will relabel the lags in the UniTensor by a given index.
+    This function will alter the label of the UniTensor directly.
+	@param[in] inx a given index
+	@param[in] new_label the new label of the UniTensor in the index \p inx
+    @see set_label(const cytnx_int64 &idx, const std::string &new_label)
+     */
+    void relabel_(const cytnx_int64 &inx, const std::string &new_label) const {
+      this->_impl->relabel_(inx, new_label);
+    }
 
     /**
-    @brief rebable the lags in the UniTensor by a given label.
+    @brief relabel the lags in the UniTensor by a given label.
+    @details This function will relabel the lags in the UniTensor by a given label.
+    This function will alter the label of the UniTensor directly.
+	  @param[in] old_label original label you want to replace
+	  @param[in] new_label the new label
+    @see set_label(const std::string &old_label, const std::string &new_label)
+     */
+    void relabel_(const std::string &old_label, const std::string &new_label) const {
+      this->_impl->relabel_(old_label, new_label);
+    }
+    
+    /**
+    @brief relabel the lags in the UniTensor by a given label.
     @details This function will relabel the lags in the UniTensor by a given label.
     This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor (that is if you use same_data() to check,
