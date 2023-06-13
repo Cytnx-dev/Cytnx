@@ -215,4 +215,4 @@ Output >>
       Shape : (1)
       [7.87947e-16 ]
 
-If we contract :math:`U \cdot S \cdot Vt`, we get a tensor of the same form as **T** and we can subtract the two tensors. The error :math:`\frac{|T-U \cdot S \cdot Vt|}{|T|}` is of the order of machine precision.
+If we contract :math:`U \cdot S \cdot Vt`, we get a tensor of the same shape as **T** and we can subtract the two tensors. The error :math:`\frac{|T-U \cdot S \cdot Vt|}{|T|}` is of the order of machine precision.

@@ -17,7 +17,7 @@ Each tensor is represented by a node (sometimes also called vertex in graph theo
 The number of bonds represents the *rank* of the tensor. 
 
 
-.. image:: image/Not.png
+.. image:: uniten/image/Not.png
     :width: 600
     :align: center
 
@@ -35,7 +35,7 @@ A powerful operation with tensors is the tensor multiplication. It is used in te
 
 In the graphical notation, this is equivalent to the following diagram:
 
-.. image:: image/cont.png
+.. image:: uniten/image/cont.png
     :width: 550
     :align: center
 
@@ -50,7 +50,7 @@ Each bond of a tensor can be interpreted as a vectors space. In quantum systems,
 
 To distinguish these two kinds of bonds and ensure that only compatible indices get contracted, we introduce a **direction** (arrow) for each bond in the graphical notation. A bond with an arrow pointing towards the node indicates a *ket* and an arrow pointing away from the node indicates a *bra*:
 
-.. image:: image/braket.png
+.. image:: uniten/image/braket.png
     :width: 500
     :align: center
 
@@ -58,7 +58,7 @@ These represent (a) a rank-3 tensor :math:`A = |\alpha><\beta|<\delta|` and (b) 
 
 Just like in physics, a *ket* bond cannot be multiplied with a *bra* bond. In the tensor notation, this means that two bonds with conflicting directions cannot be contracted with each other:
 
-.. image:: image/braket_cont.png
+.. image:: uniten/image/braket_cont.png
     :width: 350
     :align: center
 
