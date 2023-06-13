@@ -1,9 +1,11 @@
 Network
 ========================
 
+The **Network** object provides a skeleton of a Tensor network diagram. Users can write a *Network file*, which will serve as the blue print of a TN structure, and contract multiple Tensors at once with optimal contraction order optimized automatically within the **Network** object. Further more, user can plot the Tensor network diagram from *Network file* directly in python API to check the implementation. 
+
 Network is a class for contracting UniTensors, it is useful when we have to perform the same large contraction task many times.
 We can create configuration for the contraction task and put the "constant" UniTensors in at the initialization step of some algorithms, 
-later when runing the sweeping or the iterative steps, we put the variational tensors in and launch the network to get the results.
+later when running the sweeping or the iterative steps, we put the variational tensors in and launch the network to get the results.
 
 Network from .net file
 --------------------------

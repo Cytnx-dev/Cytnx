@@ -51,8 +51,9 @@ Continue reading:
     guide/basic_obj/Tensor.rst
     guide/basic_obj/Storage.rst
     guide/basic_obj/Scalar.rst
+    guide/TNotation.rst
     guide/uniten.rst
-    guide/net.rst
+    guide/contraction.rst
     guide/linalg.rst
     guide/itersol.rst
     guide/xlinalg.rst
