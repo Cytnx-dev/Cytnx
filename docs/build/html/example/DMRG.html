@@ -172,64 +172,94 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">6. UniTensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/TNotation.html">6.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">6.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">6.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Contraction.html">6.4. Contraction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/TNotation.html">6. Tensor Notation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/TNotation.html#tensor-contraction">6.1. Tensor Contraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/TNotation.html#direction-of-bond">6.2. Direction of bond</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/net.html">7. Network</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.1. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">7.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/uniten.html">7. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/create.html">7.1. Create UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/create.html#construct-from-tensor">7.1.1. Construct from Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/create.html#from-scratch">7.1.2. From scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/labels.html">7.2. Change labels</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#create-unitensor-with-different-labels-that-share-data">7.2.1. Create UniTensor with different labels that share data</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/bond.html">7.3. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#symmetry-object">7.3.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#create-bond-with-qnums">7.3.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#combine-bonds">7.3.3. Combine Bonds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/tagged.html">7.4. Tagged UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/tagged.html#non-symmetric-tagged-unitensor">7.4.1. Non-symmetric Tagged UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/symmetric.html">7.5. UniTensor with Symmetry</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/blocks.html">7.6. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/blocks.html#unitensor-without-symmetries">7.6.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/blocks.html#unitensor-with-symmetries">7.6.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/blocks.html#putting-a-block">7.6.3. Putting a block</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/elements.html">7.7. Get/set UniTensor element</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/elements.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/elements.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/manipulation.html">7.8. Manipulate UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#permute">7.8.1. permute:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#reshape">7.8.2. reshape:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#arithmetic">7.8.3. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#rowrank">7.8.4. rowrank</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">8. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../guide/contraction.html">8. Contraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/network.html">8.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">9. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">9.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/contract.html">8.2. Contract(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/contract.html#contract">8.2.1. Contract</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/contract.html#contracts">8.2.2. Contracts</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/ncon.html">8.3. ncon</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">9. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">10. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">10.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">10.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">10.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">10.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">10. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -265,9 +295,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../CommApp.html">Common usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../common_app/BlasINT.html">2. Check current Blas/Lapack integer size</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tuning</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
@@ -492,64 +523,94 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/cyx.html">6. UniTensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/TNotation.html">6.1. Tensor Notation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#tensor-contraction">6.1.1. Tensor Contraction</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/TNotation.html#direction-of-bond">6.1.2. Direction of bond</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Bond.html">6.2. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#symmetry-object">6.2.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#create-bond-with-qnums">6.2.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Bond.html#combine-bonds">6.2.3. Combine Bonds</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/UniTensor.html">6.3. UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_create.html">6.3.1. Create UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_tag.html">6.3.2. Tagged UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_sym.html">6.3.3. UniTensor with Symmetry</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getblk.html">6.3.4. Accessing the block(s)</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_getele.html">6.3.5. Get element from UniTensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/UniTensor_manip.html">6.3.6. Manipulate UniTensor</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Contraction.html">6.4. Contraction</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contract">6.4.1. Contract()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#contracts">6.4.2. Contracts()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Contraction.html#ncon">6.4.3. ncon()</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/TNotation.html">6. Tensor Notation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/TNotation.html#tensor-contraction">6.1. Tensor Contraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/TNotation.html#direction-of-bond">6.2. Direction of bond</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/net.html">7. Network</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/cyx/Network.html">7.1. Network</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-net-file">7.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#put-unitensors-and-launch">7.1.2. Put UniTensors and Launch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#network-from-string">7.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/cyx/Network.html#putunitensor-according-to-label-ordering">7.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/uniten.html">7. UniTensor</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/create.html">7.1. Create UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/create.html#construct-from-tensor">7.1.1. Construct from Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/create.html#from-scratch">7.1.2. From scratch</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/labels.html">7.2. Change labels</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/labels.html#create-unitensor-with-different-labels-that-share-data">7.2.1. Create UniTensor with different labels that share data</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/bond.html">7.3. Bond</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#symmetry-object">7.3.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#create-bond-with-qnums">7.3.2. Create Bond with Qnums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/bond.html#combine-bonds">7.3.3. Combine Bonds</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/tagged.html">7.4. Tagged UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/tagged.html#non-symmetric-tagged-unitensor">7.4.1. Non-symmetric Tagged UniTensor</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/symmetric.html">7.5. UniTensor with Symmetry</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/blocks.html">7.6. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/blocks.html#unitensor-without-symmetries">7.6.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/blocks.html#unitensor-with-symmetries">7.6.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/blocks.html#putting-a-block">7.6.3. Putting a block</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/elements.html">7.7. Get/set UniTensor element</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/elements.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/elements.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/manipulation.html">7.8. Manipulate UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#permute">7.8.1. permute:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#reshape">7.8.2. reshape:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#arithmetic">7.8.3. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/uniten/manipulation.html#rowrank">7.8.4. rowrank</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">8. Linear algebra</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../guide/contraction.html">8. Contraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/network.html">8.1. Network</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">9. Iterative solver</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">9.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">9.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">9.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">9.1.3. Ex: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">9.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/contract.html">8.2. Contract(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/contract.html#contract">8.2.1. Contract</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/contraction/contract.html#contracts">8.2.2. Contracts</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">9.2. Lanczos solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/ncon.html">8.3. ncon</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/linalg.html">9. Linear algebra</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/itersol.html">10. Iterative solver</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/LinOp.html">10.1. LinOp class</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#pass-a-function">10.1.1. Pass a function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#inherit-the-linop-class">10.1.2. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#ex-sparse-data-structure-with-mapping-function">10.1.3. Ex: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guide/itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.4. Prestore/preconstruct sparse elements</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../guide/itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">10. linalg extension</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../guide/xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -585,9 +646,10 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../CommApp.html">Common usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../common_app/BlasINT.html">2. Check current Blas/Lapack integer size</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tune</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="../Perf_tune.html">Performance tuning</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
 </ul>
@@ -792,7 +854,7 @@ on device   : cytnx device: CPU
 <span class="linenos"> 8</span>    <span class="n">dim1</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">d</span><span class="p">;</span>
 <span class="linenos"> 9</span>    <span class="n">dim3</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="n">d</span> <span class="o">**</span> <span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">));</span>
 <span class="linenos">10</span>    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span><span class="p">,</span> <span class="n">dim3</span><span class="p">],</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">),</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos">11</span>    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">set_labels</span><span class="p">([</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
+<span class="linenos">11</span>    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">([</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>The result MPS would look like a tensor train, stored in the list A:</p>
@@ -877,7 +939,7 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 <span class="linenos">20</span>    <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
 <span class="linenos">21</span>    <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span> <span class="c1">## convert psi back to 4-leg form</span>
 <span class="linenos">22</span>    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">23</span>    <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
+<span class="linenos">23</span>    <span class="n">psi</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
 <span class="linenos">24</span>    <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
 <span class="linenos">25</span>
 <span class="linenos">26</span>    <span class="c1">## truncate the two-site state into MPS form</span>
@@ -887,7 +949,7 @@ what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, th
 <span class="linenos">30</span>
 <span class="linenos">31</span>    <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
 <span class="linenos">32</span>    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="linenos">33</span>    <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">33</span>    <span class="n">s</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
 <span class="linenos">34</span>
 <span class="linenos">35</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
 <span class="linenos">36</span>
@@ -977,7 +1039,7 @@ we have to make our psi into the canonical form, for which we do the SVD for the
 <span class="linenos">3</span>
 <span class="linenos">4</span><span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
 <span class="linenos">5</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="linenos">6</span><span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">6</span><span class="n">s</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
 <span class="linenos">7</span>
 <span class="linenos">8</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
 </pre></div>
@@ -1039,7 +1101,7 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <span class="linenos">20</span>        <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
 <span class="linenos">21</span>        <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span> <span class="c1">## convert psi back to 4-leg form</span>
 <span class="linenos">22</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">23</span>        <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
+<span class="linenos">23</span>        <span class="n">psi</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
 <span class="linenos">24</span>        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
 <span class="linenos">25</span>
 <span class="linenos">26</span>        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
@@ -1050,7 +1112,7 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <span class="linenos">31</span>        <span class="c1"># s.Div_(s.get_block_().Norm().item()) // a bug : cannot use</span>
 <span class="linenos">32</span>        <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
 <span class="linenos">33</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="linenos">34</span>        <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">34</span>        <span class="n">s</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
 <span class="linenos">35</span>
 <span class="linenos">36</span>
 <span class="linenos">37</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1">## absorb s into next neighbor</span>
@@ -1078,7 +1140,7 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <span class="linenos">59</span>        <span class="n">psi_T</span> <span class="o">=</span> <span class="n">psi</span><span class="o">.</span><span class="n">get_block_</span><span class="p">();</span> <span class="n">psi_T</span><span class="o">.</span><span class="n">flatten_</span><span class="p">()</span> <span class="c1">## flatten to 1d</span>
 <span class="linenos">60</span>        <span class="n">psi_T</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
 <span class="linenos">61</span>        <span class="n">psi_T</span><span class="o">.</span><span class="n">reshape_</span><span class="p">(</span><span class="n">dim_l</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="p">)</span><span class="c1">## convert psi back to 4-leg form</span>
-<span class="linenos">62</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="n">psi</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
+<span class="linenos">62</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">psi_T</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span> <span class="n">psi</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbl</span><span class="p">);</span>
 <span class="linenos">63</span>        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">);</span>
 <span class="linenos">64</span>
 <span class="linenos">65</span>        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
@@ -1088,7 +1150,7 @@ set_rowrank(1) is only for the convenience of calling Svd/Svd_truncate in the ne
 <span class="linenos">69</span>        <span class="c1"># s = s/s.get_block_().Norm().item()</span>
 <span class="linenos">70</span>        <span class="n">slabel</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
 <span class="linenos">71</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">get_block_</span><span class="p">()</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
-<span class="linenos">72</span>        <span class="n">s</span><span class="o">.</span><span class="n">set_labels</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
+<span class="linenos">72</span>        <span class="n">s</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">slabel</span><span class="p">)</span>
 <span class="linenos">73</span>
 <span class="linenos">74</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## absorb s into next neighbor.</span>
 <span class="linenos">75</span>
