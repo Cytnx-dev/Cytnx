@@ -138,17 +138,17 @@ This approach should be convenient when you do not want to maintain the .net fil
 PutUniTensor according to label ordering
 ------------------------------------------
 
-When we put a UniTensor into a Network, we can also specify its leg order by the bond labels in a UniTensor. This way, the user does not need to know or look up the order of the indices of the bonds. As an example, we consider two UniTensors **A1** and **A2** with three bonds each.  Both tensors have one leg corresponding to physical degrees of freedom and the other two legs are internal indices of the Tensor Network. Tensors of this kind are used in matrix product states, and the internal indices point to the left or right in diagrams, while the physical index is oriented vertically. We first create such tensors and set the corresponding labels:
+When we put a UniTensor into a Network, we can also specify its leg order by the bond labels in a UniTensor. This way, the user does not need to know or look up the order of the indices of the bonds. As an example, we consider two UniTensors **A** and **B** with three bonds each.  Both tensors have one leg corresponding to physical degrees of freedom and the other two legs are internal indices of the Tensor Network. Tensors of this kind are used in matrix product states, and the internal indices point to the left or right in diagrams, while the physical index is oriented vertically. We first create such tensors and set the corresponding labels:
 
 * In Python:
 
 .. code-block:: python
     :linenos:
 
-    T0 = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    T0.set_labels(["phy","left","right"])
-    T1 = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    T1.set_labels(["phy","left","right"])
+    A = cytnx.UniTensor(cytnx.ones([2,8,8]));
+    A.relabels_(["phy","left","right"])
+    B = cytnx.UniTensor(cytnx.ones([2,8,8]));
+    B.relabels_(["phy","left","right"])
 
 The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2, corresponding to a spin-half chain) and the other two legs are
 the internal bonds (with bond dimension 8).
@@ -161,11 +161,11 @@ If we want to contract the physical legs of the two tensors, we can create the f
     :linenos:
 
     N = cytnx.Network()
-    N.FromString(["A0: v0in, phy0, v0out",\
-                "A1: v1in, phy1, v1out",\
-                "TOUT: v0in, v1in, v0out, v1out"])
+    N.FromString(["T0: v0in, phy, v0out",\
+                "T1: v1in, phy, v1out",\
+                "TOUT: v0in, v1in; v0out, v1out"])
 
-Note that this Network uses the convention that the second legs of the tensors are contracted. This is not consistent with the index ordering of **T0** and **T1**, which have the physical leg in the first position. However, if we specify the labels when we put the tensors, we do not have to worry about the index order:
+Note that this Network uses the convention that the second legs of the tensors are contracted. This is not consistent with the index ordering of **A** and **B**, which have the physical leg in the first position. However, if we specify the labels when we put the tensors, we do not have to worry about the index order:
 
 
 * In Python:
@@ -173,8 +173,28 @@ Note that this Network uses the convention that the second legs of the tensors a
 .. code-block:: python
     :linenos:
 
-    N.PutUniTensor("A0",T0,["left","phy","right"])
-    N.PutUniTensor("A1",T1,["left","phy","right"])
+    N.PutUniTensor("T0",A,["left","phy","right"])
+    N.PutUniTensor("T1",B,["left","phy","right"])
+    Tout=N.Launch()
+    Tout.print_diagram()
+
+Output >> 
+
+.. code-block:: text
+
+    -----------------------
+    tensor Name : 
+    tensor Rank : 4
+    block_form  : False
+    is_diag     : False
+    on device   : cytnx device: CPU
+                 ---------     
+                /         \    
+       v0in ____| 8     8 |____ v0out
+                |         |    
+       v1in ____| 8     8 |____ v1out
+                \         /    
+                 ---------     
 
 We added the bond labels as a third argument in PutUniTensor(). In this case, the indices will be permuted according to the label ordering of the Network.
 

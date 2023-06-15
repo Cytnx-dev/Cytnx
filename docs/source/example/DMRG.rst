@@ -197,7 +197,7 @@ Next, we are going to prepare our variational ansatz (MPS). Here, **chi** is the
         dim1 = A[k-1].shape()[2]; dim2 = d;
         dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1));
         A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1.),2)
-        A[k].set_labels([2*k,2*k+1,2*k+2])
+        A[k].relabels_([2*k,2*k+1,2*k+2])
 
 
 The result MPS would look like a tensor train, stored in the list A:
@@ -313,7 +313,7 @@ Now we are ready for describing the main DMRG algorithm that optimize our MPS, t
         psi_T, Entemp = optimize_psi(psi_T, (LR[p],M,M,LR[p+2]), maxit, krydim)
         psi_T.reshape_(dim_l,d,d,dim_r) ## convert psi back to 4-leg form 
         psi = cytnx.UniTensor(psi_T,2);    
-        psi.set_labels(lbl);
+        psi.relabels_(lbl);
         Ekeep.append(Entemp);
         
         ## truncate the two-site state into MPS form
@@ -323,7 +323,7 @@ Now we are ready for describing the main DMRG algorithm that optimize our MPS, t
 
         slabel = s.labels()
         s = s/s.get_block_().Norm().item() 
-        s.set_labels(slabel)
+        s.relabels_(slabel)
 
         A[p] = cytnx.Contract(A[p],s) ## absorb s into next neighbor
 
@@ -437,7 +437,7 @@ we have to make our psi into the canonical form, for which we do the SVD for the
 
     slabel = s.labels()
     s = s/s.get_block_().Norm().item() 
-    s.set_labels(slabel)
+    s.relabels_(slabel)
 
     A[p] = cytnx.Contract(A[p],s) ## absorb s into next neighbor
 
@@ -522,7 +522,7 @@ So we are done! With the other loop to control the number of times we sweep, we 
             psi_T, Entemp = optimize_psi(psi_T, (LR[p],M,M,LR[p+2]), maxit, krydim)
             psi_T.reshape_(dim_l,d,d,dim_r) ## convert psi back to 4-leg form 
             psi = cytnx.UniTensor(psi_T,2);    
-            psi.set_labels(lbl);
+            psi.relabels_(lbl);
             Ekeep.append(Entemp);
             
             new_dim = min(dim_l*d,dim_r*d,chi)
@@ -533,7 +533,7 @@ So we are done! With the other loop to control the number of times we sweep, we 
             # s.Div_(s.get_block_().Norm().item()) // a bug : cannot use
             slabel = s.labels()
             s = s/s.get_block_().Norm().item() 
-            s.set_labels(slabel)
+            s.relabels_(slabel)
 
 
             A[p] = cytnx.Contract(A[p],s) ## absorb s into next neighbor
@@ -561,7 +561,7 @@ So we are done! With the other loop to control the number of times we sweep, we 
             psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
             psi_T, Entemp = optimize_psi(psi_T, (LR[p],M,M,LR[p+2]), maxit, krydim)
             psi_T.reshape_(dim_l,d,d,dim_r)## convert psi back to 4-leg form 
-            psi = cytnx.UniTensor(psi_T,2); psi.set_labels(lbl);
+            psi = cytnx.UniTensor(psi_T,2); psi.relabels_(lbl);
             Ekeep.append(Entemp);
             
             new_dim = min(dim_l*d,dim_r*d,chi)
@@ -571,7 +571,7 @@ So we are done! With the other loop to control the number of times we sweep, we 
             # s = s/s.get_block_().Norm().item()
             slabel = s.labels()
             s = s/s.get_block_().Norm().item() 
-            s.set_labels(slabel)
+            s.relabels_(slabel)
 
             A[p+1] = cytnx.Contract(s,A[p+1]) ## absorb s into next neighbor.
 

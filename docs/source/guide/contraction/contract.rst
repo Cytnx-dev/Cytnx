@@ -1,12 +1,11 @@
 Contract(s)
 =============
-Cytnx provides rich UniTensor contraction interfaces, in this section we introduce several methods to contract a desired tensor network.
+Contractions of two tensors can be done with **Contract()**. Using this function, indices with the same labels on the two tensors are contracted. **Contracts()** provides the same functionality for more than two tensors. In this case, the contraction order can additionally be specified.
 
 Contract
 ------------------
 
-For the contraction of two UniTensor, we have the function **cytnx.Contract()** to do the job, what it does is simply contract 
-the common labels of two UniTensors. Here is a example:
+The function **cytnx.Contract()** contracts all common labels of two UniTensors. For example:
 
 * In Python:
 
@@ -14,11 +13,11 @@ the common labels of two UniTensors. Here is a example:
     :linenos:
 
 
-    A = cytnx.UniTensor(cytnx.ones([3,3,3]), rowrank = 1)
-    A.set_labels([1,2,3])
+    A = cytnx.UniTensor(cytnx.ones([2,3,4]), rowrank = 1)
+    A.relabels_(["i","j","l"])
 
-    B = cytnx.UniTensor(cytnx.ones([3,3,3,3]), rowrank = 2)
-    B.set_labels([2,3,4,5])
+    B = cytnx.UniTensor(cytnx.ones([3,2,4,5]), rowrank = 2)
+    B.relabels_(["j","k","l","m"])
 
     C = cytnx.Contract(A, B)
 
@@ -34,48 +33,46 @@ Output >>
     -----------------------
     tensor Name : 
     tensor Rank : 3
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
-             -------------      
-            /             \     
-      1 ____| 3         3 |____ 2  
-            |             |     
-            |           3 |____ 3  
-            \             /     
-             -------------      
+              ---------     
+             /         \    
+       i ____| 2     3 |____ j
+             |         |    
+             |       4 |____ l
+             \         /    
+              ---------     
     -----------------------
     tensor Name : 
     tensor Rank : 4
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
-             -------------      
-            /             \     
-      2 ____| 3         3 |____ 4  
-            |             |     
-      3 ____| 3         3 |____ 5  
-            \             /     
-             -------------     
+              ---------     
+             /         \    
+       j ____| 3     4 |____ l
+             |         |    
+       k ____| 2     5 |____ m
+             \         /    
+              ---------     
     -----------------------
     tensor Name : 
     tensor Rank : 3
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
-             -------------      
-            /             \     
-      1 ____| 3         3 |____ 4  
-            |             |     
-            |           3 |____ 5  
-            \             /     
-             -------------   
+              ---------     
+             /         \    
+       i ____| 2     5 |____ m
+             |         |    
+       k ____| 2       |        
+             \         /    
+              ---------     
 
-Here we see that legs from two UniTensors with same labels **2** and **3** are contracted.
+Here we see that the labels **j** and **l** appear on both tensors. Thus, they are contracted. Note that the bond dimensions of the contracted tensors must agree on both tensors.
 
-Often we have to change the labels of UniTensors in order to do the desired contraction, to reduce the inconvinence of maintaining
-labels, we provide **.relabels()** to relabel the UniTensors, this in fact return us a copy of UniTensor to do the contraction job,
-while the labels of the original UniTensor itself are preserved. Here is the example:
+In order to define which indices shall be contracted without changing the labels on the initial tensors, Cyntx provides the method **.relabels()**. It allows to set common labels on the indices to be contracted and distinct labels on the others. Also, the labels on the resulting tensor can be defined this way. Suppose that we only want to contract the index *j* in the previous example, but not sum over *l*. We can use **.relabels()** for this task:
 
 
 * In Python:
@@ -84,15 +81,15 @@ while the labels of the original UniTensor itself are preserved. Here is the exa
     :linenos:
 
 
-    A = cytnx.UniTensor(cytnx.ones([3,3,3]), rowrank = 1)
-    A.set_labels([1,2,3])
-    At = A.relabels([-1,-2,-3])
+    A = cytnx.UniTensor(cytnx.ones([2,3,4]), rowrank = 1)
+    A.relabels_(["i","j","l"])
+    Are = A.relabels(["i","j","lA"])
 
-    B = cytnx.UniTensor(cytnx.ones([3,3,3]), rowrank = 1)
-    B.set_labels([4,5,6])
-    Bt = B.relabels([-3,-4,-5])
+    B = cytnx.UniTensor(cytnx.ones([3,2,4,5]), rowrank = 2)
+    B.relabels_(["j","k","l","m"])
+    Bre = B.relabels(["j","k","lB","m"])
 
-    C = cytnx.Contract(At, Bt)
+    C = cytnx.Contract(Are, Bre)
 
     A.print_diagram()
     B.print_diagram()
@@ -106,62 +103,61 @@ Output >>
     -----------------------
     tensor Name : 
     tensor Rank : 3
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
-             -------------      
-            /             \     
-      1 ____| 3         3 |____ 2  
-            |             |     
-            |           3 |____ 3  
-            \             /     
-             -------------      
-    -----------------------
-    tensor Name : 
-    tensor Rank : 3
-    block_form  : false
-    is_diag     : False
-    on device   : cytnx device: CPU
-             -------------      
-            /             \     
-      3 ____| 3         3 |____ 4  
-            |             |     
-            |           3 |____ 5  
-            \             /     
-             -------------      
+              ---------     
+             /         \    
+       i ____| 2     3 |____ j
+             |         |    
+             |       4 |____ l
+             \         /    
+              ---------     
     -----------------------
     tensor Name : 
     tensor Rank : 4
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
-             -------------      
-            /             \     
-      1 ____| 3         3 |____ 2  
-            |             |     
-            |           3 |____ 4  
-            |             |     
-            |           3 |____ 5  
-            \             /     
-             -------------   
+              ---------     
+             /         \    
+       j ____| 3     4 |____ l
+             |         |    
+       k ____| 2     5 |____ m
+             \         /    
+              ---------     
+        -----------------------
+    tensor Name : 
+    tensor Rank : 5
+    block_form  : False
+    is_diag     : False
+    on device   : cytnx device: CPU
+               ---------     
+              /         \    
+       i  ____| 2     2 |____ k
+              |         |    
+       lA ____| 4     4 |____ lB
+              |         |    
+              |       5 |____ m
+              \         /    
+               ---------     
 
-Note that in this example, two UniTensors **A** and **B** have no labels in common, but we somehow want to contract them while
-preserving their labels, that's the reason why we use **.relabels** here.
+
+The function **.relabels()** creates a copy of the initial UniTensor and changes the labels, while keeping the labels on the inital tensor unchanged. The actual data is shared between the old and new tensor, only the meta is independent.
 
 Contracts
 ------------------
-The function **Contracts** allow us to contract multiple Unitensors.
+The function **Contracts** allows us to contract multiple UniTensors.
 
-This function take an argument **TNs** which is a list contains UniTensors to be contracted,
-we also provide arguments **order** for users to specify a desired contraction order, and an **optimal** option to use an auto-optimized contraction order.
+The first argument of this function is **TNs**, which is a list containing all UniTensors to be contracted. Contracts also provides the argument **order** to specify a desired contraction order, or the **optimal** option to use an auto-optimized contraction order.
 
-Consider the following contraction task consists of UniTensors **A1**, **A2** and **M**:
+Consider the following contraction task consisting of UniTensors **A1**, **A2** and **M**:
 
 .. image:: image/contracts.png
     :width: 300
     :align: center
 
-translate to the code we have:
+This corresponds to the Python program:
 
 * In Python:
 
@@ -174,11 +170,36 @@ translate to the code we have:
     M = cytnx.UniTensor(cytnx.ones([2,2,4,4]), name = "M")
 
     # Assign labels
-    A1.set_labels(["phy1","v1","v2"])
-    M.set_labels(["phy1","phy2","v3","v4"])
-    A2.set_labels(["phy2","v5","v6"])
+    A1.relabels_(["phy1","v1","v2"])
+    M.relabels_(["phy1","phy2","v3","v4"])
+    A2.relabels_(["phy2","v5","v6"])
 
     # Use Contracts
     res = cytnx.Contracts(TNs = [A1,M,A2], order = "(M,(A1,A2))", optimal = False)
+    res.print_diagram()
 
-Note that to specify the contraction orders, the UniTensors' name should be specified(in this case we specified them in the constructor argument).
+Output >> 
+
+.. code-block:: text
+
+    -----------------------
+    tensor Name : 
+    tensor Rank : 6
+    block_form  : False
+    is_diag     : False
+    on device   : cytnx device: CPU
+               ---------     
+              /         \    
+       v1 ____| 8     8 |____ v2
+              |         |    
+              |       4 |____ v3
+              |         |    
+              |       4 |____ v4
+              |         |    
+              |       8 |____ v5
+              |         |    
+              |       8 |____ v6
+              \         /    
+               ---------     
+
+Note that the UniTensors' names have to be specified for an explicitly given contraction order. In this case we specified them in the constructor argument.
