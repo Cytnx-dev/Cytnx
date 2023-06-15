@@ -5,5 +5,5 @@ The **Network** object provides a skeleton of a Tensor network diagram. Users ca
 .. toctree::
     :maxdepth: 3
 
-    cyx/Network.rst
+    network.rst
 

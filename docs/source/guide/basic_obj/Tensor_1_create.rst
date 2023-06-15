@@ -1,6 +1,6 @@
 Create a Tensor
 -------------------
-Just like with :numpy-arr:`numpy.array <>` / :torch-tn:`torch.tensor <>`, a Tensor is generally created using a generator such as **zero()**, **arange()**, **ones()**.
+Just like with :numpy-arr:`numpy.array <>` / :torch-tn:`torch.tensor <>`, a Tensor is generally created using a generator such as **zero()**, **arange()**, **ones()** or **eye()**.
 
 For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:
 
@@ -27,7 +27,7 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
 
 
 
-Other options such as **arange()** (similar as np.arange), and **ones** (similar as np.ones) can also be done. 
+Tensors can also be created and initialized with **arange()** (similar as np.arange), **ones** (similar as np.ones) or **eye** (identity matrix):
 
 * In Python : 
 
@@ -37,6 +37,7 @@ Other options such as **arange()** (similar as np.arange), and **ones** (similar
     A = cytnx.arange(10);     #rank-1 Tensor from [0,10) with step 1
     B = cytnx.arange(0,10,2); #rank-1 Tensor from [0,10) with step 2
     C = cytnx.ones([3,4,5]);  #Tensor of shape (3,4,5) with all elements set to one.
+    D = cytnx.eye(3);         #Tensor of shape (3,3) with diagonal elements set to one, all other entries are zero.
 
 * In C++:
 
@@ -46,6 +47,7 @@ Other options such as **arange()** (similar as np.arange), and **ones** (similar
     auto A = cytnx::arange(10);     //rank-1 Tensor from [0,10) with step 1
     auto B = cytnx::arange(0,10,2); //rank-1 Tensor from [0,10) with step 2
     auto C = cytnx::ones({3,4,5});  //Tensor of shape (3,4,5) with all elements set to one.
+    auto D = cytnx.eye(3);          //Tensor of shape (3,3) with diagonal elements set to one, all other entries are zero.
 
 
 :Tips: In C++, you can make use of *auto* to simplify your code! 
