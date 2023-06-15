@@ -14,7 +14,7 @@ To create a Storage, with dtype=Type.Double on the cpu:
 
     print(A);
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -66,7 +66,7 @@ The available data types are the same as for Tensor.
     print(A)
     print(B)
 
-* In c++:
+* In C++:
  
 .. code-block:: c++
     :linenos:
@@ -114,7 +114,7 @@ We can also transfer the storage between different devices. Similar to Tensor, w
     print(A.device_str())
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -159,7 +159,7 @@ Internally, the data of a Tensor is stored in Storage. We can get the storage of
     print(A)
     print(B)
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:
