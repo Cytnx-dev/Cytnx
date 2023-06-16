@@ -1118,7 +1118,7 @@ namespace cytnx {
                     tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b]).reshape(tmp->_blocks[targ_b].shape());
                   }
                 }
-                //mkl_set_interface_layer(MKL_INTERFACE_ILP64);
+                mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
                 blas_int group_count = itoiR_idx.size();
                 if((tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and

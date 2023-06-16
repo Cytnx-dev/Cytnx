@@ -101,6 +101,7 @@ FLAG="${FLAG} -DUSE_CUDA=ON "
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
 #        in case MAGMA is not automatically find, please specify MAGMAROOT path 
 #        where the magma is installed
+# [Remark] You need to install MAGMA with BLA_VENDOR Intel10_64_dyn or Intel10_64ilp
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
 FLAG="${FLAG} -DUSE_MAGMA=OFF "

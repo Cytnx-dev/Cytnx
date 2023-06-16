@@ -2,6 +2,9 @@
 #ifdef UNI_MKL
     #include <mkl.h>
 #endif
+#ifdef UNI_MAGMA
+  #include "magma_v2.h"
+#endif
 
 using namespace std;
 
@@ -22,12 +25,25 @@ namespace cytnx {
       #endif
       return 0;
     }
-
+    linalg_internal_interface::~linalg_internal_interface(){
+      #ifdef UNI_GPU
+        #ifdef UNI_MAGMA
+          int magma_status = magma_finalize();
+          cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot finalize!%s","\n");
+        #endif
+      #endif
+    }
     linalg_internal_interface::linalg_internal_interface() {
-
       #ifdef UNI_MKL
         this->set_mkl_ilp64();
       #endif
+      #ifdef UNI_GPU
+        #ifdef UNI_MAGMA
+          int magma_status = magma_init();
+          cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot initialize!%s","\n");
+        #endif
+      #endif
+      
       
 
       Ari_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type, NULL));

@@ -70,28 +70,28 @@ void random_binding(py::module &m){
   m_random.def(
     "normal",
     [](const cytnx_uint64 &Nelem, const double &mean, const double &std, const int &device,
-       const unsigned int &seed) { return cytnx::random::normal(Nelem, mean, std, device, seed); },
+       const unsigned int &seed, const unsigned int &dtype) { return cytnx::random::normal(Nelem, mean, std, device, seed, dtype); },
     py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = std::random_device()(), py::arg("dtype") = Type.Double);
   m_random.def(
     "normal",
     [](const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std,
        const int &device,
-       const unsigned int &seed) { return cytnx::random::normal(Nelem, mean, std, device, seed); },
+       const unsigned int &seed, const unsigned int &dtype) { return cytnx::random::normal(Nelem, mean, std, device, seed, dtype); },
     py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = std::random_device()(), py::arg("dtype") = Type.Double);
   m_random.def(
     "uniform",
     [](const cytnx_uint64 &Nelem, const double &low, const double &high, const int &device,
-       const unsigned int &seed) { return cytnx::random::uniform(Nelem, low, high, device, seed); },
+       const unsigned int &seed, const unsigned int &dtype) { return cytnx::random::uniform(Nelem, low, high, device, seed, dtype); },
     py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = std::random_device()(), py::arg("dtype") = Type.Double);
   m_random.def(
     "uniform",
     [](const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high,
        const int &device,
-       const unsigned int &seed) { return cytnx::random::uniform(Nelem, low, high, device, seed); },
+       const unsigned int &seed, const unsigned int &dtype) { return cytnx::random::uniform(Nelem, low, high, device, seed, dtype); },
     py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = std::random_device()(), py::arg("dtype") = Type.Double);
   
 }
