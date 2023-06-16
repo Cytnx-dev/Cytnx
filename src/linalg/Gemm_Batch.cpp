@@ -17,67 +17,64 @@ namespace cytnx {
                  const vector<Scalar> &beta_array, void **c_array,
                  const blas_int group_count, const vector<blas_int> &group_size,
                  const unsigned int dtype, const int device){
-//       if(check_parameters){
-//         cytnx_error_msg(group_size.size() != group_count,"[Gemm_Batch] error, group_size.size() != group_count%s","\n");
-//         // check tensor count
-//         cytnx_uint64 tot_tns = 0;
-//         for(cytnx_uint64 i=0;i<group_count;i++){
-//           tot_tns+=group_size[i];
-//         }
-//         cytnx_error_msg(alpha_array.size() != tot_tns,"[Gemm_Batch] error, alpha_array.size() != total tensor count%s","\n");
-//         cytnx_error_msg(beta_array.size() != tot_tns,"[Gemm_Batch] error, beta_array.size() != total tensor count%s","\n");
-//       }
-//       if(!guarentee_same_good_type){
-//         // checking the largest dtype!
-//         int fin_dtype = alpha_array[0].dtype();
-//         for(cytnx_uint64 i=0;i<alpha_array.size();i++){
-//           if(alpha_array[i].dtype() < fin_dtype ) fin_dtype = alpha_array[i].dtype();
-//           if(beta_array[i].dtype() < fin_dtype ) fin_dtype = beta_array[i].dtype();
-
-//           // check Void type
-//           cytnx_error_msg(alpha_array[i].dtype() == Type.Void,"[Gemm_Batch] error, cannot accept Void type in alpha_array%s","\n");
-//           cytnx_error_msg(beta_array[i].dtype() == Type.Void,"[Gemm_Batch] error, cannot accept Void type in beta_array%s","\n");
-
-//           // check invalid type
-//           cytnx_error_msg(alpha_array[i].dtype() > 4,"[Gemm_Batch] alpha_array only supports (complex/real)(double/float) %s","\n");
-//           cytnx_error_msg(beta_array[i].dtype() > 4,"[Gemm_Batch] beta_array only supports (complex/real)(double/float) %s","\n");
-//         }
-//         //convert dtype:
-//         vector<Scalar> tmp_alpha_array(alpha_array), tmp_beta_array(beta_array);
-//         for(cytnx_uint64 i=0;i<alpha_array.size();i++){
-//           if(alpha_array[i].dtype() != fin_dtype) tmp_alpha_array[i] = alpha_array[i].astype(fin_dtype);
-//           if(beta_array[i].dtype() != fin_dtype) tmp_beta_array[i] = beta_array[i].astype(fin_dtype);
-//         }
-//         if(device==Device.cpu){
-//           linalg_internal::lii.Gemm_Batch_ii[fin_dtype](transb_array.data(), transa_array.data(),
-//                  n_array.data(), m_array.data(), k_array.data(),
-//                  tmp_alpha_array, (const void**)a_array, n_array.data(), (const void**)b_array, k_array.data(),
-//                  tmp_beta_array, c_array, n_array.data(), group_count, group_size.data());
-//         }else{
-// #ifdef UNI_GPU
-//           checkCudaErrors(cudaSetDevice(device));
-//           linalg_internal::lii.cuGemm_Batch_ii[dtype](transb_array.data(), transa_array.data(), n_array.data(), m_array.data(), k_array.data(),
-//                   tmp_alpha_array, (const void**)b_array, n_array.data(), (const void**)a_array, k_array.data(),
-//                   tmp_beta_array, (void**)c_array, n_array.data(), group_count, group_size.data());
-// #else
-//           cytnx_error_msg(true,"[Gemm_Batch] fatal error,%s","try to use GPU but not compiled with GPU support.\n");
-// #endif
-//         }
-//       }
-      if(device==Device.cpu){
-        linalg_internal::lii.Gemm_Batch_ii[dtype](transb_array.data(), transa_array.data(), n_array.data(), m_array.data(), k_array.data(),
-                alpha_array, b_array, n_array.data(), a_array, k_array.data(),
-                beta_array, c_array, n_array.data(), group_count, group_size.data());
-      }else{
-#ifdef UNI_GPU
-        checkCudaErrors(cudaSetDevice(device));
-        linalg_internal::lii.cuGemm_Batch_ii[dtype](transb_array.data(), transa_array.data(), n_array.data(), m_array.data(), k_array.data(),
-                alpha_array, (const void**)b_array, n_array.data(), (const void**)a_array, k_array.data(),
-                beta_array, (void**)c_array, n_array.data(), group_count, group_size.data());
-#else
-        cytnx_error_msg(true,"[Gemm_Batch] fatal error,%s","try to use GPU but not compiled with GPU support.\n");
-#endif
+      bool check_parameters = false;
+      bool guarentee_same_good_type = false;
+      if(check_parameters){
+        cytnx_error_msg(group_size.size() != group_count,"[Gemm_Batch] error, group_size.size() != group_count%s","\n");
+        // check tensor count
+        cytnx_uint64 tot_tns = 0;
+        for(cytnx_uint64 i=0;i<group_count;i++){
+          tot_tns+=group_size[i];
+        }
+        cytnx_error_msg(alpha_array.size() != tot_tns,"[Gemm_Batch] error, alpha_array.size() != total tensor count%s","\n");
+        cytnx_error_msg(beta_array.size() != tot_tns,"[Gemm_Batch] error, beta_array.size() != total tensor count%s","\n");
       }
+      if(!guarentee_same_good_type){
+        for(cytnx_uint64 i=0;i<alpha_array.size();i++){
+          // check Void type
+          cytnx_error_msg(alpha_array[i].dtype() == Type.Void,"[Gemm_Batch] error, cannot accept Void type in alpha_array%s","\n");
+          cytnx_error_msg(beta_array[i].dtype() == Type.Void,"[Gemm_Batch] error, cannot accept Void type in beta_array%s","\n");
+
+          // check invalid type
+          cytnx_error_msg(alpha_array[i].dtype() > 4,"[Gemm_Batch] alpha_array only supports (complex/real)(double/float) %s","\n");
+          cytnx_error_msg(beta_array[i].dtype() > 4,"[Gemm_Batch] beta_array only supports (complex/real)(double/float) %s","\n");
+        }
+        //convert dtype:
+        vector<Scalar> tmp_alpha_array(alpha_array), tmp_beta_array(beta_array);
+        for(cytnx_uint64 i=0;i<alpha_array.size();i++){
+          if(alpha_array[i].dtype() != dtype) tmp_alpha_array[i] = alpha_array[i].astype(dtype);
+          if(beta_array[i].dtype() != dtype) tmp_beta_array[i] = beta_array[i].astype(dtype);
+        }
+        if(device==Device.cpu){
+          linalg_internal::lii.Gemm_Batch_ii[dtype](transb_array.data(), transa_array.data(),
+                 n_array.data(), m_array.data(), k_array.data(),
+                 tmp_alpha_array, (const void**)b_array, n_array.data(), (const void**)a_array, k_array.data(),
+                 tmp_beta_array, c_array, n_array.data(), group_count, group_size.data());
+        }else{
+#ifdef UNI_GPU
+          checkCudaErrors(cudaSetDevice(device));
+          linalg_internal::lii.cuGemm_Batch_ii[dtype](transb_array.data(), transa_array.data(), n_array.data(), m_array.data(), k_array.data(),
+                  tmp_alpha_array, (const void**)b_array, n_array.data(), (const void**)a_array, k_array.data(),
+                  tmp_beta_array, (void**)c_array, n_array.data(), group_count, group_size.data());
+#else
+          cytnx_error_msg(true,"[Gemm_Batch] fatal error,%s","try to use GPU but not compiled with GPU support.\n");
+#endif
+        }
+      }
+//       if(device==Device.cpu){
+//         linalg_internal::lii.Gemm_Batch_ii[dtype](transb_array.data(), transa_array.data(), n_array.data(), m_array.data(), k_array.data(),
+//                 alpha_array, b_array, n_array.data(), a_array, k_array.data(),
+//                 beta_array, c_array, n_array.data(), group_count, group_size.data());
+//       }else{
+// #ifdef UNI_GPU
+//         checkCudaErrors(cudaSetDevice(device));
+//         linalg_internal::lii.cuGemm_Batch_ii[dtype](transb_array.data(), transa_array.data(), n_array.data(), m_array.data(), k_array.data(),
+//                 alpha_array, (const void**)b_array, n_array.data(), (const void**)a_array, k_array.data(),
+//                 beta_array, (void**)c_array, n_array.data(), group_count, group_size.data());
+// #else
+//         cytnx_error_msg(true,"[Gemm_Batch] fatal error,%s","try to use GPU but not compiled with GPU support.\n");
+// #endif
+//       }
 
     }
     void Gemm_Batch(const vector<cytnx_int64> &m_array, const vector<cytnx_int64> &n_array, const vector<cytnx_int64> &k_array,

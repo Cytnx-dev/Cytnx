@@ -1037,21 +1037,36 @@ namespace cytnx {
               std::vector<Scalar> alphas(Rtn->_blocks.size(),1.0);
               std::vector<Scalar> betas(Rtn->_blocks.size(),0.0);
 
+              BlockUniTensor* tmp_Rtn=Rtn;
+
               // check if all sub-tensor are same dtype and device
-              // if(User_debug){
+              if(User_debug){
                 bool all_sub_tensor_same_dtype = true;
                 bool all_sub_tensor_same_device = true;
                 for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                   if(this->_blocks[a].dtype() != this->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
                   if(this->_blocks[a].device() != this->_blocks[0].device()) all_sub_tensor_same_device = false;
                 }
+                cytnx_error_msg(all_sub_tensor_same_dtype,"[ERROR] cannot perform contraction on sub-Tensors with different dtype.%s","\n");
+                cytnx_error_msg(all_sub_tensor_same_device,"[ERROR] cannot perform contraction on sub-Tensors with different device.%s","\n");
+                all_sub_tensor_same_dtype = true;
+                all_sub_tensor_same_device = true;
                 for(cytnx_int64 a=0;a<Rtn->_blocks.size();a++){
                   if(Rtn->_blocks[a].dtype() != Rtn->_blocks[0].dtype()) all_sub_tensor_same_dtype = false;
                   if(Rtn->_blocks[a].device() != Rtn->_blocks[0].device()) all_sub_tensor_same_device = false;
                 }
-                cytnx_error_msg(all_sub_tensor_same_dtype,"[ERROR] cannot perform contraction on Tensors with different dtype.%s","\n");
-                cytnx_error_msg(all_sub_tensor_same_device,"[ERROR] cannot perform contraction on Tensors with different device.%s","\n");
-              // }
+                cytnx_error_msg(all_sub_tensor_same_dtype,"[ERROR] cannot perform contraction on sub-Tensors with different dtype.%s","\n");
+                cytnx_error_msg(all_sub_tensor_same_device,"[ERROR] cannot perform contraction on sub-Tensors with different device.%s","\n");
+              }
+              // If the dtype of this and Rtn are different, we need to cast to the common dtype
+              if(this->dtype()!=Rtn->dtype()){
+                BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
+                tmpp->_blocks.resize(Rtn->_blocks.size());
+                for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
+                  tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(this->dtype());
+                }
+                tmp_Rtn = tmpp;
+              }
               // First select left block to do gemm
               for(cytnx_int64 a=0;a<this->_blocks.size();a++){
                 cytnx_int64 comm_dim = 1;
@@ -1069,45 +1084,45 @@ namespace cytnx {
                   // get the index of the right block
                   cytnx_uint64 b = itoiR_idx[binx];
                   // permute&reshape Rtn->_blocks[b]
-                  Rtn->_blocks[b].permute_(mapperR);
-                  oldshapeR[b] = Rtn->_blocks[b].shape();
-                  Rtn->_blocks[b].reshape_({comm_dim, -1});
+                  tmp_Rtn->_blocks[b].permute_(mapperR);
+                  oldshapeR[b] = tmp_Rtn->_blocks[b].shape();
+                  tmp_Rtn->_blocks[b].reshape_({comm_dim, -1});
                   // prepare to find the target block
                   Lgbuffer.resize(non_comm_idx1.size()+non_comm_idx2.size());
                   for(cytnx_uint64 cc=0;cc<non_comm_idx1.size();cc++){
                     Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
                   }
                   for(cytnx_uint64 cc=non_comm_idx1.size();cc<non_comm_idx1.size()+non_comm_idx2.size();cc++){
-                    Lgbuffer[cc] = Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc-non_comm_idx1.size()]];
+                    Lgbuffer[cc] = tmp_Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc-non_comm_idx1.size()]];
                   }
                   // target block index
                   cytnx_int64 targ_b = mpC[Lgbuffer];
                   betas[binx] = 1.0;
                   // if the target block is not initialized, call to gemm with beta=0
                   if(!reshaped[targ_b]){
-                    tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0], (cytnx_int64)Rtn->_blocks[b].shape()[1]});
+                    tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0], (cytnx_int64)tmp_Rtn->_blocks[b].shape()[1]});
                     reshaped[targ_b] = true;
                     betas[binx] = 0.0;
                   }
                   // prepare to call gemm_batch
-                  if((tmp->dtype() <= 4 and this->dtype() <= 4 and Rtn->dtype() <= 4) and
-                     (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and Rtn->dtype()!=Type.Void)
+                  if((tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
+                     (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and tmp_Rtn->dtype()!=Type.Void)
                      ){
                     ms[binx] = this->_blocks[a].shape()[0];
-                    ns[binx] = Rtn->_blocks[b].shape()[1];
+                    ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
                     ks[binx] = comm_dim;
                     LMems[binx] = this->_blocks[a].storage()._impl->Mem;
-                    RMems[binx] = Rtn->_blocks[b].storage()._impl->Mem;
+                    RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->Mem;
                     CMems[binx] = tmp->_blocks[targ_b].storage()._impl->Mem;
                   } else {
-                    tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b]).reshape(tmp->_blocks[targ_b].shape());
+                    tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b]).reshape(tmp->_blocks[targ_b].shape());
                   }
                 }
                 //mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
                 blas_int group_count = itoiR_idx.size();
-                if((tmp->dtype() <= 4 and this->dtype() <= 4 and Rtn->dtype() <= 4) and
-                   (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and Rtn->dtype()!=Type.Void)
+                if((tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
+                   (tmp->dtype()!=Type.Void and this->dtype()!=Type.Void and tmp_Rtn->dtype()!=Type.Void)
                   ){
                   group_size.resize(group_count,1);
                   linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(), (const void **)RMems.data(),
@@ -1118,8 +1133,8 @@ namespace cytnx {
                 for(cytnx_uint64 binx = 0;binx<itoiR_idx.size();binx++){
                   cytnx_uint64 b = itoiR_idx[binx];
 
-                  Rtn->_blocks[b].reshape_(oldshapeR[b]);
-                  Rtn->_blocks[b].permute_(inv_mapperR);
+                  tmp_Rtn->_blocks[b].reshape_(oldshapeR[b]);
+                  tmp_Rtn->_blocks[b].permute_(inv_mapperR);
                 }
 
                 this->_blocks[a].reshape_(oldshapeL);
@@ -1133,9 +1148,13 @@ namespace cytnx {
                   tmp->_blocks[a].storage().set_zeros();
                 }
               }
-                
+              
+              // if Rtn dtype is casted, delete the tmp_Rtn
+              if(this->dtype()!=Rtn->dtype()){
+                delete tmp_Rtn;
+              }
             }
-            
+
             boost::intrusive_ptr<UniTensor_base> out(tmp);
             return out;
 
