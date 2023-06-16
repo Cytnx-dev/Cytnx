@@ -42,5 +42,7 @@ if(USE_CUDA)
     PRIVATE
     cucomplex_arithmetic.hpp
     cucomplex_arithmetic.cu
+    cutensornet.hpp
+    cutensornet.cu
   )
 endif()
