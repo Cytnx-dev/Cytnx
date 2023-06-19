@@ -10,5 +10,7 @@ extlinks = {'splo':("https://docs.scipy.org/doc/scipy/reference/generated/scipy.
             'miniconda':("https://repo.anaconda.com/miniconda/%s",''),\
             'virtualenv':("https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#%s",''),\
             'mkl-mac':("https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library/choose-download/macos.html%s",''),\
-            'wsl':("https://docs.microsoft.com/en-us/windows/wsl/install-win10%s",'')\
+            'wsl':("https://docs.microsoft.com/en-us/windows/wsl/install-win10%s",''),\
+            'cytnx_namespace':("https://kaihsinwu.gitlab.io/cytnx_api/v0.9.1/namespacecytnx.html%s",''),\
+            'cytnx_linalg':("https://kaihsinwu.gitlab.io/cytnx_api/v0.9.1/namespacecytnx_1_1linalg.html%s",'')\
             } 
