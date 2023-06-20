@@ -63,7 +63,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
 
 
-**Option A. Using anaconda/conda to install deps:**
+**Option A. Using anaconda/conda to install dependencies:**
 
 1. Install anaconda/miniconda, setting the virtual environments
 
@@ -122,14 +122,14 @@ There are two methods how you can set-up all the dependencies before starting th
     $conda conda install -c nvidia cuda
 
 
-**Option B. Install deps via system package manager**
+**Option B. Install dependencies via system package manager**
 
-You can also choose to install deps directly from the system package manager, but one needs to carefully resolve the dependency path for cmake to capture them successfully. 
+You can also choose to install dependencies directly from the system package manager, but one needs to carefully resolve the dependency path for cmake to capture them successfully. 
 
 
 .. warning::
 
-    For MacOS, standard brew install openblas will not work since it lacks lapacke.h wrapper support. 
+    For MacOS, a standard brew install openblas will not work since it lacks lapacke.h wrapper support. 
 
     If you are using MacOS, please install intel mkl (free) instead. 
 

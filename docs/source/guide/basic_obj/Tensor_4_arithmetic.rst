@@ -1,7 +1,7 @@
 Tensor arithmetic
 ----------------------
 
-In Cytnx, arithmetic operations such as **+, -, x, /, +=, -=, *=, /=** can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. 
+In Cytnx, arithmetic operations such as **+, -, *, /, +=, -=, *=, /=** can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. 
 
 Type promotion
 ********************
@@ -26,7 +26,7 @@ The Type order from strong to weak is:
 
 Tensor-scalar arithmetic
 *****************************
-Arithmetic operations between a Tensor and a scalar can be performed. 
+Several arithmetic operations between a Tensor and a scalar are possible. 
 For example:
 
 * In Python:
@@ -34,14 +34,14 @@ For example:
 .. code-block:: python 
     :linenos:        
 
-        A = cytnx.ones([3,4])
-        print(A)
+    A = cytnx.ones([3,4])
+    print(A)
 
-        B = A + 4 
-        print(B)
+    B = A + 4 
+    print(B)
 
-        C = A - 7j # type promotion
-        print(C)
+    C = A - 7j # type promotion
+    print(C)
 
         
 
@@ -50,14 +50,14 @@ For example:
 .. code-block:: c++
     :linenos:
 
-        auto A = cytnx::ones({3,4});
-        cout << A << endl;
+    auto A = cytnx::ones({3,4});
+    cout << A << endl;
 
-        auto B = A + 4;
-        cout << B << endl;
+    auto B = A + 4;
+    cout << B << endl;
 
-        auto C = A - std::complex<double>(0,7); //type promotion
-        cout << C << endl;
+    auto C = A - std::complex<double>(0,7); //type promotion
+    cout << C << endl;
 
 Output>>
 
@@ -101,14 +101,14 @@ For example:
 .. code-block:: python 
     :linenos:        
 
-        A = cytnx.arange(12).reshape(3,4)
-        print(A)
+    A = cytnx.arange(12).reshape(3,4)
+    print(A)
 
-        B = cytnx.ones([3,4])*4 
-        print(B)
+    B = cytnx.ones([3,4])*4 
+    print(B)
 
-        C = A * B
-        print(C)
+    C = A * B
+    print(C)
 
         
 
@@ -117,14 +117,14 @@ For example:
 .. code-block:: c++
     :linenos:
 
-        auto A = cytnx::arange(12).reshape(3,4);
-        cout << A << endl;
+    auto A = cytnx::arange(12).reshape(3,4);
+    cout << A << endl;
 
-        auto B = cytnx.ones({3,4})*4;
-        cout << B << endl;
+    auto B = cytnx.ones({3,4})*4;
+    cout << B << endl;
 
-        auto C = A * B;
-        cout << C << endl;
+    auto C = A * B;
+    cout << C << endl;
 
 Output>>
 
@@ -157,6 +157,11 @@ Output>>
      [3.20000e+01 3.60000e+01 4.00000e+01 4.40000e+01 ]]
 
 
+.. Note::
+
+    An elementwise multiplication is applied if the operator **'*'** is used. For tensor contractions or matrix multiplications, see :ref:`Contraction`.
+
+
 Equivalent APIs (C++ only)
 ****************************
 Cytnx also provides some equivalent APIs for users who are familiar with/coming from pytorch and similar libraries. 
@@ -167,15 +172,15 @@ For example, there are two different ways to perform the + operation: **Tensor.A
 .. code-block:: c++
     :linenos:
 
-        auto A = cytnx::ones({3,4})
-        auto B = cytnx::arange(12).reshape(3,4);
-        
-        // these two are equivalent to C = A+B;
-        auto C = A.Add(B); 
-        auto D = cytnx::linalg.Add(A,B);
+    auto A = cytnx::ones({3,4})
+    auto B = cytnx::arange(12).reshape(3,4);
+    
+    // these two are equivalent to C = A+B;
+    auto C = A.Add(B); 
+    auto D = cytnx::linalg.Add(A,B);
 
-        // this is equivalent to A+=B;
-        A.Add_(B);
+    // this is equivalent to A+=B;
+    A.Add_(B);
 
 
 .. Note::

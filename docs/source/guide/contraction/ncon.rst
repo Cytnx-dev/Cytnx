@@ -38,11 +38,5 @@ In the figure we labelled the internal bonds using unique positive numbers. Exte
 
 We see that **ncon** accomplishes contractions similar to **Contracts** or a contraction **Network**. While the code becomes very compact with *ncon*, the user must take care of the correct index order of all tensors. 
 
-
-.. Tip::
-
-    We encourage users to use **Network** contractions or **Contract(s)** together with meaningful label names, which are easier to understand than integer values as required by **ncon**. The latter routine is provided for users who know exactly what they are doing and who take care of the index order themselves.
-
-
 .. bibliography:: ref.ncon.bib
     :cited:

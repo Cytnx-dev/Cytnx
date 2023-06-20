@@ -2,16 +2,16 @@ To/From numpy.array
 ----------------------
 Cytnx also provides conversion from and to numpy.array in the Python API. 
 
-* To convert from Tensor to numpy array, use **Tensor.numpy()**
+* To convert from Cytnx Tensor to numpy array, use **Tensor.numpy()**
 
 .. code-block:: python
     :linenos:
         
-        A = cytnx.ones([3,4])
-        B = A.numpy()
-        print(A)
-        print(type(B))
-        print(B)
+    A = cytnx.ones([3,4])
+    B = A.numpy()
+    print(A)
+    print(type(B))
+    print(B)
 
 Output>>
 
@@ -33,16 +33,16 @@ Output>>
 
 
 
-* To convert from numpy array to Tensor, use **cytnx.from_numpy()**
+* To convert from numpy array to Cytnx Tensor, use **cytnx.from_numpy()**
 
 .. code-block:: python 
     :linenos:
 
-        import numpy as np
-        B = np.ones([3,4])
-        A = cytnx.from_numpy(B)
-        print(B)
-        print(A)
+    import numpy as np
+    B = np.ones([3,4])
+    A = cytnx.from_numpy(B)
+    print(B)
+    print(A)
 
 Output>>
 
