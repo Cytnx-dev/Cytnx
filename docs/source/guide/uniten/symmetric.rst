@@ -149,7 +149,7 @@ As shown in the previous figure, this UniTensor has only **4** valid blocks whic
 
 .. Note::
 
-    The number in the square braket **[]** in print_blocks() indicates the Qnum index. It refers to the order of the quantum numbers on the corresponding bond. In the previous example, *bond_e* contains three quantum numbers. The element with quantum number U1(2) has the Qnum index [0] on this link, the U1(0) elements have Qnum index [1], and U1(2) element has Qnum index [2]. 
+    The number in the square braket **[]** in print_blocks() indicates the Qnum index. It refers to the order of the quantum numbers on the corresponding bond. In the previous example, *bond_e* contains three quantum numbers. The element with quantum number U1(2) has the Qnum index [0] on this link, the U1(0) elements have Qnum index [1], and U1(2) element has Qnum index [2]. More information on the output can be found in :ref:`print() and print_blocks()`.
 
 
 
