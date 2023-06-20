@@ -1,11 +1,11 @@
-Access elements
+Accessing elements
 ----------------------
 Next, let's take a look on how we can access elements of a Tensor.
 
 Get elements 
 ***************************
-Just like in Python list/numpy.array/torch.tensor, on the Python side, we can simply use *slice* to get the elements. See :numpy-slice:`This page <>` for more details.
-In C++, Cytnx takes this approach from Python and brings it to our C++ API. You can simply use the **slice string** to access elements. 
+On the Python side, we can simply use *slice* to get the elements, just as common with list/numpy.array/torch.tensor in Python. See :numpy-slice:`This page <>` for more details.
+In C++, Cytnx ports this approach from Python to the C++ API. You can simply use a **slice string** to access elements. 
 
 For example:
 
@@ -73,10 +73,10 @@ Output>>
 .. Note::
 
     1. To convert between Python and C++ APIs, notice that in C++ you need to use operator() instead of operator[] if you are using slice strings to access elements. 
-    2. The return will always be a Tensor object, even it is only one elements in the Tensor.
+    2. The return value will always be a Tensor object, even it only contains one element.
 
 
-In the case where you have only one element in a Tensor, you can use **item()** to get the element in the standard Python type/C++ type. 
+In the case where you have only one element in a Tensor, you can use **item()** to get the element as a standard Python/C++ type. 
 
 * In Python:
 
@@ -214,8 +214,8 @@ Output>>
 
 Low-level API (C++ only) 
 *******************************
-On C++ side, Cytnx provides lower-level APIs with slightly smaller overhead for getting elements. 
-These low-level APIs require using with **Accessor** object. 
+On the C++ side, Cytnx provides lower-level APIs with slightly smaller overhead for getting elements. 
+These low-level APIs require using an **Accessor** object. 
 
 * Accessor:
     **Accessor** object is equivalent to Python *slice*. It is sometimes convenient to use aliases to simplify the expression when using it.
