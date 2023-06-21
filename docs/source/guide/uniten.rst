@@ -2,7 +2,7 @@ UniTensor
 =================
 Besides the generic Tensor structure, Cytnx provides further objects that are designed specifically for tensor network simulations, based on the **cytnx.Tensor** class.
 
-**UniTensor** is an enhanced version of **cytnx.Tensor** which provides features such as labels for each index (which we call "bond") and Bra/Ket (In/Out) convention of bonds. These features are handy for contractions of multiple tensors, as well as for the implementation of ensor network diagrams. Also, symmetries can be included resulting in symmetric UniTensors.
+**UniTensor** is an enhanced version of **cytnx.Tensor** which provides features such as labels for each index (which we call "bond") and Bra/Ket (In/Out) convention of bonds. These features are handy for contractions of multiple tensors, as well as for the implementation of ensor network diagrams. Also, symmetries can be included.
 
 A **UniTensor** consist of three important parts: 
 
