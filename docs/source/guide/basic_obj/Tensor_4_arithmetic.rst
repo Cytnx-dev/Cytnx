@@ -185,7 +185,7 @@ For example, there are two different ways to perform the + operation: **Tensor.A
 
 .. Note::
 
-    1. All the arithmetic operation functions such as **Add,Sub,Mul,Div...**, as well as the linear algebra functions all start with capital characters. Beware, since they all start with lower-case characters in pytorch.
+    1. All the arithmetic functions such as **Add,Sub,Mul,Div...**, as well as the linear algebra functions all start with capital characters. Beware, since they all start with lower-case characters in pytorch.
     2. All the arithmetic operations with an underscore (such as **Add_, Sub_, Mul_, Div_**) are inplace versions that modify the current instance. 
 
 .. Hint::

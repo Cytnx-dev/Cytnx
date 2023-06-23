@@ -116,7 +116,7 @@ You can create a Tensor with a different data type, and/or on different devices 
     3. In C++, there are no keyword arguments as Python, so make sure you put the arguments in the correct order. Check the `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!  
 
 
-Currently, there are several data types supported by Cytnx (see :ref:`Scalar` for more details):
+Currently, there are several data types supported by Cytnx:
 
 .. tabularcolumns:: |l|l|l|
 

@@ -5,7 +5,7 @@ To access the elements in Storage, different APIs are used in Python and C++ due
 
 Get/Set elements
 ****************
-* In Python, simply use **operator[]**:
+* In Python, simply use the **operator[]**:
 
 .. code-block:: python 
     :linenos:
