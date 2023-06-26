@@ -9,7 +9,7 @@ Permutation, reshaping and arithmetic operations are accessed similarly to **Ten
 permute:
 ************************************
 
-The bond order can be changed with *permute* for all kinds of UniTensors. The order can either be defined by the index order as for the permute function for a Tensor, or by specifying the label order after the permutation.
+The bond order can be changed with *permute* for all kinds of UniTensors. The order can either be defined by the index order as for the permute method of a *Tensor*, or by specifying the label order after the permutation.
 
 For example, we permute the indices of the symmetric tensor that we introduced before:
 
@@ -18,17 +18,17 @@ For example, we permute the indices of the symmetric tensor that we introduced b
 .. code-block:: python
     :linenos:
 
-      bond_c = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
       bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-      bond_e = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-      Td = cytnx.UniTensor([bond_c, bond_d, bond_e]).relabels_(["c","d","e"]);
-      Td.print_diagram()
+      bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+      bond_f = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
+      Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels_(["d","e","f"])
+      Tsymm.print_diagram()
 
-      Td_perm_ind=Td.permute([2,0,1])
-      Td_perm_ind.print_diagram()
+      Tsymm_perm_ind=Tsymm.permute([2,0,1])
+      Tsymm_perm_ind.print_diagram()
 
-      Td_perm_label=Td.permute(["e","c","d"])
-      Td_perm_label.print_diagram()
+      Tsymm_perm_label=Tsymm.permute(["f","d","e"])
+      Tsymm_perm_label.print_diagram()
 
 
 * Output >> 
@@ -36,7 +36,7 @@ For example, we permute the indices of the symmetric tensor that we introduced b
 .. code-block:: text
 
       -----------------------
-      tensor Name : 
+      tensor Name : symm. tensor
       tensor Rank : 3
       contiguous  : True
       valid blocks : 4
@@ -45,14 +45,30 @@ For example, we permute the indices of the symmetric tensor that we introduced b
             row           col 
                -----------    
                |         |    
-         c  -->| 2     4 |-->  e
+         d  -->| 2     4 |-->  f
+               |         |    
+         e  -->| 2       |        
+               |         |    
+               -----------    
+
+      -----------------------
+      tensor Name : symm. tensor
+      tensor Rank : 3
+      contiguous  : False
+      valid blocks : 4
+      is diag   : False
+      on device   : cytnx device: CPU
+            row           col 
+               -----------    
+               |         |    
+         f *<--| 4     2 |<--* e
                |         |    
          d  -->| 2       |        
                |         |    
                -----------    
-      
+
       -----------------------
-      tensor Name : 
+      tensor Name : symm. tensor
       tensor Rank : 3
       contiguous  : False
       valid blocks : 4
@@ -61,30 +77,14 @@ For example, we permute the indices of the symmetric tensor that we introduced b
             row           col 
                -----------    
                |         |    
-         e *<--| 4     2 |<--* d
+         f *<--| 4     2 |<--* e
                |         |    
-         c  -->| 2       |        
+         d  -->| 2       |        
                |         |    
-               -----------    
-      
-      -----------------------
-      tensor Name : 
-      tensor Rank : 3
-      contiguous  : False
-      valid blocks : 4
-      is diag   : False
-      on device   : cytnx device: CPU
-            row           col 
-               -----------    
-               |         |    
-         e *<--| 4     2 |<--* d
-               |         |    
-         c  -->| 2       |        
-               |         |    
-               -----------    
+               -----------   
 
 
-We did the same permutation in two ways in this example, once using indices, once using labels. The first index of the permuted tensor corresponds to the last index of the original tensor (original index 2, label "c"), the second new index to the first old index (old index 0, label "c") and the last new bond has the old index 1 and label "d".
+We did the same permutation in two ways in this example, once using indices, once using labels. The first index of the permuted tensor corresponds to the last index of the original tensor (original index 2, label "f"), the second new index to the first old index (old index 0, label "d") and the last new bond has the old index 1 and label "e".
 
 reshape:
 ************************************
@@ -111,15 +111,15 @@ Output >>
       block_form  : False
       is_diag     : False
       on device   : cytnx device: CPU
-            --------     
-            /        \    
-            |      2 |____ 0
-            |        |    
-            |      3 |____ 1
-            |        |    
-            |      2 |____ 2
-            \        /    
-            --------     
+               --------     
+              /        \    
+              |      2 |____ 0
+              |        |    
+              |      3 |____ 1
+              |        |    
+              |      2 |____ 2
+              \        /    
+               --------      
 
 .. Note::
 
@@ -130,12 +130,12 @@ Arithmetic
 ************************************
 
 
-Arithmetic operations for un-tagged UniTensors can be done exactly the same as with Tensors, see section arithmetic for Tensors.
+Arithmetic operations for un-tagged UniTensors can be done exactly the same as with Tensors, see :ref:`Tensor arithmetic`.
 
 rowrank
 *********
 
-Another property that we may want to maintain in UniTensor is its rowrank. It tells us how the legs of the a UniTensor are split into two halves, one part belongs to the rowspace and the other to the column space. A UniTensor can then be seen as a linear operator between these two spaces, or as a matrix. The matrix is be seen as having the first *rowrank* indices combined to the first (row-)index and the other indices combined to the second (column-)index. Most of the linear algebra algorithms take a matrix as an input. We thus use rowrank to specify how to cast the input UniTensor into a matrix. In Cytnx, this specification makes it easy to use linalg operations on UniTensors. Here is an example where a **singular value decomposition (SVD)** is performed on a UniTensor:
+Another property that we may want to maintain in UniTensor is its rowrank. It tells us how the legs of the a UniTensor are split into two halves, one part belongs to the rowspace and the other to the column space. A UniTensor can then be seen as a linear operator between these two spaces, or as a matrix. The matrix results in having the first *rowrank* indices combined to the first (row-)index and the other indices combined to the second (column-)index. Most of the linear algebra algorithms take a matrix as an input. We thus use rowrank to specify how to cast the input UniTensor into a matrix. In Cytnx, this specification makes it easy to use linear algebra operations on UniTensors. Here is an example where a **singular value decomposition (SVD)** is performed on a UniTensor:
 
 
 * In Python:
@@ -213,19 +213,19 @@ Output >>
                   |          |    
                   |        5 |____ 4
                   \          /    
-                   ----------     
+                   ---------- 
 
 .. toctree::
 
-When calling *Svd*, the first three legs of **T** are automatically reshaped into one leg according to **rowrank=3**. After the SVD, the matrices **U** and **Vt** are automatically reshaped back into the corresponding index form of the original tensor. This way, we get the original **T** if we contract :math:`U \cdot S \cdot Vt`:
+When calling *Svd*, the first three legs of **T** are automatically reshaped into one leg according to **rowrank=3**. After the SVD, the matrices **U** and **Vt** are automatically reshaped back into the corresponding index form of the original tensor. This way, we get the original UniTensor **T** if we contract :math:`U \cdot S \cdot Vt`:
 
 * In Python:
 
 .. code-block:: python
     :linenos:
 
-    Tdiff=T-cytnx.Contracts([u,s,vt]);
-    Tdiff.Norm()/T.Norm()
+    Tsymm_diff=T-cytnx.Contracts([U,S,Vt]);
+    Tsymm_diff.Norm()/T.Norm()
 
 Output >> 
 
@@ -238,4 +238,4 @@ Output >>
       Shape : (1)
       [7.87947e-16 ]
 
-If we contract :math:`U \cdot S \cdot Vt`, we get a tensor of the same shape as **T** and we can subtract the two tensors. The error :math:`\frac{|T-U \cdot S \cdot Vt|}{|T|}` is of the order of machine precision.
+If we contract :math:`U \cdot S \cdot Vt`, we get a tensor of the same shape as **T** and we can subtract the two tensors. The error :math:`\frac{|T-U \cdot S \cdot Vt|}{|T|}` is of the order of machine precision, as expected.
