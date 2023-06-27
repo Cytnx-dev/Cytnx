@@ -1,6 +1,6 @@
 ncon
 =============
-Another way to contract tensors is by using **ncon**. This function was originally proposed for MATLAB :cite:`pfeifer2015ncon`. It has a simple syntax where the index connectivity and ordering of the indices on the resulting tensor is defined by integer values. Note that **ncon** requires the user to know the ordering of the bonds in a tensor. Labels are not made use of when using **ncon**.
+Another way to contract tensors is by using **ncon**. This function was originally proposed for MATLAB :cite:`pfeifer2015ncon`. It has a syntax where the index connectivity and ordering of the indices on the resulting tensor are defined by integer values. Note that **ncon** requires the user to know the ordering of the bonds in a tensor. Labels are not made use of when using **ncon**.
 
 For a tensor contraction with **ncon**, we first construct a labelled diagram of the desired network contraction. Indices are labelled by integer numbers:
 

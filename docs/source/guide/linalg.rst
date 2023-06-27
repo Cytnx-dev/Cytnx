@@ -86,6 +86,7 @@ Currently, Cytnx supports the following linear algebra functions. See https://ka
 
 (\*) this is a high level linalg  
 
+Many linear algebra functions can be used with Tensors and UniTensors. Most of the linear algebra algorithms take a matrix as an input. We use :ref:`rowrank` to specify how to cast the input UniTensor into a matrix. See :ref:`rowrank` as well for an example of how to calculate a singular value decomposition of a UniTensor.
 
 .. toctree::
     :maxdepth: 3

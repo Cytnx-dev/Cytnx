@@ -10,6 +10,12 @@ A simple way to contract indices is provided by **Contract()** and **Contracts()
 Finally, the function **ncon()** allows to contract tensors by defining the connectivity and contraction order of the bonds. The user needs to specify the bonds by their indices instead of their labels, so the index order matters.
 
 
+.. Tip::
+
+    We encourage users to use **Network** contractions or **Contract(s)** together with meaningful label names, which are easier to understand than integer values as required by **ncon**. The latter routine is provided for advanced users who carefully track the index order themselves.
+
+
+
 .. toctree::
     :maxdepth: 3
 

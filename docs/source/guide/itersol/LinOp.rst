@@ -1,6 +1,6 @@
 LinOp class
 --------------
-Cytnx provides users with the ability to define customized a linear operators using the **LinOp** class. 
+Cytnx provides the ability to define a customized linear operators using the **LinOp** class. 
 
 Before diving into the **LinOp** class, let's take a look at a simple example:
 
@@ -48,11 +48,14 @@ Output>>
 
 .. code-block:: text
 
+    
     Total elem: 4
     type  : Double (Float64)
     cytnx device: CPU
     Shape : (4)
     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+
+
 
 
     Total elem: 16
@@ -65,11 +68,17 @@ Output>>
      [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]]
 
 
+
+
     Total elem: 4
     type  : Double (Float64)
     cytnx device: CPU
     Shape : (4)
-    [2.40000e+01 2.80000e+01 3.20000e+01 3.60000e+01 ]
+    [6.00000e+00 2.20000e+01 3.80000e+01 5.40000e+01 ]
+
+
+
+
 
 Such an explicit matrix-vector multiplication can be done for small matrices :math:`\boldsymbol{\hat{H}}`. 
 
@@ -134,7 +143,7 @@ First, let's define the function:
 
 .. Note::
 
-    The function should have the signature **Tensor f(const Tensor &)** with NO additional arguments. Thus, it is less flexible if the linear algebra operator depends on further parameters or data. In such cases, see the next section *Inherit the LinOp class* instead.
+    The function should have the signature **Tensor f(const Tensor &)** with NO additional arguments. If the linear algebra operator depends on more parameters, the approach in the next section :ref:`Inherit the LinOp class` can be used instead.
 
 
 Next, we create a **LinOp** object, and pass the function *myfunc* to it. 
@@ -262,7 +271,7 @@ First, let's create a class that inherits from **LinOp**, with a class member **
     };
 
 
-Next, the most important part is to overload the **matvec** member function, as it defines the mapping from input :math:`\boldsymbol{x}` to the output :math:`\boldsymbol{y}`.
+Next, we need to overload the **matvec** member function, as it defines the mapping from input :math:`\boldsymbol{x}` to the output :math:`\boldsymbol{y}`.
 
 * In Python:
 
@@ -320,7 +329,7 @@ Next, the most important part is to overload the **matvec** member function, as 
 
     };
 
-Finally, the class can be simply be used. We demonstrate this in in the following and set the constant to add to 7: 
+Now, the class can be be used. We demonstrate this in in the following and set the constant to be added to 7: 
 
 * In Python:
 
@@ -421,7 +430,7 @@ Output>>
 
 Prestore/preconstruct sparse elements
 ****************************************
-In the previous example, we showed how to construct a linear operator by overloading the **matvec** member function of the LinOp class. This is straight forward and simple, but in cases where the custom mapping contains many for-loops, clearly, handling them in python is not optimal for performance reasons. 
+In the previous example, we showed how to construct a linear operator by overloading the **matvec** member function of the LinOp class. This is straight forward and simple, but in cases where the custom mapping contains many for-loops, handling them in Python is not optimal for performance reasons. 
 
 Since v0.6.3a, the option **"mv_elem"** is available in the constructor of the LinOp class. It allows users to pre-store the indices and values of the non-zero elements, similar to the standard sparse storage structure. If this is used, Cytnx handles the internal structure and optimizes the matvec performance. Again, let's use the previous example: a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) and ONLY two non-zero elements A[1,100]=4 and A[100,1]=7.  
 
@@ -449,7 +458,7 @@ Since v0.6.3a, the option **"mv_elem"** is available in the constructor of the L
 
 Notice that instead of overloading the **matvec** function, we use the **set_elem** member function in the LinOp class to set the indices and values of the elements. This information is then stored internally in the LinOp class, and we let the LinOp class provide and optimize **matvec**. 
 
-In the next section, we will see how we can benefit from the LinOp class by passing this object to Cytnx's iterative solver. This way the eigenvalue problem can be solved efficiently with our customized linear operator. 
+In :ref:`Lanczos solver`, we will see how we can benefit from the LinOp class by passing this object to Cytnx's iterative solver. This way the eigenvalue problem can be solved efficiently with our customized linear operator. 
 
 
 

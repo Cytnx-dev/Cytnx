@@ -1,7 +1,7 @@
 Tensor arithmetic
 ----------------------
 
-In Cytnx, arithmetic operations such as **+, -, *, /, +=, -=, *=, /=** can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. 
+In Cytnx, arithmetic operations such as **+, -, *, /, +=, -=, *=, /=** can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. See also :ref:`Linear algebra` for a list of arithmetic operations and further linear algebra functions.
 
 Type promotion
 ********************
