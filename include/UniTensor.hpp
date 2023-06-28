@@ -2567,9 +2567,9 @@ namespace cytnx {
 
     */
     explicit UniTensor(const Tensor &in_tensor, const bool &is_diag = false,
-                       const cytnx_int64 &rowrank = -1, const std::string &name = "")
+                       const cytnx_int64 &rowrank = -1, const std::vector<std::string> &in_labels = {}, const std::string &name = "")
         : _impl(new UniTensor_base()) {
-      this->Init(in_tensor, is_diag, rowrank, name);
+      this->Init(in_tensor, is_diag, rowrank, in_labels, name);
     }
     /**
     @brief Initialize a UniTensor with cytnx::Tensor.
@@ -2589,11 +2589,13 @@ namespace cytnx {
 	@see UniTensor(const Tensor &, const bool &, const cytnx_int64 &)
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false,
-              const cytnx_int64 &rowrank = -1, const std::string &name = "") {
+              const cytnx_int64 &rowrank = -1, const std::vector<std::string> &in_labels = {}, const std::string &name = "") {
       //std::cout << "[entry!]" << std::endl;
       boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
       out->Init_by_Tensor(in_tensor, is_diag, rowrank, name);
       this->_impl = out;
+      if(in_labels.size()!=0)
+        this->set_labels(in_labels);
     }
     //@}
 

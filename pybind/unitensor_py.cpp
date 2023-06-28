@@ -132,8 +132,8 @@ void unitensor_binding(py::module &m){
   // entry.UniTensor
   py::class_<UniTensor>(m, "UniTensor")
     .def(py::init<>())
-    .def(py::init<const cytnx::Tensor &, const bool &, const cytnx_int64 &, const std::string &>(), py::arg("Tin"),
-         py::arg("is_diag") = false, py::arg("rowrank") = (cytnx_int64)(-1), py::arg("name")="")
+    .def(py::init<const cytnx::Tensor &, const bool &, const cytnx_int64 &, const std::vector<std::string> &, const std::string &>(), py::arg("Tin"),
+         py::arg("is_diag") = false, py::arg("rowrank") = (cytnx_int64)(-1), py::arg("labels") = std::vector<std::string>(), py::arg("name")="")
     .def(py::init<const std::vector<Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &,
                   const unsigned int &, const int &, const bool &, const std::string &>(),
          py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
@@ -149,9 +149,9 @@ void unitensor_binding(py::module &m){
          py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
 
 
-    .def("Init",[](UniTensor &self, const Tensor &in_tensor, const bool &is_diag, const cytnx_int64 &rowrank, const std::string &name){
-                    self.Init(in_tensor,is_diag,rowrank,name);
-                },py::arg("Tin"),py::arg("is_diag")=false,py::arg("rowrank")=(cytnx_int64)(-1), py::arg("name")="")
+    .def("Init",[](UniTensor &self, const Tensor &in_tensor, const bool &is_diag, const cytnx_int64 &rowrank, const std::vector<std::string> &labels, const std::string &name){
+                    self.Init(in_tensor,is_diag,rowrank,labels,name);
+                },py::arg("Tin"),py::arg("is_diag")=false,py::arg("rowrank")=(cytnx_int64)(-1), py::arg("labels") = std::vector<std::string>(), py::arg("name")="")
 
 
     .def("Init",[](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
