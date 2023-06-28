@@ -33,7 +33,6 @@ Cytnx user guide and examples
 
 .. toctree::
 
-    FAQ.rst    
     Developer.rst
 
 

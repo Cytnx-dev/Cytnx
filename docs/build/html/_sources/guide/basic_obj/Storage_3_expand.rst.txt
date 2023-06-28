@@ -2,7 +2,7 @@ Increase size
 -----------------
 Just like C++ vectors, we can increase the size of the Storage.
 
-Append
+append
 ********
 It is possible to append a new element to the end of the Storage. 
 For example
@@ -47,7 +47,7 @@ Output>>
     [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 5.00000e+02 ]
 
 
-Resize
+resize
 ********
 Equivalently to *vector.resize* in C++, we can resize the Storage in Cytnx.
 

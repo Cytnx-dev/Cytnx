@@ -70,7 +70,7 @@ Output >>
              \         /    
               ---------     
 
-Here we see that the labels **j** and **l** appear on both tensors. Thus, they are contracted. Note that the bond dimensions of the contracted tensors must agree on both tensors.
+Here we see that the labels **j** and **l** appear on both input tensors. Thus, they are contracted. Note that the bond dimensions of the contracted tensors must agree on both tensors.
 
 In order to define which indices shall be contracted without changing the labels on the initial tensors, Cyntx provides the method **.relabels()**. It allows to set common labels on the indices to be contracted and distinct labels on the others. Also, the labels on the resulting tensor can be defined this way. Suppose that we only want to contract the index *j* in the previous example, but not sum over *l*. We can use **.relabels()** for this task:
 
@@ -202,4 +202,4 @@ Output >>
               \         /    
                ---------     
 
-Note that the UniTensors' names have to be specified for an explicitly given contraction order. In this case we specified them in the constructor argument.
+Note that the UniTensors' names have to be specified for an explicitly given contraction order. In this case we specified them in the constructor argument. The order *(M,(A1,A2))* indicates that first all common indices of *A1* and *A2* are contracted, then all common indices of the resulting tensor and *M*.

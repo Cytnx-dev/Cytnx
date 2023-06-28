@@ -78,7 +78,7 @@ When a UniTensor has block structure, not all possible elements correspond to a 
 
 In such cases, one can still use *at* and receive a proxy. The proxy can be used to check if the element is valid.
 
-Let's consider the following example:
+Let's consider the same example of a symmetric tensor as in the previous sections:
 
 .. image:: image/u1_tdex.png
     :width: 500
@@ -89,10 +89,10 @@ Let's consider the following example:
 .. code-block:: python
     :linenos:
     
-    bond_c = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
     bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_e = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    Td = cytnx.UniTensor([bond_c, bond_d, bond_e]);
+    bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_f = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
+    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels_(["d","e","f"])
 
 
 An existing element (here: at [0,0,0]) can be accessed as in the case without symmetries:
@@ -102,7 +102,7 @@ An existing element (here: at [0,0,0]) can be accessed as in the case without sy
 .. code-block:: python
     :linenos:
 
-    print(Td.at([0,0,0]).value)
+    print(Tsymm.at([0,0,0]).value)
 
 
 * In C++:
@@ -110,7 +110,7 @@ An existing element (here: at [0,0,0]) can be accessed as in the case without sy
 .. code-block:: c++
     :linenos:
 
-    print(Td.at({0,0,0}));
+    print(Tsymm.at({0,0,0}));
         
         
 
@@ -128,7 +128,7 @@ If we try to access an element that does not correspond to a valid block (for ex
 .. code-block:: python
     :linenos:
 
-    print(Td.at([0,0,1]).value)
+    print(Tsymm.at([0,0,1]).value)
 
 
 * In C++:
@@ -136,7 +136,7 @@ If we try to access an element that does not correspond to a valid block (for ex
 .. code-block:: c++
     :linenos:
 
-    print(Td.at({0,0,1}));
+    print(Tsymm.at({0,0,1}));
 
 Output>>
 
@@ -153,7 +153,7 @@ To avoid this error, we can check if the element is valid before accessing it. T
     :linenos:
 
     for i in [0,1]:
-        tmp = Td.at([0,0,i])
+        tmp = Tsymm.at([0,0,i])
         if(tmp.exists()):
             tmp.value = 8.
 
@@ -163,7 +163,7 @@ To avoid this error, we can check if the element is valid before accessing it. T
     :linenos:
 
     for(auto i=0;i<2;i++){
-        auto tmp = Td.at({0,0,i});
+        auto tmp = Tsymm.at({0,0,i});
         if(tmp.exists()):
             tmp = 8;
     }

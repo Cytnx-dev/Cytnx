@@ -1,7 +1,7 @@
 Accessing the block(s)
 ------------------------
 
-In this section we introduce some basic ways to access and manipulate the blocks in UniTensors. This way, the data of a UniTensor can be accessed and manipulated. Each block is a **Tensor**.
+The data in a UniTensor is stored in blocks. We introduce how to access and manipulate these. This way, the data of a UniTensor can be accessed and manipulated. Each block is a **Tensor**.
 
 UniTensor without symmetries
 *****************************
@@ -39,21 +39,21 @@ Output >>
 UniTensor with symmetries
 *****************************
 
-Let's use the same example of UniTensor with U1 symmetry that we introduced in the previous section to demostrate how to get block(s) from a block structured UniTensor:
+Let's use the same example of a UniTensor with *U1* symmetry that we introduced in the previous section :ref:`UniTensor with Symmetries` to demonstrate how to get block(s) from a block structured UniTensor:
 
 .. image:: image/u1_tdex.png
     :width: 500
     :align: center
 
+* In Python:
 
 .. code-block:: python
     :linenos:
 
-    bond_c = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
     bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_e = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    Td = cytnx.UniTensor([bond_c, bond_d, bond_e])
-    Td.set_name("Td")
+    bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_f = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
+    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels_(["d","e","f"])
 
 There are two ways to get a certain block from a UniTensor. 
 
@@ -61,16 +61,24 @@ There are two ways to get a certain block from a UniTensor.
 
 .. py:function:: UniTensor.get_block(qindices)
 
-    :param List[int] qindices: list of integers specifying the indices of qnums on each bond
+    :param List[int] qindices: list of integers specifying the indices of the quantum numbers on each bond
 
-The quantum numbers need to be given in the same order as the legs in the tensor.
+The quantum numbers need to be given in the same order as the legs in the tensor. In our example, *bond\_f* was created with three quantum numbers. Their indices are
 
-In our example we can access the block with qnums [Qs(1),Qs(-1),Qs(0)], which correspond to the Qn-indices [0,1,1]: 
+    * 0 for *U1(2)*
+    * 1 for *U1(0)*
+    * 2 for *U1(-2)*
+because the quantum numbers were created in this order. Similarly for *bond\_d* and *bond\_e: *U1(1)* has quantum number index 0 and *U1(-1)* has quantum number index 2.
+
+
+As an example, we want to access the block with quantum numbers [Qs(1),Qs(-1),Qs(0)]. In the above convention, this corresponds to the Qn-indices [0,1,1]: 
+
+* In Python:
 
 .. code-block:: Python
     :linenos:
 
-    B1 = Td.get_block_([0,1,1])
+    B1 = Tsymm.get_block_([0,1,1])
     print(B1)
 
 Output >> 
@@ -90,12 +98,14 @@ Output >>
 
     :param [int] blockindex: the index of the block in the UniTensor
 
-For example, if we want to get the block with block index number 1:
+If we know the block index, we can access the data directly. For example, if we want to get the block with block index number 1:
+
+* In Python:
 
 .. code-block:: python
     :linenos:
 
-    B1 = Td.get_block_(1)
+    B1 = Tsymm.get_block_(1)
     print(B1)
 
 Output >> 
@@ -116,14 +126,14 @@ Output >>
 
 **Getting all blocks:**
 
-To access all valid blocks in a UniTensor with block structure (with symmetry), we can use **get_blocks()** or **get_blocks_()**. This will return the blocks as a *list* in Python or a *vector* in C++. Each block is a **cytnx.Tensor** object. The order of the blocks corresponds to their block indices.
+To access all valid blocks in a UniTensor with block structure (with symmetries), we can use **get_blocks()** or **get_blocks_()**. This will return the blocks as a *list* in Python or a *vector* in C++. Each block is a **cytnx.Tensor** object. The order of the blocks corresponds to their block indices.
 
 * In Python:
 
 .. code-block:: python
     :linenos:
     
-    Blks = Td.get_blocks_()
+    Blks = Tsymm.get_blocks_()
     print(len(Blks))
     print(*Blks)
 
@@ -178,20 +188,20 @@ We might want to do some manipulations to an individual block that we got from *
 
 .. py:function:: UniTensor.put_block(Tn, qindices)
 
-    :param List[int] qindices: list of integers specifying the indices of qnums on each bond
+    :param List[int] qindices: list of integers specifying the indices of quantum numbers on each bond
 
-We can, for example, put the block to the location in the UniTensor with qnums [Qs(1),Qs(-1),Qs(0)], corresponding to QN-indices [0,1,1]: 
+We can, for example, put the block to the location in the UniTensor with quantum numbers [Qs(1),Qs(-1),Qs(0)], corresponding to QN-indices [0,1,1]: 
 
 * In Python:
 
 .. code-block:: python
     :linenos:
 
-    B2 = ones([1,1,2])
-    B1 = Td.get_block_([0,1,1])
+    B1new = cytnx.ones([1,1,2])
+    B1 = Tsymm.get_block_([0,1,1])
     print(B1)
-    Td.put_block(B2,[0,1,1])
-    print(Td.get_block_(1))
+    Tsymm.put_block(B1new,[0,1,1])
+    print(Tsymm.get_block_([0,1,1]))
 
 Output >> 
 
@@ -219,18 +229,18 @@ Output >>
 
     :param [int] blockindex: the index of the blocks in the UniTensor
 
-For example, if we want to put the tensor to the block with block index 1, then:
+For example, if we want to put the tensor to the block with block index 2, then:
 
 * In Python:
 
 .. code-block:: python
     :linenos:
 
-    B2 = ones([1,1,2])
-    B1 = Td.get_block_(1)
-    print(B1)
-    Td.put_block(B2,1)
-    print(Td.get_block_(1))
+    B2new = cytnx.ones([1,1,2])
+    B2 = Tsymm.get_block_(2)
+    print(B2)
+    Tsymm.put_block(B2new,2)
+    print(Tsymm.get_block_(2))
     
 
 

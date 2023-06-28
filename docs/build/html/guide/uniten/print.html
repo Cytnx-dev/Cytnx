@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>7.7. Accessing the block(s) &#8212; Cytnx  documentation</title>
+    <title>7.1. Print and display &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
@@ -26,8 +26,8 @@
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="7.8. Get/set UniTensor element" href="elements.html" />
-    <link rel="prev" title="7.6. UniTensor with Symmetries" href="symmetric.html" /> 
+    <link rel="next" title="7.2. Creating a UniTensor" href="create.html" />
+    <link rel="prev" title="7. UniTensor" href="../uniten.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -181,10 +181,10 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../uniten.html">7. UniTensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="print.html">7.1. Print and display</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="print.html#print-diagram">7.1.1. print_diagram()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="print.html#print-block">7.1.3. print_block()</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">7.1. Print and display</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#print-diagram">7.1.1. print_diagram()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#print-block">7.1.3. print_block()</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="create.html">7.2. Creating a UniTensor</a><ul>
@@ -214,10 +214,10 @@
 <li class="toctree-l3"><a class="reference internal" href="symmetric.html">7.6. UniTensor with Symmetries</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.7. Accessing the block(s)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#putting-a-block">7.7.3. Putting a block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocks.html">7.7. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="blocks.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocks.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocks.html#putting-a-block">7.7.3. Putting a block</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="elements.html">7.8. Get/set UniTensor element</a><ul>
@@ -381,15 +381,15 @@
                          accesskey="U"
                          class="active"
                        ><span class="section-number">7. </span>UniTensor</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">7.7. </span>Accessing the block(s)</li>
+            <li class="breadcrumb-item active"><span class="section-number">7.1. </span>Print and display</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="symmetric.html" title="Previous Chapter: 7.6. UniTensor with Symmetries" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 7.6. UniTenso...
+               <a href="../uniten.html" title="Previous Chapter: 7. UniTensor" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 7. UniTensor
                </a>
-               <a href="elements.html" title="Next Chapter: 7.8. Get/set UniTensor element" class="btn btn-primary" role="botton" accesskey="N">
-                   7.8. Get/set ... &raquo;
+               <a href="create.html" title="Next Chapter: 7.2. Creating a UniTensor" class="btn btn-primary" role="botton" accesskey="N">
+                   7.2. Creating... &raquo;
                </a>
            </div>
        </div>
@@ -542,10 +542,10 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="../uniten.html">7. UniTensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="print.html">7.1. Print and display</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="print.html#print-diagram">7.1.1. print_diagram()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
-<li class="toctree-l4"><a class="reference internal" href="print.html#print-block">7.1.3. print_block()</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">7.1. Print and display</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#print-diagram">7.1.1. print_diagram()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#print-block">7.1.3. print_block()</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="create.html">7.2. Creating a UniTensor</a><ul>
@@ -575,10 +575,10 @@
 <li class="toctree-l3"><a class="reference internal" href="symmetric.html">7.6. UniTensor with Symmetries</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">7.7. Accessing the block(s)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#putting-a-block">7.7.3. Putting a block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="blocks.html">7.7. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="blocks.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocks.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="blocks.html#putting-a-block">7.7.3. Putting a block</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="elements.html">7.8. Get/set UniTensor element</a><ul>
@@ -687,13 +687,13 @@
           
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="symmetric.html"
-                          title="previous chapter"><span class="section-number">7.6. </span>UniTensor with Symmetries</a></p>
+    <p class="topless"><a href="../uniten.html"
+                          title="previous chapter"><span class="section-number">7. </span>UniTensor</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="elements.html"
-                          title="next chapter"><span class="section-number">7.8. </span>Get/set UniTensor element</a></p>
+    <p class="topless"><a href="create.html"
+                          title="next chapter"><span class="section-number">7.2. </span>Creating a UniTensor</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
@@ -705,7 +705,7 @@
 
 <script type="text/javascript">$('#searchbox').show(0);</script>
   <ul class="this-page-menu list-unstyled text-right">
-    <li><a href="../../_sources/guide/uniten/blocks.rst.txt"
+    <li><a href="../../_sources/guide/uniten/print.rst.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
@@ -716,240 +716,345 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="accessing-the-block-s">
-<h1><span class="section-number">7.7. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Permalink to this heading">¶</a></h1>
-<p>The data in a UniTensor is stored in blocks. We introduce how to access and manipulate these. This way, the data of a UniTensor can be accessed and manipulated. Each block is a <strong>Tensor</strong>.</p>
-<section id="unitensor-without-symmetries">
-<h2><span class="section-number">7.7.1. </span>UniTensor without symmetries<a class="headerlink" href="#unitensor-without-symmetries" title="Permalink to this heading">¶</a></h2>
-<p>A UniTensor without symmetries is simply a Tensor with labeled bonds. In this case, the methods <strong>.get_block()</strong>  and <strong>.get_block_()</strong> return the Tensor object of the UniTensor for us to manipulate.</p>
+  <section id="print-and-display">
+<h1><span class="section-number">7.1. </span>Print and display<a class="headerlink" href="#print-and-display" title="Permalink to this heading">¶</a></h1>
+<p>Cytnx provides several ways to display the data stored in a UniTensor. This can be helpful to check the implementation.</p>
+<p>For demonstration purposes, we create three tensors in the following.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># Create an UniTensor from Tensor</span>
-<span class="linenos">2</span><span class="n">T</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]))</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">T</span><span class="o">.</span><span class="n">get_block</span><span class="p">())</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]),</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;untagged tensor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">relabels_</span><span class="p">([</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">])</span>
+<span class="linenos">2</span><span class="n">bond_d</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="linenos">3</span><span class="n">bond_e</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="linenos">4</span><span class="n">bond_f</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span> <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+<span class="linenos">5</span><span class="n">bond_g</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">)</span>
+<span class="linenos">6</span><span class="n">bond_h</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">relabels_</span><span class="p">([</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="s2">&quot;f&quot;</span><span class="p">])</span>
+<span class="linenos">8</span><span class="n">Tdiag</span><span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_g</span><span class="p">,</span> <span class="n">bond_h</span><span class="p">],</span> <span class="n">is_diag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;diag tensor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">relabels_</span><span class="p">([</span><span class="s2">&quot;g&quot;</span><span class="p">,</span><span class="s2">&quot;h&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>We will discuss how a UniTensor is created in <a class="reference internal" href="create.html#creating-a-unitensor"><span class="std std-ref">Creating a UniTensor</span></a> and the details about Symmetry, Bonds etc. in the following subchapters. Here, we want to focus on the output of <strong>print_diagram()</strong> and <strong>print</strong>, so no need to understand the lines above in detail.</p>
+<p>The tensor diagram of the three-leg UniTensor <em>uT</em> looks like:</p>
+<a class="reference internal image-reference" href="../../_images/untag.png"><img alt="../../_images/untag.png" class="align-center" src="../../_images/untag.png" style="width: 200px;" /></a>
+<section id="print-diagram">
+<h2><span class="section-number">7.1.1. </span>print_diagram()<a class="headerlink" href="#print-diagram" title="Permalink to this heading">¶</a></h2>
+<p>We can use <strong>print_diagram()</strong> to visualize the basic properties of a UniTensor</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">2</span><span class="n">Tsymm</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">3</span><span class="n">Tdiag</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 9
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (3,3)
-[[1.00000e+00 1.00000e+00 1.00000e+00 ]
-[1.00000e+00 1.00000e+00 1.00000e+00 ]
-[1.00000e+00 1.00000e+00 1.00000e+00 ]]
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>While <strong>.get_block_()</strong> returns a reference to the Tensor which corresponds to the data in a UniTensor, <strong>.get_block()</strong> makes a copy of the data. Therefore, changes to a Tensor returned from <strong>.get_block_()</strong> will also change the UniTesor data, while changes after a <strong>.get_block()</strong> do not affect the UniTensor.</p>
-</div>
-</section>
-<section id="unitensor-with-symmetries">
-<h2><span class="section-number">7.7.2. </span>UniTensor with symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Permalink to this heading">¶</a></h2>
-<p>Let’s use the same example of a UniTensor with <em>U1</em> symmetry that we introduced in the previous section <a class="reference internal" href="symmetric.html#unitensor-with-symmetries"><span class="std std-ref">UniTensor with Symmetries</span></a> to demonstrate how to get block(s) from a block structured UniTensor:</p>
-<a class="reference internal image-reference" href="../../_images/u1_tdex.png"><img alt="../../_images/u1_tdex.png" class="align-center" src="../../_images/u1_tdex.png" style="width: 500px;" /></a>
-<ul class="simple">
-<li><p>In Python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bond_d</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos">2</span><span class="n">bond_e</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos">3</span><span class="n">bond_f</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span> <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos">4</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">relabels_</span><span class="p">([</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="s2">&quot;f&quot;</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>There are two ways to get a certain block from a UniTensor.</p>
-<p><strong>1. Getting a block by its Qn-indices</strong></p>
-<dl class="py function">
-<dt class="sig sig-object py" id="UniTensor.get_block">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.get_block" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qindices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – list of integers specifying the indices of the quantum numbers on each bond</p>
-</dd>
-</dl>
-</dd></dl>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name : untagged tensor
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------
+         /         \
+   a ____| 2     3 |____ b
+         |         |
+         |       4 |____ c
+         \         /
+          ---------
+-----------------------
+tensor Name : symm. tensor
+tensor Rank : 3
+contiguous  : True
+valid blocks : 4
+is diag   : False
+on device   : cytnx device: CPU
+      row           col
+         -----------
+         |         |
+   d  --&gt;| 2     4 |--&gt;  f
+         |         |
+   e  --&gt;| 2       |
+         |         |
+         -----------
 
-<p>The quantum numbers need to be given in the same order as the legs in the tensor. In our example, <em>bond_f</em> was created with three quantum numbers. Their indices are</p>
+-----------------------
+tensor Name : diag tensor
+tensor Rank : 2
+block_form  : False
+is_diag     : True
+on device   : cytnx device: CPU
+braket_form : False
+      row           col
+         -----------
+         |         |
+   g *&lt;--| 2     2 |&lt;--* h
+         |         |
+         -----------
+</pre></div>
+</div>
+<p>The information provided by the output is explained in the following:</p>
+<ol class="arabic">
+<li><p><strong>Bonds:</strong> They are attached to the left side and/or right side of the center square. Now you might wonder why there are Bonds going to two sides? In Cytnx, we use a property called <strong>rowrank</strong> which defines this. The first <em>rowrank</em> Bonds will be considered to direct to the left and the rest will be on the right. When the left and right indices are combined, a tensor can be brought into matrix form, which is particularly useful for linear algebra operations. We will get back to this property in the following sections, particularly in <a class="reference internal" href="manipulation.html#rowrank"><span class="std std-ref">rowrank</span></a>. For now, let’s just assume that rowrank takes an arbitrary integer 0 &lt; rowrank &lt; rank. The number of Bonds indicates the rank of the UniTensor, which is also printed in the second line as <em>tensor Rank</em>.</p>
 <blockquote>
-<div><ul class="simple">
-<li><p>0 for <em>U1(2)</em></p></li>
-<li><p>1 for <em>U1(0)</em></p></li>
-<li><p>2 for <em>U1(-2)</em></p></li>
+<div><dl class="simple">
+<dt><strong>Examples:</strong></dt><dd><ul class="simple">
+<li><p><strong>uT</strong> has three Bonds, indicating it is a rank-3 UniTensor</p></li>
+<li><p><strong>Tsymm</strong> has rank-3 as well</p></li>
+<li><p><strong>Tdiag</strong> has rank-2.</p></li>
 </ul>
+</dd>
+</dl>
 </div></blockquote>
-<p>because the quantum numbers were created in this order. Similarly for <em>bond_d</em> and <em>bond_e: *U1(1)</em> has quantum number index 0 and <em>U1(-1)</em> has quantum number index 2.</p>
-<p>As an example, we want to access the block with quantum numbers [Qs(1),Qs(-1),Qs(0)]. In the above convention, this corresponds to the Qn-indices [0,1,1]:</p>
-<ul class="simple">
-<li><p>In Python:</p></li>
+</li>
+<li><p><strong>Labels&amp;dimensions:</strong> The number on the outside of each bond represents the <em>label</em> of that bond, and the numbers inside the box indicate the <em>dimension</em> (number of elements) of each bond.</p>
+<blockquote>
+<div><dl class="simple">
+<dt><strong>Example uT:</strong></dt><dd><ul class="simple">
+<li><p>The bond on the left side   has dimension=2 and label=”a”.</p></li>
+<li><p>The bond on the upper-right has dimension=3 and label=”b”.</p></li>
+<li><p>The bond on the lower-right has dimension=4 and label=”c”.</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Tsymm</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 2
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
-</pre></div>
-</div>
-<p><strong>2. Getting a block by its block index</strong></p>
-<dl class="py function">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blockindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>blockindex</strong> (<em>[</em><em>int</em><em>]</em>) – the index of the block in the UniTensor</p>
 </dd>
 </dl>
-</dd></dl>
-
-<p>If we know the block index, we can access the data directly. For example, if we want to get the block with block index number 1:</p>
-<ul class="simple">
-<li><p>In Python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Tsymm</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 2
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
-</pre></div>
+</div></blockquote>
+</li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The bonds are ordered and arranged from left to right and up to down. In the example, <em>uT</em> has the bond with label=”a” as the first bond (index=0); the bond with label=”b” is the second bond (index=1); the bond with label=”c” is the 3rd bond (index=2).</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The order of the blocks in a UniTensor depends on how the tensor was created. If you want to access blocks with certain quantum numbers, use <em>UniTensor.get_block(qindices)</em>.</p>
+<p>The labels of bonds are strings, and therefore text. By default, these labels are set to “0”, “1”, … if no label names are defined. These are strings containing the corresponding number. Labels can not be integers. This is because in many APIs a Bond can either be addressed by its index number (integer) as for a <strong>cytnx.Tensor</strong> or by its name (string).</p>
 </div>
-<p><strong>Getting all blocks:</strong></p>
-<p>To access all valid blocks in a UniTensor with block structure (with symmetries), we can use <strong>get_blocks()</strong> or <strong>get_blocks_()</strong>. This will return the blocks as a <em>list</em> in Python or a <em>vector</em> in C++. Each block is a <strong>cytnx.Tensor</strong> object. The order of the blocks corresponds to their block indices.</p>
+<ol class="arabic">
+<li><p><strong>tensor name:</strong> The name (alias) of the UniTensor.</p>
+<dl class="simple">
+<dt><strong>Examples:</strong></dt><dd><ul class="simple">
+<li><p><strong>uT</strong> has the name <strong>untagged tensor</strong></p></li>
+<li><p><strong>Tsymm</strong> has the name <strong>symm. tensor</strong></p></li>
+<li><p><strong>Tdiag</strong> has the name <strong>diag tensor</strong>.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Users can name a UniTensor with <strong>UniTensor.set_name()</strong>:</p>
+</li>
+</ol>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Blks</span> <span class="o">=</span> <span class="n">Tsymm</span><span class="o">.</span><span class="n">get_blocks_</span><span class="p">()</span>
-<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Blks</span><span class="p">))</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">Blks</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;tensor uT&quot;</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>4
-
-Total elem: 1
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,1)
-[[[0.00000e+00 ]]]
-
-
-
-Total elem: 2
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
-
-
-
-Total elem: 2
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
-
-
-
-Total elem: 1
-type  : Double (Float64)
-cytnx device: CPU
-Shape : (1,1,1)
-[[[0.00000e+00 ]]]
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+<span class="hll">tensor Name : tensor uT
+</span>tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------
+         /         \
+   a ____| 2     3 |____ b
+         |         |
+         |       4 |____ c
+         \         /
+          ---------
 </pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>You can use <strong>UniTensor.name()</strong> to get the name property of the UniTensor.</p>
+</div>
+<ol class="arabic" start="4">
+<li><p><strong>block_form/valid blocks:</strong> UniTensors have different ways in which the data is stored. A normal tensor without symmetries is just a dense Tensor and can be seen as a cytnx.Tensor with additional metadata. In this case <strong>block_form : False</strong> will be displayed. For UniTensors with symmetries, only certain index combinations lead to entries that fulfill the symmetry properties. Only this data is stored in the UniTensor. Therefore, the data can be split into several valid blocks. With <strong>UniTensor.is_blockform()</strong> one can check whether a UniTensor is of this form. If so, the number of blocks in the UniTensor is displayed by <em>print_diagram()</em>.</p>
+<blockquote>
+<div><dl class="simple">
+<dt><strong>Examples:</strong></dt><dd><ul class="simple">
+<li><p><strong>uT</strong> has <strong>uT.is_blockform() == False</strong></p></li>
+<li><p><strong>Tsymm</strong> has <strong>Tsymm.is_blockform() == True</strong> and contains four valid blocks</p></li>
+<li><p><strong>Tdiag</strong> has <strong>Tdiag.is_blockform() == True</strong> and contains one valid block.</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</li>
+<li><p><strong>is_diag:</strong> indicates if the UniTensor is a symmetric matrix. In this case, only the diagonal entries are stored. This is <em>True</em> in the above example for <em>Tdiag</em>.</p></li>
+<li><p><strong>on device:</strong> This indicates the device where the data of the UniTensor is stored (CPU or GPU). See <a class="reference internal" href="../Device.html#device"><span class="std std-ref">Device</span></a> for details.</p></li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Similar to <strong>cytnx.Tensor</strong>, one can use <strong>.to()</strong> to move a UniTensor between devices!</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Note again that <strong>.get_block(s)_()</strong> returns to the block in the UniTensor, while <strong>.get_block(s)()</strong> creates an independent copy of the data.</p>
+<p>The dtype and device of a UniTensor depends on the underlying <em>block</em> (data) of the UniTensor.</p>
 </div>
+<ol class="arabic simple" start="7">
+<li><p>The UniTensors <strong>Tsymm</strong> and <strong>Tdiag</strong> have <strong>directional Bonds</strong>. The direction of the Bonds is indicated by <strong>arrows</strong> in the output of <em>print_diagram()</em>. This way, incoming/Ket- and outgoing/Bra-Bonds can be distinguished graphically. If all indices on the left are incoming and all indices on the right outgoing, the UniTensor is in <strong>braket_form</strong>. Directed Bonds that violate this form are marked with a <strong>‘*’</strong>. This is the case for both indices of the UniTensor <em>Tdiag</em>.</p></li>
+<li><p>A <strong>tagged UniTensor</strong>, that is a UniTensor with directed Bonds, is represented by a <strong>rectangular box</strong>. See <em>Tsymm</em> and <em>Tdiag</em> in the above example. An <strong>untagged UniTensor</strong> like <em>uT</em> is printed with <strong>rounded corners</strong>.</p></li>
+</ol>
 </section>
-<section id="putting-a-block">
-<h2><span class="section-number">7.7.3. </span>Putting a block<a class="headerlink" href="#putting-a-block" title="Permalink to this heading">¶</a></h2>
-<p>We might want to do some manipulations to an individual block that we got from <em>.get_block(s)</em>. Then, the new block can be put back to the UniTensor with <em>put_block()</em>.</p>
-<p><strong>1. Putting a block into a location assigned by their Qn-indices</strong></p>
-<dl class="py function">
-<dt class="sig sig-object py" id="UniTensor.put_block">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.put_block" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>qindices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – list of integers specifying the indices of quantum numbers on each bond</p>
-</dd>
-</dl>
-</dd></dl>
-
-<p>We can, for example, put the block to the location in the UniTensor with quantum numbers [Qs(1),Qs(-1),Qs(0)], corresponding to QN-indices [0,1,1]:</p>
+<section id="print-and-print-blocks">
+<h2><span class="section-number">7.1.2. </span>print() and print_blocks()<a class="headerlink" href="#print-and-print-blocks" title="Permalink to this heading">¶</a></h2>
+<p>Further information and the actual data is printed with <strong>UniTensor.print_blocks()</strong>. Equivalently, one can use <strong>print(uT)</strong> where <em>uT</em> is a UniTensor.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B1new</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="linenos">2</span><span class="n">B1</span> <span class="o">=</span> <span class="n">Tsymm</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">B1</span><span class="p">)</span>
-<span class="linenos">4</span><span class="n">Tsymm</span><span class="o">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">B1new</span><span class="p">,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">Tsymm</span><span class="o">.</span><span class="n">get_block_</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">print_blocks</span><span class="p">()</span>
+<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">Tdiag</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Output &gt;&gt;</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 2
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-------- start of print ---------
+Tensor name: untagged tensor
+is_diag    : False
+contiguous : True
+
+Total elem: 24
 type  : Double (Float64)
 cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
+Shape : (2,3,4)
+[[[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+  [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+  [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
+ [[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+  [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
+  [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]]
+
+
+-------- start of print ---------
+Tensor name: diag tensor
+braket_form : False
+is_diag    : True
+contiguous : True
 
 Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
-Shape : (1,1,2)
-[[[1.00000e+00 1.00000e+00 ]]]
+Shape : (2)
+[0.00000e+00 0.00000e+00 ]
 </pre></div>
 </div>
-<div class="toctree-wrapper compound">
-</div>
-<p><strong>2. Putting a block by its block index</strong></p>
-<dl class="py function">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blockindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>blockindex</strong> (<em>[</em><em>int</em><em>]</em>) – the index of the blocks in the UniTensor</p>
-</dd>
-</dl>
-</dd></dl>
-
-<p>For example, if we want to put the tensor to the block with block index 2, then:</p>
+<p>Similarly to <em>print_diagram()</em>, the properties <em>name</em>, <em>is_diag</em> and <em>cytnx device</em> are provided. Additionally, one can see the <strong>shape</strong> and <strong>total number of elements</strong>, as well as the <strong>data type</strong>. Furthermore, the <strong>contiguous</strong> status is displayed, see <a class="reference internal" href="../basic_obj/Tensor_8_cp.html#contiguous"><span class="std std-ref">Contiguous</span></a> for details.</p>
+<p>Finally, the data is printed. In the case of a dense tensor like <em>uT</em>, the elements are given as a nested list with brackets <strong>[]</strong> combining the elements according to the shape. In the case of a diagonal matrix like <em>Udiag</em>, the diagonal entries are printed as a vector.</p>
+<p>For a UniTensor in blockform, all blocks are printed separately:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">B2new</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
-<span class="linenos">2</span><span class="n">B2</span> <span class="o">=</span> <span class="n">Tsymm</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">B2</span><span class="p">)</span>
-<span class="linenos">4</span><span class="n">Tsymm</span><span class="o">.</span><span class="n">put_block</span><span class="p">(</span><span class="n">B2new</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">Tsymm</span><span class="o">.</span><span class="n">get_block_</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">print</span><span class="p">(</span><span class="n">Tsymm</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 2
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-------- start of print ---------
+Tensor name: symm. tensor
+braket_form : True
+is_diag    : False
+[OVERALL] contiguous : True
+========================
+BLOCK [#0]
+ |- []   : Qn index
+ |- Sym(): Qnum of correspond symmetry
+                 -----------
+                 |         |
+   [0] U1(1)  --&gt;| 1     1 |--&gt;  [0] U1(2)
+                 |         |
+   [0] U1(1)  --&gt;| 1       |
+                 |         |
+                 -----------
+
+Total elem: 1
 type  : Double (Float64)
 cytnx device: CPU
-Shape : (1,1,2)
-[[[0.00000e+00 0.00000e+00 ]]]
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
 
+========================
+BLOCK [#1]
+ |- []   : Qn index
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [0] U1(1)   --&gt;| 1     2 |--&gt;  [1] U1(0)
+                  |         |
+   [1] U1(-1)  --&gt;| 1       |
+                  |         |
+                  -----------
 
 Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (1,1,2)
-[[[1.00000e+00 1.00000e+00 ]]]
+[[[0.00000e+00 0.00000e+00 ]]]
+
+========================
+BLOCK [#2]
+ |- []   : Qn index
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [1] U1(-1)  --&gt;| 1     2 |--&gt;  [1] U1(0)
+                  |         |
+   [0] U1(1)   --&gt;| 1       |
+                  |         |
+                  -----------
+
+Total elem: 2
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,2)
+[[[0.00000e+00 0.00000e+00 ]]]
+
+========================
+BLOCK [#3]
+ |- []   : Qn index
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [1] U1(-1)  --&gt;| 1     1 |--&gt;  [2] U1(-2)
+                  |         |
+   [1] U1(-1)  --&gt;| 1       |
+                  |         |
+                  -----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
+</pre></div>
+</div>
+<p>A UniTensor with Symmetries has Bonds carrying quantum numbers. In our example, the quantum numbers are printed as <em>U1(-2)</em>, <em>U1(-1)</em>, …, <em>U1(2)</em>.The different quantum numbers are ordered by Qnum indices. Each quantum number can have a degeneracy.</p>
+<p>In the above output, the number in the square braket [] indicates the Qnum index. In the previous example, bond <strong>“f”</strong>, which is the outgoing bond of <em>Tsymm</em>, contains three quantum numbers. The element with quantum number <em>U1(2)</em> has the Qnum index [0] on this bond, the <em>U1(0)</em> elements have Qnum index [1], and <em>U1(2)</em> element has Qnum index [2]. The degeneracies are displayed inside the box next to the corresponding bond. For example, the quantum number <em>U1(0)</em> on bond <strong>“f”</strong> has the degeneracy 2, while all other quantum numbers have degeneracy 1.</p>
+</section>
+<section id="print-block">
+<h2><span class="section-number">7.1.3. </span>print_block()<a class="headerlink" href="#print-block" title="Permalink to this heading">¶</a></h2>
+<p>To print a single block of a UniTensor in block form, one can use <strong>UniTensor.print_block(idx)</strong> where <em>idx</em> is the block index:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Tsymm</span><span class="o">.</span><span class="n">print_block</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>========================
+BLOCK [#2]
+ |- []   : Qn index
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [1] U1(-1)  --&gt;| 1     2 |--&gt;  [1] U1(0)
+                  |         |
+   [0] U1(1)   --&gt;| 1       |
+                  |         |
+                  -----------
+
+Total elem: 2
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,2)
+[[[0.00000e+00 0.00000e+00 ]]]
 </pre></div>
 </div>
 </section>

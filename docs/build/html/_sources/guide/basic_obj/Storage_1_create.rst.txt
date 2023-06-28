@@ -1,8 +1,8 @@
-Create a Storage
+Creating a Storage
 -------------------
-The storage can be created in a similar way as in Tensor. Note that Storage does not have the concept of *shape*, and behaves basically just like a **vector** in C++.
+The storage can be created similarly to a Tensor. Note that Storage does not have the concept of *shape*, and behaves basically just like a **vector** in C++.
 
-To create a Storage, with dtype=Type.Double on the cpu: 
+To create a Storage, with dtype=Type.Double on the CPU: 
 
 * In Python:
 
@@ -49,9 +49,9 @@ Output>>
 
 Type conversion
 ****************
-Conversion between different data types is possible for Storage. Just like Tensor, call **Storage.astype()** to convert between different data types. 
+Conversion between different data types is possible for a Storage. Just like Tensor, call **Storage.astype()** to convert between different data types. 
 
-The available data types are the same as for Tensor. 
+The available data types are the same as for a Tensor, see :ref:`Tensor with different dtype and device`. 
 
 * In Python:
 
@@ -139,14 +139,14 @@ Output>>
 
 .. Hint::
 
-    1. Like Tensor, **.device_str()** returns the device string while **.device()** returns device ID (cpu=-1).
+    1. Like for a Tensor, **.device_str()** returns the device string while **.device()** returns the device ID (cpu=-1).
 
     2. **.to()** returns a copy on the target device. Use **.to_()** instead to move the current instance to a target device. 
 
 
 Get Storage of Tensor
 **************************
-Internally, the data of a Tensor is stored in Storage. We can get the storage of a Tensor using **Tensor.storage()**. 
+Internally, the data of a Tensor is saved in a Storage. We can get the Storage of a Tensor by using **Tensor.storage()**. 
 
 * In Python:
 
@@ -191,12 +191,12 @@ Output >>
 
 .. Note::
 
-    1. The return value is a *reference* to the Tensor's internal storage. This implies that any modification to this storage will modify the Tensor accordingly. 
+    The return value is a *reference* to the Tensor's internal storage. This implies that any modification to this Storage will modify the Tensor accordingly. 
 
 
 **[Important]** For a Tensor in non-contiguous status, the meta-data is detached from its memory handled by storage. In this case, calling **Tensor.storage()** will return the current memory layout, not the ordering according to the Tensor indices in the meta-data. 
 
-Let's use Python API to demonstrate this. The c++ API can be used in a similar way. 
+We demonstrate this using the Python API. The C++ API can be used in a similar way. 
 
 * In Python:
 

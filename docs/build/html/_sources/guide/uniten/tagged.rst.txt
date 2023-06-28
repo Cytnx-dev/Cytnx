@@ -1,9 +1,9 @@
-Tagged UniTensor 
+Tagged UniTensor
 -------------------
 
-In this section we introduce **tagged UniTensor**, which is a UniTensor with *directional* bonds. Mathematically, a bond directing towards a tensor represents to a vectorspace, while a bond directing away from a tensor represents the corresponding dual space. In physics, this is often represented as a "Ket" or "Bra" vector. We use the convention that "Ket" is represented by a bond directing towards the tensor, while "Bra" points away from the tensor.
+In this section we introduce **tagged UniTensor**, which is a UniTensor with *directional* bonds. Mathematically, a bond directing towards a tensor represents a vectorspace, while a bond directing away from a tensor represents the corresponding dual space. In physics, this is often represented as a "Ket" or "Bra" vector. We use the convention that "Ket" is represented by a bond directing towards the tensor, while "Bra" points away from the tensor.
 
-If symmetric tensors are considered, the bonds carry quantum numbers. Therefore, UniTensor can further be categorized into **non-symmetric** and **symmetric** (block form).
+If symmetric tensors are considered, the bonds carry quantum numbers and are always tagged. Therefore, tagged UniTensors can further be categorized into **non-symmetric** and **symmetric** (block form) tensors. The latter are covered in :ref:`UniTensor with Symmetries`.
 
 Non-symmetric Tagged UniTensor
 ********************************
@@ -35,54 +35,54 @@ Output >>
     -----------------------
     tensor Name : Ta
     tensor Rank : 3
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
     braket_form : True
-            row               col   
-            ---------------      
-            |             |     
-      0  -->| 3         3 |-->  2  
-            |             |     
-      1  -->| 3           |        
-            |             |     
-            ---------------     
+          row           col 
+             -----------    
+             |         |    
+       0  -->| 3     3 |-->  2
+             |         |    
+       1  -->| 3       |        
+             |         |    
+             -----------    
     -----------------------
     tensor Name : Tb
     tensor Rank : 3
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
     braket_form : True
-            row               col   
-            ---------------      
-            |             |     
-      2  -->| 3         3 |-->  3  
-            |             |     
-            |           3 |-->  4  
-            |             |     
-            ---------------      
+          row           col 
+             -----------    
+             |         |    
+       2  -->| 3     3 |-->  3
+             |         |    
+             |       3 |-->  4
+             |         |    
+             -----------    
     -----------------------
     tensor Name : Tc
     tensor Rank : 3
-    block_form  : false
+    block_form  : False
     is_diag     : False
     on device   : cytnx device: CPU
     braket_form : False
-            row               col   
-            ---------------      
-            |             |     
-      2 *<--| 3         3 |-->  3  
-            |             |     
-            |           3 |-->  4  
-            |             |     
-            ---------------     
+          row           col 
+             -----------    
+             |         |    
+       2 *<--| 3     3 |-->  3
+             |         |    
+             |       3 |-->  4
+             |         |    
+             -----------   
             
-In this example, the UniTensors **Ta** and  **Tb**  are created to be in the **braket form (braket_form : True)**. This means that all bonds in the rowspace are Kets (inward) and all the bonds in the colspace are Bras(outward), which can be seen in the diagram as well. The property rowrank of a UniTensor defines these spaces: the first bonds are part of rowspace, and rowspace contains rowrank bonds.
+In this example, the UniTensors **Ta** and  **Tb**  are created to be in the **braket form (braket_form : True)**. This means that all bonds in the rowspace are Kets (inward) and all the bonds in the colspace are Bras(outward), which can be seen in the diagram as well. The property rowrank of a UniTensor defines these spaces: the first bonds are part of rowspace, and rowspace contains *rowrank* bonds.
 
 Two bonds can only be contracted when one of them corresponds to a Ket state (living in a vector space) and the other is Bra state (living in the dual space). Therefore, **two bonds with conflicting directions cannot be contract with each other**. While this is certainly a constraint, this condition makes the implementation of tensor network algorithms less error-prone since incompatible bond directions will not be contracted.
 
-To demonstrate this, we can just try:
+To demonstrate this, we use :ref:`contract` and try:
 
 
 * In Python:

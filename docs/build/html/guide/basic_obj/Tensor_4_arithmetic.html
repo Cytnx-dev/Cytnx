@@ -27,7 +27,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="3.5. To/From numpy.array" href="Tensor_5_numpy.html" />
-    <link rel="prev" title="3.3. Access elements" href="Tensor_3_access.html" /> 
+    <link rel="prev" title="3.3. Accessing elements" href="Tensor_3_access.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -90,11 +90,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">3. Tensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Creating a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#initialized-tensor">3.1.1. Initialized Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#random-tensor">3.1.2. Random Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.3. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.4. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.5. Transfer between devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.6. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
@@ -102,7 +104,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Accessing elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
@@ -118,7 +120,7 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">3.5. To/From numpy.array</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Append elements</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Appending elements</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_7_io.html">3.7. Save/Load</a><ul>
@@ -127,7 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_8_cp.html">3.8. When will data be copied?</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#reference-copy-of-object">3.8.1. Reference &amp; Copy of object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#reference-to-copy-of-objects">3.8.1. Reference to &amp; Copy of objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#permute">3.8.2. Permute</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#contiguous">3.8.3. Contiguous</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#reshape">3.8.4. Reshape</a></li>
@@ -136,7 +138,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Storage.html">4. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Creating a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
@@ -148,8 +150,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">4.3. Increase size</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. Append</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. Resize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. resize</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
@@ -158,69 +160,76 @@
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. Save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Scalar.html">5. Scalar</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a scalar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a Scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#change-data-type">5.2. Change data type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#application-scenarios">5.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor Notation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor Contraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bond">6.2. Direction of bond</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor notation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor contraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bonds">6.2. Direction of bonds</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../uniten.html">7. UniTensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.1. Create UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#construct-from-tensor">7.1.1. Construct from Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.1.2. From scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/print.html">7.1. Print and display</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-diagram">7.1.1. print_diagram()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-block">7.1.3. print_block()</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.2. Change labels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.2. Creating a UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.2.2. From scratch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.3. Tagged UniTensors and UniTensors with Symmetries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#create-unitensor-with-different-labels-that-share-data">7.2.1. Create UniTensor with different labels that share data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.3. Bond</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.3.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#create-bond-with-qnums">7.3.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combine-bonds">7.3.3. Combine Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.4. Tagged UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.4.1. Non-symmetric Tagged UniTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.5. Tagged UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.5.1. Non-symmetric Tagged UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.5. UniTensor with Symmetry</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.6. UniTensor with Symmetries</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.6. Accessing the block(s)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.6.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.6.2. UniTensor with symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.6.3. Putting a block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.7. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.7.3. Putting a block</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.7. Get/set UniTensor element</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.8. Get/set UniTensor element</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.8.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.8.2. UniTensor with symmetries</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.8. Manipulate UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.8.1. permute:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.8.2. reshape:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.8.3. Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.8.4. rowrank</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.9. Manipulate UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.9.1. permute:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.9.2. reshape:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.9.3. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.9.4. rowrank</a></li>
 </ul>
 </li>
 </ul>
@@ -309,7 +318,6 @@
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../FAQ.html">FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Developer.html">Developer</a></li>
 </ul>
 
@@ -377,8 +385,8 @@
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="Tensor_3_access.html" title="Previous Chapter: 3.3. Access elements" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 3.3. Access elements
+               <a href="Tensor_3_access.html" title="Previous Chapter: 3.3. Accessing elements" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 3.3. Accessin...
                </a>
                <a href="Tensor_5_numpy.html" title="Next Chapter: 3.5. To/From numpy.array" class="btn btn-primary" role="botton" accesskey="N">
                    3.5. To/From ... &raquo;
@@ -443,11 +451,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">3. Tensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Creating a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#initialized-tensor">3.1.1. Initialized Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#random-tensor">3.1.2. Random Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.3. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.4. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.5. Transfer between devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.6. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
@@ -455,7 +465,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Accessing elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
@@ -471,7 +481,7 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">3.5. To/From numpy.array</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Append elements</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Appending elements</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_7_io.html">3.7. Save/Load</a><ul>
@@ -480,7 +490,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_8_cp.html">3.8. When will data be copied?</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#reference-copy-of-object">3.8.1. Reference &amp; Copy of object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#reference-to-copy-of-objects">3.8.1. Reference to &amp; Copy of objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#permute">3.8.2. Permute</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#contiguous">3.8.3. Contiguous</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_8_cp.html#reshape">3.8.4. Reshape</a></li>
@@ -489,7 +499,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Storage.html">4. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Creating a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
@@ -501,8 +511,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">4.3. Increase size</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. Append</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. Resize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. resize</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
@@ -511,69 +521,76 @@
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. Save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Scalar.html">5. Scalar</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a scalar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a Scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#change-data-type">5.2. Change data type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#application-scenarios">5.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor Notation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor Contraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bond">6.2. Direction of bond</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor notation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor contraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bonds">6.2. Direction of bonds</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../uniten.html">7. UniTensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.1. Create UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#construct-from-tensor">7.1.1. Construct from Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.1.2. From scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/print.html">7.1. Print and display</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-diagram">7.1.1. print_diagram()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-block">7.1.3. print_block()</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.2. Change labels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.2. Creating a UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.2.2. From scratch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.3. Tagged UniTensors and UniTensors with Symmetries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#create-unitensor-with-different-labels-that-share-data">7.2.1. Create UniTensor with different labels that share data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.3. Bond</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.3.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#create-bond-with-qnums">7.3.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combine-bonds">7.3.3. Combine Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.4. Tagged UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.4.1. Non-symmetric Tagged UniTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.5. Tagged UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.5.1. Non-symmetric Tagged UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.5. UniTensor with Symmetry</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.6. UniTensor with Symmetries</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.6. Accessing the block(s)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.6.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.6.2. UniTensor with symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.6.3. Putting a block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.7. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.7.3. Putting a block</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.7. Get/set UniTensor element</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.8. Get/set UniTensor element</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.8.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.8.2. UniTensor with symmetries</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.8. Manipulate UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.8.1. permute:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.8.2. reshape:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.8.3. Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.8.4. rowrank</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.9. Manipulate UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.9.1. permute:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.9.2. reshape:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.9.3. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.9.4. rowrank</a></li>
 </ul>
 </li>
 </ul>
@@ -662,7 +679,6 @@
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../FAQ.html">FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Developer.html">Developer</a></li>
 </ul>
 
@@ -672,7 +688,7 @@
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="Tensor_3_access.html"
-                          title="previous chapter"><span class="section-number">3.3. </span>Access elements</a></p>
+                          title="previous chapter"><span class="section-number">3.3. </span>Accessing elements</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
@@ -702,7 +718,7 @@
             
   <section id="tensor-arithmetic">
 <h1><span class="section-number">3.4. </span>Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Permalink to this heading">¶</a></h1>
-<p>In Cytnx, arithmetic operations such as <strong>+, -, x, /, +=, -=, *=, /=</strong> can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python.</p>
+<p>In Cytnx, arithmetic operations such as <strong>+, -, *, /, +=, -=, *=, /=</strong> can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. See also <a class="reference internal" href="../linalg.html#linear-algebra"><span class="std std-ref">Linear algebra</span></a> for a list of arithmetic operations and further linear algebra functions.</p>
 <section id="type-promotion">
 <h2><span class="section-number">3.4.1. </span>Type promotion<a class="headerlink" href="#type-promotion" title="Permalink to this heading">¶</a></h2>
 <p>Arithmetic operations in Cytnx follow a similar pattern of type promotion as standard C++/Python.
@@ -726,32 +742,32 @@ When an arithmetic operation between a Tensor and another Tensor or scalar is pe
 </section>
 <section id="tensor-scalar-arithmetic">
 <h2><span class="section-number">3.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this heading">¶</a></h2>
-<p>Arithmetic operations between a Tensor and a scalar can be performed.
+<p>Several arithmetic operations between a Tensor and a scalar are possible.
 For example:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-<span class="linenos">2</span>    <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span>    <span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">4</span>
-<span class="linenos">5</span>    <span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">4</span>
+<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
 <span class="linenos">6</span>
-<span class="linenos">7</span>    <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="mi">7</span><span class="n">j</span> <span class="c1"># type promotion</span>
-<span class="linenos">8</span>    <span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="mi">7</span><span class="n">j</span> <span class="c1"># type promotion</span>
+<span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">});</span>
-<span class="linenos">2</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">});</span>
+<span class="linenos">2</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
-<span class="linenos">5</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 <span class="linenos">6</span>
-<span class="linenos">7</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span><span class="w"> </span><span class="c1">//type promotion</span>
-<span class="linenos">8</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">7</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span><span class="w"> </span><span class="c1">//type promotion</span>
+<span class="linenos">8</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -790,27 +806,27 @@ For example:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>    <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
-<span class="linenos">2</span>    <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span>    <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
-<span class="linenos">5</span>    <span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="linenos">4</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
+<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
 <span class="linenos">6</span>
-<span class="linenos">7</span>    <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
-<span class="linenos">8</span>    <span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<span class="linenos">7</span><span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
+<span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">2</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="linenos">2</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="p">.</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
-<span class="linenos">5</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="p">.</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
+<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 <span class="linenos">6</span>
-<span class="linenos">7</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">;</span>
-<span class="linenos">8</span><span class="w">    </span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<span class="linenos">7</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">;</span>
+<span class="linenos">8</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>Output&gt;&gt;</p>
@@ -841,6 +857,10 @@ Shape : (3,4)
  [3.20000e+01 3.60000e+01 4.00000e+01 4.40000e+01 ]]
 </pre></div>
 </div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>An elementwise multiplication is applied if the operator <strong>‘*’</strong> is used. For tensor contractions or matrix multiplications, see <a class="reference internal" href="../contraction.html#contraction"><span class="std std-ref">Contraction</span></a>.</p>
+</div>
 </section>
 <section id="equivalent-apis-c-only">
 <h2><span class="section-number">3.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Permalink to this heading">¶</a></h2>
@@ -849,21 +869,21 @@ For example, there are two different ways to perform the + operation: <strong>Te
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span>
-<span class="linenos">2</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span>
+<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
 <span class="linenos">3</span>
-<span class="linenos">4</span><span class="w">    </span><span class="c1">// these two are equivalent to C = A+B;</span>
-<span class="linenos">5</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
-<span class="linenos">6</span><span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
+<span class="linenos">4</span><span class="c1">// these two are equivalent to C = A+B;</span>
+<span class="linenos">5</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+<span class="linenos">6</span><span class="k">auto</span><span class="w"> </span><span class="n">D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
 <span class="linenos">7</span>
-<span class="linenos">8</span><span class="w">    </span><span class="c1">// this is equivalent to A+=B;</span>
-<span class="linenos">9</span><span class="w">    </span><span class="n">A</span><span class="p">.</span><span class="n">Add_</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+<span class="linenos">8</span><span class="c1">// this is equivalent to A+=B;</span>
+<span class="linenos">9</span><span class="n">A</span><span class="p">.</span><span class="n">Add_</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
-<li><p>All the arithmetic operation functions such as <strong>Add,Sub,Mul,Div…</strong>, as well as the linear algebra functions all start with capital characters. Beware, since they all start with lower-case characters in pytorch.</p></li>
+<li><p>All the arithmetic functions such as <strong>Add,Sub,Mul,Div…</strong>, as well as the linear algebra functions all start with capital characters. Beware, since they all start with lower-case characters in pytorch.</p></li>
 <li><p>All the arithmetic operations with an underscore (such as <strong>Add_, Sub_, Mul_, Div_</strong>) are inplace versions that modify the current instance.</p></li>
 </ol>
 </div>

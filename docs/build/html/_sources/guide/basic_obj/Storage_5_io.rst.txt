@@ -58,7 +58,7 @@ Output>>
     [ 6.00000e+00 6.00000e+00 6.00000e+00 6.00000e+00 ]
 
 
-save & load from/to binary
+Save & load from/to binary
 **************************
 We can also save all the elements in a binary file without any additional header information associated to the storage format. This is similar to numpy.tofile/numpy.fromfile.
 

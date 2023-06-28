@@ -97,7 +97,7 @@ The function **Tensor.reshape_** (with a underscore) performs a reshape as well,
       [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
       [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
 
-Thus we see that using the underscore version modifies the original tensor itself. 
+Thus, we see that using the underscore version modifies the original Tensor itself. 
 
 
 .. Note::
@@ -110,7 +110,7 @@ Thus we see that using the underscore version modifies the original tensor itsel
 
 permute
 **********************
-Now, let's again use the same rank-3  with shape=(2,3,4) as an example. This time we want to permute the order of the Tensor indices according to (0,1,2)->(1,2,0)
+Let's consider the same rank-3 Tensor with shape=(2,3,4) as an example. This time we want to permute the order of the Tensor indices according to (0,1,2)->(1,2,0)
 
 This can be achieved with **Tensor.permute** 
 
@@ -176,7 +176,7 @@ This can avoid the redundant moving of elements. Note that this approach is also
 
 After the permute, the meta-data does not correspond to the memory order anymore. If the meta-data is distached that way from the real memory layout, we call the Tensor in this status *non-contiguous*. We can use **Tensor.is_contiguous()** to check if the current Tensor is in contiguous status. 
 
-You can force the Tensor to return to it's contiguous status by calling **Tensor.contiguous()/Tensor.contiguous_()**, although generally you don't have to worry about contiguous, as Cytnx automatically handles it for you. 
+You can force the Tensor to become contiguous by calling **Tensor.contiguous()** or **Tensor.contiguous_()**. The memory is then rearranged according to the shape of the Tensor. Generally you do not have to worry about the contiguous status, as Cytnx automatically handles it for you.
 
 
 * In Python:
@@ -248,7 +248,11 @@ Output>>
 
     1. Generally, you don't have to worry about contiguous issues. You can access the elements and call linalg just like this contiguous/non-contiguous property does not exist. 
     
-    2. In the case where the function does require user to manually force the Tensor to be contiguous, a warning will be prompted, and you can simply add a **Tensor.contiguous()/.contiguous_()** before the function call. 
+    2. In cases where a function does require the user to manually force the Tensor to be contiguous, a warning will be prompted, and you can simply add a **Tensor.contiguous()** or **Tensor.contiguous_()** before the function call.
+
+    3. Making a Tensor contiguous involves copying the elements in memory and can slow down the algorithm. Unnecessary calls of **Tensor.contiguous()** or **Tensor.contiguous_()** should therefore be avoided.
+    
+    4. See :ref:`Contiguous` for more details about the contiguous status.
 
     
 .. Note::

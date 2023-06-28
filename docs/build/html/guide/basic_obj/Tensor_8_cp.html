@@ -90,11 +90,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">3. Tensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Creating a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#initialized-tensor">3.1.1. Initialized Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#random-tensor">3.1.2. Random Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.3. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.4. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.5. Transfer between devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.6. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
@@ -102,7 +104,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Accessing elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
@@ -118,7 +120,7 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">3.5. To/From numpy.array</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Append elements</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Appending elements</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_7_io.html">3.7. Save/Load</a><ul>
@@ -127,7 +129,7 @@
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">3.8. When will data be copied?</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#reference-copy-of-object">3.8.1. Reference &amp; Copy of object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference-to-copy-of-objects">3.8.1. Reference to &amp; Copy of objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#permute">3.8.2. Permute</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#contiguous">3.8.3. Contiguous</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#reshape">3.8.4. Reshape</a></li>
@@ -136,7 +138,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Storage.html">4. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Creating a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
@@ -148,8 +150,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">4.3. Increase size</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. Append</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. Resize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. resize</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
@@ -158,69 +160,76 @@
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. Save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Scalar.html">5. Scalar</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a scalar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a Scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#change-data-type">5.2. Change data type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#application-scenarios">5.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor Notation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor Contraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bond">6.2. Direction of bond</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor notation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor contraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bonds">6.2. Direction of bonds</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../uniten.html">7. UniTensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.1. Create UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#construct-from-tensor">7.1.1. Construct from Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.1.2. From scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/print.html">7.1. Print and display</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-diagram">7.1.1. print_diagram()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-block">7.1.3. print_block()</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.2. Change labels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.2. Creating a UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.2.2. From scratch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.3. Tagged UniTensors and UniTensors with Symmetries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#create-unitensor-with-different-labels-that-share-data">7.2.1. Create UniTensor with different labels that share data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.3. Bond</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.3.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#create-bond-with-qnums">7.3.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combine-bonds">7.3.3. Combine Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.4. Tagged UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.4.1. Non-symmetric Tagged UniTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.5. Tagged UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.5.1. Non-symmetric Tagged UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.5. UniTensor with Symmetry</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.6. UniTensor with Symmetries</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.6. Accessing the block(s)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.6.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.6.2. UniTensor with symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.6.3. Putting a block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.7. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.7.3. Putting a block</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.7. Get/set UniTensor element</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.8. Get/set UniTensor element</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.8.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.8.2. UniTensor with symmetries</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.8. Manipulate UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.8.1. permute:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.8.2. reshape:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.8.3. Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.8.4. rowrank</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.9. Manipulate UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.9.1. permute:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.9.2. reshape:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.9.3. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.9.4. rowrank</a></li>
 </ul>
 </li>
 </ul>
@@ -309,7 +318,6 @@
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../FAQ.html">FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Developer.html">Developer</a></li>
 </ul>
 
@@ -443,11 +451,13 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="Tensor.html">3. Tensor</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Create a Tensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.1. Tensor with different dtype and device</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.2. Type conversion</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.3. Transfer between devices</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.4. Tensor from Storage [v0.6.6+]</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_1_create.html">3.1. Creating a Tensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#initialized-tensor">3.1.1. Initialized Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#random-tensor">3.1.2. Random Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-with-different-dtype-and-device">3.1.3. Tensor with different dtype and device</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#type-conversion">3.1.4. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#transfer-between-devices">3.1.5. Transfer between devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Tensor_1_create.html#tensor-from-storage-v0-6-6">3.1.6. Tensor from Storage [v0.6.6+]</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_2_manip.html">3.2. Manipulating Tensors</a><ul>
@@ -455,7 +465,7 @@
 <li class="toctree-l4"><a class="reference internal" href="Tensor_2_manip.html#permute">3.2.2. permute</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Access elements</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Tensor_3_access.html">3.3. Accessing elements</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#get-elements">3.3.1. Get elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#set-elements">3.3.2. Set elements</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Tensor_3_access.html#low-level-api-c-only">3.3.3. Low-level API (C++ only)</a></li>
@@ -471,7 +481,7 @@
 <li class="toctree-l3"><a class="reference internal" href="Tensor_5_numpy.html">3.5. To/From numpy.array</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Append elements</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="Tensor_6_app.html">3.6. Appending elements</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Tensor_7_io.html">3.7. Save/Load</a><ul>
@@ -480,7 +490,7 @@
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">3.8. When will data be copied?</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#reference-copy-of-object">3.8.1. Reference &amp; Copy of object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#reference-to-copy-of-objects">3.8.1. Reference to &amp; Copy of objects</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#permute">3.8.2. Permute</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#contiguous">3.8.3. Contiguous</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#reshape">3.8.4. Reshape</a></li>
@@ -489,7 +499,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Storage.html">4. Storage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Create a Storage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Storage_1_create.html">4.1. Creating a Storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#type-conversion">4.1.1. Type conversion</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#transfer-between-devices">4.1.2. Transfer between devices</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_1_create.html#get-storage-of-tensor">4.1.3. Get Storage of Tensor</a></li>
@@ -501,8 +511,8 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_3_expand.html">4.3. Increase size</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. Append</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. Resize</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#append">4.3.1. append</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_3_expand.html#resize">4.3.2. resize</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
@@ -511,69 +521,76 @@
 <li class="toctree-l3"><a class="reference internal" href="Storage_5_io.html">4.5. Save/Load</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. save &amp; load from/to binary</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Storage_5_io.html#save-load-from-to-binary">4.5.3. Save &amp; load from/to binary</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Scalar.html">5. Scalar</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a scalar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Scalar.html#define-declare-a-scalar">5.1. Define/Declare a Scalar</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#change-data-type">5.2. Change data type</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Scalar.html#application-scenarios">5.3. Application scenarios</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor Notation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor Contraction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bond">6.2. Direction of bond</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="../TNotation.html">6. Tensor notation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#tensor-contraction">6.1. Tensor contraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../TNotation.html#direction-of-bonds">6.2. Direction of bonds</a><ul class="simple">
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../uniten.html">7. UniTensor</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.1. Create UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#construct-from-tensor">7.1.1. Construct from Tensor</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.1.2. From scratch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/print.html">7.1. Print and display</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-diagram">7.1.1. print_diagram()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/print.html#print-block">7.1.3. print_block()</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.2. Change labels</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/create.html">7.2. Creating a UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#from-scratch">7.2.2. From scratch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.3. Tagged UniTensors and UniTensors with Symmetries</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#create-unitensor-with-different-labels-that-share-data">7.2.1. Create UniTensor with different labels that share data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.3. Bond</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.3.1. Symmetry object</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#create-bond-with-qnums">7.3.2. Create Bond with Qnums</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combine-bonds">7.3.3. Combine Bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.4. Tagged UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.4.1. Non-symmetric Tagged UniTensor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/tagged.html">7.5. Tagged UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/tagged.html#non-symmetric-tagged-unitensor">7.5.1. Non-symmetric Tagged UniTensor</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.5. UniTensor with Symmetry</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../uniten/symmetric.html">7.6. UniTensor with Symmetries</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.6. Accessing the block(s)</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.6.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.6.2. UniTensor with symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.6.3. Putting a block</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/blocks.html">7.7. Accessing the block(s)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/blocks.html#putting-a-block">7.7.3. Putting a block</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.7. Get/set UniTensor element</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/elements.html">7.8. Get/set UniTensor element</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-without-symmetries">7.8.1. UniTensor without symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/elements.html#unitensor-with-symmetries">7.8.2. UniTensor with symmetries</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.8. Manipulate UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.8.1. permute:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.8.2. reshape:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.8.3. Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.8.4. rowrank</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uniten/manipulation.html">7.9. Manipulate UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#permute">7.9.1. permute:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#reshape">7.9.2. reshape:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#arithmetic">7.9.3. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uniten/manipulation.html#rowrank">7.9.4. rowrank</a></li>
 </ul>
 </li>
 </ul>
@@ -662,7 +679,6 @@
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../FAQ.html">FAQs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Developer.html">Developer</a></li>
 </ul>
 
@@ -708,12 +724,12 @@
 <p>Two important concepts need to be distinguished: the Tensor <strong>object</strong> itself, and the things that are stored inside a Tensor object. Each Tensor object contains two ingredients:</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li><p>the <strong>meta</strong> contains all the data that describe the attributes of the Tensor, like the shape and the number of elements</p></li>
-<li><p>a <strong>Storage</strong> that contains the data (the actual tensor elements) which are stored in memory.</p></li>
+<li><p>The <strong>meta</strong> contains all the data that describe the attributes of the Tensor, like the shape and the number of elements.</p></li>
+<li><p>A <strong>Storage</strong> that contains the data (the actual tensor elements) which are stored in memory.</p></li>
 </ol>
 </div></blockquote>
-<section id="reference-copy-of-object">
-<h2><span class="section-number">3.8.1. </span>Reference &amp; Copy of object<a class="headerlink" href="#reference-copy-of-object" title="Permalink to this heading">¶</a></h2>
+<section id="reference-to-copy-of-objects">
+<h2><span class="section-number">3.8.1. </span>Reference to &amp; Copy of objects<a class="headerlink" href="#reference-to-copy-of-objects" title="Permalink to this heading">¶</a></h2>
 <p>One of the most important features in Python is the <em>referencing</em> of objects. All the Cytnx objects follow the same behavior:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
@@ -739,8 +755,8 @@
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>True
 </pre></div>
 </div>
-<p>Here, <strong>B</strong> is a reference of <strong>A</strong>, so essentially <strong>B</strong> and <strong>A</strong> are the same object. We can use <strong>is</strong> to check if two objects are the same. Since they are the same object, all the change made to <strong>B</strong> will affect <strong>A</strong> as well.</p>
-<p>To really create a copy of <strong>A</strong>, we can use the <strong>clone()</strong> method. <strong>clone()</strong> creates a new object with copied meta data and a newly allocated <strong>Storage</strong> with the same content as the storage of <strong>A</strong>:</p>
+<p>Here, <strong>B</strong> is a reference to <strong>A</strong>, so essentially <strong>B</strong> and <strong>A</strong> are the same object. We can use <strong>is</strong> to check if two objects are the same. Since they are the same object, all changes made to <strong>B</strong> will affect <strong>A</strong> as well.</p>
+<p>To really create a copy of <strong>A</strong>, we can use the <strong>clone()</strong> method. <strong>clone()</strong> creates a new object with copied meta data and a newly allocated <strong>Storage</strong> with the same content as the Storage of <strong>A</strong>:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
@@ -925,7 +941,7 @@ Shape : (2,4,3)
 False
 </pre></div>
 </div>
-<p>We can make a contiguous Tensor <strong>C</strong> that has the same shape as <strong>B</strong> by calling <strong>contiguous()</strong>. Creating such a contiguous Tensor requires moving the elements in memory to their right position, matching the shape of Tensor.</p>
+<p>We can make a contiguous Tensor <strong>C</strong> that has the same shape as <strong>B</strong> by calling <strong>contiguous()</strong>. Creating such a contiguous Tensor requires moving the elements in memory to their right position, matching the shape of the Tensor.</p>
 <a class="reference internal image-reference" href="../../_images/Tncontg.png"><img alt="../../_images/Tncontg.png" class="align-center" src="../../_images/Tncontg.png" style="width: 650px;" /></a>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">C</span> <span class="o">=</span> <span class="n">B</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>
 <span class="linenos">2</span>
@@ -968,7 +984,10 @@ False
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<p>We can also make <strong>B</strong> itself contiguous by calling <strong>B.contiguous_()</strong> (with underscore). Notice that this will create a new internal storage for <strong>B</strong>, so after calling <strong>B.contiguous_()</strong>, <strong>B.same_data(A)</strong> will be false!</p>
+<ol class="arabic simple">
+<li><p>We can also make <strong>B</strong> itself contiguous by calling <strong>B.contiguous_()</strong> (with underscore). Notice that this will create a new internal Storage for <strong>B</strong>, so after calling <strong>B.contiguous_()</strong>, <strong>B.same_data(A)</strong> will be false!</p></li>
+<li><p>Making a Tensor contiguous involves copying the elements in memory and can slow down the algorithm. Unnecessary calls of <strong>Tensor.contiguous()</strong> or <strong>Tensor.contiguous_()</strong> should therefore be avoided.</p></li>
+</ol>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -977,9 +996,9 @@ False
 </section>
 <section id="reshape">
 <h2><span class="section-number">3.8.4. </span>Reshape<a class="headerlink" href="#reshape" title="Permalink to this heading">¶</a></h2>
-<p>Reshape is an operation that combines/splits indices of a Tensor while keeping the same total number of elements. <strong>Tensor.reshape()</strong> always creates a new object, but whether the internal storage is shared or not follows the rules:</p>
+<p>Reshape is an operation that combines/splits indices of a Tensor while keeping the same total number of elements. <strong>Tensor.reshape()</strong> always creates a new object, but whether the internal Storage is shared or not follows the rules:</p>
 <ol class="arabic simple">
-<li><p>If the Tensor object is in <em>contiguous</em> status, then only the <em>meta</em> is changed, and the storage is shared</p></li>
+<li><p>If the Tensor object is in <em>contiguous</em> status, then only the <em>meta</em> is changed, and the Storage is shared</p></li>
 <li><p>If the Tensor object is in <em>non-contiguous</em> status, then the <em>contiguous()</em> will be called first before the <em>meta</em> will be changed.</p></li>
 </ol>
 <div class="toctree-wrapper compound">

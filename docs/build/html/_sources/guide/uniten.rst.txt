@@ -1,8 +1,8 @@
 UniTensor
 =================
-Besides the generic tensor structure, Cytnx provides further objects that are designed specifically for tensor network simulations, based on the **cytnx.Tensor** class.
+Besides the generic Tensor structure, Cytnx provides further objects that are designed specifically for tensor network simulations, based on the **cytnx.Tensor** class.
 
-**UniTensor** is an enhanced version of **cytnx.Tensor** which provides features such as labels for each index (which we call "bond") and Bra/Ket (In/Out) convention of bonds. These features are handy for contractions of multiple tensors, as well as for the implementation of Tensor network diagrams. 
+**UniTensor** is an enhanced version of **cytnx.Tensor** which provides features such as labels for each index (which we call "bond") and Bra/Ket (In/Out) convention of bonds. These features are handy for contractions of multiple tensors, as well as for the implementation of ensor network diagrams. Also, symmetries can be included.
 
 A **UniTensor** consist of three important parts: 
 
@@ -15,7 +15,7 @@ A **UniTensor** consist of three important parts:
 
 2. Bonds, which contain the information associated to each index of the tensor. 
 
-3. labels, which give each bond a name with which it can be accessed. 
+3. Labels, which give each bond a name by which it can be accessed. 
 
 
 
@@ -27,6 +27,7 @@ In the following, let's look into these objects:
 .. toctree::
     :maxdepth: 3
 
+    uniten/print.rst
     uniten/create.rst
     uniten/labels.rst
     uniten/bond.rst

@@ -7,7 +7,7 @@ Scalar is a generic data type which can hold various data types in C++.
 In Python, the data type of any variable is dynamic, i.e. it can be changed at any time. In contrast to this, C++ data types are static and cannot be changed once they are declared. In the C++/Python cross-platform library Cytnx, we provide a generic data type Scalar on the C++ side which allows variables to be used like dynamic data types in Python, with all the convenience and advantages related to this. 
 
 
-Define/Declare a scalar
+Define/Declare a Scalar
 *************************
 Defining a Scalar is straight forward. One can convert directly from a supported standard C++ Type to a Scalar. 
 
@@ -153,7 +153,7 @@ Application scenarios
 **********************
 The Scalar type allows for many possibilities in C++ that are otherwise hard to achieve. We will consider some examples in the following.
 
-* 1. If we want to have a list (vector) with elements having different data types, we can use *tuple*s in C++. However, that requires the number of elements and data types to be known and fixed a priori. Using scalar, we can also create a vector with a variable number of elements and variable data types:
+* 1. If we want to have a list (vector) with elements having different data types, we can use *tuple* objects in C++. However, that requires the number of elements and data types to be known and fixed a priori. Using Scalar, we can also create a vector with a variable number of elements and variable data types:
 
 .. code-block:: c++
     :linenos:
