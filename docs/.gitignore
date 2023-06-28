@@ -2,3 +2,5 @@
 *.DS_Store
 *.vscode
 *.python_version
+.python_version
+source/__pycache__/*
