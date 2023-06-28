@@ -1,5 +1,5 @@
-Append elements
------------------
+Appending elements
+-------------------
 The size of a Tensor can be expanded using **Tensor.append**. 
 
 One can append a scalar to a rank-1 Tensor.

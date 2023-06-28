@@ -35,9 +35,9 @@ We implement the diagram as a .net file to represent the contraction task:
 
 Note that:
 
-1. The labels above correspond to the diagram you draw, not the label attribute of UniTensor objects. Both label conventions can but do not have to be the same.
+1. The labels above correspond to the diagram you draw, not the label attribute of UniTensor objects. Both label conventions can, but do not have to be the same.
    
-2. Labels should be seperated by ' , '. A ' ; ' seperates the labels in rowspace and colspace. In the above case all bonds are in the colspace.
+2. Labels should be separated by ' , '. In TOUT, a ' ; ' separates the labels in rowspace and colspace.
    
 3. TOUT specifies the output configuration, in this case we leave it blank since the result will be a scalar.
    
@@ -52,11 +52,18 @@ We use the .net file to create a Network. Then, we can load instances of UniTens
 .. code-block:: python
     :linenos:
 
-    N = Network("ctm.net")
-    N.PutUniTensor("c0",c0)
-    N.PutUniTensor("t0",t0)
-    print(N)
-    N.PutUniTensor("c1",c1)
+    # initialize tensors
+    c0 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
+    c1 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
+    t0 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
+    # and so on...
+
+    # put tensors
+    net = cytnx.Network("ctm.net")
+    net.PutUniTensor("c0",c0)
+    net.PutUniTensor("t0",t0)
+    print(net)
+    net.PutUniTensor("c1",c1)
     # and so on...
 
 * In C++:
@@ -64,11 +71,11 @@ We use the .net file to create a Network. Then, we can load instances of UniTens
 .. code-block:: c++
     :linenos:
 
-    Network N = Network("ctm.net");
-    N.PutUniTensor("c0",c0);
-    N.PutUniTensor("t0",t0);
-    cout << N;
-    N.PutUniTensor("c1",c1)
+    Network net = cytnx.Network("ctm.net");
+    net.PutUniTensor("c0", c0);
+    net.PutUniTensor("t0", t0);
+    cout << net;
+    net.PutUniTensor("c1", c1)
     // and so on...
 
 Output >> 
@@ -95,21 +102,22 @@ To perform the contraction and get the outcome, we use the Launch():
 .. code-block:: python
     :linenos:
 
-    Res = N.Launch(optimal = True)
+    Res = net.Launch(optimal = True)
 
 * In C++:
 
 .. code-block:: c++
     :linenos:
 
-    UniTensor Res = N.Launch(true)
+    UniTensor Res = net.Launch(true)
 
 Here if the argument **optimal = True**, the contraction order is always auto-optimized.
 If **optimal = False**, the specified ORDER in the .net file will be used. If ORDER is not specified, the order of the tensor definitions in the .net file is used.
 
 
 .. Note::
-    The auto-optimized contraction order obtained by calling **.Launch(optimal = True)** will save in the Network object with the optimized order. If there is no need to re-optimize the order (i.e. the order of the bond dimensions of the input tensors remain the same.), we can put new tensors and call **.Launch()** again with **optimal = False**. In this case, the optimized order is reused, which avoids the overhead of recalculating the optimal order.
+    1. The auto-optimized contraction order obtained by calling **.Launch(optimal = True)** is saved in the Network object. If there is no need to re-optimize the order (i.e. the bond dimensions of the input tensors remain (approximately) the same.), we can put new tensors and call **.Launch()** again with **optimal = False**. In this case, the optimized order is reused, which avoids the overhead of recalculating the optimal order.
+    2. The indices of the UniTensors to be put into the Network need to be ordered according to the indices in the .net file. Otherwise, the index order can be defined in PutTensor explicitly, see :ref:`PutUniTensor according to label ordering` below.
 
 Network from string
 --------------------------
@@ -120,20 +128,20 @@ Alternatively, we can implement the contraction directly in the program with Fro
 .. code-block:: python
     :linenos:
 
-    N = cytnx.Network()
-    N.FromString(["c0: t0-c0, t3-c0",\
-                "c1: t1-c1, t0-c1",\
-                "c2: t2-c2, t1-c2",\
-                "c3: t3-c3, t2-c3",\
-                "t0: t0-c1, w-t0, t0-c0",\
-                "t1: t1-c2, w-t1, t1-c1",\
-                "t2: t2-c3, w-t2, t2-c2",\
-                "t3: t3-c0, w-t3, t3-c3",\
-                "w: w-t0, w-t1, w-t2, w-t3",\
-                "TOUT:",\
-                "ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)"])
+    net = cytnx.Network()
+    net.FromString(["c0: t0-c0, t3-c0",\
+                    "c1: t1-c1, t0-c1",\
+                    "c2: t2-c2, t1-c2",\
+                    "c3: t3-c3, t2-c3",\
+                    "t0: t0-c1, w-t0, t0-c0",\
+                    "t1: t1-c2, w-t1, t1-c1",\
+                    "t2: t2-c3, w-t2, t2-c2",\
+                    "t3: t3-c0, w-t3, t3-c3",\
+                    "w: w-t0, w-t1, w-t2, w-t3",\
+                    "TOUT:",\
+                    "ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)"])
 
-This approach should be convenient when you do not want to maintain the .net file outside the program.
+This approach can be convenient if you do not want to maintain the .net file outside the program file.
 
 PutUniTensor according to label ordering
 ------------------------------------------
@@ -146,9 +154,9 @@ When we put a UniTensor into a Network, we can also specify its leg order by the
     :linenos:
 
     A = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    A.relabels_(["phy","left","right"])
+    A.relabels_(["phy", "left", "right"])
     B = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    B.relabels_(["phy","left","right"])
+    B.relabels_(["phy", "left", "right"])
 
 The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2, corresponding to a spin-half chain) and the other two legs are
 the internal bonds (with bond dimension 8).
@@ -160,10 +168,10 @@ If we want to contract the physical legs of the two tensors, we can create the f
 .. code-block:: python
     :linenos:
 
-    N = cytnx.Network()
-    N.FromString(["T0: v0in, phy, v0out",\
-                "T1: v1in, phy, v1out",\
-                "TOUT: v0in, v1in; v0out, v1out"])
+    net = cytnx.Network()
+    net.FromString(["T0: v0in, phy, v0out",\
+                    "T1: v1in, phy, v1out",\
+                    "TOUT: v0in, v1in; v0out, v1out"])
 
 Note that this Network uses the convention that the second legs of the tensors are contracted. This is not consistent with the index ordering of **A** and **B**, which have the physical leg in the first position. However, if we specify the labels when we put the tensors, we do not have to worry about the index order:
 
@@ -173,9 +181,9 @@ Note that this Network uses the convention that the second legs of the tensors a
 .. code-block:: python
     :linenos:
 
-    N.PutUniTensor("T0",A,["left","phy","right"])
-    N.PutUniTensor("T1",B,["left","phy","right"])
-    Tout=N.Launch()
+    net.PutUniTensor("T0", A, ["left", "phy", "right"])
+    net.PutUniTensor("T1", B, ["left", "phy", "right"])
+    Tout=net.Launch()
     Tout.print_diagram()
 
 Output >> 

@@ -1,5 +1,9 @@
-Create a Tensor
+Creating a Tensor
 -------------------
+When creating a Tensor, its elements are initialized with either fixed values, random elements, or from existing data.
+
+Initialized Tensor
+************************
 Just like with :numpy-arr:`numpy.array <>` / :torch-tn:`torch.tensor <>`, a Tensor is generally created using a generator such as **zero()**, **arange()**, **ones()** or **eye()**.
 
 For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and initialize all elements with zero:
@@ -52,12 +56,37 @@ Tensors can also be created and initialized with **arange()** (similar as np.ara
 
 :Tips: In C++, you can make use of *auto* to simplify your code! 
 
+Random Tensor
+************************
+Often, Tensors shall be initialized with random values. This can be achieved with **random.normal** (normal or Gaussian distribution) and **random.uniform** (uniform distribution):
+
+* In Python : 
+
+.. code-block:: python 
+    :linenos:
+
+    A = cytnx.random.normal([3,4,5], mean=0., std=1.)   #Tensor of shape (3,4,5) with all elements distributed according
+                                                        #to a normal distribution around 0 with standard deviation 1
+    B = cytnx.random.uniform([3,4,5], low=-1., high=1.) #Tensor of shape (3,4,5) with all elements distributed uniformly
+                                                        #between -1 and 1
+    
+
+* In C++:
+
+.. code-block:: c++
+    :linenos:
+
+    auto A = cytnx::random::normal({3,4,5}, 0., 1.);    //Tensor of shape (3,4,5) with all elements distributed according
+                                                        //to a normal distribution around 0 with standard deviation 1
+    auto B = cytnx::random::uniform({3,4,5}, -1., 1.);  //Tensor of shape (3,4,5) with all elements distributed uniformly
+                                                        //between -1 and 1
+
 
 Tensor with different dtype and device 
 *******************************************
-By default, the Tensor will be created with *double* type (or *float* in Python) on CPU if there is no additional arguments provided upon creating the Tensor. 
+By default, a Tensor will be created with elements of type *double* (or *float* in Python) on the CPU if there are no additional arguments provided upon creating the Tensor. 
 
-You can create a Tensor with a different data type, and/or on different devices simply by specifying the **dtype** and the **device** arguments upon initialization. For example, the following codes create a Tensor with 64bit integer on a cuda-enabled GPU. 
+You can create a Tensor with a different data type, and/or on different devices simply by specifying the **dtype** and the **device** arguments upon initialization. For example, the following code creates a Tensor with 64bit integer elements on a cuda-enabled GPU:
 
 * In Python:
 
@@ -71,11 +100,12 @@ You can create a Tensor with a different data type, and/or on different devices 
 
     auto A = cytnx.zeros({3,4,5},cytnx::Type.Int64,cytnx::Device.cuda);
 
-.. Note:: 
 
-in 
-    1. Remember the difference between . in Python and :: in C++ when you use Type and Device classes. 
-    2. If you have multiple GPUs, you can specify on which GPU you want to init the Tensor by adding the gpu-id to cytnx::Device::cuda. 
+.. Note:: 
+    
+    1. Remember to switch between '.' in Python and '::' in C++ when you use Type and Device classes. 
+    
+    2. If you have multiple GPUs, you can specify on which GPU you want to initialize the Tensor by adding the gpu-id to cytnx::Device::cuda. 
         
         For example: 
         
@@ -83,7 +113,7 @@ in
 
             device=cytnx.Device.cuda+4   #will create the Tensor on GPU id=4
 
-    3. In C++, there is no keyword argument as Python, so make sure you put the arguments in the correct order. Check `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!  
+    3. In C++, there are no keyword arguments as Python, so make sure you put the arguments in the correct order. Check the `API documentation <https://kaihsin.github.io/Cytnx/docs/html/index.html>`_ for function signatures!  
 
 
 Currently, there are several data types supported by Cytnx:
@@ -133,7 +163,7 @@ Type conversion
 **********************
 It is possible to convert a Tensor to a different data type. To convert the data type, simply use **Tensor.astype()**.
 
-For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to convert it to **Type.Double**
+For example, consider a Tensor *A* with **dtype=Type.Int64**, which shall be converted to **Type.Double**:
 
 * In Python:
 
@@ -167,14 +197,14 @@ For example, consider a Tensor *A* with **dtype=Type.Int64**, and we want to con
 .. Note::
     
     1. Tensor.dtype() returns a type-id, while Tensor.dtype_str() returns the type name. 
-    2. A complex data type cannot directly be converted to a real data type. Use Tensor.real()/Tensor.imag() if you want to get the real/imag part.
+    2. A complex data type cannot directly be converted to a real data type. Use Tensor.real() or Tensor.imag() if you want to get the real or imaginary part.
 
 
 Transfer between devices
 ***************************
 Moving a Tensor between different devices is very easy. We can use **Tensor.to()** to move the Tensor to a different device.
 
-For example, let's create a Tensor on the cpu and transfer it to the GPU with gpu-id=0. 
+For example, let's create a Tensor in the memory accessible by the CPU and transfer it to the GPU with gpu-id=0. 
 
 * In Python:
 
@@ -232,7 +262,7 @@ For example, let's create a Tensor on the cpu and transfer it to the GPU with gp
 
 .. Note::
     
-    1. You can use **Tensor.device()** to get the current device-id (cpu = -1), where as **Tensor.device_str()** returns the device name. 
+    1. You can use **Tensor.device()** to get the current device-id (cpu = -1), whereas **Tensor.device_str()** returns the device name. 
 
     2. **Tensor.to()** will return a copy on the target device. If you want to move the current Tensor to another device, use **Tensor.to_()** (with underscore). 
 
@@ -271,9 +301,7 @@ Tensor from Storage [v0.6.6+]
 
 .. Note::
 
-    Note that this will create a wrapping around input storage, and the created Tensor and input storage share the same memory. To actually create independent memory, use **storage.clone()**
-
-
+    Note that this will create a wrapping of the Storage in a Tensor. The created Tensor and the input storage share the same memory. To create independent memory for the Tensor data, use **storage.clone()**
 
 
 .. toctree::

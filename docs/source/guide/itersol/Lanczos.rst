@@ -1,10 +1,8 @@
 Lanczos solver
 ----------------
-Currently (v0.5.5a), Cytnx solves the eigenvalue problem for a custom linear operator defined using the **LinOp** class by using the Lanczos iterative solver.
+In Cytnx, an eigenvalue problem can be solved for a custom linear operator defined using the **LinOp** class by using the Lanczos iterative solver.
 
-For this, you can pass either the **LinOp** itself or any of its interitance object to **linalg.Lanczos_ER**
-
-* Lanczos_ER signature:
+For this, you can pass a **LinOp** or any of its child classes to **linalg.Lanczos_ER**:
 
 .. py:function:: Lanczos_ER(Hop, k=1, is_V=true, maxiter=10000,\
                 CvgCrit=1.0e-14, is_row=false, Tin=Tensor(), max_krydim=4)
@@ -17,13 +15,13 @@ For this, you can pass either the **LinOp** itself or any of its interitance obj
     :param uint64 maxiter: the maximum number of iteration steps for each k
     :param double CvgCrit: the convergence criterion of the energy
     :param bool is_row: whether the returned eigenvectors should be in row-major form
-    :param Tensor Tin: the initial vector, this should be rank-1
+    :param Tensor Tin: the initial vector, should be a Tensor with rank-1
     :param uint32 max_krydim: the maximum Krylov subspace dimension for each iteration
     :return: [eigvals (Tensor), eigvecs (Tensor)(option)]
     :rtype: vector<Tensor> (C++ API)/list of Tensor(python API) 
 
 
-For example, we consider a simple example of wrapping a (4x4) matrix inside a custom operator. We can easily generalize the **matvec** to be any custom sparse structure. 
+For example, we consider a simple example where we wrap a (4x4) matrix inside a custom operator. We can easily generalize the **matvec** to be any custom sparse structure. 
 
 
 * In Python:

@@ -8,7 +8,7 @@ Introduction
     
     Cytnx also supports multi-devices (CPUs/GPUs) directly on the base container level. Especially, not only the container but also our linear algebra functions share the same APIs regardless of the devices where the input Tensors are stored, just like pytorch. This provides users the ability to accelerate the code without worrying too much about details of multi-device programming. 
     
-    From the physics side, Cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces. 
+    For algorithms in physics, Cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces. 
 
     In this user guide, both Python and C++ APIs will be discussed, provided side-by-side for users to better understand how to use Cytnx, and to understand the conversion in between the Python API and the C++ API. 
     
@@ -20,7 +20,7 @@ Features
   This means that one can do a fast prototype in Python, and directly convert to C++ with extremely minimal re-writing of the codebase. 
 * GPUs/CPUs multi-device support. 
 * Easy to use user-interface similar to numpy/scipy/pytorch. 
-* Enhanced tools specifically designed for Quantum/classical Physics simulations.  
+* Enhanced tools specifically designed for quantum/classical physics simulations, including symmetries.
 
 Further references
 ----------------------------

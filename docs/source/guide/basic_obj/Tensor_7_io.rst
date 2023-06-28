@@ -1,6 +1,6 @@
 Save/Load
 -----------------
-We can also save/read Tensors to/from a file.
+Cyntx provides a way to save/read Tensors to/from a file.
 
 Save a Tensor
 *****************
@@ -23,7 +23,7 @@ To save a Tensor to a file, simply call **Tensor.Save(filepath)**.
     auto A = cytnx::arange(12).reshape(3,4);
     A.Save("T1")
 
-This will save Tensor *A* to the current directory as **T1.cytn**, with extension *.cytn*
+This will save Tensor *A* to the current directory as **T1.cytn**, with *.cytn* as file extension.
 
 
 Load a Tensor
