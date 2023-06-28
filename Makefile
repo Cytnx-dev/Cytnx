@@ -42,7 +42,7 @@ endif
 
 ifeq ($(MKL_Enable),1)
   CCFLAGS += -std=c++17 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_ILP64 #-DUNI_DEBUG -Wno-c++11-narrowing
-  LDFLAGS += $(DOCKER_MKL) -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm 
+  LDFLAGS += $(DOCKER_MKL) -lmkl_rt -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm 
 else
   CCFLAGS += -std=c++17 ${OPTIM} -Wformat=0 -fPIC -w -g #-DUNI_DEBUG -Wno-c++11-narrowing
   LDFLAGS += -llapacke -lblas -lstdc++  
@@ -142,7 +142,7 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Sdd_internal.o Gesvd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Trace_internal.o Tridiag_internal.o Axpy_internal.o Ger_internal.o Gemm_internal.o
+OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Sdd_internal.o Gesvd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Trace_internal.o Tridiag_internal.o Axpy_internal.o Ger_internal.o Gemm_Batch_internal.o Gemm_internal.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuMod_internal.o cuPow_internal.o cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAbs_internal.o cuGer_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuMaxMin_internal.o cuSum_internal.o cuKron_internal.o cuDet_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuInvM_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_dg_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o 
 endif
@@ -470,6 +470,9 @@ Ger_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Ger_internal.cpp $(C
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $< 
 
 Gemm_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $< 
+
+Gemm_Batch_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_Batch_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_Batch_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $< 
 
 Matvec_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.hpp

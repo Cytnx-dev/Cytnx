@@ -16,8 +16,29 @@ void pp(){
     Type.getname(Type.Double);
 }
 
+using lbl = std::string;
+// preferable impl:
+// {"a">>1, "b">>4, "c">>3, "d">>1}
+
+
+// need:
+//inline std::string lbl(const char *a){
+//    return std::string(a);
+//}
+// operator>>(string, int) -> pair<string,int>
+// get_block(vector< pair<string,int> >)
+
+
+pair<std::string,cytnx_int64> operator>>(const std::string &a, const cytnx_int64 &qnidx){
+    return make_pair(a,qnidx);
+}
+
+
 
 int main(int argc, char *argv[]) {
+
+  auto ttss = lbl("a")>>4;
+  return 0;
 
   int size = 5;
   std::vector<Bond> bonds = {Bond(size), Bond(size)};
