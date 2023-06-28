@@ -44,10 +44,10 @@ namespace cytnx {
       }
     }
 
-    #ifdef UNI_MAGMA
-        int magma_status = magma_init();
-        cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot initialize!%s","\n");
-    #endif
+    // #ifdef UNI_MAGMA
+    //     int magma_status = magma_init();
+    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot initialize!%s","\n");
+    // #endif
 
 
 #endif
@@ -63,10 +63,10 @@ namespace cytnx {
   };
 
   Device_class::~Device_class(){
-    #ifdef UNI_MAGMA
-        int magma_status = magma_finalize();
-        cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot finalize!%s","\n");
-    #endif
+    // #ifdef UNI_MAGMA
+    //     int magma_status = magma_finalize();
+    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot finalize!%s","\n");
+    // #endif
   };
 
 

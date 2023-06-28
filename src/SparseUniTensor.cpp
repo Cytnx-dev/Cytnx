@@ -595,12 +595,21 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
+  void SparseUniTensor::relabels_(const std::vector<string> &new_labels) {
+    this->set_labels(new_labels);
+  }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(
     const std::vector<cytnx_int64> &new_labels) {
     vector<string> vs(new_labels.size());
     transform(new_labels.begin(), new_labels.end(), vs.begin(),
               [](cytnx_int64 x) -> string { return to_string(x); });
     return relabels(vs);
+  }
+  void SparseUniTensor::relabels_(const std::vector<cytnx_int64> &new_labels) {
+    vector<string> vs(new_labels.size());
+    transform(new_labels.begin(), new_labels.end(), vs.begin(),
+              [](cytnx_int64 x) -> string { return to_string(x); });
+    relabels_(vs);
   }
 
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
@@ -612,6 +621,10 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
+  void SparseUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
+                                 const bool &by_label) {
+    this->set_label(inx, new_label, by_label);
+  }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
                                                                 const string &new_label) {
     SparseUniTensor *tmp = this->clone_meta(true, true);
@@ -619,6 +632,9 @@ namespace cytnx {
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
+  }
+  void SparseUniTensor::relabel_(const cytnx_int64 &inx, const string &new_label) {
+    this->set_label(inx, new_label);
   }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const string &inx,
                                                                 const string &new_label) {
@@ -628,6 +644,9 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
+  void SparseUniTensor::relabel_(const string &inx, const string &new_label) {
+    this->set_label(inx, new_label);
+  }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
                                                                 const cytnx_int64 &new_label) {
     SparseUniTensor *tmp = this->clone_meta(true, true);
@@ -635,6 +654,9 @@ namespace cytnx {
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
+  }
+  void SparseUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
+    this->set_label(inx, new_label);
   }
 
   std::vector<Symmetry> SparseUniTensor::syms() const { return this->_bonds[0].syms(); }

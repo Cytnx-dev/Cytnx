@@ -213,19 +213,33 @@ void unitensor_binding(py::module &m){
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         return self.relabels(new_labels);
                     }, py::arg("new_labels"))
+     .def("relabels_",[](UniTensor &self, const std::vector<std::string> &new_labels){
+                        self.relabels_(new_labels);
+                    }, py::arg("new_labels"))
 
     // [Deprecated]
     .def("relabels",[](UniTensor &self, const std::vector<cytnx_int64> &new_labels){
                         cytnx_warning_msg(true,"[Deprecated warning][relabels] specify labels with integers will be deprecated soon. using strings instead.%s","\n");
                         return self.relabels(new_labels);
                     }, py::arg("new_labels"))
+     // [Deprecated]
+    .def("relabels_",[](UniTensor &self, const std::vector<cytnx_int64> &new_labels){
+                        cytnx_warning_msg(true,"[Deprecated warning][relabels_] specify labels with integers will be deprecated soon. using strings instead.%s","\n");
+                        self.relabels_(new_labels);
+                    }, py::arg("new_labels"))
 
     .def("relabel", [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label){
                             return self.relabel(idx,new_label);
                         },py::arg("idx"), py::arg("new_label"))
+     .def("relabel_", [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label){
+                            self.relabel_(idx,new_label);
+                        },py::arg("idx"), py::arg("new_label"))
 
     .def("relabel", [](UniTensor &self, const std::string &old_label, const std::string &new_label){
                             return self.relabel(old_label,new_label);
+                        },py::arg("old_label"), py::arg("new_label"))
+     .def("relabel_", [](UniTensor &self, const std::string &old_label, const std::string &new_label){
+                            self.relabel_(old_label,new_label);
                         },py::arg("old_label"), py::arg("new_label"))
 
     // [Deprecated!] 
@@ -235,6 +249,14 @@ void unitensor_binding(py::module &m){
                                 cytnx_warning_msg(true,"[Deprecated warning][relabel:2] specify relabel with integer will be deprecated soon. use string instead.%s","\n");
                             }
                             return self.relabel(idx,new_label,by_label);
+                        },py::arg("idx"), py::arg("new_label"),py::arg("by_label")=false)
+     // [Deprecated!] 
+    .def("relabel_", [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label, const bool &by_label){
+                            cytnx_warning_msg(true,"[Deprecated warning][relabel_:1] specify new_label with integer will be deprecated soon. use string instead.%s","\n");
+                            if(by_label==true){
+                                cytnx_warning_msg(true,"[Deprecated warning][relabel_:2] specify relabel_ with integer will be deprecated soon. use string instead.%s","\n");
+                            }
+                            self.relabel_(idx,new_label,by_label);
                         },py::arg("idx"), py::arg("new_label"),py::arg("by_label")=false)
 
 

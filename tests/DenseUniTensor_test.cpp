@@ -30,6 +30,19 @@ TEST_F(DenseUniTensorTest, relabels){
   EXPECT_THROW(utzero3456.relabels({1,2}), std::logic_error);
   EXPECT_THROW(utzero3456.relabels({"a","b","c","d","e"}), std::logic_error);
 }
+TEST_F(DenseUniTensorTest, relabels_){
+  utzero3456.relabels_({"a", "b", "cd", "d"});
+  EXPECT_EQ(utzero3456.labels()[0],"a");
+  EXPECT_EQ(utzero3456.labels()[1],"b");
+  EXPECT_EQ(utzero3456.labels()[2],"cd");
+  EXPECT_EQ(utzero3456.labels()[3],"d");
+  utzero3456.relabels_({1,-1,2,1000});
+  EXPECT_THROW(utzero3456.relabels_({"a","a","b","c"}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels_({1,1,0,-1}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels_({"a"}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels_({1,2}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels_({"a","b","c","d","e"}), std::logic_error);
+}
 
 TEST_F(DenseUniTensorTest, relabel){
   utzero3456 = utzero3456.relabel("0", "a");
@@ -57,6 +70,28 @@ TEST_F(DenseUniTensorTest, relabel){
   // utzero3456.relabel(0,"a").relabel(1,"a");
   // EXPECT_THROW(utzero3456.relabel("a","b"),std::logic_error);
   // EXPECT_THROW(utzero3456.relabel(5,'a'),std::logic_error);
+}
+TEST_F(DenseUniTensorTest, relabel_){
+  utzero3456.relabel_("0", "a");
+  utzero3456.relabel_("1", "b");
+  utzero3456.relabel_("2", "d");
+  utzero3456.relabel_("3", "de");
+  utzero3456.relabel_("b", "ggg");
+  EXPECT_EQ(utzero3456.labels()[0],"a");
+  EXPECT_EQ(utzero3456.labels()[1],"ggg");
+  EXPECT_EQ(utzero3456.labels()[2],"d");
+  EXPECT_EQ(utzero3456.labels()[3],"de");
+  utzero3456.relabel_(0,"ccc");
+  EXPECT_EQ(utzero3456.labels()[0],"ccc");
+  utzero3456.relabel_(0,-1);
+  EXPECT_EQ(utzero3456.labels()[0],"-1");
+  utzero3456.relabel_(1,-199922);
+  EXPECT_EQ(utzero3456.labels()[1],"-199922");
+  utzero3456.relabel_("-1","0");
+  EXPECT_EQ(utzero3456.labels()[0],"0");
+  EXPECT_THROW(utzero3456.relabel_(5,"a"),std::logic_error);
+  EXPECT_THROW(utzero3456.relabel_(-1,"a"),std::logic_error);
+  // EXPECT_THROW(utzero3456.relabel_(0,"a").relabel_(1,"a"),std::logic_error);
 }
 
 TEST_F(DenseUniTensorTest, Norm){
