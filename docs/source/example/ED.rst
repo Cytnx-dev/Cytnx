@@ -158,7 +158,7 @@ The class constructor takes three arguments: **L**, the size of ising chain; **J
 
 2. Now, we can then using Lanczos method to get the low-level energy spectrum of this Hamiltonian. Since we are interesting in the property of avoid level crossing, let's get the lowest 3 energy states. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -171,7 +171,7 @@ The class constructor takes three arguments: **L**, the size of ising chain; **J
     print(cy.linalg.Lanczos_ER(H,3))
 
 
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:

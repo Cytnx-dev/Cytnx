@@ -11,6 +11,8 @@ The benefit of using this is that it is general, meaning that you can put Access
 
 For example:
 
+* In C++:
+
 .. code-block:: c++
     :linenos:
 
@@ -19,6 +21,8 @@ For example:
     
 
 In the scnario where we want to access only single element, using operator(), one can do:
+
+* In C++:
 
 .. code-block:: c++
     :linenos:
@@ -32,6 +36,8 @@ Note that here, the return is a **Tensor**, not a **Scalar**. Cytnx view this ac
     For Tensor with single element, one can use A.item() to get the element as Scalar, or use A.item<>() to get standard C++ type via template.  
     
 Although this is legit, it will have more overhead than we want. Since lots of meta data is being calculated in background. If we want to frequently access elements, it is better to use **at()**:
+
+* In C++:
 
 .. code-block:: c++
     :linenos:

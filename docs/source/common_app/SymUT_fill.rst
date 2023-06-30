@@ -1,20 +1,25 @@
 Set same value for all blocks in UniTensor with Symmetry
 -------------------------------------------------------------- 
 
-Consider a UniTensor with Symmetry **Td**. The following code provide example code to set all elements to be the same value (1.0 in this case) for all the blocks
+Consider a UniTensor with Symmetry **Tsymm**. The following code provide example code to set all elements to be the same value (1.0 in this case) for all the blocks
 
-* In python:
+* In Python:
 
      
 .. code-block:: python
     :linenos:
 
+    bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
+    bond_f = cytnx.Bond(cytnx.BD_OUT,\
+                        [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
+    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels_(["d","e","f"])
 
-    for block in Td.get_blocks_():
+    for block in Tsymm.get_blocks_():
         block.fill(1.0)
 
     
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:

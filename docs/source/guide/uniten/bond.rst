@@ -160,6 +160,8 @@ If several symmetries are present, this can be achieved by giving several quantu
     print(bd_sym_u1z2_a);
     
 
+Output >>
+
 .. code-block:: text
 
     Dim = 12 |type: KET>     
@@ -181,7 +183,8 @@ As an example, let us create another *U1* Bond **bd_sym_u1_c** and combine it wi
 .. code-block:: python
     :linenos:
 
-    bd_sym_u1_c = cytnx.Bond(cytnx.BD_KET,[cytnx.Qs(-1)>>2,cytnx.Qs(1)>>3,cytnx.Qs(2)>>4,cytnx.Qs(-2)>>5,cytnx.Qs(0)>>6])
+    bd_sym_u1_c = cytnx.Bond(cytnx.BD_KET,\
+                    [cytnx.Qs(-1)>>2,cytnx.Qs(1)>>3,cytnx.Qs(2)>>4,cytnx.Qs(-2)>>5,cytnx.Qs(0)>>6])
     print(bd_sym_u1_c)
 
     bd_sym_all = bd_sym_u1_a.combineBond(bd_sym_u1_c)
@@ -230,6 +233,8 @@ By default, *combineBond* will group any quantum numbers of the same type togeth
     bd_sym_all = bd_sym_u1_a.combineBond(bd_sym_u1_c,is_grp=False)
     print(bd_sym_all)
 
+
+Output >>
 
 .. code-block:: text
     

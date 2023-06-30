@@ -71,6 +71,8 @@ Using python API after Conda install
 ---------------------------------------
 After installing Cytnx, using the Python API is very straight forward, simply import cytnx via:
 
+* In Python:
+
 .. code-block:: python 
     :linenos:
 
@@ -79,7 +81,7 @@ After installing Cytnx, using the Python API is very straight forward, simply im
     A = cytnx.ones(4)
     print(A)
 
-* Output:
+Output>>
 
 .. code-block:: text
     
@@ -95,6 +97,8 @@ One important feature of Cytnx is that the installation also provides a C++ API.
 There are fundamental differences between C++ and Python, where C++ requires compiling and linking of the code, while Python as an interpreted language does not require both steps.
 
 Cytnx provides a simple way for users to easily compile their C++ code. In the cytnx package, we provide three pre-set variables:
+
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -112,7 +116,7 @@ Cytnx provides a simple way for users to easily compile their C++ code. In the c
 
 Let us consider the same example as before for Python. Here, we want to compile the **test.cpp** that uses Cytnx:
 
-* test.cpp
+* test.cpp; in C++:
 
 .. code-block:: c++
     :linenos:
@@ -149,7 +153,7 @@ The first four lines are the Python inline executions to get the three required 
     ./test
 
 
-* Output:
+Output>>
 
 .. code-block:: text
     

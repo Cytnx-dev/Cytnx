@@ -42,7 +42,7 @@ Initialization
 
 The initailzation of MPO is much the same as we did in the previous DMRG example:
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -78,7 +78,7 @@ The first step of iDMRG is to obtain a initial two-site state, which is done by 
 
 Let's implement the function solving eigenvalue problem using in-built Lanczos method and the needed linear operation class:
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -120,7 +120,7 @@ Let's implement the function solving eigenvalue problem using in-built Lanczos m
 
 Now do the optimization and SVD task:
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -145,7 +145,7 @@ we performed SVD and use the left and right basis to update the environment for 
     :width: 470
     :align: center
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -163,7 +163,7 @@ we then solve the eigenvalue problem again and do SVD for the new effective hami
     :width: 600
     :align: center
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -180,7 +180,7 @@ we then solve the eigenvalue problem again and do SVD for the new effective hami
 
 followed by another environment update:
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -201,7 +201,7 @@ The next few steps involve "rotate" the center of our state to the left and righ
 
 which is done by the straightforward contraction and re-SVD:
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -260,7 +260,7 @@ this immediately suggests the above trial form if we try to rotate the center to
 
 The construction of trial state and optimization is done as follows:
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -289,7 +289,7 @@ The construction of trial state and optimization is done as follows:
 
 then we check the convergence by comparing the singular values to the one we obtained in the previous iteration:
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -306,7 +306,7 @@ then we check the convergence by comparing the singular values to the one we obt
 
 also rememeber to update the environment using the SVD result.
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -328,7 +328,7 @@ After reaching the fixed point, let's consider a local measurement of energy for
     :width: 350
     :align: center
 
-* In python
+* In Python:
 
 .. code-block:: python
     :linenos:

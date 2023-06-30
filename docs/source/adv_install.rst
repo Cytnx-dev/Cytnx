@@ -221,6 +221,8 @@ The simplest (and most flexible) way to do that is to add it into sys.path right
 
 In the following, we will use **CYTNX_ROOT** (capital letters) to represent the path where you installed Cytnx. You should replace it with the path where Cytnx is installed. 
 
+* In Python:
+
 .. code-block:: python 
     :linenos:
 
@@ -231,7 +233,7 @@ In the following, we will use **CYTNX_ROOT** (capital letters) to represent the 
     A = cytnx.ones(4)
     print(A)
 
-* Output:
+Output>>
 
 .. code-block:: text
     

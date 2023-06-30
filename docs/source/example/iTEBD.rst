@@ -24,7 +24,7 @@ Because the system has translational invariant, thus it is legit to choose unit-
 
 Let's first create this two-site  MPS wave function (here, we set virtual bond dimension :math:`\chi = 10` as example)
 
-* In python
+* In Python
 
 .. code-block:: python
     :linenos:
@@ -48,7 +48,7 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     lb.print_diagram()
 
 
-* In c++
+* In C++
 
 .. code-block:: c++
     :linenos:
@@ -159,7 +159,7 @@ First, acting :math:`U_a` as shown in Figure(1) then acting :math:`U_b` as shown
 
 Here, let's construct this imaginary time evolution operator with parameter :math:`J=-1`, :math:`H_x = -0.3` and (imaginary) time step :math:`\delta \tau = 0.1`
 
-* In python 
+* In Python 
 
 .. code-block:: python 
     :linenos:
@@ -189,7 +189,7 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
     U = UniTensor(eH,2)
     U.print_diagram()
 
-* In c++
+* In C++
 
 .. code-block:: c++
     :linenos:
@@ -292,7 +292,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
     :width: 450
     :align: center
 
-* In python 
+* In Python 
 
 .. code-block:: python 
     :linenos:
@@ -324,7 +324,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
     print("Step: %d Enr: %5.8f"%(i,Elast))
     Elast = E
 
-* In c++
+* In C++
 
 .. code-block:: c++ 
     :linenos:
@@ -367,7 +367,7 @@ in the next step we perform the two-sites imaginary time evolution, using the op
 
 we also performed SVD for the XeH here, this put the MPS into mixed canonical form and have a Schimit decomposition of the whole state where the singular values are simply the Schimit coefficients. The **Svd_truncate** is called such that the intermediate bonds with label (-6) and (-7) are properly truncate to the maximum virtual bond dimension **chi**. 
 
-* In python 
+* In Python 
 
 .. code-block:: python 
     :linenos:
@@ -379,7 +379,7 @@ we also performed SVD for the XeH here, this put the MPS into mixed canonical fo
     la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
     la.normalize_()
 
-* In c++
+* In C++
 
 .. code-block:: c++ 
     :linenos:
@@ -414,7 +414,7 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
 
 
 
-* In python 
+* In Python 
 
 .. code-block:: python 
     :linenos:
@@ -430,7 +430,7 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
     A,B = B,A
     la,lb = lb,la
 
-* In c++
+* In C++
 
 .. code-block:: c++ 
     :linenos:
@@ -450,7 +450,7 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
 
 Let's put everything together in a loop for iteration:
 
-* In python 
+* In Python 
 
 .. code-block:: python 
     :linenos:
@@ -528,7 +528,7 @@ Let's put everything together in a loop for iteration:
         la,lb = lb,la
 
 
-* In c++
+* In C++
 
 .. code-block:: c++ 
     :linenos:

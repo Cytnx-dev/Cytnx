@@ -4,6 +4,8 @@ Cytnx also provides conversion from and to numpy.array in the Python API.
 
 * To convert from Cytnx Tensor to numpy array, use **Tensor.numpy()**
 
+* In Python:
+
 .. code-block:: python
     :linenos:
         
@@ -34,6 +36,8 @@ Output>>
 
 
 * To convert from numpy array to Cytnx Tensor, use **cytnx.from_numpy()**
+
+* In Python:
 
 .. code-block:: python 
     :linenos:

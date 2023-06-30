@@ -3,7 +3,7 @@ Check current Blas/Lapack integer size
 
 To check whether the current Blas/Lapack integer size is 4 bytes or 8 bytes:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -11,7 +11,7 @@ To check whether the current Blas/Lapack integer size is 4 bytes or 8 bytes:
     print(cytnx.__blasINTsize__)
 
     
-* In c++:
+* In C++:
 
 .. code-block:: c++
     :linenos:

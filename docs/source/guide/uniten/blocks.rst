@@ -52,18 +52,19 @@ Let's use the same example of a UniTensor with *U1* symmetry that we introduced 
 
     bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
     bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_f = cytnx.Bond(cytnx.BD_OUT, [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
+    bond_f = cytnx.Bond(cytnx.BD_OUT,\
+                        [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
     Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels_(["d","e","f"])
 
 There are two ways to get a certain block from a UniTensor. 
 
-**1. Getting a block by its Qn-indices**
+**1. Getting a block by its quantum number indices**
 
 .. py:function:: UniTensor.get_block(qindices)
 
     :param List[int] qindices: list of integers specifying the indices of the quantum numbers on each bond
 
-The quantum numbers need to be given in the same order as the legs in the tensor. In our example, *bond\_f* was created with three quantum numbers. Their indices are
+The quantum number indices (*qindices*) need to be given in the same order as the legs in the tensor. In our example, *bond\_f* was created with three quantum numbers. Their indices are
 
     * 0 for *U1(2)*
     * 1 for *U1(0)*
@@ -71,7 +72,7 @@ The quantum numbers need to be given in the same order as the legs in the tensor
 because the quantum numbers were created in this order. Similarly for *bond\_d* and *bond\_e: *U1(1)* has quantum number index 0 and *U1(-1)* has quantum number index 2.
 
 
-As an example, we want to access the block with quantum numbers [Qs(1),Qs(-1),Qs(0)]. In the above convention, this corresponds to the Qn-indices [0,1,1]: 
+As an example, we want to access the block with quantum numbers [Qs(1),Qs(-1),Qs(0)]. In the above convention, this corresponds to the quantum number indices [0,1,1]: 
 
 * In Python:
 
@@ -121,7 +122,7 @@ Output >>
 
 .. note::
 
-    The order of the blocks in a UniTensor depends on how the tensor was created. If you want to access blocks with certain quantum numbers, use *UniTensor.get_block(qindices)*.
+    The order of the blocks in a UniTensor depends on how the tensor was created. If you want to access blocks with certain quantum number indices, use *UniTensor.get_block(qindices)*.
 
 
 **Getting all blocks:**
@@ -184,13 +185,13 @@ Putting a block
 
 We might want to do some manipulations to an individual block that we got from *.get_block(s)*. Then, the new block can be put back to the UniTensor with *put_block()*.
 
-**1. Putting a block into a location assigned by their Qn-indices**
+**1. Putting a block into a location assigned by their quantum number indices**
 
 .. py:function:: UniTensor.put_block(Tn, qindices)
 
     :param List[int] qindices: list of integers specifying the indices of quantum numbers on each bond
 
-We can, for example, put the block to the location in the UniTensor with quantum numbers [Qs(1),Qs(-1),Qs(0)], corresponding to QN-indices [0,1,1]: 
+We can, for example, put the block to the location in the UniTensor with quantum numbers [Qs(1),Qs(-1),Qs(0)], corresponding to quantum number indices [0,1,1]: 
 
 * In Python:
 

@@ -85,7 +85,7 @@ Now, let's first prepare the MPO, **M**. Here, the **d** is the physical bond di
 **L0** and **R0** are the left and right boundary as mentioned previously. 
 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -115,6 +115,8 @@ Now, let's first prepare the MPO, **M**. Here, the **d** is the physical bond di
 
 
 At this moment, let's print out to show what **M**, **L0** and **R0** looks like:
+
+* In Python:
 
 .. code-block:: python 
     :linenos:
@@ -182,7 +184,7 @@ Preparing the MPS and enviroments
 
 Next, we are going to prepare our variational ansatz (MPS). Here, **chi** is the *virtual bond* dimension, and **Nsites** is the number of sites. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -251,7 +253,7 @@ we load it, put tensors in, then call "Launch", all the four tensors got contrac
 The full implementation looks like:
 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -286,7 +288,7 @@ Optimization of MPS (update sweep)
 
 Now we are ready for describing the main DMRG algorithm that optimize our MPS, the way we are going to do this, is so called "sweeping" update. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -375,26 +377,26 @@ which in tensor notation looks like this:
 
 To ultilize the Lanczos function, the opertion of acting Hamitonian (which involves contraction using a network) is implemented using LinOp class (See Iterative Solver section for furtuer details). 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
 
     class Hxx(cytnx.LinOp):
 
-    def __init__(self, anet, shapes, psidim):
-        cytnx.LinOp.__init__(self,"mv", psidim, cytnx.Type.Double, cytnx.Device.cpu)
-        self.anet = anet
-        self.shapes = shapes
+        def __init__(self, anet, shapes, psidim):
+            cytnx.LinOp.__init__(self,"mv", psidim, cytnx.Type.Double, cytnx.Device.cpu)
+            self.anet = anet
+            self.shapes = shapes
 
-    def matvec(self, v):
-        v_ = v.clone()
-        psi_u = cytnx.UniTensor(v_, 0) ## share memory, no copy
-        psi_u.reshape_(*self.shapes)
-        self.anet.PutUniTensor("psi",psi_u,False);
-        out = self.anet.Launch(optimal=True).get_block_() # get_block_ without copy
-        out.flatten_() ## only change meta, without copy.
-        return out
+        def matvec(self, v):
+            v_ = v.clone()
+            psi_u = cytnx.UniTensor(v_, 0) ## share memory, no copy
+            psi_u.reshape_(*self.shapes)
+            self.anet.PutUniTensor("psi",psi_u,False);
+            out = self.anet.Launch(optimal=True).get_block_() # get_block_ without copy
+            out.flatten_() ## only change meta, without copy.
+            return out
 
 .. Hint::
     the class itself contain this projector network and do the contraction job for the input vector(state).
@@ -403,7 +405,7 @@ To ultilize the Lanczos function, the opertion of acting Hamitonian (which invol
 
 So now the optimize_psi function looks like:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -427,7 +429,7 @@ Where we constructed the network (put tensors in) then pass it to our linear ope
 Now, we get our energy and ground state for a two-sites system, after some re-labeling (in order to contract UniTensor) and reshape, 
 we have to make our psi into the canonical form, for which we do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt. The intermediate bond are truncated such that the maximum virtual bond dimension is limited to **chi**. 
 
-* In python:
+* In Python:
   
 .. code-block:: python
     :linenos:
@@ -479,7 +481,7 @@ So our enviroments are also updated by the vT from the optimized two-side states
 
 The for loop is finished, now we arrived at the left end of the system, with the last two line
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -495,7 +497,7 @@ We can now sweep from left to the right. The code is pretty much the same as we 
 
 So we are done! With the other loop to control the number of times we sweep, we get the full DMRG sweep code:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -590,7 +592,7 @@ Results
 
 Here, we plot the energy as a function of iteration. We see that after iterations, the energy successfully converge to a value that is consistent with the exact solution. 
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:

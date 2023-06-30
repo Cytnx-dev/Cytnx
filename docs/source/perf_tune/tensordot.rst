@@ -4,7 +4,7 @@ Starting from v0.6.4a, **linalg::Tensordot** provides an additional option *cach
 
 To show how this makes difference, let's consider a scenario where we contract two *A* and *B* Tensors N times:
 
-* In python:
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -49,7 +49,7 @@ We can clearly see the downside of this: every time **Tensordot()** is called, w
 
 
 
-* In python:
+* In Python:
 
 .. code-block:: python 
     :linenos:

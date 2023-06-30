@@ -41,7 +41,7 @@ One of the most important features in Python is the *referencing* of objects. Al
 
     cout << is(B,A) << endl;
 
-* output:
+Output>>
 
 .. code-block:: text
     
@@ -71,7 +71,7 @@ To really create a copy of **A**, we can use the **clone()** method. **clone()**
 
     cout << is(B,A) << endl;
 
-* output:
+Output>>
 
 .. code-block:: text
 
@@ -109,7 +109,7 @@ Now let us take a look at what happens if we perform a **permute()** operation o
 
     cout << is(B,A) << endl;
 
-* output:
+Output>>
 
 .. code-block:: text
 
@@ -164,7 +164,7 @@ We see that **A** and **B** are now two different objects (as it should be, they
     cout << A << endl;
     cout << B << endl;    
 
-* output:
+Output>>
 
 .. code-block:: text
 
@@ -214,7 +214,7 @@ We can use **Tensor.same_data()** to check if two objects share the same memory 
 
     cout << B.same_data(A) << endl;
 
-* output:
+Output>>
 
 .. code-block:: text
     
@@ -251,7 +251,7 @@ Next, let's have a look at the **contiguous** property. In the above example, we
     cout << A.is_contiguous() << endl;
     cout << B.is_contiguous() << endl;
 
-* output:
+Output>>
 
 .. code-block:: text
 
@@ -265,6 +265,7 @@ We can make a contiguous Tensor **C** that has the same shape as **B** by callin
     :width: 650
     :align: center
 
+* In Python:
 
 .. code-block:: python
     :linenos:
@@ -290,7 +291,7 @@ We can make a contiguous Tensor **C** that has the same shape as **B** by callin
     cout << C.same_data(B) << endl;
  
 
-* output:
+Output>>
 
 .. code-block:: text
 

@@ -8,19 +8,17 @@ Number of threads
 ********************
 To check how many threads can be used in your current program by Cytnx, you can use **Device.Ncpus**. 
 
-* In C++
-
-.. code-block:: c++
-    
-    cout << Device.Ncpus;
-
-
 * In Python:
 
 .. code-block:: python
 
     print(cytnx.Device.Ncpus)
 
+* In C++
+
+.. code-block:: c++
+    
+    cout << Device.Ncpus;
 
 
 If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.
@@ -49,18 +47,18 @@ Number of GPUs
 ********************
 To check how many GPUs can be used in your current program by Cytnx, you can use **Device.Ngpus**. 
 
-* In C++
-
-.. code-block:: c++
-
-    cout << Device.Ngpus;
-
-
 * In Python:
 
 .. code-block:: python
 
     print(cytnx.Device.Ngpus)
+
+
+* In C++
+
+.. code-block:: c++
+
+    cout << Device.Ngpus;
 
 
 If Cytnx is not compiled with CUDA available, the Device.Ngpus will always return 0.
@@ -81,7 +79,7 @@ For systems with multi-gpu, Cytnx utilizes the peer-access feature to transfer d
     cytnx.Device.Print_Property();
 
 
-* Output example: 
+Output example>>
 
 1. Executed on a node with 4 GPUs installed with peer-access available between gpu-id=0 <-> gpu-id=2:
 
@@ -104,6 +102,9 @@ For systems with multi-gpu, Cytnx utilizes the peer-access feature to transfer d
 
     === No CUDA support ===
 
+Initializing tensors on GPU
+******************************
+How a tensor is created on the GPU is explained in :ref:`Tensor with different dtype and device`. A tensor can also be moved between devices, see :ref:`Transfer between devices`.
 
 
 
