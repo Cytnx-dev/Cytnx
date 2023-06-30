@@ -39,10 +39,16 @@ namespace cytnx {
       // info = LAPACKE_zgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, (lapack_complex_double *)Mij, ldA,
       //                       (cytnx_double *)S->Mem, (lapack_complex_double *)vT->Mem, ldu,
       //                       (lapack_complex_double *)U->Mem, ldvT, superb);
+#ifdef UNI_MKL
       info = LAPACKE_zgesdd(LAPACK_COL_MAJOR, jobz, N, M, (cytnx_complex128 *)Mij, ldA,
                             (cytnx_double *)S->Mem, (cytnx_complex128 *)vTMem, ldu,
                             (cytnx_complex128 *)UMem, ldvT);
-
+                            double __complex__ a;
+#else
+      info = LAPACKE_zgesdd(LAPACK_COL_MAJOR, jobz, N, M, (double __complex__ *)Mij, ldA,
+                            (cytnx_double *)S->Mem, (double __complex__ *)vTMem, ldu,
+                            (double __complex__ *)UMem, ldvT);
+#endif
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'zgesvd': Lapack INFO = ", info);
 
@@ -85,9 +91,14 @@ namespace cytnx {
       // double *superb = (double *)malloc(sizeof(double) * (min - 1));
       // info = LAPACKE_dgesvd(LAPACK_COL_MAJOR, jobv, jobu, N, M, Mij, ldA, (cytnx_double *)S->Mem,
       //                       (cytnx_double *)vT->Mem, ldu, (cytnx_double *)U->Mem, ldvT, superb);
+#ifdef UNI_MKL      
       info = LAPACKE_cgesdd(LAPACK_COL_MAJOR, jobz, N, M, (cytnx_complex64 *)Mij, ldA, (cytnx_float *)S->Mem,
                             (cytnx_complex64 *)vTMem, ldu, (cytnx_complex64 *)UMem, ldvT);
-
+#else
+      info = LAPACKE_cgesdd(LAPACK_COL_MAJOR, jobz, N, M, (float __complex__ *)Mij, ldA,
+                            (cytnx_float *)S->Mem, (float __complex__ *)vTMem, ldu,
+                            (float __complex__ *)UMem, ldvT);
+#endif
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'dgesvd': Lapack INFO = ", info);
 

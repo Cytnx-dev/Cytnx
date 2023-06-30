@@ -1058,6 +1058,7 @@ namespace cytnx {
                 cytnx_error_msg(all_sub_tensor_same_dtype,"[ERROR] cannot perform contraction on sub-Tensors with different dtype.%s","\n");
                 cytnx_error_msg(all_sub_tensor_same_device,"[ERROR] cannot perform contraction on sub-Tensors with different device.%s","\n");
               }
+#ifdef UNI_MKL
               // If the dtype of this and Rtn are different, we need to cast to the common dtype
               if(this->dtype()!=Rtn->dtype()){
                 BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
@@ -1154,6 +1155,60 @@ namespace cytnx {
                 delete tmp_Rtn;
               }
             }
+#else
+            // First select left block to do gemm
+            for(cytnx_int64 a=0;a<this->_blocks.size();a++){
+              cytnx_int64 comm_dim = 1;
+              // get the indices of right blocks that *can* contract with this->_blocks[a]
+              itoiR_idx = mp[itoiL_common[a]];
+              for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
+                comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
+              }
+              // permute&reshape this->_blocks[a] 
+              this->_blocks[a].permute_(mapperL);
+              oldshapeL = this->_blocks[a].shape();
+              this->_blocks[a].reshape_({-1, comm_dim});
+              // loop over all right blocks that can contract with this->_blocks[a]
+              for(cytnx_uint64 binx = 0;binx<itoiR_idx.size();binx++){
+                // get the index of the right block
+                cytnx_uint64 b = itoiR_idx[binx];
+                // permute&reshape Rtn->_blocks[b]
+                Rtn->_blocks[b].permute_(mapperR);
+                oldshapeR[b] = Rtn->_blocks[b].shape();
+                Rtn->_blocks[b].reshape_({comm_dim, -1});
+                // prepare to find the target block
+                Lgbuffer.resize(non_comm_idx1.size()+non_comm_idx2.size());
+                for(cytnx_uint64 cc=0;cc<non_comm_idx1.size();cc++){
+                  Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
+                }
+                for(cytnx_uint64 cc=non_comm_idx1.size();cc<non_comm_idx1.size()+non_comm_idx2.size();cc++){
+                  Lgbuffer[cc] = Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc-non_comm_idx1.size()]];
+                }
+                // target block index
+                cytnx_int64 targ_b = mpC[Lgbuffer];
+                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b]).reshape(tmp->_blocks[targ_b].shape());
+              }
+              // restore the shape&permutation of this->_blocks[a]
+              for(cytnx_uint64 binx = 0;binx<itoiR_idx.size();binx++){
+                cytnx_uint64 b = itoiR_idx[binx];
+
+                Rtn->_blocks[b].reshape_(oldshapeR[b]);
+                Rtn->_blocks[b].permute_(inv_mapperR);
+              }
+
+              this->_blocks[a].reshape_(oldshapeL);
+              this->_blocks[a].permute_(inv_mapperL);
+            }
+            // restore the shape of tmp->_blocks
+            for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
+              tmp->_blocks[a].reshape_(oldshapeC[a]);
+              if(!reshaped[a]){
+                // if targ_block is not result of any block contraction, set to zeros
+                tmp->_blocks[a].storage().set_zeros();
+              }
+            }
+          }
+#endif
 
             boost::intrusive_ptr<UniTensor_base> out(tmp);
             return out;

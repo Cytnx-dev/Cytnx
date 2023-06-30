@@ -32,7 +32,7 @@ FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #        Please follow the guide from official mkl/oneMKL "post-installation" part 
 #        to source the proper setvars.sh and/or vars.sh  
 #----------------------
-FLAG="${FLAG} -DUSE_MKL=ON"
+FLAG="${FLAG} -DUSE_MKL=OFF"
 #----------------------
 
 
@@ -105,7 +105,7 @@ FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
 FLAG="${FLAG} -DUSE_MAGMA=OFF "
-FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
+FLAG="${FLAG} -DMAGMA_ROOT=${HOME}/MAGMA"
 #-----------------------------------
 # 6-d) CuTensor (DEFALT = off)
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
@@ -114,7 +114,7 @@ FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 # CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 CUTENSOR_ROOT=${HOME}/CUTENSOR
 FLAG="${FLAG} -DUSE_CUTENSOR=ON "
-FLAG="${FLAG} -DCUTENSOR_ROOT=/home/j9263178/libcutensor-linux-x86_64-1.6.2.3-archive"
+FLAG="${FLAG} -DCUTENSOR_ROOT=${HOME}/CUTENSOR"
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = off)
 # [Note] set to "=off" will 
@@ -123,7 +123,7 @@ FLAG="${FLAG} -DCUTENSOR_ROOT=/home/j9263178/libcutensor-linux-x86_64-1.6.2.3-ar
 # CUQUANTUM_ROOT=/usr/local/cuqunatum-......
 CUQUANTUM_ROOT=${HOME}/CUQUANTUM
 FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
-FLAG="${FLAG} -DCUQUANTUM_ROOT=/home/j9263178/cuquantum-linux-x86_64-23.03.0.20-archive"
+FLAG="${FLAG} -DCUQUANTUM_ROOT=${HOME}/CUQUANTUM"
 
 
 

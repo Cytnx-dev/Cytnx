@@ -883,146 +883,146 @@ namespace cytnx {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return cytnx_complex128(0,0);
+      return Scalar::Sproxy();
     }
     const cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                           const cytnx_complex128 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return cytnx_complex128(0,0);
+      return cytnx_complex128(0,0);
     }
     const cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                          const cytnx_complex64 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return cytnx_complex64(0,0);
+      return cytnx_complex64(0,0);
     }
     const cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                       const cytnx_double &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
     const cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                      const cytnx_float &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
     const cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                       const cytnx_uint64 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
     const cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                      const cytnx_int64 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
     const cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                       const cytnx_uint32 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
     const cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                      const cytnx_int32 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
     const cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                       const cytnx_uint16 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
     const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                      const cytnx_int16 &aux) const {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return 0;
     }
 
     Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return cytnx_complex128(0,0);
+      return Scalar::Sproxy();
     }
     cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                     const cytnx_complex128 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return cytnx_complex128(0,0);
+      return *(cytnx_complex128*)nullptr;
     }
     cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                    const cytnx_complex64 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return cytnx_complex64(0,0);
+      return *(cytnx_complex64*)nullptr;
     }
     cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_double*)nullptr;
     }
     cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_float*)nullptr;
     }
     cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_uint64*)nullptr;
     }
     cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_int64*)nullptr;
     }
     cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_uint32*)nullptr;
     }
     cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_int32*)nullptr;
     }
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_uint16*)nullptr;
     }
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux) {
       cytnx_error_msg(
         true, "[ERROR][Internal] This shouldn't be called by DenseUniTensor, something wrong.%s",
         "\n");
-      // return 0;
+      return *(cytnx_int16*)nullptr;
     }
 
     bool elem_exists(const std::vector<cytnx_uint64> &locator) const {

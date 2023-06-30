@@ -163,7 +163,7 @@ namespace cytnx {
       this->TOUT_iBondNum = 0;
       this->ORDER_tokens.clear();
     }
-    UniTensor Launch(const bool &optimal = false) { return UniTensor(); };
+    UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "") { return UniTensor(); };
     boost::intrusive_ptr<Network_base> clone() {
       FermionNetwork *tmp = new FermionNetwork();
       tmp->name2pos = this->name2pos;
