@@ -7,7 +7,6 @@ TEST_F(BlockUniTensorTest, contract1_cutn) {
     UT_contract_R1.set_labels({'b','c'});
     UT_contract_L1.to_(Device.cuda);
     UT_contract_R1.to_(Device.cuda);
-
     EXPECT_TRUE(UT_contract_L1.dtype() == Type.Double);
     EXPECT_TRUE(UT_contract_R1.dtype() == Type.Double);
     UniTensor out = UT_contract_L1.contract(UT_contract_R1);
@@ -40,8 +39,8 @@ TEST_F(BlockUniTensorTest, contract3_cutn) {
     UT_contract_R3.set_labels({'c','d','e'});
     UT_contract_L3.to_(Device.cuda);
     UT_contract_R3.to_(Device.cuda);
-    // EXPECT_TRUE(UT_contract_L3.dtype() == Type.Double);
-    // EXPECT_TRUE(UT_contract_R3.dtype() == Type.Double);
+    EXPECT_TRUE(UT_contract_L3.dtype() == Type.Double);
+    EXPECT_TRUE(UT_contract_R3.dtype() == Type.Double);
     UniTensor out = UT_contract_L3.contract(UT_contract_R3);
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans3.get_blocks();
