@@ -1,3 +1,9 @@
+if (USE_CUDA AND USE_CUTENSOR)      # cutensor related tests
+  set(additional_tests 
+      gpu_test/BlockUniTensor_test.cpp
+      gpu_test/DenseUniTensor_test.cpp)
+endif()
+
 add_executable(
   test_main
   test_tools.cpp
@@ -33,7 +39,10 @@ add_executable(
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
 
+  ${additional_tests}
 )
+ 
+
 target_link_libraries(
   test_main
   gtest_main
