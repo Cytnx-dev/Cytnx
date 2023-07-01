@@ -32,7 +32,7 @@ FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #        Please follow the guide from official mkl/oneMKL "post-installation" part 
 #        to source the proper setvars.sh and/or vars.sh  
 #----------------------
-FLAG="${FLAG} -DUSE_MKL=OFF"
+FLAG="${FLAG} -DUSE_MKL=ON"
 #----------------------
 
 

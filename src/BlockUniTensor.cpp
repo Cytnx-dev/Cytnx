@@ -964,6 +964,7 @@ namespace cytnx {
             for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++)
               if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
 
+#ifdef UNI_MKL
             // Initialize!!
             if((this->dtype()!=Type.Double and this->dtype()!=Type.ComplexDouble) and
                (this->dtype()!=Type.Float and this->dtype()!=Type.ComplexFloat) or
@@ -972,6 +973,9 @@ namespace cytnx {
             } else {
               tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false, true);
             }
+#else
+              tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false, true);
+#endif
 
             // now, build the itoi table:
             std::vector< std::vector<cytnx_uint64> > itoiL_common(this->_blocks.size()), itoiR_common(Rtn->_blocks.size());
