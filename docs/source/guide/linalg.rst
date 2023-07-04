@@ -4,7 +4,7 @@ Linear algebra
 Currently, Cytnx supports the following linear algebra functions. See https://kaihsin.github.io/Cytnx/docs/html/index.html for further documentation.
 
 +-----------------------------------------------------------------------+---------+-----+------+-------------+----+----------------+
-|   func                                                                | inplace | CPU | GPU  | callby tn   | Tn | CyTn (xlinalg) |
+|   func                                                                | Inplace | CPU | GPU  | Called by Tn| Tn | CyTn (xlinalg) |
 +-----------------------------------------------------------------------+---------+-----+------+-------------+----+----------------+
 | :cytnx_linalg:`Add <#ac61bd0f99306496fae81f8601fa4070c>`              |   x     |  Y  |  Y   |    Y        | Y  |   Y            |
 +-----------------------------------------------------------------------+---------+-----+------+-------------+----+----------------+
@@ -84,7 +84,18 @@ Currently, Cytnx supports the following linear algebra functions. See https://ka
 +-----------------------------------------------------------------------+---------+-----+------+-------------+----+----------------+
 
 
-(\*) this is a high level linalg  
+**Inplace**: If the function applies inplacely to the input tensor, and the corresponding function to use if it does.
+
+**CPU/GPU**: If it is supported for input tensors on that device.
+
+**Called by Tn**: If the function can be called as a member function of the tensor object, e.g. Tensor1.add(Tensor2)
+
+**Tn**: If the function supports the Cytnx.Tensor as input.
+
+**CyTn**: If the function supports the Cytnx.UniTensor as input.
+
+**(\*)**: This is a high level linalg.
+
 
 Many linear algebra functions can be used with Tensors and UniTensors. Most of the linear algebra algorithms take a matrix as an input. We use :ref:`rowrank` to specify how to cast the input UniTensor into a matrix. See :ref:`rowrank` as well for an example of how to calculate a singular value decomposition of a UniTensor.
 

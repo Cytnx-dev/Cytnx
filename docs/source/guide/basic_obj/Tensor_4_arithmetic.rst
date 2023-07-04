@@ -190,7 +190,7 @@ For example, there are two different ways to perform the + operation: **Tensor.A
 
 .. Hint::
     
-    1. If the input is of type ComplexDouble/ComplexFloat/Double/Float and both inputs are of the same type, the arithmetic operations internally call BLAS/cuBLAS/MKL ?axpy. 
+    1. If the input is of type ComplexDouble/ComplexFloat/Double/Float and both inputs are of the same type, the arithmetic operations internally call BLAS/cuBLAS/MKL `?axpy <https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-fortran/2023-0/axpy.html>`_ routines. 
     2. Arithmetic operations between other types (including different types) are accelerated with OpenMP on the CPU. On a GPU, custom kernels are used to perform the operations. 
 
 

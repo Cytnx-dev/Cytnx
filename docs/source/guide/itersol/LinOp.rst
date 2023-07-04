@@ -375,8 +375,8 @@ Output>>
     [3.00000e+00 8.00000e+00 9.00000e+00 0.00000e+00 ]
 
 
-Ex: sparse data structure with mapping function 
-****************************************************
+Example: sparse data structure with mapping function 
+*****************************************************
 With the flexibility provided by overloading the **matvec** member function, users can actually define their own sparse data structures of an operator. 
 
 As an example, we want to define a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. All other elements are zero. We do not have to construct a dense tensor with size :math:`10^6`. Instead, we can simply use the **LinOp** class:

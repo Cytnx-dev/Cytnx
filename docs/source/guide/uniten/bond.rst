@@ -16,7 +16,49 @@ The API for constructing a simple Bond (with or without direction) is:
     :param bondType bd_type: The type (direction) of the bond, can be BD_REG--undirectional, BD_KET--inward (same as BD_IN), BD.BRA--outward (same as BD_OUT)
 
 
+A Bond object (without any symmetry) can thus be created as follows:
 
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+    from cytnx import Bond
+    # This creates an in-going Bond with dimension 10.
+    bond_1 = Bond(10, BD_IN)
+    print(bond_1)
+    # If one doesn't specify the Bond type, the default bond type will be
+    regular or undirectional.
+    bond_2 = Bond(10)
+    print(bond_2)
+
+Output >>
+
+.. code-block:: text
+
+    Dim = 10 |type: KET>
+    Dim = 10 |type: REGULAR>
+
+In some scenarios, one may want to change the direction of the bond, namely from BD_BRA
+to BD_KET or the opposite, one can then use .redirect() method:
+
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+    from cytnx import Bond
+    bond_1 = Bond(10, BD_IN)
+    bond_2 = bond_1.redirect()
+    print(bond_1)
+    print(bond_2)
+
+Output >>
+
+.. code-block:: text
+
+    Dim = 10 |type: KET>
+    Dim = 10 |type: <BRA
 
 
 Symmetry object
