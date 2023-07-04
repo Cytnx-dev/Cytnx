@@ -59,4 +59,5 @@ target_sources_local(cytnx
     cuSum_internal.cu
     cuMaxMin_internal.cu
     cuKron_internal.cu
+    cuTensordot_internal.cu
 )

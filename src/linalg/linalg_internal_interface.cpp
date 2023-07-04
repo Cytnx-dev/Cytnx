@@ -1361,6 +1361,15 @@ namespace cytnx {
       cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
       cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
 
+#ifdef UNI_CUTENSOR
+      cuTensordot_ii = vector<Tensordotfunc_oii>(N_Type);
+      cuTensordot_ii[Type.ComplexDouble] = cuTensordot_internal_cd;
+      cuTensordot_ii[Type.ComplexFloat] = cuTensordot_internal_cf;
+      cuTensordot_ii[Type.Double] = cuTensordot_internal_d;
+      cuTensordot_ii[Type.Float] = cuTensordot_internal_f;
+      cuTensordot_ii[Type.Int32] = cuTensordot_internal_i32;
+      cuTensordot_ii[Type.Uint32] = cuTensordot_internal_u32;
+#endif
 #endif
     }
 

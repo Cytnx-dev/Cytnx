@@ -62,6 +62,9 @@
   #include "linalg/linalg_internal_gpu/cuSum_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuKron_internal.hpp"
+#ifdef UNI_CUTENSOR
+  #include "linalg/linalg_internal_gpu/cuTensordot_internal.hpp"
+#endif
 #endif
 
 namespace cytnx {
@@ -165,7 +168,9 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &, const std::vector<cytnx_int64> &,
                            const cytnx_uint64 &, const cytnx_uint64 &);
 
-
+    typedef void (*Tensordotfunc_oii)(Tensor &out,
+                              const Tensor &Lin,
+                              const Tensor &Rin, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
 
     class linalg_internal_interface {
      public:
@@ -227,6 +232,7 @@ namespace cytnx {
       std::vector<MaxMinfunc_oii> cuMM_ii;
       std::vector<MaxMinfunc_oii> cuSum_ii;
       std::vector<std::vector<Kronfunc_oii>> cuKron_ii;
+      std::vector<Tensordotfunc_oii> cuTensordot_ii;
 #endif
 
       linalg_internal_interface();
