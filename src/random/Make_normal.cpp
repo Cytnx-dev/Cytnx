@@ -39,7 +39,7 @@ namespace cytnx {
 
     void Make_normal(UniTensor &Tin, const double &mean, const double &std,
                      const unsigned int &seed) {
-      if (Tin.uten_type() == UTenType.Sparse) {
+      if (Tin.uten_type() != UTenType.Dense) {
         for (cytnx_int64 i = 0; i < Tin.get_blocks_().size(); i++) {
           Make_normal(Tin.get_blocks_()[i], mean, std, seed + i);
         }
