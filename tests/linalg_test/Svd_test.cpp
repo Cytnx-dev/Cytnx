@@ -405,7 +405,7 @@ void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& To
   const UniTensor& U = Tout[1];
   const UniTensor& V = Tout[2];
   auto UD = U.Dagger();
-  UD.set_labels({0, 1, 9});
+  UD.set_labels({"0", "1", "9"});
   UD.permute_({2, 0, 1}, 1);
   auto UUD = Contract(U, UD);
 }

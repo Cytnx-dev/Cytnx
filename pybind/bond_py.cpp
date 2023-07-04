@@ -31,11 +31,8 @@ void bond_binding(py::module &m){
   py::class_<Bond>(m, "Bond")
     // construction
     .def(py::init<>())
-    .def(py::init<const cytnx_uint64 &, const bondType &,
-                  const std::vector<std::vector<cytnx_int64>> &, const std::vector<Symmetry> &>(),
-         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG,
-         py::arg("qnums") = std::vector<std::vector<cytnx_int64>>(),
-         py::arg("symmetries") = std::vector<Symmetry>())
+    .def(py::init<const cytnx_uint64 &, const bondType &>(),
+         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG)
     .def(py::init<const bondType &, const std::vector<std::vector<cytnx_int64> > &, 
                   const  std::vector<cytnx_uint64> &, const std::vector<Symmetry> &>(),
          py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
@@ -56,11 +53,10 @@ void bond_binding(py::module &m){
          py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
 
     .def("Init", 
-         [](Bond &self, const cytnx_uint64 &dim, const bondType &bd_type, 
-            const std::vector<std::vector<cytnx_int64>> &in_qnums, const std::vector<Symmetry> &in_syms){
-                self.Init(dim,bd_type,in_qnums,in_syms);
+         [](Bond &self, const cytnx_uint64 &dim, const bondType &bd_type){
+                self.Init(dim,bd_type);
             }, 
-         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG, py::arg("qnums")=std::vector<std::vector<cytnx_int64>>(), py::arg("symmetries")=std::vector<Symmetry>())
+         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG)
 
     .def("Init", 
          [](Bond &self, const bondType &bd_type, const std::vector< std::pair<std::vector<cytnx_int64>,cytnx_uint64> > &in_qnums_degs,

@@ -13,9 +13,9 @@ BENCHMARK(BM_Cytnx_declare);
 
 static void BM_Cytnx_contract(benchmark::State& state) {
   auto A = cytnx::UniTensor(cytnx::ones({3, 3, 3}));
-  A.set_labels(std::vector<long int>{1l, 2l, 3l});
+  A.set_labels({"1","2","3"});
   auto B = cytnx::UniTensor(cytnx::ones({3, 3, 3, 3}));
-  B.set_labels(std::vector<long int>{2l, 3l, 4l, 5l});
+  B.set_labels({"2","3","4","5"});
   for (auto _: state) {
     auto C = cytnx::Contract(A, B);
   }

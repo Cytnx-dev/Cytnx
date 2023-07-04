@@ -25,10 +25,10 @@ class DenseUniTensorTest : public ::testing::Test {
   Tensor tzero345 = zeros({3, 4, 5}).astype(Type.ComplexDouble);
   Tensor tar345 = arange({3*4*5}).reshape({3,4,5}).astype(Type.ComplexDouble);
 
-  UniTensor Spf = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.Float,Device.cpu,false);
-  UniTensor Spd = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.Double,Device.cpu,false);
-  UniTensor Spcf = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.ComplexFloat,Device.cpu,false);
-  UniTensor Spcd = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.ComplexDouble,Device.cpu,false);
+  UniTensor Spf = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.Float,Device.cpu,false);
+  UniTensor Spd = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.Double,Device.cpu,false);
+  UniTensor Spcf = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.ComplexFloat,Device.cpu,false);
+  UniTensor Spcd = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.ComplexDouble,Device.cpu,false);
 
   UniTensor ut1,ut2,contres1,contres2,contres3,dense4trtensor,densetr;
   UniTensor ut3,ut4,permu1,permu2;

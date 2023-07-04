@@ -60,9 +60,7 @@ namespace cytnx {
         this->_qnums.erase(this->_qnums.begin() + q_index);
     }
 
-    void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG,
-              const std::vector<std::vector<cytnx_int64>> &in_qnums = {},
-              const std::vector<Symmetry> &in_syms = {});
+    void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG);
 
     // new added
     void Init(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
@@ -192,31 +190,18 @@ namespace cytnx {
 	/**
 	 * @brief The constructor of the Bond object.
 	 * @details This function will call \ref 
-     *  Init(const cytnx_uint64 &dim, const bondType &bd_type,
-     *       const std::vector<std::vector<cytnx_int64>> &in_qnums,
-     *       const std::vector<Symmetry> &in_syms) 
+     *  Init(const cytnx_uint64 &dim, const bondType &bd_type) 
 	 *  	 "Init" to do initialization.
 	 * @param[in] dim the dimenstion of the Bond
 	 * @param[in] bd_type the type (see \ref bondType) of the bond
-	 * @param[in] in_qnums input the quantum numbers of the bond (for symmetry case)
-	 * @param[in] in_syms input the symmetries of the bond (for symmetry case)
-	 * @warning This function is deprecated for symmetry case, please use \n
-     *   Bond(const bondType &bd_type, 
-	 *        const std::vector<std::vector<cytnx_int64>> &in_qnums,
-     *        const std::vector<cytnx_uint64> &degs, 
-	 *  	  const std::vector<Symmetry> &in_syms)\n
-	 *   instead.
+
      *
 	 * @see
-     *  Init(const cytnx_uint64 &dim, const bondType &bd_type,
-     *       const std::vector<std::vector<cytnx_int64>> &in_qnums,
-     *       const std::vector<Symmetry> &in_syms)
+     *  Init(const cytnx_uint64 &dim, const bondType &bd_type)
 	 */
-    Bond(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG,
-         const std::vector<std::vector<cytnx_int64>> &in_qnums = {},
-         const std::vector<Symmetry> &in_syms = {})
+    Bond(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG)
         : _impl(new Bond_impl()) {
-      this->_impl->Init(dim, bd_type, in_qnums, in_syms);
+      this->_impl->Init(dim, bd_type);
     }
 
 	/**
@@ -294,29 +279,17 @@ namespace cytnx {
     @param[in] dim the dimension of the bond (rank)
     @param[in] bd_type the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG as
     regular bond (rank)
-    @param[in] in_qnums the quantum number(s) of the bond. it should be a 2d vector with shape (# of
-    symmetry, dim)
-    @param[in] in_syms the symmetry object of the bond. [Note] if qnums are provided, the default
-    symmetry type is \link cytnx::Symmetry::U1 Symmetry::U1 \endlink
+
 
     details:
         1. each bond can be tagged with BD_BRA or BD_KET that represent the bond is defined in Bra
     space or Ket space.
-        2. the bond can have arbitrary multiple symmetries, with the type of each symmetry associate
-    to the qnums are provided with the in_syms.
 
 	@pre
 	    1. \p dim cannot be 0.
-        2. If quantum number(s) \p in_qnums are provided (which means the bond is 
-		  with symmetry) then the bond MUST be tagged with either cytxn::BD_BRA 
-		  or bondType.BD_KET.
-        3. If the bond is non-symmetry, then it can be tagged with bondType.BD_BRA or 
+      2. The bond can be tagged with bondType.BD_BRA or 
 		  bondType.BD_KET, or bondType.BD_REG depending on the usage.
-	@warning 
-	  For symmetry case, this initial function is deprecated, pleas use \n
-      Init(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
-           const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms)\n
-		   instead.
+
 
     ## Example:
     ### c++ API:
@@ -328,10 +301,8 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/Init.py.out
     */
-    void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG,
-              const std::vector<std::vector<cytnx_int64>> &in_qnums = {},
-              const std::vector<Symmetry> &in_syms = {}) {
-      this->_impl->Init(dim, bd_type, in_qnums, in_syms);
+    void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG) {
+      this->_impl->Init(dim, bd_type);
     }
 
     /**
