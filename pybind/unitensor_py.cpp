@@ -134,12 +134,7 @@ void unitensor_binding(py::module &m){
     .def(py::init<>())
     .def(py::init<const cytnx::Tensor &, const bool &, const cytnx_int64 &, const std::vector<std::string> &, const std::string &>(), py::arg("Tin"),
          py::arg("is_diag") = false, py::arg("rowrank") = (cytnx_int64)(-1), py::arg("labels") = std::vector<std::string>(), py::arg("name")="")
-    .def(py::init<const std::vector<Bond> &, const std::vector<cytnx_int64> &, const cytnx_int64 &,
-                  const unsigned int &, const int &, const bool &, const std::string &>(),
-         py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
-         py::arg("rowrank") = (cytnx_int64)(-1),
-         py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
+
 
     .def(py::init<const std::vector<Bond> &, const std::vector<std::string> &, const cytnx_int64 &,
                   const unsigned int &, const int &, const bool &, const std::string &>(),
@@ -153,16 +148,6 @@ void unitensor_binding(py::module &m){
                     self.Init(in_tensor,is_diag,rowrank,labels,name);
                 },py::arg("Tin"),py::arg("is_diag")=false,py::arg("rowrank")=(cytnx_int64)(-1), py::arg("labels") = std::vector<std::string>(), py::arg("name")="")
 
-
-    .def("Init",[](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
-                   const cytnx_int64 &rowrank, const unsigned int &dtype,
-                   const int &device, const bool &is_diag, const std::string &name){
-                    self.Init(bonds,in_labels,rowrank,dtype,device,is_diag,name);
-                },
-         py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
-         py::arg("rowrank") = (cytnx_int64)(-1),
-         py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false, py::arg("name")="")
 
     .def("Init",[](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels,
                    const cytnx_int64 &rowrank, const unsigned int &dtype,
@@ -184,26 +169,8 @@ void unitensor_binding(py::module &m){
                             return self.set_label(old_label,new_label);
                         },py::arg("old_label"), py::arg("new_label"))
 
-    // [Deprecated!] 
-    .def("c_set_label", [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label, const bool &by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][set_label:1] specify new_label with integer will be deprecated soon. use string instead.%s","\n");
-                            if(by_label==true){
-                                cytnx_warning_msg(true,"[Deprecated warning][set_label:2] specify old_label with integer will be deprecated soon. use string instead.%s","\n");
-                                return self.set_label(idx,new_label,by_label);
-                            }else{
-                                return self.set_label(idx,new_label);
-                            }
-                        },py::arg("idx"), py::arg("new_label"),py::arg("by_label")=false)
-
-
 
     .def("c_set_labels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                            return self.set_labels(new_labels);
-                        },py::arg("new_labels"))
-
-    // [Deprecated!]
-    .def("c_set_labels",[](UniTensor &self, const std::vector<cytnx_int64> &new_labels){
-                            cytnx_warning_msg(true,"[Deprecated warning][set_labels] specify labels with integers will be deprecated soon. using strings instead.%s","\n");
                             return self.set_labels(new_labels);
                         },py::arg("new_labels"))
 
@@ -213,24 +180,16 @@ void unitensor_binding(py::module &m){
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         return self.relabels(new_labels);
                     }, py::arg("new_labels"))
+
      .def("relabels_",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         self.relabels_(new_labels);
                     }, py::arg("new_labels"))
 
-    // [Deprecated]
-    .def("relabels",[](UniTensor &self, const std::vector<cytnx_int64> &new_labels){
-                        cytnx_warning_msg(true,"[Deprecated warning][relabels] specify labels with integers will be deprecated soon. using strings instead.%s","\n");
-                        return self.relabels(new_labels);
-                    }, py::arg("new_labels"))
-     // [Deprecated]
-    .def("relabels_",[](UniTensor &self, const std::vector<cytnx_int64> &new_labels){
-                        cytnx_warning_msg(true,"[Deprecated warning][relabels_] specify labels with integers will be deprecated soon. using strings instead.%s","\n");
-                        self.relabels_(new_labels);
-                    }, py::arg("new_labels"))
 
     .def("relabel", [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label){
                             return self.relabel(idx,new_label);
                         },py::arg("idx"), py::arg("new_label"))
+
      .def("relabel_", [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label){
                             self.relabel_(idx,new_label);
                         },py::arg("idx"), py::arg("new_label"))
@@ -242,26 +201,7 @@ void unitensor_binding(py::module &m){
                             self.relabel_(old_label,new_label);
                         },py::arg("old_label"), py::arg("new_label"))
 
-    // [Deprecated!] 
-    .def("relabel", [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label, const bool &by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][relabel:1] specify new_label with integer will be deprecated soon. use string instead.%s","\n");
-                            if(by_label==true){
-                                cytnx_warning_msg(true,"[Deprecated warning][relabel:2] specify relabel with integer will be deprecated soon. use string instead.%s","\n");
-                            }
-                            return self.relabel(idx,new_label,by_label);
-                        },py::arg("idx"), py::arg("new_label"),py::arg("by_label")=false)
-     // [Deprecated!] 
-    .def("relabel_", [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label, const bool &by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][relabel_:1] specify new_label with integer will be deprecated soon. use string instead.%s","\n");
-                            if(by_label==true){
-                                cytnx_warning_msg(true,"[Deprecated warning][relabel_:2] specify relabel_ with integer will be deprecated soon. use string instead.%s","\n");
-                            }
-                            self.relabel_(idx,new_label,by_label);
-                        },py::arg("idx"), py::arg("new_label"),py::arg("by_label")=false)
 
-
-
-    
  
     .def("rowrank", &UniTensor::rowrank)
     .def("Nblocks", &UniTensor::Nblocks)
@@ -517,25 +457,21 @@ void unitensor_binding(py::module &m){
       py::arg("new_type"))
 
     // [Deprecated by_label!]
-    .def("permute_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][permute] by_label=true with integer recognized as label be deprecated soon. use strings instead.%s","\n");
-                        }
-                        self.permute_(mapper,rowrank,by_label);
+    .def("permute_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
+
+                        self.permute_(mapper,rowrank);
                          
-                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1), py::arg("by_label")=false)
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
                         self.permute_(mapper,rowrank); 
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
-    .def("permute", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][permute] by_label=true with integer recognized as label be deprecated soon. use strings instead.%s","\n");
-                        }
-                        return self.permute(mapper,rowrank,by_label);
+    .def("permute", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
+
+                        return self.permute(mapper,rowrank);
                          
-                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1), py::arg("by_label")=false)
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
                         return self.permute(mapper,rowrank); 
@@ -1066,15 +1002,12 @@ void unitensor_binding(py::module &m){
     .def("cConj_", &UniTensor::Conj_)
     .def("Conj", &UniTensor::Conj)
 
-    .def("cTrace_", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                            return self.Trace_(a,b,by_label);
-                        }else{
+    .def("cTrace_", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b){
+                        
                             return self.Trace_(a,b);
-                        }
+                        
                     },
-                    py::arg("a")=0, py::arg("b")=1, py::arg("by_label")=false)
+                    py::arg("a")=0, py::arg("b")=1)
 
     .def("cTrace_", [](UniTensor &self, const std::string &a, const std::string &b){
                     return self.Trace_(a,b);
@@ -1082,15 +1015,12 @@ void unitensor_binding(py::module &m){
                  py::arg("a"), py::arg("b"))
 
 
-    .def("Trace", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
-                    if(by_label){
-                        cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                        return self.Trace(a,b,by_label);
-                    }else{
+    .def("Trace", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b){
+                   
                         return self.Trace(a,b);
-                    }
+                    
                  },
-                 py::arg("a")=0, py::arg("b")=1, py::arg("by_label")=false)
+                 py::arg("a")=0, py::arg("b")=1)
 
     .def("Trace", [](UniTensor &self, const std::string &a, const std::string &b){
                     return self.Trace(a,b);
@@ -1106,31 +1036,23 @@ void unitensor_binding(py::module &m){
     .def("cDagger_", &UniTensor::Dagger_)
     .def("Dagger", &UniTensor::Dagger)
     .def("ctag", &UniTensor::tag)
-    .def("truncate",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                       const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                            return self.truncate(bond_idx, dim, by_label);
-                        }else{
-                            return self.truncate(bond_idx, dim);
-                        }
+    .def("truncate",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim){
+
+                         return self.truncate(bond_idx, dim);
+                        
                     },
-                    py::arg("bond_idx"), py::arg("dim"),py::arg("by_label") = false)
+                    py::arg("bond_idx"), py::arg("dim"))
     .def("truncate",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
                         return self.truncate(label, dim);
                     },
                     py::arg("label"), py::arg("dim"))  
 
-    .def("ctruncate_",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                       const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                            return self.truncate_(bond_idx, dim, by_label);
-                        }else{
+    .def("ctruncate_",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim){
+                       
                             return self.truncate_(bond_idx, dim);
-                        }
+                        
                     },
-                    py::arg("bond_idx"), py::arg("dim"),py::arg("by_label") = false)
+                    py::arg("bond_idx"), py::arg("dim"))
 
     .def("ctruncate_",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
                         return self.truncate(label, dim);

@@ -295,9 +295,13 @@ void linalg_binding(py::module &m){
 
   m_linalg.def(
     "Trace",
-    [](const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b,
-       const bool &by_label) { return cytnx::linalg::Trace(Tin, a, b, by_label); },
-    py::arg("Tn"), py::arg("axisA") = 0, py::arg("axisB") = 1, py::arg("by_label") = false);
+    [](const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) { return cytnx::linalg::Trace(Tin, a, b); },
+    py::arg("Tn"), py::arg("axisA") = 0, py::arg("axisB") = 1);
+
+  m_linalg.def(
+    "Trace",
+    [](const cytnx::UniTensor &Tin, const std::string &a, const std::string &b) { return cytnx::linalg::Trace(Tin, a, b); },
+    py::arg("Tn"), py::arg("axisA"), py::arg("axisB"));
 
   m_linalg.def(
     "Trace",

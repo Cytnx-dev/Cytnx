@@ -660,7 +660,7 @@ namespace cytnx {
     UniTensor Mul(const UniTensor &Lt, const UniTensor &Rt) {
 
       UniTensor out = Lt.clone();
-      out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+      out.set_labels(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       out.Mul_(Rt);

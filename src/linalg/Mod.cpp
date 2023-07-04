@@ -896,10 +896,10 @@ namespace cytnx {
       }else{
         cytnx_error_msg(true,"[Developing/Evaluating suitable][Mod][UniTensor with Sym]%s","\n");
         // cytnx_error_msg(true,"[Developing][Mod][Sparsecytnx::UniTensor]%s","\n");
-        SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
-        for (int i = 0; i < out_raw->_blocks.size(); i++) {
-          out_raw->_blocks[i] = cytnx::linalg::Mod(lc, out_raw->_blocks[i]);
-        }
+        //SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
+        //for (int i = 0; i < out_raw->_blocks.size(); i++) {
+        //  out_raw->_blocks[i] = cytnx::linalg::Mod(lc, out_raw->_blocks[i]);
+        //}
       }
       return out;
     }
@@ -927,10 +927,10 @@ namespace cytnx {
       }else{
         cytnx_error_msg(true,"[Developing/Evaluating suitable][Mod][UniTensor with Sym]%s","\n");
         // cytnx_error_msg(true,"[Developing][Mod][Sparsecytnx::UniTensor]%s","\n");
-        SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
-        for (int i = 0; i < out_raw->_blocks.size(); i++) {
-          out_raw->_blocks[i] = cytnx::linalg::Mod(out_raw->_blocks[i], rc);
-        }
+        //SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
+        //for (int i = 0; i < out_raw->_blocks.size(); i++) {
+        //  out_raw->_blocks[i] = cytnx::linalg::Mod(out_raw->_blocks[i], rc);
+        //}
       }
 
       return out;

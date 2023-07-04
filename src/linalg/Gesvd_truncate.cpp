@@ -167,14 +167,7 @@ namespace cytnx {
         if (return_err) outCyT.back().Init(outT.back(), false, 0);
     }; // svdt Dense
 
-    
-    void _gesvd_truncate_Sparse_UT(std::vector<UniTensor> &outCyT,const cytnx::UniTensor &Tin,
-                                               const cytnx_uint64 &keepdim, const double &err,
-                                               const bool &is_U, const bool &is_vT,
-                                               const bool &return_err){
-
-      cytnx_error_msg(true,"[ERROR] Sparse_UT data structure will be deprecated.%s","\n");
-    }; // svdt Sparse
+  
 
 
     void _gesvd_truncate_Block_UT(std::vector<UniTensor> &outCyT,const cytnx::UniTensor &Tin,
@@ -345,9 +338,7 @@ namespace cytnx {
                                                return_err);
 
       }else{
-        _gesvd_truncate_Sparse_UT(outCyT, Tin, keepdim, err,
-                                               is_U,is_vT,
-                                               return_err);
+        cytnx_error_msg(true,"[ERROR] only support gesvd for Dense and Block UniTensor.%s","\n");
 
       }
       return outCyT;

@@ -176,11 +176,11 @@ namespace cytnx {
         // anet.PutUniTensors(["L","A","A_Conj","M"],[self.LR[p],self.mps.A[p],self.mps.A[p].Conj(),self.mpo.get_op(p)],is_clone=False);
 
         // hard coded the network:
-        auto Lenv = this->LR[p].relabels({-2, -1, -3});
-        auto tA = this->mps.data()[p].relabels({-1, -4, 1});
+        auto Lenv = this->LR[p].relabels({"-2", "-1", "-3"});
+        auto tA = this->mps.data()[p].relabels({"-1", "-4", "1"});
         auto tAc = this->mps.data()[p].Conj();
-        tAc.set_labels({-3, -5, 2});
-        auto M = this->mpo.get_op(p).relabels({-2, 0, -4, -5});
+        tAc.set_labels({"-3", "-5", "2"});
+        auto M = this->mpo.get_op(p).relabels({"-2", "0", "-4", "-5"});
         this->LR[p + 1] = Network::Contract({Lenv, tA, tAc, M}, ";0,1,2").Launch(true);
       }
       // this->mps.S_mvright();

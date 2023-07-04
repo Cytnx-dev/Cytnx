@@ -21,10 +21,7 @@ namespace cytnx {
                            const std::string &b) {
       return Tin.Trace(a, b);
     }
-    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b,
-                           const bool &by_label) {
-      return Tin.Trace(a, b, by_label);
-    }
+
   }  // namespace linalg
 }  // namespace cytnx
 

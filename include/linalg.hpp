@@ -793,12 +793,7 @@ namespace cytnx {
      */
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b);
 
-    /**
-     * @deprecated This function is deprecated, please use 
-     * Trace(const cytnx::UniTensor &Tin, const string &a, const string &b) instead.
-    */
-    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
-                           const cytnx_int64 &b = 1, const bool &by_label = false);
+
 
     /**
      * @brief Perform the QR decomposition on a UniTensor.

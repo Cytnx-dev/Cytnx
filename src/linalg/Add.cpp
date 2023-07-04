@@ -612,7 +612,7 @@ namespace cytnx {
     cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) {
 
       UniTensor out = Lt.clone();
-      out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+      out.set_labels(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       out.Add_(Rt);

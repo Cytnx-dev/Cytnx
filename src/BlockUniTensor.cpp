@@ -543,30 +543,20 @@ namespace cytnx {
 
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
-    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label) {
+    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     
     BlockUniTensor *out_raw = this->clone_meta(true,true);
     out_raw ->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64;
-    if (by_label) {
-      // cytnx_error_msg(true,"[Developing!]%s","\n");
-      std::vector<std::string>::iterator it;
-      for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
-        it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), std::to_string(mapper[i]));
-        cytnx_error_msg(it == out_raw->_labels.end(),
-                        "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
-        mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
-      }
-
-    } else {
-      mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
-      //checking:
-      for(int i=0;i<mapper_u64.size();i++){
-        cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",mapper_u64[i]);
-      }
-
+    
+    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    //checking:
+    for(int i=0;i<mapper_u64.size();i++){
+      cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",mapper_u64[i]);
     }
+
+    
 
 
     out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
@@ -616,31 +606,20 @@ namespace cytnx {
           mapper_i64.push_back(std::distance(out_raw->_labels.begin(), it));
         }
  
-        return this->permute(mapper_i64,rowrank,false);
+        return this->permute(mapper_i64,rowrank);
 
 
   }
 
-  void BlockUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                                 const bool &by_label) {
+  void BlockUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     std::vector<cytnx_uint64> mapper_u64;
-    if (by_label) {
-      // cytnx_error_msg(true,"[Developing!]%s","\n");
-      std::vector<string>::iterator it;
-      for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
-        it = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(mapper[i]));
-        cytnx_error_msg(it == this->_labels.end(),
-                        "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
-        mapper_u64.push_back(std::distance(this->_labels.begin(), it));
-      }
-
-    } else {
-      mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
-      //checking:
-      for(int i=0;i<mapper_u64.size();i++){
-        cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",mapper_u64[i]);
-      }
+  
+    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    //checking:
+    for(int i=0;i<mapper_u64.size();i++){
+      cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",mapper_u64[i]);
     }
+    
 
     this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
     this->_labels = vec_map(this->labels(), mapper_u64);
@@ -682,7 +661,7 @@ namespace cytnx {
       mapper_i64.push_back(std::distance(this->_labels.begin(), it));
     }
 
-    this->permute_(mapper_i64,rowrank,false);
+    this->permute_(mapper_i64,rowrank);
 
   }
 
@@ -697,35 +676,8 @@ namespace cytnx {
   void BlockUniTensor::relabels_(const std::vector<string> &new_labels) {
     this->set_labels(new_labels);
   }
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
-    const std::vector<cytnx_int64> &new_labels) {
-    vector<string> vs(new_labels.size());
-    transform(new_labels.begin(), new_labels.end(), vs.begin(),
-              [](cytnx_int64 x) -> string { return to_string(x); });
-    //std::cout << "entry" << endl;
-    return relabels(vs);
-  }
-  void BlockUniTensor::relabels_(const std::vector<cytnx_int64> &new_labels) {
-    vector<string> vs(new_labels.size());
-    transform(new_labels.begin(), new_labels.end(), vs.begin(),
-              [](cytnx_int64 x) -> string { return to_string(x); });
-    //std::cout << "entry" << endl;
-    this->relabels_(vs);
-  }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
-                                                                const cytnx_int64 &new_label,
-                                                                const bool &by_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
-    tmp->_blocks = this->_blocks;
-    tmp->set_label(inx, new_label, by_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
-  }
-  void BlockUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                                const bool &by_label) {
-    this->set_label(inx, new_label, by_label);
-  }
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
                                                                 const string &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
@@ -748,17 +700,7 @@ namespace cytnx {
   void BlockUniTensor::relabel_(const string &inx, const string &new_label) {
     this->set_label(inx, new_label);
   }
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
-                                                                const cytnx_int64 &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
-    tmp->_blocks = this->_blocks;
-    tmp->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(tmp);
-    return out;
-  }
-  void BlockUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
-    this->set_label(inx, new_label);
-  }
+
 
 
 
@@ -1250,24 +1192,7 @@ namespace cytnx {
     }
   };
 
-  void BlockUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
 
-    // 1) from label to indx.
-    cytnx_int64 ida, idb;
-
-    if (by_label) {
-      ida = vec_where(this->_labels, std::to_string(a));
-      idb = vec_where(this->_labels, std::to_string(b));
-    } else {
-      cytnx_error_msg(a < 0 || b < 0, "[ERROR] invalid index a, b%s", "\n");
-      cytnx_error_msg(a >= this->rank() || b >= this->rank(), "[ERROR] index out of bound%s", "\n");
-      ida = a;
-      idb = b;
-    }
-
-    this->Trace_(ida,idb);
-
-  }
   
   void BlockUniTensor::Trace_(const std::string &a, const std::string &b){
     // 1) from label to indx.
@@ -1626,17 +1551,11 @@ namespace cytnx {
   }
 
 
-  void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index,
-                           const bool &by_label){
+  void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index){
 
         cytnx_error_msg(this->is_diag(),"[ERROR][BlockUniTensor][truncate_] cannot use truncate_ when is_diag() = true.%s","\n");
         cytnx_int64 bidx = bond_idx;
-        if(by_label){
-            auto it = std::find(this->_labels.begin(), this->_labels.end(), to_string(bond_idx));
-            cytnx_error_msg(it == this->_labels.end(),
-                    "[ERROR] label [%d] does not exist in current UniTensor.\n", bond_idx);
-            bidx = it - this->_labels.begin();
-        }
+        
 
         cytnx_error_msg((bidx>=this->_labels.size())|| (bidx < 0), "[ERROR][BlockUniTensor][truncate_] bond_idx out of bound.%s","\n");   
         cytnx_error_msg(q_index >= this->_bonds[bidx].qnums().size(), "[ERROR][BlockUniTensor][truncate_] q_index out of bound @ specify Bond @[%d].\n",bidx);   
@@ -1664,10 +1583,7 @@ namespace cytnx {
                     "[ERROR] label [%s] does not exist in current UniTensor.\n", bond_idx.c_str());
 
     cytnx_int64 idx = it - this->_labels.begin();
-    this->truncate_(idx,q_index,false);
-  }
-  void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index){
-    this->truncate_(bond_idx,q_index,false);
+    this->truncate_(idx,q_index);
   }
 
 

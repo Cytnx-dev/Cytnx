@@ -88,7 +88,7 @@ namespace cytnx {
 
     friend class UniTensor;  // allow wrapper to access the private elems
     friend class DenseUniTensor;
-    friend class SparseUniTensor;
+    //friend class SparseUniTensor;
     friend class BlockUniTensor;
 
 
@@ -127,6 +127,7 @@ namespace cytnx {
     const std::string &name() const { return this->_name; }
     cytnx_uint64 rank() const { return this->_labels.size(); }
     void set_name(const std::string &in) { this->_name = in; }
+
     /**
      * @brief Set the label object
 	   * @details Replace the old label by new label.
@@ -176,46 +177,7 @@ namespace cytnx {
                       "\n");
       this->_labels[inx] = new_label;
     }
-    /**
-     * @brief Set the label object
-	 * @details Set the label with respect to the input index.
-     * @deprecated
-	 *  This function is deprecated, use 
-	 *  \ref set_label(const cytnx_int64 &inx, const cytnx_int64 &_new_label, const bool &by_label)
-	 *  instread.
-     */
-    void set_label(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
-      set_label(inx, std::to_string(new_label));
-    }
-    /**
-     * @brief Set the label object
-     * @deprecated
-	 *  This function is deprecated, use 
-	 *  \ref set_label(const cytnx_int64 &inx, const cytnx_int64 &_new_label, const bool &by_label)
-	 *  instread.
-     */
-    void set_label(const cytnx_int64 &inx, const cytnx_int64 &_new_label, const bool &by_label) {
-      std::string new_label = std::to_string(_new_label);
-      cytnx_int64 idx;
-      if (by_label) {
-        auto res = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(inx));
-        cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", inx);
-        idx = std::distance(this->_labels.begin(), res);
-      } else {
-        idx = inx;
-      }
-     
-      set_label(idx,new_label);
-
-    }
-    /**
-     * @brief Set the labels object
-     *
-     * @deprecated
-     *
-     * @param new_labels
-     */
-    void set_labels(const std::vector<cytnx_int64> &new_labels);
+    
     void set_labels(const std::vector<std::string> &new_labels);
     
 
@@ -280,16 +242,15 @@ namespace cytnx {
 
 
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                         const cytnx_int64 &rowrank = -1,
-                                                         const bool &by_label= false);
+                                                         const cytnx_int64 &rowrank = -1);
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                          const cytnx_int64 &rowrank = -1);
     //virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
     //                                                     const cytnx_int64 &rowrank = -1);
 
-    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
-                          const bool &by_label=false);
+    virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1);
     virtual void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
     //virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
@@ -349,31 +310,22 @@ namespace cytnx {
     virtual std::vector<std::vector<cytnx_int64>> get_blocks_qnums() const;
     virtual void Trace_(const std::string &a, const std::string &b);
     virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
-    virtual void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label);
+
     virtual boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b);
     virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b);
-    virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
-                                                       const bool &by_label);
-    virtual boost::intrusive_ptr<UniTensor_base> relabels(
-      const std::vector<cytnx_int64> &new_labels);
+
+
     virtual boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &new_labels);
-    virtual void relabels_(const std::vector<cytnx_int64> &new_labels);
     virtual void relabels_(const std::vector<std::string> &new_labels);
-    virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                         const cytnx_int64 &new_label,
-                                                         const bool &by_label);
+
     virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
                                                          const std::string &new_label);
-    virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                         const cytnx_int64 &new_label);
+
     virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                          const std::string &new_label);
-    virtual void relabel_(const cytnx_int64 &inx,
-                          const cytnx_int64 &new_label,
-                          const bool &by_label);
+
     virtual void relabel_(const std::string &inx, const std::string &new_label);
-    virtual void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
     virtual void relabel_(const cytnx_int64 &inx, const std::string &new_label);
 
     virtual std::vector<Symmetry> syms() const;
@@ -408,8 +360,6 @@ namespace cytnx {
 
     virtual void tag();
 
-    virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                           const bool &by_label);
     virtual void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
     virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
 
@@ -558,70 +508,51 @@ namespace cytnx {
     /**
      * @brief
      *
-     * @deprecated
+     * 
      *
      * @param mapper
      * @param rowrank
-     * @param by_label
      * @return boost::intrusive_ptr<UniTensor_base>
      */
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank=-1, const bool &by_label=false);
+                                                 const cytnx_int64 &rowrank=-1);
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                  const cytnx_int64 &rowrank = -1);
-    //boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-    //                                             const cytnx_int64 &rowrank = -1);
+
     /**
      * @brief
      *
-     * @deprecated
+     *
      *
      * @param mapper
      * @param rowrank
-     * @param by_label
      */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
-                  const bool &by_label=false);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
 
-    //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
 
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
     void relabels_(const std::vector<std::string> &new_labels);
+
+    
     /**
      * @brief
      *
-     * @deprecated
-     *
-     * @param new_labels
-     * @return boost::intrusive_ptr<UniTensor_base>
-     */
-    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
-    void relabels_(const std::vector<cytnx_int64> &new_labels);
-    /**
-     * @brief
-     *
-     * @deprecated
+     * 
      *
      * @param inx
      * @param new_label
-     * @param by_label
+     * 
      * @return boost::intrusive_ptr<UniTensor_base>
      */
-    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                 const cytnx_int64 &new_label,
-                                                 const bool &by_label);
-    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &old_label,
                                                  const std::string &new_label);
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                  const std::string &new_label);
-    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                 const cytnx_int64 &new_label);
-    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                  const bool &by_label);
-    void relabel_(const std::string &inx, const std::string &new_label);
+
+    void relabel_(const std::string &old_label, const std::string &new_label);
     void relabel_(const cytnx_int64 &inx, const std::string &new_label);
-    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
+
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       DenseUniTensor *tmp = this->clone_meta();
@@ -843,13 +774,12 @@ namespace cytnx {
     /**
      * @brief
      *
-     * @deprecated
+     * 
      *
      * @param a
      * @param b
-     * @param by_label
+     * 
      */
-    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label);
     void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
     void Trace_(const std::string &a, const std::string &b);
     boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
@@ -862,21 +792,7 @@ namespace cytnx {
       out->Trace_(a, b);
       return out;
     }
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param a
-     * @param b
-     * @param by_label
-     */
-    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
-                                               const bool &by_label) {
-      boost::intrusive_ptr<UniTensor_base> out = this->clone();
-      out->Trace_(a, b, by_label);
-      return out;
-    }
+
 
     Tensor Norm() const;
 
@@ -1046,13 +962,12 @@ namespace cytnx {
     /**
      * @brief
      *
-     * @deprecated
+     * 
      *
-     * @param bond_idx
+     * @param bond_idx / bond_label
      * @param dim
-     * @param by_label
+     * 
      */
-    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label);
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
     void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
 
@@ -1083,731 +998,6 @@ namespace cytnx {
   };
   /// @endcond
 
-  //======================================================================
-  /// @cond
-  class SparseUniTensor : public UniTensor_base {
-   protected:
-   public:
-    cytnx_uint64 _inner_rowrank;
-    std::vector<std::vector<cytnx_int64>> _blockqnums;
-    std::vector<cytnx_uint64> _mapper;
-    std::vector<cytnx_uint64> _inv_mapper;
-    std::vector<std::vector<cytnx_uint64>> _inner2outer_row;
-    std::vector<std::vector<cytnx_uint64>> _inner2outer_col;
-    std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> _outer2inner_row;
-    std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> _outer2inner_col;
-
-    std::vector<Tensor> _blocks;
-
-    bool _contiguous;
-    void set_meta(SparseUniTensor *tmp, const bool &inner, const bool &outer) const {
-      // outer meta
-      if (outer) {
-        tmp->_bonds = vec_clone(this->_bonds);
-        tmp->_labels = this->_labels;
-        tmp->_is_braket_form = this->_is_braket_form;
-        tmp->_rowrank = this->_rowrank;
-        tmp->_name = this->_name;
-      }
-      // comm meta
-      tmp->_mapper = this->_mapper;
-      tmp->_inv_mapper = this->_inv_mapper;
-      tmp->_contiguous = this->_contiguous;
-      tmp->_is_diag = this->_is_diag;
-
-      // inner meta
-      if (inner) {
-        tmp->_inner_rowrank = this->_inner_rowrank;
-        tmp->_inner2outer_row = this->_inner2outer_row;
-        tmp->_inner2outer_col = this->_inner2outer_col;
-        tmp->_outer2inner_row = this->_outer2inner_row;
-        tmp->_outer2inner_col = this->_outer2inner_col;
-        tmp->_blockqnums = this->_blockqnums;
-      }
-    }
-    SparseUniTensor *clone_meta(const bool &inner, const bool &outer) const {
-      SparseUniTensor *tmp = new SparseUniTensor();
-      this->set_meta(tmp, inner, outer);
-      return tmp;
-    };
-
-    //===================================
-    friend class UniTensor;  // allow wrapper to access the private elems
-    SparseUniTensor() {
-      this->uten_type_id = UTenType.Sparse;
-      this->_is_tag = true;
-    };
-
-    // virtual functions
-    //void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels = {},
-    //          const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-    //          const int &device = Device.cpu, const bool &is_diag = false,
-    //          const bool &no_alloc = false);
-    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false,
-              const bool &no_alloc = false, const std::string &name = "");
-
-    void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
-                        const cytnx_int64 &rowrank = -1, const std::string &name = "") {
-      cytnx_error_msg(
-        true, "[ERROR][SparseUniTensor] cannot use Init_by_tensor() on a SparseUniTensor.%s", "\n");
-    }
-    std::vector<cytnx_uint64> shape() const {
-      std::vector<cytnx_uint64> out(this->_bonds.size());
-      for (cytnx_uint64 i = 0; i < out.size(); i++) {
-        out[i] = this->_bonds[i].dim();
-      }
-      return out;
-    }
-    bool is_blockform() const { return true; }
-    void to_(const int &device) {
-      for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
-        this->_blocks[i].to_(device);
-      }
-    };
-    boost::intrusive_ptr<UniTensor_base> to(const int &device) {
-      if (this->device() == device) {
-        return this;
-      } else {
-        boost::intrusive_ptr<UniTensor_base> out = this->clone();
-        out->to_(device);
-        return out;
-      }
-    };
-    boost::intrusive_ptr<UniTensor_base> clone() const {
-      SparseUniTensor *tmp = this->clone_meta(true, true);
-      tmp->_blocks = vec_clone(this->_blocks);
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
-    };
-
-    bool is_contiguous() const { return this->_contiguous; };
-    void set_rowrank(const cytnx_uint64 &new_rowrank) {
-      cytnx_error_msg((new_rowrank < 1) || (new_rowrank >= this->rank()),
-                      "[ERROR][SparseUniTensor] rowrank should be [>=1] and [<UniTensor.rank].%s",
-                      "\n");
-      cytnx_error_msg(new_rowrank >= this->_labels.size(),
-                      "[ERROR] rowrank cannot exceed the rank of UniTensor.%s", "\n");
-      if (this->_inner_rowrank != new_rowrank) this->_contiguous = false;
-
-      this->_rowrank = new_rowrank;
-      this->_is_braket_form = this->_update_braket();
-    }
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param new_labels
-     * @return boost::intrusive_ptr<UniTensor_base>
-     */
-    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<cytnx_int64> &new_labels);
-    void relabels_(const std::vector<cytnx_int64> &new_labels);
-    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
-    void relabels_(const std::vector<std::string> &new_labels);
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param inx
-     * @param new_label
-     * @param by_label
-     * @return boost::intrusive_ptr<UniTensor_base>
-     */
-    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                 const cytnx_int64 &new_label,
-                                                 const bool &by_label);
-    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                 const cytnx_int64 &new_label);
-    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                 const std::string &new_label);
-    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
-                                                 const std::string &new_label);
-    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                  const bool &by_label);
-    void relabel_(const std::string &inx, const std::string &new_label);
-    void relabel_(const cytnx_int64 &inx, const std::string &new_label);
-    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
-    unsigned int dtype() const {
-#ifdef UNI_DEBUG
-      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
-                      "\n");
-#endif
-      return this->_blocks[0].dtype();
-    };
-    int device() const {
-#ifdef UNI_DEBUG
-      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
-                      "\n");
-#endif
-      return this->_blocks[0].device();
-    };
-    std::string dtype_str() const {
-#ifdef UNI_DEBUG
-      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
-                      "\n");
-#endif
-      return this->_blocks[0].dtype_str();
-    };
-    std::string device_str() const {
-#ifdef UNI_DEBUG
-      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
-                      "\n");
-#endif
-      return this->_blocks[0].device_str();
-    };
-
-    boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
-      SparseUniTensor *tmp = this->clone_meta(true, true);
-      tmp->_blocks.resize(this->_blocks.size());
-      for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
-        tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
-      }
-      boost::intrusive_ptr<UniTensor_base> out(tmp);
-      return out;
-    };
-
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param mapper
-     * @param rowrank
-     * @param by_label
-     */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
-                  const bool &by_label=false);
-    //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
-    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param mapper
-     * @param rowrank
-     * @param by_label
-     * @return boost::intrusive_ptr<UniTensor_base>
-     */
-    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                 const cytnx_int64 &rowrank=-1, const bool &by_label=false);
-    //boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-    //                                             const cytnx_int64 &rowrank = -1);
-    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
-                                                 const cytnx_int64 &rowrank = -1);
-    boost::intrusive_ptr<UniTensor_base> contiguous();
-    boost::intrusive_ptr<UniTensor_base> contiguous_() {
-      if (!this->_contiguous) {
-        boost::intrusive_ptr<UniTensor_base> titr = this->contiguous();
-        SparseUniTensor *tmp = (SparseUniTensor *)titr.get();
-        tmp->set_meta(this, true, true);
-        this->_blocks = tmp->_blocks;
-      }
-      return boost::intrusive_ptr<UniTensor_base>(this);
-    }
-    void print_diagram(const bool &bond_info = false);
-    void print_blocks(const bool &full_info=true)const;
-    void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
-    std::vector<Symmetry> syms() const;
-
-    Tensor get_block(const cytnx_uint64 &idx = 0) const {
-      cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][SparseUniTensor] index out of range%s",
-                      "\n");
-      if (this->_contiguous) {
-        return this->_blocks[idx].clone();
-      } else {
-        cytnx_error_msg(true,
-                        "[Developing] get block from a non-contiguous SparseUniTensor is currently "
-                        "not support. Call contiguous()/contiguous_() first.%s",
-                        "\n");
-        return Tensor();
-      }
-    };
-    cytnx_uint64 Nblocks() const { return this->_blocks.size(); };
-    Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
-      if (!force)
-        cytnx_error_msg(
-          !this->is_braket_form(),
-          "[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch "
-          "the row/col space.\n permute to the correct physical space first, then get block.%s",
-          "\n");
-      // std::cout << "get_block" <<std::endl;
-      if (this->_contiguous) {
-        // std::cout << "contiguous" << std::endl;
-        // get dtype from qnum:
-        cytnx_int64 idx = -1;
-        for (int i = 0; i < this->_blockqnums.size(); i++) {
-          // for(int j=0;j<this->_blockqnums[i].size();j++)
-          //     std::cout << this->_blockqnums[i][j]<< " ";
-          // std::cout << std::endl;
-          if (qnum == this->_blockqnums[i]) {
-            idx = i;
-            break;
-          }
-        }
-        cytnx_error_msg(
-          idx < 0,
-          "[ERROR][SparseUniTensor] no block with [qnum] exists in the current UniTensor.%s", "\n");
-        return this->get_block(idx);
-      } else {
-        cytnx_error_msg(true,
-                        "[Developing] get block from a non-contiguous SparseUniTensor is currently "
-                        "not support. Call contiguous()/contiguous_() first.%s",
-                        "\n");
-        return Tensor();
-      }
-      return Tensor();
-    };
-
-    // return a share view of block, this only work for symm tensor in contiguous form.
-    Tensor &get_block_(const cytnx_uint64 &idx = 0) {
-      cytnx_error_msg(
-        this->is_contiguous() == false,
-        "[ERROR][SparseUniTensor] cannot use get_block_() on non-contiguous UniTensor with "
-        "symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call "
-        "get_block_()\n  2) Try get_block()/get_blocks()%s",
-        "\n");
-
-      cytnx_error_msg(idx >= this->_blocks.size(),
-                      "[ERROR][SparseUniTensor] index exceed the number of blocks.%s", "\n");
-
-      return this->_blocks[idx];
-    }
-    const Tensor &get_block_(const cytnx_uint64 &idx = 0) const {
-      cytnx_error_msg(
-        this->is_contiguous() == false,
-        "[ERROR][SparseUniTensor] cannot use get_block_() on non-contiguous UniTensor with "
-        "symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call "
-        "get_block_()\n  2) Try get_block()/get_blocks()%s",
-        "\n");
-
-      cytnx_error_msg(idx >= this->_blocks.size(),
-                      "[ERROR][SparseUniTensor] index exceed the number of blocks.%s", "\n");
-
-      return this->_blocks[idx];
-    }
-
-    Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) {
-      if (!force)
-        cytnx_error_msg(
-          !this->is_braket_form(),
-          "[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch "
-          "the row/col space.\n permute to the correct physical space first, then get block.%s",
-          "\n");
-
-      cytnx_error_msg(
-        this->is_contiguous() == false,
-        "[ERROR][SparseUniTensor] cannot use get_block_() on non-contiguous UniTensor with "
-        "symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call "
-        "get_blocks_()\n  2) Try get_block()/get_blocks()%s",
-        "\n");
-
-      // get dtype from qnum:
-      cytnx_int64 idx = -1;
-      for (int i = 0; i < this->_blockqnums.size(); i++) {
-        if (qnum == this->_blockqnums[i]) {
-          idx = i;
-          break;
-        }
-      }
-      cytnx_error_msg(
-        idx < 0, "[ERROR][SparseUniTensor] no block with [qnum] exists in the current UniTensor.%s",
-        "\n");
-      return this->get_block_(idx);
-      // cytnx_error_msg(true,"[Developing]%s","\n");
-    }
-    const Tensor &get_block_(const std::vector<cytnx_int64> &qnum, const bool &force) const {
-      if (!force)
-        cytnx_error_msg(
-          !this->is_braket_form(),
-          "[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch "
-          "the row/col space.\n permute to the correct physical space first, then get block.%s",
-          "\n");
-
-      cytnx_error_msg(
-        this->is_contiguous() == false,
-        "[ERROR][SparseUniTensor] cannot use get_block_() on non-contiguous UniTensor with "
-        "symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call "
-        "get_blocks_()\n  2) Try get_block()/get_blocks()%s",
-        "\n");
-
-      // get dtype from qnum:
-      cytnx_int64 idx = -1;
-      for (int i = 0; i < this->_blockqnums.size(); i++) {
-        if (qnum == this->_blockqnums[i]) {
-          idx = i;
-          break;
-        }
-      }
-      cytnx_error_msg(
-        idx < 0, "[ERROR][SparseUniTensor] no block with [qnum] exists in the current UniTensor.%s",
-        "\n");
-      return this->get_block_(idx);
-    }
-
-    std::vector<Tensor> get_blocks() const {
-      if (this->_contiguous) {
-        return vec_clone(this->_blocks);
-      } else {
-        // cytnx_error_msg(true,"[Developing]%s","\n");
-        boost::intrusive_ptr<UniTensor_base> tmp = this->clone();
-        tmp->contiguous_();
-        SparseUniTensor *ttmp = (SparseUniTensor *)tmp.get();
-        return ttmp->_blocks;
-      }
-    };
-
-    const std::vector<Tensor> &get_blocks_(const bool &silent = false) const {
-      // cout << "[call this]" << endl;
-      if (this->_contiguous) {
-        return this->_blocks;
-      } else {
-        // cytnx_error_msg(true,"[Developing]%s","\n");
-        if (!silent)
-          cytnx_warning_msg(
-            true,
-            "[WARNING][SparseUniTensor] call get_blocks_() with a non-contiguous UniTensor should "
-            "be used with caution. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() "
-            "first, then get_blocks_() to get concise results%s",
-            "\n");
-
-        return this->_blocks;
-      }
-    };
-    std::vector<Tensor> &get_blocks_(const bool &silent = false) {
-      // cout << "[call this]" << endl;
-      if (this->_contiguous) {
-        return this->_blocks;
-      } else {
-        if (!silent)
-          cytnx_warning_msg(
-            true,
-            "[WARNING][SparseUniTensor] call get_blocks_() with a non-contiguous UniTensor should "
-            "be used with caution. \ntry: \n1) get_blocks()\n2) call contiguous/contiguous_() "
-            "first, then get_blocks_() to get concise results%s",
-            "\n");
-
-        return this->_blocks;
-      }
-    };
-
-    bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const {
-      if (rhs->uten_type() != UTenType.Sparse) return false;
-      if (rhs->get_blocks_(1).size() != this->get_blocks_(1).size()) return false;
-
-      for (int i = 0; i < rhs->get_blocks_(1).size(); i++)
-        if (this->get_blocks_(1)[i].same_data(rhs->get_blocks_(1)[i]) == false) return false;
-
-      return true;
-    }
-
-    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
-      cytnx_error_msg(
-        this->is_contiguous() == false,
-        "[ERROR][SparseUniTensor] cannot use put_block_() on non-contiguous UniTensor with "
-        "symmetry.\n suggest options: \n  1) Call contiguous_()/contiguous() first, then call "
-        "put_blocks_()\n  2) Try put_block()/put_blocks()%s",
-        "\n");
-
-      cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][SparseUniTensor] index out of range%s",
-                      "\n");
-      cytnx_error_msg(in.shape() != this->_blocks[idx].shape(),
-                      "[ERROR][SparseUniTensor] the shape of input tensor does not match the shape "
-                      "of block @ idx=%d\n",
-                      idx);
-      this->_blocks[idx] = in;
-    };
-    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
-      cytnx_error_msg(idx >= this->_blocks.size(), "[ERROR][SparseUniTensor] index out of range%s",
-                      "\n");
-      if (this->_contiguous) {
-        cytnx_error_msg(in.shape() != this->_blocks[idx].shape(),
-                        "[ERROR][SparseUniTensor] the shape of input tensor does not match the "
-                        "shape of block @ idx=%d\n",
-                        idx);
-        this->_blocks[idx] = in.clone();
-      } else {
-        cytnx_error_msg(true,
-                        "[Developing] put block to a non-contiguous SparseUniTensor is currently "
-                        "not support. Call contiguous()/contiguous_() first.%s",
-                        "\n");
-      }
-    };
-    void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
-      if (!force)
-        cytnx_error_msg(
-          !this->is_braket_form(),
-          "[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch "
-          "the row/col space.\n permute to the correct physical space first, then get block.%s",
-          "\n");
-
-      // get dtype from qnum:
-      cytnx_int64 idx = -1;
-      for (int i = 0; i < this->_blockqnums.size(); i++) {
-        if (qnum == this->_blockqnums[i]) {
-          idx = i;
-          break;
-        }
-      }
-      cytnx_error_msg(
-        idx < 0, "[ERROR][SparseUniTensor] no block with [qnum] exists in the current UniTensor.%s",
-        "\n");
-      this->put_block(in, idx);
-    };
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
-      if (!force)
-        cytnx_error_msg(
-          !this->is_braket_form(),
-          "[ERROR][Un-physical] cannot get the block by qnums when bra-ket/in-out bonds mismatch "
-          "the row/col space.\n permute to the correct physical space first, then get block.%s",
-          "\n");
-
-      // get dtype from qnum:
-      cytnx_int64 idx = -1;
-      for (int i = 0; i < this->_blockqnums.size(); i++) {
-        if (qnum == this->_blockqnums[i]) {
-          idx = i;
-          break;
-        }
-      }
-      cytnx_error_msg(
-        idx < 0, "[ERROR][SparseUniTensor] no block with [qnum] exists in the current UniTensor.%s",
-        "\n");
-      this->put_block_(in, idx);
-    };
-
-    // this will only work on non-symm tensor (DenseUniTensor)
-    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
-      cytnx_error_msg(true,
-                      "[ERROR][SparseUniTensor][get] cannot use get on a UniTensor with "
-                      "Symmetry.\n suggestion: try get_block()/get_blocks() first.%s",
-                      "\n");
-      return nullptr;
-    }
-    // this will only work on non-symm tensor (DenseUniTensor)
-    void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
-      cytnx_error_msg(true,
-                      "[ERROR][SparseUniTensor][set] cannot use set on a UniTensor with "
-                      "Symmetry.\n suggestion: try get_block()/get_blocks() first.%s",
-                      "\n");
-    }
-    void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
-      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
-    }
-    boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
-                                                 const cytnx_uint64 &rowrank = 0) {
-      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
-      return nullptr;
-    }
-    boost::intrusive_ptr<UniTensor_base> to_dense() {
-      cytnx_error_msg(true, "[ERROR] cannot to_dense a UniTensor with symmetry.%s", "\n");
-      return nullptr;
-    }
-    void to_dense_() {
-      cytnx_error_msg(true, "[ERROR] cannot to_dense_ a UniTensor with symmetry.%s", "\n");
-    }
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param indicators
-     * @param permute_back
-     * @param by_label
-     */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
-                      const bool &by_label) {
-      cytnx_error_msg(true, "[Developing]%s", "\n");
-    };
-    void combineBonds(const std::vector<std::string> &indicators, const bool &force = true) {
-      cytnx_error_msg(true, "[Developing]%s", "\n");
-    };
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = true) {
-      cytnx_error_msg(true, "[Developing]%s", "\n");
-    };
-    boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
-                                                  const bool &mv_elem_self = false,
-                                                  const bool &mv_elem_rhs = false);
-    std::vector<Bond> getTotalQnums(const bool &physical = false);
-    std::vector<std::vector<cytnx_int64>> get_blocks_qnums() const { return this->_blockqnums; }
-    ~SparseUniTensor(){};
-
-    // arithmetic
-    void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
-    void Add_(const Scalar &rhs);
-
-    void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
-    void Mul_(const Scalar &rhs);
-
-    void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs);
-    void Sub_(const Scalar &rhs);
-    void lSub_(const Scalar &lhs);
-
-    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs);
-    void Div_(const Scalar &rhs);
-    void lDiv_(const Scalar &lhs);
-
-    boost::intrusive_ptr<UniTensor_base> Conj() {
-      boost::intrusive_ptr<UniTensor_base> out = this->clone();
-      out->Conj_();
-      return out;
-    }
-
-    void Conj_() {
-      for (int i = 0; i < this->_blocks.size(); i++) {
-        this->_blocks[i].Conj_();
-      }
-    };
-    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b);
-    boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b);
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param a
-     * @param b
-     * @param by_label
-     * @return boost::intrusive_ptr<UniTensor_base>
-     */
-    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
-                                               const bool &by_label);
-    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b) {
-      cytnx_error_msg(true,
-                      "[ERROR] Currently SparseUniTensor does not support inplace Trace!, call "
-                      "Trace() instead!%s",
-                      "\n");
-    }
-    void Trace_(const std::string &a, const std::string &b) {
-      cytnx_error_msg(true,
-                      "[ERROR] Currently SparseUniTensor does not support inplace Trace!, call "
-                      "Trace() instead!%s",
-                      "\n");
-    }
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param a
-     * @param b
-     * @param by_label
-     */
-    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
-      cytnx_error_msg(true,
-                      "[ERROR] Currently SparseUniTensor does not support inplace Trace!, call "
-                      "Trace() instead!%s",
-                      "\n");
-    }
-
-    void Transpose_();
-    boost::intrusive_ptr<UniTensor_base> Transpose() {
-      boost::intrusive_ptr<UniTensor_base> out = this->clone();
-      out->Transpose_();
-      return out;
-    }
-
-    boost::intrusive_ptr<UniTensor_base> Dagger() {
-      boost::intrusive_ptr<UniTensor_base> out = this->Conj();
-      out->Transpose_();
-      return out;
-    }
-    void Dagger_() {
-      this->Conj_();
-      this->Transpose_();
-    }
-
-    Tensor Norm() const;
-    
-    boost::intrusive_ptr<UniTensor_base> normalize() {
-      boost::intrusive_ptr<UniTensor_base> out = this->Conj();
-      out->normalize_();
-      return out;
-    }
-    void normalize_(){
-        cytnx_error_msg(true,"[ERROR] SparseUniTensor is about to deprecated.%s","\n");
-    }
-
-    void tag() {
-      // no-use!
-    }
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param bond_idx
-     * @param dim
-     * @param by_label
-     */
-    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim, const bool &by_label);
-    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
-    void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
-    const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
-    const cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                          const cytnx_complex128 &aux) const;
-    const cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                         const cytnx_complex64 &aux) const;
-    const cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                      const cytnx_double &aux) const;
-    const cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                     const cytnx_float &aux) const;
-    const cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                      const cytnx_uint64 &aux) const;
-    const cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                     const cytnx_int64 &aux) const;
-    const cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                      const cytnx_uint32 &aux) const;
-    const cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                     const cytnx_int32 &aux) const;
-    const cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                      const cytnx_uint16 &aux) const;
-    const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                     const cytnx_int16 &aux) const;
-
-    Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator);
-    cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                    const cytnx_complex128 &aux);
-    cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                   const cytnx_complex64 &aux);
-    cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
-    cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
-    cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
-    cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
-    cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
-    cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
-    cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
-    cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
-
-    void group_basis_(){
-        cytnx_warning_msg(true,"[WARNING] group basis will not have any effect on SparseUniTensor.%s","\n");
-    }
-
-    bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
-
-    const std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx) const{
-        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor with Symmetry.%s","\n");
-    }
-    std::vector<cytnx_uint64>& get_qindices(const cytnx_uint64 &bidx){
-        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_qindices can only be unsed on BlockUniTensor.%s","\n");
-    }
-    const vec2d<cytnx_uint64> & get_itoi() const{
-        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_itoi can only be unsed on BlockUniTensor with Symmetry.%s","\n");
-    }
-    vec2d<cytnx_uint64> & get_itoi(){
-        cytnx_error_msg(true,"[ERROR][SparseUniTensor] get_itoi can only be unsed on BlockUniTensor with Symmetry.%s","\n");
-    }
-
-
-    // end virtual func
-
-  };
-  /// @endcond
 
   //======================================================================
   /// @cond
@@ -2108,17 +1298,14 @@ namespace cytnx {
     }
    
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-                                                         const cytnx_int64 &rowrank=-1,
-                                                         const bool &by_label=false);
+                                                         const cytnx_int64 &rowrank=-1);
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                          const cytnx_int64 &rowrank = -1);
-    //boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-    //                                                     const cytnx_int64 &rowrank = -1);
 
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
-                          const bool &by_label=false);
+
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
-    //void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+
 
  
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
@@ -2139,26 +1326,20 @@ namespace cytnx {
       const bool &mv_elem_rhs = false);
    
 
-    boost::intrusive_ptr<UniTensor_base> relabels(
-      const std::vector<cytnx_int64> &new_labels);
-    void relabels_(const std::vector<cytnx_int64> &new_labels);
+
     boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &new_labels);
     void relabels_(const std::vector<std::string> &new_labels);
-    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                         const cytnx_int64 &new_label,
-                                                         const bool &by_label);
-    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
+
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &old_label,
                                                          const std::string &new_label);
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
-                                                         const cytnx_int64 &new_label);
-    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                          const std::string &new_label);
-    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                  const bool &by_label);
-    void relabel_(const std::string &inx, const std::string &new_label);
+
+
+    void relabel_(const std::string &old_label, const std::string &new_label);
     void relabel_(const cytnx_int64 &inx, const std::string &new_label);
-    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label);
+
  
     std::vector<Symmetry> syms() const;
 
@@ -2323,7 +1504,7 @@ namespace cytnx {
 
     void Trace_(const std::string &a, const std::string &b);
     void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
-    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label);
+
 
     boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -2345,26 +1526,7 @@ namespace cytnx {
       }
       return out;
     }
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param a
-     * @param b
-     * @param by_label
-     */
-    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b,
-                                               const bool &by_label) {
-      boost::intrusive_ptr<UniTensor_base> out = this->clone();
-      out->Trace_(a, b, by_label);
-      if(out->rank()==0){
-        DenseUniTensor *tmp = new DenseUniTensor();
-        tmp->_block = ((BlockUniTensor*)out.get())->_blocks[0];
-        out = boost::intrusive_ptr<UniTensor_base>(tmp);
-      }
-      return out;
-    }
+
 
     Tensor Norm() const;
 
@@ -2410,8 +1572,6 @@ namespace cytnx {
     void _load_dispatch(std::fstream &f);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond! 
-    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index,
-                           const bool &by_label);
     void truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index);
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index);
 
@@ -2632,32 +1792,9 @@ namespace cytnx {
 #endif
       this->Init(bonds, in_labels, rowrank, dtype, device, is_diag, name);
     }
-    /**
-     * @deprecated
-     *  This constructor (integer labels) is deprecated, use \n
-    UniTensor(const std::vector<Bond>&, const std::vector<std::string> &in_labels,
-              const cytnx_int64 &rowrank, const unsigned int &dtype,
-              const int &device, const bool &is_diag) \n
-	 *  instread.
-     */
-    UniTensor(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false, const std::string &name = "")
-        : _impl(new UniTensor_base()) {
-#ifdef UNI_DEBUG
-      cytnx_warning_msg(
-        true,
-        "[DEBUG] message: entry for UniTensor(const std::vector<Bond> &bonds, const "
-        "std::vector<cytnx_int64> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int "
-        "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
-        "\n");
-#endif
-      std::vector<std::string> vs;
-      for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
-      this->Init(bonds, vs, rowrank, dtype, device, is_diag, name);
-    }
     
     /// @cond
+    /* [developing]
     void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
               const UniTensor_options &UToptions = UniTensor_options(), const std::string &name = ""){
         this->Init(bonds,in_labels, UToptions._rowrank,
@@ -2665,7 +1802,8 @@ namespace cytnx {
                                     UToptions._device ,
                                     UToptions._is_diag,
                                     name);
-    }
+    }   
+    */
     /// @endcond
 
 
@@ -2722,8 +1860,9 @@ namespace cytnx {
         // cytnx_warning_msg(true,"[warning, still developing, some functions will display
         // \"[Developing]\"][SparseUniTensor]%s","\n");
         if(sym_fver == 0){
-            boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
-            this->_impl = out;
+            //boost::intrusive_ptr<UniTensor_base> out(new SparseUniTensor());
+            //this->_impl = out;
+            cytnx_error_msg(true,"[ERROR] internal error! [legacy Sparse entry] the Bond is symmetry but the version is not properly determined!%s","\n")
         }else if(sym_fver==-1){
             cytnx_error_msg(true,"[ERROR] internal error! the Bond is symmetry but the version is not properly determined!%s","\n");
         }else{
@@ -2736,25 +1875,7 @@ namespace cytnx {
       }
       this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag, false, name);
     }
-    /**
-    @deprecated
-	This function is deprecated. Please use \n 
-    Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels,
-         const cytnx_int64 &rowrank, const unsigned int &dtype,
-         const int &device, const bool &is_diag) \n
-	 instread.
-     */
-    void Init(const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false, const std::string &name = "") {
-      std::vector<std::string> vs;
-      cytnx_warning_msg(true,"[Deprecated warning] specify label with integers will be depreated soon. use string instead.%s","\n");
-      for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
-      this->Init(bonds, vs, rowrank, dtype, device, is_diag, name);
-    }
-
-    //@}
-
+    
     /**
     @brief Set the name of the UniTensor.
 	@details You can use this function to give a name for the UniTensor.
@@ -2765,26 +1886,7 @@ namespace cytnx {
       this->_impl->set_name(in);
       return *this;
     }
-    /**
-    @deprecated
-	  This function is deprecated. Please use \n 
-	  set_label(const cytnx_int64 &idx, const std::string &new_label) instead.
-    */
-    UniTensor &set_label(const cytnx_int64 &idx, const cytnx_int64 &new_label,
-                         const bool &by_label) {
-      this->_impl->set_label(idx, new_label, by_label);
-      return *this;
-    }
 
-    /**
-    @deprecated
-	  This function is deprecated. Please use \n 
-	  set_label(const cytnx_int64 &idx, const std::string &new_label) instead
-    */
-    UniTensor &set_label(const cytnx_int64 &idx, const cytnx_int64 &new_label) {
-      this->_impl->set_label(idx, new_label);
-      return *this;
-    }
     /**
     @brief Set a new label for bond at the assigned index.
     @param[in] idx the index of the bond.
@@ -2856,16 +1958,6 @@ namespace cytnx {
     */
 
     /**
-    @deprecated
-	  This is deprecated function. Please use
-      set_labels(const std::vector<std::string> &new_labels) \n
-	  instead
-    */
-    UniTensor &set_labels(const std::vector<cytnx_int64> &new_labels) {
-      this->_impl->set_labels(new_labels);
-      return *this;
-    }
-    /**
     @brief Set new labels for all the bonds.
     @param[in] new_labels the new labels for each bond.
     @note
@@ -2878,6 +1970,7 @@ namespace cytnx {
       this->_impl->set_labels(new_labels);
       return *this;
     }
+
     /**
 	  @see 
     set_labels(const std::vector<std::string> &new_labels)
@@ -3094,24 +2187,6 @@ namespace cytnx {
       return out;
     }
 
-    /**
-     * @deprecated
-	 * It is recommanded to use \ref 
-         relabels(const std::vector<std::string> &new_labels) const
-     */
-    UniTensor relabels(const std::vector<cytnx_int64> &new_labels) const {
-      UniTensor out;
-      out._impl = this->_impl->relabels(new_labels);
-      return out;
-    }
-    /**
-     * @deprecated
-	 * It is recommanded to use \ref 
-         relabels_(const std::vector<std::string> &new_labels) const
-     */
-    void relabels_(const std::vector<cytnx_int64> &new_labels) {
-      this->_impl->relabels_(new_labels);
-    }
 
     /**
     @brief Set new labels for all the bonds.
@@ -3165,26 +2240,7 @@ namespace cytnx {
         this->_impl->relabels_(vs);
     }
 
-    /**
-     @deprecated
-	   It is recommened to use
-     relabel(const cytnx_int64 &inx, const std::string &new_label) const
-     */
-    UniTensor relabel(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                      const bool &by_label=false) const {
-      UniTensor out;
-      out._impl = this->_impl->relabel(inx, new_label, by_label);
-      return out;
-    }
-    /**
-     @deprecated
-	   It is recommened to use
-     relabel_(const cytnx_int64 &inx, const std::string &new_label) const
-     */
-    void relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                  const bool &by_label=false) {
-      this->_impl->relabel_(inx, new_label, by_label);
-    }
+
 
     /**
     @brief rebable the lags in the UniTensor by given index.
@@ -3270,23 +2326,16 @@ namespace cytnx {
      * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if 
      *    \p by_label is false, otherwise it is mapped by bond label.
      * @param[in] rowrank the new rowrank after the permutation
-     * @param[in] by_label Whether permute the lags by label. It can only be used if labels 
-	   *     are integer form, which will be deprecated soon.
      * @return UniTensor
 	   * @warning \p by_label will be deprecated! 
      */
-    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
-                      const bool &by_label=false) const {
+    UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1) const {
       UniTensor out;
-      out._impl = this->_impl->permute(mapper, rowrank, by_label);
+      out._impl = this->_impl->permute(mapper, rowrank);
       return out;
     }
-    //UniTensor permute(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
-    //  UniTensor out;
-    //  out._impl = this->_impl->permute(mapper, rowrank);
-    //  return out;
-    //}
-	//
+    
+
     /**
      * @brief permute the lags of the UniTensor by labels
      * @param[in] mapper the mapper by babels
@@ -3316,12 +2365,10 @@ namespace cytnx {
       permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     @param[in] mapper the mapper by labels
     @param[in] rowrank the row rank after the permutation
-    @param[in] by_label permute by label or index.
 	  @warning \p by_label will be deprecated! 
     */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1,
-                  const bool &by_label=false) {
-      this->_impl->permute_(mapper, rowrank, by_label);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank=-1) {
+      this->_impl->permute_(mapper, rowrank);
     }
 
     /**
@@ -4330,19 +3377,7 @@ namespace cytnx {
       return out;
     }
 
-    /**
-     * @deprecated
-	 * This is deprecated function, please use \n
-     * Trace(const std::string &a, const std::string &b) const\n
-	 * instead.
-     */
-    UniTensor Trace(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) const {
-      if(by_label){
-        return Trace(std::to_string(a),std::to_string(b));
-      }else{
-        return Trace(a, b);
-      }
-    }
+
 
     /**
     @brief Take the partial trance to the UniTensor, inplacely.
@@ -4388,24 +3423,7 @@ namespace cytnx {
       return *this;
     }
 
-    /**
-     * @deprecated
-	 * This function is deprecated, please use \n
-     * &Trace_(const std::string &a, const std::string &b)\n
-	 * instread.
-     */
-    UniTensor &Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
-      this->_impl->Trace_(a, b, by_label);
-      if(this->uten_type()==UTenType.Block){
-        // handle if no leg left case for BlockUniTensor.
-        if(this->rank()==0){
-            DenseUniTensor *tmp = new DenseUniTensor();
-            tmp->_block = this->get_blocks_(true)[0];
-            this->_impl = boost::intrusive_ptr<UniTensor_base>(tmp);
-        }
-      }
-      return *this;
-    }
+
 
     /**
     @brief Take the conjugate transpose to the UniTensor.
@@ -4527,16 +3545,6 @@ namespace cytnx {
     */
     static UniTensor Load(const char *fname);
 
-    /**
-     * @deprecated this function is deprecated, please use \n
-     * truncate_(const std::string &bond_idx, const cytnx_uint64 &dim) \n
-     * instead.
-     */
-    UniTensor &truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                         const bool &by_label) {
-      this->_impl->truncate_(bond_idx, dim, by_label);
-      return *this;
-    }
 
     /**
      * @brief truncate bond dimension of the UniTensor by the given bond label and dimension.
@@ -4563,17 +3571,7 @@ namespace cytnx {
       this->_impl->truncate_(bond_idx, dim);
       return *this;
     }
-    /**
-     * @deprecated this function is deprecated, please use \n
-     * truncate(const std::string &bond_idx, const cytnx_uint64 &dim) const \n
-     * instead.
-     */
-    UniTensor truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                       const bool &by_label) const {
-      UniTensor out = this->clone();
-      out.truncate_(bond_idx, dim, by_label);
-      return out;
-    }
+
 
     /**
      * @brief truncate bond dimension of the UniTensor by the given bond label and dimension.

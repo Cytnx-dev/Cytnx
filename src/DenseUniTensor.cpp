@@ -210,17 +210,7 @@ namespace cytnx {
     }
   }
 
-  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
-    const std::vector<cytnx_int64> &new_labels) {
-    std::vector<std::string> vs;
-    for (int i = 0; i < (int)new_labels.size(); i++) vs.push_back(std::to_string(new_labels[i]));
-    return relabels(vs);
-  }
-  void DenseUniTensor::relabels_(const std::vector<cytnx_int64> &new_labels) {
-    std::vector<std::string> vs;
-    for (int i = 0; i < (int)new_labels.size(); i++) vs.push_back(std::to_string(new_labels[i]));
-    this->relabels_(vs);
-  }
+
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<std::string> &new_labels) {
     DenseUniTensor *out_raw = this->clone_meta();
@@ -233,30 +223,7 @@ namespace cytnx {
     this->set_labels(new_labels);
   }
 
-  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx,
-                                                               const cytnx_int64 &new_label,
-                                                               const bool &by_label) {
-    DenseUniTensor *out_raw = this->clone_meta();
-    out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label, by_label);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
-  }
-  void DenseUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                                const bool &by_label) {
-    this->set_label(inx, new_label, by_label);
-  }
-  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx,
-                                                               const cytnx_int64 &new_label) {
-    DenseUniTensor *out_raw = this->clone_meta();
-    out_raw->_block = this->_block;
-    out_raw->set_label(inx, new_label);
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
-  }
-  void DenseUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
-    this->set_label(inx, new_label);
-  }
+
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx,
                                                                const std::string &new_label) {
     DenseUniTensor *out_raw = this->clone_meta();
@@ -279,57 +246,7 @@ namespace cytnx {
   void DenseUniTensor::relabel_(const std::string &inx, const std::string &new_label) {
     this->set_label(inx, new_label);
   }
-  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
-    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label) {
-    // boost::intrusive_ptr<UniTensor_base> out = this->clone();
-    // out->permute_(mapper,rowrank,by_label);
-    // return out;
-    DenseUniTensor *out_raw = this->clone_meta();
-    // boost::intrusive_ptr<UniTensor_base> out(this->clone_meta());
 
-    std::vector<cytnx_uint64> mapper_u64;
-    if (by_label) {
-      // cytnx_error_msg(true,"[Developing!]%s","\n");
-      std::vector<std::string>::iterator it;
-      for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
-        it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), std::to_string(mapper[i]));
-        cytnx_error_msg(it == out_raw->_labels.end(),
-                        "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
-        mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
-      }
-
-    } else {
-      mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
-    }
-
-    if (out_raw->_is_diag) {
-      if (rowrank >= 0) {
-        cytnx_error_msg(rowrank != 1,
-                        "[ERROR] rowrank should be =1 for UniTensor with is_diag=true%s", "\n");
-      }
-      out_raw->_bonds =
-        vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
-      out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
-      out_raw->_is_braket_form = out_raw->_update_braket();
-      out_raw->_block = this->_block;  // share mem
-    } else {
-      out_raw->_bonds =
-        vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
-      out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
-      out_raw->_block = this->_block.permute(mapper_u64);  // share mem
-
-      if (rowrank >= 0) {
-        cytnx_error_msg((rowrank > out_raw->_bonds.size()) || (rowrank < 0),
-                        "[ERROR] rowrank cannot exceed the rank of UniTensor, and should be >=0.%s",
-                        "\n");
-        out_raw->_rowrank = rowrank;
-      }
-      out_raw->_is_braket_form = out_raw->_update_braket();
-    }
-    boost::intrusive_ptr<UniTensor_base> out(out_raw);
-    return out;
-  }
-  /*
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -339,7 +256,9 @@ namespace cytnx {
     // boost::intrusive_ptr<UniTensor_base> out(this->clone_meta());
 
     std::vector<cytnx_uint64> mapper_u64;
+    
     mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    
 
     if (out_raw->_is_diag) {
       if (rowrank >= 0) {
@@ -368,7 +287,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
-  */
+
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
@@ -416,22 +335,11 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
-  void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                                const bool &by_label) {
+  void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
     std::vector<cytnx_uint64> mapper_u64;
-    if (by_label) {
-      // cytnx_error_msg(true,"[Developing!]%s","\n");
-      std::vector<std::string>::iterator it;
-      for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
-        it = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(mapper[i]));
-        cytnx_error_msg(it == this->_labels.end(),
-                        "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i]);
-        mapper_u64.push_back(std::distance(this->_labels.begin(), it));
-      }
-
-    } else {
-      mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
-    }
+    
+    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    
 
     if (this->_is_diag) {
       if (rowrank >= 0) {
@@ -489,35 +397,7 @@ namespace cytnx {
       this->_is_braket_form = this->_update_braket();
     }
   }
-  /*
-  void DenseUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
-                                const cytnx_int64 &rowrank) {
-    std::vector<cytnx_uint64> mapper_u64;
-    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
 
-    if (this->_is_diag) {
-      if (rowrank >= 0) {
-        cytnx_error_msg(rowrank != 1,
-                        "[ERROR] rowrank should be =1 for UniTensor with is_diag=true%s", "\n");
-      }
-      this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
-      this->_labels = vec_map(this->labels(), mapper_u64);
-      this->_is_braket_form = this->_update_braket();
-
-    } else {
-      this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
-      this->_labels = vec_map(this->labels(), mapper_u64);
-      this->_block.permute_(mapper_u64);
-      if (rowrank >= 0) {
-        cytnx_error_msg((rowrank > this->_bonds.size()) || (rowrank < 0),
-                        "[ERROR] rowrank cannot exceed the rank of UniTensor, and should be >=0.%s",
-                        "\n");
-        this->_rowrank = rowrank;
-      }
-      this->_is_braket_form = this->_update_braket();
-    }
-  };
-  */
   void DenseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const{
     std::ostream &os = std::cout;
     os << "-------- start of print ---------\n";
@@ -1269,59 +1149,7 @@ namespace cytnx {
     this->_labels.erase(this->_labels.begin() + idb);
     this->_labels.erase(this->_labels.begin() + ida);
   }
-  void DenseUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
-    // 1) from label to indx.
-    cytnx_uint64 ida, idb;
 
-    if (by_label) {
-      ida = vec_where(this->_labels, std::to_string(a));
-      idb = vec_where(this->_labels, std::to_string(b));
-    } else {
-      cytnx_error_msg(a < 0 || b < 0, "[ERROR] invalid index a, b%s", "\n");
-      cytnx_error_msg(a >= this->rank() || b >= this->rank(), "[ERROR] index out of bound%s", "\n");
-      ida = a;
-      idb = b;
-    }
-
-    // check if indices are the same:
-    cytnx_error_msg(ida == idb,
-                    "[ERROR][DenseUniTensor::Trace_] index a and index b should not be the same.%s",
-                    "\n");
-
-    // check dimension:
-    cytnx_error_msg(
-      this->_bonds[ida].dim() != this->_bonds[idb].dim(),
-      "[ERROR][DenseUniTensor::Trace_] The dimension of two bond for trace does not match!%s",
-      "\n");
-
-    // check bra-ket if tagged
-    if (this->is_braket_form()) {
-      // check if it is the same species:
-      if (this->_bonds[ida].type() == this->_bonds[idb].type()) {
-        cytnx_error_msg(
-          true, "[ERROR][DenseUniTensor::Trace_] BD_BRA can only contract with BD_KET.%s", "\n");
-      }
-    }
-
-    // trace the block:
-    if (this->_is_diag) {
-      cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
-    } else {
-      this->_block = this->_block.Trace(ida, idb);
-    }
-
-    // update rowrank:
-    cytnx_int64 tmpRk = this->_rowrank;
-    if (ida < tmpRk) this->_rowrank--;
-    if (idb < tmpRk) this->_rowrank--;
-
-    // remove the bound, labels:
-    if (ida > idb) std::swap(ida, idb);
-    this->_bonds.erase(this->_bonds.begin() + idb);
-    this->_bonds.erase(this->_bonds.begin() + ida);
-    this->_labels.erase(this->_labels.begin() + idb);
-    this->_labels.erase(this->_labels.begin() + ida);
-  }
 
   void DenseUniTensor::Transpose_() {
     if (this->is_tag()){
@@ -1416,47 +1244,7 @@ namespace cytnx {
       }
     }
   }
-  void DenseUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                                 const bool &by_label) {
-    // if it is diagonal tensor, truncate will be done on both index!
-    cytnx_error_msg(dim < 1, "[ERROR][DenseUniTensor][truncate] dim should be >0.%s", "\n");
-    cytnx_uint64 idx;
-    if (by_label) {
-      auto it = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(bond_idx));
-      cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR][DenseUniTensor][truncate] Error, bond label does not exist in the "
-                      "current label list.%s",
-                      "\n");
-      idx = std::distance(this->_labels.begin(), it);
-    } else {
-      idx = bond_idx;
-    }
-    cytnx_error_msg(
-      idx >= this->_labels.size(),
-      "[ERROR][DenseUniTensor][truncate] Error, index [%d] is out of range. Total rank: %d\n", idx,
-      this->_labels.size());
-    cytnx_error_msg(dim > this->_bonds[idx].dim(),
-                    "[ERROR][DenseUniTensor][truncate] dimension can only be <= the dimension of "
-                    "the instance bond.%s",
-                    "\n");
-
-    // if dim is the same as the dimension, don't do anything.
-    if (dim != this->_bonds[idx].dim()) {
-      // if diag type.
-      if (this->_is_diag) {
-        for (int i = 0; i < this->_bonds.size(); i++) {
-          this->_bonds[i]._impl->_dim = dim;
-        }
-        this->_block = this->_block.get({ac::range(0, dim)});
-      } else {
-        this->_bonds[idx]._impl->_dim = dim;
-
-        std::vector<ac> accessors(this->_bonds.size(), ac::all());
-        accessors[idx] = ac::range(0, dim);
-        this->_block = this->_block.get(accessors);
-      }
-    }
-  }
+  
 
   // Arithmetic:
   void DenseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {

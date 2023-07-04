@@ -297,8 +297,8 @@ int main(int argc, char *argv[]) {
   Bond phy = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 1});
   Bond aux = Bond(BD_IN, {Qs(1)}, {1});
 
-  auto Sp = UniTensor({phy, phy.redirect(), aux},{0,2,-1});
-  auto Sm = UniTensor({phy, phy.redirect(), aux.redirect()}, {1, 3, -1});
+  auto Sp = UniTensor({phy, phy.redirect(), aux},{"0","2","-1"});
+  auto Sm = UniTensor({phy, phy.redirect(), aux.redirect()}, {"1", "3", "-1"});
   auto Sz = UniTensor({phy, phy.redirect()});
 
   // Sp.get_block_({0,1,0}).item() = 1;
@@ -547,7 +547,7 @@ int main(int argc, char *argv[]) {
 
   UniTensor T3B(
     {bd_sym_s.redirect(), bd_sym_s.redirect(), bd_sym_s2.redirect(), bd_sym_s3.redirect()});
-  T3B = T3B.relabels({4, 5, 2, 6});
+  T3B = T3B.relabels({"4", "5", "2", "6"});
 
   T3B.print_diagram();
 

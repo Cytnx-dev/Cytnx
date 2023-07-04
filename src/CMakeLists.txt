@@ -15,7 +15,7 @@ target_sources_local(cytnx
     UniTensor_base.cpp
     UniTensor.cpp
     DenseUniTensor.cpp
-    SparseUniTensor.cpp
+    #SparseUniTensor.cpp
     BlockUniTensor.cpp
     Symmetry.cpp
     contraction_tree.cpp
