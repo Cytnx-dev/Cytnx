@@ -42,15 +42,16 @@ TEST_F(BlockUniTensorTest, gpu_relabels){
   EXPECT_EQ(BUT1.labels()[1],"b");
   EXPECT_EQ(BUT1.labels()[2],"cd");
   EXPECT_EQ(BUT1.labels()[3],"d");
-  BUT1 = BUT1.relabels({1,-1,2,1000});
+  BUT1 = BUT1.relabels({"1","-1","2","1000"});
   EXPECT_EQ(BUT1.labels()[0],"1");
   EXPECT_EQ(BUT1.labels()[1],"-1");
   EXPECT_EQ(BUT1.labels()[2],"2");
   EXPECT_EQ(BUT1.labels()[3],"1000");
+  
   EXPECT_THROW(BUT1.relabels({"a","a","b","c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({1,1,0,-1}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels({"1","1","0","-1"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({1,2}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels({"1","2"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels({"a","b","c","d","e"}), std::logic_error);
 }
 TEST_F(BlockUniTensorTest, gpu_relabels_){
@@ -59,15 +60,15 @@ TEST_F(BlockUniTensorTest, gpu_relabels_){
   EXPECT_EQ(BUT1.labels()[1],"b");
   EXPECT_EQ(BUT1.labels()[2],"cd");
   EXPECT_EQ(BUT1.labels()[3],"d");
-  BUT1.relabels_({1,-1,2,1000});
+  BUT1.relabels_({"1","-1","2","1000"});
   EXPECT_EQ(BUT1.labels()[0],"1");
   EXPECT_EQ(BUT1.labels()[1],"-1");
   EXPECT_EQ(BUT1.labels()[2],"2");
   EXPECT_EQ(BUT1.labels()[3],"1000");
   EXPECT_THROW(BUT1.relabels_({"a","a","b","c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({1,1,0,-1}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"1","1","0","-1"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels_({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({1,2}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"1","2"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels_({"a","b","c","d","e"}), std::logic_error);
 }
 
@@ -76,19 +77,26 @@ TEST_F(BlockUniTensorTest, gpu_relabel){
   BUT1 = BUT1.relabel("1", "b");
   BUT1 = BUT1.relabel("2", "d");
   BUT1 = BUT1.relabel("3", "de");
+
   BUT1 = BUT1.relabel("b", "ggg");
+
   EXPECT_EQ(BUT1.labels()[0],"a");
   EXPECT_EQ(BUT1.labels()[1],"ggg");
   EXPECT_EQ(BUT1.labels()[2],"d");
   EXPECT_EQ(BUT1.labels()[3],"de");
+
   BUT1 = BUT1.relabel(0,"ccc");
   EXPECT_EQ(BUT1.labels()[0],"ccc");
-  BUT1 = BUT1.relabel(0,-1);
-  EXPECT_EQ(BUT1.labels()[0],"-1");
-  BUT1 = BUT1.relabel(1,-199922);
+
+  BUT1 = BUT1.relabel(3,"-1");
+  EXPECT_EQ(BUT1.labels()[3],"-1");
+
+  BUT1 = BUT1.relabel(1,"-199922");
   EXPECT_EQ(BUT1.labels()[1],"-199922");
+
   BUT1 = BUT1.relabel("-1","0");
-  EXPECT_EQ(BUT1.labels()[0],"0");
+  EXPECT_EQ(BUT1.labels()[3],"0");
+
   // BUT1.relabel(0,'a');
   // EXPECT_EQ(BUT1.labels()[0],"a");
   EXPECT_THROW(BUT1.relabel(5,"a"),std::logic_error);
@@ -99,23 +107,29 @@ TEST_F(BlockUniTensorTest, gpu_relabel){
   // EXPECT_THROW(BUT1.relabel(5,'a'),std::logic_error);
 }
 TEST_F(BlockUniTensorTest, gpu_relabel_){
+
   BUT1.relabel_("0", "a");
   BUT1.relabel_("1", "b");
   BUT1.relabel_("2", "d");
   BUT1.relabel_("3", "de");
   BUT1.relabel_("b", "ggg");
+
   EXPECT_EQ(BUT1.labels()[0],"a");
   EXPECT_EQ(BUT1.labels()[1],"ggg");
   EXPECT_EQ(BUT1.labels()[2],"d");
   EXPECT_EQ(BUT1.labels()[3],"de");
+
   BUT1.relabel_(0,"ccc");
   EXPECT_EQ(BUT1.labels()[0],"ccc");
-  BUT1.relabel_(0,-1);
-  EXPECT_EQ(BUT1.labels()[0],"-1");
-  BUT1.relabel_(1,-199922);
+
+  BUT1.relabel_(3,"-1");
+  EXPECT_EQ(BUT1.labels()[3],"-1");
+
+  BUT1.relabel_(1,"-199922");
   EXPECT_EQ(BUT1.labels()[1],"-199922");
+
   BUT1.relabel_("-1","0");
-  EXPECT_EQ(BUT1.labels()[0],"0");
+  EXPECT_EQ(BUT1.labels()[3],"0");
   EXPECT_THROW(BUT1.relabel_(5,"a"),std::logic_error);
   EXPECT_THROW(BUT1.relabel_(-1,"a"),std::logic_error);
   // EXPECT_THROW(BUT1.relabel(0,"a").relabel(1,"a"),std::logic_error);
@@ -362,7 +376,7 @@ TEST_F(BlockUniTensorTest, gpu_device) {
 }
 
 TEST_F(BlockUniTensorTest, gpu_device_str){
-    EXPECT_EQ(Spf.device_str(), "cytnx device: CUDA");
+    EXPECT_EQ(Spf.device_str().substr(0, 18), "cytnx device: CUDA");
 }
 
 TEST_F(BlockUniTensorTest, gpu_is_blockform) {
@@ -372,7 +386,7 @@ TEST_F(BlockUniTensorTest, gpu_is_blockform) {
 
 TEST_F(BlockUniTensorTest, gpu_is_contiguous) {
     EXPECT_EQ(Spf.is_contiguous(), true);
-    auto Spf_new = Spf.permute({2,1,0},1,false);
+    auto Spf_new = Spf.permute({2,1,0},1);
     EXPECT_EQ(Spf_new.is_contiguous(), false);
 }
 
@@ -656,8 +670,8 @@ TEST_F(BlockUniTensorTest, gpu_permute_2) {
 TEST_F(BlockUniTensorTest, gpu_contract1) {
     // two sparse matrix
 
-    UT_contract_L1.set_labels({'a','b'});
-    UT_contract_R1.set_labels({'b','c'});
+    UT_contract_L1.set_labels({"a","b"});
+    UT_contract_R1.set_labels({"b","c"});
     UniTensor out = UT_contract_L1.contract(UT_contract_R1);
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans1.get_blocks();
@@ -668,8 +682,8 @@ TEST_F(BlockUniTensorTest, gpu_contract1) {
 TEST_F(BlockUniTensorTest, gpu_contract2) {
     // two sparse matrix with degeneracy
 
-    UT_contract_L2.set_labels({'a','b'});
-    UT_contract_R2.set_labels({'b','c'});
+    UT_contract_L2.set_labels({"a","b"});
+    UT_contract_R2.set_labels({"b","c"});
     UniTensor out = UT_contract_L2.contract(UT_contract_R2);
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans2.get_blocks();
@@ -681,8 +695,8 @@ TEST_F(BlockUniTensorTest, gpu_contract2) {
 TEST_F(BlockUniTensorTest, gpu_contract3) {
     //// two 3 legs tensor
 
-    UT_contract_L3.set_labels({'a','b','c'});
-    UT_contract_R3.set_labels({'c','d','e'});
+    UT_contract_L3.set_labels({"a","b","c"});
+    UT_contract_R3.set_labels({"c","d","e"});
     UniTensor out = UT_contract_L3.contract(UT_contract_R3);
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans3.get_blocks();
