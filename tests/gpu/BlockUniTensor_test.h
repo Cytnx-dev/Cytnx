@@ -76,10 +76,10 @@ class BlockUniTensorTest : public ::testing::Test {
   Bond C3B2 = Bond(BD_IN, {Qs(0), Qs(1), Qs(0), Qs(1)}, {1,2,3,4});
   Bond C3B3 = Bond(BD_OUT, {Qs(0), Qs(1), Qs(2)}, {1,2,3});
 
-  UniTensor Spf = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.Float,Device.cpu,false).to(cytnx::Device.cuda);
-  UniTensor Spd = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.Double,Device.cpu,false).to(cytnx::Device.cuda);
-  UniTensor Spcf = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.ComplexFloat,Device.cpu,false).to(cytnx::Device.cuda);
-  UniTensor Spcd = UniTensor({phy,phy.redirect(),aux},{1,2,3},1,Type.ComplexDouble,Device.cpu,false).to(cytnx::Device.cuda);
+  UniTensor Spf = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.Float,Device.cpu,false).to(cytnx::Device.cuda);
+  UniTensor Spd = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.Double,Device.cpu,false).to(cytnx::Device.cuda);
+  UniTensor Spcf = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.ComplexFloat,Device.cpu,false).to(cytnx::Device.cuda);
+  UniTensor Spcd = UniTensor({phy,phy.redirect(),aux},{"1","2","3"},1,Type.ComplexDouble,Device.cpu,false).to(cytnx::Device.cuda);
 
   UniTensor UT_pB = UniTensor({pBI,pBJ,pBK}).to(cytnx::Device.cuda);
   UniTensor UT_pB_ans = UniTensor({pBI,pBJ,pBK}).to(cytnx::Device.cuda);

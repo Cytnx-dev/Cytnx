@@ -23,11 +23,11 @@ TEST_F(DenseUniTensorTest, gpu_relabels){
   EXPECT_EQ(utzero3456.labels()[1],"b");
   EXPECT_EQ(utzero3456.labels()[2],"cd");
   EXPECT_EQ(utzero3456.labels()[3],"d");
-  utzero3456 = utzero3456.relabels({1,-1,2,1000});
+  utzero3456 = utzero3456.relabels({"1","-1","2","1000"});
   EXPECT_THROW(utzero3456.relabels({"a","a","b","c"}), std::logic_error);
-  EXPECT_THROW(utzero3456.relabels({1,1,0,-1}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels({"1","1","0","-1"}), std::logic_error);
   EXPECT_THROW(utzero3456.relabels({"a"}), std::logic_error);
-  EXPECT_THROW(utzero3456.relabels({1,2}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels({"1","2"}), std::logic_error);
   EXPECT_THROW(utzero3456.relabels({"a","b","c","d","e"}), std::logic_error);
 }
 TEST_F(DenseUniTensorTest, gpu_relabels_){
@@ -36,11 +36,11 @@ TEST_F(DenseUniTensorTest, gpu_relabels_){
   EXPECT_EQ(utzero3456.labels()[1],"b");
   EXPECT_EQ(utzero3456.labels()[2],"cd");
   EXPECT_EQ(utzero3456.labels()[3],"d");
-  utzero3456.relabels_({1,-1,2,1000});
+  utzero3456.relabels_({"1","-1","2","1000"});
   EXPECT_THROW(utzero3456.relabels_({"a","a","b","c"}), std::logic_error);
-  EXPECT_THROW(utzero3456.relabels_({1,1,0,-1}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels_({"1","1","0","-1"}), std::logic_error);
   EXPECT_THROW(utzero3456.relabels_({"a"}), std::logic_error);
-  EXPECT_THROW(utzero3456.relabels_({1,2}), std::logic_error);
+  EXPECT_THROW(utzero3456.relabels_({"1","2"}), std::logic_error);
   EXPECT_THROW(utzero3456.relabels_({"a","b","c","d","e"}), std::logic_error);
 }
 
@@ -50,18 +50,20 @@ TEST_F(DenseUniTensorTest, gpu_relabel){
   utzero3456 = utzero3456.relabel("2", "d");
   utzero3456 = utzero3456.relabel("3", "de");
   utzero3456 = utzero3456.relabel("b", "ggg");
+
   EXPECT_EQ(utzero3456.labels()[0],"a");
   EXPECT_EQ(utzero3456.labels()[1],"ggg");
   EXPECT_EQ(utzero3456.labels()[2],"d");
   EXPECT_EQ(utzero3456.labels()[3],"de");
   utzero3456 = utzero3456.relabel(0,"ccc");
   EXPECT_EQ(utzero3456.labels()[0],"ccc");
-  utzero3456 = utzero3456.relabel(0,-1);
+  utzero3456 = utzero3456.relabel(0,"-1");
   EXPECT_EQ(utzero3456.labels()[0],"-1");
-  utzero3456 = utzero3456.relabel(1,-199922);
+  utzero3456 = utzero3456.relabel(1,"-199922");
   EXPECT_EQ(utzero3456.labels()[1],"-199922");
   utzero3456 = utzero3456.relabel("-1","0");
   EXPECT_EQ(utzero3456.labels()[0],"0");
+
   // utzero3456.relabel(0,'a');
   // EXPECT_EQ(utzero3456.labels()[0],"a");
   EXPECT_THROW(utzero3456.relabel(5,"a"),std::logic_error);
@@ -83,9 +85,9 @@ TEST_F(DenseUniTensorTest, gpu_relabel_){
   EXPECT_EQ(utzero3456.labels()[3],"de");
   utzero3456.relabel_(0,"ccc");
   EXPECT_EQ(utzero3456.labels()[0],"ccc");
-  utzero3456.relabel_(0,-1);
+  utzero3456.relabel_(0,"-1");
   EXPECT_EQ(utzero3456.labels()[0],"-1");
-  utzero3456.relabel_(1,-199922);
+  utzero3456.relabel_(1,"-199922");
   EXPECT_EQ(utzero3456.labels()[1],"-199922");
   utzero3456.relabel_("-1","0");
   EXPECT_EQ(utzero3456.labels()[0],"0");
@@ -247,7 +249,7 @@ TEST_F(DenseUniTensorTest, gpu_device) {
 }
 
 TEST_F(DenseUniTensorTest, gpu_device_str){
-    EXPECT_EQ(Spf.device_str(), "cytnx device: CUDA");
+    EXPECT_EQ(Spf.device_str().substr(0, 18), "cytnx device: CUDA");
 }
 
 TEST_F(DenseUniTensorTest, gpu_is_blockform) {
@@ -257,7 +259,7 @@ TEST_F(DenseUniTensorTest, gpu_is_blockform) {
 
 TEST_F(DenseUniTensorTest, gpu_is_contiguous) {
     EXPECT_EQ(Spf.is_contiguous(), true);
-    auto Spf_new = Spf.permute({2,1,0},1,false);
+    auto Spf_new = Spf.permute({2,1,0},1);
     EXPECT_EQ(Spf_new.is_contiguous(), false);
 }
 
