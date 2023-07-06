@@ -11,6 +11,7 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  user_guide/user_guide_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
@@ -63,4 +64,9 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/output.txt"
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
+      DESTINATION ${CMAKE_BINARY_DIR})
+
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/user_guide/ctm.net"
+      DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/user_guide/ctm.net"
       DESTINATION ${CMAKE_BINARY_DIR})
