@@ -47,7 +47,19 @@ We can convert such a Tensor to a UniTensor:
     uT = cytnx.UniTensor(T)
 
     
-Here, the Tensor **T** is converted to a UniTensor **uT** simply by wrapping it with constructor *cy.UniTensor()*. Formally, we can think of this as constructing a UniTensor **uT** with **T** being its *block* (data). 
+Here, the Tensor **T** is converted to a UniTensor **uT** simply by wrapping it with constructor *cytnx.UniTensor()*. Formally, we can think of this as constructing a UniTensor **uT** with **T** being its *block* (data). 
+If we want to create a UniTensor with different dtype, for example, a complex UniTensor, we can do:
+
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+    # create a tensor with complex data type
+    T = cytnx.ones([3,4,5], dtype=cytnx.Type.ComplexDouble)
+    # convert to UniTensor:
+    uT = cytnx.UniTensor(T)
+
 
 We can use **print_diagram()** to visualize a UniTensor in a more straightforward way as a diagram: 
 
