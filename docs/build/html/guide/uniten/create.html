@@ -755,7 +755,17 @@
 <span class="linenos">4</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Here, the Tensor <strong>T</strong> is converted to a UniTensor <strong>uT</strong> simply by wrapping it with constructor <em>cy.UniTensor()</em>. Formally, we can think of this as constructing a UniTensor <strong>uT</strong> with <strong>T</strong> being its <em>block</em> (data).</p>
+<p>Here, the Tensor <strong>T</strong> is converted to a UniTensor <strong>uT</strong> simply by wrapping it with constructor <em>cytnx.UniTensor()</em>. Formally, we can think of this as constructing a UniTensor <strong>uT</strong> with <strong>T</strong> being its <em>block</em> (data).
+If we want to create a UniTensor with different dtype, for example, a complex UniTensor, we can do:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># create a tensor with complex data type</span>
+<span class="linenos">2</span><span class="n">T</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ComplexDouble</span><span class="p">)</span>
+<span class="linenos">3</span><span class="c1"># convert to UniTensor:</span>
+<span class="linenos">4</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>We can use <strong>print_diagram()</strong> to visualize a UniTensor in a more straightforward way as a diagram:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>

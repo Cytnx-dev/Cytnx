@@ -64,12 +64,12 @@ For example, consider a Tensor with shape (3,4,5). You can append a Tensor with 
     A.append(B)
     print(A)
 
-
+* In C++:
 .. code-block:: c++
     :linenos:
 
     auto A = cytnx::ones({3,4,5});
-    auto B = cytnx.ones({4,5})*2;
+    auto B = cytnx::ones({4,5})*2;
     cout << A << endl;
     cout << B << endl;
 

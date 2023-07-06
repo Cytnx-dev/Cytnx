@@ -101,7 +101,7 @@ Now let us take a look at what happens if we perform a **permute()** operation o
 .. code-block:: c++
     :linenos:
 
-    auto A = cytnx::zeros({2,3,4})
+    auto A = cytnx::zeros({2,3,4});
     auto B = A.permute(0,2,1);
 
     cout << A << endl;
@@ -245,7 +245,7 @@ Next, let's have a look at the **contiguous** property. In the above example, we
 .. code-block:: c++
     :linenos:
 
-    auto A = cytnx::zeros({2,3,4})
+    auto A = cytnx::zeros({2,3,4});
     auto B = A.permute(0,2,1);
 
     cout << A.is_contiguous() << endl;
@@ -283,7 +283,7 @@ We can make a contiguous Tensor **C** that has the same shape as **B** by callin
 .. code-block:: c++
     :linenos:
 
-    auto C = B.contiguous()
+    auto C = B.contiguous();
 
     cout << C << endl;
     cout << C.is_contiguous() << endl;

@@ -120,7 +120,7 @@ For example:
     auto A = cytnx::arange(12).reshape(3,4);
     cout << A << endl;
 
-    auto B = cytnx.ones({3,4})*4;
+    auto B = cytnx::ones({3,4})*4;
     cout << B << endl;
 
     auto C = A * B;
@@ -172,12 +172,12 @@ For example, there are two different ways to perform the + operation: **Tensor.A
 .. code-block:: c++
     :linenos:
 
-    auto A = cytnx::ones({3,4})
+    auto A = cytnx::ones({3,4});
     auto B = cytnx::arange(12).reshape(3,4);
     
     // these two are equivalent to C = A+B;
     auto C = A.Add(B); 
-    auto D = cytnx::linalg.Add(A,B);
+    auto D = cytnx::linalg::Add(A,B);
 
     // this is equivalent to A+=B;
     A.Add_(B);
