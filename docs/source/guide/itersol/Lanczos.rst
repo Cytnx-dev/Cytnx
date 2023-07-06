@@ -55,9 +55,10 @@ For example, we consider a simple example where we wrap a (4x4) matrix inside a 
 
     using namespace cytnx;
     class MyOp: public LinOp{
-
+        public:
         MyOp(): LinOp("mv",4){}
 
+        private:
         Tensor matvec(const Tensor &v) override{
             auto A = arange(16).reshape(4,4);
             A += A.permute(1,0);
@@ -69,7 +70,7 @@ For example, we consider a simple example where we wrap a (4x4) matrix inside a 
     auto op = MyOp();
 
     auto v0 = arange(4); // trial state
-    auto ev = linalg::Lanczos_ER(&op,1, true, 10000,1.0e-14, false,v0);
+    auto ev = linalg::Lanczos_ER(&op, 1, true, 10000, 1.0e-14, false, v0, 3);
 
     cout << ev[0] << endl; //eigenval
     cout << ev[1] << endl; //eigenvec

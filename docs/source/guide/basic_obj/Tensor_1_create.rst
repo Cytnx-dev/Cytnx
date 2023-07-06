@@ -51,7 +51,7 @@ Tensors can also be created and initialized with **arange()** (similar as np.ara
     auto A = cytnx::arange(10);     //rank-1 Tensor from [0,10) with step 1
     auto B = cytnx::arange(0,10,2); //rank-1 Tensor from [0,10) with step 2
     auto C = cytnx::ones({3,4,5});  //Tensor of shape (3,4,5) with all elements set to one.
-    auto D = cytnx.eye(3);          //Tensor of shape (3,3) with diagonal elements set to one, all other entries are zero.
+    auto D = cytnx::eye(3);          //Tensor of shape (3,3) with diagonal elements set to one, all other entries are zero.
 
 
 :Tips: In C++, you can make use of *auto* to simplify your code! 
@@ -98,7 +98,7 @@ You can create a Tensor with a different data type, and/or on different devices 
 
 .. code-block:: c++
 
-    auto A = cytnx.zeros({3,4,5},cytnx::Type.Int64,cytnx::Device.cuda);
+    auto A = cytnx::zeros({3,4,5},cytnx::Type.Int64,cytnx::Device.cuda);
 
 
 .. Note:: 
@@ -225,7 +225,7 @@ For example, let's create a Tensor in the memory accessible by the CPU and trans
 .. code-block:: c++
     :linenos:
 
-    auto A = cytnx::ones([2,2]); //on CPU
+    auto A = cytnx::ones({2,2}); //on CPU
     auto B = A.to(cytnx::Device.cuda+0);
     cout << A << endl; // on CPU
     cout << B << endl; // on GPU
@@ -296,7 +296,7 @@ Tensor from Storage [v0.6.6+]
     auto B = cytnx::Tensor::from_storage(A);
 
     // A & C have different memory
-    C = cytnx::Tensor::from_storage(A.clone());
+    auto C = cytnx::Tensor::from_storage(A.clone());
 
 
 .. Note::
