@@ -125,7 +125,17 @@ To construct a Bond with symmetries and associate quantum numbers, the following
 
 
     
-The two arguments *qnums_list* and *degeneracies* can be combined into a single argument, for example:
+The two arguments *qnums_list* and *degeneracies* can be combined into a single argument by using the following API:
+
+.. py:function:: Bond(bd_type, qnums_degeneracy_pair, sym_list)
+
+    :param bondType bd_type: type (direction) of the bond, this can ONLY be BD_KET--inward (BD_IN) or BD_BRA--outward (BD_OUT) when quantum numbers are used
+    :param list qnums_degeneracy_pair_list: list of pairs of quantum numbers and degeneracies, which can be constructed with the helper class *Qs*
+    :param list sym_list: list of Symmetry objects that define the symmetry of each qnum
+
+*Qs* is a helper class that can be used to construct a pair of quantum number list and degeneracy.
+
+For example:
 
 * In Python:
 
