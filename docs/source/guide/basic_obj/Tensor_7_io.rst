@@ -21,7 +21,7 @@ To save a Tensor to a file, simply call **Tensor.Save(filepath)**.
     :linenos:
 
     auto A = cytnx::arange(12).reshape(3,4);
-    A.Save("T1")
+    A.Save("T1");
 
 This will save Tensor *A* to the current directory as **T1.cytn**, with *.cytn* as file extension.
 
