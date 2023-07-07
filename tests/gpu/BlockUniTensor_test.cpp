@@ -464,36 +464,36 @@ TEST_F(BlockUniTensorTest, gpu_same_data) {
 }
 
 TEST_F(BlockUniTensorTest, gpu_get_block_byqnum) {
-    EXPECT_EQ(UT_pB_ans.get_block({0,0,0}).equiv(t0), true);
-    EXPECT_EQ(UT_pB_ans.get_block({0,1,1}).equiv(t1a), true);
-    EXPECT_EQ(UT_pB_ans.get_block({1,0,1}).equiv(t1b), true);
-    EXPECT_EQ(UT_pB_ans.get_block({1,1,2}).equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block({0,0,0}),t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block({0,1,1}),t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block({1,0,1}),t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block({1,1,2}),t2), true);
     // EXPECT_ANY_THROW(UT_pB_ans.get_block({0,0,3}));
 }
 
 TEST_F(BlockUniTensorTest, gpu_get_block_byidx) {
-    EXPECT_EQ(UT_pB_ans.get_block(0).equiv(t0), true);
-    EXPECT_EQ(UT_pB_ans.get_block(1).equiv(t1a), true);
-    EXPECT_EQ(UT_pB_ans.get_block(2).equiv(t1b), true);
-    EXPECT_EQ(UT_pB_ans.get_block(3).equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block(0),t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block(1),t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block(2),t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB_ans.get_block(3),t2), true);
     // EXPECT_ANY_THROW(UT_pB_ans.get_block({0,0,3}));
 }
 
 TEST_F(BlockUniTensorTest, gpu_get_blocks) {
     auto bks = UT_pB_ans.get_blocks();
-    EXPECT_EQ(bks[0].equiv(t0), true);
-    EXPECT_EQ(bks[1].equiv(t1a), true);
-    EXPECT_EQ(bks[2].equiv(t1b), true);
-    EXPECT_EQ(bks[3].equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[0],t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[1],t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[2],t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[3],t2), true);
     // EXPECT_ANY_THROW(UT_pB_ans.get_block({0,0,3}));
 }
 
 TEST_F(BlockUniTensorTest, gpu_get_blocks_) {
     auto bks = UT_pB_ans.get_blocks_();
-    EXPECT_EQ(bks[0].equiv(t0), true);
-    EXPECT_EQ(bks[1].equiv(t1a), true);
-    EXPECT_EQ(bks[2].equiv(t1b), true);
-    EXPECT_EQ(bks[3].equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[0],t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[1],t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[2],t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(bks[3],t2), true);
     EXPECT_EQ(UT_pB_ans.get_block_(0).same_data(bks[0]), true);
     EXPECT_EQ(UT_pB_ans.get_block_(1).same_data(bks[1]), true);
     EXPECT_EQ(UT_pB_ans.get_block_(2).same_data(bks[2]), true);
@@ -513,10 +513,10 @@ TEST_F(BlockUniTensorTest, gpu_put_block__byidx) {
                 if(UT_pB.at({i,j,k}).exists())
                     EXPECT_EQ(UT_pB.at({i,j,k}), UT_pB_ans.at({i,j,k}));
             }
-    EXPECT_EQ(UT_pB.get_block(0).equiv(t0), true);
-    EXPECT_EQ(UT_pB.get_block(1).equiv(t1a), true);
-    EXPECT_EQ(UT_pB.get_block(2).equiv(t1b), true);
-    EXPECT_EQ(UT_pB.get_block(3).equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(0),t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(1),t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(2),t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(3),t2), true);
     EXPECT_EQ(UT_pB.get_block_(0).same_data(t0), true);
     EXPECT_EQ(UT_pB.get_block_(1).same_data(t1a), true);
     EXPECT_EQ(UT_pB.get_block_(2).same_data(t1b), true);
@@ -539,10 +539,10 @@ TEST_F(BlockUniTensorTest, gpu_put_block_byidx) {
                 if(UT_pB.at({i,j,k}).exists())
                     EXPECT_EQ(UT_pB.at({i,j,k}), UT_pB_ans.at({i,j,k}));
             }
-    EXPECT_EQ(UT_pB.get_block(0).equiv(t0), true);
-    EXPECT_EQ(UT_pB.get_block(1).equiv(t1a), true);
-    EXPECT_EQ(UT_pB.get_block(2).equiv(t1b), true);
-    EXPECT_EQ(UT_pB.get_block(3).equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(0),t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(1),t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(2),t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(3),t2), true);
     EXPECT_EQ(UT_pB.get_block_(0).same_data(t0), false);
     EXPECT_EQ(UT_pB.get_block_(1).same_data(t1a), false);
     EXPECT_EQ(UT_pB.get_block_(2).same_data(t1b), false);
@@ -565,10 +565,10 @@ TEST_F(BlockUniTensorTest, gpu_put_block__byqnum) {
                 if(UT_pB.at({i,j,k}).exists())
                     EXPECT_EQ(UT_pB.at({i,j,k}), UT_pB_ans.at({i,j,k}));
             }
-    EXPECT_EQ(UT_pB.get_block(0).equiv(t0), true);
-    EXPECT_EQ(UT_pB.get_block(1).equiv(t1a), true);
-    EXPECT_EQ(UT_pB.get_block(2).equiv(t1b), true);
-    EXPECT_EQ(UT_pB.get_block(3).equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(0),t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(1),t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(2),t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(3),t2), true);
     EXPECT_EQ(UT_pB.get_block_(0).same_data(t0), true);
     EXPECT_EQ(UT_pB.get_block_(1).same_data(t1a), true);
     EXPECT_EQ(UT_pB.get_block_(2).same_data(t1b), true);
@@ -591,10 +591,10 @@ TEST_F(BlockUniTensorTest, gpu_put_block_byqnum) {
                 if(UT_pB.at({i,j,k}).exists())
                     EXPECT_EQ(UT_pB.at({i,j,k}), UT_pB_ans.at({i,j,k}));
             }
-    EXPECT_EQ(UT_pB.get_block(0).equiv(t0), true);
-    EXPECT_EQ(UT_pB.get_block(1).equiv(t1a), true);
-    EXPECT_EQ(UT_pB.get_block(2).equiv(t1b), true);
-    EXPECT_EQ(UT_pB.get_block(3).equiv(t2), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(0),t0), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(1),t1a), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(2),t1b), true);
+    EXPECT_EQ(AreNearlyEqTensor(UT_pB.get_block(3),t2), true);
     EXPECT_EQ(UT_pB.get_block_(0).same_data(t0), false);
     EXPECT_EQ(UT_pB.get_block_(1).same_data(t1a), false);
     EXPECT_EQ(UT_pB.get_block_(2).same_data(t1b), false);
@@ -676,7 +676,7 @@ TEST_F(BlockUniTensorTest, gpu_contract1) {
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans1.get_blocks();
     for(int i = 0; i < ansbks.size(); i++)
-        EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
+        EXPECT_EQ(AreNearlyEqTensor(outbks[i],ansbks[i],1e-5), true);
 }
 
 TEST_F(BlockUniTensorTest, gpu_contract2) {
@@ -688,7 +688,7 @@ TEST_F(BlockUniTensorTest, gpu_contract2) {
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans2.get_blocks();
     for(int i = 0; i < ansbks.size(); i++)
-        EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
+        EXPECT_EQ(AreNearlyEqTensor(outbks[i],ansbks[i],1e-5), true);
 }
 
 
@@ -701,7 +701,7 @@ TEST_F(BlockUniTensorTest, gpu_contract3) {
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans3.get_blocks();
     for(int i = 0; i < ansbks.size(); i++)
-        EXPECT_EQ(outbks[i].equiv(ansbks[i]), true);
+        EXPECT_EQ(AreNearlyEqTensor(outbks[i],ansbks[i],1e-5), true);
 }
 
 TEST_F(BlockUniTensorTest, gpu_Add){

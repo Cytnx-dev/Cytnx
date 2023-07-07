@@ -3,9 +3,11 @@
 
 #include "cytnx.hpp"
 #include <gtest/gtest.h>
+#include "test_tools.h"
 
 using namespace cytnx;
 using namespace std;
+using namespace TestTools;
 class DenseUniTensorTest : public ::testing::Test {
  public:
 

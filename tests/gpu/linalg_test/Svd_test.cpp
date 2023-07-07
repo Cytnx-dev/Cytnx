@@ -417,8 +417,8 @@ bool CheckResult(const std::string& case_name) {
   std::string ans_file_name = ans_data_root + case_name + ".cytnx";
   // bool need_U, need_VT;
   bool compute_uv;
-  UniTensor src_T = UniTensor::Load(src_file_name);
-  UniTensor ans_T = UniTensor::Load(ans_file_name); //sigular values UniTensor
+  UniTensor src_T = UniTensor::Load(src_file_name).to(cytnx::Device.cuda);
+  UniTensor ans_T = UniTensor::Load(ans_file_name).to(cytnx::Device.cuda); //sigular values UniTensor
    
   //Do svd
   std::vector<UniTensor> svds = linalg::Svd(src_T, compute_uv = true);

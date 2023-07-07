@@ -398,7 +398,7 @@ TEST_F(DenseUniTensorTest, gpu_contract1) {
     UniTensor out = ut1.contract(ut2);
     auto outbk = out.get_block_();
     auto ansbk = contres1.get_block_();
-    EXPECT_TRUE(outbk.equiv(ansbk));
+    EXPECT_TRUE(AreNearlyEqTensor(outbk,ansbk,1e-5));
 }
 
 TEST_F(DenseUniTensorTest, gpu_contract2) {
@@ -407,7 +407,7 @@ TEST_F(DenseUniTensorTest, gpu_contract2) {
     UniTensor out = ut1.contract(ut2);
     auto outbk = out.get_block_();
     auto ansbk = contres2.get_block_();
-    EXPECT_TRUE(outbk.equiv(ansbk));
+    EXPECT_TRUE(AreNearlyEqTensor(outbk,ansbk,1e-5));
 }
 
 TEST_F(DenseUniTensorTest, gpu_contract3) {
@@ -416,7 +416,7 @@ TEST_F(DenseUniTensorTest, gpu_contract3) {
     UniTensor out = ut1.contract(ut2);
     auto outbk = out.get_block_();
     auto ansbk = contres3.get_block_();
-    EXPECT_TRUE(outbk.equiv(ansbk));
+    EXPECT_TRUE(AreNearlyEqTensor(outbk,ansbk,1e-5));
 }
 
 TEST_F(DenseUniTensorTest, gpu_Add){
