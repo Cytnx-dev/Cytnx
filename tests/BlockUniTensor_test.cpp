@@ -676,8 +676,11 @@ TEST_F(BlockUniTensorTest, contract1) {
     UniTensor out = UT_contract_L1.contract(UT_contract_R1);
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans1.get_blocks();
-    for(int i = 0; i < ansbks.size(); i++)
+    for(int i = 0; i < ansbks.size(); i++){
+        std::cout<<outbks[i]<<std::endl;
+        std::cout<<ansbks[i]<<std::endl;
         EXPECT_EQ(AreNearlyEqTensor(outbks[i],ansbks[i],1e-5), true);
+    }
 }
 
 TEST_F(BlockUniTensorTest, contract2) {
@@ -688,8 +691,11 @@ TEST_F(BlockUniTensorTest, contract2) {
     UniTensor out = UT_contract_L2.contract(UT_contract_R2);
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans2.get_blocks();
-    for(int i = 0; i < ansbks.size(); i++)
+    for(int i = 0; i < ansbks.size(); i++){
+        std::cout<<outbks[i]<<std::endl;
+        std::cout<<ansbks[i]<<std::endl;
         EXPECT_EQ(AreNearlyEqTensor(outbks[i],ansbks[i],1e-5), true);
+    }
 }
 
 
@@ -701,8 +707,11 @@ TEST_F(BlockUniTensorTest, contract3) {
     UniTensor out = UT_contract_L3.contract(UT_contract_R3);
     auto outbks = out.get_blocks();
     auto ansbks = UT_contract_ans3.get_blocks();
-    for(int i = 0; i < ansbks.size(); i++)
+    for(int i = 0; i < ansbks.size(); i++){
+        std::cout<<outbks[i]<<std::endl;
+        std::cout<<ansbks[i]<<std::endl;
         EXPECT_EQ(AreNearlyEqTensor(outbks[i],ansbks[i],1e-5), true);
+    }
 }
 
 TEST_F(BlockUniTensorTest, Add){

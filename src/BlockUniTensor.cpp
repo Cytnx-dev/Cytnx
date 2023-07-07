@@ -917,7 +917,7 @@ namespace cytnx {
               tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false, true);
             }
 #else
-              tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false, true);
+              tmp->Init(out_bonds,out_labels, out_rowrank, this->dtype(), this->device(), false, false);
 #endif
 
             // now, build the itoi table:

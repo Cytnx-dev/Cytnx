@@ -398,6 +398,8 @@ TEST_F(DenseUniTensorTest, contract1) {
     UniTensor out = ut1.contract(ut2);
     auto outbk = out.get_block_();
     auto ansbk = contres1.get_block_();
+    cout<<outbk<<endl;
+    cout<<ansbk<<endl;
     EXPECT_TRUE(AreNearlyEqTensor(outbk,ansbk,1e-5));
 }
 
@@ -407,6 +409,8 @@ TEST_F(DenseUniTensorTest, contract2) {
     UniTensor out = ut1.contract(ut2);
     auto outbk = out.get_block_();
     auto ansbk = contres2.get_block_();
+    cout<<outbk<<endl;
+    cout<<ansbk<<endl;
     EXPECT_TRUE(AreNearlyEqTensor(outbk,ansbk,1e-5));
 }
 
@@ -416,6 +420,8 @@ TEST_F(DenseUniTensorTest, contract3) {
     UniTensor out = ut1.contract(ut2);
     auto outbk = out.get_block_();
     auto ansbk = contres3.get_block_();
+    cout<<outbk<<endl;
+    cout<<ansbk<<endl;
     EXPECT_TRUE(AreNearlyEqTensor(outbk,ansbk,1e-5));
 }
 
