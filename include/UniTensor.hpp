@@ -319,6 +319,13 @@ namespace cytnx {
       const std::vector<std::string> &new_labels);
     virtual void relabels_(const std::vector<std::string> &new_labels);
 
+    //virtual boost::intrusive_ptr<UniTensor_base> relabels(
+    //  const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
+
+    //virtual void relabels_(
+    //  const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
+    
+
     virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
                                                          const std::string &new_label);
 
@@ -534,7 +541,10 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
     void relabels_(const std::vector<std::string> &new_labels);
 
-    
+    //boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
+    //void relabels_(const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
+
+
     /**
      * @brief
      *
@@ -586,7 +596,9 @@ namespace cytnx {
     void print_diagram(const bool &bond_info = false);
     void print_blocks(const bool &full_info=true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info=true) const;
-    Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_block.clone(); }
+    Tensor get_block(const cytnx_uint64 &idx = 0) const { 
+      return this->_block.clone(); 
+    }
 
     Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
       cytnx_error_msg(
@@ -611,7 +623,9 @@ namespace cytnx {
     }
 
     // return a share view of block, this only work for non-symm tensor.
-    Tensor &get_block_(const cytnx_uint64 &idx = 0) { return this->_block; }
+    Tensor &get_block_(const cytnx_uint64 &idx = 0) { 
+        return this->_block; 
+    }
     // return a share view of block, this only work for non-symm tensor.
     const Tensor &get_block_(const cytnx_uint64 &idx = 0) const { return this->_block; }
 
@@ -1330,6 +1344,11 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &new_labels);
     void relabels_(const std::vector<std::string> &new_labels);
+
+
+    //boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
+    //void relabels_(const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
+
 
     boost::intrusive_ptr<UniTensor_base> relabel(const std::string &old_label,
                                                          const std::string &new_label);
@@ -2239,6 +2258,9 @@ namespace cytnx {
 
         this->_impl->relabels_(vs);
     }
+
+
+
 
 
 

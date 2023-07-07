@@ -694,9 +694,9 @@ namespace cytnx {
     if (bin.type() == bondType::BD_REG) {
       os << "type: REGULAR " << std::endl;
     } else if (bin.type() == bondType::BD_BRA) {
-      os << "type: <BRA     " << std::endl;
+      os << "type: < OUT (BRA)    " << std::endl;
     } else if (bin.type() == bondType::BD_KET) {
-      os << "type: KET>     " << std::endl;
+      os << "type: |IN (KET)>     " << std::endl;
     } else {
       cytnx_error_msg(1, "%s", "[ERROR] internal error.");
     }

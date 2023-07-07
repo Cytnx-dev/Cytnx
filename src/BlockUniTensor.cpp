@@ -678,6 +678,7 @@ namespace cytnx {
   }
 
 
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
                                                                 const string &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
