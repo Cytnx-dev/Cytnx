@@ -166,7 +166,7 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 
 
 echo ${FLAG}
-rm -rf build
+# rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}

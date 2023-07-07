@@ -9,6 +9,9 @@ namespace cytnx {
 
     algo_internal_interface::algo_internal_interface() {
       Sort_ii.assign(N_Type, NULL);
+#ifdef UNI_GPU
+      cuSort_ii.assign(N_Type, NULL);
+#endif
 
       Sort_ii[Type.ComplexDouble] = Sort_internal_cd;
       Sort_ii[Type.ComplexFloat] = Sort_internal_cf;
@@ -23,7 +26,17 @@ namespace cytnx {
       Sort_ii[Type.Bool] = Sort_internal_b;
 
 #ifdef UNI_GPU
-
+      cuSort_ii[Type.ComplexDouble] = cuSort_internal_cd;
+      cuSort_ii[Type.ComplexFloat] = cuSort_internal_cf;
+      cuSort_ii[Type.Double] = cuSort_internal_d;
+      cuSort_ii[Type.Float] = cuSort_internal_f;
+      cuSort_ii[Type.Uint64] = cuSort_internal_u64;
+      cuSort_ii[Type.Int64] = cuSort_internal_i64;
+      cuSort_ii[Type.Uint32] = cuSort_internal_u32;
+      cuSort_ii[Type.Int32] = cuSort_internal_i32;
+      cuSort_ii[Type.Uint16] = cuSort_internal_u16;
+      cuSort_ii[Type.Int16] = cuSort_internal_i16;
+      cuSort_ii[Type.Bool] = cuSort_internal_b;
 #endif
     }
 

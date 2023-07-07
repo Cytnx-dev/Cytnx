@@ -11,7 +11,7 @@
 
 
 #ifdef UNI_GPU
-  //#include "algo/algo_internal_gpu/cuSort_internal.hpp"
+  #include "algo/algo_internal_gpu/cuSort_internal.hpp"
 #endif
 
 namespace cytnx {
@@ -19,13 +19,12 @@ namespace cytnx {
   namespace algo_internal {
     typedef void (*Sort_internal_ii)(boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
                                      const cytnx_uint64 &);
-
     class algo_internal_interface {
      public:
       std::vector<Sort_internal_ii> Sort_ii;
 
 #ifdef UNI_GPU
-        // std::vector<Sort_internal_ii> cuSort_ii;
+        std::vector<Sort_internal_ii> cuSort_ii;
 #endif
 
       algo_internal_interface();
