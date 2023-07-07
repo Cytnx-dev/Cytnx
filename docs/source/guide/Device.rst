@@ -16,9 +16,8 @@ To check how many threads can be used in your current program by Cytnx, you can 
 
 * In C++
 
-.. code-block:: c++
-    
-    cout << Device.Ncpus;
+.. literalinclude:: ../../code/cplusplus/guide_codes/2_1_ex1.cpp
+    :language: c++
 
 
 If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.
@@ -56,10 +55,8 @@ To check how many GPUs can be used in your current program by Cytnx, you can use
 
 * In C++
 
-.. code-block:: c++
-
-    cout << Device.Ngpus;
-
+.. literalinclude:: ../../code/cplusplus/guide_codes/2_2_ex1.cpp
+    :language: c++
 
 If Cytnx is not compiled with CUDA available, the Device.Ngpus will always return 0.
 

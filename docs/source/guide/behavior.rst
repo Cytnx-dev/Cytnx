@@ -20,13 +20,9 @@ Let's look at the following example. Consider the **Tensor** object in Cytnx
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../code/cplusplus/guide_codes/1_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Tensor({2,3});
-    auto B = A;
-
-    cout << cytnx::is(B,A) << endl;
 
 Output >>
 
@@ -60,15 +56,9 @@ In the case where a copy of an object is needed, you can use **clone()**.
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../code/cplusplus/guide_codes/1_2_ex1.cpp
+    :language: c++
     :linenos:
- 
-    auto A = cytnx::Tensor({2,3});
-    auto B = A;
-    auto C = A.clone();
-    
-    cout << cytnx::is(B,A) << endl;
-    cout << cytnx::is(C,A) << endl;
 
 Output>>
 

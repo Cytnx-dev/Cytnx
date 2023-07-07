@@ -22,35 +22,14 @@ We can use the **Tensor.reshape** function to do this.
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_2_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::arange(24);
-    auto B = A.reshape(2,3,4);
-    cout << A << endl;
-    cout << B << endl;
    
 >> Output:
 
-.. code-block:: text
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (24)
-    [0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,3,4)
-    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
-      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
-      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
-     [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
-      [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
-      [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
- 
+.. literalinclude:: ../../../code/cplusplus/outputs/3_2_1_ex1.out
+    :language: text
 
 Notice that calling **reshape()** returns a new object *B*, so the original object *A*'s shape is not changed after calling reshape. 
 
