@@ -38,9 +38,9 @@ TEST(UserGuide, 1_1_ex1) {
   OUT_RESET
 }
 
-TEST(UserGuide, 1_1_ex2) {
+TEST(UserGuide, 1_2_ex1) {
   OUT_REDIRECT 
-  #include "guide_codes/1_1_ex2.cpp"
+  #include "guide_codes/1_2_ex1.cpp"
   OUT_RESET
 }
 
