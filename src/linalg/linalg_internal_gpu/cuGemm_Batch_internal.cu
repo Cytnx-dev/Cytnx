@@ -48,7 +48,7 @@ namespace cytnx{
                     // create handles:
                     cublasHandle_t cublasH = NULL;
                     checkCudaErrors(cublasCreate(&cublasH));
-                    checkCudaErrors(cublasZgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cuDoubleComplex*)&alphas[i],(cuDoubleComplex*)&b_array[idx],blsNr,(cuDoubleComplex*)&a_array[idx],blsComm,(cuDoubleComplex*)&betas[i],(cuDoubleComplex*)&c_array[idx],blsNr));
+                    checkCudaErrors(cublasZgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cuDoubleComplex*)&alphas[i],(cuDoubleComplex*)b_array[idx],blsNr,(cuDoubleComplex*)a_array[idx],blsComm,(cuDoubleComplex*)&betas[i],(cuDoubleComplex*)c_array[idx],blsNr));
                     idx++;
                     cublasDestroy(cublasH);
                 }
@@ -97,7 +97,7 @@ namespace cytnx{
                     // create handles:
                     cublasHandle_t cublasH = NULL;
                     checkCudaErrors(cublasCreate(&cublasH));
-                    checkCudaErrors(cublasCgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cuFloatComplex*)&alphas[i],(cuFloatComplex*)&b_array[idx],blsNr,(cuFloatComplex*)&a_array[idx],blsComm,(cuFloatComplex*)&betas[i],(cuFloatComplex*)&c_array[idx],blsNr));
+                    checkCudaErrors(cublasCgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cuFloatComplex*)&alphas[i],(cuFloatComplex*)b_array[idx],blsNr,(cuFloatComplex*)a_array[idx],blsComm,(cuFloatComplex*)&betas[i],(cuFloatComplex*)c_array[idx],blsNr));
                     idx++;
                     cublasDestroy(cublasH);
                 }
@@ -147,7 +147,7 @@ namespace cytnx{
                     // create handles:
                     cublasHandle_t cublasH = NULL;
                     checkCudaErrors(cublasCreate(&cublasH));
-                    checkCudaErrors(cublasDgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cytnx_double*)&alphas[i],(cytnx_double*)&b_array[idx],blsNr,(cytnx_double*)&a_array[idx],blsComm,(cytnx_double*)&betas[i],(cytnx_double*)&c_array[idx],blsNr));
+                    checkCudaErrors(cublasDgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cytnx_double*)&alphas[i],(cytnx_double*)b_array[idx],blsNr,(cytnx_double*)a_array[idx],blsComm,(cytnx_double*)&betas[i],(cytnx_double*)c_array[idx],blsNr));
                     idx++;
                     cublasDestroy(cublasH);
                 }
@@ -195,7 +195,7 @@ namespace cytnx{
                     // create handles:
                     cublasHandle_t cublasH = NULL;
                     checkCudaErrors(cublasCreate(&cublasH));
-                    checkCudaErrors(cublasSgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cytnx_float*)&alphas[i],(cytnx_float*)&b_array[idx],blsNr,(cytnx_float*)&a_array[idx],blsComm,(cytnx_float*)&betas[i],(cytnx_float*)&c_array[idx],blsNr));
+                    checkCudaErrors(cublasSgemm(cublasH,opl,opr,blsNr,blsMl,blsComm,(cytnx_float*)&alphas[i],(cytnx_float*)b_array[idx],blsNr,(cytnx_float*)a_array[idx],blsComm,(cytnx_float*)&betas[i],(cytnx_float*)c_array[idx],blsNr));
                     idx++;
                     cublasDestroy(cublasH);
                 }
