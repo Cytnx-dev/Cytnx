@@ -55,10 +55,12 @@ If we want to create a UniTensor with different dtype, for example, a complex Un
 .. code-block:: python
     :linenos:
 
-    # create a tensor with complex data type
-    T = cytnx.ones([3,4,5], dtype=cytnx.Type.ComplexDouble)
-    # convert to UniTensor:
+    # initialize a tensor with complex data type
+    T = cytnx.zeros([2,3,4], dtype=cytnx.Type.ComplexDouble)
+    # convert to UniTensor
     uT = cytnx.UniTensor(T)
+    # randomize the elements with a uniform distribution in the range [low, high]
+    cytnx.random.Make_uniform(uT, low = -1., high = 1.)
 
 
 We can use **print_diagram()** to visualize a UniTensor in a more straightforward way as a diagram: 
