@@ -3,7 +3,7 @@ Total elem: 1
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (1)
-[-2.33795e+01 ]
+[-2.29255e+01 ]
 
 
 
@@ -11,6 +11,6 @@ Total elem: 6
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (6)
-[-7.15510e-01 -4.55150e-01 -1.94790e-01 -1.25380e-02 5.25520e-02 5.86290e-01 ]
+[-6.15649e-01 -5.84368e-01 -2.49867e-01 4.67314e-02 1.91720e-01 4.88318e-01 ]
 
 

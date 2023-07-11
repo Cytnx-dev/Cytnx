@@ -1146,14 +1146,14 @@ namespace cytnx {
               this->_blocks[a].reshape_(oldshapeL);
               this->_blocks[a].permute_(inv_mapperL);
             }
-            // restore the shape of tmp->_blocks
-            for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
-              tmp->_blocks[a].reshape_(oldshapeC[a]);
-              if(!reshaped[a]){
-                // if targ_block is not result of any block contraction, set to zeros
-                tmp->_blocks[a].storage().set_zeros();
-              }
-            }
+            // // restore the shape of tmp->_blocks
+            // for(cytnx_int64 a=0;a<tmp->_blocks.size();a++){
+            //   tmp->_blocks[a].reshape_(oldshapeC[a]);
+            //   if(!reshaped[a]){
+            //     // if targ_block is not result of any block contraction, set to zeros
+            //     tmp->_blocks[a].storage().set_zeros();
+            //   }
+            // }
           }
 #endif
 
