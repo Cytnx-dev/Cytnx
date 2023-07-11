@@ -353,7 +353,6 @@ Arithmetic
 
 Arithmetic operations for un-tagged UniTensors can be done exactly the same as with Tensors, see :ref:`Tensor arithmetic`. The supported arithmetic operations and further linear algebra functions are listed in :ref:`Linear algebra`.
 
-
 Rowrank
 *********
 
