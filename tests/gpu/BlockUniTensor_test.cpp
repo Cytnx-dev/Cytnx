@@ -835,7 +835,7 @@ TEST_F(BlockUniTensorTest, gpu_group_basis){
   EXPECT_DOUBLE_EQ(double(out.at({2,2}).real()), double(1));
 
   EXPECT_EQ(out.shape(),std::vector<cytnx_uint64>({3,3}));
-  EXPECT_EQ(out.device(),Device.cpu);
+  EXPECT_EQ(out.device(),Device.cuda);
   EXPECT_EQ(out.bonds()[0].qnums(),std::vector<std::vector<cytnx_int64>>({{0},{1}}));
   EXPECT_EQ(out.bonds()[1].qnums(),std::vector<std::vector<cytnx_int64>>({{0},{1}}));
 }
