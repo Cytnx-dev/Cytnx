@@ -130,8 +130,8 @@ namespace cytnx {
         [Tensor]
     */
     Tensor normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
-                  const int &device = Device.cpu,
-                  const unsigned int &seed = std::random_device()(), const unsigned int &dtype = Type.Double);
+                  const int &device = Device.cpu, const unsigned int &seed = std::random_device()(),
+                  const unsigned int &dtype = Type.Double);
 
     /**
     @brief create an Tensor with all the elements are initialized with normal distribution
@@ -146,8 +146,8 @@ namespace cytnx {
         [Tensor]
     */
     Tensor normal(const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std,
-                  const int &device = Device.cpu,
-                  const unsigned int &seed = std::random_device()(), const unsigned int &dtype = Type.Double);
+                  const int &device = Device.cpu, const unsigned int &seed = std::random_device()(),
+                  const unsigned int &dtype = Type.Double);
     //@}
 
     // uniform:
@@ -166,7 +166,8 @@ namespace cytnx {
     */
     Tensor uniform(const cytnx_uint64 &Nelem, const double &low, const double &high,
                    const int &device = Device.cpu,
-                   const unsigned int &seed = std::random_device()(), const unsigned int &dtype = Type.Double);
+                   const unsigned int &seed = std::random_device()(),
+                   const unsigned int &dtype = Type.Double);
 
     /**
     @brief create an Tensor with all the elements are initialized with uniform distribution
@@ -183,7 +184,8 @@ namespace cytnx {
     */
     Tensor uniform(const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high,
                    const int &device = Device.cpu,
-                   const unsigned int &seed = std::random_device()(), const unsigned int &dtype = Type.Double);
+                   const unsigned int &seed = std::random_device()(),
+                   const unsigned int &dtype = Type.Double);
     //@}
 
   }  // namespace random

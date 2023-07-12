@@ -11,8 +11,8 @@
 #include <functional>
 
 namespace cytnx {
-  int set_mkl_ilp64(); 
-  
+  int set_mkl_ilp64();
+
   /**
    * @brief The addtion operator between two UniTensor.
    * @details This is the addtion function for UniTensor. It will call
@@ -21,7 +21,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the addtion.
    * @see linalg::Add(const UniTensor &Lt, const UniTensor &Rt)
-  */
+   */
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
   /**
@@ -32,7 +32,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the addtion.
    * @see linalg::Add(const T &lc, const UniTensor &Rt)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -44,7 +44,7 @@ namespace cytnx {
    * @param[in] rc The right template type.
    * @return [UniTensor] The result of the addtion.
    * @see linalg::Add(const UniTensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -56,7 +56,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const UniTensor &Lt, const UniTensor &Rt)
-  */
+   */
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
   /**
@@ -67,7 +67,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const T &lc, const UniTensor &Rt)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -79,7 +79,7 @@ namespace cytnx {
    * @param[in] rc The right template type.
    * @return [UniTensor] The result of the subtraction.
    * @see linalg::Sub(const UniTensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -91,7 +91,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const UniTensor &Lt, const UniTensor &Rt)
-  */
+   */
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
   /**
@@ -102,7 +102,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const T &lc, const UniTensor &Rt)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -114,7 +114,7 @@ namespace cytnx {
    * @param[in] rc The right template type.
    * @return [UniTensor] The result of the multiplication.
    * @see linalg::Mul(const UniTensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -126,7 +126,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const UniTensor &Lt, const UniTensor &Rt)
-  */
+   */
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
   /**
@@ -137,7 +137,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const T &lc, const UniTensor &Rt)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -149,7 +149,7 @@ namespace cytnx {
    * @param[in] rc The right template type.
    * @return [UniTensor] The result of the division.
    * @see linalg::Div(const UniTensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -161,7 +161,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const UniTensor &Lt, const UniTensor &Rt)
-  */
+   */
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
   /**
@@ -172,7 +172,7 @@ namespace cytnx {
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const T &lc, const UniTensor &Rt)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -184,17 +184,16 @@ namespace cytnx {
    * @param[in] rc The right template type.
    * @return [UniTensor] The result of the modulo.
    * @see linalg::Mod(const UniTensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
 
-  
   /**
   @namespace cytnx::linalg
   @brief linear algebra related functions.
   @details This namespace contains all the linear algebra related functions.
   For example, the matrix multiplication, the singular value decomposition, etc.
-  If the linear algebra can only perfom on a matrix, then in most cases, 
+  If the linear algebra can only perfom on a matrix, then in most cases,
   1. If the object is Tensor, then it need to be rank-2.
   2. If the object is UniTensor, then the result will depend on the UniTensor's
   rowrank.
@@ -204,35 +203,35 @@ namespace cytnx {
 
     // Add:
     //==================================================
-   /**
-    * @brief The addtion function between two UniTensor.
-    * @details This is the addtion function for UniTensor. It will perform
-    * the element-wise addtion. That means if the left UniTensor \p Lt
-    * is given as \f$ T_L \f$ and the right UniTensor \p Rt is given as \f$ T_R \f$,
-    * then the result will be:
-    *   \f[
-    *    T_o[i] = T_L[i] + T_R[i],
-    *  \f]
-    * where \f$ T_L[i] \f$ and \f$ T_R[i] \f$ are the elements in the
-    * UniTensor \f$ T_L \f$ and \f$ T_R \f$.
-    * It will perform the element-wise addtion and note that it will return a 
-    * new UniTensor object.
-    * @param[in] Lt The left UniTensor.
-    * @param[in] Rt The right UniTensor.
-    * @return The result UniTensor.
-    * @pre \p Lt and \p Rt must have the same shape.
-    * @see 
-    *     UniTensor::Add(const UniTensor &Rt) const,
-    *     operator+(const UniTensor &Lt, const UniTensor &Rt)
-    */
+    /**
+     * @brief The addtion function between two UniTensor.
+     * @details This is the addtion function for UniTensor. It will perform
+     * the element-wise addtion. That means if the left UniTensor \p Lt
+     * is given as \f$ T_L \f$ and the right UniTensor \p Rt is given as \f$ T_R \f$,
+     * then the result will be:
+     *   \f[
+     *    T_o[i] = T_L[i] + T_R[i],
+     *  \f]
+     * where \f$ T_L[i] \f$ and \f$ T_R[i] \f$ are the elements in the
+     * UniTensor \f$ T_L \f$ and \f$ T_R \f$.
+     * It will perform the element-wise addtion and note that it will return a
+     * new UniTensor object.
+     * @param[in] Lt The left UniTensor.
+     * @param[in] Rt The right UniTensor.
+     * @return The result UniTensor.
+     * @pre \p Lt and \p Rt must have the same shape.
+     * @see
+     *     UniTensor::Add(const UniTensor &Rt) const,
+     *     operator+(const UniTensor &Lt, const UniTensor &Rt)
+     */
     cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
     /**
      * @brief The addtion function between a template type and a UniTensor.
      * @details This is the addtion function for UniTensor. It will
      * add the UniTensor and a template type together and add every element
-     * in the UniTensor with the template type. That means if the template type 
-     * \p lc is given as \f$ c \f$ and the UniTensor \p Rt is given as \f$ T_i \f$, 
+     * in the UniTensor with the template type. That means if the template type
+     * \p lc is given as \f$ c \f$ and the UniTensor \p Rt is given as \f$ T_i \f$,
      * then the result will be:
      * \f[
      *    T_o[i] = c + T_i[i],
@@ -242,17 +241,17 @@ namespace cytnx {
      * @param[in] lc
      * @parblock
      * The left template type.
-     * 
+     *
      * supported type:
-     * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64, 
-     * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64, 
-     * cytnx::cytnx_uint64, cytnx::cytnx_int32, cytnx::cytnx_uint32, 
+     * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
+     * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
+     * cytnx::cytnx_uint64, cytnx::cytnx_int32, cytnx::cytnx_uint32,
      * cytnx::cytnx_int16, cytnx::cytnx_uint16, cytnx::cytnx_bool.
      * @endparblock
      * @param[in] Rt The right UniTensor.
      * @return The result UniTensor.
      * @pre The supported template type shown above.
-     * @note 
+     * @note
      * The inpute template type \p lc will be casted to the same type as
      * the UniTensor \p Rt.
      * @see
@@ -274,12 +273,12 @@ namespace cytnx {
      * \f]
      * where \f$ T_i[i] \f$ and \f$ T_o[i] \f$ are the elements in the
      * UniTensor \f$ T_i \f$ and \f$ T_o \f$.
-     * 
+     *
      * @param[in] Lt The left UniTensor.
-     * @param[in] rc 
+     * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
      * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
@@ -294,7 +293,7 @@ namespace cytnx {
      * @see
      * operator+(const UniTensor &Lt, const T &rc),
      * Add(const T &lc, const cytnx::UniTensor &Rt)
-    */
+     */
     template <class T>
     cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -340,7 +339,7 @@ namespace cytnx {
      * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
      * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
@@ -355,7 +354,7 @@ namespace cytnx {
      * @see
      *    operator-(const T &lc, const UniTensor &Rt),
      *    Sub(const T &lc, const cytnx::UniTensor &Rt)
-    */
+     */
     template <class T>
     cytnx::UniTensor Sub(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -375,7 +374,7 @@ namespace cytnx {
      * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
      * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
@@ -390,7 +389,7 @@ namespace cytnx {
      * @see
      *    operator-(const UniTensor &Lt, const T &rc),
      *    Sub(const cytnx::UniTensor &Lt, const T &rc)
-    */
+     */
     template <class T>
     cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -436,7 +435,7 @@ namespace cytnx {
      * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
      * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
@@ -451,7 +450,7 @@ namespace cytnx {
      * @see
      *    operator*(const T &lc, const UniTensor &Rt),
      *    Mul(const T &lc, const cytnx::UniTensor &Rt)
-    */
+     */
     template <class T>
     cytnx::UniTensor Mul(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -471,7 +470,7 @@ namespace cytnx {
      * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
      * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
@@ -486,7 +485,7 @@ namespace cytnx {
      * @see
      *    operator*(const UniTensor &Lt, const T &rc),
      *    Mul(const cytnx::UniTensor &Lt, const T &rc)
-    */
+     */
     template <class T>
     cytnx::UniTensor Mul(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -532,7 +531,7 @@ namespace cytnx {
      * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
      * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
@@ -548,7 +547,7 @@ namespace cytnx {
      * @see
      *    operator/(const T &lc, const UniTensor &Rt),
      *    Div(const T &lc, const cytnx::UniTensor &Rt)
-    */
+     */
     template <class T>
     cytnx::UniTensor Div(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -568,7 +567,7 @@ namespace cytnx {
      * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_complex128, cytnx::cytnx_complex64,
      * cytnx::cytnx_double, cytnx::cytnx_float, cytnx::cytnx_int64,
@@ -584,7 +583,7 @@ namespace cytnx {
      * @see
      *    operator/(const UniTensor &Lt, const T &rc),
      *    Div(const cytnx::UniTensor &Lt, const T &rc)
-    */
+     */
     template <class T>
     cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -607,7 +606,7 @@ namespace cytnx {
      * @param[in] Lt The left UniTensor.
      * @param[in] Rt The right UniTensor.
      * @return The result UniTensor.
-     * @pre 
+     * @pre
      * 1. \p Lt and \p Rt must have the same shape.
      * 2. The input UniTensor \p Lt and \p Rt need to be integer type.
      * @see
@@ -630,7 +629,7 @@ namespace cytnx {
      * @param lc The left template type.
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_int64,
      * cytnx::cytnx_uint64, cytnx::cytnx_int32, cytnx::cytnx_uint32,
@@ -645,7 +644,7 @@ namespace cytnx {
      * @see
      *    operator%(const UniTensor &Lt, const T &rc),
      *    Mod(const cytnx::UniTensor &Lt, const T &rc)
-    */
+     */
     template <class T>
     cytnx::UniTensor Mod(const T &lc, const cytnx::UniTensor &Rt);
 
@@ -664,7 +663,7 @@ namespace cytnx {
      * @param[in] rc
      * @parblock
      * The right template type.
-     * 
+     *
      * supported type:
      * Scalar, cytnx::cytnx_int64,
      * cytnx::cytnx_uint64, cytnx::cytnx_int32, cytnx::cytnx_uint32,
@@ -678,7 +677,7 @@ namespace cytnx {
      * @see
      *    operator%(const UniTensor &Lt, const T &rc),
      *    Mod(const cytnx::UniTensor &Lt, const T &rc)
-    */
+     */
     template <class T>
     cytnx::UniTensor Mod(const cytnx::UniTensor &Lt, const T &rc);
 
@@ -694,17 +693,18 @@ namespace cytnx {
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
     @details This function performs the Singular-Value decomposition on a UniTensor \p Tin.
     The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
-    refer to the documentation of the function Gesvd(const Tensor &Tin, const bool &is_U, const bool &is_vT).
+    refer to the documentation of the function Gesvd(const Tensor &Tin, const bool &is_U, const bool
+    &is_vT).
     */
     std::vector<cytnx::UniTensor> Gesvd(const cytnx::UniTensor &Tin, const bool &is_U = true,
-                                      const bool &is_vT = true);
+                                        const bool &is_vT = true);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
      * @details This function performs the Singular-Value decomposition on a UniTensor \p Tin and
-     * do the truncation on the singular values. The result will depend on the rowrank of the UniTensor
-     * \p Tin. For more details, please refer to the documentation of the function
-     * Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, 
+     * do the truncation on the singular values. The result will depend on the rowrank of the
+     * UniTensor \p Tin. For more details, please refer to the documentation of the function
+     * Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *              const bool &is_UvT, const bool &return_err).
      * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *                   const bool &is_UvT, const bool &return_err)
@@ -714,23 +714,20 @@ namespace cytnx {
                                                const bool &is_UvT = true,
                                                const bool &return_err = false);
 
-
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
      * @details This function performs the Singular-Value decomposition on a UniTensor \p Tin and
-     * do the truncation on the singular values. The result will depend on the rowrank of the UniTensor
-     * \p Tin. For more details, please refer to the documentation of the function
-     * Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, 
+     * do the truncation on the singular values. The result will depend on the rowrank of the
+     * UniTensor \p Tin. For more details, please refer to the documentation of the function
+     * Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *              const bool &is_U, const bool &is_vT, const bool &return_err).
      * @see Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *                   const bool &is_U, const bool &is_vT, const bool &return_err)
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
-                                               const cytnx_uint64 &keepdim, const double &err = 0,
-                                               const bool &is_U = true, const bool &is_vT=true,
-                                               const bool &return_err = false);
-
-
+                                                 const cytnx_uint64 &keepdim, const double &err = 0,
+                                                 const bool &is_U = true, const bool &is_vT = true,
+                                                 const bool &return_err = false);
 
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
@@ -738,7 +735,7 @@ namespace cytnx {
       const std::vector<cytnx_int64> &trucate_dim = std::vector<cytnx_int64>());
 
     /**
-     * @brief Perform the exponential function on a UniTensor, which the blocks are 
+     * @brief Perform the exponential function on a UniTensor, which the blocks are
      * Hermitian matrix.
      * @details This function performs the exponential function on a UniTensor \p Tin, which the
      * blocks are Hermitian matrix. For more details, please refer to the documentation of the
@@ -749,7 +746,7 @@ namespace cytnx {
     cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
 
     /**
-     * @brief Perform the exponential function on a UniTensor. 
+     * @brief Perform the exponential function on a UniTensor.
      * @details This function performs the exponential function on a UniTensor \p Tin.
      * For more details, please refer to the documentation of the
      * function ExpM(const Tensor &Tin, const T &a, const T &b).
@@ -759,7 +756,7 @@ namespace cytnx {
     cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
 
     /**
-     * @brief Perform the exponential function on a UniTensor, which the blocks are 
+     * @brief Perform the exponential function on a UniTensor, which the blocks are
      * Hermitian matrix.
      * @details This function performs the exponential function on a UniTensor \p Tin, which the
      * blocks are Hermitian matrix. For more details, please refer to the documentation of the
@@ -769,7 +766,7 @@ namespace cytnx {
     cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin);
 
     /**
-     * @brief Perform the exponential function on a UniTensor. 
+     * @brief Perform the exponential function on a UniTensor.
      * @details This function performs the exponential function on a UniTensor \p Tin.
      * For more details, please refer to the documentation of the
      * function ExpM(const Tensor &Tin)
@@ -778,9 +775,9 @@ namespace cytnx {
     cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin);
 
     /**
-     * @deprecated This function is deprecated, please use 
+     * @deprecated This function is deprecated, please use
      * Trace(const cytnx::UniTensor &Tin, const string &a, const string &b) instead.
-    */
+     */
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
                            const cytnx_int64 &b = 1);
 
@@ -793,26 +790,24 @@ namespace cytnx {
      */
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b);
 
-
-
     /**
      * @brief Perform the QR decomposition on a UniTensor.
-     * @details This function performs the QR decomposition on a UniTensor \p Tin. 
-     * The result will depend on the rowrank of the UniTensor \p Tin. For more details, 
+     * @details This function performs the QR decomposition on a UniTensor \p Tin.
+     * The result will depend on the rowrank of the UniTensor \p Tin. For more details,
      * please refer to the documentation of the function
      * Qr(const Tensor &Tin, const bool &is_tau).
      * @see Qr(const Tensor &Tin, const bool &is_tau)
-    */
+     */
     std::vector<cytnx::UniTensor> Qr(const cytnx::UniTensor &Tin, const bool &is_tau = false);
 
     /**
      * @brief Perform the QDR decomposition on a UniTensor.
-     * @details This function performs the QDR decomposition on a UniTensor \p Tin. 
-     * The result will depend on the rowrank of the UniTensor \p Tin. For more details, 
+     * @details This function performs the QDR decomposition on a UniTensor \p Tin.
+     * The result will depend on the rowrank of the UniTensor \p Tin. For more details,
      * please refer to the documentation of the function
      * Qdr(const Tensor &Tin, const bool &is_tau).
      * @see Qdr(const Tensor &Tin, const bool &is_tau)
-    */
+     */
     std::vector<cytnx::UniTensor> Qdr(const cytnx::UniTensor &Tin, const bool &is_tau = false);
 
     // Pow:
@@ -822,10 +817,10 @@ namespace cytnx {
     @details This function will take power p on all the elements in UniTensor.
     @param[in] Tin the input UniTensor
     @param[in] p the power
-    @pre If \p Tin is a real UniTensor and containt negative elements, 
+    @pre If \p Tin is a real UniTensor and containt negative elements,
     then \p p must be an integer.
     @return UniTensor with the same shape as Tin, but with the elements are the power of Tin.
-    @note Compare to the Pow_(UniTensor &Tin, const double &p) function, this 
+    @note Compare to the Pow_(UniTensor &Tin, const double &p) function, this
     function will not modify the input UniTensor and return a new UniTensor.
     @see Pow_(UniTensor &Tin, const double &p)
     */
@@ -838,16 +833,15 @@ namespace cytnx {
      * @param[in] p the power
      * @pre If \p Tin is a real UniTensor and containt negative elements,
      * then \p p must be an integer.
-     * @note Compare to the Pow function, this is an inplacely function, which 
+     * @note Compare to the Pow function, this is an inplacely function, which
      * will modify the input UniTensor.
      * @see Pow(const UniTensor &Tin, const double &p)
      */
     void Pow_(UniTensor &Tin, const double &p);
 
-
-
     //====================================================================================
-    //  [Tensor] ====================================================================================
+    //  [Tensor]
+    //  ====================================================================================
     //====================================================================================
 
     /**
@@ -861,13 +855,13 @@ namespace cytnx {
      *  \f]
      * where \f$ T_L[i] \f$ and \f$ T_R[i] \f$ are the elements in the
      * Tensor \f$ T_L \f$ and \f$ T_R \f$.
-     * It will perform the element-wise addtion and note that it will return a 
+     * It will perform the element-wise addtion and note that it will return a
      * new Tensor object.
      * @param[in] Lt The left Tensor.
      * @param[in] Rt The right Tensor.
      * @return The result Tensor.
      * @pre The shape of \p Lt and \p Rt must be the same.
-     * @see 
+     * @see
      * Add(const T &lc, const Tensor &Rt),
      * Add(const Tensor &Lt, const T &rc),
      * iAdd(Tensor &Lt, const Tensor &Rt),
@@ -877,7 +871,7 @@ namespace cytnx {
 
     /**
      * @brief The addition function for Tensor.
-     * @details This is the addtion function between a Tensor and a template type. 
+     * @details This is the addtion function between a Tensor and a template type.
      * It will perform the element-wise addtion. That means if the template type \p lc
      * is given as \f$ c \f$ and the Tensor \p Rt is given as \f$ T_R \f$,
      * then the result will be:
@@ -885,12 +879,12 @@ namespace cytnx {
      *    T_o[i] = c + T_L[i],
      *  \f]
      * where \f$ T_R[i] \f$ is the elements in the Tensor \f$ T_R \f$.
-     * It will perform the element-wise addtion and note that it will return a 
+     * It will perform the element-wise addtion and note that it will return a
      * new Tensor object.
      * @param[in] lc The left template type.
      * @param[in] Rt The right Tensor.
      * @return The result Tensor.
-     * @see 
+     * @see
      * Add(const Tensor &Lt, const Tensor &Rt),
      * Add(const Tensor &Lt, const T &rc),
      * iAdd(Tensor &Lt, const Tensor &Rt),
@@ -901,7 +895,7 @@ namespace cytnx {
 
     /**
      * @brief The addition function for Tensor.
-     * @details This is the addtion function between a Tensor and a template type. 
+     * @details This is the addtion function between a Tensor and a template type.
      * It will perform the element-wise addtion. That means if the Tensor \p Lt
      * is given as \f$ T_L \f$ and the template type \p rc is given as \f$ c \f$,
      * then the result will be:
@@ -909,12 +903,12 @@ namespace cytnx {
      *    T_o[i] = T_L[i] + c,
      *  \f]
      * where \f$ T_L[i] \f$ is the elements in the Tensor \f$ T_L \f$.
-     * It will perform the element-wise addtion and note that it will return a 
+     * It will perform the element-wise addtion and note that it will return a
      * new Tensor object.
      * @param[in] Lt The left Tensor.
      * @param[in] rc The right template type.
      * @return The result Tensor.
-     * @see 
+     * @see
      * Add(const Tensor &Lt, const Tensor &Rt),
      * Add(const T &lc, const Tensor &Rt),
      * iAdd(Tensor &Lt, const Tensor &Rt),
@@ -934,14 +928,14 @@ namespace cytnx {
      *  \f]
      * where \f$ T_L[i] \f$ and \f$ T_R[i] \f$ are the elements in the
      * Tensor \f$ T_L \f$ and \f$ T_R \f$.
-     * It will perform the element-wise addtion and note that it will modify the 
+     * It will perform the element-wise addtion and note that it will modify the
      * left Tensor \p Lt.
      * @param[in,out] Lt The left Tensor.
      * @param[in] Rt The right Tensor.
      * @pre The shape of \p Lt and \p Rt must be the same.
      * @note Compare to the function Add(const Tensor &Lt, const Tensor &Rt),
      * this is a inplace function and it will modify the left Tensor \p Lt.
-     * @see 
+     * @see
      * Add(const Tensor &Lt, const Tensor &Rt),
      * Add(const T &lc, const Tensor &Rt),
      * Add(const Tensor &Lt, const T &rc),
@@ -1139,14 +1133,14 @@ namespace cytnx {
      * @param[in,out] Lt The left Tensor.
      * @param[in] Rt The right Tensor.
      * @note
-     * Compare to Mul(const Tensor &Lt, const Tensor &Rt), this is inplace function 
+     * Compare to Mul(const Tensor &Lt, const Tensor &Rt), this is inplace function
      * and will modify the left Tensor \p Lt.
      * @see
      * Mul(const Tensor &Lt, const Tensor &Rt),
      * Mul(const T &lc, const Tensor &Rt),
      * Mul(const Tensor &Lt, const T &rc),
      * operator*(const Tensor &Lt, const Tensor &Rt)
-    */
+     */
     void iMul(Tensor &Lt, const Tensor &Rt);
 
     // Div:
@@ -1249,7 +1243,7 @@ namespace cytnx {
      * Div(const T &lc, const Tensor &Rt),
      * Div(const Tensor &Lt, const T &rc),
      * operator/(const Tensor &Lt, const Tensor &Rt)
-    */
+     */
     void iDiv(Tensor &Lt, const Tensor &Rt);
 
     // Mod:
@@ -1271,7 +1265,7 @@ namespace cytnx {
      * @param[in] Lt The left Tensor.
      * @param[in] Rt The right Tensor.
      * @return The result Tensor.
-     * @pre The input tensors \p Lt and \p Rt should have the same shape and 
+     * @pre The input tensors \p Lt and \p Rt should have the same shape and
      * need to be integer type.
      * @see
      * Mod(const T &lc, const Tensor &Rt),
@@ -1348,7 +1342,7 @@ namespace cytnx {
      * @param[in] Rt The right Tensor.
      * @return The result Tensor.
      * @pre The input tensors \p Lt and \p Rt should have the same shape.
-     * @see 
+     * @see
      * Cpr(const T &lc, const Tensor &Rt),
      * Cpr(const Tensor &Lt, const T &rc)
      */
@@ -1414,7 +1408,7 @@ namespace cytnx {
     @brief Calculate the norm of a tensor.
     @details This function will calculate the norm of a tensor. If the input tensor is rank-1,
     then the frobenius norm will be calculated. If the input tensor is rank-N with N>=2, then
-    the tensor will be flatten (see @ref Tensor::flatten() const "flatten()") to 1d first, 
+    the tensor will be flatten (see @ref Tensor::flatten() const "flatten()") to 1d first,
     and then calculate the frobenius norm.
     @param[in] Tl input Tensor
     @return Tensor
@@ -1425,7 +1419,7 @@ namespace cytnx {
     //=================================================
     /**
     @brief Calculate the determinant of a tensor.
-    @details This function will calculate the determinant of a <em> square matrix </em>. 
+    @details This function will calculate the determinant of a <em> square matrix </em>.
     That means the input tensor should be a rank-2 tensor with shape (N,N).
     @param[in] Tl input a Tensor with shape (N,N)
     @return Tensor
@@ -1449,7 +1443,7 @@ namespace cytnx {
 
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
     @param[in] is_UvT whether need to return a left unitary matrix.
-    @return 
+    @return
     @parblock
     [std::vector<Tensors>]
 
@@ -1457,8 +1451,8 @@ namespace cytnx {
     2. If \p is_UvT is true, then the tensors \f$ U,V^\dagger \f$ will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
-    @see \ref Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT, const bool &return_err)
-    "Svd_truncate"
+    @see \ref Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const
+    bool &is_UvT, const bool &return_err) "Svd_truncate"
     */
     std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT = true);
 
@@ -1479,34 +1473,33 @@ namespace cytnx {
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
     @param[in] is_U whether need to return left unitary matrix.
     @param[in] is_vT whether need to return right unitary matrix
-    @return 
+    @return
     @parblock
     [std::vector<Tensors>]
 
     1. The first tensor is a 1-d tensor contanin the singular values
-    2. If \p is_U is true, then the tensor \f$ U \f$ will be pushed back to the vector, and if \p is_vT is true, \f$ V^\dagger \f$ will be pushed back to the vector.
+    2. If \p is_U is true, then the tensor \f$ U \f$ will be pushed back to the vector, and if \p
+    is_vT is true, \f$ V^\dagger \f$ will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
-    @see \ref Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U, const bool &is_vT, const bool &return_err)
-    "Gesvd_truncate"
+    @see \ref Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
+    const bool &is_U, const bool &is_vT, const bool &return_err) "Gesvd_truncate"
     */
     std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
-
-
 
     // Svd_truncate:
     //==================================================
     /**
     @brief Perform the truncate Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
-    @details This function will perform the truncate Singular-Value decomposition 
+    @details This function will perform the truncate Singular-Value decomposition
     on a matrix (a rank-2 Tensor). It will perform the SVD first, and then truncate the
-    singular values to the given cutoff \p err. That means givent a matrix \p Tin as \f$ M \f$, 
+    singular values to the given cutoff \p err. That means givent a matrix \p Tin as \f$ M \f$,
     then the result will be:
     \f[
     M = U S V^\dagger,
     \f]
     where \f$ S \f$ is a singular values matrix with the singular values truncated to the
-    given cutoff \p err. The dimension of \f$ S \f$ is at most \p keepdim. 
+    given cutoff \p err. The dimension of \f$ S \f$ is at most \p keepdim.
 
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
     @param[in] keepdim the number (at most) of singular values to keep.
@@ -1515,7 +1508,7 @@ namespace cytnx {
     @param[in] return_err whether need to return the error. If \p return_err is \em true, then
     the error will be pushed back to the vector. It is the smallest singular value in the
     singular values matrix \f$ S \f$.
-    @return 
+    @return
     @parblock
     [std::vector<Tensors>]
 
@@ -1527,23 +1520,22 @@ namespace cytnx {
     @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
     */
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                     const double &err = 0, const bool &is_UvT = true, 
+                                     const double &err = 0, const bool &is_UvT = true,
                                      const bool &return_err = false);
-
 
     // Gesvd_truncate:
     //==================================================
     /**
     @brief Perform the truncate Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
-    @details This function will perform the truncate Singular-Value decomposition 
+    @details This function will perform the truncate Singular-Value decomposition
     on a matrix (a rank-2 Tensor). It will perform the SVD first, and then truncate the
-    singular values to the given cutoff \p err. That means givent a matrix \p Tin as \f$ M \f$, 
+    singular values to the given cutoff \p err. That means givent a matrix \p Tin as \f$ M \f$,
     then the result will be:
     \f[
     M = U S V^\dagger,
     \f]
     where \f$ S \f$ is a singular values matrix with the singular values truncated to the
-    given cutoff \p err. The dimension of \f$ S \f$ is at most \p keepdim. 
+    given cutoff \p err. The dimension of \f$ S \f$ is at most \p keepdim.
 
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
     @param[in] keepdim the number (at most) of singular values to keep.
@@ -1553,7 +1545,7 @@ namespace cytnx {
     @param[in] return_err whether need to return the error. If \p return_err is \em true, then
     the error will be pushed back to the vector. It is the smallest singular value in the
     singular values matrix \f$ S \f$.
-    @return 
+    @return
     @parblock
     [std::vector<Tensors>]
 
@@ -1566,9 +1558,8 @@ namespace cytnx {
     @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
     */
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                     const double &err = 0, const bool &is_U = true, const bool &is_vT = true,
-                                     const bool &return_err = false);
-
+                                       const double &err = 0, const bool &is_U = true,
+                                       const bool &is_vT = true, const bool &return_err = false);
 
     // Hosvd:
     std::vector<Tensor> Hosvd(
@@ -1586,18 +1577,18 @@ namespace cytnx {
     M = Q R,
     \f]
     where \f$ Q \f$ is a orthogonal matrix, and \f$ R \f$ is a right-upper triangular matrix.
-    
-    @param[in] Tin a Tensor, it should be a rank-2 tensor (a @em matrix)
-    @param[in] is_tau if return the tau that contains the Householder reflectors that generate q along
-    with r. The tau array contains scaling factors for the reflectors
 
-    @return 
+    @param[in] Tin a Tensor, it should be a rank-2 tensor (a @em matrix)
+    @param[in] is_tau if return the tau that contains the Householder reflectors that generate q
+    along with r. The tau array contains scaling factors for the reflectors
+
+    @return
     @parblock
     [std::vector<Tensors>]
-    
+
     1. the first tensor is the orthomormal matrix \f$ Q \f$, a 2-d tensor (matrix)
     2. the second tensor is the right-upper triangular matrix \f$ R \f$, a 2-d tensor (matrix)
-    3. the third tensor is the Householder reflectors \f$ H \f$, a 1-d tensor (vector). 
+    3. the third tensor is the Householder reflectors \f$ H \f$, a 1-d tensor (vector).
     This tensor will only return when \p is_tau = @em true.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
@@ -1610,8 +1601,8 @@ namespace cytnx {
     /**
     @brief Perform QDR decomposition on a rank-2 Tensor.
     @param[in] Tin a cytnx::Tensor, it should be a rank-2 tensor (matrix)
-    @param[in] is_tau if return the tau that contains the Householder reflectors that generate q along
-    with r. The tau array contains scaling factors for the reflectors
+    @param[in] is_tau if return the tau that contains the Householder reflectors that generate q
+    along with r. The tau array contains scaling factors for the reflectors
 
     @return
     @parblock
@@ -1620,7 +1611,7 @@ namespace cytnx {
     1. the first tensor is the orthomormal matrix \f$ Q \f$, a 2-d tensor (matrix)
     2. the second tensor is the diagonal matrix \f$ D \f$, a 1-d tensor (diagonal matrix)
     3. the third tensor is the right-upper triangular matrix \f$ R \f$, a 2-d tensor (matrix)
-    4. the forth tensor is the Householder reflectors \f$ H \f$, a 1-d tensor (vector). 
+    4. the forth tensor is the Householder reflectors \f$ H \f$, a 1-d tensor (vector).
     This tensor will only return when \p is_tau = @em true.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
@@ -1637,7 +1628,7 @@ namespace cytnx {
     \f[
     M = V^\dagger D V,
     \f]
-    where \f$ V \f$ is a unitary matrix contains the eigen vectors, 
+    where \f$ V \f$ is a unitary matrix contains the eigen vectors,
     and \f$ D \f$ is a diagonal matrix contains the eigen values.
 
     @param[in] Tin a \link cytnx::Tensor Tensor \endlink, it should be a rank-2 tensor (matrix)
@@ -1645,8 +1636,8 @@ namespace cytnx {
     @param[in] row_V if set to ture, the return eigen vectors will be row form.
     @return [std::vector<Tensors>], the first tensor is the eigen values, a 1-d tensor (vector).
     The second tensor is the eigen vectors, a 2-d tensor (matrix). This tensor will only return when
-    \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row form.
-    Otherwise, the eigen vectors will be column form.
+    \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row
+    form. Otherwise, the eigen vectors will be column form.
     @pre the \p Tin should be a Hermitian matrix.
     @warning If \p Tin is not a Hermitian matrix, the result will be undefined.
     */
@@ -1669,8 +1660,8 @@ namespace cytnx {
     @param[in] row_V if set to ture, the return eigen vectors will be row form.
     @return [std::vector<Tensors>], the first tensor is the eigen values, a 1-d tensor (vector).
     The second tensor is the eigen vectors, a 2-d tensor (matrix). This tensor will only return when
-    \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row form.
-    Otherwise, the eigen vectors will be column form.
+    \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row
+    form. Otherwise, the eigen vectors will be column form.
     @pre the \p Tin should be a square matrix.
     */
     std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
@@ -1680,7 +1671,7 @@ namespace cytnx {
     /**
     @brief perform trace over index.
     @details This function will perform trace over index \p axisA and \p axisB.
-    For example, if \p Tn is a rank-4 tensor \f$ T \f$, then \p axisA = 0 and 
+    For example, if \p Tn is a rank-4 tensor \f$ T \f$, then \p axisA = 0 and
     \p axisB = 2, then the result will be:
     \f[
     \mathrm{Tr}_{j,l}(T) = \sum_{i,k} T_{i,j,k,l}
@@ -1765,7 +1756,7 @@ namespace cytnx {
     //==================================================
     /**
     @brief Element-wise inverse with clip.
-    @details This function will perform Element-wise inverse with clip. If 
+    @details This function will perform Element-wise inverse with clip. If
     A[i] < \p clip, then 1/A[i] = 0 will be set. That is, the out put will be:
     \f[
     A_{out} = \left\{
@@ -1790,7 +1781,7 @@ namespace cytnx {
     @param[in] Tin a Tensor
     @param[in] clip the clip value.
     @return [Tensor]
-    @note 
+    @note
     1. For complex type Tensors, the square norm is used to determine the clip.
     2. on return, all the elements will be modified to it's inverse. if Tin is integer type, it
     will automatically promote to Type.Double.
@@ -1801,7 +1792,7 @@ namespace cytnx {
     //==================================================
     /**
     @brief Conjugate all the element in Tensor.
-    @details This function take the complex conjugate of all the elements in Tensor \p Tin. 
+    @details This function take the complex conjugate of all the elements in Tensor \p Tin.
     That is, the output will be:
     \f[
         T_{o}[i] = T_{in}[i]^*
@@ -1819,7 +1810,7 @@ namespace cytnx {
     @brief inplace perform Conjugate on all the element in Tensor.
     @details This function take the complex conjugate of all the elements in Tensor \p Tin.
     This function is just a inplace version of Conj.
-    @note 
+    @note
     1. if the input Tensor is complex, the elements of input Tensor will all be conjugated.
     2. if the input Tensor is real, then nothing act.
     */
@@ -1906,11 +1897,8 @@ namespace cytnx {
     //==================================================
     /**
     @brief Elementwise absolute value.
-    @details This function will perform Elementwise absolute value on all the elements in Tensor \p Tin.
-    That is, the output will be:
-    \f[
-        T_{o}[i] = |T_{i}[i]|
-    \f]
+    @details This function will perform Elementwise absolute value on all the elements in Tensor \p
+    Tin. That is, the output will be: \f[ T_{o}[i] = |T_{i}[i]| \f]
     @param[in] Tin tensor.
     @return [Tensor]
     */
@@ -1931,9 +1919,9 @@ namespace cytnx {
     @brief return a diagonal tensor with diagonal elements provided as Tin.
     @return
         [Tensor]
-    @details This function will return a diagonal tensor with diagonal elements provided as \p Tin. Furthermore,
-    the return Tensor will be rank-2, with shape=(L, L); where L is the number of elements in \p Tin.
-    \pre \p Tin should be a rank-2 Tensor.
+    @details This function will return a diagonal tensor with diagonal elements provided as \p Tin.
+    Furthermore, the return Tensor will be rank-2, with shape=(L, L); where L is the number of
+    elements in \p Tin. \pre \p Tin should be a rank-2 Tensor.
     */
     Tensor Diag(const Tensor &Tin);
 
@@ -1974,7 +1962,7 @@ namespace cytnx {
     @note
         1. the elements in idxl and idxr have one to one correspondence.
         2. two tensors should on same device.
-        3. if diag_L=true, Tl should be a rank-1 tensor as the diagonal elements of a diagonal 
+        3. if diag_L=true, Tl should be a rank-1 tensor as the diagonal elements of a diagonal
         matrix. if false, Tr should be a rank-1 tensor
     */
     Tensor Tensordot_dg(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
@@ -1984,9 +1972,9 @@ namespace cytnx {
     //==================================================
     /**
     @brief perform outer produces of two rank-1 Tensor.
-    @details This function will perform outer produces of two rank-1 Tensor \p Tl and \p Tr. Furthermore,
-    if the Tensor \p Tl has [shape_1], and Tensor \p Tr has [shape_2]; then the return Tensor will
-    have shape: concate(shape_1,shape_2)
+    @details This function will perform outer produces of two rank-1 Tensor \p Tl and \p Tr.
+    Furthermore, if the Tensor \p Tl has [shape_1], and Tensor \p Tr has [shape_2]; then the return
+    Tensor will have shape: concate(shape_1,shape_2)
     @param[in] Tl rank-1 Tensor #1
     @param[in] Tr rank-1 Tensor #2
     @return [Tensor]
@@ -1998,10 +1986,10 @@ namespace cytnx {
     //==================================================
     /**
     @brief perform kronecker produces of two Tensor.
-    @details This function will perform kronecker produces of two Tensor \p Tl and \p Tr. Furthermore,
-    the function assume two tensor has the same rank. In case where two tensors have different
-    ranks, the small one will be extend by adding redundant dimension to the beginning of axis
-    (T<x>_pad_right=true) or by adding redundant dim to the last axis (if T<x>_pad_left=false
+    @details This function will perform kronecker produces of two Tensor \p Tl and \p Tr.
+    Furthermore, the function assume two tensor has the same rank. In case where two tensors have
+    different ranks, the small one will be extend by adding redundant dimension to the beginning of
+    axis (T<x>_pad_right=true) or by adding redundant dim to the last axis (if T<x>_pad_left=false
     [default]). if the Tensor #1 has shape=(i1,j1,k1,l1...), and Tensor #2 has
     shape=(i2,j2,k2,l2...); then the return Tensor will have shape=(i1*i2,j1*j2,k1*k2...)
     @param[in] Tl rank-n Tensor #1
@@ -2015,23 +2003,24 @@ namespace cytnx {
     Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left = false,
                 const bool &Tr_pad_left = false);
 
-
     // Directsum:
     //==================================================
     /**
     @brief perform directsum of two Tensor.
     @details
-        The function assume two tensor has the same rank, and axes indicated in <shared_axes> are the same for both T1 and T2. 
-    The out put tensors will have same rank as T1 and T2, with the dimension of rest of the axes being the sum of dimensions of T1 and T2. 
-    e.g., the out put shape = (i1+i2,j1+j2, share_axis_1, k1+k2, share_axis_2, ...); where T1.shape = (i1,j1,share_axis_1,k1,share_axis_2 ...)
-    and T2.shape = (i2,j2,share_axis_1,k2,share_axis_2 ...)
+        The function assume two tensor has the same rank, and axes indicated in <shared_axes> are
+    the same for both T1 and T2. The out put tensors will have same rank as T1 and T2, with the
+    dimension of rest of the axes being the sum of dimensions of T1 and T2. e.g., the out put shape
+    = (i1+i2,j1+j2, share_axis_1, k1+k2, share_axis_2, ...); where T1.shape =
+    (i1,j1,share_axis_1,k1,share_axis_2 ...) and T2.shape = (i2,j2,share_axis_1,k2,share_axis_2 ...)
     @param[in] T1 rank-n Tensor #1
     @param[in] T2 rank-n Tensor #2
     @param[in] shared_axes The axes that are shared by two tensors
     @return [Tensor]
     @pre two tensor should on same device.
     */
-    Tensor Directsum(const Tensor &T1, const Tensor &T2, const std::vector<cytnx_uint64> &shared_axes);
+    Tensor Directsum(const Tensor &T1, const Tensor &T2,
+                     const std::vector<cytnx_uint64> &shared_axes);
 
     // VectorDot:
     //=================================================
@@ -2111,10 +2100,8 @@ namespace cytnx {
 
     */
     template <typename T>
-    Tensor ExpH(const Tensor &in, const T &a, const T &b =0);
+    Tensor ExpH(const Tensor &in, const T &a, const T &b = 0);
     Tensor ExpH(const Tensor &in);
-    
-
 
     // ExpM:
     //===========================================
@@ -2152,14 +2139,14 @@ namespace cytnx {
     @param[in] Tin the initial vector, this should be rank-1.
     @param[in] which
     @parblock
-    which order eigenvlues and corresponding eigenvectors should be find, the supported 
+    which order eigenvlues and corresponding eigenvectors should be find, the supported
     options are:
 
-    <b>'LM'</b> : largest magnitude  
-    <b>'LR'</b> : largest real part  
-    <b>'LI'</b> : largest imaginary part  
-    <b>'SM'</b> : smallest magnitude  
-    <b>'SR'</b> : smallest real part  
+    <b>'LM'</b> : largest magnitude
+    <b>'LR'</b> : largest real part
+    <b>'LI'</b> : largest imaginary part
+    <b>'SM'</b> : smallest magnitude
+    <b>'SR'</b> : smallest real part
     <b>'SI'</b> : smallest imaginary part
 
     @endparblock
@@ -2174,10 +2161,10 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
-    std::vector<Tensor> Arnoldi(
-        LinOp *Hop, const Tensor &Tin = Tensor(), const std::string which = "LM",
-        const cytnx_uint64 &maxiter = 10000, const cytnx_double & cvg_crit = 1.0e-9,
-        const cytnx_uint64 &k = 1, const bool &is_V = true, const bool &verbose = false);
+    std::vector<Tensor> Arnoldi(LinOp *Hop, const Tensor &Tin = Tensor(),
+                                const std::string which = "LM", const cytnx_uint64 &maxiter = 10000,
+                                const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
+                                const bool &is_V = true, const bool &verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2207,7 +2194,7 @@ namespace cytnx {
     @param[in] verbose print out iteration info.
     @return
         [eigvals (Tensor), eigvecs (Tensor)(option)]
-    @note 
+    @note
     To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
@@ -2245,7 +2232,7 @@ namespace cytnx {
     @param[in] verbose print out iteration info.
     @return
         [eigvals (UniTensor), eigvecs (UniTensor)(option)]
-    @note 
+    @note
     To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
@@ -2255,7 +2242,6 @@ namespace cytnx {
                                    const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
                                    const bool &is_V = true, const bool &is_row = false,
                                    const cytnx_uint32 &max_krydim = 4, const bool &verbose = false);
-
 
     // Lanczos:
     //===========================================
@@ -2352,7 +2338,7 @@ namespace cytnx {
     @param[in] rcond Cut-off ratio for small singular values of a. For the purposes of rank
     determination, singular values are treated as zero if they are smaller than rcond times the
     largest singular value of A, If it is negative, the machine precision is used.
-    @return 
+    @return
     [std::vector<Tensors>]
 
     1. the first tensor is least-squares solutions in the K columns.
@@ -2365,30 +2351,29 @@ namespace cytnx {
     */
     std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond = -1);
 
-
     /**
     @brief Blas Axpy, performing \f$ a\textbf{x} + \textbf{y} \f$, inplacely.
     @details
-    This function performs 
+    This function performs
     \f[
     a\textbf{x} + \textbf{y},
     \f]
     where \f$ \textbf{x},\textbf{y} \f$ are Tensor and \f$ a \f$ is a Scalar. The dtype of return
     Tensor will be the strongest among \p x, \p y and \p a.
-    @param[in] a Scalar. 
+    @param[in] a Scalar.
     @param[in] x Tensor, can be any rank
     @param[in] y Tensor, can be any rank
     @return
     [Tensor]
     If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
-    @note This will return a new tensor. 
+    @note This will return a new tensor.
     */
     Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor());
-    
+
     /**
      * @brief Blas Axpy, performing \f$ \textbf{y} = a\textbf{x} + \textbf{y} \f$, inplacely.
      * @details
-     * This function performs 
+     * This function performs
      * \f[
      * \textbf{y} = a\textbf{x} + \textbf{y},
      * \f]
@@ -2406,42 +2391,44 @@ namespace cytnx {
     void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
 
     /**
-    @brief Blas Ger, performing return = a*vec(x)*vec(y)^T 
+    @brief Blas Ger, performing return = a*vec(x)*vec(y)^T
     @details
-        This function performs a*x*y^T where x,y are rank-1 Tensor with dimension nx and ny respectively; and a is a Scalar. The dtype of return 
-        Tensor will be the strongest among x,y and a.
+        This function performs a*x*y^T where x,y are rank-1 Tensor with dimension nx and ny
+    respectively; and a is a Scalar. The dtype of return Tensor will be the strongest among x,y and
+    a.
     @param[in] x Tensor, rank-1 with size nx
     @param[in] y Tensor, rank-1 with size ny
-    @param[in] a Scalar, if not provided a = 1. 
+    @param[in] a Scalar, if not provided a = 1.
     @return
         [Tensor with shape (nx,ny)]
     @note
-        This will return a new tensor. 
+        This will return a new tensor.
     */
-    Tensor Ger(const Tensor &x, const Tensor &y, const Scalar &a=Scalar());
-
+    Tensor Ger(const Tensor &x, const Tensor &y, const Scalar &a = Scalar());
 
     /**
-     * @brief Blas Gemm, performing \f$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} \f$, inplacely.
+     * @brief Blas Gemm, performing \f$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} \f$,
+     * inplacely.
      * @details
-     * This function performs 
+     * This function performs
      * \f[
      * \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c},
      * \f]
-     * where \f$ \textbf{x},\textbf{y},\textbf{c} \f$ are rank-2 Tensor and a, b are Scalars. The dtype of return
-     * Tensor will be the strongest among \p x, \p y and \p a \p b \p c.
+     * where \f$ \textbf{x},\textbf{y},\textbf{c} \f$ are rank-2 Tensor and a, b are Scalars. The
+     * dtype of return Tensor will be the strongest among \p x, \p y and \p a \p b \p c.
      * @param[in ] a Scalar.
      * @param[in ] x Tensor, rank-2 with shape (M,N)
      * @param[in ] y Tensor, rank-2 with shape (N,K)
      * @param[in ] b Scalar.
-     * @param[in,out ] c Tensor, rank-2 with shape (M,K), must be properly initialized with the correct shape.
-    */
+     * @param[in,out ] c Tensor, rank-2 with shape (M,K), must be properly initialized with the
+     * correct shape.
+     */
     void Gemm_(const Scalar &a, const Tensor &x, const Tensor &y, const Scalar &b, Tensor &c);
 
     /**
      * @brief Blas Gemm, performing \f$ a\textbf{x}\textbf{y} -> \f$ return.
      * @details
-     * This function performs 
+     * This function performs
      * \f[
      * return = a\textbf{x}\textbf{y},
      * \f]
@@ -2452,129 +2439,138 @@ namespace cytnx {
      * @param[in ] y Tensor, rank-2 with shape (N,K)
      * @return
      * [Tensor] with shape (M,K)
-    */
+     */
     Tensor Gemm(const Scalar &a, const Tensor &x, const Tensor &y);
 
     /**
-     * @brief Blas Gemm_Batch, performing many(batch) \f$ \textbf{c} = \alpha\textbf{a}\textbf{b} + \beta\textbf{c} \f$, inplacely.
-     * You do not need to consider the row-major or column-major, just provide the correct shape.
+     * @brief Blas Gemm_Batch, performing many(batch) \f$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
+     * \beta\textbf{c} \f$, inplacely. You do not need to consider the row-major or column-major,
+     * just provide the correct shape.
      * @details
-     * see https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html
-     * This function performs tensor type check and type conversion, then call the corresponding blas function.
-     * 
+     * see
+     * https://www.intel.com/content/www/us/en/developer/articles/technical/introducing-batch-gemm-operations.html
+     * This function performs tensor type check and type conversion, then call the corresponding
+     * blas function.
+     *
      * @param[in] m_array array of cytnx_int64, each element is the number of rows of \p a_tensors
-     * @param[in] n_array array of cytnx_int64, each element is the number of columns of \p b_tensors
-     * @param[in] k_array array of cytnx_int64, each element is the number of columns of \p a_tensors and the number of rows of \p b_tensors
+     * @param[in] n_array array of cytnx_int64, each element is the number of columns of \p
+     * b_tensors
+     * @param[in] k_array array of cytnx_int64, each element is the number of columns of \p
+     * a_tensors and the number of rows of \p b_tensors
      * @param[in] alpha_array array of Scalar, each element is the scalar \p alpha
-     * @param[in] a_tensors array of Tensor, each element is a rank-2 Tensor with shape (m_array[i],k_array[i])
-     * @param[in] b_tensors array of Tensor, each element is a rank-2 Tensor with shape (k_array[i],n_array[i])
+     * @param[in] a_tensors array of Tensor, each element is a rank-2 Tensor with shape
+     * (m_array[i],k_array[i])
+     * @param[in] b_tensors array of Tensor, each element is a rank-2 Tensor with shape
+     * (k_array[i],n_array[i])
      * @param[in] beta_array array of Scalar, each element is the scalar \p beta
-     * @param[in,out] c_tensors array of Tensor, each element is a rank-2 Tensor with shape (m_array[i],n_array[i]), \b{must be properly initialized with the correct shape}.
+     * @param[in,out] c_tensors array of Tensor, each element is a rank-2 Tensor with shape
+     * (m_array[i],n_array[i]), \b{must be properly initialized with the correct shape}.
      * @param[in] group_count cytnx_int64, the number of groups
-     * @param[in] group_size array of cytnx_int64, each element is the number of matrices in each group
-    */
-    void Gemm_Batch(
-                 const std::vector<cytnx_int64> &m_array, const std::vector<cytnx_int64> &n_array, const std::vector<cytnx_int64> &k_array,
-                 const std::vector<Scalar> &alpha_array, const std::vector<Tensor> &a_tensors,
-                 const std::vector<Tensor> &b_tensors,
-                 const std::vector<Scalar> &beta_array, std::vector<Tensor> &c_tensors,
-                 const cytnx_int64 group_count, const std::vector<cytnx_int64> &group_size);
-    
+     * @param[in] group_size array of cytnx_int64, each element is the number of matrices in each
+     * group
+     */
+    void Gemm_Batch(const std::vector<cytnx_int64> &m_array,
+                    const std::vector<cytnx_int64> &n_array,
+                    const std::vector<cytnx_int64> &k_array, const std::vector<Scalar> &alpha_array,
+                    const std::vector<Tensor> &a_tensors, const std::vector<Tensor> &b_tensors,
+                    const std::vector<Scalar> &beta_array, std::vector<Tensor> &c_tensors,
+                    const cytnx_int64 group_count, const std::vector<cytnx_int64> &group_size);
+
   }  // namespace linalg
 
   // operators:
   /**
    * @brief The addition operator for Tensor.
-   * @details This operator call linalg::Add(const Tensor &Lt, const Tensor &Rt) 
+   * @details This operator call linalg::Add(const Tensor &Lt, const Tensor &Rt)
    * to perform the addition.
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of addition.
    * @see linalg::Add(const Tensor &Lt, const Tensor &Rt)
-  */
+   */
   Tensor operator+(const Tensor &Lt, const Tensor &Rt);
 
   /**
    * @brief The addition operator between a template type and Tensor.
-   * @details This operator call linalg::Add(const T &lc, const Tensor &Rt) to 
+   * @details This operator call linalg::Add(const T &lc, const Tensor &Rt) to
    * perform the addition between a template type and Tensor.
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of addition.
    * @see linalg::Add(const T &lc, const Tensor &Rt)
-  */
+   */
   template <class T>
   Tensor operator+(const T &lc, const Tensor &Rt);
 
   /**
    * @brief The addition operator between Tensor and a template type.
-   * @details This operator call linalg::Add(const Tensor &Lt, const T &rc) to 
+   * @details This operator call linalg::Add(const Tensor &Lt, const T &rc) to
    * perform the addition between Tensor and a template type.
    * @param[in] Lt Left Tensor.
    * @param[in] rc Right template type.
    * @return [Tensor] the result of addition.
    * @see linalg::Add(const Tensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   Tensor operator+(const Tensor &Lt, const T &rc);
 
   //------------------------------------
   /**
    * @brief The subtraction operator for Tensor.
-   * @details This operator call linalg::Sub(const Tensor &Lt, const Tensor &Rt) 
+   * @details This operator call linalg::Sub(const Tensor &Lt, const Tensor &Rt)
    * to perform the subtraction.
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of subtraction.
    * @see linalg::Sub(const Tensor &Lt, const Tensor &Rt)
-  */
+   */
   Tensor operator-(const Tensor &Lt, const Tensor &Rt);
 
   /**
    * @brief The subtraction operator between a template type and Tensor.
-   * @details This operator call linalg::Sub(const T &lc, const Tensor &Rt) to 
+   * @details This operator call linalg::Sub(const T &lc, const Tensor &Rt) to
    * perform the subtraction between a template type and Tensor.
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of subtraction.
    * @see linalg::Sub(const T &lc, const Tensor &Rt)
-  */
+   */
   template <class T>
   Tensor operator-(const T &lc, const Tensor &Rt);
 
   /**
    * @brief The subtraction operator between Tensor and a template type.
-   * @details This operator call linalg::Sub(const Tensor &Lt, const T &rc) to 
+   * @details This operator call linalg::Sub(const Tensor &Lt, const T &rc) to
    * perform the subtraction between Tensor and a template type.
    * @param[in] Lt Left Tensor.
    * @param[in] rc Right template type.
    * @return [Tensor] the result of subtraction.
    * @see linalg::Sub(const Tensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   Tensor operator-(const Tensor &Lt, const T &rc);
 
   //-----------------------------------
   /**
    * @brief The multiplication operator for Tensor.
-   * @details This operator call linalg::Mul(const Tensor &Lt, const Tensor &Rt) 
+   * @details This operator call linalg::Mul(const Tensor &Lt, const Tensor &Rt)
    * to perform the multiplication.
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of multiplication.
    * @see linalg::Mul(const Tensor &Lt, const Tensor &Rt)
-  */
+   */
   Tensor operator*(const Tensor &Lt, const Tensor &Rt);
 
   /**
    * @brief The multiplication operator between a template type and Tensor.
-   * @details This operator call linalg::Mul(const T &lc, const Tensor &Rt) to 
+   * @details This operator call linalg::Mul(const T &lc, const Tensor &Rt) to
    * perform the multiplication between a template type and Tensor.
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of multiplication.
    * @see linalg::Mul(const T &lc, const Tensor &Rt)
-  */
+   */
   template <class T>
   Tensor operator*(const T &lc, const Tensor &Rt);
 
@@ -2586,46 +2582,46 @@ namespace cytnx {
    * @param[in] rc Right template type.
    * @return [Tensor] the result of multiplication.
    * @see linalg::Mul(const Tensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   Tensor operator*(const Tensor &Lt, const T &rc);
 
   //----------------------------------
   /**
    * @brief The division operator for Tensor.
-   * @details This operator call linalg::Div(const Tensor &Lt, const Tensor &Rt) 
+   * @details This operator call linalg::Div(const Tensor &Lt, const Tensor &Rt)
    * to perform the division.
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of division.
    * @see linalg::Div(const Tensor &Lt, const Tensor &Rt)
    * @pre The divisor cannot be zero.
-  */
+   */
   Tensor operator/(const Tensor &Lt, const Tensor &Rt);
 
   /**
    * @brief The division operator between a template type and Tensor.
-   * @details This operator call linalg::Div(const T &lc, const Tensor &Rt) to 
+   * @details This operator call linalg::Div(const T &lc, const Tensor &Rt) to
    * perform the division between a template type and Tensor.
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of division.
    * @see linalg::Div(const T &lc, const Tensor &Rt)
    * @pre The divisor cannot be zero.
-  */
+   */
   template <class T>
   Tensor operator/(const T &lc, const Tensor &Rt);
 
   /**
    * @brief The division operator between Tensor and a template type.
-   * @details This operator call linalg::Div(const Tensor &Lt, const T &rc) to 
+   * @details This operator call linalg::Div(const Tensor &Lt, const T &rc) to
    * perform the division between Tensor and a template type.
    * @param[in] Lt Left Tensor.
    * @param[in] rc Right template type.
    * @return [Tensor] the result of division.
    * @see linalg::Div(const Tensor &Lt, const T &rc)
    * @pre The divisor cannot be zero.
-  */
+   */
   template <class T>
   Tensor operator/(const Tensor &Lt, const T &rc);
 
@@ -2638,30 +2634,30 @@ namespace cytnx {
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const Tensor &Lt, const Tensor &Rt)
-  */
+   */
   Tensor operator%(const Tensor &Lt, const Tensor &Rt);
 
   /**
    * @brief The mode operator between a template type and Tensor.
-   * @details This operator call linalg::Mod(const T &lc, const Tensor &Rt) to 
+   * @details This operator call linalg::Mod(const T &lc, const Tensor &Rt) to
    * perform the mode between a template type and Tensor.
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const T &lc, const Tensor &Rt)
-  */
+   */
   template <class T>
   Tensor operator%(const T &lc, const Tensor &Rt);
 
   /**
    * @brief The mode operator between Tensor and a template type.
-   * @details This operator call linalg::Mod(const Tensor &Lt, const T &rc) to 
+   * @details This operator call linalg::Mod(const Tensor &Lt, const T &rc) to
    * perform the mode between Tensor and a template type.
    * @param[in] Lt Left Tensor.
    * @param[in] rc Right template type.
    * @return [Tensor] the result of mode.
    * @see linalg::Mod(const Tensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   Tensor operator%(const Tensor &Lt, const T &rc);
 
@@ -2674,30 +2670,30 @@ namespace cytnx {
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of comparison.
    * @see linalg::Equal(const Tensor &Lt, const Tensor &Rt)
-  */
+   */
   Tensor operator==(const Tensor &Lt, const Tensor &Rt);
 
   /**
    * @brief The comparison operator between a template type and Tensor.
-   * @details This operator call linalg::Cpr(const T &lc, const Tensor &Rt) to 
+   * @details This operator call linalg::Cpr(const T &lc, const Tensor &Rt) to
    * perform the comparison between a template type and Tensor.
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of comparison.
    * @see linalg::Equal(const T &lc, const Tensor &Rt)
-  */
+   */
   template <class T>
   Tensor operator==(const T &lc, const Tensor &Rt);
 
   /**
    * @brief The comparison operator between Tensor and a template type.
-   * @details This operator call linalg::Cpr(const Tensor &Lt, const T &rc) to 
+   * @details This operator call linalg::Cpr(const Tensor &Lt, const T &rc) to
    * perform the comparison between Tensor and a template type.
    * @param[in] Lt Left Tensor.
    * @param[in] rc Right template type.
    * @return [Tensor] the result of comparison.
    * @see linalg::Equal(const Tensor &Lt, const T &rc)
-  */
+   */
   template <class T>
   Tensor operator==(const Tensor &Lt, const T &rc);
 

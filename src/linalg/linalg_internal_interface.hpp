@@ -62,9 +62,9 @@
   #include "linalg/linalg_internal_gpu/cuSum_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuKron_internal.hpp"
-#ifdef UNI_CUTENSOR
-  #include "linalg/linalg_internal_gpu/cuTensordot_internal.hpp"
-#endif
+  #ifdef UNI_CUTENSOR
+    #include "linalg/linalg_internal_gpu/cuTensordot_internal.hpp"
+  #endif
 #endif
 
 namespace cytnx {
@@ -79,19 +79,24 @@ namespace cytnx {
       const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
       const std::vector<cytnx_uint64> &invmapper_R, const char &type);
 
-    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &, const Scalar &);
+    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base> &,
+                             boost::intrusive_ptr<Storage_base> &, const Scalar &);
     typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &, const Scalar &);
 
     typedef void (*Gemmfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
-                                   const cytnx_int64 &, const cytnx_int64 &, const Scalar &, const Scalar &);
+                                 const boost::intrusive_ptr<Storage_base> &,
+                                 const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
+                                 const cytnx_int64 &, const cytnx_int64 &, const Scalar &,
+                                 const Scalar &);
 
-    typedef void (*Gemm_Batchfunc_oii)(const char *transa_array, const char *transb_array, const blas_int *m_array, const blas_int *n_array, const blas_int *k_array,
-                 const std::vector<Scalar> &alpha_array, const void **a_array, const blas_int *lda_array, const void **b_array, const blas_int *ldb_array,
-                 const std::vector<Scalar> &beta_array, void **c_array, const blas_int *ldc_array, const blas_int group_count, const blas_int *group_size);
+    typedef void (*Gemm_Batchfunc_oii)(
+      const char *transa_array, const char *transb_array, const blas_int *m_array,
+      const blas_int *n_array, const blas_int *k_array, const std::vector<Scalar> &alpha_array,
+      const void **a_array, const blas_int *lda_array, const void **b_array,
+      const blas_int *ldb_array, const std::vector<Scalar> &beta_array, void **c_array,
+      const blas_int *ldc_array, const blas_int group_count, const blas_int *group_size);
 
     typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
                                 boost::intrusive_ptr<Storage_base> &,
@@ -162,15 +167,17 @@ namespace cytnx {
                                   boost::intrusive_ptr<Storage_base> &r, const cytnx_int64 &M,
                                   const cytnx_int64 &N, const cytnx_int64 &nrhs,
                                   const cytnx_float &rcond);
-    
-    typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &, const int &,
-                           const cytnx_uint64 &, const std::vector<cytnx_uint64> &,
-                           const std::vector<cytnx_uint64> &, const std::vector<cytnx_int64> &,
-                           const cytnx_uint64 &, const cytnx_uint64 &);
 
-    typedef void (*Tensordotfunc_oii)(Tensor &out,
-                              const Tensor &Lin,
-                              const Tensor &Rin, const std::vector<cytnx_uint64> &idxl, const std::vector<cytnx_uint64> &idxr);
+    typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &,
+                                  const int &, const cytnx_uint64 &,
+                                  const std::vector<cytnx_uint64> &,
+                                  const std::vector<cytnx_uint64> &,
+                                  const std::vector<cytnx_int64> &, const cytnx_uint64 &,
+                                  const cytnx_uint64 &);
+
+    typedef void (*Tensordotfunc_oii)(Tensor &out, const Tensor &Lin, const Tensor &Rin,
+                                      const std::vector<cytnx_uint64> &idxl,
+                                      const std::vector<cytnx_uint64> &idxr);
 
     class linalg_internal_interface {
      public:

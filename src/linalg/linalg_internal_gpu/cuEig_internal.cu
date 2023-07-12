@@ -6,9 +6,8 @@
 #include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
 
 #ifdef UNI_MAGMA
-    #include "magma_v2.h"
+  #include "magma_v2.h"
 #endif
-
 
 namespace cytnx {
 
@@ -16,8 +15,8 @@ namespace cytnx {
 
     /// cuEig
     void cuEig_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
-                         boost::intrusive_ptr<Storage_base> &e,
-                         boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+                           boost::intrusive_ptr<Storage_base> &e,
+                           boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       /*
       char jobs = 'N';
 
@@ -44,8 +43,8 @@ namespace cytnx {
       */
     }
     void cuEig_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
-                         boost::intrusive_ptr<Storage_base> &e,
-                         boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+                           boost::intrusive_ptr<Storage_base> &e,
+                           boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       /*
       char jobs = 'N';
 
@@ -73,8 +72,8 @@ namespace cytnx {
     }
 
     void cuEig_internal_d(const boost::intrusive_ptr<Storage_base> &in,
-                        boost::intrusive_ptr<Storage_base> &e,
-                        boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+                          boost::intrusive_ptr<Storage_base> &e,
+                          boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       /*
       char jobs = 'N';
 
@@ -121,8 +120,8 @@ namespace cytnx {
       */
     }
     void cuEig_internal_f(const boost::intrusive_ptr<Storage_base> &in,
-                        boost::intrusive_ptr<Storage_base> &e,
-                        boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+                          boost::intrusive_ptr<Storage_base> &e,
+                          boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       /*
       char jobs = 'N';
 

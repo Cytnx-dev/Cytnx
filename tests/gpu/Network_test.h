@@ -4,7 +4,6 @@
 #include "cytnx.hpp"
 #include <gtest/gtest.h>
 
-
 using namespace cytnx;
 
 class NetworkTest : public ::testing::Test {
@@ -18,13 +17,12 @@ class NetworkTest : public ::testing::Test {
   UniTensor bkut1 = UniTensor({B1p, B4p}).to(cytnx::Device.cuda);
   UniTensor bkut2 = UniTensor({B1p.redirect(), B2p, B3p, B4p}).to(cytnx::Device.cuda);
   UniTensor bkut3 = UniTensor({B1p, B2p, B3p, B4p.redirect()}).to(cytnx::Device.cuda);
-  UniTensor ut1 = UniTensor(ones({5,5})).to(cytnx::Device.cuda);
-  UniTensor ut2 = UniTensor(ones({5,11,3,5})).to(cytnx::Device.cuda);
-  UniTensor ut3 = UniTensor(ones({5,11,3,5})).to(cytnx::Device.cuda);
- protected:
-  void SetUp() override {
+  UniTensor ut1 = UniTensor(ones({5, 5})).to(cytnx::Device.cuda);
+  UniTensor ut2 = UniTensor(ones({5, 11, 3, 5})).to(cytnx::Device.cuda);
+  UniTensor ut3 = UniTensor(ones({5, 11, 3, 5})).to(cytnx::Device.cuda);
 
-  }
+ protected:
+  void SetUp() override {}
   void TearDown() override {
     // NEmpty = cytnx::Network();
     // NetFromFile = cytnx::Network("testNet.net");

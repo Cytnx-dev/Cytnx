@@ -45,7 +45,6 @@ namespace cytnx {
     Tensor pauli(const char &Comp, const int &device = Device.cpu);
     /// @endcond
 
-    
 #define kBoltz cytnx_double(1.380649e-23)  // J/K
 #define hPlanck cytnx_double(6.62607015e-34)  // J-s
 #define hBar cytnx_double(1.05457181e-34)  // J-s
@@ -53,19 +52,17 @@ namespace cytnx {
   }  // namespace physics
 }  // namespace cytnx
 
-namespace cytnx{
-  namespace operators{
+namespace cytnx {
+  namespace operators {
 
-    UniTensor Sz_shalf(const int &device = Device.cpu, const bool &conserve_qns=false);
-    UniTensor Sp_shalf(const int &device = Device.cpu, const bool &conserve_qns=false, const std::string &aux_dir="r");
-    UniTensor Sn_shalf(const int &device = Device.cpu, const bool &conserve_qns=false, const std::string &aux_dir="r");
-    
+    UniTensor Sz_shalf(const int &device = Device.cpu, const bool &conserve_qns = false);
+    UniTensor Sp_shalf(const int &device = Device.cpu, const bool &conserve_qns = false,
+                       const std::string &aux_dir = "r");
+    UniTensor Sn_shalf(const int &device = Device.cpu, const bool &conserve_qns = false,
+                       const std::string &aux_dir = "r");
 
-
-
-  }
-}
-
+  }  // namespace operators
+}  // namespace cytnx
 
 /// @cond
 namespace cytnx {
@@ -80,8 +77,7 @@ namespace cytnx {
     UniTensor toffoli(const int &device = Device.cpu);
     UniTensor cntl_gate_2q(const UniTensor &gate_1q);
 
-  }  // namespace qgate
-
+  }  // namespace qgates
 
 }  // namespace cytnx
 /// @endcond

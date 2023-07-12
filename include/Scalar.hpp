@@ -2466,42 +2466,42 @@ namespace cytnx {
    * @brief A class to represent a scalar.
    * @details This class is used to represent a scalar. You can construct a Scalar by
    * a given value and a dtype (see cytnx::Type for available dtype).
-  */
+   */
   class Scalar {
    public:
     ///@cond
     struct Sproxy {
       boost::intrusive_ptr<Storage_base> _insimpl;
       cytnx_uint64 _loc;
-      Sproxy(){}
+      Sproxy() {}
       Sproxy(boost::intrusive_ptr<Storage_base> _ptr, const cytnx_uint64 &idx)
           : _insimpl(_ptr), _loc(idx) {}
 
-      Sproxy(const Sproxy &rhs){
+      Sproxy(const Sproxy &rhs) {
         this->_insimpl = rhs._insimpl;
         this->_loc = rhs._loc;
       }
 
       // When used to set elems:
-      Sproxy& operator=(const Scalar &rc);
-      Sproxy& operator=(const cytnx_complex128 &rc);
-      Sproxy& operator=(const cytnx_complex64 &rc);
-      Sproxy& operator=(const cytnx_double &rc);
-      Sproxy& operator=(const cytnx_float &rc);
-      Sproxy& operator=(const cytnx_uint64 &rc);
-      Sproxy& operator=(const cytnx_int64 &rc);
-      Sproxy& operator=(const cytnx_uint32 &rc);
-      Sproxy& operator=(const cytnx_int32 &rc);
-      Sproxy& operator=(const cytnx_uint16 &rc);
-      Sproxy& operator=(const cytnx_int16 &rc);
-      Sproxy& operator=(const cytnx_bool &rc);
+      Sproxy &operator=(const Scalar &rc);
+      Sproxy &operator=(const cytnx_complex128 &rc);
+      Sproxy &operator=(const cytnx_complex64 &rc);
+      Sproxy &operator=(const cytnx_double &rc);
+      Sproxy &operator=(const cytnx_float &rc);
+      Sproxy &operator=(const cytnx_uint64 &rc);
+      Sproxy &operator=(const cytnx_int64 &rc);
+      Sproxy &operator=(const cytnx_uint32 &rc);
+      Sproxy &operator=(const cytnx_int32 &rc);
+      Sproxy &operator=(const cytnx_uint16 &rc);
+      Sproxy &operator=(const cytnx_int16 &rc);
+      Sproxy &operator=(const cytnx_bool &rc);
 
-      Sproxy& operator=(const Sproxy &rc);
+      Sproxy &operator=(const Sproxy &rc);
 
-      Sproxy copy() const{
+      Sproxy copy() const {
         Sproxy out = *this;
         return out;
-      } 
+      }
 
       Scalar real();
       Scalar imag();
@@ -2554,11 +2554,11 @@ namespace cytnx {
     /**
      * @brief Get the max value of the Scalar with the given \p dtype.
      * @details This function is used to get the max value of the Scalar with the given \p dtype.
-     * That is, for example, if you want to get the max value of a Scalar with 
+     * That is, for example, if you want to get the max value of a Scalar with
      * \p dtype = cytnx::Type.Int16, then you will get the max value of a 16-bit integer 32767.
      * @param[in] dtype The data type of the Scalar.
      * @return The max value of the Scalar with the given \p dtype.
-    */
+     */
     static Scalar maxval(const unsigned int &dtype) {
       Scalar out(0, dtype);
       out._impl->set_maxval();
@@ -2568,11 +2568,11 @@ namespace cytnx {
     /**
      * @brief Get the min value of the Scalar with the given \p dtype.
      * @details This function is used to get the min value of the Scalar with the given \p dtype.
-     * That is, for example, if you want to get the min value of a Scalar with 
+     * That is, for example, if you want to get the min value of a Scalar with
      * \p dtype = cytnx::Type.Int16, then you will get the min value of a 16-bit integer -32768.
      * @param[in] dtype The data type of the Scalar.
      * @return The min value of the Scalar with the given \p dtype.
-    */
+     */
     static Scalar minval(const unsigned int &dtype) {
       Scalar out(0, dtype);
       out._impl->set_minval();
@@ -2667,100 +2667,100 @@ namespace cytnx {
     };
 
     // copy assignment [Number]:
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_complex128 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_complex128 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_complex64 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_complex64 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_double \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_double &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_float \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_float &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_uint64 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_uint64 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_int64 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_int64 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_uint32 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_uint32 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_int32 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_int32 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_uint16 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_uint16 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_int16 \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_int16 &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** @brief The copy assignment operator of the Scalar class with a given number 
+    /** @brief The copy assignment operator of the Scalar class with a given number
      * cytnx::cytnx_bool \p rhs.
-    */
+     */
     Scalar &operator=(const cytnx_bool &rhs) {
       this->Init_by_number(rhs);
       return *this;
     }
 
-    /** 
+    /**
      * @brief Type conversion function.
      * @param[in] dtype The type of the output Scalar (see cytnx::Type for more details).
      * @return The converted Scalar.
-     * @attention The function cannot convert from complex to real, please use 
-     * cytnx::Scalar::real() or cytnx::Scalar::imag() to get the real or imaginary 
+     * @attention The function cannot convert from complex to real, please use
+     * cytnx::Scalar::real() or cytnx::Scalar::imag() to get the real or imaginary
      * part of the Scalar instead.
      */
     Scalar astype(const unsigned int &dtype) const {
@@ -2769,10 +2769,10 @@ namespace cytnx {
     }
 
     /**
-     * @brief Get the conjugate of the Scalar. That means return \f$ c^* \f$ if 
+     * @brief Get the conjugate of the Scalar. That means return \f$ c^* \f$ if
      * the Scalar is \f$ c \f$.
      * @return The conjugate of the Scalar.
-    */
+     */
     Scalar conj() const {
       Scalar out = *this;
       out._impl->conj_();
@@ -2780,30 +2780,30 @@ namespace cytnx {
     }
 
     /**
-     * @brief Get the imaginary part of the Scalar. That means return \f$ \Im(c) \f$ if 
+     * @brief Get the imaginary part of the Scalar. That means return \f$ \Im(c) \f$ if
      * the Scalar is \f$ c \f$.
      * @return The imaginary part of the Scalar.
-    */
+     */
     Scalar imag() const { return Scalar(this->_impl->get_imag()); }
 
     /**
-     * @brief Get the real part of the Scalar. That means return \f$ \Re(c) \f$ if 
+     * @brief Get the real part of the Scalar. That means return \f$ \Re(c) \f$ if
      * the Scalar is \f$ c \f$.
      * @return The real part of the Scalar.
-    */
+     */
     Scalar real() const { return Scalar(this->_impl->get_real()); }
     // Scalar& set_imag(const Scalar &in){   return *this;}
     // Scalar& set_real(const Scalar &in){   return *this;}
 
     /**
      * @brief Get the dtype of the Scalar (see cytnx::Type for more details).
-    */
+     */
     int dtype() const { return this->_impl->_dtype; }
 
     // print()
     /**
      * @brief Print the Scalar to the standard output.
-    */
+     */
     void print() const {
       this->_impl->print(std::cout);
       std::cout << std::string(" Scalar dtype: [") << Type.getname(this->_impl->_dtype)
@@ -2839,7 +2839,7 @@ namespace cytnx {
     explicit operator cytnx_bool() const { return this->_impl->to_cytnx_bool(); }
 
     /// @cond
-    //destructor
+    // destructor
     ~Scalar() {
       if (this->_impl != nullptr) delete this->_impl;
     };
@@ -2855,7 +2855,8 @@ namespace cytnx {
     ///@brief The addition assignment operator of the Scalar class with a given Scalar.
     void operator+=(const Scalar &rhs) { this->_impl->iadd(rhs._impl); }
 
-    ///@brief The subtraction assignment operator of the Scalar class with a given number (template).
+    ///@brief The subtraction assignment operator of the Scalar class with a given number
+    ///(template).
     template <class T>
     void operator-=(const T &rc) {
       this->_impl->isub(rc);
@@ -2865,7 +2866,8 @@ namespace cytnx {
     void operator-=(const Scalar &rhs) { this->_impl->isub(rhs._impl); }
     template <class T>
 
-    ///@brief The multiplication assignment operator of the Scalar class with a given number (template).
+    ///@brief The multiplication assignment operator of the Scalar class with a given number
+    ///(template).
     void operator*=(const T &rc) {
       this->_impl->imul(rc);
     }
@@ -2876,14 +2878,14 @@ namespace cytnx {
 
     /**
      * @brief The division assignment operator of the Scalar class with a given number (template).
-    */
+     */
     void operator/=(const T &rc) {
       this->_impl->idiv(rc);
     }
 
     /**
      * @brief The division assignment operator of the Scalar class with a given Scalar.
-    */
+     */
     void operator/=(const Scalar &rhs) { this->_impl->idiv(rhs._impl); }
 
     /// @brief Set the Scalar to absolute value. (inplace)
@@ -2897,32 +2899,29 @@ namespace cytnx {
      * @note Compare to the iabs() function, this function will return a new Scalar object.
      * @return The absolute value of the Scalar.
      * @see iabs()
-    */
+     */
     Scalar abs() const {
       Scalar out = *this;
       out._impl->iabs();
       return out.real();
     }
 
- 
-
     /**
      * @brief The member function to get the square root of the Scalar.
      * @note Compare to the isqrt() function, this function will return a new Scalar object.
      * @return The square root of the Scalar.
      * @see isqrt()
-    */
+     */
     Scalar sqrt() const {
       Scalar out = *this;
       out._impl->isqrt();
       return out;
     }
 
-
     // comparison <
-    /** 
+    /**
      * @brief Return whether the current Scalar is less than a given template number \p rc.
-     * @details That is, whether \f$ s < r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s < r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given number \p rc.
      * @see operator<(const Scalar &lhs, const Scalar &rhs)
      */
@@ -2938,9 +2937,9 @@ namespace cytnx {
       }
     }
 
-    /** 
+    /**
      * @brief Return whether the current Scalar is less than a given Scalar \p rhs.
-     * @details That is, whether \f$ s < r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s < r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator<(const Scalar &lhs, const Scalar &rhs)
      */
@@ -2956,9 +2955,10 @@ namespace cytnx {
 
     // comparison <=
 
-    /** 
-     * @brief Return whether the current Scalar is less than or equal to a given template number \p rc.
-     * @details That is, whether \f$ s \leq r \f$, where \f$ s \f$ is the current Scalar 
+    /**
+     * @brief Return whether the current Scalar is less than or equal to a given template number \p
+     * rc.
+     * @details That is, whether \f$ s \leq r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given number \p rc.
      * @see operator<=(const Scalar &lhs, const Scalar &rhs)
      */
@@ -2974,9 +2974,9 @@ namespace cytnx {
       }
     }
 
-    /** 
+    /**
      * @brief Return whether the current Scalar is less than or equal to a given Scalar \p rhs.
-     * @details That is, whether \f$ s \leq r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s \leq r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator<=(const Scalar &lhs, const Scalar &rhs)
      */
@@ -2991,9 +2991,9 @@ namespace cytnx {
     }
 
     // comparison >
-    /** 
+    /**
      * @brief Return whether the current Scalar is greater than a given template number \p rc.
-     * @details That is, whether \f$ s > r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s > r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given number \p rc.
      * @see operator>(const Scalar &lhs, const Scalar &rhs)
      */
@@ -3009,9 +3009,9 @@ namespace cytnx {
       }
     }
 
-    /** 
+    /**
      * @brief Return whether the current Scalar is greater than a given Scalar \p rhs.
-     * @details That is, whether \f$ s > r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s > r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator>(const Scalar &lhs, const Scalar &rhs)
      */
@@ -3027,9 +3027,10 @@ namespace cytnx {
 
     // comparison >=
 
-    /** 
-     * @brief Return whether the current Scalar is greater than or equal to a given template number \p rc.
-     * @details That is, whether \f$ s \geq r \f$, where \f$ s \f$ is the current Scalar 
+    /**
+     * @brief Return whether the current Scalar is greater than or equal to a given template number
+     * \p rc.
+     * @details That is, whether \f$ s \geq r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given number \p rc.
      * @see operator>=(const Scalar &lhs, const Scalar &rhs)
      */
@@ -3045,9 +3046,9 @@ namespace cytnx {
       }
     }
 
-    /** 
+    /**
      * @brief Return whether the current Scalar is greater than or equal to a given Scalar \p rhs.
-     * @details That is, whether \f$ s \geq r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s \geq r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator>=(const Scalar &lhs, const Scalar &rhs)
      */
@@ -3063,9 +3064,9 @@ namespace cytnx {
 
     // comparison ==
 
-    /** 
+    /**
      * @brief Return whether the current Scalar is equal to a given template number \p rc.
-     * @details That is, whether \f$ s = r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s = r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given number \p rc.
      * @see operator==(const Scalar &lhs, const Scalar &rhs)
      */
@@ -3081,9 +3082,9 @@ namespace cytnx {
       }
     }
 
-    /** 
+    /**
      * @brief Return whether the current Scalar is equal to a given Scalar \p rhs.
-     * @details That is, whether \f$ s = r \f$, where \f$ s \f$ is the current Scalar 
+     * @details That is, whether \f$ s = r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator==(const Scalar &lhs, const Scalar &rhs)
      */
@@ -3102,7 +3103,7 @@ namespace cytnx {
     /**
      * @brief Return the addition of the current Scalar and a given template number \p rc.
      * @see operator+(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     template <class T>
     Scalar radd(const T &rc) const {
       Scalar out;
@@ -3119,7 +3120,7 @@ namespace cytnx {
     /**
      * @brief Return the addition of the current Scalar and a given Scalar \p rhs.
      * @see operator+(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     Scalar radd(const Scalar &rhs) const {
       Scalar out;
       if (this->dtype() < rhs.dtype()) {
@@ -3136,7 +3137,7 @@ namespace cytnx {
     /**
      * @brief Return the multiplication of the current Scalar and a given template number \p rc.
      * @see operator*(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     template <class T>
     Scalar rmul(const T &rc) const {
       Scalar out;
@@ -3153,7 +3154,7 @@ namespace cytnx {
     /**
      * @brief Return the multiplication of the current Scalar and a given Scalar \p rhs.
      * @see operator*(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     Scalar rmul(const Scalar &rhs) const {
       Scalar out;
       if (this->dtype() < rhs.dtype()) {
@@ -3170,7 +3171,7 @@ namespace cytnx {
     /**
      * @brief Return the subtraction of the current Scalar and a given template number \p rc.
      * @see operator-(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     template <class T>
     Scalar rsub(const T &rc) const {
       Scalar out;
@@ -3187,7 +3188,7 @@ namespace cytnx {
     /**
      * @brief Return the subtraction of the current Scalar and a given Scalar \p rhs.
      * @see operator-(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     Scalar rsub(const Scalar &rhs) const {
       Scalar out;
       if (this->dtype() < rhs.dtype()) {
@@ -3204,7 +3205,7 @@ namespace cytnx {
     /**
      * @brief Return the division of the current Scalar and a given template number \p rc.
      * @see operator/(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     template <class T>
     Scalar rdiv(const T &rc) const {
       Scalar out;
@@ -3221,7 +3222,7 @@ namespace cytnx {
     /**
      * @brief Return the division of the current Scalar and a given Scalar \p rhs.
      * @see operator/(const Scalar &lhs, const Scalar &rhs)
-    */
+     */
     Scalar rdiv(const Scalar &rhs) const {
       Scalar out;
       if (this->dtype() < rhs.dtype()) {
@@ -3279,7 +3280,7 @@ namespace cytnx {
 
   /**
    * @brief The addition operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l+r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3288,7 +3289,7 @@ namespace cytnx {
   // lmul c * Scalar;
   /**
    * @brief The multiplication operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l \cdot r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3297,7 +3298,7 @@ namespace cytnx {
   // lsub c * Scalar;
   /**
    * @brief The subtraction operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l-r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3306,7 +3307,7 @@ namespace cytnx {
   // ldiv c / Scalar;
   /**
    * @brief The division operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l/r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3315,7 +3316,7 @@ namespace cytnx {
   // lless c < Scalar;
   /**
    * @brief The less-than operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l<r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3324,7 +3325,7 @@ namespace cytnx {
   // lgreater c > Scalar;
   /**
    * @brief The greater-than operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l>r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3333,7 +3334,7 @@ namespace cytnx {
   // lless c <= Scalar;
   /**
    * @brief The less-than-or-equal operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l\leq r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3342,7 +3343,7 @@ namespace cytnx {
   // lgreater c >= Scalar;
   /**
    * @brief The greater-than-or-equal operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l\geq r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3351,7 +3352,7 @@ namespace cytnx {
   // eq c == Scalar;
   /**
    * @brief The equal operator between two Scalar objects.
-   * @details Return 
+   * @details Return
    * \f[ l==r \f],
    * where \f$ l \f$ is the left Scalar \p lc and \f$ r \f$ is the right Scalar \p rs .
    */
@@ -3361,7 +3362,7 @@ namespace cytnx {
 
   /**
    * @brief Return the absolute value of a Scalar object.
-   * @details Return 
+   * @details Return
    * \f[ \left|c\right| \f],
    * where \f$ c \f$ is the input Scalar \p c .
    */
@@ -3370,13 +3371,11 @@ namespace cytnx {
   // sqrt:
   /**
    * @brief Return the square root of a Scalar object.
-   * @details Return 
+   * @details Return
    * \f[ \sqrt{c} \f],
    * where \f$ c \f$ is the input Scalar \p c .
    */
   Scalar sqrt(const Scalar &c);
-
-
 
   // complex conversion:
   /// @brief Convert a Scalar object to a cytnx::complex128.

@@ -10,7 +10,7 @@
 
 #ifdef UNI_MKL
   #include <mkl.h>
-  typedef MKL_INT blas_int;
+typedef MKL_INT blas_int;
 #else
 //#include <cblas.h>
 //#ifdef BLAS_ILP64

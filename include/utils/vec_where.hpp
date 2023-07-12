@@ -7,9 +7,9 @@ namespace cytnx {
 
   template <class T>
   cytnx_uint64 vec_where(const std::vector<T>& in, const T& key);
-    
-  template<class T>
-  std::vector<cytnx_uint64> vec_argwhere(std::vector<T> const &v, const T &target);
 
-}
+  template <class T>
+  std::vector<cytnx_uint64> vec_argwhere(std::vector<T> const& v, const T& target);
+
+}  // namespace cytnx
 #endif

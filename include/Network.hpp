@@ -85,7 +85,10 @@ namespace cytnx {
     virtual void clear();
     virtual std::string getOptimalOrder();
     virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
-    virtual void construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim);
+    virtual void construct(const std::vector<std::string> &alias,
+                           const std::vector<std::vector<std::string>> &lbls,
+                           const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
+                           const std::string &order, const bool optim);
     virtual void PrintNet(std::ostream &os);
     virtual boost::intrusive_ptr<Network_base> clone();
     virtual void Savefile(const std::string &fname);
@@ -118,7 +121,10 @@ namespace cytnx {
     }
     std::string getOptimalOrder();
     UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
-    void construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim);
+    void construct(const std::vector<std::string> &alias,
+                   const std::vector<std::vector<std::string>> &lbls,
+                   const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
+                   const std::string &order, const bool optim);
     boost::intrusive_ptr<Network_base> clone() {
       RegularNetwork *tmp = new RegularNetwork();
       tmp->name2pos = this->name2pos;
@@ -163,7 +169,9 @@ namespace cytnx {
       this->TOUT_iBondNum = 0;
       this->ORDER_tokens.clear();
     }
-    UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "") { return UniTensor(); };
+    UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "") {
+      return UniTensor();
+    };
     boost::intrusive_ptr<Network_base> clone() {
       FermionNetwork *tmp = new FermionNetwork();
       tmp->name2pos = this->name2pos;
@@ -311,26 +319,23 @@ namespace cytnx {
     Network(const std::string &fname, const int &network_type = NtType.Regular) {
       this->Fromfile(fname, network_type);
     }
-    
-    void PutUniTensor(const std::string &name, const UniTensor &utensor, const std::vector<std::string> &lbl_order={}) {
-      if(lbl_order.size()){
+
+    void PutUniTensor(const std::string &name, const UniTensor &utensor,
+                      const std::vector<std::string> &lbl_order = {}) {
+      if (lbl_order.size()) {
         auto tmpu = utensor.permute(lbl_order);
         this->_impl->PutUniTensor(name, tmpu);
-      }else
+      } else
         this->_impl->PutUniTensor(name, utensor);
     }
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor, const std::vector<std::string> &lbl_order={}) {
-      if(lbl_order.size()){
+    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor,
+                      const std::vector<std::string> &lbl_order = {}) {
+      if (lbl_order.size()) {
         auto tmpu = utensor.permute(lbl_order);
         this->_impl->PutUniTensor(idx, tmpu);
-      }else
+      } else
         this->_impl->PutUniTensor(idx, utensor);
     }
-    
-
-
-
-
 
     void PutUniTensors(const std::vector<std::string> &name,
                        const std::vector<UniTensor> &utensors) {
@@ -352,7 +357,11 @@ namespace cytnx {
       }
     }
 
-    void construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl = std::vector<std::string>(), const cytnx_int64 &outrk = 0, const std::string &order = "", const bool optim = false, const int &network_type = NtType.Regular){
+    void construct(const std::vector<std::string> &alias,
+                   const std::vector<std::vector<std::string>> &lbls,
+                   const std::vector<std::string> &outlbl = std::vector<std::string>(),
+                   const cytnx_int64 &outrk = 0, const std::string &order = "",
+                   const bool optim = false, const int &network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
         boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
         this->_impl = tmp;

@@ -15,25 +15,25 @@ namespace cytnx {
 
   /**
    * @brief bond type
-   * @details This is about the enumeration of the type of the object Bond. 
+   * @details This is about the enumeration of the type of the object Bond.
    * 1. For the UniTensor which is non-symmetry, the corresponding bondType will be set as
-   *   bondType.BD_REG defaultly. You also can set the bondType as bondType.BD_KET 
+   *   bondType.BD_REG defaultly. You also can set the bondType as bondType.BD_KET
    *   or bondType.BD_BRA if you want to give the UniTensor more physics meaning.
-   * 2. For the UniTensor is symmetry, the corresponding bondType must be bondType.BD_KET 
-   *   or bondType.BD_BRA. 
-   * 3. Please note that if you want to do the contraction for 
+   * 2. For the UniTensor is symmetry, the corresponding bondType must be bondType.BD_KET
+   *   or bondType.BD_BRA.
+   * 3. Please note that if you want to do the contraction for
    *   symmetric UniTensor, you must make sure that the two bonds you want to contract
    *   are one bondType.BD_KET and the other bondType.BD_BRA. Namely, you cannot do the
    *   contraction if two bonds are both bondType.BD_KET or both bondType.BD_BRA.
    * @note currently using gBD_* to indicate this is bond with new qnum structure!
    */
-  enum bondType : int { 
-    BD_KET = -1,  /*!< -1, represent ket state in physics */
-	  BD_BRA = 1,   /*!< 1, represent bra state in physics */ 
-	  BD_REG = 0,   /*!< 0, only can be used in non-symmetry UniTensor */
-	  BD_NONE = 0,  /*!< 0, same as BD_REG */
-	  BD_IN = -1,   /*!< -1, same as BD_KET */
-	  BD_OUT = 1    /*!< 1, same as BD_BRA */
+  enum bondType : int {
+    BD_KET = -1, /*!< -1, represent ket state in physics */
+    BD_BRA = 1, /*!< 1, represent bra state in physics */
+    BD_REG = 0, /*!< 0, only can be used in non-symmetry UniTensor */
+    BD_NONE = 0, /*!< 0, same as BD_REG */
+    BD_IN = -1, /*!< -1, same as BD_KET */
+    BD_OUT = 1 /*!< 1, same as BD_BRA */
   };
 
   /// @cond
@@ -53,11 +53,11 @@ namespace cytnx {
 
     Bond_impl() : _dim(0), _type(bondType::BD_REG){};
 
-    void _rm_qnum(const cytnx_uint64 &q_index){
-        // this will not check, so check it before using this internal function!!
-        this->_dim -= this->_degs[q_index];
-        this->_degs.erase(this->_degs.begin() + q_index);
-        this->_qnums.erase(this->_qnums.begin() + q_index);
+    void _rm_qnum(const cytnx_uint64 &q_index) {
+      // this will not check, so check it before using this internal function!!
+      this->_dim -= this->_degs[q_index];
+      this->_degs.erase(this->_degs.begin() + q_index);
+      this->_qnums.erase(this->_qnums.begin() + q_index);
     }
 
     void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG);
@@ -78,14 +78,14 @@ namespace cytnx {
     std::vector<std::vector<cytnx_int64>> qnums_clone() const { return this->_qnums; }
     std::vector<Symmetry> syms_clone() const { return vec_clone(this->_syms); }
 
-    bool has_duplicate_qnums() const{
-        if(this->_degs.size()){
-            auto tmp = this->_qnums;
-            std::sort(tmp.begin(),tmp.end());
-            return std::adjacent_find(tmp.begin(), tmp.end()) != tmp.end();
-        }else{
-            return false;
-        }
+    bool has_duplicate_qnums() const {
+      if (this->_degs.size()) {
+        auto tmp = this->_qnums;
+        std::sort(tmp.begin(), tmp.end());
+        return std::adjacent_find(tmp.begin(), tmp.end()) != tmp.end();
+      } else {
+        return false;
+      }
     }
 
     void set_type(const bondType &new_bondType) {
@@ -143,36 +143,33 @@ namespace cytnx {
     // return the effective qnums when Bra-Ket mismatch.
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums();
 
-
-    std::vector<cytnx_uint64>& getDegeneracies(){ return this->_degs;};
-    const std::vector<cytnx_uint64>& getDegeneracies() const{return this->_degs;};
+    std::vector<cytnx_uint64> &getDegeneracies() { return this->_degs; };
+    const std::vector<cytnx_uint64> &getDegeneracies() const { return this->_degs; };
 
     std::vector<cytnx_uint64> group_duplicates_();
 
-    boost::intrusive_ptr<Bond_impl> group_duplicates(std::vector<cytnx_uint64> &mapper) const{
-        boost::intrusive_ptr<Bond_impl> out = this->clone();
-        mapper = out->group_duplicates_();
-        return out;
+    boost::intrusive_ptr<Bond_impl> group_duplicates(std::vector<cytnx_uint64> &mapper) const {
+      boost::intrusive_ptr<Bond_impl> out = this->clone();
+      mapper = out->group_duplicates_();
+      return out;
     }
 
     void force_combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp);
-
-
 
   };  // Bond_impl
   ///@endcond
 
   /**
    * @brief the object contains auxiliary properties for each Tensor rank (bond)
-   * @details The Bond object is used to construct the bond of the UniTensor. 
-   *     1. For non-symmetric UniTensor (regular UniTensor, that means 
+   * @details The Bond object is used to construct the bond of the UniTensor.
+   *     1. For non-symmetric UniTensor (regular UniTensor, that means
    *       cytnx::UTenType.Dense, see cytnx::UTenType), the bond type need will be set as
    *       bondType.BD_REG defaultly. And you can set the bond type as bondType.BD_KET or
    *       bondType.BD_BRA if you want to describe the it as ket or bra basis.
    *       For non-symmetric case, you cannot input the quantum numbers and Symmetry object.
-   *     2. For symmteric UniTensor (cytnx::UTenType.Block, see cytnx::UTenType), the 
-   *       bond type need to be set as bondType.BD_KET or bondType.BD_BRA depend on 
-   *       what physical system you describe. And you should input the quantum numbers 
+   *     2. For symmteric UniTensor (cytnx::UTenType.Block, see cytnx::UTenType), the
+   *       bond type need to be set as bondType.BD_KET or bondType.BD_BRA depend on
+   *       what physical system you describe. And you should input the quantum numbers
    *       and Symmetry objects.
    */
   class Bond {
@@ -187,57 +184,56 @@ namespace cytnx {
     }
     ///@endcond
 
-	/**
-	 * @brief The constructor of the Bond object.
-	 * @details This function will call \ref 
-     *  Init(const cytnx_uint64 &dim, const bondType &bd_type) 
-	 *  	 "Init" to do initialization.
-	 * @param[in] dim the dimenstion of the Bond
-	 * @param[in] bd_type the type (see \ref bondType) of the bond
+    /**
+     * @brief The constructor of the Bond object.
+     * @details This function will call \ref
+ *  Init(const cytnx_uint64 &dim, const bondType &bd_type)
+     *  	 "Init" to do initialization.
+     * @param[in] dim the dimenstion of the Bond
+     * @param[in] bd_type the type (see \ref bondType) of the bond
 
-     *
-	 * @see
-     *  Init(const cytnx_uint64 &dim, const bondType &bd_type)
-	 */
+ *
+     * @see
+ *  Init(const cytnx_uint64 &dim, const bondType &bd_type)
+     */
     Bond(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG)
         : _impl(new Bond_impl()) {
       this->_impl->Init(dim, bd_type);
     }
 
-	/**
-	 * @brief The constructor of the Bond object.
-	 * @details This function will call \ref 
-     *  Init(const bondType &bd_type, 
-	 *       const std::vector<std::vector<cytnx_int64>> &in_qnums,
-     *       const std::vector<cytnx_uint64> &degs, 
-	 *  	 const std::vector<Symmetry> &in_syms)
-	 *  	 "Init" to do initialization.
-	 *
-	 * @param[in] bd_type the type (see \ref bondType) of the bond
-	 * @param[in] in_qnums input the quantum numbers of the bond (for symmetry case)
-	 * @param[in] degs the degrees of freedom of the bond.
-	 * @param[in] in_syms input the symmetries of the bond (for symmetry case)
-	 * @attention This function is can only use for symmetry case.
-	 * @see
-     *  Init(const bondType &bd_type, 
-	 *       const std::vector<std::vector<cytnx_int64>> &in_qnums,
-     *       const std::vector<cytnx_uint64> &degs, 
-	 *  	 const std::vector<Symmetry> &in_syms)
-	 */
+    /**
+     * @brief The constructor of the Bond object.
+     * @details This function will call \ref
+     *  Init(const bondType &bd_type,
+     *       const std::vector<std::vector<cytnx_int64>> &in_qnums,
+     *       const std::vector<cytnx_uint64> &degs,
+     *  	 const std::vector<Symmetry> &in_syms)
+     *  	 "Init" to do initialization.
+     *
+     * @param[in] bd_type the type (see \ref bondType) of the bond
+     * @param[in] in_qnums input the quantum numbers of the bond (for symmetry case)
+     * @param[in] degs the degrees of freedom of the bond.
+     * @param[in] in_syms input the symmetries of the bond (for symmetry case)
+     * @attention This function is can only use for symmetry case.
+     * @see
+     *  Init(const bondType &bd_type,
+     *       const std::vector<std::vector<cytnx_int64>> &in_qnums,
+     *       const std::vector<cytnx_uint64> &degs,
+     *  	 const std::vector<Symmetry> &in_syms)
+     */
     Bond(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
          const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
         : _impl(new Bond_impl()) {
       this->_impl->Init(bd_type, in_qnums, degs, in_syms);
     }
 
-
-	/**
-	 * @see
-     *   Bond(const bondType &bd_type, 
-	 *        const std::vector<std::vector<cytnx_int64>> &in_qnums, 
-	 *        const std::vector<cytnx_uint64> &degs, 
-	 *        const std::vector<Symmetry> &in_syms)
-	 */
+    /**
+     * @see
+     *   Bond(const bondType &bd_type,
+     *        const std::vector<std::vector<cytnx_int64>> &in_qnums,
+     *        const std::vector<cytnx_uint64> &degs,
+     *        const std::vector<Symmetry> &in_syms)
+     */
     Bond(const bondType &bd_type, const std::initializer_list<std::vector<cytnx_int64>> &in_qnums,
          const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
         : _impl(new Bond_impl()) {
@@ -245,50 +241,49 @@ namespace cytnx {
     }
 
     // this is needed for python binding!
-	/**
-	 * @see
-     *   Bond(const bondType &bd_type, 
-	 *        const std::vector<std::vector<cytnx_int64>> &in_qnums, 
-	 *        const std::vector<cytnx_uint64> &degs, 
-	 *        const std::vector<Symmetry> &in_syms)
-	 */
+    /**
+     * @see
+     *   Bond(const bondType &bd_type,
+     *        const std::vector<std::vector<cytnx_int64>> &in_qnums,
+     *        const std::vector<cytnx_uint64> &degs,
+     *        const std::vector<Symmetry> &in_syms)
+     */
     Bond(const bondType &bd_type, const std::vector<cytnx::Qs> &in_qnums,
          const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
         : _impl(new Bond_impl()) {
-      vec2d<cytnx_int64> qnums(in_qnums.begin(),in_qnums.end()); 
+      vec2d<cytnx_int64> qnums(in_qnums.begin(), in_qnums.end());
       this->_impl->Init(bd_type, qnums, degs, in_syms);
     }
 
-	/**
-	 * @see
-     *   Bond(const bondType &bd_type, 
-	 *        const std::vector<std::vector<cytnx_int64>> &in_qnums, 
-	 *        const std::vector<cytnx_uint64> &degs, 
-	 *        const std::vector<Symmetry> &in_syms)
-	 */
-    Bond(const bondType &bd_type, 
-         const std::vector< std::pair<std::vector<cytnx_int64>, cytnx_uint64> > &in_qnums_dims,
+    /**
+     * @see
+     *   Bond(const bondType &bd_type,
+     *        const std::vector<std::vector<cytnx_int64>> &in_qnums,
+     *        const std::vector<cytnx_uint64> &degs,
+     *        const std::vector<Symmetry> &in_syms)
+     */
+    Bond(const bondType &bd_type,
+         const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>> &in_qnums_dims,
          const std::vector<Symmetry> &in_syms = {})
         : _impl(new Bond_impl()) {
       this->Init(bd_type, in_qnums_dims, in_syms);
     }
 
-
     /**
     @brief init a bond object
     @param[in] dim the dimension of the bond (rank)
-    @param[in] bd_type the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG as
-    regular bond (rank)
+    @param[in] bd_type the tag of the bond, it can be BD_BRA, BD_KET as physical tagged; or BD_REG
+    as regular bond (rank)
 
 
     details:
         1. each bond can be tagged with BD_BRA or BD_KET that represent the bond is defined in Bra
     space or Ket space.
 
-	@pre
-	    1. \p dim cannot be 0.
-      2. The bond can be tagged with bondType.BD_BRA or 
-		  bondType.BD_KET, or bondType.BD_REG depending on the usage.
+        @pre
+            1. \p dim cannot be 0.
+      2. The bond can be tagged with bondType.BD_BRA or
+                  bondType.BD_KET, or bondType.BD_REG depending on the usage.
 
 
     ## Example:
@@ -307,37 +302,37 @@ namespace cytnx {
 
     /**
     @brief init a bond object
-	@details This function is initialization for symmetry bond case.
-        1. each bond can be tagged with BD_BRA or BD_KET that represent the bond is 
-		    defined in Bra space or Ket space.
-        2. the bond can have arbitrary multiple symmetries, with the type of each 
-		    symmetry associate to the qnums are provided with the in_syms.
+        @details This function is initialization for symmetry bond case.
+        1. each bond can be tagged with BD_BRA or BD_KET that represent the bond is
+                    defined in Bra space or Ket space.
+        2. the bond can have arbitrary multiple symmetries, with the type of each
+                    symmetry associate to the qnums are provided with the in_syms.
 
-    @param[in] bd_type the tag of the bond, it can be bondType.BD_BRA, bondType.BD_KET as 
-	    physical tagged and cannot be bondType.BD_REG (regular bond).
-    @param[in] in_qnums the quantum number(s) of the bond. it should be a 2d vector with 
-	    shape (# of unique qnum labels, # of symmetry).
-    @param[in] degs the degeneracy correspond to each qunatum number sets specified 
-	    in the qnums, the size should match the # of rows of passed-in qnums.
-    @param[in] in_syms a vector of symmetry objects of the bond, the size should 
-	    match the # of cols of passed-in qnums. [Note] if qnums are provided, the 
-		default symmetry type is \link cytnx::Symmetry::U1 Symmetry::U1 \endlink
+    @param[in] bd_type the tag of the bond, it can be bondType.BD_BRA, bondType.BD_KET as
+            physical tagged and cannot be bondType.BD_REG (regular bond).
+    @param[in] in_qnums the quantum number(s) of the bond. it should be a 2d vector with
+            shape (# of unique qnum labels, # of symmetry).
+    @param[in] degs the degeneracy correspond to each qunatum number sets specified
+            in the qnums, the size should match the # of rows of passed-in qnums.
+    @param[in] in_syms a vector of symmetry objects of the bond, the size should
+            match the # of cols of passed-in qnums. [Note] if qnums are provided, the
+                default symmetry type is \link cytnx::Symmetry::U1 Symmetry::U1 \endlink
 
-	@pre
-	    1. The size of \p degs need to same as the size of \p in_qnums.
-		2. \p in_qnums and \p degs cannot be empty.
-		3. All sub-vector in \p in_qnums MUST have the same size.
-		4. If \p in_syms is provided, the size of \p in_syms MUST same as the size of 
-		  the sub-vector in \p in_qnums.
-		5. \p bd_type cannot be bondType.BD_REG.
-		6. The quantum numbers in \p in_qnums and \p in_syms need to be consistent.
-		  For example, you cannot set the quntum number 2 in Z(2) symmetry.
-    
-	@note 
-	    1. If quantum number(s) are provided (which means the bond is with symmetry) 
-		  then the bond MUST be tagged with either bondType.BD_BRA or bondType.BD_KET.
-        2. If the bond is non-symmetry, then it can be tagged with bondType.BD_BRA 
-		  or bondType.BD_KET, or bondType.BD_REG depending on the usage.
+        @pre
+            1. The size of \p degs need to same as the size of \p in_qnums.
+                2. \p in_qnums and \p degs cannot be empty.
+                3. All sub-vector in \p in_qnums MUST have the same size.
+                4. If \p in_syms is provided, the size of \p in_syms MUST same as the size of
+                  the sub-vector in \p in_qnums.
+                5. \p bd_type cannot be bondType.BD_REG.
+                6. The quantum numbers in \p in_qnums and \p in_syms need to be consistent.
+                  For example, you cannot set the quntum number 2 in Z(2) symmetry.
+
+        @note
+            1. If quantum number(s) are provided (which means the bond is with symmetry)
+                  then the bond MUST be tagged with either bondType.BD_BRA or bondType.BD_KET.
+        2. If the bond is non-symmetry, then it can be tagged with bondType.BD_BRA
+                  or bondType.BD_KET, or bondType.BD_REG depending on the usage.
         3. The "bond dimension" is the sum over all numbers specified in degs.
     */
     void Init(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
@@ -346,16 +341,16 @@ namespace cytnx {
     }
 
     /**
-	 @see 
+         @see
      Init(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
           const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms)
-	 */
-    void Init(const bondType &bd_type, 
-			  const std::vector< std::pair<std::vector<cytnx_int64>, cytnx_uint64> > &in_qnums_dims,
-			  const std::vector<Symmetry> &in_syms = {}) {
+         */
+    void Init(const bondType &bd_type,
+              const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>> &in_qnums_dims,
+              const std::vector<Symmetry> &in_syms = {}) {
       vec2d<cytnx_int64> qnums(in_qnums_dims.size());
       std::vector<cytnx_uint64> degs(in_qnums_dims.size());
-      for(int i=0;i<in_qnums_dims.size();i++){
+      for (int i = 0; i < in_qnums_dims.size(); i++) {
         qnums[i] = in_qnums_dims[i].first;
         degs[i] = in_qnums_dims[i].second;
       }
@@ -372,11 +367,11 @@ namespace cytnx {
     /**
     @brief return the current quantum number set(s) by reference
     @return [2d vector] with shape: (dim, # of Symmetry)
-	@note Compare to qnums_clone(), this function return reference.
+        @note Compare to qnums_clone(), this function return reference.
     */
     const std::vector<std::vector<cytnx_int64>> &qnums() const { return this->_impl->qnums(); };
     /**
-	@see qnums() const
+        @see qnums() const
     */
     std::vector<std::vector<cytnx_int64>> &qnums() { return this->_impl->qnums(); };
     //@}
@@ -384,7 +379,7 @@ namespace cytnx {
     /**
     @brief return the clone (deep copy) of the current quantum number set(s)
     @return [2d vector] with shape: (dim, # of Symmetry)
-	@note Compare to qnums(), this function return the clone (deep copy).
+        @note Compare to qnums(), this function return the clone (deep copy).
     */
     std::vector<std::vector<cytnx_int64>> qnums_clone() const {
       return this->_impl->qnums_clone();
@@ -405,29 +400,29 @@ namespace cytnx {
     //@{
     /**
     @brief return the vector of symmetry objects by reference.
-	@note Compare to syms_clone() const, this function return by reference.
+        @note Compare to syms_clone() const, this function return by reference.
     @return [vector of Symmetry]
     */
     const std::vector<Symmetry> &syms() const { return this->_impl->syms(); };
     /**
-	@see syms() const
+        @see syms() const
     */
     std::vector<Symmetry> &syms() { return this->_impl->syms(); };
     //@}
 
     /**
     @brief return copy of the vector of symmetry objects.
-	@note Compare to syms() const, this function return the clone (deep copy).
+        @note Compare to syms() const, this function return the clone (deep copy).
     @return [vector of Symmetry]
     */
     std::vector<Symmetry> syms_clone() const { return this->_impl->syms_clone(); };
 
     /**
     @brief change the tag-type of the instance Bond
-    @param[in] new_bondType the new tag-type, it can be bondType.BD_BRA, 
-	    boncType.BD_KET or bondType.BD_REG. See cytnx::bondType.
-	@attention You cannot change the symmetry bond (bondType.BD_BRA or bondType.BD_KET 
-	    to regular type (bondType.BD_REG) except the size of the quantum number is 0.
+    @param[in] new_bondType the new tag-type, it can be bondType.BD_BRA,
+            boncType.BD_KET or bondType.BD_REG. See cytnx::bondType.
+        @attention You cannot change the symmetry bond (bondType.BD_BRA or bondType.BD_KET
+            to regular type (bondType.BD_REG) except the size of the quantum number is 0.
     */
     Bond &set_type(const bondType &new_bondType) {
       this->_impl->set_type(new_bondType);
@@ -437,11 +432,11 @@ namespace cytnx {
     /**
     @brief create a new instance of Bond with type changed to the new tag-type.
     @param[in]  new_bondType the new tag-type, it can be bondType.BD_BRA,
-	    bondType.BD_KET or bondType.BD_REG. See cytnx::bondType.
-	@note This is equivalent to Bond.clone().set_type()
-	@attention You cannot change the symmetry bond (bondType.BD_BRA or bondType.BD_KET 
-	    to regular type (bondType.BD_REG) except the size of the quantum number is 0.
-	@see clone(), set_type(const bondType & new_bondType)
+            bondType.BD_KET or bondType.BD_REG. See cytnx::bondType.
+        @note This is equivalent to Bond.clone().set_type()
+        @attention You cannot change the symmetry bond (bondType.BD_BRA or bondType.BD_KET
+            to regular type (bondType.BD_REG) except the size of the quantum number is 0.
+        @see clone(), set_type(const bondType & new_bondType)
     */
     Bond retype(const bondType &new_bondType) {
       auto out = this->clone();
@@ -450,28 +445,28 @@ namespace cytnx {
     }
 
     /**
-    @brief create a new instance of Bond with type changed in between 
-	    bondType.BD_BRA / bondType.BD_KET.
+    @brief create a new instance of Bond with type changed in between
+            bondType.BD_BRA / bondType.BD_KET.
     */
     Bond redirect() const {
       auto out = this->clone();
       out.set_type(bondType(int(out.type()) * -1));
       return out;
     }
-    
+
     /**
-    @brief Change the bond type between bondType.BD_BRA and bondType.BD_KET 
-	    in the Bond.
+    @brief Change the bond type between bondType.BD_BRA and bondType.BD_KET
+            in the Bond.
     */
-    Bond& redirect_(){
-        this->set_type(bondType(int(this->type()) * -1));
-        return *this;
+    Bond &redirect_() {
+      this->set_type(bondType(int(this->type()) * -1));
+      return *this;
     }
 
     /**
     @brief change the tag-type to the default value bondType.BD_REG.
-	@pre The size of quantum number should be 0. Namely, you cannot clear the 
-	    symmetric bond.
+        @pre The size of quantum number should be 0. Namely, you cannot clear the
+            symmetric bond.
     */
     void clear_type() { this->_impl->clear_type(); }
 
@@ -498,18 +493,18 @@ namespace cytnx {
     /**
     @brief Combine the input bond with self, inplacely.
     @param[in] bd_in the bond that to be combined with self.
-	  @param[in] is_grp this parameter is only used when the bond is 
-      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+          @param[in] is_grp this parameter is only used when the bond is
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
       If is_grp is true, the basis with duplicated quantum number will be
-      grouped together as a single basis. See 
+      grouped together as a single basis. See
       group_duplicates(std::vector<cytnx_uint64> &mapper) const.
-	  @pre 
-	    1. The type of two bonds (see cytnx::bondType) need to be same.
-	    2. The Symmetry of two bonds should be same.
-	  @note Compare to \n
+          @pre
+            1. The type of two bonds (see cytnx::bondType) need to be same.
+            2. The Symmetry of two bonds should be same.
+          @note Compare to \n
       combineBond(const Bond &bd_in, const bool &is_grp) const, \n
-	    this function in inplace function.
-	  @see combineBond(const Bond &bd_in, const bool &is_grp)const
+            this function in inplace function.
+          @see combineBond(const Bond &bd_in, const bool &is_grp)const
 
     ## Example:
     ### c++ API:
@@ -528,19 +523,19 @@ namespace cytnx {
     /**
     @brief combine the input bond with self, and return a new combined Bond instance.
     @param[in] bd_in the bond that to be combined.
-	  @param[in] is_grp this parameter is only used when the bond is 
-      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+          @param[in] is_grp this parameter is only used when the bond is
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
       If is_grp is true, the basis with duplicated quantum number will be
-      grouped together as a single basis. See 
+      grouped together as a single basis. See
       group_duplicates(std::vector<cytnx_uint64> &mapper) const.
     @return [Bond] a new combined bond instance.
-	  @pre 
-	    1. The type of two bonds (see cytnx::bondType) need to be same.
-	    2. The Symmetry of two bonds should be same.
-	  @note Compare to \n
+          @pre
+            1. The type of two bonds (see cytnx::bondType) need to be same.
+            2. The Symmetry of two bonds should be same.
+          @note Compare to \n
       combineBond_(const Bond &bd_in, const bool &is_grp), \n
-	    this function will create a new Bond object.
-	  @see combineBond_(const Bond &bd_in, const bool &is_grp)
+            this function will create a new Bond object.
+          @see combineBond_(const Bond &bd_in, const bool &is_grp)
 
     ## Example:
     ### c++ API:
@@ -561,18 +556,18 @@ namespace cytnx {
     /**
     @brief combine multiple input bonds with self, and return a new combined Bond instance.
     @param[in] bds the bonds that to be combined with self.
-	  @param[in] is_grp this parameter is only used when the bond is 
-      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+          @param[in] is_grp this parameter is only used when the bond is
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
       If is_grp is true, the basis with duplicated quantum number will be
-      grouped together as a single basis. See 
+      grouped together as a single basis. See
       group_duplicates(std::vector<cytnx_uint64> &mapper) const.
     @return [Bond] a new combined bond instance.
-	  @pre 
-	    1. The type of all bonds (see cytnx::bondType) need to be same.
-	    2. The Symmetry of all bonds should be same.
-	  @note Compare to \n
+          @pre
+            1. The type of all bonds (see cytnx::bondType) need to be same.
+            2. The Symmetry of all bonds should be same.
+          @note Compare to \n
       combineBonds_(const std::vector<Bond> &bds, const bool &is_grp),\n
-	    this function will create a new Bond object.
+            this function will create a new Bond object.
     @see combineBonds_(const std::vector<Bond> &bds, const bool &is_grp)
 
     ## Example:
@@ -596,17 +591,17 @@ namespace cytnx {
     /**
     @brief combine multiple input bonds with self, inplacely
     @param[in] bds the bonds that to be combined with self.
-	  @param[in] is_grp this parameter is only used when the bond is 
-      symmetric bond (bondType.BD_BRA or bondType.BD_KET). 
+          @param[in] is_grp this parameter is only used when the bond is
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
       If is_grp is true, the basis with duplicated quantum number will be
-      grouped together as a single basis. See 
+      grouped together as a single basis. See
       group_duplicates(std::vector<cytnx_uint64> &mapper) const.
-	@pre 
-	  1. The type of all bonds (see cytnx::bondType) need to be same.
-	  2. The Symmetry of all bonds should be same.
-	@note Compare to \n
+        @pre
+          1. The type of all bonds (see cytnx::bondType) need to be same.
+          2. The Symmetry of all bonds should be same.
+        @note Compare to \n
       combineBonds(const std::vector<Bond> &bds, const bool &is_grp),\n
-	  this function will create a new Bond object.
+          this function will create a new Bond object.
     @see combineBonds(const std::vector<Bond> &bds, const bool &is_grp)
 
     ## Example:
@@ -628,9 +623,9 @@ namespace cytnx {
     /**
     @brief return a sorted qnum sets by removing all the duplicate qnum sets.
     @param[out] counts output the counts of the unique quantum numbers.
-	@pre The bond cannot be regular type (namely, bondType.BD_REG)
+        @pre The bond cannot be regular type (namely, bondType.BD_REG)
     @return std::vector<std::vector<cytnx_int64>> unique_qnums
-	@see getUniqueQnums()
+        @see getUniqueQnums()
     */
     std::vector<std::vector<cytnx_int64>> getUniqueQnums(std::vector<cytnx_uint64> &counts) {
       return this->_impl->getUniqueQnums(counts, true);
@@ -638,9 +633,9 @@ namespace cytnx {
 
     /**
     @brief return a sorted qnum sets by removing all the duplicate qnum sets.
-	@pre The bond cannot be regular type (namely, bondType.BD_REG)
+        @pre The bond cannot be regular type (namely, bondType.BD_REG)
     @return std::vector<std::vector<cytnx_int64>> unique_qnums
-	@see getUniqueQnums(std::vector<cytnx_uint64> &counts)
+        @see getUniqueQnums(std::vector<cytnx_uint64> &counts)
     */
     std::vector<std::vector<cytnx_int64>> getUniqueQnums() {
       std::vector<cytnx_uint64> tmp;
@@ -649,14 +644,14 @@ namespace cytnx {
 
     /**
     @brief return the degeneracy of specify qnum set.
-	@param[in] qnum input the quantum number you want to get the degeneracy.
-	@pre the input \p qnum should match the number of the Symmetry. (see Nsym())
+        @param[in] qnum input the quantum number you want to get the degeneracy.
+        @pre the input \p qnum should match the number of the Symmetry. (see Nsym())
     @return cytnx_uint64 degeneracy
 
-	@note
+        @note
         if the bond has no symmetries, return 0.
         if the degeneracy queried does not exist, return 0, and the indicies is empty
-	@see 
+        @see
          getDegeneracy(const std::vector<cytnx_int64> &qnum,
                        std::vector<cytnx_uint64> &indices) const.
     */
@@ -667,15 +662,15 @@ namespace cytnx {
 
     /**
     @brief return the degeneracy of specify qnum set.
-	@param[in] qnum input the quantum number you want to get the degeneracy.
-	@param[out] indices output the indices location of the quantum number \p qnum.
-	@pre the input \p qnum should match the number of the Symmetry. (see Nsym())
+        @param[in] qnum input the quantum number you want to get the degeneracy.
+        @param[out] indices output the indices location of the quantum number \p qnum.
+        @pre the input \p qnum should match the number of the Symmetry. (see Nsym())
     @return cytnx_uint64 degeneracy
 
-	@note
+        @note
         If the bond has no symmetries, return 0.
         If the degeneracy queried does not exist, return 0, and the indicies is empty.
-	@see 
+        @see
          getDegeneracy(const std::vector<cytnx_int64> &qnum) const.
     */
     cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64> &qnum,
@@ -687,88 +682,82 @@ namespace cytnx {
     /**
     @brief return all degeneracies.
     @return std::vector<cytnx_uint64> degeneracy
-	@see getDegeneracies() const,
+        @see getDegeneracies() const,
          getDegeneracy(const std::vector<cytnx_int64> &qnum) const,
          getDegeneracy(const std::vector<cytnx_int64> &qnum,
                        std::vector<cytnx_uint64> &indices) const.
     */
-    std::vector<cytnx_uint64> & getDegeneracies(){
-        return this->_impl->getDegeneracies();
-    }
+    std::vector<cytnx_uint64> &getDegeneracies() { return this->_impl->getDegeneracies(); }
 
     /**
-	@see getDegeneracies()
+        @see getDegeneracies()
     */
-    const std::vector<cytnx_uint64> & getDegeneracies() const{
-        return this->_impl->getDegeneracies();
+    const std::vector<cytnx_uint64> &getDegeneracies() const {
+      return this->_impl->getDegeneracies();
     }
-        
+
     /**
     @brief Group the duplicated quantum number, inplacely.
-	@details This function will group the duplicated quantum number and return the
-	    mapper, where mapper is about the new index from old index via\n
+        @details This function will group the duplicated quantum number and return the
+            mapper, where mapper is about the new index from old index via\n
         new_index = return<cytnx_uint64>[old_index].
-	@pre The Bond need to be symmetric type (namely, bondType should be 
-	    bondType.BD_BRA or bondType.BD_DET, see \ref bondType.)
-	@note 
-	    1. Compare to the function 
-	      group_duplicates(std::vector<cytnx_uint64> &mapper) const,
-		  this function is inplace function.
-		2. This function will sort ascending of the quantum number. 
-	@see group_duplicates(std::vector<cytnx_uint64> &mapper) const,
-	    has_duplicate_qnums() const.
-    @return std::vector<cytnx_uint64> mapper 
+        @pre The Bond need to be symmetric type (namely, bondType should be
+            bondType.BD_BRA or bondType.BD_DET, see \ref bondType.)
+        @note
+            1. Compare to the function
+              group_duplicates(std::vector<cytnx_uint64> &mapper) const,
+                  this function is inplace function.
+                2. This function will sort ascending of the quantum number.
+        @see group_duplicates(std::vector<cytnx_uint64> &mapper) const,
+            has_duplicate_qnums() const.
+    @return std::vector<cytnx_uint64> mapper
     */
-    std::vector<cytnx_uint64> group_duplicates_(){
-        return this->_impl->group_duplicates_();
-    }
+    std::vector<cytnx_uint64> group_duplicates_() { return this->_impl->group_duplicates_(); }
 
     /**
-    @brief Group the duplicated quantum number and return the new instance 
-	    of the Bond ojbect.
-	@details This function will group the duplicated quantum number and return 
-	    the new instance of the Bond object. It will also the \p mapper, where 
-		\p mapper is about the new index from old index via\n
+    @brief Group the duplicated quantum number and return the new instance
+            of the Bond ojbect.
+        @details This function will group the duplicated quantum number and return
+            the new instance of the Bond object. It will also the \p mapper, where
+                \p mapper is about the new index from old index via\n
         new_index = return<cytnx_uint64>[old_index].
-	@param[out] mapper the new index from old index via\n
+        @param[out] mapper the new index from old index via\n
         new_index = return<cytnx_uint64>[old_index].
-	@pre The Bond need to be symmetric type (namely, bondType should be 
-	    bondType.BD_BRA or bondType.BD_DET, see \ref bondType.)
-	@note
-	    1. Compare to the function 
-	      group_duplicates_(), this function will create the new instance of 
-		  Bond object.
-		2. This function will sort ascending of the quantum number. 
-	@see group_duplicates_(std::vector<cytnx_uint64> &mapper), 
-	    has_duplicate_qnums() const.
+        @pre The Bond need to be symmetric type (namely, bondType should be
+            bondType.BD_BRA or bondType.BD_DET, see \ref bondType.)
+        @note
+            1. Compare to the function
+              group_duplicates_(), this function will create the new instance of
+                  Bond object.
+                2. This function will sort ascending of the quantum number.
+        @see group_duplicates_(std::vector<cytnx_uint64> &mapper),
+            has_duplicate_qnums() const.
     @return Bond
     */
-    Bond group_duplicates(std::vector<cytnx_uint64> &mapper) const{
-        Bond out;
-        out._impl = this->_impl->group_duplicates(mapper);
-        return out;
+    Bond group_duplicates(std::vector<cytnx_uint64> &mapper) const {
+      Bond out;
+      out._impl = this->_impl->group_duplicates(mapper);
+      return out;
     }
 
     /**
     @brief Check whether there is duplicated quantum numbers in the Bond.
-	@details This function will check whether there is any duplicated quantum number
-	    is the Bond. If yes, return ture. Otherwise, return false.
-	@note For the regular bond (bondType.BD_REG), it will always return false.
-	@see 
-	    group_duplicates_(std::vector<cytnx_uint64> &mapper)
-	    group_duplicates(std::vector<cytnx_uint64> &mapper) const
+        @details This function will check whether there is any duplicated quantum number
+            is the Bond. If yes, return ture. Otherwise, return false.
+        @note For the regular bond (bondType.BD_REG), it will always return false.
+        @see
+            group_duplicates_(std::vector<cytnx_uint64> &mapper)
+            group_duplicates(std::vector<cytnx_uint64> &mapper) const
     @return bool
     */
-    bool has_duplicate_qnums() const {
-        return this->_impl->has_duplicate_qnums();
-    }
+    bool has_duplicate_qnums() const { return this->_impl->has_duplicate_qnums(); }
 
     /**
     @brief Calculate the reverse of the quantum numbers.
-	@details This function will calculate the reverse of the qunatum numbers by the 
-	    reverse rule of the Symmetry. See Symmetry.reverse_rule().
-	@note You may use this function if the Bra-Ket mismatch.
-	@see Symmetry.reverse_rule()
+        @details This function will calculate the reverse of the qunatum numbers by the
+            reverse rule of the Symmetry. See Symmetry.reverse_rule().
+        @note You may use this function if the Bra-Ket mismatch.
+        @see Symmetry.reverse_rule()
     @return std::vector<std::vector<cytnx_int64>>
     */
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums() {
@@ -777,22 +766,22 @@ namespace cytnx {
 
     /**
     @brief Save the Bond object to the file.
-    @details Save the Bond object to the file. The file extension will be automatically 
+    @details Save the Bond object to the file. The file extension will be automatically
       added as ".cybd".
-	  @param[in] fname the file name of the Bond object (exclude the file extension).
+          @param[in] fname the file name of the Bond object (exclude the file extension).
     @see Load(const std::string &fname)
     */
     void Save(const std::string &fname) const;
 
     /**
-	@see Save(const std::string &fname) const;
+        @see Save(const std::string &fname) const;
     */
     void Save(const char *fname) const;
 
     /**
     @brief Load the Bond object from the file.
-	  @param[in] fname the file name of the Bond object.
-	  @pre The file need to be the file of Bond object, which is saved by the 
+          @param[in] fname the file name of the Bond object.
+          @pre The file need to be the file of Bond object, which is saved by the
       function Bond::Save(const std::string &fname) const.
     */
     static cytnx::Bond Load(const std::string &fname);
@@ -809,11 +798,11 @@ namespace cytnx {
 
     /**
     @brief The comparison operator 'equal to'.
-    @details The comparison operators to compare two Bonds. If two Bond object are 
-	  same, return true. Otherwise, return false. This equal to operator will
+    @details The comparison operators to compare two Bonds. If two Bond object are
+          same, return true. Otherwise, return false. This equal to operator will
     compare all the "value" of the Bond object. Even the Bond object are different
     object (different address), but they are same "value", it will return true.
-	  @see operator!=(const Bond &rhs) const
+          @see operator!=(const Bond &rhs) const
     */
     bool operator==(const Bond &rhs) const;
 
@@ -821,45 +810,45 @@ namespace cytnx {
     @brief The comparison operator 'not equal to'.
     @details The comparison operators to compare two Bonds. More precisely, it is
     the opposite result of the operator==(const Bond &rhs) const.
-	  @see operator==(const Bond &rhs) const
+          @see operator==(const Bond &rhs) const
     */
     bool operator!=(const Bond &rhs) const;
 
     /**
     @brief The multiplication operator of the Bond object.
-    @details The multiplication operator of the Bond means that Combine two Bond. 
-	    So this operator is same as 
-		\ref combineBond(const Bond &bd_in, const bool &is_grp) const "combineBond".
-	    The following code are same result:
-	@code
-	    // bd1, bd2 and bd3 are Bond objects.
-		bd3 = bd1.combineBond(bd2);
-	@endcode
-	@code
-	    // bd1, bd2 and bd3 are Bond objects.
-		bd3 = bd1 * bd2;
-	@endcode
-	@see operator*=(const Bond &rhs), 
+    @details The multiplication operator of the Bond means that Combine two Bond.
+            So this operator is same as
+                \ref combineBond(const Bond &bd_in, const bool &is_grp) const "combineBond".
+            The following code are same result:
+        @code
+            // bd1, bd2 and bd3 are Bond objects.
+                bd3 = bd1.combineBond(bd2);
+        @endcode
+        @code
+            // bd1, bd2 and bd3 are Bond objects.
+                bd3 = bd1 * bd2;
+        @endcode
+        @see operator*=(const Bond &rhs),
         combineBond(const Bond &bd_in, const bool &is_grp) const
     */
     Bond operator*(const Bond &rhs) const { return this->combineBond(rhs); }
 
     /**
     @brief The multiplication assignment operator of the Bond object.
-    @details The multiplication assignment operator of the Bond means that Combine 
-	    two Bond inplacely, So this operator is same as 
-		\ref combineBond_ "combineBond_".
-	    The following code are same result:
-	@code
-	    // bd1 and bd2 are Bond objects.
-		bd1.combineBond_(bd2);
-	@endcode
-	@code
-	    // bd1 and bd2 are Bond objects.
-		bd1 *= bd2;
-	@endcode
-	@see operator*(const Bond &rhs) const,
-		combineBond_(const Bond &bd_in, const bool &is_grp)
+    @details The multiplication assignment operator of the Bond means that Combine
+            two Bond inplacely, So this operator is same as
+                \ref combineBond_ "combineBond_".
+            The following code are same result:
+        @code
+            // bd1 and bd2 are Bond objects.
+                bd1.combineBond_(bd2);
+        @endcode
+        @code
+            // bd1 and bd2 are Bond objects.
+                bd1 *= bd2;
+        @endcode
+        @see operator*(const Bond &rhs) const,
+                combineBond_(const Bond &bd_in, const bool &is_grp)
     */
     Bond &operator*=(const Bond &rhs) {
       this->combineBond_(rhs);
