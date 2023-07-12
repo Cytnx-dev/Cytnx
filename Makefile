@@ -878,7 +878,7 @@ Lstsq.o: $(CytnxPATH)/src/linalg/Lstsq.cpp $(CytnxPATH)/include/linalg.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 
 
-test.o: test.cpp
+test.o: test.cc
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 dmrg_tfim.o: dmrg_tfim.cpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
