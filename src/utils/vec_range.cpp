@@ -56,7 +56,7 @@ namespace cytnx {
     return out;
   }
 
- template <>
+  template <>
   vector<std::string> vec_range<std::string>(const cytnx_int64 &len) {
     vector<std::string> out(len);
 #ifdef UNI_OMP
@@ -80,7 +80,6 @@ namespace cytnx {
     }
     return out;
   }
-
 
   void vec_range_(vector<cytnx_uint64> &v, const cytnx_uint64 &start, const cytnx_uint64 &end) {
     cytnx_error_msg(end < start, "[ERROR] cannot have end < start%s", "\n");
@@ -113,7 +112,8 @@ namespace cytnx {
   }
 
   template <>
-  void vec_range_<cytnx_int64>(vector<cytnx_int64> &v, const cytnx_int64 &start, const cytnx_int64 &end) {
+  void vec_range_<cytnx_int64>(vector<cytnx_int64> &v, const cytnx_int64 &start,
+                               const cytnx_int64 &end) {
     cytnx_error_msg(end < start, "[ERROR] cannot have end < start%s", "\n");
     // v.resize(end - start);
 #ifdef UNI_OMP

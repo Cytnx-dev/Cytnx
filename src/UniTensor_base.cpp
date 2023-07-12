@@ -13,7 +13,7 @@ namespace cytnx {
       return std::string("Dense");
     } else if (ut_type == this->Sparse) {
       return std::string("Sparse ");
-    } else if (ut_type == this->Block){
+    } else if (ut_type == this->Block) {
       return std::string("Block ");
     } else {
       cytnx_error_msg(true, "%s\n", "[ERROR] invalid ut_type");
@@ -125,7 +125,8 @@ namespace cytnx {
     return nullptr;
   }
 
-  void UniTensor_base::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
+  void UniTensor_base::permute_(const std::vector<cytnx_int64> &mapper,
+                                const cytnx_int64 &rowrank) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
@@ -134,7 +135,6 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
-
 
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::contiguous_() {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
@@ -154,7 +154,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
-  void UniTensor_base::print_block(const cytnx_int64 &idx, const bool &full_info) const{
+  void UniTensor_base::print_block(const cytnx_int64 &idx, const bool &full_info) const {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
@@ -252,7 +252,7 @@ namespace cytnx {
                     "\n");
     return nullptr;
   }
- 
+
   void UniTensor_base::set_labels(const std::vector<std::string> &new_labels) {
     cytnx_error_msg(new_labels.size() != this->_labels.size(),
                     "[ERROR][set_labels][UniTensor] %s\n",
@@ -384,7 +384,6 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
-
 
   void UniTensor_base::Transpose_() {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
@@ -546,7 +545,7 @@ namespace cytnx {
   }
 
   //-----------------------------------------
-  std::ostream& operator<<(std::ostream &os, const UniTensor &in) {
+  std::ostream &operator<<(std::ostream &os, const UniTensor &in) {
     in.print_blocks();
     return os;
   }
@@ -556,9 +555,9 @@ namespace cytnx {
     return inL.contract(inR, cacheL, cacheR);
   }
 
-
   void _resolve_CT(std::vector<UniTensor> &TNlist){};
-  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order, const bool &optimal) {
+  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order,
+                      const bool &optimal) {
     cytnx_error_msg(TNs.size() < 2, "[ERROR][Contracts] should have more than 2 TNs to contract.%s",
                     "\n");
     // UniTensor out = TNs[0].contract(TNs[1]);
@@ -570,7 +569,7 @@ namespace cytnx {
     Network tmp;
     std::vector<std::vector<std::string>> lbls;
     std::vector<std::string> names;
-    for(int i = 0; i <TNs.size(); i++){
+    for (int i = 0; i < TNs.size(); i++) {
       names.push_back(TNs[i].name());
       lbls.push_back(TNs[i].labels());
     }
@@ -624,29 +623,27 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
-  void UniTensor_base::group_basis_(){
+  void UniTensor_base::group_basis_() {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
 
-  const std::vector<cytnx_uint64>& UniTensor_base::get_qindices(const cytnx_uint64 &bidx) const{
+  const std::vector<cytnx_uint64> &UniTensor_base::get_qindices(const cytnx_uint64 &bidx) const {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
-  std::vector<cytnx_uint64>& UniTensor_base::get_qindices(const cytnx_uint64 &bidx){
-    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
-                    "\n");
-  }
-
-  const vec2d<cytnx_uint64> & UniTensor_base::get_itoi() const{
-    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
-                    "\n");
-
-  }
-  vec2d<cytnx_uint64> & UniTensor_base::get_itoi(){
+  std::vector<cytnx_uint64> &UniTensor_base::get_qindices(const cytnx_uint64 &bidx) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
 
+  const vec2d<cytnx_uint64> &UniTensor_base::get_itoi() const {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
+  vec2d<cytnx_uint64> &UniTensor_base::get_itoi() {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
 
 }  // namespace cytnx

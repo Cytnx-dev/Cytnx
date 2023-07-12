@@ -15,11 +15,11 @@ int main(int argc, char *argv[]) {
   double dt = 0.1;
 
   //> Create onsite-Op
-  Tensor Sz = cytnx::zeros(2*2).reshape({2,2});
+  Tensor Sz = cytnx::zeros(2 * 2).reshape({2, 2});
   Sz.at<double>({0, 0}) = 1;
   Sz.at<double>({1, 1}) = -1;
 
-  Tensor Sx = cytnx::zeros(2*2).reshape({2,2});
+  Tensor Sx = cytnx::zeros(2 * 2).reshape({2, 2});
   Sx.at<double>({0, 1}) = Sx.at<double>({1, 0}) = Hx;
   Tensor I = Sz.clone();
   I.at<double>({1, 1}) = 1;
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
   Tensor ZZterm = cytnx::linalg::Kron(Sz, Sz);
   Tensor tH = Hx * TFterm + J * ZZterm;
 
-  cout<<"tH::::::"<<tH<<endl;
+  cout << "tH::::::" << tH << endl;
 
   Tensor teH = cytnx::linalg::ExpH(tH, -dt);
   teH.reshape_({2, 2, 2, 2});
@@ -50,16 +50,17 @@ int main(int argc, char *argv[]) {
   //     |    |
   //   --A-la-B-lb--
   //
-  UniTensor A = UniTensor({cytnx::Bond(chi), cytnx::Bond(2), cytnx::Bond(chi)}, vector<string>({"-1", "0", "-2"}), 1);
+  UniTensor A = UniTensor({cytnx::Bond(chi), cytnx::Bond(2), cytnx::Bond(chi)},
+                          vector<string>({"-1", "0", "-2"}), 1);
   UniTensor B = UniTensor(A.bonds(), vector<string>({"-3", "1", "-4"}), 1);
 
   cytnx::random::Make_normal(B.get_block_(), 0, 0.2);
   cytnx::random::Make_normal(A.get_block_(), 0, 0.2);
 
-  UniTensor la =
-    UniTensor({cytnx::Bond(chi), cytnx::Bond(chi)}, vector<string>({"-2", "-3"}), 1, Type.Double, Device.cpu, true);
-  UniTensor lb =
-    UniTensor({cytnx::Bond(chi), cytnx::Bond(chi)}, vector<string>({"-4", "-5"}), 1, Type.Double, Device.cpu, true);
+  UniTensor la = UniTensor({cytnx::Bond(chi), cytnx::Bond(chi)}, vector<string>({"-2", "-3"}), 1,
+                           Type.Double, Device.cpu, true);
+  UniTensor lb = UniTensor({cytnx::Bond(chi), cytnx::Bond(chi)}, vector<string>({"-4", "-5"}), 1,
+                           Type.Double, Device.cpu, true);
   la.put_block(cytnx::ones(chi));
   lb.put_block(cytnx::ones(chi));
   //> Evov:

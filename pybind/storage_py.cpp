@@ -18,8 +18,8 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-void storage_binding(py::module &m){
-    py::class_<cytnx::Storage>(m, "Storage")
+void storage_binding(py::module &m) {
+  py::class_<cytnx::Storage>(m, "Storage")
     .def("numpy",
          [](Storage &self) -> py::array {
            // device on GPU? move to cpu:ref it;
@@ -79,11 +79,13 @@ void storage_binding(py::module &m){
     .def(py::init<>())
     .def(py::init<const cytnx::Storage &>())
     .def(py::init<boost::intrusive_ptr<cytnx::Storage_base>>())
-    .def(py::init<const unsigned long long &, const unsigned int &, int, const bool &>(), py::arg("size"),
-         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1, py::arg("init_zero")=true)
+    .def(py::init<const unsigned long long &, const unsigned int &, int, const bool &>(),
+         py::arg("size"), py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
+         py::arg("init_zero") = true)
     .def("Init", &cytnx::Storage::Init, py::arg("size"),
-         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1, py::arg("init_zero")=true)
-    
+         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
+         py::arg("init_zero") = true)
+
     .def("dtype", &cytnx::Storage::dtype)
     .def("dtype_str", &cytnx::Storage::dtype_str)
     .def("device", &cytnx::Storage::device)
@@ -165,7 +167,7 @@ void storage_binding(py::module &m){
            else
              cytnx_error_msg(true, "%s", "[ERROR] try to get element from a void Storage.");
          })
-    
+
     .def(
       "__repr__",
       [](cytnx::Storage &self) -> std::string {
@@ -226,18 +228,28 @@ void storage_binding(py::module &m){
     .def("append", &cytnx::Storage::append<cytnx::cytnx_uint16>, py::arg("val"))
     .def("append", &cytnx::Storage::append<cytnx::cytnx_bool>, py::arg("val"))
 
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex128>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_double>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_float>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint32>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int32>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint16>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int16>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex128>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex64>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_double>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_float>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint64>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int64>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint32>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int32>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint16>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int16>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
 
     .def("c_pylist_complex128", &cytnx::Storage::vector<cytnx_complex128>)
     .def("c_pylist_complex64", &cytnx::Storage::vector<cytnx_complex64>)
@@ -269,7 +281,5 @@ void storage_binding(py::module &m){
     .def("real", &cytnx::Storage::real)
     .def("imag", &cytnx::Storage::imag)
 
-    
-    ; // end of object line
-
+    ;  // end of object line
 }

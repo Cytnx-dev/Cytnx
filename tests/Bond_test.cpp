@@ -55,8 +55,6 @@ TEST(Bond, CombineBondNoSymmBraKet) {
   EXPECT_EQ(bd_all.Nsym(), 0);
 }
 
-
-
 TEST(Bond, InitWithQnum_v2) {
   // default sym
   Bond bd_sym_a = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
@@ -165,7 +163,6 @@ TEST(Bond, CombindBondSymm_v2) {
   Bond bd_sym_g = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::U1()});
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_f), std::logic_error);
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
-
 }
 
 // TEST(Bond, ConstructorTypeQnums){

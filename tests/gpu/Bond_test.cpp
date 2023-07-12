@@ -163,7 +163,6 @@ TEST(Bond, gpu_CombindBondSymm_v2) {
   Bond bd_sym_g = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::U1()});
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_f), std::logic_error);
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
-
 }
 
 // TEST(Bond, ConstructorTypeQnums){

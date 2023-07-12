@@ -18,7 +18,8 @@ namespace cytnx {
   typedef Accessor ac;
   void SparseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
                              const cytnx_int64 &rowrank, const unsigned int &dtype,
-                             const int &device, const bool &is_diag, const bool &no_alloc, const std::string &name) {
+                             const int &device, const bool &is_diag, const bool &no_alloc,
+                             const std::string &name) {
     // the entering is already check all the bonds have symmetry.
     //  need to check:
     //  1. the # of symmetry and their type across all bonds
@@ -147,15 +148,15 @@ namespace cytnx {
       }
     }
   }
-  //void SparseUniTensor::Init(const std::vector<Bond> &bonds,
-  //                           const std::vector<cytnx_int64> &in_labels, const cytnx_int64 &rowrank,
-  //                           const unsigned int &dtype, const int &device, const bool &is_diag,
-  //                           const bool &no_alloc) {
-  //  vector<string> vs;
-  //  transform(in_labels.begin(), in_labels.end(), vs.begin(),
-  //            [](cytnx_int64 x) -> string { return to_string(x); });
-  //  Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
-  //}
+  // void SparseUniTensor::Init(const std::vector<Bond> &bonds,
+  //                            const std::vector<cytnx_int64> &in_labels, const cytnx_int64
+  //                            &rowrank, const unsigned int &dtype, const int &device, const bool
+  //                            &is_diag, const bool &no_alloc) {
+  //   vector<string> vs;
+  //   transform(in_labels.begin(), in_labels.end(), vs.begin(),
+  //             [](cytnx_int64 x) -> string { return to_string(x); });
+  //   Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
+  // }
 
   vector<Bond> SparseUniTensor::getTotalQnums(const bool &physical) {
     if (physical) {
@@ -661,17 +662,18 @@ namespace cytnx {
 
   std::vector<Symmetry> SparseUniTensor::syms() const { return this->_bonds[0].syms(); }
 
-  void SparseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info)const{
-        cytnx_error_msg(true,"[ERROR] SpareUniTensor does not support individual printing.%s","\n");
+  void SparseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+    cytnx_error_msg(true, "[ERROR] SpareUniTensor does not support individual printing.%s", "\n");
   }
 
-  void SparseUniTensor::print_blocks(const bool &full_info)const {
+  void SparseUniTensor::print_blocks(const bool &full_info) const {
     std::ostream &os = std::cout;
     os << "-------- start of print ---------\n";
     char *buffer = (char *)malloc(sizeof(char) * 1024);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
-    if (this->_is_tag) sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
+    if (this->_is_tag)
+      sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
     os << std::string(buffer);
     sprintf(buffer, "is_diag    : %s\n", this->_is_diag ? "True" : "False");
     os << std::string(buffer);
@@ -679,40 +681,38 @@ namespace cytnx {
     os << std::string(buffer);
 
     auto tmp_qnums = this->get_blocks_qnums();
-      std::vector<Tensor> tmp = this->get_blocks_(true);
-      sprintf(buffer, "BLOCKS:: %s", "\n");
-      os << std::string(buffer);
+    std::vector<Tensor> tmp = this->get_blocks_(true);
+    sprintf(buffer, "BLOCKS:: %s", "\n");
+    os << std::string(buffer);
+    os << "=============\n";
+
+    if (!this->is_contiguous()) {
+      cytnx_warning_msg(
+        true,
+        "[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks "
+        "appears here could be different than the current shape of UniTensor.%s",
+        "\n");
+    }
+    for (cytnx_uint64 i = 0; i < tmp.size(); i++) {
+      os << "Qnum:" << tmp_qnums[i] << std::endl;
+      if (full_info)
+        os << tmp[i] << std::endl;
+      else {
+        os << "dtype: " << Type.getname(tmp[i].dtype()) << endl;
+        os << "device: " << Device.getname(tmp[i].device()) << endl;
+        os << "shape: ";
+        vec_print_simple(os, tmp[i].shape());
+      }
       os << "=============\n";
-
-      if (!this->is_contiguous()) {
-        cytnx_warning_msg(
-          true,
-          "[WARNING][Symmetric] cout/print UniTensor on a non-contiguous UniTensor. the blocks "
-          "appears here could be different than the current shape of UniTensor.%s",
-          "\n");
-      }
-      for (cytnx_uint64 i = 0; i < tmp.size(); i++) {
-        os << "Qnum:" << tmp_qnums[i] << std::endl;
-        if(full_info)
-            os << tmp[i] << std::endl;
-        else{
-            os << "dtype: " << Type.getname(tmp[i].dtype()) << endl;
-            os << "device: " << Device.getname(tmp[i].device()) << endl;
-            os << "shape: ";
-            vec_print_simple(os,tmp[i].shape());
-
-        }
-        os << "=============\n";
-      }
-      os << "-------- end of print ---------\n";
+    }
+    os << "-------- end of print ---------\n";
 
     free(buffer);
   }
 
   void SparseUniTensor::print_diagram(const bool &bond_info) {
     char *buffer = (char *)malloc(1024 * sizeof(char));
-    unsigned int BUFFsize = 100;    
-
+    unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
     std::cout << std::string(buffer);
@@ -744,35 +744,34 @@ namespace cytnx {
     char *r = (char *)malloc(BUFFsize * sizeof(char));
     char *rlbl = (char *)malloc(BUFFsize * sizeof(char));
 
-    int Space_Llabel_max=0, Space_Ldim_max=0, Space_Rdim_max =0;
-    //quickly checking the size for each line, only check the largest! 
-
+    int Space_Llabel_max = 0, Space_Ldim_max = 0, Space_Rdim_max = 0;
+    // quickly checking the size for each line, only check the largest!
 
     for (cytnx_uint64 i = 0; i < vl; i++) {
-        if(i<Nin){
-            if(Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
-            if(Space_Ldim_max < to_string(this->_bonds[i].dim()).size()) Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
-        }
-        if(i<Nout){
-            if(Space_Rdim_max < to_string(this->_bonds[Nin+i].dim()).size()) Space_Rdim_max = to_string(this->_bonds[Nin+i].dim()).size();
-        }
+      if (i < Nin) {
+        if (Space_Llabel_max < this->_labels[i].size()) Space_Llabel_max = this->_labels[i].size();
+        if (Space_Ldim_max < to_string(this->_bonds[i].dim()).size())
+          Space_Ldim_max = to_string(this->_bonds[i].dim()).size();
+      }
+      if (i < Nout) {
+        if (Space_Rdim_max < to_string(this->_bonds[Nin + i].dim()).size())
+          Space_Rdim_max = to_string(this->_bonds[Nin + i].dim()).size();
+      }
     }
-    string LallSpace = (string(" ")*(Space_Llabel_max+3+1));
-    string MallSpace = string(" ")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
-    string M_dashes  = string("-")*(1 + Space_Ldim_max + 5 + Space_Rdim_max+1);
-
-
+    string LallSpace = (string(" ") * (Space_Llabel_max + 3 + 1));
+    string MallSpace = string(" ") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
+    string M_dashes = string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
 
     sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
     std::cout << std::string(buffer);
     std::string tmpss;
-    sprintf(buffer, "%s row %s col %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+    sprintf(buffer, "%s row %s col %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
     std::cout << std::string(buffer);
-    sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
+    sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
     std::cout << std::string(buffer);
 
     for (cytnx_uint64 i = 0; i < vl; i++) {
-        sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+      sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
       std::cout << std::string(buffer);
 
       if (i < Nin) {
@@ -782,17 +781,18 @@ namespace cytnx {
           bks = "*<--";
         memset(l, 0, sizeof(char) * BUFFsize);
         memset(llbl, 0, sizeof(char) * BUFFsize);
-        tmpss = this->_labels[i] + std::string(" ")*(Space_Llabel_max-this->_labels[i].size());
+        tmpss = this->_labels[i] + std::string(" ") * (Space_Llabel_max - this->_labels[i].size());
         sprintf(l, "%s %s", tmpss.c_str(), bks.c_str());
-        tmpss = to_string(this->_bonds[i].dim()) + std::string(" ")*(Space_Ldim_max-to_string(this->_bonds[i].dim()).size());
+        tmpss = to_string(this->_bonds[i].dim()) +
+                std::string(" ") * (Space_Ldim_max - to_string(this->_bonds[i].dim()).size());
         sprintf(llbl, "%s", tmpss.c_str());
       } else {
         memset(l, 0, sizeof(char) * BUFFsize);
         memset(llbl, 0, sizeof(char) * BUFFsize);
-        tmpss = std::string(" ")*(Space_Llabel_max+5);
-        sprintf(l, "%s",tmpss.c_str());
-        tmpss = std::string(" ")*(Space_Ldim_max);
-        sprintf(llbl, "%s",tmpss.c_str());
+        tmpss = std::string(" ") * (Space_Llabel_max + 5);
+        sprintf(l, "%s", tmpss.c_str());
+        tmpss = std::string(" ") * (Space_Ldim_max);
+        sprintf(llbl, "%s", tmpss.c_str());
       }
       if (i < Nout) {
         if (this->_bonds[Nin + i].type() == bondType::BD_KET)
@@ -804,22 +804,23 @@ namespace cytnx {
 
         sprintf(r, "%s %s", bks.c_str(), this->_labels[Nin + i].c_str());
 
-        tmpss = to_string(this->_bonds[Nin+i].dim()) + std::string(" ")*(Space_Rdim_max-to_string(this->_bonds[Nin+i].dim()).size());
+        tmpss = to_string(this->_bonds[Nin + i].dim()) +
+                std::string(" ") * (Space_Rdim_max - to_string(this->_bonds[Nin + i].dim()).size());
         sprintf(rlbl, "%s", tmpss.c_str());
 
       } else {
         memset(r, 0, sizeof(char) * BUFFsize);
         memset(rlbl, 0, sizeof(char) * BUFFsize);
         sprintf(r, "%s", "        ");
-        tmpss = std::string(" ")*Space_Rdim_max;
-        sprintf(rlbl, "%s",tmpss.c_str());
+        tmpss = std::string(" ") * Space_Rdim_max;
+        sprintf(rlbl, "%s", tmpss.c_str());
       }
       sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
       std::cout << std::string(buffer);
     }
-    sprintf(buffer, "%s    |%s|    %s",LallSpace.c_str(),MallSpace.c_str(),"\n");
+    sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
     std::cout << std::string(buffer);
-    sprintf(buffer, "%s    -%s-    %s",LallSpace.c_str(),M_dashes.c_str(),"\n");
+    sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
     std::cout << std::string(buffer);
     sprintf(buffer, "%s", "\n");
     std::cout << std::string(buffer);
@@ -2124,7 +2125,8 @@ namespace cytnx {
         // std::cout << rhs->_bonds[comm_idx2[i]];
         if (User_debug)
           cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),
-                          "[ERROR] contract bond @ label %d have qnum mismatch.\n", comm_labels[i].c_str());
+                          "[ERROR] contract bond @ label %d have qnum mismatch.\n",
+                          comm_labels[i].c_str());
 
         cytnx_error_msg(this->_bonds[comm_idx1[i]].type() + rhs->_bonds[comm_idx2[i]].type(),
                         "[ERROR] BRA can only contract with KET. invalid @ label: %d\n",

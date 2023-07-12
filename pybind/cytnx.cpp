@@ -23,8 +23,6 @@ using namespace cytnx;
 // ref: https://block.arch.ethz.ch/blog/2016/07/adding-methods-to-python-classes/
 // ref: https://medium.com/@mgarod/dynamically-add-a-method-to-a-class-in-python-c49204b85bd6
 
-
-
 void generator_binding(py::module &m);
 void storage_binding(py::module &m);
 void tensor_binding(py::module &m);
@@ -52,7 +50,7 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
-  m.def("set_mkl_ilp64",&cytnx::set_mkl_ilp64);
+  m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
 
   // global vars
   // m.attr("cytnxdevice") = cytnx::cytnxdevice;
@@ -90,16 +88,9 @@ PYBIND11_MODULE(cytnx, m) {
   mdev.attr("cuda") = (cytnx_int64)cytnx::Device.cuda;
   mdev.attr("Ngpus") = cytnx::Device.Ngpus;
   mdev.attr("Ncpus") = cytnx::Device.Ncpus;
-  mdev.def(
-    "Print_Property",
-    [](){
-      cytnx::Device.Print_Property();
-    });
-  mdev.def(
-    "getname",
-    [](const int& device_id) -> std::string {
-      return cytnx::Device.getname(device_id);
-    });
+  mdev.def("Print_Property", []() { cytnx::Device.Print_Property(); });
+  mdev.def("getname",
+           [](const int &device_id) -> std::string { return cytnx::Device.getname(device_id); });
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
 
   // m.def(
@@ -109,7 +100,8 @@ PYBIND11_MODULE(cytnx, m) {
   //       const bool check_network, const bool optimize,
   //       std::vector<cytnx_int64> cont_order ,
   //       const std::vector<std::string> &out_labels) -> UniTensor {
-  //     return ncon(tensor_list_in, connect_list_in, check_network, optimize, cont_order, out_labels);
+  //     return ncon(tensor_list_in, connect_list_in, check_network, optimize, cont_order,
+  //     out_labels);
   //   },
   //   py::arg("tensor_list_in")= std::vector<UniTensor>(),
   //   py::arg("connect_list_in")= std::vector<std::vector<cytnx_int64>>(),

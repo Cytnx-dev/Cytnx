@@ -26,13 +26,14 @@ int main() {
       combine symmetry bonds,
       with U1 x Z2 multiple symmetry
   */
-  Bond bd_sym_a = Bond(BD_BRA, {Qs(0, 1)>>1, Qs(2, 0)>>1, Qs(-4, 1)>>1}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_a =
+    Bond(BD_BRA, {Qs(0, 1) >> 1, Qs(2, 0) >> 1, Qs(-4, 1) >> 1}, {Symmetry::U1(), Symmetry::Zn(2)});
 
-  Bond bd_sym_b =
-    Bond(BD_BRA, {Qs(0, 0)>>1, Qs(2, 1)>>1, Qs(-1, 1)>>1, Qs(3, 0)>>1}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_b = Bond(BD_BRA, {Qs(0, 0) >> 1, Qs(2, 1) >> 1, Qs(-1, 1) >> 1, Qs(3, 0) >> 1},
+                       {Symmetry::U1(), Symmetry::Zn(2)});
 
-  Bond bd_sym_c =
-    Bond(BD_BRA, {Qs(1, 1)>>2, Qs(-1, 1)>>1, Qs(-2, 0)>>1, Qs(0, 0)>>1}, {Symmetry::U1(), Symmetry::Zn(2)});
+  Bond bd_sym_c = Bond(BD_BRA, {Qs(1, 1) >> 2, Qs(-1, 1) >> 1, Qs(-2, 0) >> 1, Qs(0, 0) >> 1},
+                       {Symmetry::U1(), Symmetry::Zn(2)});
 
   Bond bd_sym_d = bd_sym_a.combineBonds({bd_sym_b, bd_sym_c});
   cout << bd_sym_a << endl;

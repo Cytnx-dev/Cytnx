@@ -8,134 +8,130 @@ namespace cytnx {
 
   namespace linalg {
 
-    void _Tensordot_generic(Tensor &out, const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
-                     const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
-                     const bool &cacheR){
-          
-          std::vector<cytnx_uint64> mapperL, mapperR;
-          std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
-          std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
+    void _Tensordot_generic(Tensor &out, const Tensor &Tl, const Tensor &Tr,
+                            const std::vector<cytnx_uint64> &idxl,
+                            const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
+                            const bool &cacheR) {
+      std::vector<cytnx_uint64> mapperL, mapperR;
+      std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
+      std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
 
-          // calculate permute
-          vec_concatenate_(mapperL, non_contract_l, idxl);
-          vec_concatenate_(mapperR, idxr, non_contract_r);
+      // calculate permute
+      vec_concatenate_(mapperL, non_contract_l, idxl);
+      vec_concatenate_(mapperR, idxr, non_contract_r);
 
-          // checking + calculate comm_dim:
-          cytnx_int64 comm_dim = 1;
-          for (cytnx_uint64 i = 0; i < idxl.size(); i++) {
-            cytnx_error_msg(Tl.shape()[idxl[i]] != Tr.shape()[idxr[i]],
-                            "the index L=%d and R=%d have different dimension!\n", idxl[i], idxr[i]);
-            comm_dim *= Tl.shape()[idxl[i]];
-          }
+      // checking + calculate comm_dim:
+      cytnx_int64 comm_dim = 1;
+      for (cytnx_uint64 i = 0; i < idxl.size(); i++) {
+        cytnx_error_msg(Tl.shape()[idxl[i]] != Tr.shape()[idxr[i]],
+                        "the index L=%d and R=%d have different dimension!\n", idxl[i], idxr[i]);
+        comm_dim *= Tl.shape()[idxl[i]];
+      }
 
-          // calculate output shape:
-          std::vector<cytnx_int64> new_shape(non_contract_l.size() + non_contract_r.size());
-          for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
-            new_shape[i] = Tl.shape()[non_contract_l[i]];
-          for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
-            new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
+      // calculate output shape:
+      std::vector<cytnx_int64> new_shape(non_contract_l.size() + non_contract_r.size());
+      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
+        new_shape[i] = Tl.shape()[non_contract_l[i]];
+      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
+        new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
 
-          if (new_shape.size() == 0) {
-            new_shape.push_back(1);
-          }
+      if (new_shape.size() == 0) {
+        new_shape.push_back(1);
+      }
 
-          Tensor tmpL = Tl;
-          Tensor tmpR = Tr;
+      Tensor tmpL = Tl;
+      Tensor tmpR = Tr;
 
-          std::vector<cytnx_uint64> inv_mapperL, inv_mapperR;
-          std::vector<cytnx_uint64> oldshapeL, oldshapeR;
+      std::vector<cytnx_uint64> inv_mapperL, inv_mapperR;
+      std::vector<cytnx_uint64> oldshapeL, oldshapeR;
 
-          if (cacheL) {
-            // calculate reverse mapper:
-            inv_mapperL.resize(mapperL.size());
-            for (int i = 0; i < mapperL.size(); i++) {
-              inv_mapperL[mapperL[i]] = i;
-            }
-            tmpL.permute_(mapperL);
-            oldshapeL = tmpL.shape();
-            tmpL.reshape_({-1, comm_dim});
+      if (cacheL) {
+        // calculate reverse mapper:
+        inv_mapperL.resize(mapperL.size());
+        for (int i = 0; i < mapperL.size(); i++) {
+          inv_mapperL[mapperL[i]] = i;
+        }
+        tmpL.permute_(mapperL);
+        oldshapeL = tmpL.shape();
+        tmpL.reshape_({-1, comm_dim});
 
-          } else {
-            tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
-          }
-          if (cacheR) {
-            // calculate reverse mapper:
-            inv_mapperR.resize(mapperR.size());
-            for (int i = 0; i < mapperR.size(); i++) {
-              inv_mapperR[mapperR[i]] = i;
-            }
-            tmpR.permute_(mapperR);
-            oldshapeR = tmpR.shape();
-            tmpR.reshape_({comm_dim, -1});
+      } else {
+        tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
+      }
+      if (cacheR) {
+        // calculate reverse mapper:
+        inv_mapperR.resize(mapperR.size());
+        for (int i = 0; i < mapperR.size(); i++) {
+          inv_mapperR[mapperR[i]] = i;
+        }
+        tmpR.permute_(mapperR);
+        oldshapeR = tmpR.shape();
+        tmpR.reshape_({comm_dim, -1});
 
-          } else {
-            tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
-          }
+      } else {
+        tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
+      }
 
-          // permute!
-          // Tensor tmpL = Tl.permute(mapperL).reshape({-1,comm_dim});
-          // Tensor tmpR = Tr.permute(mapperR).reshape({comm_dim,-1});
+      // permute!
+      // Tensor tmpL = Tl.permute(mapperL).reshape({-1,comm_dim});
+      // Tensor tmpR = Tr.permute(mapperR).reshape({comm_dim,-1});
 
-          out = Matmul(tmpL, tmpR);
-          out.reshape_(new_shape);
+      out = Matmul(tmpL, tmpR);
+      out.reshape_(new_shape);
 
-          if (cacheL) {
-            tmpL.reshape_(oldshapeL);
-            tmpL.permute_(inv_mapperL);
-          }
-          if (cacheR) {
-            tmpR.reshape_(oldshapeR);
-            tmpR.permute_(inv_mapperR);
-          }
-
+      if (cacheL) {
+        tmpL.reshape_(oldshapeL);
+        tmpL.permute_(inv_mapperL);
+      }
+      if (cacheR) {
+        tmpR.reshape_(oldshapeR);
+        tmpR.permute_(inv_mapperR);
+      }
     }
 
-
 #ifdef UNI_GPU
-    void _Tensordot_cutn(Tensor &out, const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
-                     const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
-                     const bool &cacheR){
+    void _Tensordot_cutn(Tensor &out, const Tensor &Tl, const Tensor &Tr,
+                         const std::vector<cytnx_uint64> &idxl,
+                         const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
+                         const bool &cacheR) {
+      unsigned int t = Tl.dtype();
 
-          unsigned int t = Tl.dtype();
+      if (t == Type.Uint64 || t == Type.Int64 || t == Type.Uint16 || t == Type.Int16 ||
+          t == Type.Bool) {
+        cytnx_warning_msg(true, "Unsupported data type in cuTensor: %s, use default implementation",
+                          Type.Typeinfos[Tl.dtype()].name);
+        return _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
+      }
 
-          if (t == Type.Uint64 || 
-              t == Type.Int64 ||
-              t == Type.Uint16 ||
-              t == Type.Int16 ||
-              t == Type.Bool) {
-            cytnx_warning_msg(true, "Unsupported data type in cuTensor: %s, use default implementation", Type.Typeinfos[Tl.dtype()].name);
-            return _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
-          }
+      // checking + calculate comm_dim:
+      for (cytnx_uint64 i = 0; i < idxl.size(); i++) {
+        cytnx_error_msg(Tl.shape()[idxl[i]] != Tr.shape()[idxr[i]],
+                        "the index L=%d and R=%d have different dimension!\n", idxl[i], idxr[i]);
+      }
 
-          // checking + calculate comm_dim:
-          for (cytnx_uint64 i = 0; i < idxl.size(); i++) {
-            cytnx_error_msg(Tl.shape()[idxl[i]] != Tr.shape()[idxr[i]],
-                            "the index L=%d and R=%d have different dimension!\n", idxl[i], idxr[i]);
-          }
+      // check device:
+      cytnx_error_msg(Tl.device() != Tr.device(),
+                      "[Matmul] error two tensor should be on same device.%s", "\n");
 
-          // check device:
-          cytnx_error_msg(Tl.device() != Tr.device(),
-                          "[Matmul] error two tensor should be on same device.%s", "\n");
+      std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
+      std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
 
-          std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
-          std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
+      // calculate output shape:
+      std::vector<cytnx_uint64> new_shape(non_contract_l.size() + non_contract_r.size());
+      for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
+        new_shape[i] = Tl.shape()[non_contract_l[i]];
+      for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
+        new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
 
-          // calculate output shape:
-          std::vector<cytnx_uint64> new_shape(non_contract_l.size() + non_contract_r.size());
-          for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
-            new_shape[i] = Tl.shape()[non_contract_l[i]];
-          for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
-            new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
+      if (new_shape.size() == 0) {
+        new_shape.push_back(1);
+      }
 
-          if (new_shape.size() == 0) {
-            new_shape.push_back(1);
-          }
+      out.Init(new_shape, Tr.dtype(), Tr.device(), false);
 
-          out.Init(new_shape, Tr.dtype(), Tr.device(), false);
-
-          checkCudaErrors(cudaSetDevice(Tl.device()));
-          cytnx::linalg_internal::lii.cuTensordot_ii[Tl.dtype()](out, Tl, Tr, idxl, idxr);
-        }
+      checkCudaErrors(cudaSetDevice(Tl.device()));
+      cytnx::linalg_internal::lii.cuTensordot_ii[Tl.dtype()](out, Tl, Tr, idxl, idxr);
+    }
 #endif
 
     Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
@@ -160,26 +156,24 @@ namespace cytnx {
                         "\n");
       }
 
-
       Tensor out;
 
-      if(Tl.device() == Device.cpu){
-        _Tensordot_generic(out,Tl,Tr,idxl,idxr,cacheL,cacheR);
+      if (Tl.device() == Device.cpu) {
+        _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
 
-      }else{
-        #ifdef UNI_GPU
-            #ifdef UNI_CUTENSOR
-                _Tensordot_cutn(out,Tl,Tr,idxl,idxr,cacheL,cacheR);
-            #else
-                _Tensordot_generic(out,Tl,Tr,idxl,idxr,cacheL,cacheR);
-            #endif
-        #else
-            cytnx_error_msg(true,"calling GPU version of Tensordot without CUDA support!%s","\n");
-        #endif
+      } else {
+#ifdef UNI_GPU
+  #ifdef UNI_CUTENSOR
+        _Tensordot_cutn(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
+  #else
+        _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
+  #endif
+#else
+        cytnx_error_msg(true, "calling GPU version of Tensordot without CUDA support!%s", "\n");
+#endif
       }
 
       return out;
-
     }
 
   }  // namespace linalg

@@ -53,20 +53,21 @@ namespace cytnx {
 namespace cytnx {
   namespace linalg {
     void Pow_(UniTensor &Tin, const double &p) {
-      if(Tin.uten_type()==UTenType.Dense){
+      if (Tin.uten_type() == UTenType.Dense) {
         Tin.get_block_().Pow_(p);
-      }else if(Tin.uten_type() == UTenType.Block){
-        cytnx_error_msg(true,"[Pow_][BlockUniTensor] Currently disable and evaluating. This is unphysical operation and will destroy Symmetry structure.%s","\n");
-      }else{
+      } else if (Tin.uten_type() == UTenType.Block) {
+        cytnx_error_msg(true,
+                        "[Pow_][BlockUniTensor] Currently disable and evaluating. This is "
+                        "unphysical operation and will destroy Symmetry structure.%s",
+                        "\n");
+      } else {
         // cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
         auto tmp = Tin.get_blocks_();
         for (int i = 0; i < tmp.size(); i++) {
           tmp[i].Pow_(p);
         }
-      }//uten types
-
+      }  // uten types
     };
-
 
   }  // namespace linalg
 }  // namespace cytnx

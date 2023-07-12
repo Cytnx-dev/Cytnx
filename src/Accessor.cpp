@@ -119,10 +119,9 @@ namespace cytnx {
   // if _type is singl, pos will be pos, and len == 0
   void Accessor::get_len_pos(const cytnx_uint64 &dim, cytnx_uint64 &len,
                              std::vector<cytnx_uint64> &pos) const {
-    if(User_debug)
-        cytnx_error_msg(this->_type == Accessor::none, "%s",
-                        "[DEBUG][ERROR] try to call get_len from an un-initialize Accessor.");
-
+    if (User_debug)
+      cytnx_error_msg(this->_type == Accessor::none, "%s",
+                      "[DEBUG][ERROR] try to call get_len from an un-initialize Accessor.");
 
     pos.clear();
 

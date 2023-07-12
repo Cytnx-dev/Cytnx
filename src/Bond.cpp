@@ -8,13 +8,10 @@
 using namespace std;
 namespace cytnx {
   void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type) {
-
     cytnx_error_msg(dim == 0, "%s", "[ERROR] Bond_impl cannot have 0 or negative dimension.");
 
     this->_type = bd_type;
     this->_dim = dim;
-
-    
   }
 
   void Bond_impl::Init(const bondType &bd_type,
@@ -74,8 +71,8 @@ namespace cytnx {
     }
   }
 
-  void Bond_impl::force_combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp) {
-    
+  void Bond_impl::force_combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in,
+                                     const bool &is_grp) {
     // check:
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
                     "[ERROR] cannot combine two Bonds with differnet symmetry.");
@@ -102,16 +99,14 @@ namespace cytnx {
 
           for (cytnx_uint64 d = 0; d < Dnew_qnums; d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
-              if(bd_in->type() != this->type()){
-                this->_syms[i].combine_rule_(tmpqnum[i],
-                                           this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
-                                           this->_syms[i].reverse_rule(bd_in->_qnums[d % bd_in->_qnums.size()][i])
-                                          );
-              }else{
-                this->_syms[i].combine_rule_(tmpqnum[i],
-                                           this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
-                                           bd_in->_qnums[d % bd_in->_qnums.size()][i]
-                                          );
+              if (bd_in->type() != this->type()) {
+                this->_syms[i].combine_rule_(
+                  tmpqnum[i], this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
+                  this->_syms[i].reverse_rule(bd_in->_qnums[d % bd_in->_qnums.size()][i]));
+              } else {
+                this->_syms[i].combine_rule_(
+                  tmpqnum[i], this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
+                  bd_in->_qnums[d % bd_in->_qnums.size()][i]);
               }
             }
             if (QNpool.find(tmpqnum) == QNpool.end()) {
@@ -120,7 +115,7 @@ namespace cytnx {
               QNpool[tmpqnum].push_back(d);
             }
             new_degs[d] += this->_degs[cytnx_uint64(d / bd_in->_qnums.size())] *
-                          bd_in->_degs[d % bd_in->_qnums.size()];
+                           bd_in->_degs[d % bd_in->_qnums.size()];
           }
 
           // realloc & assign!
@@ -147,24 +142,21 @@ namespace cytnx {
 #endif
           for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
-                
-              if(bd_in->type() != this->type()){
-                this->_syms[i].combine_rule_(new_qnums[d][i],
-                                              this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
-                                              this->_syms[i].reverse_rule(bd_in->_qnums[d % bd_in->_qnums.size()][i])
-                                            );
-              }else{
-                this->_syms[i].combine_rule_(new_qnums[d][i],
-                                           this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
-                                           bd_in->_qnums[d % bd_in->_qnums.size()][i]);
-
+              if (bd_in->type() != this->type()) {
+                this->_syms[i].combine_rule_(
+                  new_qnums[d][i], this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
+                  this->_syms[i].reverse_rule(bd_in->_qnums[d % bd_in->_qnums.size()][i]));
+              } else {
+                this->_syms[i].combine_rule_(
+                  new_qnums[d][i], this->_qnums[cytnx_uint64(d / bd_in->_qnums.size())][i],
+                  bd_in->_qnums[d % bd_in->_qnums.size()][i]);
               }
             }
             new_degs[d] = this->_degs[cytnx_uint64(d / bd_in->_qnums.size())] *
                           bd_in->_degs[d % bd_in->_qnums.size()];
           }
 
-          //cytnx_warning_msg(true, "[WARNING] duplicated qnums might appears!%s", "\n");
+          // cytnx_warning_msg(true, "[WARNING] duplicated qnums might appears!%s", "\n");
           this->_degs = new_degs;
           this->_qnums = new_qnums;
         }
@@ -180,18 +172,15 @@ namespace cytnx {
 #endif
         for (cytnx_uint64 d = 0; d < this->_dim; d++) {
           for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
-            if(bd_in->type() != this->type()){
-                this->_syms[i].combine_rule_(new_qnums[d][i],
-                                             this->_qnums[cytnx_uint64(d / bd_in->dim())][i],
-                                             this->_syms[i].reverse_rule(bd_in->_qnums[d % bd_in->dim()][i])
-                                            );
-            }else{
-                this->_syms[i].combine_rule_(new_qnums[d][i],
-                                         this->_qnums[cytnx_uint64(d / bd_in->dim())][i],
-                                         bd_in->_qnums[d % bd_in->dim()][i]);
+            if (bd_in->type() != this->type()) {
+              this->_syms[i].combine_rule_(
+                new_qnums[d][i], this->_qnums[cytnx_uint64(d / bd_in->dim())][i],
+                this->_syms[i].reverse_rule(bd_in->_qnums[d % bd_in->dim()][i]));
+            } else {
+              this->_syms[i].combine_rule_(new_qnums[d][i],
+                                           this->_qnums[cytnx_uint64(d / bd_in->dim())][i],
+                                           bd_in->_qnums[d % bd_in->dim()][i]);
             }
-
-
           }
         }
         this->_qnums = new_qnums;
@@ -199,8 +188,6 @@ namespace cytnx {
 
     }  // check if symmetry.
   }
-
-
 
   void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp) {
     // check:
@@ -236,12 +223,12 @@ namespace cytnx {
                                            bd_in->_qnums[d % bd_in->_qnums.size()][i]);
             }
             if (QNpool.find(tmpqnum) == QNpool.end()) {
-              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({ static_cast<int>(d)})));
+              QNpool.insert(make_pair(tmpqnum, std::vector<cytnx_int32>({static_cast<int>(d)})));
             } else {
               QNpool[tmpqnum].push_back(d);
             }
             new_degs[d] += this->_degs[cytnx_uint64(d / bd_in->_qnums.size())] *
-                          bd_in->_degs[d % bd_in->_qnums.size()];
+                           bd_in->_degs[d % bd_in->_qnums.size()];
           }
 
           // realloc & assign!
@@ -330,45 +317,46 @@ namespace cytnx {
     return tmp_qnums;
   }
 
-  std::vector<cytnx_uint64> Bond_impl::group_duplicates_(){
-        // the map returns the new index from old index via
-        // new_index = return<cytnx_uint64>[old_index]
-        // [Note] this will sort QN from small to large   
+  std::vector<cytnx_uint64> Bond_impl::group_duplicates_() {
+    // the map returns the new index from old index via
+    // new_index = return<cytnx_uint64>[old_index]
+    // [Note] this will sort QN from small to large
 
-        if(this->_degs.size()){
-            auto mapper = vec_sort(this->_qnums,true);
-            auto tmp_degs = vec_map(this->_degs,mapper);
-            
-            cytnx_uint64 cnt = 0;
-            cytnx_uint64 loc = 0;
-            std::vector<cytnx_uint64> return_order(this->_qnums.size());
-            std::vector<cytnx_uint64> idx_erase;
-            std::vector<cytnx_int64> *last = &this->_qnums[0];
-            return_order[mapper[0]] = cnt;
-            for(int q=1;q<this->_qnums.size();q++){
-                if(this->_qnums[q] != *last){
-                    last = &this->_qnums[q];
-                    cnt ++;
-                    loc = q;    
-                }else{
-                    idx_erase.push_back(q);
-                    tmp_degs[loc] += tmp_degs[q];
-                    //std::cout << "add from loc" << q << " to " << cnt << std::endl;
-                }
-                return_order[mapper[q]] = cnt;
-            } 
-            this->_degs = tmp_degs;
-            //now, remove:
-            this->_qnums = vec_erase(this->_qnums,idx_erase);
-            vec_erase_(this->_degs,idx_erase);
+    if (this->_degs.size()) {
+      auto mapper = vec_sort(this->_qnums, true);
+      auto tmp_degs = vec_map(this->_degs, mapper);
 
-            return return_order;
-        }else{
-            cytnx_error_msg(true,"[ERROR] group_duplicates() only work for new Bond format and with symmetry!%s","\n");
-            return std::vector<cytnx_uint64>();
+      cytnx_uint64 cnt = 0;
+      cytnx_uint64 loc = 0;
+      std::vector<cytnx_uint64> return_order(this->_qnums.size());
+      std::vector<cytnx_uint64> idx_erase;
+      std::vector<cytnx_int64> *last = &this->_qnums[0];
+      return_order[mapper[0]] = cnt;
+      for (int q = 1; q < this->_qnums.size(); q++) {
+        if (this->_qnums[q] != *last) {
+          last = &this->_qnums[q];
+          cnt++;
+          loc = q;
+        } else {
+          idx_erase.push_back(q);
+          tmp_degs[loc] += tmp_degs[q];
+          // std::cout << "add from loc" << q << " to " << cnt << std::endl;
         }
-  }
+        return_order[mapper[q]] = cnt;
+      }
+      this->_degs = tmp_degs;
+      // now, remove:
+      this->_qnums = vec_erase(this->_qnums, idx_erase);
+      vec_erase_(this->_degs, idx_erase);
 
+      return return_order;
+    } else {
+      cytnx_error_msg(
+        true, "[ERROR] group_duplicates() only work for new Bond format and with symmetry!%s",
+        "\n");
+      return std::vector<cytnx_uint64>();
+    }
+  }
 
   cytnx_uint64 Bond_impl::getDegeneracy(const std::vector<cytnx_int64> &qnum,
                                         const bool &return_indices,
@@ -521,12 +509,12 @@ namespace cytnx {
       if (this->syms() != rhs.syms()) return false;
     }
 
-    if(this->_impl->_degs.size()){
-        if(this->_impl->_degs != rhs._impl->_degs) return false;
-        if (this->_impl->_qnums != rhs._impl->_qnums) return false; 
-    }else{
-        if (User_debug)
-          if (this->_impl->_qnums != rhs._impl->_qnums) return false;
+    if (this->_impl->_degs.size()) {
+      if (this->_impl->_degs != rhs._impl->_degs) return false;
+      if (this->_impl->_qnums != rhs._impl->_qnums) return false;
+    } else {
+      if (User_debug)
+        if (this->_impl->_qnums != rhs._impl->_qnums) return false;
     }
     return true;
   }
@@ -685,8 +673,6 @@ namespace cytnx {
       }
     }
   }
-
-
 
   std::ostream &operator<<(std::ostream &os, const Bond &bin) {
     char *buffer = (char *)malloc(sizeof(char) * 256);

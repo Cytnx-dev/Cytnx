@@ -6,14 +6,13 @@
 
 #ifdef UNI_MAGMA
   #include "magma_v2.h"
-#endif 
+#endif
 
 using namespace std;
 namespace cytnx {
 
-
   Device_class::Device_class() : Ngpus(0), Ncpus(1) {
-     //cout << "init_device class!" << endl;
+    // cout << "init_device class!" << endl;
 #ifdef UNI_GPU
 
     // get all available gpus
@@ -23,7 +22,7 @@ namespace cytnx {
     // check can Peer Access, if can, open PCIE access to increase bandwidth
     //  Enable Peer Access when it's possible:
     //  https://stackoverflow.com/questions/31628041/how-to-copy-memory-between-different-gpus-in-cuda
-    int cAP=0;
+    int cAP = 0;
     vector<int> isopen(Ngpus);
     for (int i = 0; i < Ngpus; i++) {
       CanAccessPeer[i][i] = 1;
@@ -46,9 +45,9 @@ namespace cytnx {
 
     // #ifdef UNI_MAGMA
     //     int magma_status = magma_init();
-    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot initialize!%s","\n");
+    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot
+    //     initialize!%s","\n");
     // #endif
-
 
 #endif
 
@@ -65,10 +64,10 @@ namespace cytnx {
   Device_class::~Device_class(){
     // #ifdef UNI_MAGMA
     //     int magma_status = magma_finalize();
-    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot finalize!%s","\n");
+    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot
+    //     finalize!%s","\n");
     // #endif
   };
-
 
   string Device_class::getname(const int& device_id) {
     if (device_id == this->cpu) {

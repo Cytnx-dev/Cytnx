@@ -18,17 +18,16 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-void symmetry_binding(py::module &m){
+void symmetry_binding(py::module &m) {
   py::enum_<__sym::__stype>(m, "SymType")
     .value("Z", __sym::__stype::Z)
     .value("U", __sym::__stype::U)
     .export_values();
 
   py::class_<Qs>(m, "_cQs")
-    .def(py::init< const std::vector<cytnx_int64> >(), py::arg("qin"))
-    .def("__rshift__", [](Qs &self, const cytnx_uint64 &dim){
-                            return self>>dim;
-                        }, py::arg("dim"));
+    .def(py::init<const std::vector<cytnx_int64>>(), py::arg("qin"))
+    .def(
+      "__rshift__", [](Qs &self, const cytnx_uint64 &dim) { return self >> dim; }, py::arg("dim"));
 
   py::class_<Symmetry>(m, "Symmetry")
     // construction
@@ -46,14 +45,15 @@ void symmetry_binding(py::module &m){
     .def("__eq__", &Symmetry::operator==)
     .def("check_qnum", &Symmetry::check_qnum, py::arg("qnum"))
     .def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
-    .def("combine_rule", [](Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse){
-                            return self.combine_rule(inL,inR,is_reverse);
-                         }, py::arg("qnL"), py::arg("qnR"),py::arg("is_reverse")=false)
-    .def("reverse_rule", [](Symmetry &self, const cytnx_int64 &qin){
-                            return self.reverse_rule(qin);
-                         }, py::arg("qin"))
- 
-
+    .def(
+      "combine_rule",
+      [](Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse) {
+        return self.combine_rule(inL, inR, is_reverse);
+      },
+      py::arg("qnL"), py::arg("qnR"), py::arg("is_reverse") = false)
+    .def(
+      "reverse_rule", [](Symmetry &self, const cytnx_int64 &qin) { return self.reverse_rule(qin); },
+      py::arg("qin"))
 
     .def(
       "Save", [](Symmetry &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
@@ -72,6 +72,4 @@ void symmetry_binding(py::module &m){
     //.def("check_qnum", &Symmetry::check_qnum,py::arg("qnum"))
     //.def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
     ;
-
-  
 }

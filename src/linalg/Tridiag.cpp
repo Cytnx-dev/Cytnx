@@ -69,7 +69,6 @@ namespace cytnx {
         return out;
 
       } else {
-
         auto _in_diag = in_diag.to(Device.cpu);
         auto _s_diag = s_diag.to(Device.cpu);
 
@@ -89,7 +88,6 @@ namespace cytnx {
           if (!is_row) out.back().permute_(1, 0);
         }
       }
-
     };
 
   }  // namespace linalg

@@ -60,88 +60,99 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
   self.set(accessors, rc);
 }
 
+void tensor_binding(py::module &m) {
+  py::class_<cytnx::Tensor>(m, "Tensor")
+    .def(
+      "numpy",
+      [](Tensor &self, const bool &share_mem) -> py::array {
+        // device on GPU? move to cpu:ref it;
+        Tensor tmpIN;
+        if (self.device() >= 0) {
+          if (share_mem) {
+            cytnx_error_msg(true,
+                            "[ERROR] the Tensor is on GPU. to have share_mem=True, move the Tensor "
+                            "back to CPU by .to(Device.cpu).%s",
+                            "\n");
+          } else {
+            tmpIN = self.to(Device.cpu);
+          }
+        } else {
+          tmpIN = self;
+        }
+        if (tmpIN.is_contiguous()) {
+          if (share_mem)
+            tmpIN = self;
+          else
+            tmpIN = self.clone();
+        } else {
+          if (share_mem) {
+            cytnx_error_msg(true,
+                            "[ERROR] calling numpy(share_mem=true) require the current Tensor is "
+                            "contiguous. \n Call contiguous() first before convert to numpy.%s",
+                            "\n");
+          } else
+            tmpIN = self.contiguous();
+        }
 
-void tensor_binding(py::module &m){
-    py::class_<cytnx::Tensor>(m, "Tensor")
-    .def("numpy",
-         [](Tensor &self, const bool &share_mem) -> py::array {
-           // device on GPU? move to cpu:ref it;
-           Tensor tmpIN;
-           if (self.device() >= 0) {
-             if(share_mem){
-                cytnx_error_msg(true,"[ERROR] the Tensor is on GPU. to have share_mem=True, move the Tensor back to CPU by .to(Device.cpu).%s","\n");
-             }else{
-                tmpIN = self.to(Device.cpu);
-             }
-           } else {
-             tmpIN = self;
-           }
-           if (tmpIN.is_contiguous()){
-             if(share_mem) tmpIN = self;
-             else tmpIN = self.clone();
-           }else{
-             if(share_mem){ cytnx_error_msg(true,"[ERROR] calling numpy(share_mem=true) require the current Tensor is contiguous. \n Call contiguous() first before convert to numpy.%s","\n"); }
-             else tmpIN = self.contiguous();
-           }
+        // calculate stride:
+        std::vector<ssize_t> stride(tmpIN.shape().size());
+        std::vector<ssize_t> shape(tmpIN.shape().begin(), tmpIN.shape().end());
+        ssize_t accu = 1;
+        for (int i = shape.size() - 1; i >= 0; i--) {
+          stride[i] = accu * Type.typeSize(tmpIN.dtype());
+          accu *= shape[i];
+        }
+        py::buffer_info npbuf;
+        std::string chr_dtype;
+        if (tmpIN.dtype() == Type.ComplexDouble) {
+          chr_dtype = py::format_descriptor<cytnx_complex128>::format();
+        } else if (tmpIN.dtype() == Type.ComplexFloat) {
+          chr_dtype = py::format_descriptor<cytnx_complex64>::format();
+        } else if (tmpIN.dtype() == Type.Double) {
+          chr_dtype = py::format_descriptor<cytnx_double>::format();
+        } else if (tmpIN.dtype() == Type.Float) {
+          chr_dtype = py::format_descriptor<cytnx_float>::format();
+        } else if (tmpIN.dtype() == Type.Uint64) {
+          chr_dtype = py::format_descriptor<cytnx_uint64>::format();
+        } else if (tmpIN.dtype() == Type.Int64) {
+          chr_dtype = py::format_descriptor<cytnx_int64>::format();
+        } else if (tmpIN.dtype() == Type.Uint32) {
+          chr_dtype = py::format_descriptor<cytnx_uint32>::format();
+        } else if (tmpIN.dtype() == Type.Int32) {
+          chr_dtype = py::format_descriptor<cytnx_int32>::format();
+        } else if (tmpIN.dtype() == Type.Bool) {
+          chr_dtype = py::format_descriptor<cytnx_bool>::format();
+        } else {
+          cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s", "\n");
+        }
 
-           // calculate stride:
-           std::vector<ssize_t> stride(tmpIN.shape().size());
-           std::vector<ssize_t> shape(tmpIN.shape().begin(), tmpIN.shape().end());
-           ssize_t accu = 1;
-           for (int i = shape.size() - 1; i >= 0; i--) {
-             stride[i] = accu * Type.typeSize(tmpIN.dtype());
-             accu *= shape[i];
-           }
-           py::buffer_info npbuf;
-           std::string chr_dtype;
-           if (tmpIN.dtype() == Type.ComplexDouble) {
-             chr_dtype = py::format_descriptor<cytnx_complex128>::format();
-           } else if (tmpIN.dtype() == Type.ComplexFloat) {
-             chr_dtype = py::format_descriptor<cytnx_complex64>::format();
-           } else if (tmpIN.dtype() == Type.Double) {
-             chr_dtype = py::format_descriptor<cytnx_double>::format();
-           } else if (tmpIN.dtype() == Type.Float) {
-             chr_dtype = py::format_descriptor<cytnx_float>::format();
-           } else if (tmpIN.dtype() == Type.Uint64) {
-             chr_dtype = py::format_descriptor<cytnx_uint64>::format();
-           } else if (tmpIN.dtype() == Type.Int64) {
-             chr_dtype = py::format_descriptor<cytnx_int64>::format();
-           } else if (tmpIN.dtype() == Type.Uint32) {
-             chr_dtype = py::format_descriptor<cytnx_uint32>::format();
-           } else if (tmpIN.dtype() == Type.Int32) {
-             chr_dtype = py::format_descriptor<cytnx_int32>::format();
-           } else if (tmpIN.dtype() == Type.Bool) {
-             chr_dtype = py::format_descriptor<cytnx_bool>::format();
-           } else {
-             cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s",
-                             "\n");
-           }
-
-           npbuf = py::buffer_info(tmpIN.storage()._impl->Mem,  // ptr
-                                   Type.typeSize(tmpIN.dtype()),  // size of elem
-                                   chr_dtype,  // pss format
-                                   tmpIN.rank(),  // rank
-                                   shape,  // shape
-                                   stride  // stride
-           );
-           py::array out(npbuf);
-           // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to
-           // free.
-           if(share_mem==false){
-            void *pswap = malloc(sizeof(bool));
-            tmpIN.storage()._impl->Mem = pswap;
-           }
-           return out;
-         },py::arg("share_mem")=false)
+        npbuf = py::buffer_info(tmpIN.storage()._impl->Mem,  // ptr
+                                Type.typeSize(tmpIN.dtype()),  // size of elem
+                                chr_dtype,  // pss format
+                                tmpIN.rank(),  // rank
+                                shape,  // shape
+                                stride  // stride
+        );
+        py::array out(npbuf);
+        // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to
+        // free.
+        if (share_mem == false) {
+          void *pswap = malloc(sizeof(bool));
+          tmpIN.storage()._impl->Mem = pswap;
+        }
+        return out;
+      },
+      py::arg("share_mem") = false)
     // construction
     .def(py::init<>())
     .def(py::init<const cytnx::Tensor &>())
-    .def(py::init<const std::vector<cytnx::cytnx_uint64> &, const unsigned int &, int, const bool &>(),
-         py::arg("shape"), py::arg("dtype") = (cytnx_uint64)cytnx::Type.Double,
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero")=true)
+    .def(
+      py::init<const std::vector<cytnx::cytnx_uint64> &, const unsigned int &, int, const bool &>(),
+      py::arg("shape"), py::arg("dtype") = (cytnx_uint64)cytnx::Type.Double,
+      py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("Init", &cytnx::Tensor::Init, py::arg("shape"),
          py::arg("dtype") = (cytnx_uint64)cytnx::Type.Double,
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero")=true)
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("dtype", &cytnx::Tensor::dtype)
     .def("dtype_str", &cytnx::Tensor::dtype_str)
     .def("device", &cytnx::Tensor::device)
@@ -965,6 +976,5 @@ void tensor_binding(py::module &m){
     .def("Norm", &cytnx::Tensor::Norm)
     .def("Trace", &cytnx::Tensor::Trace)
 
-    ; //end of object line
-
+    ;  // end of object line
 }

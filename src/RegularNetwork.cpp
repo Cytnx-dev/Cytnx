@@ -109,7 +109,8 @@ namespace cytnx {
     lbls.clear();
     // vector<string> tmp = str_split(line, false, ";");
     // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-    //                 "Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1> "
+    //                 "Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1>
+    //                 "
     //                 "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
 
     // // handle col-space lbl
@@ -119,7 +120,8 @@ namespace cytnx {
     // for (cytnx_uint64 i = 0; i < ket_lbls.size(); i++) {
     //   string tmp = str_strip(ket_lbls[i]);
     //   cytnx_error_msg(tmp.length() == 0,
-    //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s", line_num,
+    //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s",
+    //                   line_num,
     //                   "\n");
     //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
     //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
@@ -138,7 +140,7 @@ namespace cytnx {
     //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
     //                   line_num, "\n");
 
-    //   // tri(tmp.c_str()); 
+    //   // tri(tmp.c_str());
 
     //   // cout << tmp.size() << endl;
     //   // cout << tmp.find_first_not_of("0123456789-") << endl;
@@ -806,8 +808,11 @@ namespace cytnx {
     return out;
   }
 
-  void RegularNetwork::construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim) {
-    for(int i = 0; i < alias.size(); i++){
+  void RegularNetwork::construct(const std::vector<std::string> &alias,
+                                 const std::vector<std::vector<std::string>> &lbls,
+                                 const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
+                                 const std::string &order, const bool optim) {
+    for (int i = 0; i < alias.size(); i++) {
       this->names.push_back(alias[i]);
       this->name2pos[alias[i]] = names.size() - 1;  // register
       cytnx_uint64 tmp_iBN = lbls[i].size();
@@ -838,7 +843,7 @@ namespace cytnx {
         }
         cytnx_error_msg(true, "%s", "\n");
       }
-    }// check all RN.
+    }  // check all RN.
 
     cytnx_error_msg(
       this->names.size() < 2,
@@ -864,11 +869,11 @@ namespace cytnx {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
     // std::cout<<this->TOUT_labels.size();
-    if(this->TOUT_labels.size() == 0){
+    if (this->TOUT_labels.size() == 0) {
       // std::cout<<expected_TOUT;
       this->TOUT_labels = expected_TOUT;
       // std::cout<<this->TOUT_labels;
-    }else{
+    } else {
       // std::cout<<this->TOUT_labels;
       bool err = false;
       if (expected_TOUT.size() != TOUT_labels.size()) {

@@ -17,7 +17,8 @@ namespace cytnx {
       } else {
 #ifdef UNI_GPU
         // cytnx::algo_internal::aii.cuSort_ii[out.dtype()](out._impl->storage()._impl,
-        //                                                  out.shape().back(), out.storage().size());
+        //                                                  out.shape().back(),
+        //                                                  out.storage().size());
         cytnx_error_msg(true, "[Developing] Sort.%s", "\n");
 #else
         cytnx_error_msg(true, "[Svd] fatal error,%s",

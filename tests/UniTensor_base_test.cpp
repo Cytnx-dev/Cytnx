@@ -13,5 +13,3 @@ TEST_F(UniTensor_baseTest, get_index) {
   std::cout << utzero345.get_index("ABCa") << std::endl;
   std::cout << utzero345.get_index("") << std::endl;
 }
-
-

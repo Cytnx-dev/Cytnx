@@ -5,7 +5,7 @@ cout << A << endl;
 
 A.Tofile("S1");
 
-//load
-auto B = cytnx::Storage::Fromfile("S1",cytnx::Type.Double);
+// load
+auto B = cytnx::Storage::Fromfile("S1", cytnx::Type.Double);
 
 cout << B << endl;

@@ -18,13 +18,12 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-void network_binding(py::module &m){
+void network_binding(py::module &m) {
   py::enum_<__ntwk::__nttype>(m, "NtType")
     .value("Regular", __ntwk::__nttype::Regular)
     .value("Fermion", __ntwk::__nttype::Fermion)
     .value("Void", __ntwk::__nttype::Void)
     .export_values();
-
 
   py::class_<Network>(m, "Network")
     .def(py::init<>())
@@ -51,16 +50,16 @@ void network_binding(py::module &m){
     .def("Savefile", &Network::Savefile, py::arg("fname"))
     .def(
       "PutUniTensor",
-      [](Network &self, const std::string &name, const UniTensor &utensor, const std::vector<std::string> &lbl_order) {
-        self.PutUniTensor(name, utensor,lbl_order);
+      [](Network &self, const std::string &name, const UniTensor &utensor,
+         const std::vector<std::string> &lbl_order) {
+        self.PutUniTensor(name, utensor, lbl_order);
       },
       py::arg("name"), py::arg("utensor"), py::arg("lbl_order") = std::vector<std::string>())
     .def(
       "PutUniTensor",
-      [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor, const std::vector<std::string> &lbl_order) {
-        self.PutUniTensor(idx, utensor,lbl_order);
-      },
-      py::arg("idx"), py::arg("utensor"),py::arg("lbl_order") = std::vector<std::string>())
+      [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor,
+         const std::vector<std::string> &lbl_order) { self.PutUniTensor(idx, utensor, lbl_order); },
+      py::arg("idx"), py::arg("utensor"), py::arg("lbl_order") = std::vector<std::string>())
     .def(
       "PutUniTensors",
       [](Network &self, const std::vector<std::string> &names,
@@ -71,7 +70,9 @@ void network_binding(py::module &m){
     .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",
          py::arg("network_type") = (int)NtType.Regular)
 
-    .def("construct", &Network::construct,py::arg("alias"), py::arg("lbls"), py::arg("outlbl")=std::vector<std::string>(), py::arg("outrk"), py::arg("order")="", py::arg("optim")=false, py::arg("network_type")=(int)NtType.Regular)
+    .def("construct", &Network::construct, py::arg("alias"), py::arg("lbls"),
+         py::arg("outlbl") = std::vector<std::string>(), py::arg("outrk"), py::arg("order") = "",
+         py::arg("optim") = false, py::arg("network_type") = (int)NtType.Regular)
 
     .def("clear", &Network::clear)
     .def("clone", &Network::clone)
@@ -93,9 +94,6 @@ void network_binding(py::module &m){
       },
       py::arg("utensors"), py::arg("Tout"), py::arg("alias") = std::vector<std::string>(),
       py::arg("contract_order") = std::string(""))
-      
-    ;// end of object line
 
-  
-  
+    ;  // end of object line
 }

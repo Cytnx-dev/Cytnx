@@ -8,7 +8,8 @@ using namespace cytnx;
 
 namespace cytnx {
   //+++++++++++++++++++
-  void FloatStorage::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
+  void FloatStorage::Init(const unsigned long long &len_in, const int &device,
+                          const bool &init_zero) {
     // cout << "Float.init" << endl;
     // check:
     this->len = len_in;
@@ -24,8 +25,10 @@ namespace cytnx {
     }
 
     if (device == Device.cpu) {
-      if(init_zero) this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(float));
-      else this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(float));
+      if (init_zero)
+        this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(float));
+      else
+        this->Mem = utils_internal::Malloc_cpu(this->cap * sizeof(float));
     } else {
 #ifdef UNI_GPU
       cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");

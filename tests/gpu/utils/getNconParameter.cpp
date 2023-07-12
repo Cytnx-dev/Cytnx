@@ -48,7 +48,8 @@ pair<vector<UniTensor>, vector<vector<cytnx_int64>>> getNconParameter(string fil
     }
     T.reshape_(bond);
     UniTensor uT =
-      UniTensor(T, false, 0).to(cytnx::Device.cuda);  // The UniTensors in output.txt are rowrank zero UniTensors
+      UniTensor(T, false, 0)
+        .to(cytnx::Device.cuda);  // The UniTensors in output.txt are rowrank zero UniTensors
     uTs.pb(uT);
   }
   rep(i, 0, n) {

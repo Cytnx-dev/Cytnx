@@ -11,51 +11,47 @@ using namespace std;
 namespace cytnx {
   // these three are internal functions:
 
-  void _parse_task_line_(string line, vector<vector<pair<string, string>>>& table, vector<std::string>& names, map<string, cytnx_uint64>& name2pos, int i){
+  void _parse_task_line_(string line, vector<vector<pair<string, string>>> &table,
+                         vector<std::string> &names, map<string, cytnx_uint64> &name2pos, int i) {
+    vector<string> tmpvs, tmpvs_;
+    tmpvs = str_split(line, false, "-");  // note that checking empty string!
 
-        vector<string> tmpvs, tmpvs_;
-        tmpvs = str_split(line, false, "-");  // note that checking empty string!
+    cytnx_error_msg(tmpvs.size() != 2, "[ERROR][Gncon] invalid line in Gncon file at line: %d. \n",
+                    i);
 
-        cytnx_error_msg(tmpvs.size() != 2,
-                        "[ERROR][Gncon] invalid line in Gncon file at line: %d. \n", i);
+    for (int j = 0; j < 2; j++) {
+      tmpvs[j] = str_strip(tmpvs[j]);  // remove spaces
 
-        for(int j=0; j<2; j++){
+      // A valid line should contain ':'
+      cytnx_error_msg(
+        tmpvs[j].find_first_of(":") == string::npos,
+        "[ERROR][Gncon][Fromfile] invalid Gncon description at line: %d. should contain \':\'", i);
+      vector<string> task;
+      tmpvs_ = str_split(tmpvs[j], false, ":");  // note that checking empty string!
 
+      cytnx_error_msg(tmpvs_.size() != 2,
+                      "[ERROR][Gncon] invalid line in Gncon file at line: %d. \n", i);
 
-          tmpvs[j] = str_strip(tmpvs[j]);  // remove spaces
+      tmpvs_[0] = str_strip(tmpvs_[0]);  // remove spaces
+      tmpvs_[1] = str_strip(tmpvs_[1]);  // remove spaces
 
-          // A valid line should contain ':'
-          cytnx_error_msg(
-            tmpvs[j].find_first_of(":") == string::npos,
-            "[ERROR][Gncon][Fromfile] invalid Gncon description at line: %d. should contain \':\'",
-            i);
-          vector<string> task;
-          tmpvs_ = str_split(tmpvs[j], false, ":");  // note that checking empty string!
+      // check if name contain invalid keyword or not assigned.
+      cytnx_error_msg(tmpvs_[0].length() == 0,
+                      "[ERROR][Gncon][Fromfile] invalid tensor name at line: %d\n", i);
 
-          cytnx_error_msg(tmpvs_.size() != 2,
-                          "[ERROR][Gncon] invalid line in Gncon file at line: %d. \n", i);
-
-          tmpvs_[0] = str_strip(tmpvs_[0]); // remove spaces
-          tmpvs_[1] = str_strip(tmpvs_[1]); // remove spaces
-
-          // check if name contain invalid keyword or not assigned.
-          cytnx_error_msg(tmpvs_[0].length() == 0,
-                          "[ERROR][Gncon][Fromfile] invalid tensor name at line: %d\n", i);
-
-          // check if name not exist:
-          if (name2pos.find(tmpvs_[0]) == name2pos.end()){
-            names.push_back(tmpvs_[0]);
-            table.push_back(vector<pair<string, string>>());
-            // rep_labels.push_back(vector<pair<string, string>>());
-            name2pos[tmpvs_[0]] = names.size()-1;  // register
-          }
-          // std::cout<<"table size : "<<table.size()<<std::endl;
-          // std::cout<<"index : "<<name2pos[tmpvs_[0]]<<std::endl;
-          pair<string, string> ptmp(tmpvs_[1], "/"+to_string(i));
-          // table[i] =  i-th tensor's leg names to be contracted, and its target labels. 
-          table[name2pos[tmpvs_[0]]].push_back(ptmp);
-        }
-      
+      // check if name not exist:
+      if (name2pos.find(tmpvs_[0]) == name2pos.end()) {
+        names.push_back(tmpvs_[0]);
+        table.push_back(vector<pair<string, string>>());
+        // rep_labels.push_back(vector<pair<string, string>>());
+        name2pos[tmpvs_[0]] = names.size() - 1;  // register
+      }
+      // std::cout<<"table size : "<<table.size()<<std::endl;
+      // std::cout<<"index : "<<name2pos[tmpvs_[0]]<<std::endl;
+      pair<string, string> ptmp(tmpvs_[1], "/" + to_string(i));
+      // table[i] =  i-th tensor's leg names to be contracted, and its target labels.
+      table[name2pos[tmpvs_[0]]].push_back(ptmp);
+    }
   }
 
   void _parse_ORDER_line_(vector<string> &tokens, const string &line,
@@ -79,13 +75,14 @@ namespace cytnx {
     cytnx_error_msg(tokens.size() == 0, "[ERROR][Gncon][Fromfile] line:%d invalid ORDER line.%s",
                     line_num, "\n");
   }
-  void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum, vector<vector<pair<string,string>>>& table,
-                        map<string, cytnx_uint64> name2pos, const string &line, const cytnx_uint64 &line_num) {
-
+  void _parse_TOUT_line_(vector<cytnx_int64> &lbls, cytnx_uint64 &TOUT_iBondNum,
+                         vector<vector<pair<string, string>>> &table,
+                         map<string, cytnx_uint64> name2pos, const string &line,
+                         const cytnx_uint64 &line_num) {
     // A:a->b,c->d ; B:b,c
 
     vector<string> tmp = str_split(line, false, ";");
-    for(int i = 0; i < tmp.size(); i++){
+    for (int i = 0; i < tmp.size(); i++) {
       tmp[i] = str_strip(tmp[i]);  // remove spaces
       vector<string> tmp_ = str_split(tmp[i], false, "/");
       string name = str_strip(tmp_[0]);
@@ -94,15 +91,15 @@ namespace cytnx {
       // std::cout<<"content = "<<content<<std::endl;
       vector<string> reps = str_split(content, false, ",");
       int tidx = name2pos[name];
-      for(int j = 0; j < reps.size(); j++){
+      for (int j = 0; j < reps.size(); j++) {
         reps[j] = str_strip(reps[j]);  // remove spaces
         vector<string> ls = str_split(reps[j], false, ">");
-        ls[0] =  str_strip(ls[0]); // remove spaces
-        ls[1] =  str_strip(ls[1]); // remove spaces
-        pair<string, string> tmp(ls[0],ls[1]);
+        ls[0] = str_strip(ls[0]);  // remove spaces
+        ls[1] = str_strip(ls[1]);  // remove spaces
+        pair<string, string> tmp(ls[0], ls[1]);
         // std::cout<<"ls[0] = "<<ls[0]<<"ls[1] = "<<ls[1]<<std::endl;
         table[tidx].push_back(tmp);
-      } 
+      }
     }
 
     // // handle col-space lbl
@@ -138,16 +135,18 @@ namespace cytnx {
   }
 
   /// This is debug function
-  void print_gn(std::vector<vector<pair<string, string>>>& table, vector<string>& names, map<string, cytnx_uint64>& name2pos) {
-    std::cout<<"### table  ###"<<std::endl;
-    for(int i = 0;i<table.size();i++){
-      for(int j = 0; j<table[i].size(); j++){
-        std::cout<<"original lbl, replaced lbl =  "<<table[i][j].first<<" ,"<<table[i][j].second<<std::endl;
+  void print_gn(std::vector<vector<pair<string, string>>> &table, vector<string> &names,
+                map<string, cytnx_uint64> &name2pos) {
+    std::cout << "### table  ###" << std::endl;
+    for (int i = 0; i < table.size(); i++) {
+      for (int j = 0; j < table[i].size(); j++) {
+        std::cout << "original lbl, replaced lbl =  " << table[i][j].first << " ,"
+                  << table[i][j].second << std::endl;
       }
     }
-    std::cout<<"### tensor names  ###"<<std::endl;
-    for(int i = 0;i<names.size();i++){
-        std::cout<<names[i]<<" pos : "<<name2pos[names[i]]<<std::endl;
+    std::cout << "### tensor names  ###" << std::endl;
+    for (int i = 0; i < names.size(); i++) {
+      std::cout << names[i] << " pos : " << name2pos[names[i]] << std::endl;
     }
   }
 
@@ -162,9 +161,9 @@ namespace cytnx {
     }
   }
 
-  void RegularGncon::Contract_plan(const std::vector<UniTensor> &utensors,
-                                     const std::string &Tout, const std::vector<std::string> &alias,
-                                     const std::string &contract_order) {
+  void RegularGncon::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
+                                   const std::vector<std::string> &alias,
+                                   const std::string &contract_order) {
     // cytnx_error_msg(utensors.size() < 2,
     //                 "[ERROR][Gncon] invalid Gncon. Should have at least 2 tensors defined.%s",
     //                 "\n");
@@ -172,14 +171,15 @@ namespace cytnx {
     // if (contract_order.length()) {
     //   // checing if alias is set!
     //   cytnx_error_msg(alias.size() == 0,
-    //                   "[ERRPR] conraction_order need to be specify using alias name, so alias name "
-    //                   "have to be assigned!%s",
+    //                   "[ERRPR] conraction_order need to be specify using alias name, so alias
+    //                   name " "have to be assigned!%s",
     //                   "\n");
     // }
 
     // if (alias.size())
     //   cytnx_error_msg(utensors.size() != alias.size(),
-    //                   "[ERROR] alias of UniTensor need to be assigned for all utensors.%s", "\n");
+    //                   "[ERROR] alias of UniTensor need to be assigned for all utensors.%s",
+    //                   "\n");
 
     // bool isORDER_exist = false;
     // // reading
@@ -299,9 +299,8 @@ namespace cytnx {
   }
 
   void RegularGncon::FromString(const std::vector<std::string> &contents) {
-
     // "A:a-B:b","B:d-A:k"
-    
+
     this->clear();
 
     string line;
@@ -312,16 +311,15 @@ namespace cytnx {
     for (int i = 0; i < contents.size(); i++) {
       vector<string> task;
       line = contents[i];
-      line = str_strip(line, "\n"); // remove leading and ending /n
-      line = str_strip(line); // remove leading and ending spaces and tab
+      line = str_strip(line, "\n");  // remove leading and ending /n
+      line = str_strip(line);  // remove leading and ending spaces and tab
       if (line.length() == 0) continue;  // blank line
       if (line.at(0) == '#') continue;  // comment whole line.
 
       // remove any comment at eol :
       line = str_split(line, true, "#")[0];  // remove comment on end.
       // std::cout<<line<<std::endl;
-      if(line.find_first_of("-") == string::npos){
-
+      if (line.find_first_of("-") == string::npos) {
         // Not a contraction line, should be either ORDER or TOUT
 
         tmpvs = str_split(line, false, ":");  // note that checking empty string!
@@ -339,25 +337,26 @@ namespace cytnx {
           }
         } else if (command == "TOUT") {
           // if content has length, then pass to process.
-          if (content.length()){
+          if (content.length()) {
             // this is an internal function that is defined in this cpp file.
-            _parse_TOUT_line_(this->TOUT_labels, this->TOUT_iBondNum, this->table, this->name2pos, content, i);
+            _parse_TOUT_line_(this->TOUT_labels, this->TOUT_iBondNum, this->table, this->name2pos,
+                              content, i);
           }
-          
+
         } else {
-          cytnx_error_msg(true,"[ERROR][Gncon] invalid line in Gncon file at line: %d. \n", i);
+          cytnx_error_msg(true, "[ERROR][Gncon] invalid line in Gncon file at line: %d. \n", i);
         }
 
-      }else{
+      } else {
         // Is a cotraction task line!
-          _parse_task_line_(line, this->table, this->names, this->name2pos, i);
-      } // end line.find_first_of("-") == string::npos
+        _parse_task_line_(line, this->table, this->names, this->name2pos, i);
+      }  // end line.find_first_of("-") == string::npos
 
-    }// end for i loop
+    }  // end for i loop
 
     // cytnx_error_msg(lnum>=MAXLINES,"[ERROR][Gncon][Fromfile] Gncon file exceed the maxinum
     // allowed lines, MAXLINES=1024%s","\n");
-    
+
     cytnx_error_msg(
       this->names.size() < 2,
       "[ERROR][Gncon][Fromfile] invalid Gncon file. Should have at least 2 tensors defined.%s",
@@ -373,10 +372,9 @@ namespace cytnx {
       _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {
         auto it = std::find(TN_names.begin(), TN_names.end(), this->names[i]);
-        cytnx_error_msg(
-          it == std::end(TN_names),
-          "[ERROR][Gncon][Fromfile] TN: <%s> defined but is not used in ORDER line\n",
-          this->names[i].c_str());
+        cytnx_error_msg(it == std::end(TN_names),
+                        "[ERROR][Gncon][Fromfile] TN: <%s> defined but is not used in ORDER line\n",
+                        this->names[i].c_str());
         TN_names.erase(it);
       }
       if (TN_names.size() != 0) {
@@ -430,7 +428,7 @@ namespace cytnx {
   }
 
   void RegularGncon::PutUniTensors(const std::vector<string> &names,
-                                     const std::vector<UniTensor> &utensors) {
+                                   const std::vector<UniTensor> &utensors) {
     cytnx_error_msg(names.size() != utensors.size(),
                     "[ERROR][RegularGncon][PutUniTensors] total number of names does not match "
                     "number of input UniTensors.%s",
@@ -438,7 +436,6 @@ namespace cytnx {
     for (int i = 0; i < names.size(); i++) {
       this->PutUniTensor(names[i], utensors[i]);
     }
-    
   }
 
   void RegularGncon::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
@@ -463,7 +460,7 @@ namespace cytnx {
     // this->is_contracted[idx].resize(utensor.rank());
 
     // update label_arr: update
-    for(int i = 0; i < this->table[idx].size(); i++){
+    for (int i = 0; i < this->table[idx].size(); i++) {
       pair<string, string> tmp = this->table[idx][i];
       int utidx = utensor.get_index(tmp.first);
       this->label_arr[idx][utidx] = tmp.second;
@@ -472,9 +469,9 @@ namespace cytnx {
   }
 
   void RegularGncon::Savefile(const std::string &fname) {
-    cytnx_error_msg(
-      this->label_arr.size() == 0,
-      "[ERROR][RegularGncon][Savefile] cannot save empty Gncon to Gncon file!%s", "\n");
+    cytnx_error_msg(this->label_arr.size() == 0,
+                    "[ERROR][RegularGncon][Savefile] cannot save empty Gncon to Gncon file!%s",
+                    "\n");
 
     fstream fo;
     fo.open(fname + ".net", ios::out | ios::trunc);
@@ -544,8 +541,6 @@ namespace cytnx {
     }
 
     this->PutUniTensor(idx, utensor);
-
-
   }
 
   void RegularGncon::PrintNet(std::ostream &os) {
@@ -608,13 +603,11 @@ namespace cytnx {
     Stree.search_order();
     return Stree.nodes_container.back()[0].accu_str;
   }
-  
-  UniTensor RegularGncon::Launch(const bool &optimal,
-                                   const string &contract_order /*default ""*/) {
+
+  UniTensor RegularGncon::Launch(const bool &optimal, const string &contract_order /*default ""*/) {
     // 1. check tensors are all set, and put all unitensor on node for contraction:
     cytnx_error_msg(this->tensors.size() == 0,
-                    "[ERROR][Launch][RegularGncon] cannot launch an un-initialize Gncon.%s",
-                    "\n");
+                    "[ERROR][Launch][RegularGncon] cannot launch an un-initialize Gncon.%s", "\n");
     cytnx_error_msg(this->tensors.size() < 2,
                     "[ERROR][Launch][RegularGncon] Gncon should contain >=2 tensors.%s", "\n");
 
@@ -624,11 +617,11 @@ namespace cytnx {
       "[ERROR][Launch][RegularGncon] cannot launch with optimal=True and given contract_order.%s",
       "\n");
     int outleg_lbl = -1;
-    
+
     for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
       cytnx_error_msg(this->tensors[idx].uten_type() == UTenType.Void,
-                      "[ERROR][Launch][RegularGncon] tensor at [%d], name: [%s] is not set.\n",
-                      idx, this->names[idx].c_str());
+                      "[ERROR][Launch][RegularGncon] tensor at [%d], name: [%s] is not set.\n", idx,
+                      this->names[idx].c_str());
       // transion save old labels:
       //  old_labels.push_back(this->tensors[idx].labels());
 
@@ -639,7 +632,7 @@ namespace cytnx {
       // std::cout<<std::endl;
 
       // modify the label of unitensor (shared):
-      //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict  
+      //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
       this->CtTree.base_nodes[idx].utensor =
         this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
       // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
