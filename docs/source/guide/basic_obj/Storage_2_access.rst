@@ -21,31 +21,14 @@ Get/Set elements
 
 * In C++, use **at<>()**:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(6);
-    A.set_zeros();
-    cout << A << endl;
-
-    A.at<double>(4) = 4;
-    cout << A << endl;
-
 
 Output >>
 
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 6
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 6
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 4.00000e+00 0.00000e+00 ]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_2_1_ex1.out
+    :language: text
 
 .. Note::
     
@@ -54,37 +37,14 @@ Output >>
 
 * [New][v0.6.6+] The introduction of the Scalar class allows to get elements using **at()**  without type specialization (C++ only):
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_1_ex2.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(6);
-    cout << A << endl;
-
-    Scalar elemt = A.at(4);
-    cout << elemt << endl;
-
-    A.at(4) = 4;
-    cout << A << endl;
-
    
 Output >>
 
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 6
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-
-    Scalar dtype: [Double (Float64)]
-    0
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 6
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 4.00000e+00 0.00000e+00 ]
-
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_2_1_ex2.out
+    :language: text
 
 
 Get raw-pointer (C++ only)
@@ -96,24 +56,18 @@ In some cases the user might want to get the raw-pointer to the Storage. Cytnx p
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(6);
-    double *pA = A.data<double>();
-
     
 2. Use **Storage.data()**:
     Using **.data()** without specialization returns a void pointer, please use with caution! 
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_2_ex2.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(6);
-    void *pA = A.data();
-
 
 .. Note::
 

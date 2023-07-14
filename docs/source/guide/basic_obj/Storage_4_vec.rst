@@ -7,16 +7,9 @@ To convert a C++ vector to a Storage, use **Storage::from_vector**:
 
 * In C++
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_4_ex1.cpp
+    :language: c++
     :linenos:
-
-    vector<double> vA(4,6);
-    
-    auto A = cytnx::Storage::from_vector(vA);
-    auto B = cytnx::Storage::from_vector(vA,cytnx::Device.cuda);
-
-    cout << A << endl;
-    cout << B << endl;
 
 Output >>
 
@@ -49,31 +42,18 @@ To convert a Storage to std::vector with type *T*, use **Storage.vector<T>()**:
 
 * In C++
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_4_ex2.cpp
+    :language: c++
     :linenos:
-
-    Storage sA = {3.,4.,5.,6.};
-
-    print(sA.dtype_str());
-    
-    auto vA = sA.vector<double>();
-
-    print(vA);
     
 Output >>
 
-.. code-block:: text
-
-    Double (Float64)
-
-    Vector Print:
-    Total Elements:4
-    [3, 4, 5, 6]
+.. literalinclude:: ../../../code/cplusplus/outputs/4_4_ex2.out
+    :language: text
 
 .. Note::
 
     The type T has to match the dtype of the Storage, otherwise an error will be raised. 
-
 
 
 

@@ -22,30 +22,14 @@ For example
    
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_3_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(4);
-    A.set_zeros();
-    cout << A << endl;
-
-    A.append(500);
-    cout << A << endl;
 
 Output>>
 
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 4
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 5
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 5.00000e+02 ]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_3_1_ex1.out
+    :language: text
 
 resize
 ********
@@ -64,21 +48,14 @@ Equivalently to *vector.resize* in C++, we can resize the Storage in Cytnx.
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_3_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(4);
-    cout << A.size() << endl;
-
-    A.resize(5);    
-    cout << A.size() << endl;
 
 Output>>
 
-.. code-block:: text
-
-    4
-    5
+.. literalinclude:: ../../../code/cplusplus/outputs/4_3_2_ex1.out
+    :language: text
 
 .. Note::
     

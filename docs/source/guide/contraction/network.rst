@@ -18,20 +18,9 @@ We implement the diagram as a .net file to represent the contraction task:
 
 * ctm.net:
 
-.. code-block:: text
-    :linenos:
+.. literalinclude:: ../../../code/ctm.net
+    :language: text
 
-    c0: t0-c0, t3-c0
-    c1: t1-c1, t0-c1
-    c2: t2-c2, t1-c2
-    c3: t3-c3, t2-c3
-    t0: t0-c1, w-t0, t0-c0
-    t1: t1-c2, w-t1, t1-c1
-    t2: t2-c3, w-t2, t2-c2
-    t3: t3-c0, w-t3, t3-c3
-    w: w-t0, w-t1, w-t2, w-t3
-    TOUT:
-    ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 
 Note that:
 
@@ -81,53 +70,14 @@ We use the .net file to create a Network. Then, we can load instances of UniTens
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/8_1_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    // initialize tensors
-    auto w = cytnx::UniTensor(cytnx::random::normal({2,2,2,2}, 0., 1.));
-    auto c0 = cytnx::UniTensor(cytnx::random::normal({8,8}, 0., 1.));
-    auto c1 = cytnx::UniTensor(cytnx::random::normal({8,8}, 0., 1.));
-    auto c2 = cytnx::UniTensor(cytnx::random::normal({8,8}, 0., 1.));
-    auto c3 = cytnx::UniTensor(cytnx::random::normal({8,8}, 0., 1.));
-    auto t0 = cytnx::UniTensor(cytnx::random::normal({8,2,8}, 0., 1.));
-    auto t1 = cytnx::UniTensor(cytnx::random::normal({8,2,8}, 0., 1.));
-    auto t2 = cytnx::UniTensor(cytnx::random::normal({8,2,8}, 0., 1.));
-    auto t3 = cytnx::UniTensor(cytnx::random::normal({8,2,8}, 0., 1.));
-
-    // initialize network object from ctm.net file
-    Network net = cytnx::Network("ctm.net");
-
-    // put tensors
-    net.PutUniTensor("w",w);
-    net.PutUniTensor("c0",c0);
-    net.PutUniTensor("c1",c1);
-    net.PutUniTensor("c2",c2);
-    net.PutUniTensor("c3",c3);
-    net.PutUniTensor("t0",t0);
-    net.PutUniTensor("t1",t1);
-    net.PutUniTensor("t2",t2);
-    net.PutUniTensor("t3",t3);
-
-    cout << net;
 
 Output >> 
 
-.. code-block:: text
-
-    ==== Network ====
-    [o] c0 : t0-c0 t3-c0 
-    [o] c1 : t1-c1 t0-c1 
-    [o] c2 : t2-c2 t1-c2 
-    [o] c3 : t3-c3 t2-c3 
-    [o] t0 : t0-c1 w-t0 t0-c0 
-    [o] t1 : t1-c2 w-t1 t1-c1 
-    [o] t2 : t2-c3 w-t2 t2-c2 
-    [o] t3 : t3-c0 w-t3 t3-c3 
-    [o] w : w-t0 w-t1 w-t2 w-t3 
-    TOUT : ; 
-    ORDER : ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
-    =================
+.. literalinclude:: ../../../code/cplusplus/outputs/8_1_2_ex1.out
+    :language: text
 
 To perform the contraction and get the outcome, we use the .Launch():
 
@@ -140,10 +90,9 @@ To perform the contraction and get the outcome, we use the .Launch():
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/8_1_2_ex2.cpp
+    :language: c++
     :linenos:
-
-    UniTensor Res = net.Launch(true);
 
 Here if the argument **optimal = True**, the contraction order is always auto-optimized.
 If **optimal = False**, the specified ORDER in the .net file will be used. If ORDER is not specified, the order of the tensor definitions in the .net file is used.
