@@ -32,52 +32,14 @@ As an example, we multiply a matrix :math:`\boldsymbol{\hat{H}}` with shape (4,4
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/10_1_ex1.cpp
+    :language: c++
     :linenos:
-    
-    auto x = cytnx::ones(4);
-    auto H = cytnx.arange(16).reshape(4,4);
-
-    auto y = cytnx.linalg.Dot(H,x);
-
-    cout << x << endl;
-    cout << H << endl;
-    cout << y << endl;
 
 Output>>
 
-.. code-block:: text
-
-    
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (4)
-    [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-
-
-
-
-    Total elem: 16
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (4,4)
-    [[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
-     [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
-     [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]
-     [1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]]
-
-
-
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (4)
-    [6.00000e+00 2.20000e+01 3.80000e+01 5.40000e+01 ]
-
-
-
+.. literalinclude:: ../../../code/cplusplus/outputs/10_1_ex1.out
+    :language: text
 
 
 Such an explicit matrix-vector multiplication can be done for small matrices :math:`\boldsymbol{\hat{H}}`. 

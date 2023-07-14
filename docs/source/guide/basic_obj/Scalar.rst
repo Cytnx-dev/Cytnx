@@ -45,41 +45,26 @@ Consider the example where we want to create a Scalar with *double* type. The co
 
 * 1. Convert from a C++ variable
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/5_1_ex1.cpp
+    :language: c++
     :linenos:
 
-    double cA = 1.33;
-    Scalar A(cA);
-    cout << A << endl;
-
 Output:
- 
-.. code-block:: text
 
-    < 1.33 >  Scalar dtype: [Double (Float64)]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/5_1_ex1.out
+    :language: text
 
 * 2. Create directly:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/5_1_ex2.cpp
+    :language: c++
     :linenos:
 
-    Scalar A(double(1.33));
-
-    Scalar A2 = double(1.33);
-
-    Scalar A3(10,Type.Double);
-
-    cout << A << A2 << A3 << endl;
 
 Output:
 
-.. code-block:: text
-
-    < 1.33 >  Scalar dtype: [Double (Float64)]
-    < 1.33 >  Scalar dtype: [Double (Float64)]
-    < 10 >  Scalar dtype: [Double (Float64)]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/5_1_ex2.out
+    :language: text
 
 
 .. Note::
@@ -92,33 +77,16 @@ Output:
 
     Converting to a C++ data type works just like other type castings in C++:
 
-
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/5_1_ex3.cpp
+    :language: c++
     :linenos:
 
-    Scalar A = 10;
-    cout << A << endl;
-
-    auto fA = float(A); // convert to float
-    cout << typeid(fA).name() << fA << endl;
-    
-    // convert to complex double
-    auto cdA = complex128(A);
-    cout << cdA << endl;
-
-    // convert to complex float
-    auto cfA = complex64(A); 
-    cout << cfA << endl;
 
 Output:
 
-.. code-block:: text
+.. literalinclude:: ../../../code/cplusplus/outputs/5_1_ex3.out
+    :language: text
 
-    < 10 >  Scalar dtype: [Int32]
-
-    f10
-    (10,0)
-    (10,0)
 
 .. note::
 
@@ -129,24 +97,14 @@ Change data type
 ******************
     To change the data type of a Scalar, use **.astype()**. 
 
-
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/5_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    Scalar A(1.33);
-    cout << A << endl;
-
-    A = A.astype(Type.Float);
-    cout << A << endl;
 
 Output:
 
-.. code-block:: text
-    
-    < 1.33 >  Scalar dtype: [Double (Float64)]
-
-    < 1.33 >  Scalar dtype: [Float (Float32)]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/5_2_ex1.out
+    :language: text
 
 
 Application scenarios
@@ -155,25 +113,14 @@ The Scalar type allows for many possibilities in C++ that are otherwise hard to 
 
 * 1. If we want to have a list (vector) with elements having different data types, we can use *tuple* objects in C++. However, that requires the number of elements and data types to be known and fixed a priori. Using Scalar, we can also create a vector with a variable number of elements and variable data types:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/5_3_ex1.cpp
+    :language: c++
     :linenos:
-
-    vector<Scalar> out;
-
-    out.push_back(Scalar(1.33)); //double
-    out.push_back(Scalar(10));   //int
-    out.push_back(Scalar(cytnx_complex128(3,4))); //complex double
-
-    cout << out[0] << out[1] << out[2] << endl;
 
 Output:
 
-.. code-block:: text
-
-    < 1.33 >  Scalar dtype: [Double (Float64)]
-    < 10 >  Scalar dtype: [Int32]
-    < (3,4) >  Scalar dtype: [Complex Double (Complex Float64)]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/5_3_ex1.out
+    :language: text
 
 
 * 2. In C++, unlike Python, we can not create a function that can take arbitrary types of arguments. This becomes possible with Scalar:

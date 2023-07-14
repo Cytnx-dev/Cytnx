@@ -46,35 +46,14 @@ The function **Tensor.reshape_** (with a underscore) performs a reshape as well,
     print(A)
 
 * In C++:
-
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_2_1_ex2.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::arange(24);
-    cout << A << endl;
-    A.reshape_(2,3,4);
-    cout << A << endl;
 
 >> Output:
 
-.. code-block:: text
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (24)
-    [0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,3,4)
-    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
-      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
-      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
-     [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
-      [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
-      [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
+.. literalinclude:: ../../../code/cplusplus/outputs/3_2_1_ex2.out
+    :language: text
 
 Thus, we see that using the underscore version modifies the original Tensor itself. 
 
@@ -105,45 +84,14 @@ This can be achieved with **Tensor.permute**
 
 * In C++:
 
-.. code-block:: c++ 
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_2_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::arange(24).reshape(2,3,4);
-    auto B = A.permute(1,2,0);
-    cout << A << endl;
-    cout << B << endl;
 
 >> Output:
 
-.. code-block:: text
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,3,4)
-    [[[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
-      [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
-      [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
-     [[1.20000e+01 1.30000e+01 1.40000e+01 1.50000e+01 ]
-      [1.60000e+01 1.70000e+01 1.80000e+01 1.90000e+01 ]
-      [2.00000e+01 2.10000e+01 2.20000e+01 2.30000e+01 ]]]
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4,2)
-    [[[0.00000e+00 1.20000e+01 ]
-      [1.00000e+00 1.30000e+01 ]
-      [2.00000e+00 1.40000e+01 ]
-      [3.00000e+00 1.50000e+01 ]]
-     [[4.00000e+00 1.60000e+01 ]
-      [5.00000e+00 1.70000e+01 ]
-      [6.00000e+00 1.80000e+01 ]
-      [7.00000e+00 1.90000e+01 ]]
-     [[8.00000e+00 2.00000e+01 ]
-      [9.00000e+00 2.10000e+01 ]
-      [1.00000e+01 2.20000e+01 ]
-      [1.10000e+01 2.30000e+01 ]]]
+.. literalinclude:: ../../../code/cplusplus/outputs/3_2_2_ex1.out
+    :language: text
 
 .. Note::
 
@@ -176,19 +124,9 @@ You can force the Tensor to become contiguous by calling **Tensor.contiguous()**
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_2_2_ex2.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::arange(24).reshape(2,3,4);
-    cout << A.is_contiguous() << endl;
-    cout << A << endl;
-
-    A.permute_(1,0,2);
-    cout << A.is_contiguous() << endl;
-    cout << A << endl;
-
-    A.contiguous_();
-    cout << A.is_contiguous() << endl;
 
 Output>> 
 

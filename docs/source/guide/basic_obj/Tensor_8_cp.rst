@@ -33,13 +33,9 @@ One of the most important features in Python is the *referencing* of objects. Al
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::zeros({3,4,5});
-    auto B = A;
-
-    cout << is(B,A) << endl;
 
 Output>>
 
@@ -63,13 +59,9 @@ To really create a copy of **A**, we can use the **clone()** method. **clone()**
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_1_ex2.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::zeros({3,4,5});
-    auto B = A.clone();
-
-    cout << is(B,A) << endl;
 
 Output>>
 
@@ -98,16 +90,9 @@ Now let us take a look at what happens if we perform a **permute()** operation o
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::zeros({2,3,4});
-    auto B = A.permute(0,2,1);
-
-    cout << A << endl;
-    cout << B << endl;
-
-    cout << is(B,A) << endl;
 
 Output>>
 
@@ -156,41 +141,14 @@ We see that **A** and **B** are now two different objects (as it should be, they
     
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_2_ex2.cpp
+    :language: c++
     :linenos:
-
-    A(0,0,0) = 300;
-
-    cout << A << endl;
-    cout << B << endl;    
 
 Output>>
 
-.. code-block:: text
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,3,4)
-    [[[3.00000e+02 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
-     [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,4,3)
-    [[[3.00000e+02 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]]
-     [[0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+.. literalinclude:: ../../../code/cplusplus/outputs/3_8_2_ex2.out
+    :language: text
 
 Notice that the element in **B** is also changed! So what actually happened? When we called **permute()**, a new object was created, which has different *meta*, but the two Tensors actually share the *same* data storage! There is NO copy of the tensor elements in memory performed:
 
@@ -209,10 +167,9 @@ We can use **Tensor.same_data()** to check if two objects share the same memory 
     
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_2_ex3.cpp
+    :language: c++
     :linenos:
-
-    cout << B.same_data(A) << endl;
 
 Output>>
 
@@ -242,14 +199,9 @@ Next, let's have a look at the **contiguous** property. In the above example, we
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_3_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::zeros({2,3,4});
-    auto B = A.permute(0,2,1);
-
-    cout << A.is_contiguous() << endl;
-    cout << B.is_contiguous() << endl;
 
 Output>>
 
@@ -280,16 +232,9 @@ We can make a contiguous Tensor **C** that has the same shape as **B** by callin
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_3_ex2.cpp
+    :language: c++
     :linenos:
-
-    auto C = B.contiguous();
-
-    cout << C << endl;
-    cout << C.is_contiguous() << endl;
-    
-    cout << C.same_data(B) << endl;
- 
 
 Output>>
 

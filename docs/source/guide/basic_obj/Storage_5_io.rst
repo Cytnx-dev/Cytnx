@@ -18,12 +18,9 @@ To save a Storage to file, simply call **Storage.Save(filepath)**.
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_5_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(4);
-    A.fill(6);
-    A.Save("S1");
 
 This will save Storage *A* to the current directory as **T1.cyst**, with extension *.cyst*
 
@@ -42,21 +39,14 @@ Now, let's load the Storage from the file.
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_5_2_ex1.cpp
+    :language: c++
     :linenos:
-    
-    auto A = cytnx::Storage::Load("S1.cyst");
-    cout << A << endl;
 
 Output>>
 
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 4
-    [ 6.00000e+00 6.00000e+00 6.00000e+00 6.00000e+00 ]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_5_2_ex1.out
+    :language: text
 
 Save & load from/to binary
 **************************
@@ -80,35 +70,14 @@ We can also save all the elements in a binary file without any additional header
 
 * In C++
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_5_3_ex1.cpp
+    :language: c++
     :linenos:
-
-    // read
-    auto A = cytnx::Storage(10);
-    A.fill(10);
-    cout << A << endl;
-
-    A.Tofile("S1");
-
-    //load
-    auto B = cytnx::Storage::Fromfile("S1",cytnx::Type.Double);
-        
-    cout << B << endl;
 
 Output>>
 
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 10
-    [ 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 ]
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 10
-    [ 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 1.00000e+01 ]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_5_3_ex1.out
+    :language: text
 
 .. Note:: 
 
