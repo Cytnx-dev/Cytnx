@@ -25,7 +25,9 @@
   #include "utils_internal_gpu/cuFill_gpu.hpp"
   #include "utils_internal_gpu/cuSetArange_gpu.hpp"
   #include "utils_internal_gpu/cuSetElems_gpu.hpp"
+  #include "utils_internal_gpu/cuSetElems_contiguous_gpu.hpp"
   #include "utils_internal_gpu/cuGetElems_gpu.hpp"
+  #include "utils_internal_gpu/cuGetElems_contiguous_gpu.hpp"
   #include "utils_internal_gpu/cuComplexmem_gpu.hpp"
 #endif
 
@@ -97,7 +99,9 @@ namespace cytnx {
       std::vector<std::vector<ElemCast_io>> cuElemCast;
       std::vector<SetArange_io> cuSetArange_ii;
       std::vector<GetElems_io> cuGetElems_ii;
+      std::vector<GetElems_conti_io> cuGetElems_conti_ii;
       std::vector<std::vector<SetElems_io>> cuSetElems_ii;
+      std::vector<std::vector<SetElems_conti_io>> cuSetElems_conti_ii;
 #endif
 
       utils_internal_interface();

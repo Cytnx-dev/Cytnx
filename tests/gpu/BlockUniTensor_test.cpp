@@ -353,14 +353,14 @@ TEST_F(BlockUniTensorTest, gpu_elem_exist) {
 
 TEST_F(BlockUniTensorTest, gpu_Init) {
   // different types
-  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu,
+  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cuda,
                             false, false));
-  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Double, Device.cpu,
-                            false, false));
+  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Double,
+                            Device.cuda, false, false));
   EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.ComplexFloat,
-                            Device.cpu, false, false));
+                            Device.cuda, false, false));
   EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.ComplexDouble,
-                            Device.cpu, false, false));
+                            Device.cuda, false, false));
 
   // on gpu device
   //  EXPECT_NO_THROW(BkUt.Init({phy,phy.redirect(),aux},{"a", "b",
@@ -374,28 +374,28 @@ TEST_F(BlockUniTensorTest, gpu_Init) {
 
   // valid rowranks
   EXPECT_ANY_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 99, Type.Float,
-                             Device.cpu, false, false));
-  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 2, Type.Float, Device.cpu,
+                             Device.cuda, false, false));
+  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 2, Type.Float, Device.cuda,
                             false, false));
-  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu,
+  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cuda,
                             false, false));
-  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, -1, Type.Float, Device.cpu,
-                            false, false));
+  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, -1, Type.Float,
+                            Device.cuda, false, false));
   EXPECT_ANY_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, -2, Type.Float,
-                             Device.cpu, false, false));
-  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 0, Type.Float, Device.cpu,
+                             Device.cuda, false, false));
+  EXPECT_NO_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 0, Type.Float, Device.cuda,
                             false, false));
 
   // is_diag = true, but rank>2
-  EXPECT_ANY_THROW(
-    BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu, true, false));
+  EXPECT_ANY_THROW(BkUt.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float,
+                             Device.cuda, true, false));
 
   // is_diag = true, but rowrank!=1
   EXPECT_ANY_THROW(
-    BkUt.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cpu, true, false));
+    BkUt.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cuda, true, false));
 
   // is_diag = true, but no outward bond
-  EXPECT_ANY_THROW(BkUt.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
+  EXPECT_ANY_THROW(BkUt.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cuda, true, false));
 }
 
 TEST_F(BlockUniTensorTest, gpu_Init_by_Tensor) {

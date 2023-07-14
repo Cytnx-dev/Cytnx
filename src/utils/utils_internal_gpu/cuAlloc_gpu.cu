@@ -10,8 +10,8 @@ namespace cytnx {
     // }
     void* cuCalloc_gpu(const cytnx_uint64& N, const cytnx_uint64& perelem_bytes) {
       void* ptr;
-      checkCudaErrors(cudaMallocManaged(&ptr, perelem_bytes * N));
-      checkCudaErrors(cudaMemset(ptr, 0, N));
+      checkCudaErrors(cudaMallocManaged((void**)&ptr, perelem_bytes * N));
+      checkCudaErrors(cudaMemset(ptr, 0, perelem_bytes * N));
       return ptr;
     }
     void* cuMalloc_gpu(const cytnx_uint64& bytes) {

@@ -243,8 +243,8 @@ namespace cytnx {
       //                 "[Developing][GPU Getelem v2][Note, currently slice on GPU is disabled for
       //                 " "further inspection]%s",
       //                 "\n");
-      utils_internal::uii.cuGetElems_ii[this->dtype](out->Mem, this->Mem, c_offj, new_offj,
-                                                     locators, TotalElem);
+      utils_internal::uii.cuGetElems_conti_ii[this->dtype](out->Mem, this->Mem, c_offj, new_offj,
+                                                           locators, TotalElem, Nunit);
 #else
       cytnx_error_msg(true, "[ERROR][GetElem_byShape] fatal internal%s",
                       "the Storage is set on gpu without CUDA support\n");
@@ -417,12 +417,12 @@ namespace cytnx {
         in->Mem, this->Mem, c_offj, new_offj, locators, TotalElem, Nunit, is_scalar);
     } else {
 #ifdef UNI_GPU
-      if (utils_internal::uii.cuSetElems_ii[in->dtype][this->dtype] == NULL) {
+      if (utils_internal::uii.cuSetElems_conti_ii[in->dtype][this->dtype] == NULL) {
         cytnx_error_msg(true, "[ERROR] %s", "cannot assign complex element to real container.\n");
       }
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::uii.cuSetElems_ii[in->dtype][this->dtype](
-        in->Mem, this->Mem, c_offj, new_offj, locators, TotalElem, is_scalar);
+      utils_internal::uii.cuSetElems_conti_ii[in->dtype][this->dtype](
+        in->Mem, this->Mem, c_offj, new_offj, locators, TotalElem, Nunit, is_scalar);
       // cytnx_error_msg(true, "[Developing][SetElem on gpu is now down for further inspection]%s",
       //                 "\n");
 #else

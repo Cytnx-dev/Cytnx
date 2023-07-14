@@ -201,8 +201,8 @@ namespace DirectsumTest {
     axes:empty
   ====================*/
   TEST(Directsum, gpu_err_void_tens) {
-    Tensor T1 = Tensor().to(cytnx::Device.cuda);
-    Tensor T2 = Tensor().to(cytnx::Device.cuda);
+    Tensor T1 = Tensor();
+    Tensor T2 = Tensor();
     std::vector<cytnx_uint64> shared_axes = {};
     ErrorTestExcute(T1, T2, shared_axes);
   }
@@ -459,7 +459,7 @@ namespace DirectsumTest {
     } else {
       expect_T = ConstructExpectTens(T1, T2, shared_axes);
     }
-    // std::cout << dirsum_T << expect_T << std::endl;
+    // if (!AreEqTensor(dirsum_T, expect_T)) std::cout << dirsum_T << expect_T << std::endl;
     EXPECT_TRUE(AreEqTensor(dirsum_T, expect_T));
   }
 

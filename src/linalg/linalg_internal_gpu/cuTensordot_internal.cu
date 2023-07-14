@@ -1,3 +1,4 @@
+#ifdef UNI_CUTENSOR
 #include "cuTensordot_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
@@ -248,3 +249,4 @@ namespace cytnx {
   }  // namespace linalg_internal
 
 }  // namespace cytnx
+#endif

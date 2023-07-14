@@ -381,6 +381,7 @@ if(USE_CUDA)
   target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
   target_link_libraries(cytnx PRIVATE CUDA::toolkit)
   target_link_libraries(cytnx PRIVATE CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
+  target_link_libraries(cytnx PRIVATE -lcudadevrt)
 
   if(USE_CUTENSOR)
     find_package(CUTENSOR REQUIRED)

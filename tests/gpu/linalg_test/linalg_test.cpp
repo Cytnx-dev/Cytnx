@@ -28,7 +28,7 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
   Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
   Bond K = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
   Bond L = Bond(BD_OUT, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
-  UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cpu, false)
+  UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cuda, false)
                     .to(cytnx::Device.cuda);
   auto cyT2 = UniTensor::Load(data_dir + "Svd_truncate/Svd_truncate2.cytnx").to(cytnx::Device.cuda);
   std::vector<UniTensor> res = linalg::Svd_truncate(cyT, 30, 0, true);
@@ -41,7 +41,7 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate4) {
   Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
   Bond K = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
   Bond L = Bond(BD_OUT, {Qs(-4), Qs(-2), Qs(0), Qs(2), Qs(4), Qs(6)}, {1, 5, 10, 9, 4, 1});
-  UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cpu, false)
+  UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cuda, false)
                     .to(cytnx::Device.cuda);
   cyT = UniTensor::Load(data_dir + "Svd_truncate/Svd_truncate3.cytnx").to(cytnx::Device.cuda);
   std::vector<UniTensor> res = linalg::Svd_truncate(cyT, 30, 0, true);

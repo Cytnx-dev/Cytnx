@@ -78,17 +78,17 @@ class BlockUniTensorTest : public ::testing::Test {
   Bond C3B3 = Bond(BD_OUT, {Qs(0), Qs(1), Qs(2)}, {1, 2, 3});
 
   UniTensor Spf =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Float, Device.cpu, false)
+    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Float, Device.cuda, false)
       .to(cytnx::Device.cuda);
   UniTensor Spd =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Double, Device.cpu, false)
+    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Double, Device.cuda, false)
       .to(cytnx::Device.cuda);
   UniTensor Spcf =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexFloat, Device.cpu, false)
+    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexFloat, Device.cuda, false)
       .to(cytnx::Device.cuda);
-  UniTensor Spcd =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexDouble, Device.cpu, false)
-      .to(cytnx::Device.cuda);
+  UniTensor Spcd = UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexDouble,
+                             Device.cuda, false)
+                     .to(cytnx::Device.cuda);
 
   UniTensor UT_pB = UniTensor({pBI, pBJ, pBK}).to(cytnx::Device.cuda);
   UniTensor UT_pB_ans = UniTensor({pBI, pBJ, pBK}).to(cytnx::Device.cuda);
@@ -113,11 +113,11 @@ class BlockUniTensorTest : public ::testing::Test {
 
   Bond Bdiag = Bond(BD_IN, {Qs(-1), Qs(1), Qs(1), Qs(-1), Qs(2)}, {3, 2, 1, 1, 5});
   UniTensor UT_diag = UniTensor({Bdiag, Bdiag.redirect()}, std::vector<std::string>({"0", "1"}), 1,
-                                Type.ComplexDouble, Device.cpu, true)
+                                Type.ComplexDouble, Device.cuda, true)
                         .to(cytnx::Device.cuda);
   UniTensor UT_diag_cplx =
     UniTensor({Bdiag, Bdiag.redirect()}, std::vector<std::string>({"0", "1"}), 1,
-              Type.ComplexDouble, Device.cpu, true)
+              Type.ComplexDouble, Device.cuda, true)
       .to(cytnx::Device.cuda);
 
  protected:

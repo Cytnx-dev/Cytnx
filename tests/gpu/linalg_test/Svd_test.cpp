@@ -34,7 +34,7 @@ namespace SvdTest {
     int rowrank = 1;
     bool is_diag = false;
     auto labels = std::vector<std::string>();
-    auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag)
+    auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cuda, is_diag)
                .to(cytnx::Device.cuda);
     random::Make_uniform(T, -10, 0, 0);
     std::vector<UniTensor> svds = linalg::Svd(T);
@@ -224,7 +224,7 @@ namespace SvdTest {
     int rowrank = 1;
     bool is_diag = true;
     auto labels = std::vector<std::string>();
-    auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag)
+    auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cuda, is_diag)
                .to(cytnx::Device.cuda);
     random::Make_uniform(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> svds = linalg::Svd(T); }, std::logic_error);
@@ -248,7 +248,7 @@ namespace SvdTest {
     bool is_diag = true;
     std::vector<std::string> labels = {};
     auto UT =
-      UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag).to(cytnx::Device.cuda);
+      UniTensor(bonds, labels, row_rank, Type.Double, Device.cuda, is_diag).to(cytnx::Device.cuda);
     random::Make_uniform(UT, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> svds = linalg::Svd(UT); }, std::logic_error);
   }
@@ -272,7 +272,7 @@ namespace SvdTest {
     cytnx_int64 row_rank = -1;
     std::vector<std::string> labels = {};
     auto src_T =
-      UniTensor(bonds, labels, row_rank, Type.Bool, Device.cpu, false).to(cytnx::Device.cuda);
+      UniTensor(bonds, labels, row_rank, Type.Bool, Device.cuda, false).to(cytnx::Device.cuda);
     InitUniTensorUniform(src_T);
     // bool need_U, need_VT;
     bool compute_uv;

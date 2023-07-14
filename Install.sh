@@ -67,7 +67,7 @@ FLAG="${FLAG} -DUSE_HPTT=ON "
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=OFF"
+FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=ON"
 #-----------------------------------
 # 5-b) HPTT variant options (DEFAULT = no option)
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
@@ -84,18 +84,18 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF "
+FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
 #        for "=off" case one can skip 6-b)
 #-----------------------------------
-# FLAG="${FLAG} -DUSE_CUTT=off "
+FLAG="${FLAG} -DUSE_CUTT=on "
 #-----------------------------------
 # 6-b) CUTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-# FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
+FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=on "
 #-----------------------------------
 # 6-c) Magma (DEFALT = off)
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
@@ -113,7 +113,7 @@ FLAG="${FLAG} -DMAGMA_ROOT=${HOME}/MAGMA"
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 CUTENSOR_ROOT=${HOME}/CUTENSOR
-FLAG="${FLAG} -DUSE_CUTENSOR=ON "
+FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${HOME}/CUTENSOR"
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = off)
@@ -122,7 +122,7 @@ FLAG="${FLAG} -DCUTENSOR_ROOT=${HOME}/CUTENSOR"
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUQUANTUM_ROOT=/usr/local/cuqunatum-......
 CUQUANTUM_ROOT=${HOME}/CUQUANTUM
-FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
+FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
 FLAG="${FLAG} -DCUQUANTUM_ROOT=${HOME}/CUQUANTUM"
 
 

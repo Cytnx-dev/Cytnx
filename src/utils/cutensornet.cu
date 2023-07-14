@@ -1,3 +1,4 @@
+#ifdef UNI_CUQUANTUM
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -366,3 +367,4 @@ namespace cytnx {
 #endif
 
 }  // namespace cytnx
+#endif

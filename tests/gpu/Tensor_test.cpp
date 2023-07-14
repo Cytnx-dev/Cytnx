@@ -226,6 +226,20 @@ TEST_F(TensorTest, gpu_get) {
   EXPECT_EQ(tmp.shape()[2], 5);
   EXPECT_EQ(tmp.shape()[3], 6);
   TestTools::AreNearlyEqTensor(tmp, tslice1);
+
+  tmp = tar3456.permute({2, 0, 1, 3});
+  EXPECT_EQ(tmp.shape().size(), 4);
+  EXPECT_EQ(tmp.shape()[0], 5);
+  EXPECT_EQ(tmp.shape()[1], 3);
+  EXPECT_EQ(tmp.shape()[2], 4);
+  EXPECT_EQ(tmp.shape()[3], 6);
+  EXPECT_EQ(tmp.is_contiguous(), false);
+  cout << tmp(0, ":", ":", 0) << endl;
+  TestTools::AreNearlyEqTensor(tmp(0, ":", ":", 0), arange(12).reshape({3, 4}), 1e-5);
+  TestTools::AreNearlyEqTensor(tmp(":", 0, 0, ":"), arange(30).reshape({5, 6}), 1e-5);
+  TestTools::AreNearlyEqTensor(tmp(":", 0, 0, "4:6"), arange(20, 30).reshape({5, 2}), 1e-5);
+  TestTools::AreNearlyEqTensor(tmp(":", "2:4", ":", ":"),
+                               arange(3 * 2 * 5 * 6, 3 * 4 * 5 * 6).reshape({3, 2, 5, 6}), 1e-5);
 }
 
 TEST_F(TensorTest, gpu_set) {

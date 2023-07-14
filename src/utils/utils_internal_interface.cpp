@@ -618,6 +618,19 @@ namespace cytnx {
       cuGetElems_ii[Type.Int16] = cuGetElems_gpu_i16;
       cuGetElems_ii[Type.Bool] = cuGetElems_gpu_b;
 
+      cuGetElems_conti_ii.resize(N_Type, NULL);
+      cuGetElems_conti_ii[Type.ComplexDouble] = cuGetElems_contiguous_gpu_cd;
+      cuGetElems_conti_ii[Type.ComplexFloat] = cuGetElems_contiguous_gpu_cf;
+      cuGetElems_conti_ii[Type.Double] = cuGetElems_contiguous_gpu_d;
+      cuGetElems_conti_ii[Type.Float] = cuGetElems_contiguous_gpu_f;
+      cuGetElems_conti_ii[Type.Uint64] = cuGetElems_contiguous_gpu_u64;
+      cuGetElems_conti_ii[Type.Int64] = cuGetElems_contiguous_gpu_i64;
+      cuGetElems_conti_ii[Type.Uint32] = cuGetElems_contiguous_gpu_u32;
+      cuGetElems_conti_ii[Type.Int32] = cuGetElems_contiguous_gpu_i32;
+      cuGetElems_conti_ii[Type.Uint16] = cuGetElems_contiguous_gpu_u16;
+      cuGetElems_conti_ii[Type.Int16] = cuGetElems_contiguous_gpu_i16;
+      cuGetElems_conti_ii[Type.Bool] = cuGetElems_contiguous_gpu_b;
+
       //
       cuSetElems_ii = vector<vector<SetElems_io>>(N_Type, vector<SetElems_io>(N_Type, NULL));
       cuSetElems_ii[Type.ComplexDouble][Type.ComplexDouble] = cuSetElems_gpu_cdtcd;
@@ -745,6 +758,135 @@ namespace cytnx {
       cuSetElems_ii[Type.Bool][Type.Uint16] = cuSetElems_gpu_btu16;
       cuSetElems_ii[Type.Bool][Type.Int16] = cuSetElems_gpu_bti16;
       cuSetElems_ii[Type.Bool][Type.Bool] = cuSetElems_gpu_btb;
+
+      //
+      cuSetElems_conti_ii =
+        vector<vector<SetElems_conti_io>>(N_Type, vector<SetElems_conti_io>(N_Type, NULL));
+      cuSetElems_conti_ii[Type.ComplexDouble][Type.ComplexDouble] = cuSetElems_conti_gpu_cdtcd;
+      cuSetElems_conti_ii[Type.ComplexDouble][Type.ComplexFloat] = cuSetElems_conti_gpu_cdtcf;
+      // cuSetElems_conti_ii[Type.ComplexDouble][Type.Double       ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexDouble][Type.Float        ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexDouble][Type.Int64        ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexDouble][Type.Uint64       ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexDouble][Type.Int32        ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexDouble][Type.Uint32       ] = cuSetElems_conti_gpu_invalid;
+
+      cuSetElems_conti_ii[Type.ComplexFloat][Type.ComplexDouble] = cuSetElems_conti_gpu_cftcd;
+      cuSetElems_conti_ii[Type.ComplexFloat][Type.ComplexFloat] = cuSetElems_conti_gpu_cftcf;
+      // cuSetElems_conti_ii[Type.ComplexFloat][Type.Double       ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexFloat][Type.Float        ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexFloat][Type.Int64        ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexFloat][Type.Uint64       ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexFloat][Type.Int32        ] = cuSetElems_conti_gpu_invalid;
+      // cuSetElems_conti_ii[Type.ComplexFloat][Type.Uint32       ] = cuSetElems_conti_gpu_invalid;
+
+      cuSetElems_conti_ii[Type.Double][Type.ComplexDouble] = cuSetElems_conti_gpu_dtcd;
+      cuSetElems_conti_ii[Type.Double][Type.ComplexFloat] = cuSetElems_conti_gpu_dtcf;
+      cuSetElems_conti_ii[Type.Double][Type.Double] = cuSetElems_conti_gpu_dtd;
+      cuSetElems_conti_ii[Type.Double][Type.Float] = cuSetElems_conti_gpu_dtf;
+      cuSetElems_conti_ii[Type.Double][Type.Int64] = cuSetElems_conti_gpu_dti64;
+      cuSetElems_conti_ii[Type.Double][Type.Uint64] = cuSetElems_conti_gpu_dtu64;
+      cuSetElems_conti_ii[Type.Double][Type.Int32] = cuSetElems_conti_gpu_dti32;
+      cuSetElems_conti_ii[Type.Double][Type.Uint32] = cuSetElems_conti_gpu_dtu32;
+      cuSetElems_conti_ii[Type.Double][Type.Int16] = cuSetElems_conti_gpu_dti16;
+      cuSetElems_conti_ii[Type.Double][Type.Uint16] = cuSetElems_conti_gpu_dtu16;
+      cuSetElems_conti_ii[Type.Double][Type.Bool] = cuSetElems_conti_gpu_dtb;
+
+      cuSetElems_conti_ii[Type.Float][Type.ComplexDouble] = cuSetElems_conti_gpu_ftcd;
+      cuSetElems_conti_ii[Type.Float][Type.ComplexFloat] = cuSetElems_conti_gpu_ftcf;
+      cuSetElems_conti_ii[Type.Float][Type.Double] = cuSetElems_conti_gpu_ftd;
+      cuSetElems_conti_ii[Type.Float][Type.Float] = cuSetElems_conti_gpu_ftf;
+      cuSetElems_conti_ii[Type.Float][Type.Int64] = cuSetElems_conti_gpu_fti64;
+      cuSetElems_conti_ii[Type.Float][Type.Uint64] = cuSetElems_conti_gpu_ftu64;
+      cuSetElems_conti_ii[Type.Float][Type.Int32] = cuSetElems_conti_gpu_fti32;
+      cuSetElems_conti_ii[Type.Float][Type.Uint32] = cuSetElems_conti_gpu_ftu32;
+      cuSetElems_conti_ii[Type.Float][Type.Uint16] = cuSetElems_conti_gpu_ftu16;
+      cuSetElems_conti_ii[Type.Float][Type.Int16] = cuSetElems_conti_gpu_fti16;
+      cuSetElems_conti_ii[Type.Float][Type.Bool] = cuSetElems_conti_gpu_ftb;
+
+      cuSetElems_conti_ii[Type.Int64][Type.ComplexDouble] = cuSetElems_conti_gpu_i64tcd;
+      cuSetElems_conti_ii[Type.Int64][Type.ComplexFloat] = cuSetElems_conti_gpu_i64tcf;
+      cuSetElems_conti_ii[Type.Int64][Type.Double] = cuSetElems_conti_gpu_i64td;
+      cuSetElems_conti_ii[Type.Int64][Type.Float] = cuSetElems_conti_gpu_i64tf;
+      cuSetElems_conti_ii[Type.Int64][Type.Int64] = cuSetElems_conti_gpu_i64ti64;
+      cuSetElems_conti_ii[Type.Int64][Type.Uint64] = cuSetElems_conti_gpu_i64tu64;
+      cuSetElems_conti_ii[Type.Int64][Type.Int32] = cuSetElems_conti_gpu_i64ti32;
+      cuSetElems_conti_ii[Type.Int64][Type.Uint32] = cuSetElems_conti_gpu_i64tu32;
+      cuSetElems_conti_ii[Type.Int64][Type.Uint16] = cuSetElems_conti_gpu_i64tu16;
+      cuSetElems_conti_ii[Type.Int64][Type.Int16] = cuSetElems_conti_gpu_i64ti16;
+      cuSetElems_conti_ii[Type.Int64][Type.Bool] = cuSetElems_conti_gpu_i64tb;
+
+      cuSetElems_conti_ii[Type.Uint64][Type.ComplexDouble] = cuSetElems_conti_gpu_u64tcd;
+      cuSetElems_conti_ii[Type.Uint64][Type.ComplexFloat] = cuSetElems_conti_gpu_u64tcf;
+      cuSetElems_conti_ii[Type.Uint64][Type.Double] = cuSetElems_conti_gpu_u64td;
+      cuSetElems_conti_ii[Type.Uint64][Type.Float] = cuSetElems_conti_gpu_u64tf;
+      cuSetElems_conti_ii[Type.Uint64][Type.Int64] = cuSetElems_conti_gpu_u64ti64;
+      cuSetElems_conti_ii[Type.Uint64][Type.Uint64] = cuSetElems_conti_gpu_u64tu64;
+      cuSetElems_conti_ii[Type.Uint64][Type.Int32] = cuSetElems_conti_gpu_u64ti32;
+      cuSetElems_conti_ii[Type.Uint64][Type.Uint32] = cuSetElems_conti_gpu_u64tu32;
+      cuSetElems_conti_ii[Type.Uint64][Type.Int16] = cuSetElems_conti_gpu_u64ti16;
+      cuSetElems_conti_ii[Type.Uint64][Type.Uint16] = cuSetElems_conti_gpu_u64tu16;
+      cuSetElems_conti_ii[Type.Uint64][Type.Bool] = cuSetElems_conti_gpu_u64tb;
+
+      cuSetElems_conti_ii[Type.Int32][Type.ComplexDouble] = cuSetElems_conti_gpu_i32tcd;
+      cuSetElems_conti_ii[Type.Int32][Type.ComplexFloat] = cuSetElems_conti_gpu_i32tcf;
+      cuSetElems_conti_ii[Type.Int32][Type.Double] = cuSetElems_conti_gpu_i32td;
+      cuSetElems_conti_ii[Type.Int32][Type.Float] = cuSetElems_conti_gpu_i32tf;
+      cuSetElems_conti_ii[Type.Int32][Type.Int64] = cuSetElems_conti_gpu_i32ti64;
+      cuSetElems_conti_ii[Type.Int32][Type.Uint64] = cuSetElems_conti_gpu_i32tu64;
+      cuSetElems_conti_ii[Type.Int32][Type.Int32] = cuSetElems_conti_gpu_i32ti32;
+      cuSetElems_conti_ii[Type.Int32][Type.Uint32] = cuSetElems_conti_gpu_i32tu32;
+      cuSetElems_conti_ii[Type.Int32][Type.Uint16] = cuSetElems_conti_gpu_i32tu16;
+      cuSetElems_conti_ii[Type.Int32][Type.Int16] = cuSetElems_conti_gpu_i32ti16;
+      cuSetElems_conti_ii[Type.Int32][Type.Bool] = cuSetElems_conti_gpu_i32tb;
+
+      cuSetElems_conti_ii[Type.Uint32][Type.ComplexDouble] = cuSetElems_conti_gpu_u32tcd;
+      cuSetElems_conti_ii[Type.Uint32][Type.ComplexFloat] = cuSetElems_conti_gpu_u32tcf;
+      cuSetElems_conti_ii[Type.Uint32][Type.Double] = cuSetElems_conti_gpu_u32td;
+      cuSetElems_conti_ii[Type.Uint32][Type.Float] = cuSetElems_conti_gpu_u32tf;
+      cuSetElems_conti_ii[Type.Uint32][Type.Int64] = cuSetElems_conti_gpu_u32ti64;
+      cuSetElems_conti_ii[Type.Uint32][Type.Uint64] = cuSetElems_conti_gpu_u32tu64;
+      cuSetElems_conti_ii[Type.Uint32][Type.Int32] = cuSetElems_conti_gpu_u32ti32;
+      cuSetElems_conti_ii[Type.Uint32][Type.Uint32] = cuSetElems_conti_gpu_u32tu32;
+      cuSetElems_conti_ii[Type.Uint32][Type.Uint16] = cuSetElems_conti_gpu_u32tu16;
+      cuSetElems_conti_ii[Type.Uint32][Type.Int16] = cuSetElems_conti_gpu_u32ti16;
+      cuSetElems_conti_ii[Type.Uint32][Type.Bool] = cuSetElems_conti_gpu_u32tb;
+
+      cuSetElems_conti_ii[Type.Int16][Type.ComplexDouble] = cuSetElems_conti_gpu_i16tcd;
+      cuSetElems_conti_ii[Type.Int16][Type.ComplexFloat] = cuSetElems_conti_gpu_i16tcf;
+      cuSetElems_conti_ii[Type.Int16][Type.Double] = cuSetElems_conti_gpu_i16td;
+      cuSetElems_conti_ii[Type.Int16][Type.Float] = cuSetElems_conti_gpu_i16tf;
+      cuSetElems_conti_ii[Type.Int16][Type.Int64] = cuSetElems_conti_gpu_i16ti64;
+      cuSetElems_conti_ii[Type.Int16][Type.Uint64] = cuSetElems_conti_gpu_i16tu64;
+      cuSetElems_conti_ii[Type.Int16][Type.Int32] = cuSetElems_conti_gpu_i16ti32;
+      cuSetElems_conti_ii[Type.Int16][Type.Uint32] = cuSetElems_conti_gpu_i16tu32;
+      cuSetElems_conti_ii[Type.Int16][Type.Uint16] = cuSetElems_conti_gpu_i16tu16;
+      cuSetElems_conti_ii[Type.Int16][Type.Int16] = cuSetElems_conti_gpu_i16ti16;
+      cuSetElems_conti_ii[Type.Int16][Type.Bool] = cuSetElems_conti_gpu_i16tb;
+
+      cuSetElems_conti_ii[Type.Uint16][Type.ComplexDouble] = cuSetElems_conti_gpu_u16tcd;
+      cuSetElems_conti_ii[Type.Uint16][Type.ComplexFloat] = cuSetElems_conti_gpu_u16tcf;
+      cuSetElems_conti_ii[Type.Uint16][Type.Double] = cuSetElems_conti_gpu_u16td;
+      cuSetElems_conti_ii[Type.Uint16][Type.Float] = cuSetElems_conti_gpu_u16tf;
+      cuSetElems_conti_ii[Type.Uint16][Type.Int64] = cuSetElems_conti_gpu_u16ti64;
+      cuSetElems_conti_ii[Type.Uint16][Type.Uint64] = cuSetElems_conti_gpu_u16tu64;
+      cuSetElems_conti_ii[Type.Uint16][Type.Int32] = cuSetElems_conti_gpu_u16ti32;
+      cuSetElems_conti_ii[Type.Uint16][Type.Uint32] = cuSetElems_conti_gpu_u16tu32;
+      cuSetElems_conti_ii[Type.Uint16][Type.Uint16] = cuSetElems_conti_gpu_u16tu16;
+      cuSetElems_conti_ii[Type.Uint16][Type.Int16] = cuSetElems_conti_gpu_u16ti16;
+      cuSetElems_conti_ii[Type.Uint16][Type.Bool] = cuSetElems_conti_gpu_u16tb;
+
+      cuSetElems_conti_ii[Type.Bool][Type.ComplexDouble] = cuSetElems_conti_gpu_btcd;
+      cuSetElems_conti_ii[Type.Bool][Type.ComplexFloat] = cuSetElems_conti_gpu_btcf;
+      cuSetElems_conti_ii[Type.Bool][Type.Double] = cuSetElems_conti_gpu_btd;
+      cuSetElems_conti_ii[Type.Bool][Type.Float] = cuSetElems_conti_gpu_btf;
+      cuSetElems_conti_ii[Type.Bool][Type.Int64] = cuSetElems_conti_gpu_bti64;
+      cuSetElems_conti_ii[Type.Bool][Type.Uint64] = cuSetElems_conti_gpu_btu64;
+      cuSetElems_conti_ii[Type.Bool][Type.Int32] = cuSetElems_conti_gpu_bti32;
+      cuSetElems_conti_ii[Type.Bool][Type.Uint32] = cuSetElems_conti_gpu_btu32;
+      cuSetElems_conti_ii[Type.Bool][Type.Uint16] = cuSetElems_conti_gpu_btu16;
+      cuSetElems_conti_ii[Type.Bool][Type.Int16] = cuSetElems_conti_gpu_bti16;
+      cuSetElems_conti_ii[Type.Bool][Type.Bool] = cuSetElems_conti_gpu_btb;
 
 #endif
     }

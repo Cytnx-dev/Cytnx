@@ -28,17 +28,17 @@ class DenseUniTensorTest : public ::testing::Test {
     arange({3 * 4 * 5}).reshape({3, 4, 5}).astype(Type.ComplexDouble).to(cytnx::Device.cuda);
 
   UniTensor Spf =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Float, Device.cpu, false)
+    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Float, Device.cuda, false)
       .to(cytnx::Device.cuda);
   UniTensor Spd =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Double, Device.cpu, false)
+    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.Double, Device.cuda, false)
       .to(cytnx::Device.cuda);
   UniTensor Spcf =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexFloat, Device.cpu, false)
+    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexFloat, Device.cuda, false)
       .to(cytnx::Device.cuda);
-  UniTensor Spcd =
-    UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexDouble, Device.cpu, false)
-      .to(cytnx::Device.cuda);
+  UniTensor Spcd = UniTensor({phy, phy.redirect(), aux}, {"1", "2", "3"}, 1, Type.ComplexDouble,
+                             Device.cuda, false)
+                     .to(cytnx::Device.cuda);
 
   UniTensor ut1, ut2, contres1, contres2, contres3, dense4trtensor, densetr;
   UniTensor ut3, ut4, permu1, permu2;

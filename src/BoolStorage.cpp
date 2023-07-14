@@ -173,7 +173,7 @@ namespace cytnx {
         cudaSetDevice(device);
         void *dtmp = utils_internal::cuMalloc_gpu(sizeof(bool) * this->cap);
         checkCudaErrors(
-          cudaMemcpy(dtmp, this->Mem, sizeof(float) * this->cap, cudaMemcpyHostToDevice));
+          cudaMemcpy(dtmp, this->Mem, sizeof(bool) * this->cap, cudaMemcpyHostToDevice));
         boost::intrusive_ptr<Storage_base> out(new BoolStorage());
         out->_Init_byptr(dtmp, this->len, device, true, this->cap);
         return out;
