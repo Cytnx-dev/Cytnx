@@ -54,7 +54,7 @@ namespace cytnx {
       } else {
 #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(in.device()));
-        cytnx::linalg_internal::lii.cuSvd_ii[in.dtype()](
+        cytnx::linalg_internal::lii.cuGeSvd_ii[in.dtype()](
           in._impl->storage()._impl, U._impl->storage()._impl, vT._impl->storage()._impl,
           S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
 
