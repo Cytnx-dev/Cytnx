@@ -63,6 +63,10 @@ namespace cytnx {
         std::vector<Tensor> out;
         out.push_back(S);
         if (is_UvT) {
+          // cout << "vT:\n" << vT << endl;
+          vT.storage()._impl->Move_memory_({in.shape()[1], n_singlu}, {1, 0}, {1, 0});
+          vT = vT.Conj_();
+          // cout << "vT2:\n" << vT << endl;
           out.push_back(U);
           out.push_back(vT);
         }
