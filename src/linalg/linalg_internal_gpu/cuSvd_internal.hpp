@@ -7,6 +7,8 @@
 #include <vector>
 #include "Storage.hpp"
 #include "Type.hpp"
+#include "cytnx_error.hpp"
+#include "lapack_wrapper.hpp"
 
 namespace cytnx {
 

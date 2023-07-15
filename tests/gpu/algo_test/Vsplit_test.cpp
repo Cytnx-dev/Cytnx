@@ -141,7 +141,7 @@ namespace VsplitTest {
     dims:[]
   ====================*/
   TEST(Vsplit, gpu_err_void_tensor) {
-    Tensor T = Tensor().to(cytnx::Device.cuda);
+    Tensor T = Tensor();
     std::vector<cytnx_uint64> dims = {};
     EXPECT_THROW({ auto Ts = algo::Vsplit(T, dims); }, std::logic_error);
   }
