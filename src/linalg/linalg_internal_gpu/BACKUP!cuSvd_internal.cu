@@ -11,8 +11,8 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
                            const cytnx_int64 &N) {
       using data_type = cytnx_complex128;
-      cudaDataType cuda_data_type = CUDA_C_64F;
-      cudaDataType cuda_data_typeR = CUDA_R_64F;
+      cudaDataType_t cuda_data_type = CUDA_C_64F;
+      cudaDataType_t cuda_data_typeR = CUDA_R_64F;
       assert(sizeof(cuDoubleComplex) == sizeof(cytnx_complex128));
 
       cusolverEigMode_t jobz;
@@ -31,9 +31,13 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
         cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
-      cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
-      cytnx_int64 ldA = N, ldu = N, ldvT = M;
+
+      cytnx_int32 min = std::min(M, N);
+      cytnx_int32 max = std::max(M, N);
+      cytnx_int32 ldA = N, ldu = N, ldvT = M;
+      if(N<M){
+        ldA = M, ldu = M, ldvT = N;
+      }
 
       void *UMem, *vTMem;
       if(U->Mem){UMem = U->Mem;}else{
@@ -75,6 +79,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
+      if(N>=M){
           cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
                                       jobz, econ, N, M,
                                       cuda_data_type,            /* dataTypeA */
@@ -85,11 +90,25 @@ namespace cytnx {
                                       UMem, ldvT,                /* ldv */
                                       cuda_data_type,            /* computeType */
                                       d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+        // vT->Move_memory_({(cytnx_uint64)N,(cytnx_uint64)min},{2,1},{2,1});
+      }else{
+          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                      jobz, econ, M, N,
+                                      cuda_data_type,            /* dataTypeA */
+                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                      S->Mem, cuda_data_type,    /* dataTypeU */
+                                      UMem, ldu,                /* ldu */
+                                      cuda_data_type,            /* dataTypeV */
+                                      vTMem, ldvT,                /* ldv */
+                                      cuda_data_type,            /* computeType */
+                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+        // U->Move_memory_({(cytnx_uint64)M,(cytnx_uint64)min},{2,1},{2,1});
+      }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
+                      "Error in cuBlas function 'cusolverDnZgesvd': cuBlas INFO = ", info);
       cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));
@@ -110,8 +129,8 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
                            const cytnx_int64 &N) {
       using data_type = cytnx_complex64;
-      cudaDataType cuda_data_type = CUDA_C_32F;
-      cudaDataType cuda_data_typeR = CUDA_R_32F;
+      cudaDataType_t cuda_data_type = CUDA_C_32F;
+      cudaDataType_t cuda_data_typeR = CUDA_R_32F;
       assert(sizeof(cuFloatComplex) == sizeof(cytnx_complex64));
 
       cusolverEigMode_t jobz;
@@ -131,9 +150,12 @@ namespace cytnx {
       checkCudaErrors(
         cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
-      cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
-      cytnx_int64 ldA = N, ldu = N, ldvT = M;
+      cytnx_int32 min = std::min(M, N);
+      cytnx_int32 max = std::max(M, N);
+      cytnx_int32 ldA = N, ldu = N, ldvT = M;
+      if(N<M){
+        ldA = M, ldu = M, ldvT = N;
+      }
 
       void *UMem, *vTMem;
       if(U->Mem){UMem = U->Mem;}else{
@@ -175,6 +197,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
+      if(N>=M){
           cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
                                       jobz, econ, N, M,
                                       cuda_data_type,            /* dataTypeA */
@@ -185,11 +208,24 @@ namespace cytnx {
                                       UMem, ldvT,                /* ldv */
                                       cuda_data_type,            /* computeType */
                                       d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      }else{
+          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                      jobz, econ, M, N,
+                                      cuda_data_type,            /* dataTypeA */
+                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                      S->Mem, cuda_data_type,    /* dataTypeU */
+                                      UMem, ldu,                /* ldu */
+                                      cuda_data_type,            /* dataTypeV */
+                                      vTMem, ldvT,                /* ldv */
+                                      cuda_data_type,            /* computeType */
+                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+        // U->Move_memory_({(cytnx_uint64)M,(cytnx_uint64)min},{2,1},{2,1});
+      }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
+                      "Error in cuBlas function 'cusolverDnZgesvd': cuBlas INFO = ", info);
       cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));
@@ -210,13 +246,13 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
                           const cytnx_int64 &N) {
       using data_type = cytnx_double;
-      cudaDataType cuda_data_type = CUDA_R_64F;
-      cudaDataType cuda_data_typeR = CUDA_R_64F;
+      cudaDataType_t cuda_data_type = CUDA_R_64F;
+      cudaDataType_t cuda_data_typeR = CUDA_R_64F;
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
       jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? 
-        CUSOLVER_EIG_MODE_NOVECTOR : CUSOLVER_EIG_MODE_VECTOR;
+        CUSOLVER_EIG_MODE_NOVECTOR  : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -230,9 +266,12 @@ namespace cytnx {
       checkCudaErrors(
         cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
-      cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
-      cytnx_int64 ldA = N, ldu = N, ldvT = M;
+      cytnx_int32 min = std::min(M, N);
+      cytnx_int32 max = std::max(M, N);
+      cytnx_int32 ldA = N, ldu = N, ldvT = M;
+      if(N<M){
+        ldA = M, ldu = M, ldvT = N;
+      }
 
       void *UMem, *vTMem;
       if(U->Mem){UMem = U->Mem;}else{
@@ -274,6 +313,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
+      if(N>=M){
           cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
                                       jobz, econ, N, M,
                                       cuda_data_type,            /* dataTypeA */
@@ -284,11 +324,24 @@ namespace cytnx {
                                       UMem, ldvT,                /* ldv */
                                       cuda_data_type,            /* computeType */
                                       d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      }else{
+          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                      jobz, econ, M, N,
+                                      cuda_data_type,            /* dataTypeA */
+                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                      S->Mem, cuda_data_type,    /* dataTypeU */
+                                      UMem, ldu,                /* ldu */
+                                      cuda_data_type,            /* dataTypeV */
+                                      vTMem, ldvT,                /* ldv */
+                                      cuda_data_type,            /* computeType */
+                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+        // U->Move_memory_({(cytnx_uint64)M,(cytnx_uint64)min},{2,1},{2,1});
+      }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
+                      "Error in cuBlas function 'cusolverDnZgesvd': cuBlas INFO = ", info);
       cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));
@@ -309,13 +362,13 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base> &S, const cytnx_int64 &M,
                           const cytnx_int64 &N) {
       using data_type = cytnx_float;
-      cudaDataType cuda_data_type = CUDA_R_32F;
-      cudaDataType cuda_data_typeR = CUDA_R_32F;
+      cudaDataType_t cuda_data_type = CUDA_R_32F;
+      cudaDataType_t cuda_data_typeR = CUDA_R_32F;
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
       jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? 
-        CUSOLVER_EIG_MODE_NOVECTOR : CUSOLVER_EIG_MODE_VECTOR;
+        CUSOLVER_EIG_MODE_NOVECTOR  : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -329,9 +382,12 @@ namespace cytnx {
       checkCudaErrors(
         cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
-      cytnx_int64 min = std::min(M, N);
-      cytnx_int64 max = std::max(M, N);
-      cytnx_int64 ldA = N, ldu = N, ldvT = M;
+      cytnx_int32 min = std::min(M, N);
+      cytnx_int32 max = std::max(M, N);
+      cytnx_int32 ldA = N, ldu = N, ldvT = M;
+      if(N<M){
+        ldA = M, ldu = M, ldvT = N;
+      }
 
       void *UMem, *vTMem;
       if(U->Mem){UMem = U->Mem;}else{
@@ -373,6 +429,7 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
+      if(N>=M){
           cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
                                       jobz, econ, N, M,
                                       cuda_data_type,            /* dataTypeA */
@@ -383,11 +440,24 @@ namespace cytnx {
                                       UMem, ldvT,                /* ldv */
                                       cuda_data_type,            /* computeType */
                                       d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      }else{
+          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                      jobz, econ, M, N,
+                                      cuda_data_type,            /* dataTypeA */
+                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                      S->Mem, cuda_data_type,    /* dataTypeU */
+                                      UMem, ldu,                /* ldu */
+                                      cuda_data_type,            /* dataTypeV */
+                                      vTMem, ldvT,                /* ldv */
+                                      cuda_data_type,            /* computeType */
+                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+        // U->Move_memory_({(cytnx_uint64)M,(cytnx_uint64)min},{2,1},{2,1});
+      }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
+                      "Error in cuBlas function 'cusolverDnZgesvd': cuBlas INFO = ", info);
       cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));

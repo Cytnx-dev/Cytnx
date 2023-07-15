@@ -271,6 +271,9 @@ namespace cytnx {
       return cuMovemem_cutensor_gpu<cytnx_complex128, cuDoubleComplex>(
         in, old_shape, mapper, invmapper, is_inplace, CUDA_C_64F, CUDA_C_64F, CUDA_C_64F,
         make_cuDoubleComplex(1, 0));
+  #elif defined(UNI_CUTT)
+      return cuMovemem_cutt_gpu<cytnx_complex128, cuDoubleComplex>(in, old_shape, mapper, invmapper,
+                                                                 is_inplace);
   #else
       return cuMovemem_gpu_general<cytnx_complex128, cuDoubleComplex>(in, old_shape, mapper,
                                                                       invmapper, is_inplace);
@@ -282,7 +285,7 @@ namespace cytnx {
                                                         const std::vector<cytnx_uint64> &mapper,
                                                         const std::vector<cytnx_uint64> &invmapper,
                                                         const bool is_inplace) {
-  #if defined(UNO_CUTENSOR)
+  #if defined(UNI_CUTENSOR)
       return cuMovemem_cutensor_gpu<cytnx_complex64, cuFloatComplex>(
         in, old_shape, mapper, invmapper, is_inplace, CUDA_C_32F, CUDA_C_32F, CUDA_C_32F,
         make_cuFloatComplex(1, 0));
