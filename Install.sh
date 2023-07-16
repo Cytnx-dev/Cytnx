@@ -84,18 +84,18 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=ON "
+FLAG="${FLAG} -DUSE_CUDA=OFF "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
 #        for "=off" case one can skip 6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUTT=on "
+FLAG="${FLAG} -DUSE_CUTT=off "
 #-----------------------------------
 # 6-b) CUTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=on "
+FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
 # 6-c) Magma (DEFALT = off)
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
