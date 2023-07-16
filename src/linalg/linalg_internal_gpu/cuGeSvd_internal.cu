@@ -60,17 +60,20 @@ namespace cytnx {
       if(N>=M){
       checkCudaErrors(cusolverDnZgesvd(
         cusolverH, jobv, jobu, N, M, (cuDoubleComplex *)Mij, ldA, (cytnx_double *)S->Mem, (cuDoubleComplex *)vTMem,
-        ldu, (cuDoubleComplex *)UMem, ldvT, work, lwork, rwork, devinfo));}
-      else{
+        ldu, (cuDoubleComplex *)UMem, ldvT, work, lwork, rwork, devinfo));
+      }else{
         checkCudaErrors(cusolverDnZgesvd(
         cusolverH, jobu, jobv, M, N, (cuDoubleComplex *)Mij, ldA, (cytnx_double *)S->Mem, (cuDoubleComplex *)UMem,
         ldu, (cuDoubleComplex *)vTMem, ldvT, work, lwork, rwork, devinfo));
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        // linalg_internal::cuConj_inplace_internal_cd(U,M*min);
+        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
+        linalg_internal::cuConj_inplace_internal_cd(vT,N*min);
       }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
-
-      cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnZgesvd': cuBlas INFO = ", info);
+      cytnx_error_msg(info != 0, "%s %d %s",
+                      "Error in cuBlas function 'cusolverDnZgesvd': cuBlas INFO = ", info, "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
 
       checkCudaErrors(cudaFree(work));
       checkCudaErrors(cudaFree(Mij));
@@ -138,18 +141,22 @@ namespace cytnx {
       if(N>=M){
       checkCudaErrors(cusolverDnCgesvd(
         cusolverH, jobv, jobu, N, M, (cuFloatComplex *)Mij, ldA, (cytnx_float *)S->Mem, (cuFloatComplex *)vTMem,
-        ldu, (cuFloatComplex *)UMem, ldvT, work, lwork, rwork, devinfo));}
+        ldu, (cuFloatComplex *)UMem, ldvT, work, lwork, rwork, devinfo));
+      }  
       else{
         checkCudaErrors(cusolverDnCgesvd(
         cusolverH, jobu, jobv, M, N, (cuFloatComplex *)Mij, ldA, (cytnx_float *)S->Mem, (cuFloatComplex *)UMem,
         ldu, (cuFloatComplex *)vTMem, ldvT, work, lwork, rwork, devinfo));
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        // linalg_internal::cuConj_inplace_internal_cf(U,M*min);
+        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
+        linalg_internal::cuConj_inplace_internal_cf(vT,N*min);
       }
 
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
-
-      cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnCgesvd': cuBlas INFO = ", info);
+      cytnx_error_msg(info != 0, "%s %d %s",
+                      "Error in cuBlas function 'cusolverDnCgesvd': cuBlas INFO = ", info, "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
 
       checkCudaErrors(cudaFree(work));
       checkCudaErrors(cudaFree(Mij));
@@ -205,7 +212,7 @@ namespace cytnx {
       cytnx_double *work;
       cytnx_double *rwork = NULL;
       checkCudaErrors(cudaMalloc((void **)&work, lwork * sizeof(cytnx_double)));
-      // checkCudaErrors(cudaMalloc((void**)&rwork,(min-1)*sizeof(cytnx_double64)));
+      checkCudaErrors(cudaMalloc((void**)&rwork,(min-1)*sizeof(cytnx_double)));
 
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
@@ -214,20 +221,22 @@ namespace cytnx {
       cytnx_int32 info;
       /// compute:
       if(N>=M){
-      checkCudaErrors(cusolverDnDgesvd(
+      cusolverDnDgesvd(
         cusolverH, jobv, jobu, N, M, (cytnx_double *)Mij, ldA, (cytnx_double *)S->Mem, (cytnx_double *)vTMem,
-        ldu, (cytnx_double *)UMem, ldvT, work, lwork, rwork, devinfo));}
-      else{
-        checkCudaErrors(cusolverDnDgesvd(
-        cusolverH, jobu, jobv, M, N, (cytnx_double *)Mij, ldA, (cytnx_double *)S->Mem, (cytnx_double *)UMem,
-        ldu, (cytnx_double *)vTMem, ldvT, work, lwork, rwork, devinfo));
+        ldu, (cytnx_double *)UMem, ldvT, work, lwork, rwork, devinfo);
+      }else{
+        cusolverDnDgesvd(
+          cusolverH, jobu, jobv, M, N, (cytnx_double *)Mij, ldA, (cytnx_double *)S->Mem, (cytnx_double *)UMem,
+        ldu, (cytnx_double *)vTMem, ldvT, work, lwork, rwork, devinfo);
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
       }
 
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
-      cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnDgesvd': cuBlas INFO = ", info);
+      cytnx_error_msg(info != 0, "%s %d %s",
+                      "Error in cuBlas function 'cusolverDnDgesvd': cuBlas INFO = ", info, "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
 
       checkCudaErrors(cudaFree(work));
       checkCudaErrors(cudaFree(Mij));
@@ -294,18 +303,19 @@ namespace cytnx {
       if(N>=M){
       checkCudaErrors(cusolverDnSgesvd(
         cusolverH, jobv, jobu, N, M, (cytnx_float *)Mij, ldA, (cytnx_float *)S->Mem, (cytnx_float *)vTMem,
-        ldu, (cytnx_float *)UMem, ldvT, work, lwork, rwork, devinfo));}
-      else{
+        ldu, (cytnx_float *)UMem, ldvT, work, lwork, rwork, devinfo));
+      }else{
         checkCudaErrors(cusolverDnSgesvd(
         cusolverH, jobu, jobv, M, N, (cytnx_float *)Mij, ldA, (cytnx_float *)S->Mem, (cytnx_float *)UMem,
         ldu, (cytnx_float *)vTMem, ldvT, work, lwork, rwork, devinfo));
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
       }
 
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
-
-      cytnx_error_msg(info != 0, "%s %d",
-                      "Error in cuBlas function 'cusolverDnSgesvd': cuBlas INFO = ", info);
+      cytnx_error_msg(info != 0, "%s %d %s",
+                      "Error in cuBlas function 'cusolverDnSgesvd': cuBlas INFO = ", info, "If info>0, possibly svd not converge, if info<0, see cusolver manual for more info.");
 
       checkCudaErrors(cudaFree(work));
       checkCudaErrors(cudaFree(Mij));

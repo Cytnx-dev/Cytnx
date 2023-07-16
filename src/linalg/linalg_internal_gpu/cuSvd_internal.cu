@@ -75,22 +75,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                      jobz, econ, N, M,
-                                      cuda_data_type,            /* dataTypeA */
-                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                      S->Mem, cuda_data_type,    /* dataTypeU */
-                                      vTMem, ldu,                /* ldu */
-                                      cuda_data_type,            /* dataTypeV */
-                                      UMem, ldvT,                /* ldv */
-                                      cuda_data_type,            /* computeType */
-                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                  jobz, econ, N, M,
+                                  cuda_data_type,            /* dataTypeA */
+                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                  S->Mem, cuda_data_type,    /* dataTypeU */
+                                  vTMem, ldu,                /* ldu */
+                                  cuda_data_type,            /* dataTypeV */
+                                  UMem, ldvT,                /* ldv */
+                                  cuda_data_type,            /* computeType */
+                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+      linalg_internal::cuConj_inplace_internal_cd(U,M*min);
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
+      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));
       if (UMem != nullptr and U->dtype == Type.Void) {
@@ -175,22 +177,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                      jobz, econ, N, M,
-                                      cuda_data_type,            /* dataTypeA */
-                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                      S->Mem, cuda_data_type,    /* dataTypeU */
-                                      vTMem, ldu,                /* ldu */
-                                      cuda_data_type,            /* dataTypeV */
-                                      UMem, ldvT,                /* ldv */
-                                      cuda_data_type,            /* computeType */
-                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                  jobz, econ, N, M,
+                                  cuda_data_type,            /* dataTypeA */
+                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                  S->Mem, cuda_data_type,    /* dataTypeU */
+                                  vTMem, ldu,                /* ldu */
+                                  cuda_data_type,            /* dataTypeV */
+                                  UMem, ldvT,                /* ldv */
+                                  cuda_data_type,            /* computeType */
+                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+      linalg_internal::cuConj_inplace_internal_cf(U,M*min);
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
+      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));
       if (UMem != nullptr and U->dtype == Type.Void) {
@@ -274,22 +278,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                      jobz, econ, N, M,
-                                      cuda_data_type,            /* dataTypeA */
-                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                      S->Mem, cuda_data_type,    /* dataTypeU */
-                                      vTMem, ldu,                /* ldu */
-                                      cuda_data_type,            /* dataTypeV */
-                                      UMem, ldvT,                /* ldv */
-                                      cuda_data_type,            /* computeType */
-                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                  jobz, econ, N, M,
+                                  cuda_data_type,            /* dataTypeA */
+                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                  S->Mem, cuda_data_type,    /* dataTypeU */
+                                  vTMem, ldu,                /* ldu */
+                                  cuda_data_type,            /* dataTypeV */
+                                  UMem, ldvT,                /* ldv */
+                                  cuda_data_type,            /* computeType */
+                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+      
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
+      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));
       if (UMem != nullptr and U->dtype == Type.Void) {
@@ -373,22 +379,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-          cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                      jobz, econ, N, M,
-                                      cuda_data_type,            /* dataTypeA */
-                                      Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                      S->Mem, cuda_data_type,    /* dataTypeU */
-                                      vTMem, ldu,                /* ldu */
-                                      cuda_data_type,            /* dataTypeV */
-                                      UMem, ldvT,                /* ldv */
-                                      cuda_data_type,            /* computeType */
-                                      d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
+                                  jobz, econ, N, M,
+                                  cuda_data_type,            /* dataTypeA */
+                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                  S->Mem, cuda_data_type,    /* dataTypeU */
+                                  vTMem, ldu,                /* ldu */
+                                  cuda_data_type,            /* dataTypeV */
+                                  UMem, ldvT,                /* ldv */
+                                  cuda_data_type,            /* computeType */
+                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+      
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
+      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Matrix is ill-conditioned, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
 
       checkCudaErrors(cudaFree(Mij));
       if (UMem != nullptr and U->dtype == Type.Void) {
