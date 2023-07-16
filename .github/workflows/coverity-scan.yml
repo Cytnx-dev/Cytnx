@@ -7,7 +7,7 @@ on:
 
 jobs:
   latest:
-    if: (github.event_name == 'schedule' && github.repository == 'kaihsin/Cytnx') || (github.event_name != 'schedule')
+    if: (github.event_name == 'schedule' && github.repository == 'Cytnx-dev/Cytnx') || (github.event_name != 'schedule')
     runs-on: ubuntu-latest
 
     defaults:
@@ -35,7 +35,7 @@ jobs:
     - name: Download Coverity Build Tool
       working-directory: ${{github.workspace}}/build
       run: |
-        wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=kaihsin%2FCytnx" -O cov-analysis-linux64.tar.gz
+        wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=Cytnx-dev%2FCytnx" -O cov-analysis-linux64.tar.gz
         mkdir cov-analysis-linux64
         tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
       env:
@@ -57,6 +57,6 @@ jobs:
           --form file=@cytnx.tgz \
           --form version="v0.7.5" \
           --form description="Cytnx" \
-          https://scan.coverity.com/builds?project=kaihsin%2FCytnx
+          https://scan.coverity.com/builds?project=Cytnx-dev%2FCytnx
       env:
         TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
