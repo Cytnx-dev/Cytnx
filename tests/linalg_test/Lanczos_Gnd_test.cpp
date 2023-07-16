@@ -37,7 +37,9 @@ class MyOp2 : public LinOp {
   }
 };
 
-TEST(Lanczos_Gnd, CompareWithScipyLanczos_Gnd) {
+TEST(Lanczos_Gnd, Lanczos_Gnd_test) {
+  // CompareWithScipy
+
   // cytnx_double evans = -0.6524758424985271;
   cytnx_double evans = -1628.9964650426593;
 
@@ -54,7 +56,8 @@ TEST(Lanczos_Gnd, CompareWithScipyLanczos_Gnd) {
   // EXPECT_DOUBLE_EQ(ev, evans);
 }
 
-TEST(Lanczos_Gnd, Bk_CompareWithScipyLanczos_Gnd) {
+TEST(Lanczos_Gnd, Bk_Lanczos_Gnd_test) {
+  // CompareWithScipy
   cytnx_double evans = -2.31950925;
 
   Bond lan_I_v = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});

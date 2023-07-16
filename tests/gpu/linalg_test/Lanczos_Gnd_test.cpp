@@ -6,10 +6,14 @@ class MyOp : public LinOp {
 
   UniTensor matvec(const UniTensor& v) override {
     Tensor tA = arange(27 * 27).reshape(27, 27).to(cytnx::Device.cuda);
+    // Tensor tA = arange(27 * 27).reshape(27, 27);
+    // tA.to_(cytnx::Device.cuda);
     UniTensor A = UniTensor(tA).to(cytnx::Device.cuda);
     // A = A + A.clone().permute({1, 0},-1,false);
     A = A + A.Transpose();
     return UniTensor(linalg::Dot(A.get_block_(), v.get_block_())).to(cytnx::Device.cuda);
+    // return UniTensor(linalg::Tensordot(A.get_block_(), v.get_block_(), {1}, {0}))
+    //   .to(cytnx::Device.cuda);
   }
 };
 
@@ -40,7 +44,8 @@ class MyOp2 : public LinOp {
   }
 };
 
-TEST(Lanczos_Gnd, gpu_CompareWithScipyLanczos_Gnd) {
+TEST(Lanczos_Gnd, gpu_Lanczos_Gnd_test) {
+  // CompareWithScipy
   // cytnx_double evans = -0.6524758424985271;
   cytnx_double evans = -1628.9964650426593;
 
@@ -57,7 +62,8 @@ TEST(Lanczos_Gnd, gpu_CompareWithScipyLanczos_Gnd) {
   // EXPECT_DOUBLE_EQ(ev, evans);
 }
 
-TEST(Lanczos_Gnd, gpu_Bk_CompareWithScipyLanczos_Gnd) {
+TEST(Lanczos_Gnd, gpu_Bk_Lanczos_Gnd_test) {
+  // CompareWithScipy
   cytnx_double evans = -2.31950925;
 
   Bond lan_I_v = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});

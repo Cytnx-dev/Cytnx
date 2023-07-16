@@ -95,42 +95,57 @@ namespace cytnx {
                          const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
                          const bool &cacheR) {
       unsigned int t = Tl.dtype();
-
       if (t == Type.Uint64 || t == Type.Int64 || t == Type.Uint16 || t == Type.Int16 ||
           t == Type.Bool) {
         cytnx_warning_msg(true, "Unsupported data type in cuTensor: %s, use default implementation",
                           Type.Typeinfos[Tl.dtype()].name);
         return _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
       }
+      // This works:
+      // if (t != Tr.dtype()) {
+      //   cytnx_warning_msg(true, "[Tensordot] Tl.dtype != Tr.dtype, use default implementation%s",
+      //                     "\n");
+      //   return _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
+      // }
+
+      Tensor _tl = Tl.contiguous(), _tr = Tr.contiguous();
+      if (Tl.dtype() != Tr.dtype()) {
+        // do conversion:
+        if (Tl.dtype() < Tr.dtype()) {
+          _tr = _tr.astype(Tl.dtype());
+        } else {
+          _tl = _tl.astype(Tr.dtype());
+        }
+      }
 
       // checking + calculate comm_dim:
       for (cytnx_uint64 i = 0; i < idxl.size(); i++) {
-        cytnx_error_msg(Tl.shape()[idxl[i]] != Tr.shape()[idxr[i]],
+        cytnx_error_msg(_tl.shape()[idxl[i]] != _tr.shape()[idxr[i]],
                         "the index L=%d and R=%d have different dimension!\n", idxl[i], idxr[i]);
       }
 
       // check device:
-      cytnx_error_msg(Tl.device() != Tr.device(),
-                      "[Matmul] error two tensor should be on same device.%s", "\n");
+      cytnx_error_msg(_tl.device() != _tr.device(),
+                      "[Tensordot] error two tensor should be on same device.%s", "\n");
 
-      std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
-      std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
+      std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(_tl.shape().size()), idxl);
+      std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(_tr.shape().size()), idxr);
 
       // calculate output shape:
       std::vector<cytnx_uint64> new_shape(non_contract_l.size() + non_contract_r.size());
       for (cytnx_uint64 i = 0; i < non_contract_l.size(); i++)
-        new_shape[i] = Tl.shape()[non_contract_l[i]];
+        new_shape[i] = _tl.shape()[non_contract_l[i]];
       for (cytnx_uint64 i = 0; i < non_contract_r.size(); i++)
-        new_shape[non_contract_l.size() + i] = Tr.shape()[non_contract_r[i]];
+        new_shape[non_contract_l.size() + i] = _tr.shape()[non_contract_r[i]];
 
       if (new_shape.size() == 0) {
         new_shape.push_back(1);
       }
 
-      out.Init(new_shape, Tr.dtype(), Tr.device(), false);
+      out.Init(new_shape, _tr.dtype(), _tr.device(), false);
 
-      checkCudaErrors(cudaSetDevice(Tl.device()));
-      cytnx::linalg_internal::lii.cuTensordot_ii[Tl.dtype()](out, Tl, Tr, idxl, idxr);
+      checkCudaErrors(cudaSetDevice(_tl.device()));
+      cytnx::linalg_internal::lii.cuTensordot_ii[_tl.dtype()](out, _tl, _tr, idxl, idxr);
     }
 #endif
 

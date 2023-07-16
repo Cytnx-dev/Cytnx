@@ -1,6 +1,7 @@
 #include "ExpM_test.h"
 
-TEST(ExpM, gpu_CompareWithScipyExpM) {
+TEST(ExpM, gpu_ExpM_test) {
+  // CompareWithScipy
   std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
                                       {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
                                       {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},

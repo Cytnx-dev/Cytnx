@@ -144,7 +144,7 @@ namespace cytnx {
         free(Mem);
       } else {
 #ifdef UNI_GPU
-        cudaFree(Mem);
+        checkCudaErrors(cudaFree(Mem));
 #else
         cytnx_error_msg(1, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
 #endif

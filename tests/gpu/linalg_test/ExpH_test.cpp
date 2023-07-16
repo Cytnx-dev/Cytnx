@@ -1,6 +1,7 @@
 #include "ExpH_test.h"
 
-TEST(ExpH, gpu_CompareWithScipyExpH) {
+TEST(ExpH, gpu_ExpH_test) {
+  // CompareWithScipy
   std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
                                       {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
                                       {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},
@@ -31,7 +32,8 @@ TEST(ExpH, gpu_CompareWithScipyExpH) {
   }
 }
 
-TEST(ExpH_UT, gpu_UTCompareWithScipyExpH) {
+TEST(ExpH_UT, gpu_UTExpH_test) {
+  // CompareWithScipy
   std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
                                       {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
                                       {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},

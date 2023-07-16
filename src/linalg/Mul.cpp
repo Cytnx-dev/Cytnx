@@ -132,7 +132,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_double>(const cytnx_double &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Double);
+      Storage Cnst(1, Type.Double, Rt.device());
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -397,10 +397,12 @@ namespace cytnx {
 
     template <>
     Tensor Mul<Scalar>(const Scalar &lc, const Tensor &Rt) {
-      Storage Cnst;  // create a shallow container without allocate. Using base!
-
+      Storage Cnst = Storage();  // create a shallow container without allocate. Using base!
+      std::cout << "Inside Mul.cpp: Tensor Mul<Scalar>" << std::endl;
       Cnst._impl->Mem = lc._impl->get_raw_address();
       Cnst._impl->len = 1;
+      std::cout << "(double)(*(double *)(Cnst._impl->Mem)): "
+                << (double)(*(double *)(Cnst._impl->Mem)) << std::endl;
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();

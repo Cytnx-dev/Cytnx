@@ -26,7 +26,9 @@ namespace cytnx {
         }
       } else {
         for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+          cout << "a * UR.get_block_(blk):" << a * UR.get_block_(blk) << endl;
           UL.get_block_(blk) -= a * UR.get_block_(blk);
+          cout << "UL.get_block_(blk):" << UL.get_block_(blk) << endl;
         }
       }
     }
@@ -54,11 +56,13 @@ namespace cytnx {
 
       double Norm = double(Contract(Tin, Tin.Dagger()).item().real());
       Norm = std::sqrt(Norm);
-
-      // cout<<"Norm: "<<Norm<<endl;
+      cout << "Tin: " << Tin << endl;
+      cout << "Norm: " << Norm << endl;
 
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
+      cout << "psi_1: " << psi_1 << endl;
+
       // UniTensor psi_1 = Tin.clone();
       // psi_1.get_block_()/=Tin.get_block_().Norm();
 
@@ -69,7 +73,8 @@ namespace cytnx {
       // declare variables, A,B should be real if LinOp is hermitian!
       Tensor As = zeros({1}, Hop->dtype() < 3 ? Hop->dtype() + 2 : Hop->dtype(), Tin.device());
       Tensor Bs = As.clone();
-
+      cout << "As0: " << As << endl;
+      cout << "Bs0: " << Bs << endl;
       Scalar E;
 
       // temporary:
@@ -79,11 +84,7 @@ namespace cytnx {
       //-------------------------------------------------
       new_psi = Hop->matvec(psi_1);
 
-      // cout<<"psi_1, new_psi: "<<endl;
-      // psi_1.print_diagram();
-      // psi_1.print_blocks();
-      // new_psi.print_diagram();
-      // new_psi.print_blocks();
+      cout << "psi_1, new_psi: " << psi_1 << new_psi << endl;
       /*
          checking if the output match input:
       */
@@ -95,18 +96,27 @@ namespace cytnx {
                       "[ERROR] LinOp.matvec(UniTensor) -> UniTensor the output should have same "
                       "labels and shape as input!%s",
                       "\n");
-
+      cout << "preAs: " << As << endl;
       As(0) = Contract(new_psi.Dagger(), psi_1).item().real();
-
+      cout << "postAs: " << As << endl;
       // As(0) =
       // linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true);
 
       // cout << (new_psi);
       // new_psi -= As(0)*psi_1;
+      cout << "prenewpsi: " << new_psi << endl;
+      cout << "preAs: " << As << endl;
+      cout << "prepsi_1: " << psi_1 << endl;
       unsafe_Sub_(new_psi, As(0).item(), psi_1);
+      cout << "postnewpsi: " << new_psi << endl;
+      cout << "postAs: " << As << endl;
+      cout << "postpsi_1: " << psi_1 << endl;
 
+      cout << "####################new_psi: " << new_psi << endl;
+      cout << "####################new_psi.Norm().item(): " << new_psi.Norm().item() << endl;
       Bs(0) = new_psi.Norm().item();  // sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
       // Bs(0) = new_psi.get_block_().Norm();
+      cout << "##############newBs" << Bs << endl;
 
       psi_0 = psi_1;
 
@@ -118,17 +128,17 @@ namespace cytnx {
       E = As(0).item();
       Scalar Ediff;
 
-      // cout<<"psi_0: "<<endl;
-      // psi_0.print_diagram();
-      // psi_0.print_blocks();
-      // cout<<"As(0), Bs(0): "<<As(0)<<" "<<Bs(0)<<endl;
+      cout << "psi_0: " << psi_0 << endl;
+      cout << "psi_1: " << psi_1 << endl;
+      cout << "new_psi: " << new_psi << endl;
+      cout << "As, Bs: " << As << "\n" << Bs << endl;
 
       ///---------------------------
 
       // iteration LZ:
       for (unsigned int i = 1; i < Maxiter; i++) {
-        // cout << "iter: " << i << "chck:" << endl;
-        // cout << Contract(psi_1,psi_1.Dagger()).item() << endl;
+        cout << "iter: " << i << "chck:" << endl;
+        cout << Contract(psi_1, psi_1.Dagger()).item() << endl;
 
         // new_psi = Hop->matvec(psi_1) - Bs(i-1)*psi_0;
         new_psi = Hop->matvec(psi_1);
@@ -140,15 +150,22 @@ namespace cytnx {
         // new_psi.print_blocks();
 
         As.append(Contract(new_psi.Dagger(), psi_1).item().real());
+        cout << "Contract(new_psi.Dagger(), psi_1):" << Contract(new_psi.Dagger(), psi_1) << endl;
+        cout << "As1: " << As << endl;
+        cout << "Bs1: " << Bs << endl;
         // As.append(linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true).item());
 
         unsafe_Sub_(new_psi, As(i).item(), psi_1);
         unsafe_Sub_(new_psi, Bs(i - 1).item(), psi_0);
 
+        cout << "As2: " << As << endl;
+        cout << "Bs2: " << Bs << endl;
+
         try {
           // diagonalize:
           auto tmptmp = linalg::Tridiag(As, Bs, true, true, true);
           tmpEsVs = tmptmp;
+          cout << "tmptmp: " << tmptmp << endl;
         } catch (std::logic_error le) {
           std::cout << "[WARNING] Lanczos_Gnd -> Tridiag error: \n";
           std::cout << le.what() << std::endl;

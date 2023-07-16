@@ -436,7 +436,10 @@ TEST_F(DenseUniTensorTest, gpu_permute_2) {
 TEST_F(DenseUniTensorTest, gpu_contract1) {
   ut1.set_labels({"a", "b", "c", "d"});
   ut2.set_labels({"a", "aa", "bb", "cc"});
+  cout << "ut1!:" << ut1 << endl;
+  cout << "ut2!:" << ut2 << endl;
   UniTensor out = ut1.contract(ut2);
+  cout << "out!:" << out << endl;
   auto outbk = out.get_block_();
   auto ansbk = contres1.get_block_();
   EXPECT_TRUE(AreNearlyEqTensor(outbk, ansbk, 1e-5));

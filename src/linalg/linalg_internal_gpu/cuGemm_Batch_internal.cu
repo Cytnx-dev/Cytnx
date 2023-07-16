@@ -174,7 +174,7 @@ namespace cytnx {
           checkCudaErrors(cublasDestroy(cublasH));
         }
       }
-      checkCudaErrors(cudaDeviceSynchronize());
+      // checkCudaErrors(cudaDeviceSynchronize());
     }
     void cuGemm_Batch_internal_f(const char *transa_array, const char *transb_array,
                                  const blas_int *m_array, const blas_int *n_array,

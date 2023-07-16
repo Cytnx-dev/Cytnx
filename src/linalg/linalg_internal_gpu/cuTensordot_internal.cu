@@ -211,7 +211,7 @@ namespace cytnx {
                                 const std::vector<cytnx_uint64> &idxl,
                                 const std::vector<cytnx_uint64> &idxr) {
       typedef double hostType;
-      cudaDataType_t type = CUDA_C_64F;
+      cudaDataType_t type = CUDA_R_64F;
       cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_64F;
 
       hostType alpha = 1.f;
@@ -224,7 +224,7 @@ namespace cytnx {
                                 const std::vector<cytnx_uint64> &idxl,
                                 const std::vector<cytnx_uint64> &idxr) {
       typedef float hostType;
-      cudaDataType_t type = CUDA_C_32F;
+      cudaDataType_t type = CUDA_R_32F;
       cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32F;
 
       hostType alpha = 1.f;
