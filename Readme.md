@@ -18,7 +18,15 @@ See The following user guide for install and using of cytnx:
      
 
 ## Current dev Version:
+    v0.9.3
+    
     v0.9.2
+    1. [Change] Remove all deprecated APIs and old SparseUniTensor data structure
+    2. [Fix] Bugs when batch_matmul when no MKL 
+    3. [Update] Update examples to match new APIs
+    4. [New] add labels options when creating UniTensor from Tensor.
+    5. [New] change MKL to mkl_rt instead of fixed interface ilp64/lp64
+
 
     v0.9.1
     
