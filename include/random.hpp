@@ -122,14 +122,16 @@ namespace cytnx {
     @param[in] mean the mean of the normal distribution
     @param[in] std the standard deviation \f$ \sigma \f$ of a normal distribution.
     @param[in] device the device that the Tensor is put on. It can be any device defined in
+    @param[in] seed the seed for the random generator. [Default] using device entropy
+    @param[in] dtype the data type of the Tensor. [Default] cytnx::Type.Double
     cytnx::Device
     @param seed the seed for the random generator. [Default] using device entropy
     @return
         [Tensor]
     */
     Tensor normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
-                  const int &device = Device.cpu,
-                  const unsigned int &seed = std::random_device()());
+                  const int &device = Device.cpu, const unsigned int &seed = std::random_device()(),
+                  const unsigned int &dtype = Type.Double);
 
     /**
     @brief create an Tensor with all the elements are initialized with normal distribution
@@ -139,12 +141,13 @@ namespace cytnx {
     @param[in] device the device that the Tensor is put on. It can be any device defined in
     cytnx::Device
     @param[in] seed the seed for the random generator. [Default] using device entropy
+    @param[in] dtype the data type of the Tensor. [Default] cytnx::Type.Double
     @return
         [Tensor]
     */
     Tensor normal(const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std,
-                  const int &device = Device.cpu,
-                  const unsigned int &seed = std::random_device()());
+                  const int &device = Device.cpu, const unsigned int &seed = std::random_device()(),
+                  const unsigned int &dtype = Type.Double);
     //@}
 
     // uniform:
@@ -157,12 +160,14 @@ namespace cytnx {
     @param[in] device the device that the Tensor is put on. It can be any device defined in
     cytnx::Device
     @param[in] seed the seed for the random generator. [Default] using device entropy
+    @param[in] dtype the data type of the Tensor. [Default] cytnx::Type.Double
     @return
         [Tensor]
     */
     Tensor uniform(const cytnx_uint64 &Nelem, const double &low, const double &high,
                    const int &device = Device.cpu,
-                   const unsigned int &seed = std::random_device()());
+                   const unsigned int &seed = std::random_device()(),
+                   const unsigned int &dtype = Type.Double);
 
     /**
     @brief create an Tensor with all the elements are initialized with uniform distribution
@@ -172,13 +177,15 @@ namespace cytnx {
     @param[in] device the device that the Tensor is put on. It can be any device defined in
     cytnx::Device
     @param[in] seed the seed for the random generator. [Default] using device entropy
+    @param[in] dtype the data type of the Tensor. [Default] cytnx::Type.Double
     @return
         [Tensor]
 
     */
     Tensor uniform(const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high,
                    const int &device = Device.cpu,
-                   const unsigned int &seed = std::random_device()());
+                   const unsigned int &seed = std::random_device()(),
+                   const unsigned int &dtype = Type.Double);
     //@}
 
   }  // namespace random

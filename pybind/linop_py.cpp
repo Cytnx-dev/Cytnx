@@ -39,8 +39,7 @@ class PyLinOp : public LinOp {
   }
 };
 
-void linop_binding(py::module &m){
-  
+void linop_binding(py::module &m) {
   py::class_<LinOp, PyLinOp>(m, "LinOp")
     .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &>(),
          py::arg("type"), py::arg("nx"), py::arg("dtype") = (int)Type.Double,
@@ -88,12 +87,6 @@ void linop_binding(py::module &m){
         return std::string("");
       },
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-      
-      
-    ;//end of object
 
-
-
-  
-  
+    ;  // end of object
 }

@@ -7,7 +7,8 @@
 using namespace std;
 namespace cytnx {
 
-  void DoubleStorage::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
+  void DoubleStorage::Init(const unsigned long long &len_in, const int &device,
+                           const bool &init_zero) {
     // cout << "Double.init" << endl;
     this->len = len_in;
 
@@ -22,8 +23,10 @@ namespace cytnx {
     }
 
     if (device == Device.cpu) {
-      if(init_zero) this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(double));
-      else this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(double));
+      if (init_zero)
+        this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(double));
+      else
+        this->Mem = utils_internal::Malloc_cpu(this->cap * sizeof(double));
     } else {
 #ifdef UNI_GPU
       cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");

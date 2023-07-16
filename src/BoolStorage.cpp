@@ -8,7 +8,8 @@ using namespace cytnx;
 
 namespace cytnx {
   //+++++++++++++++++++
-  void BoolStorage::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
+  void BoolStorage::Init(const unsigned long long &len_in, const int &device,
+                         const bool &init_zero) {
     // cout << "Bool.init" << endl;
     // check:
     this->len = len_in;
@@ -24,8 +25,10 @@ namespace cytnx {
     }
 
     if (device == Device.cpu) {
-      if(init_zero) this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(bool));
-      else this->Mem = utils_internal::Malloc_cpu(this->cap*sizeof(bool));
+      if (init_zero)
+        this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(bool));
+      else
+        this->Mem = utils_internal::Malloc_cpu(this->cap * sizeof(bool));
     } else {
 #ifdef UNI_GPU
       cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
@@ -170,7 +173,7 @@ namespace cytnx {
         cudaSetDevice(device);
         void *dtmp = utils_internal::cuMalloc_gpu(sizeof(bool) * this->cap);
         checkCudaErrors(
-          cudaMemcpy(dtmp, this->Mem, sizeof(float) * this->cap, cudaMemcpyHostToDevice));
+          cudaMemcpy(dtmp, this->Mem, sizeof(bool) * this->cap, cudaMemcpyHostToDevice));
         boost::intrusive_ptr<Storage_base> out(new BoolStorage());
         out->_Init_byptr(dtmp, this->len, device, true, this->cap);
         return out;

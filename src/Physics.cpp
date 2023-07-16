@@ -146,68 +146,65 @@ namespace cytnx {
 
   }  // namespace qgates
 
-  namespace operators{
+  namespace operators {
 
-    UniTensor Sz_shalf(const int &device, const bool &conserve_qns){
-        if(conserve_qns){
-            Bond bd_phy(BD_IN,{Qs(1)>>1,Qs(-1)>>1});
-            auto out = UniTensor({bd_phy,bd_phy.redirect()});
-            out.at({0,0,0,0}) = 0.5;
-            out.at({1,1,0,0}) = -0.5;
-            return out;
+    UniTensor Sz_shalf(const int &device, const bool &conserve_qns) {
+      if (conserve_qns) {
+        Bond bd_phy(BD_IN, {Qs(1) >> 1, Qs(-1) >> 1});
+        auto out = UniTensor({bd_phy, bd_phy.redirect()});
+        out.at({0, 0, 0, 0}) = 0.5;
+        out.at({1, 1, 0, 0}) = -0.5;
+        return out;
 
-        }else{
-            return UniTensor(physics::pauli("z",device).real());
-        }
+      } else {
+        return UniTensor(physics::pauli("z", device).real());
+      }
     }
-    UniTensor Sp_shalf(const int &device, const bool &conserve_qns, const std::string &aux_dir){
-        if(conserve_qns){
-            Bond bd_phy(BD_IN,{Qs(1)>>1,Qs(-1)>>1});
-            Bond bd_aux;
-            if(aux_dir=="L" or aux_dir=="l")
-                bd_aux.Init(BD_IN,{Qs(1)>>1});
-            else if(aux_dir=="R" or aux_dir=="r")
-                bd_aux.Init(BD_OUT,{Qs(-1)>>1});
-            else
-                cytnx_error_msg(true,"[ERROR] aux_dir can only be L or R. (letter capital insensitive)%s","\n");
+    UniTensor Sp_shalf(const int &device, const bool &conserve_qns, const std::string &aux_dir) {
+      if (conserve_qns) {
+        Bond bd_phy(BD_IN, {Qs(1) >> 1, Qs(-1) >> 1});
+        Bond bd_aux;
+        if (aux_dir == "L" or aux_dir == "l")
+          bd_aux.Init(BD_IN, {Qs(1) >> 1});
+        else if (aux_dir == "R" or aux_dir == "r")
+          bd_aux.Init(BD_OUT, {Qs(-1) >> 1});
+        else
+          cytnx_error_msg(
+            true, "[ERROR] aux_dir can only be L or R. (letter capital insensitive)%s", "\n");
 
-            auto out = UniTensor({bd_phy,bd_phy.redirect(),bd_aux});
-            out.at({0,1,0}) = 1;
-            return out;
+        auto out = UniTensor({bd_phy, bd_phy.redirect(), bd_aux});
+        out.at({0, 1, 0}) = 1;
+        return out;
 
-        }else{
-            auto out = UniTensor(zeros({2,2},Type.Double,device));
-            out.at({0,1}) = 1;
-            return out;
-        }
-
+      } else {
+        auto out = UniTensor(zeros({2, 2}, Type.Double, device));
+        out.at({0, 1}) = 1;
+        return out;
+      }
     }
-    UniTensor Sn_shalf(const int &device, const bool &conserve_qns, const std::string &aux_dir){
-        if(conserve_qns){
-            Bond bd_phy(BD_IN,{Qs(1)>>1,Qs(-1)>>1});
-            Bond bd_aux;
-            if(aux_dir=="L" or aux_dir=="l")
-                bd_aux.Init(BD_IN,{Qs(-1)>>1});
-            else if(aux_dir=="R" or aux_dir=="r")
-                bd_aux.Init(BD_OUT,{Qs(1)>>1});
-            else
-                cytnx_error_msg(true,"[ERROR] aux_dir can only be L or R. (letter capital insensitive)%s","\n");
+    UniTensor Sn_shalf(const int &device, const bool &conserve_qns, const std::string &aux_dir) {
+      if (conserve_qns) {
+        Bond bd_phy(BD_IN, {Qs(1) >> 1, Qs(-1) >> 1});
+        Bond bd_aux;
+        if (aux_dir == "L" or aux_dir == "l")
+          bd_aux.Init(BD_IN, {Qs(-1) >> 1});
+        else if (aux_dir == "R" or aux_dir == "r")
+          bd_aux.Init(BD_OUT, {Qs(1) >> 1});
+        else
+          cytnx_error_msg(
+            true, "[ERROR] aux_dir can only be L or R. (letter capital insensitive)%s", "\n");
 
-            auto out = UniTensor({bd_phy,bd_phy.redirect(),bd_aux});
-            out.at({1,0,0}) = 1;
-            return out;
+        auto out = UniTensor({bd_phy, bd_phy.redirect(), bd_aux});
+        out.at({1, 0, 0}) = 1;
+        return out;
 
-        }else{
-            auto out = UniTensor(zeros({2,2},Type.Double,device));
-            out.at({1,0}) = 1;
-            return out;
-        }
-
+      } else {
+        auto out = UniTensor(zeros({2, 2}, Type.Double, device));
+        out.at({1, 0}) = 1;
+        return out;
+      }
     }
 
-
-  }
-
-
+  }  // namespace operators
 
 }  // namespace cytnx

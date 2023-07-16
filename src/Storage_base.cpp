@@ -72,11 +72,13 @@ namespace cytnx {
   // }
 
   //==========================
-  void Storage_base::Init(const unsigned long long &len_in, const int &device, const bool &init_zero) {
+  void Storage_base::Init(const unsigned long long &len_in, const int &device,
+                          const bool &init_zero) {
     // cout << "Base.init" << endl;
   }
 
-  Storage_base::Storage_base(const unsigned long long &len_in, const int &device, const bool &init_zero) {
+  Storage_base::Storage_base(const unsigned long long &len_in, const int &device,
+                             const bool &init_zero) {
     this->Init(len_in, device, init_zero);
   }
 
@@ -200,9 +202,9 @@ namespace cytnx {
                                         const std::vector<cytnx_uint64> &shape,
                                         const std::vector<std::vector<cytnx_uint64>> &locators,
                                         const cytnx_uint64 &Nunit) {
-    if(User_debug)
-    cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
-                    "internal, the output dtype does not match current storage dtype.\n");
+    if (User_debug)
+      cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
+                      "internal, the output dtype does not match current storage dtype.\n");
 
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < locators.size(); i++) {
@@ -237,11 +239,12 @@ namespace cytnx {
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      cytnx_error_msg(true,
-                      "[Developing][GPU Getelem v2][Note, currently slice on GPU is disabled for "
-                      "further inspection]%s",
-                      "\n");
-      // utils_internal::uii.cuGetElems_contiguous_ii[this->dtype](out->Mem,this->Mem,c_offj,new_offj,locators,TotalElem,Nunit);
+      // cytnx_error_msg(true,
+      //                 "[Developing][GPU Getelem v2][Note, currently slice on GPU is disabled for
+      //                 " "further inspection]%s",
+      //                 "\n");
+      utils_internal::uii.cuGetElems_conti_ii[this->dtype](out->Mem, this->Mem, c_offj, new_offj,
+                                                           locators, TotalElem, Nunit);
 #else
       cytnx_error_msg(true, "[ERROR][GetElem_byShape] fatal internal%s",
                       "the Storage is set on gpu without CUDA support\n");
@@ -254,11 +257,11 @@ namespace cytnx {
                                      const std::vector<cytnx_uint64> &mapper,
                                      const std::vector<cytnx_uint64> &len,
                                      const std::vector<std::vector<cytnx_uint64>> &locators) {
-    if(User_debug){
-        cytnx_error_msg(shape.size() != len.size(), "%s",
-                        "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
-        cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
-                        "internal, the output dtype does not match current storage dtype.\n");
+    if (User_debug) {
+      cytnx_error_msg(shape.size() != len.size(), "%s",
+                      "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
+      cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
+                      "internal, the output dtype does not match current storage dtype.\n");
     }
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
@@ -311,9 +314,9 @@ namespace cytnx {
                                      const std::vector<cytnx_uint64> &len,
                                      const std::vector<std::vector<cytnx_uint64>> &locators,
                                      const bool &is_scalar) {
-    if(User_debug)
-    cytnx_error_msg(shape.size() != len.size(), "%s",
-                    "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
+    if (User_debug)
+      cytnx_error_msg(shape.size() != len.size(), "%s",
+                      "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
@@ -414,14 +417,14 @@ namespace cytnx {
         in->Mem, this->Mem, c_offj, new_offj, locators, TotalElem, Nunit, is_scalar);
     } else {
 #ifdef UNI_GPU
-      // if(utils_internal::uii.cuSetElems_ii[in->dtype][this->dtype] == NULL){
-      //     cytnx_error_msg(true, "%s","[ERROR] %s","cannot assign complex element to real
-      //     container.\n");
-      // }
-      // checkCudaErrors(cudaSetDevice(this->device));
-      // utils_internal::uii.cuSetElems_conti_ii[in->dtype][this->dtype](in->Mem,this->Mem,offj,new_offj,locators,TotalElem,Nunit,is_scalar);
-      cytnx_error_msg(true, "[Developing][SetElem on gpu is now down for further inspection]%s",
-                      "\n");
+      if (utils_internal::uii.cuSetElems_conti_ii[in->dtype][this->dtype] == NULL) {
+        cytnx_error_msg(true, "[ERROR] %s", "cannot assign complex element to real container.\n");
+      }
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::uii.cuSetElems_conti_ii[in->dtype][this->dtype](
+        in->Mem, this->Mem, c_offj, new_offj, locators, TotalElem, Nunit, is_scalar);
+      // cytnx_error_msg(true, "[Developing][SetElem on gpu is now down for further inspection]%s",
+      //                 "\n");
 #else
       cytnx_error_msg(true, "[ERROR][SetElem_byShape] fatal internal%s",
                       "the Storage is set on gpu without CUDA support\n");

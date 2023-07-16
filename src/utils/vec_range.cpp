@@ -56,6 +56,31 @@ namespace cytnx {
     return out;
   }
 
+  template <>
+  vector<std::string> vec_range<std::string>(const cytnx_int64 &len) {
+    vector<std::string> out(len);
+#ifdef UNI_OMP
+  #pragma omp parallel for schedule(dynamic)
+#endif
+    for (cytnx_int64 i = 0; i < len; i++) {
+      out[i] = to_string(i);
+    }
+    return out;
+  }
+
+  template <>
+  vector<std::string> vec_range<std::string>(const cytnx_int64 &start, const cytnx_int64 &end) {
+    cytnx_error_msg(end < start, "[ERROR] cannot have end < start%s", "\n");
+    vector<std::string> out(end - start);
+#ifdef UNI_OMP
+  #pragma omp parallel for schedule(dynamic)
+#endif
+    for (cytnx_int64 i = 0; i < end - start; i++) {
+      out[i] = to_string(start + i);
+    }
+    return out;
+  }
+
   void vec_range_(vector<cytnx_uint64> &v, const cytnx_uint64 &start, const cytnx_uint64 &end) {
     cytnx_error_msg(end < start, "[ERROR] cannot have end < start%s", "\n");
     // v.resize(end - start);
@@ -87,7 +112,8 @@ namespace cytnx {
   }
 
   template <>
-  void vec_range_<cytnx_int64>(vector<cytnx_int64> &v, const cytnx_int64 &start, const cytnx_int64 &end) {
+  void vec_range_<cytnx_int64>(vector<cytnx_int64> &v, const cytnx_int64 &start,
+                               const cytnx_int64 &end) {
     cytnx_error_msg(end < start, "[ERROR] cannot have end < start%s", "\n");
     // v.resize(end - start);
 #ifdef UNI_OMP

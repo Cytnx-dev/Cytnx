@@ -4,6 +4,7 @@
 #include "UniTensor.hpp"
 
 namespace cytnx {
+  int set_mkl_ilp64() { return cytnx::linalg_internal::lii.set_mkl_ilp64(); }
   namespace linalg {
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
@@ -607,9 +608,8 @@ namespace cytnx {
     //============================================
 
     cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) {
-
       UniTensor out = Lt.clone();
-      out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+      out.set_labels(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       out.Add_(Rt);

@@ -18,7 +18,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-void tnalgo_binding(py::module &m){
+void tnalgo_binding(py::module &m) {
   //====================
   // [Submodule tn_algo]
   pybind11::module m_tnalgo = m.def_submodule("tn_algo", "tensor network algorithm related");

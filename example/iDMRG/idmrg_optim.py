@@ -1,4 +1,3 @@
-import numpy as np
 import cytnx
 
 """
@@ -16,7 +15,7 @@ class Projector(cytnx.LinOp):
         
         self.anet = cytnx.Network("projector.net")
         self.anet.PutUniTensor("M2",M2)
-        self.anet.PutUniTensors(["L","M1","R"],[L,M1,R],False)
+        self.anet.PutUniTensors(["L","M1","R"],[L,M1,R])
         self.psi_shape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]      
   
     def matvec(self,psi):
@@ -24,7 +23,7 @@ class Projector(cytnx.LinOp):
         psi_p = cytnx.UniTensor(psi.clone(),rowrank=0)  ## clone here
         psi_p.reshape_(*self.psi_shape)
 
-        self.anet.PutUniTensor("psi",psi_p,False) ## no- redundant clone here
+        self.anet.PutUniTensor("psi",psi_p)
         H_psi = self.anet.Launch(optimal=True).get_block_() # get_block_ without copy
 
         H_psi.flatten_()
@@ -38,7 +37,7 @@ def eig_Lanczos(psivec, functArgs, Cvgcrit=1.0e-15,maxit=100000):
     #print(eig_Lanczos)
 
     Hop = Projector(*functArgs,psivec.shape()[0],psivec.dtype(),psivec.device())
-    gs_energy ,psivec = cytnx.linalg.Lanczos_Gnd(Hop,Cvgcrit,Tin=psivec,maxiter=maxit)
+    gs_energy ,psivec = cytnx.linalg.Lanczos(Hop,Tin=psivec,method='Gnd',CvgCrit=Cvgcrit,Maxiter=maxit)
 
     return psivec, gs_energy.item()
     
@@ -133,10 +132,10 @@ s0/=s0.get_block_().Norm().item() ## normalize
 #      ----A*[0]-       -B*[0]----
 #
 anet = cytnx.Network("L_AMAH.net")
-anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
+anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
 L = anet.Launch(optimal=True)
 anet = cytnx.Network("R_AMAH.net")
-anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
+anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M]);
 R = anet.Launch(optimal=True)
 
 
@@ -180,10 +179,10 @@ s1/=s1.get_block_().Norm().item()
 #      ----A*[1]-       -B*[1]----
 #
 anet = cytnx.Network("L_AMAH.net")
-anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
+anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
 L = anet.Launch(optimal=True)
 anet = cytnx.Network("R_AMAH.net")
-anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
+anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M]);
 R = anet.Launch(optimal=True)
 
 
@@ -208,7 +207,8 @@ for i in range(Niter):
     #       |       |                    |     |
     #
     A.set_rowrank(1)
-    sR,_,A = cytnx.linalg.Svd(cytnx.Contract(A,s1))
+    # set the label '_aux_R' to another to avoid Svd error
+    sR,_,A = cytnx.linalg.Svd(cytnx.Contract(A, s1).set_label(2, '-2'))
 
 
 
@@ -228,7 +228,8 @@ for i in range(Niter):
     #       |       |                |     |
     #
     B.set_rowrank(2)
-    sL,B,_ = cytnx.linalg.Svd(cytnx.Contract(s1,B))
+    # set the label '_aux_L' to another to avoid Svd error
+    sL,B,_ = cytnx.linalg.Svd(cytnx.Contract(s1, B).set_label(0, '-1'))
 
     ## now, we change it just to be consistent with the notation in the paper
     #
@@ -255,15 +256,15 @@ for i in range(Niter):
     #        --A--[s2]--B--         
     #          |        |       
     #
-    sR.set_label(0,1)
-    sL.set_label(1,0)
+    sR.set_label(0,'1')
+    sL.set_label(1,'0')
     s0 = 1./s0
-    s0.set_labels([0,1])
+    s0.set_labels(['0','1'])
     s2 = cytnx.Contract(cytnx.Contract(sL,s0),sR)
 
-    s2.set_labels([-10,-11])
-    A.set_label(2,-10)
-    B.set_label(0,-11)
+    s2.set_labels(['-10','-11'])
+    A.set_label(2,'-10')
+    B.set_label(0,'-11')
     psi = cytnx.Contract(cytnx.Contract(A,s2),B)
 
     ## optimize wave function:
@@ -310,11 +311,11 @@ for i in range(Niter):
     #
     # 
     anet = cytnx.Network("L_AMAH.net")
-    anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M],is_clone=False);
+    anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
     L = anet.Launch(optimal=True)
 
     anet = cytnx.Network("R_AMAH.net")
-    anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M],is_clone=False);
+    anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M]);
     R = anet.Launch(optimal=True)
 
     s0 = s1

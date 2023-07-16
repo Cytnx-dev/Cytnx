@@ -321,43 +321,42 @@ namespace cytnx {
 
   template <class T>
   std::vector<T> Storage::vector() {
-      T tmp;
-      cytnx_error_msg(Type.cy_typeid(tmp) != this->dtype(),
-                      "[ERROR] the dtype of current Storage does not match assigned vector type.%s",
-                      "\n");
+    T tmp;
+    cytnx_error_msg(Type.cy_typeid(tmp) != this->dtype(),
+                    "[ERROR] the dtype of current Storage does not match assigned vector type.%s",
+                    "\n");
 
-      std::vector<T> out(this->size());
-      Storage S;
-      if (this->device() != Device.cpu) {
-        S = this->to(Device.cpu);
-        memcpy(&out[0], S.data(), sizeof(T) * this->size());
-      } else {
-        memcpy(&out[0], this->data(), sizeof(T) * this->size());
-      }
+    std::vector<T> out(this->size());
+    Storage S;
+    if (this->device() != Device.cpu) {
+      S = this->to(Device.cpu);
+      memcpy(&out[0], S.data(), sizeof(T) * this->size());
+    } else {
+      memcpy(&out[0], this->data(), sizeof(T) * this->size());
+    }
 
-      return out;
+    return out;
   }
 
-  template<>
-  std::vector<cytnx_bool> Storage::vector<cytnx_bool>(){
-      bool tmp;
-      cytnx_error_msg(this->dtype() != Type.Bool,
-                      "[ERROR] the dtype of current Storage does not match assigned vector type.%s",
-                      "\n");
+  template <>
+  std::vector<cytnx_bool> Storage::vector<cytnx_bool>() {
+    bool tmp;
+    cytnx_error_msg(this->dtype() != Type.Bool,
+                    "[ERROR] the dtype of current Storage does not match assigned vector type.%s",
+                    "\n");
 
-      std::vector<bool> out(this->size());
-      Storage S;
-      if (this->device() != Device.cpu) {
-        S = this->to(Device.cpu);
-      }else{
-        S = *this;
-      }
-      for(cytnx_uint64 i=0;i<S.size();i++){
-        out[i] = S.at<bool>(i);
-      }
+    std::vector<bool> out(this->size());
+    Storage S;
+    if (this->device() != Device.cpu) {
+      S = this->to(Device.cpu);
+    } else {
+      S = *this;
+    }
+    for (cytnx_uint64 i = 0; i < S.size(); i++) {
+      out[i] = S.at<bool>(i);
+    }
 
-      return out;
-
+    return out;
   }
 
   template std::vector<cytnx_complex128> Storage::vector<cytnx_complex128>();
@@ -370,15 +369,6 @@ namespace cytnx {
   template std::vector<cytnx_int32> Storage::vector<cytnx_int32>();
   template std::vector<cytnx_uint16> Storage::vector<cytnx_uint16>();
   template std::vector<cytnx_int16> Storage::vector<cytnx_int16>();
-  //template std::vector<cytnx_bool> Storage::vector<cytnx_bool>();
-
-
-
-
-
-
-
-
-
+  // template std::vector<cytnx_bool> Storage::vector<cytnx_bool>();
 
 }  // namespace cytnx

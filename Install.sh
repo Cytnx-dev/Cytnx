@@ -90,21 +90,22 @@ FLAG="${FLAG} -DUSE_CUDA=OFF "
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
 #        for "=off" case one can skip 6-b)
 #-----------------------------------
-# FLAG="${FLAG} -DUSE_CUTT=off "
+FLAG="${FLAG} -DUSE_CUTT=off "
 #-----------------------------------
 # 6-b) CUTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-# FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
+FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
 # 6-c) Magma (DEFALT = off)
 # [Note] set to "=off" will make some of the GPU functions unavailable. 
 #        in case MAGMA is not automatically find, please specify MAGMAROOT path 
 #        where the magma is installed
+# [Remark] You need to install MAGMA with BLA_VENDOR Intel10_64_dyn or Intel10_64ilp
 #-----------------------------------
 MAGMA_ROOT=${HOME}/MAGMA
 FLAG="${FLAG} -DUSE_MAGMA=OFF "
-FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
+FLAG="${FLAG} -DMAGMA_ROOT=${HOME}/MAGMA"
 #-----------------------------------
 # 6-d) CuTensor (DEFALT = off)
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
@@ -113,7 +114,7 @@ FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT} "
 # CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 CUTENSOR_ROOT=${HOME}/CUTENSOR
 FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
-FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
+FLAG="${FLAG} -DCUTENSOR_ROOT=${HOME}/CUTENSOR"
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = off)
 # [Note] set to "=off" will 
@@ -122,7 +123,8 @@ FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT} "
 # CUQUANTUM_ROOT=/usr/local/cuqunatum-......
 CUQUANTUM_ROOT=${HOME}/CUQUANTUM
 FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
-FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT} "
+FLAG="${FLAG} -DCUQUANTUM_ROOT=${HOME}/CUQUANTUM"
+
 
 
 
@@ -164,10 +166,10 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 
 
 echo ${FLAG}
-rm -rf build
+# rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG}
-#make -j`nproc`
-#make install
+make -j`nproc`
+make install
 # ctest

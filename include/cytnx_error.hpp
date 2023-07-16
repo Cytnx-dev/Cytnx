@@ -65,7 +65,10 @@ static inline void warning_msg(char const *const func, const char *const file, i
   #include <cusolverDn.h>
   #include <cuComplex.h>
   #include <curand.h>
-  #include <cutensor.h>
+
+  #if defined(UNI_CUTENSOR)
+    #include <cutensor.h>
+  #endif
 
   #ifdef __DRIVER_TYPES_H__
 static const char *_cudaGetErrorEnum(cudaError_t error) {
@@ -364,9 +367,6 @@ static const char *_cudaGetErrorEnum(cublasStatus_t error) {
 }
   #endif
 
- 
-
-
   #ifdef CUSOLVER_COMMON_H_
 // cuSOLVER API errors
 static const char *_cudaGetErrorEnum(cusolverStatus_t error) {
@@ -438,12 +438,10 @@ static const char *_cudaGetErrorEnum(curandStatus_t error) {
   #endif
 
   #ifdef UNI_CUTENSOR
-static const char* _cudaGetErrorEnum(cutensorStatus_t error){
-    return cutensorGetErrorString(error);
+static const char *_cudaGetErrorEnum(cutensorStatus_t error) {
+  return cutensorGetErrorString(error);
 }
   #endif
-
-
 
   #ifdef __DRIVER_TYPES_H__
     #ifndef DEVICE_RESET

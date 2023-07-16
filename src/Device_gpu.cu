@@ -2,17 +2,12 @@
 #include "cytnx_error.hpp"
 
 using namespace std;
-namespace cytnx{
+namespace cytnx {
 
 #ifdef UNI_GPU
-    void Device_class::cudaDeviceSynchronize(){
-        cudaDeviceSynchronize();
-    }
+  void Device_class::cudaDeviceSynchronize() { cudaDeviceSynchronize(); }
 #else
-    // See Device.cpp
+  // See Device.cpp
 #endif
 
-}
-
-
-
+}  // namespace cytnx

@@ -494,7 +494,7 @@ namespace cytnx {
     }
 
     // this->_invmapper = std::move(new_idxmap);
-    for(cytnx_uint64 i =0;i<this->_shape.size();i++){
+    for (cytnx_uint64 i = 0; i < this->_shape.size(); i++) {
       this->_shape[i] = new_shape[i];
       this->_mapper[i] = new_fwdmap[i];
     }
@@ -1304,9 +1304,7 @@ namespace cytnx {
   // std::vector<Tensor> Tensor::Svd(const bool &is_U, const bool &is_vT) const {
   //   return linalg::Svd(*this, is_U, is_vT);
   // }
-  std::vector<Tensor> Tensor::Svd(const bool &is_UvT) const {
-    return linalg::Svd(*this, is_UvT);
-  }
+  std::vector<Tensor> Tensor::Svd(const bool &is_UvT) const { return linalg::Svd(*this, is_UvT); }
   std::vector<Tensor> Tensor::Eigh(const bool &is_V, const bool &row_v) const {
     return linalg::Eigh(*this, is_V, row_v);
   }

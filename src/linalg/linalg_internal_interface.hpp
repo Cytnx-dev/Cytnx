@@ -35,6 +35,7 @@
 #include "linalg/linalg_internal_cpu/Axpy_internal.hpp"
 #include "linalg/linalg_internal_cpu/Ger_internal.hpp"
 #include "linalg/linalg_internal_cpu/Gemm_internal.hpp"
+#include "linalg/linalg_internal_cpu/Gemm_Batch_internal.hpp"
 #include "linalg/linalg_internal_cpu/Trace_internal.hpp"
 
 #ifdef UNI_GPU
@@ -46,6 +47,8 @@
   #include "linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuExp_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuGemm_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuGemm_Batch_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMatmul_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMatmul_dg_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuDiag_internal.hpp"
@@ -59,6 +62,9 @@
   #include "linalg/linalg_internal_gpu/cuSum_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuKron_internal.hpp"
+  #ifdef UNI_CUTENSOR
+    #include "linalg/linalg_internal_gpu/cuTensordot_internal.hpp"
+  #endif
 #endif
 
 namespace cytnx {
@@ -73,16 +79,24 @@ namespace cytnx {
       const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
       const std::vector<cytnx_uint64> &invmapper_R, const char &type);
 
-    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &, const Scalar &);
+    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base> &,
+                             boost::intrusive_ptr<Storage_base> &, const Scalar &);
     typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &,
                             const boost::intrusive_ptr<Storage_base> &, const Scalar &);
 
     typedef void (*Gemmfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
-                                   const cytnx_int64 &, const cytnx_int64 &, const Scalar &, const Scalar &);
+                                 const boost::intrusive_ptr<Storage_base> &,
+                                 const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
+                                 const cytnx_int64 &, const cytnx_int64 &, const Scalar &,
+                                 const Scalar &);
 
+    typedef void (*Gemm_Batchfunc_oii)(
+      const char *transa_array, const char *transb_array, const blas_int *m_array,
+      const blas_int *n_array, const blas_int *k_array, const std::vector<Scalar> &alpha_array,
+      const void **a_array, const blas_int *lda_array, const void **b_array,
+      const blas_int *ldb_array, const std::vector<Scalar> &beta_array, void **c_array,
+      const blas_int *ldc_array, const blas_int group_count, const blas_int *group_size);
 
     typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
                                 boost::intrusive_ptr<Storage_base> &,
@@ -153,13 +167,17 @@ namespace cytnx {
                                   boost::intrusive_ptr<Storage_base> &r, const cytnx_int64 &M,
                                   const cytnx_int64 &N, const cytnx_int64 &nrhs,
                                   const cytnx_float &rcond);
-    
-    typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &, const int &,
-                           const cytnx_uint64 &, const std::vector<cytnx_uint64> &,
-                           const std::vector<cytnx_uint64> &, const std::vector<cytnx_int64> &,
-                           const cytnx_uint64 &, const cytnx_uint64 &);
 
+    typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &,
+                                  const int &, const cytnx_uint64 &,
+                                  const std::vector<cytnx_uint64> &,
+                                  const std::vector<cytnx_uint64> &,
+                                  const std::vector<cytnx_int64> &, const cytnx_uint64 &,
+                                  const cytnx_uint64 &);
 
+    typedef void (*Tensordotfunc_oii)(Tensor &out, const Tensor &Lin, const Tensor &Rin,
+                                      const std::vector<cytnx_uint64> &idxl,
+                                      const std::vector<cytnx_uint64> &idxr);
 
     class linalg_internal_interface {
      public:
@@ -178,6 +196,7 @@ namespace cytnx {
       std::vector<Diagfunc_oii> Diag_ii;
       std::vector<Matmulfunc_oii> Matmul_ii;
       std::vector<Gemmfunc_oii> Gemm_ii;
+      std::vector<Gemm_Batchfunc_oii> Gemm_Batch_ii;
       std::vector<Matmul_dgfunc_oii> Matmul_dg_ii;
       std::vector<Matvecfunc_oii> Matvec_ii;
       std::vector<std::vector<Outerfunc_oii>> Outer_ii;
@@ -206,6 +225,8 @@ namespace cytnx {
       std::vector<Diagfunc_oii> cuDiag_ii;
       std::vector<Eighfunc_oii> cuEigh_ii;
       std::vector<Matmulfunc_oii> cuMatmul_ii;
+      std::vector<Gemmfunc_oii> cuGemm_ii;
+      std::vector<Gemm_Batchfunc_oii> cuGemm_Batch_ii;
       std::vector<Matmul_dgfunc_oii> cuMatmul_dg_ii;
       std::vector<Matvecfunc_oii> cuMatvec_ii;
       std::vector<std::vector<Outerfunc_oii>> cuOuter_ii;
@@ -218,9 +239,12 @@ namespace cytnx {
       std::vector<MaxMinfunc_oii> cuMM_ii;
       std::vector<MaxMinfunc_oii> cuSum_ii;
       std::vector<std::vector<Kronfunc_oii>> cuKron_ii;
+      std::vector<Tensordotfunc_oii> cuTensordot_ii;
 #endif
 
       linalg_internal_interface();
+      ~linalg_internal_interface();
+      int set_mkl_ilp64();
     };
     extern linalg_internal_interface lii;
   }  // namespace linalg_internal

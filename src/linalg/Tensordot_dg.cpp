@@ -30,9 +30,9 @@ namespace cytnx {
       if (diag_L) {
         cytnx_error_msg(Tl.shape().size() != 1,
                         "[ERROR] diag_L=true requires Tl to be rank-1 tensor.%s", "\n");
-        if(idxl.size()!=1){
-            // this is weighted trace, juse expand diag into full dense and then call Tensordot.
-            return Tensordot(Diag(Tl),Tr,{0,1},idxr);
+        if (idxl.size() != 1) {
+          // this is weighted trace, juse expand diag into full dense and then call Tensordot.
+          return Tensordot(Diag(Tl), Tr, {0, 1}, idxr);
         }
         non_contract_l = vec_erase(vec_range(2), idxl);
         non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
@@ -40,13 +40,12 @@ namespace cytnx {
         Tlshape.push_back(Tl.shape()[0]);
         Trshape = Tr.shape();
 
-
       } else {
         cytnx_error_msg(Tr.shape().size() != 1,
                         "[ERROR] diag_L=false requires Tr to be rank-1 tensor.%s", "\n");
-        if(idxr.size()!=1){
-            // this is weighted trace, juse expand diag into full dense and then call Tensordot.
-            return Tensordot(Tl,Diag(Tr),idxl,{0,1});
+        if (idxr.size() != 1) {
+          // this is weighted trace, juse expand diag into full dense and then call Tensordot.
+          return Tensordot(Tl, Diag(Tr), idxl, {0, 1});
         }
 
         non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
@@ -88,7 +87,8 @@ namespace cytnx {
           tmpL = Tl;
           tmpR = Tr.permute(mapperR).reshape({static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
           tmpout = Matmul_dg(tmpL, tmpR);
-          tmpout.reshape_({static_cast<cytnx_int64>(Tlshape[idxl[0]]), static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
+          tmpout.reshape_({static_cast<cytnx_int64>(Tlshape[idxl[0]]),
+                           static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
           out = Trace(tmpout, 0, 1);
         } else {
           tmpL = Tl;
@@ -100,7 +100,8 @@ namespace cytnx {
           tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
           tmpR = Tr;
           tmpout = Matmul_dg(tmpL, tmpR);
-          tmpout.reshape_({-1, static_cast<cytnx_int64>(Tlshape[idxl[1]]), static_cast<cytnx_int64>(Tlshape[idxl[0]])});
+          tmpout.reshape_({-1, static_cast<cytnx_int64>(Tlshape[idxl[1]]),
+                           static_cast<cytnx_int64>(Tlshape[idxl[0]])});
           out = Trace(tmpout, 1, 2);
         } else {
           tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});

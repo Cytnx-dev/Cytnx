@@ -16,8 +16,8 @@ namespace cytnx {
         checkCudaErrors(cudaSetDevice(out.device()));
         cytnx::linalg_internal::lii.cuMM_ii[out.dtype()](out._impl->storage()._impl,
                                                          Tin._impl->storage()._impl,
-                                                         Tin._impl->storage()._impl->size(),'n');
-        //cytnx_error_msg(true, "[Min] Developing.%s", "\n");
+                                                         Tin._impl->storage()._impl->size(), 'n');
+        // cytnx_error_msg(true, "[Min] Developing.%s", "\n");
 #else
         cytnx_error_msg(true, "[Min] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");

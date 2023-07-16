@@ -890,16 +890,16 @@ namespace cytnx {
     template <class T>
     cytnx::UniTensor Mod(const T &lc, const cytnx::UniTensor &Rt) {
       cytnx::UniTensor out = Rt.clone();
-      if (out.uten_type()==UTenType.Dense){
+      if (out.uten_type() == UTenType.Dense) {
         out.get_block_() = cytnx::linalg::Mod(lc, out.get_block_());
 
-      }else{
-        cytnx_error_msg(true,"[Developing/Evaluating suitable][Mod][UniTensor with Sym]%s","\n");
+      } else {
+        cytnx_error_msg(true, "[Developing/Evaluating suitable][Mod][UniTensor with Sym]%s", "\n");
         // cytnx_error_msg(true,"[Developing][Mod][Sparsecytnx::UniTensor]%s","\n");
-        SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
-        for (int i = 0; i < out_raw->_blocks.size(); i++) {
-          out_raw->_blocks[i] = cytnx::linalg::Mod(lc, out_raw->_blocks[i]);
-        }
+        // SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
+        // for (int i = 0; i < out_raw->_blocks.size(); i++) {
+        //  out_raw->_blocks[i] = cytnx::linalg::Mod(lc, out_raw->_blocks[i]);
+        //}
       }
       return out;
     }
@@ -922,15 +922,15 @@ namespace cytnx {
     cytnx::UniTensor Mod(const cytnx::UniTensor &Lt, const T &rc) {
       cytnx::UniTensor out = Lt.clone();
 
-      if(out.uten_type()==UTenType.Dense){
-         out.get_block_() = cytnx::linalg::Mod(out.get_block_(), rc);
-      }else{
-        cytnx_error_msg(true,"[Developing/Evaluating suitable][Mod][UniTensor with Sym]%s","\n");
+      if (out.uten_type() == UTenType.Dense) {
+        out.get_block_() = cytnx::linalg::Mod(out.get_block_(), rc);
+      } else {
+        cytnx_error_msg(true, "[Developing/Evaluating suitable][Mod][UniTensor with Sym]%s", "\n");
         // cytnx_error_msg(true,"[Developing][Mod][Sparsecytnx::UniTensor]%s","\n");
-        SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
-        for (int i = 0; i < out_raw->_blocks.size(); i++) {
-          out_raw->_blocks[i] = cytnx::linalg::Mod(out_raw->_blocks[i], rc);
-        }
+        // SparseUniTensor *out_raw = (SparseUniTensor *)out._impl.get();
+        // for (int i = 0; i < out_raw->_blocks.size(); i++) {
+        //  out_raw->_blocks[i] = cytnx::linalg::Mod(out_raw->_blocks[i], rc);
+        //}
       }
 
       return out;

@@ -4,9 +4,11 @@ target_sources_local(cytnx
     cuCast_gpu.hpp
     cuFill_gpu.hpp
     cuGetElems_gpu.hpp
+    cuGetElems_contiguous_gpu.hpp
     cuMovemem_gpu.hpp
     cuSetArange_gpu.hpp
     cuSetElems_gpu.hpp
+    cuSetElems_contiguous_gpu.hpp
     cuSetZeros_gpu.hpp
     cuComplexmem_gpu.hpp
     cuReduce_gpu.hpp
@@ -14,9 +16,11 @@ target_sources_local(cytnx
     cuCast_gpu.cu
     cuFill_gpu.cu
     cuGetElems_gpu.cu
+    cuGetElems_contiguous_gpu.cu
     cuMovemem_gpu.cu
     cuSetArange_gpu.cu
     cuSetElems_gpu.cu
+    cuSetElems_contiguous_gpu.cu
     cuSetZeros_gpu.cu
     cuComplexmem_gpu.cu
     cuReduce_gpu.cu

@@ -1,4 +1,4 @@
 #include <benchmark/benchmark.h>
 
-//main
+// main
 BENCHMARK_MAIN();

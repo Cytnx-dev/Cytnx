@@ -35,7 +35,8 @@ namespace cytnx {
     std::vector<UniTensor> tensors;
     std::vector<cytnx_int64> TOUT_labels;
 
-    std::vector<std::vector<std::pair<std::string,std::string>>> table; // table[i] =  i-th tensor's leg names to be contracted, and its target label.
+    std::vector<std::vector<std::pair<std::string, std::string>>>
+      table;  // table[i] =  i-th tensor's leg names to be contracted, and its target label.
 
     cytnx_uint64 TOUT_iBondNum;
 
@@ -300,8 +301,8 @@ namespace cytnx {
     // void Savefile(const std::string &fname);
 
     static Gncon Contract(const std::vector<UniTensor> &tensors, const std::string &Tout,
-                            const std::vector<std::string> &alias = {},
-                            const std::string &contract_order = "") {
+                          const std::vector<std::string> &alias = {},
+                          const std::string &contract_order = "") {
       boost::intrusive_ptr<Gncon_base> tmp(new RegularGncon());
       Gncon out;
       out._impl = tmp;

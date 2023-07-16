@@ -44,73 +44,41 @@ class PyLinOp : public LinOp {
   }
 };
 
-class cHclass{
-  public:
-      Scalar::Sproxy proxy;
-        
-      cHclass(const Scalar::Sproxy &inproxy){
-        this->proxy = inproxy;
-      }
+class cHclass {
+ public:
+  Scalar::Sproxy proxy;
 
-      cHclass(const cHclass &rhs){
-         this->proxy = rhs.proxy.copy();
-      }
-   
-      cHclass& operator=(cHclass &rhs){
-         this->proxy = rhs.proxy.copy();
-         return *this;
-      }
- 
-      bool exists() const{
-         return this->proxy.exists();
-      }
+  cHclass(const Scalar::Sproxy &inproxy) { this->proxy = inproxy; }
 
-      int dtype() const{
-         return this->proxy._insimpl->dtype;
-      }
+  cHclass(const cHclass &rhs) { this->proxy = rhs.proxy.copy(); }
 
-      cytnx_double get_elem_d() const{
-            return cytnx_double(Scalar(this->proxy));
-      }
-      cytnx_float get_elem_f() const{
-            return cytnx_float(Scalar(this->proxy));
-      }
-      cytnx_complex128 get_elem_cd() const{
-            return complex128(Scalar(this->proxy));
-      }
-      cytnx_complex64 get_elem_cf() const{
-            return complex64(Scalar(this->proxy));
-      }
-      cytnx_uint64 get_elem_u64() const{
-            return cytnx_uint64(Scalar(this->proxy));
-      }
-      cytnx_int64 get_elem_i64() const{
-            return cytnx_int64(Scalar(this->proxy));
-      }
-      cytnx_uint32 get_elem_u32() const{
-            return cytnx_uint32(Scalar(this->proxy));
-      }
-      cytnx_int32 get_elem_i32() const{
-            return cytnx_int32(Scalar(this->proxy));
-      }
-      cytnx_uint16 get_elem_u16() const{
-            return cytnx_uint16(Scalar(this->proxy));
-      }
-      cytnx_int16 get_elem_i16() const{
-            return cytnx_int16(Scalar(this->proxy));
-      }
-      cytnx_bool get_elem_b() const{
-            return cytnx_bool(Scalar(this->proxy));
-      }
+  cHclass &operator=(cHclass &rhs) {
+    this->proxy = rhs.proxy.copy();
+    return *this;
+  }
 
-      template<class T>
-      void set_elem(const T &elem){
-            //std::cout << typeid(T).name() << std::endl;
-            this->proxy = elem;
-      }
+  bool exists() const { return this->proxy.exists(); }
 
+  int dtype() const { return this->proxy._insimpl->dtype; }
+
+  cytnx_double get_elem_d() const { return cytnx_double(Scalar(this->proxy)); }
+  cytnx_float get_elem_f() const { return cytnx_float(Scalar(this->proxy)); }
+  cytnx_complex128 get_elem_cd() const { return complex128(Scalar(this->proxy)); }
+  cytnx_complex64 get_elem_cf() const { return complex64(Scalar(this->proxy)); }
+  cytnx_uint64 get_elem_u64() const { return cytnx_uint64(Scalar(this->proxy)); }
+  cytnx_int64 get_elem_i64() const { return cytnx_int64(Scalar(this->proxy)); }
+  cytnx_uint32 get_elem_u32() const { return cytnx_uint32(Scalar(this->proxy)); }
+  cytnx_int32 get_elem_i32() const { return cytnx_int32(Scalar(this->proxy)); }
+  cytnx_uint16 get_elem_u16() const { return cytnx_uint16(Scalar(this->proxy)); }
+  cytnx_int16 get_elem_i16() const { return cytnx_int16(Scalar(this->proxy)); }
+  cytnx_bool get_elem_b() const { return cytnx_bool(Scalar(this->proxy)); }
+
+  template <class T>
+  void set_elem(const T &elem) {
+    // std::cout << typeid(T).name() << std::endl;
+    this->proxy = elem;
+  }
 };
-
 
 //=============================================
 template <class T>
@@ -246,21 +214,20 @@ PYBIND11_MODULE(cytnx, m) {
   mdev.attr("Ncpus") = cytnx::Device.Ncpus;
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
 
-
-  //helper class for UniTensor.at() return
+  // helper class for UniTensor.at() return
   py::class_<cHclass>(m, "cHclass")
     .def(py::init<const Scalar::Sproxy>())
-    .def("exists",&cHclass::exists)
-    .def("dtype", &cHclass::dtype) 
-    .def("get_elem_cd", &cHclass::get_elem_cd) 
+    .def("exists", &cHclass::exists)
+    .def("dtype", &cHclass::dtype)
+    .def("get_elem_cd", &cHclass::get_elem_cd)
     .def("get_elem_d", &cHclass::get_elem_d)
-    .def("get_elem_f", &cHclass::get_elem_f) 
+    .def("get_elem_f", &cHclass::get_elem_f)
     .def("get_elem_cf", &cHclass::get_elem_cf)
-    .def("get_elem_u64", &cHclass::get_elem_u64) 
+    .def("get_elem_u64", &cHclass::get_elem_u64)
     .def("get_elem_i64", &cHclass::get_elem_i64)
-    .def("get_elem_u32", &cHclass::get_elem_u32) 
+    .def("get_elem_u32", &cHclass::get_elem_u32)
     .def("get_elem_i32", &cHclass::get_elem_i32)
-    .def("get_elem_u16", &cHclass::get_elem_u16) 
+    .def("get_elem_u16", &cHclass::get_elem_u16)
     .def("get_elem_i16", &cHclass::get_elem_i16)
     .def("get_elem_b", &cHclass::get_elem_b)
 
@@ -274,9 +241,7 @@ PYBIND11_MODULE(cytnx, m) {
     .def("set_elem", &cHclass::set_elem<cytnx_int32>)
     .def("set_elem", &cHclass::set_elem<cytnx_uint16>)
     .def("set_elem", &cHclass::set_elem<cytnx_int16>)
-    .def("set_elem", &cHclass::set_elem<cytnx_bool>)
-  ;
-
+    .def("set_elem", &cHclass::set_elem<cytnx_bool>);
 
   m.def(
     "zeros",
@@ -340,8 +305,6 @@ PYBIND11_MODULE(cytnx, m) {
     py::arg("start"), py::arg("end"), py::arg("Nelem"), py::arg("endpoint") = true,
     py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
     py::arg("device") = (int)(cytnx::Device.cpu));
-
-
 
   m.def("_from_numpy", [](py::buffer b) -> Tensor {
     py::buffer_info info = b.request();
@@ -432,8 +395,6 @@ PYBIND11_MODULE(cytnx, m) {
     //        return Tensor(self(i,j));
     //})
 
-
-
     .def(
       "matvec", [](LinOp &self, const Tensor &Tin) -> Tensor { return self.matvec(Tin); },
       py::arg("Tin"))
@@ -512,10 +473,12 @@ PYBIND11_MODULE(cytnx, m) {
     .def(py::init<>())
     .def(py::init<const cytnx::Storage &>())
     .def(py::init<boost::intrusive_ptr<cytnx::Storage_base>>())
-    .def(py::init<const unsigned long long &, const unsigned int &, int, const bool &>(), py::arg("size"),
-         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1, py::arg("init_zero")=true)
+    .def(py::init<const unsigned long long &, const unsigned int &, int, const bool &>(),
+         py::arg("size"), py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
+         py::arg("init_zero") = true)
     .def("Init", &cytnx::Storage::Init, py::arg("size"),
-         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1, py::arg("init_zero")=true)
+         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
+         py::arg("init_zero") = true)
 
     .def("dtype", &cytnx::Storage::dtype)
     .def("dtype_str", &cytnx::Storage::dtype_str)
@@ -658,19 +621,28 @@ PYBIND11_MODULE(cytnx, m) {
     .def("append", &cytnx::Storage::append<cytnx::cytnx_uint16>, py::arg("val"))
     .def("append", &cytnx::Storage::append<cytnx::cytnx_bool>, py::arg("val"))
 
-     
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex128>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_double>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_float>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int64>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint32>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int32>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint16>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int16>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"), py::arg("device")=(int)cytnx::Device.cpu)
-    
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex128>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_complex64>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_double>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_float>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint64>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int64>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint32>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int32>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_uint16>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_int16>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
+    .def_static("from_pylist", &cytnx::Storage::from_vector<cytnx_bool>, py::arg("pylist"),
+                py::arg("device") = (int)cytnx::Device.cpu)
 
     .def("c_pylist_complex128", &cytnx::Storage::vector<cytnx_complex128>)
     .def("c_pylist_complex64", &cytnx::Storage::vector<cytnx_complex64>)
@@ -1703,14 +1675,15 @@ PYBIND11_MODULE(cytnx, m) {
     .def("__eq__", &Symmetry::operator==)
     .def("check_qnum", &Symmetry::check_qnum, py::arg("qnum"))
     .def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
-    .def("combine_rule", [](Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse){
-                            return self.combine_rule(inL,inR,is_reverse);
-                         }, py::arg("qnL"), py::arg("qnR"),py::arg("is_reverse")=false)
-    .def("reverse_rule", [](Symmetry &self, const cytnx_int64 &qin){
-                            return self.reverse_rule(qin);
-                         }, py::arg("qin"))
- 
-
+    .def(
+      "combine_rule",
+      [](Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse) {
+        return self.combine_rule(inL, inR, is_reverse);
+      },
+      py::arg("qnL"), py::arg("qnR"), py::arg("is_reverse") = false)
+    .def(
+      "reverse_rule", [](Symmetry &self, const cytnx_int64 &qin) { return self.reverse_rule(qin); },
+      py::arg("qin"))
 
     .def(
       "Save", [](Symmetry &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
@@ -1730,11 +1703,9 @@ PYBIND11_MODULE(cytnx, m) {
     //.def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
     ;
   py::class_<Qs>(m, "_cQs")
-    .def(py::init< const std::vector<cytnx_int64> >(), py::arg("qin"))
-    .def("__rshift__", [](Qs &self, const cytnx_uint64 &dim){
-                            return self>>dim;
-                        }, py::arg("dim"));
-    
+    .def(py::init<const std::vector<cytnx_int64>>(), py::arg("qin"))
+    .def(
+      "__rshift__", [](Qs &self, const cytnx_uint64 &dim) { return self >> dim; }, py::arg("dim"));
 
   py::class_<Bond>(m, "Bond")
     // construction
@@ -1744,48 +1715,54 @@ PYBIND11_MODULE(cytnx, m) {
          py::arg("dim"), py::arg("bond_type") = bondType::BD_REG,
          py::arg("qnums") = std::vector<std::vector<cytnx_int64>>(),
          py::arg("symmetries") = std::vector<Symmetry>())
-    .def(py::init<const bondType &, const std::vector<std::vector<cytnx_int64> > &, 
-                  const  std::vector<cytnx_uint64> &, const std::vector<Symmetry> &>(),
-         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
-    
-    .def(py::init<const bondType &, const std::vector<std::pair<std::vector<cytnx_int64>,cytnx_uint64 > > &, 
+    .def(py::init<const bondType &, const std::vector<std::vector<cytnx_int64>> &,
+                  const std::vector<cytnx_uint64> &, const std::vector<Symmetry> &>(),
+         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"),
+         py::arg("symmetries") = std::vector<Symmetry>())
+
+    .def(py::init<const bondType &,
+                  const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>> &,
                   const std::vector<Symmetry> &>(),
-         py::arg("bond_type"), py::arg("qnums"), py::arg("symmetries")=std::vector<Symmetry>())
-    
-    .def(py::init<const bondType &, const std::vector<cytnx::Qs> &, 
-                  const  std::vector<cytnx_uint64> &, const std::vector<Symmetry> &>(),
-         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
+         py::arg("bond_type"), py::arg("qnums"), py::arg("symmetries") = std::vector<Symmetry>())
 
-    .def("Init", 
-         [](Bond &self, const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
-            const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms){
-                self.Init(bd_type,in_qnums,degs,in_syms);
-            }, 
-         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
+    .def(py::init<const bondType &, const std::vector<cytnx::Qs> &,
+                  const std::vector<cytnx_uint64> &, const std::vector<Symmetry> &>(),
+         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"),
+         py::arg("symmetries") = std::vector<Symmetry>())
 
-    .def("Init", 
-         [](Bond &self, const cytnx_uint64 &dim, const bondType &bd_type, 
-            const std::vector<std::vector<cytnx_int64>> &in_qnums, const std::vector<Symmetry> &in_syms){
-                self.Init(dim,bd_type,in_qnums,in_syms);
-            }, 
-         py::arg("dim"), py::arg("bond_type") = bondType::BD_REG, py::arg("qnums")=std::vector<std::vector<cytnx_int64>>(), py::arg("symmetries")=std::vector<Symmetry>())
+    .def(
+      "Init",
+      [](Bond &self, const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
+         const std::vector<cytnx_uint64> &degs,
+         const std::vector<Symmetry> &in_syms) { self.Init(bd_type, in_qnums, degs, in_syms); },
+      py::arg("bond_type"), py::arg("qnums"), py::arg("degs"),
+      py::arg("symmetries") = std::vector<Symmetry>())
 
-    .def("Init", 
-         [](Bond &self, const bondType &bd_type, const std::vector< std::pair<std::vector<cytnx_int64>,cytnx_uint64> > &in_qnums_degs,
-            const std::vector<Symmetry> &in_syms){
-                self.Init(bd_type,in_qnums_degs,in_syms);
-            },
-         py::arg("bond_type"), py::arg("qnums"), py::arg("symmetries")=std::vector<Symmetry>())
+    .def(
+      "Init",
+      [](Bond &self, const cytnx_uint64 &dim, const bondType &bd_type,
+         const std::vector<std::vector<cytnx_int64>> &in_qnums,
+         const std::vector<Symmetry> &in_syms) { self.Init(dim, bd_type, in_qnums, in_syms); },
+      py::arg("dim"), py::arg("bond_type") = bondType::BD_REG,
+      py::arg("qnums") = std::vector<std::vector<cytnx_int64>>(),
+      py::arg("symmetries") = std::vector<Symmetry>())
 
-    .def("Init", 
-        [](Bond &self, const bondType &bd_type, const std::vector<cytnx::Qs> &in_qnums,
-            const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms){
-                vec2d<cytnx_int64> qnums(in_qnums.begin(),in_qnums.end());
-                self.Init(bd_type,qnums,degs,in_syms);
-            },
-         py::arg("bond_type"), py::arg("qnums"), py::arg("degs"), py::arg("symmetries")=std::vector<Symmetry>())
+    .def(
+      "Init",
+      [](Bond &self, const bondType &bd_type,
+         const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>> &in_qnums_degs,
+         const std::vector<Symmetry> &in_syms) { self.Init(bd_type, in_qnums_degs, in_syms); },
+      py::arg("bond_type"), py::arg("qnums"), py::arg("symmetries") = std::vector<Symmetry>())
 
-
+    .def(
+      "Init",
+      [](Bond &self, const bondType &bd_type, const std::vector<cytnx::Qs> &in_qnums,
+         const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms) {
+        vec2d<cytnx_int64> qnums(in_qnums.begin(), in_qnums.end());
+        self.Init(bd_type, qnums, degs, in_syms);
+      },
+      py::arg("bond_type"), py::arg("qnums"), py::arg("degs"),
+      py::arg("symmetries") = std::vector<Symmetry>())
 
     .def(
       "__repr__",
@@ -1814,49 +1791,57 @@ PYBIND11_MODULE(cytnx, m) {
     .def("combineBond_", &Bond::combineBond_)
     .def("combineBonds", &Bond::combineBonds)
     .def("combineBonds_", &Bond::combineBonds_)
-    .def("getDegeneracies", [](Bond &self){
-                                return self.getDegeneracies();
-                            })
+    .def("getDegeneracies", [](Bond &self) { return self.getDegeneracies(); })
 
-    .def("getDegeneracy", [](Bond &self, const std::vector<cytnx_int64> &qnum){
-                            return self.getDegeneracy(qnum);
-                          },py::arg("qnum"))
-    .def("getDegeneracy", [](Bond &self, const cytnx::Qs &qnum){
-                            return self.getDegeneracy(std::vector<cytnx_int64>(qnum));
-                          },py::arg("qnum"))
+    .def(
+      "getDegeneracy",
+      [](Bond &self, const std::vector<cytnx_int64> &qnum) { return self.getDegeneracy(qnum); },
+      py::arg("qnum"))
+    .def(
+      "getDegeneracy",
+      [](Bond &self, const cytnx::Qs &qnum) {
+        return self.getDegeneracy(std::vector<cytnx_int64>(qnum));
+      },
+      py::arg("qnum"))
 
-
-
-    .def("c_getDegeneracy_refarg", [](Bond &self, const std::vector<cytnx_int64> &qnum, py::list &indices){
-                            std::vector<cytnx_uint64> inds;
-                            auto out = self.getDegeneracy(qnum,inds);
-                            for(int i=0;i<inds.size();i++){
-                                indices.append(inds[i]);
-                            }
-                            return out;
-                          },py::arg("qnum"), py::arg("indices"))
-    .def("c_getDegeneracy_refarg", [](Bond &self, const cytnx::Qs &qnum, py::list &indices){
-                            std::vector<cytnx_uint64> inds; 
-                            auto out = self.getDegeneracy(std::vector<cytnx_int64>(qnum),inds);
-                            for(int i=0;i<inds.size();i++){
-                                indices.append(inds[i]);
-                            }
-                            return out;
-                          },py::arg("qnum"), py::arg("indices"))
+    .def(
+      "c_getDegeneracy_refarg",
+      [](Bond &self, const std::vector<cytnx_int64> &qnum, py::list &indices) {
+        std::vector<cytnx_uint64> inds;
+        auto out = self.getDegeneracy(qnum, inds);
+        for (int i = 0; i < inds.size(); i++) {
+          indices.append(inds[i]);
+        }
+        return out;
+      },
+      py::arg("qnum"), py::arg("indices"))
+    .def(
+      "c_getDegeneracy_refarg",
+      [](Bond &self, const cytnx::Qs &qnum, py::list &indices) {
+        std::vector<cytnx_uint64> inds;
+        auto out = self.getDegeneracy(std::vector<cytnx_int64>(qnum), inds);
+        for (int i = 0; i < inds.size(); i++) {
+          indices.append(inds[i]);
+        }
+        return out;
+      },
+      py::arg("qnum"), py::arg("indices"))
 
     .def("group_duplicates_", &Bond::group_duplicates)
-    .def("c_group_duplicates_refarg", [](Bond &self, py::list &mapper){
-                                        std::vector<cytnx_uint64> mprs;
-                                        Bond out = self.group_duplicates(mprs);  
-                                        for(int i=0;i<mprs.size();i++){
-                                            mapper.append(mprs[i]);
-                                        }
-                                        return out;
-                                      }, py::arg("mapper")) 
+    .def(
+      "c_group_duplicates_refarg",
+      [](Bond &self, py::list &mapper) {
+        std::vector<cytnx_uint64> mprs;
+        Bond out = self.group_duplicates(mprs);
+        for (int i = 0; i < mprs.size(); i++) {
+          mapper.append(mprs[i]);
+        }
+        return out;
+      },
+      py::arg("mapper"))
 
     .def("has_duplicate_qnums", &Bond::has_duplicate_qnums)
     .def("calc_reverse_qnums", &Bond::calc_reverse_qnums)
-
 
     .def(
       "Save", [](Bond &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
@@ -1882,108 +1867,145 @@ PYBIND11_MODULE(cytnx, m) {
          py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
          py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
 
+    .def(
+      "Init",
+      [](UniTensor &self, const Tensor &in_tensor, const bool &is_diag,
+         const cytnx_int64 &rowrank) { self.Init(in_tensor, is_diag, rowrank); },
+      py::arg("Tin"), py::arg("is_diag") = false, py::arg("rowrank") = (cytnx_int64)(-1))
 
-    .def("Init",[](UniTensor &self, const Tensor &in_tensor, const bool &is_diag, const cytnx_int64 &rowrank){
-                    self.Init(in_tensor,is_diag,rowrank);
-                },py::arg("Tin"),py::arg("is_diag")=false,py::arg("rowrank")=(cytnx_int64)(-1))
+    .def(
+      "Init",
+      [](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
+         const cytnx_int64 &rowrank, const unsigned int &dtype, const int &device,
+         const bool &is_diag) { self.Init(bonds, in_labels, rowrank, dtype, device, is_diag); },
+      py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
+      py::arg("rowrank") = (cytnx_int64)(-1), py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
+      py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
 
-
-    .def("Init",[](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<cytnx_int64> &in_labels,
-                   const cytnx_int64 &rowrank, const unsigned int &dtype,
-                   const int &device, const bool &is_diag){
-                    self.Init(bonds,in_labels,rowrank,dtype,device,is_diag);
-                },
-         py::arg("bonds"), py::arg("labels") = std::vector<cytnx_int64>(),
-         py::arg("rowrank") = (cytnx_int64)(-1),
-         py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
-
-    .def("Init",[](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels,
-                   const cytnx_int64 &rowrank, const unsigned int &dtype,
-                   const int &device, const bool &is_diag){
-                    self.Init(bonds,in_labels,rowrank,dtype,device,is_diag);
-                },
-         py::arg("bonds"), py::arg("labels") = std::vector<std::string>(),
-         py::arg("rowrank") = (cytnx_int64)(-1),
-         py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
-         py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
-
-
-
+    .def(
+      "Init",
+      [](UniTensor &self, const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels,
+         const cytnx_int64 &rowrank, const unsigned int &dtype, const int &device,
+         const bool &is_diag) { self.Init(bonds, in_labels, rowrank, dtype, device, is_diag); },
+      py::arg("bonds"), py::arg("labels") = std::vector<std::string>(),
+      py::arg("rowrank") = (cytnx_int64)(-1), py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
+      py::arg("device") = (int)cytnx::Device.cpu, py::arg("is_diag") = false)
 
     .def("c_set_name", &UniTensor::set_name)
 
+    .def(
+      "c_set_label",
+      [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label) {
+        return self.set_label(idx, new_label);
+      },
+      py::arg("idx"), py::arg("new_label"))
 
-    .def("c_set_label", [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label){
-                            return self.set_label(idx,new_label);
-                        },py::arg("idx"), py::arg("new_label"))
-
-    .def("c_set_label", [](UniTensor &self, const std::string &old_label, const std::string &new_label){
-                            return self.set_label(old_label,new_label);
-                        },py::arg("old_label"), py::arg("new_label"))
-
-    // [Deprecated!] 
-    .def("c_set_label", [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label, const bool &by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][set_label:1] specify new_label with integer will be deprecated soon. use string instead.%s","\n");
-                            if(by_label==true){
-                                cytnx_warning_msg(true,"[Deprecated warning][set_label:2] specify old_label with integer will be deprecated soon. use string instead.%s","\n");
-                                return self.set_label(idx,new_label,by_label);
-                            }else{
-                                return self.set_label(idx,new_label);
-                            }
-                        },py::arg("idx"), py::arg("new_label"),py::arg("by_label")=false)
-
-
-
-    .def("c_set_labels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                            return self.set_labels(new_labels);
-                        },py::arg("new_labels"))
+    .def(
+      "c_set_label",
+      [](UniTensor &self, const std::string &old_label, const std::string &new_label) {
+        return self.set_label(old_label, new_label);
+      },
+      py::arg("old_label"), py::arg("new_label"))
 
     // [Deprecated!]
-    .def("c_set_labels",[](UniTensor &self, const std::vector<cytnx_int64> &new_labels){
-                            cytnx_warning_msg(true,"[Deprecated warning][set_labels] specify labels with integers will be deprecated soon. using strings instead.%s","\n");
-                            return self.set_labels(new_labels);
-                        },py::arg("new_labels"))
+    .def(
+      "c_set_label",
+      [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label,
+         const bool &by_label) {
+        cytnx_warning_msg(true,
+                          "[Deprecated warning][set_label:1] specify new_label with integer will "
+                          "be deprecated soon. use string instead.%s",
+                          "\n");
+        if (by_label == true) {
+          cytnx_warning_msg(true,
+                            "[Deprecated warning][set_label:2] specify old_label with integer will "
+                            "be deprecated soon. use string instead.%s",
+                            "\n");
+          return self.set_label(idx, new_label, by_label);
+        } else {
+          return self.set_label(idx, new_label);
+        }
+      },
+      py::arg("idx"), py::arg("new_label"), py::arg("by_label") = false)
 
+    .def(
+      "c_set_labels",
+      [](UniTensor &self, const std::vector<std::string> &new_labels) {
+        return self.set_labels(new_labels);
+      },
+      py::arg("new_labels"))
+
+    // [Deprecated!]
+    .def(
+      "c_set_labels",
+      [](UniTensor &self, const std::vector<cytnx_int64> &new_labels) {
+        cytnx_warning_msg(true,
+                          "[Deprecated warning][set_labels] specify labels with integers will be "
+                          "deprecated soon. using strings instead.%s",
+                          "\n");
+        return self.set_labels(new_labels);
+      },
+      py::arg("new_labels"))
 
     .def("c_set_rowrank", &UniTensor::set_rowrank, py::arg("new_rowrank"))
-   
-    .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        return self.relabels(new_labels);
-                    }, py::arg("new_labels"))
+
+    .def(
+      "relabels",
+      [](UniTensor &self, const std::vector<std::string> &new_labels) {
+        return self.relabels(new_labels);
+      },
+      py::arg("new_labels"))
 
     // [Deprecated]
-    .def("relabels",[](UniTensor &self, const std::vector<cytnx_int64> &new_labels){
-                        cytnx_warning_msg(true,"[Deprecated warning][relabels] specify labels with integers will be deprecated soon. using strings instead.%s","\n");
-                        return self.relabels(new_labels);
-                    }, py::arg("new_labels"))
+    .def(
+      "relabels",
+      [](UniTensor &self, const std::vector<cytnx_int64> &new_labels) {
+        cytnx_warning_msg(true,
+                          "[Deprecated warning][relabels] specify labels with integers will be "
+                          "deprecated soon. using strings instead.%s",
+                          "\n");
+        return self.relabels(new_labels);
+      },
+      py::arg("new_labels"))
 
-    .def("relabel", [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label){
-                            return self.relabel(idx,new_label);
-                        },py::arg("idx"), py::arg("new_label"))
+    .def(
+      "relabel",
+      [](UniTensor &self, const cytnx_int64 &idx, const std::string &new_label) {
+        return self.relabel(idx, new_label);
+      },
+      py::arg("idx"), py::arg("new_label"))
 
-    .def("relabel", [](UniTensor &self, const std::string &old_label, const std::string &new_label){
-                            return self.relabel(old_label,new_label);
-                        },py::arg("old_label"), py::arg("new_label"))
+    .def(
+      "relabel",
+      [](UniTensor &self, const std::string &old_label, const std::string &new_label) {
+        return self.relabel(old_label, new_label);
+      },
+      py::arg("old_label"), py::arg("new_label"))
 
-    // [Deprecated!] 
-    .def("relabel", [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label, const bool &by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][relabel:1] specify new_label with integer will be deprecated soon. use string instead.%s","\n");
-                            if(by_label==true){
-                                cytnx_warning_msg(true,"[Deprecated warning][relabel:2] specify relabel with integer will be deprecated soon. use string instead.%s","\n");
-                            }
-                            return self.relabel(idx,new_label,by_label);
-                        },py::arg("idx"), py::arg("new_label"),py::arg("by_label")=false)
+    // [Deprecated!]
+    .def(
+      "relabel",
+      [](UniTensor &self, const cytnx_int64 &idx, const cytnx_int64 &new_label,
+         const bool &by_label) {
+        cytnx_warning_msg(true,
+                          "[Deprecated warning][relabel:1] specify new_label with integer will be "
+                          "deprecated soon. use string instead.%s",
+                          "\n");
+        if (by_label == true) {
+          cytnx_warning_msg(true,
+                            "[Deprecated warning][relabel:2] specify relabel with integer will be "
+                            "deprecated soon. use string instead.%s",
+                            "\n");
+        }
+        return self.relabel(idx, new_label, by_label);
+      },
+      py::arg("idx"), py::arg("new_label"), py::arg("by_label") = false)
 
-
-
-    
- 
     .def("rowrank", &UniTensor::rowrank)
     .def("Nblocks", &UniTensor::Nblocks)
     .def("rank", &UniTensor::rank)
     .def("uten_type", &UniTensor::uten_type)
-    .def("uten_type_str",&UniTensor::uten_type_str)
+    .def("uten_type_str", &UniTensor::uten_type_str)
     .def("syms", &UniTensor::syms)
     .def("dtype", &UniTensor::dtype)
     .def("dtype_str", &UniTensor::dtype_str)
@@ -1991,10 +2013,8 @@ PYBIND11_MODULE(cytnx, m) {
     .def("device_str", &UniTensor::device_str)
     .def("name", &UniTensor::name)
     .def("is_blockform", &UniTensor::is_blockform)
-    
-    .def("get_index",&UniTensor::get_index)
-  
 
+    .def("get_index", &UniTensor::get_index)
 
     .def("reshape",
          [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
@@ -2049,11 +2069,14 @@ PYBIND11_MODULE(cytnx, m) {
            return out;
          })
 
-    .def("c_at", [](UniTensor &self, const std::vector<cytnx_uint64> &locator){
-                  Scalar::Sproxy tmp = self.at(locator);
-                  //std::cout << "ok" << std::endl;
-                  return cHclass(tmp);
-               },py::arg("locator"))
+    .def(
+      "c_at",
+      [](UniTensor &self, const std::vector<cytnx_uint64> &locator) {
+        Scalar::Sproxy tmp = self.at(locator);
+        // std::cout << "ok" << std::endl;
+        return cHclass(tmp);
+      },
+      py::arg("locator"))
 
     .def("__getitem__",
          [](const UniTensor &self, py::object locators) {
@@ -2194,8 +2217,6 @@ PYBIND11_MODULE(cytnx, m) {
     .def("set_elem", &f_UniTensor_setelem_scal_i16)
     .def("set_elem", &f_UniTensor_setelem_scal_b)
 
-
-
     .def("is_contiguous", &UniTensor::is_contiguous)
     .def("is_diag", &UniTensor::is_diag)
     .def("is_tag", &UniTensor::is_tag)
@@ -2234,34 +2255,48 @@ PYBIND11_MODULE(cytnx, m) {
       },
       py::arg("new_type"))
 
-
     // [Deprecated by_label!]
-    .def("permute_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][permute] by_label=true with integer recognized as label be deprecated soon. use strings instead.%s","\n");
-                        }
-                        self.permute_(mapper,rowrank,by_label);
-                         
-                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1), py::arg("by_label")=false)
+    .def(
+      "permute_",
+      [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+         const bool &by_label) {
+        if (by_label) {
+          cytnx_warning_msg(true,
+                            "[Deprecated warning][permute] by_label=true with integer recognized "
+                            "as label be deprecated soon. use strings instead.%s",
+                            "\n");
+        }
+        self.permute_(mapper, rowrank, by_label);
+      },
+      py::arg("mapper"), py::arg("rowrank") = (cytnx_int64)(-1), py::arg("by_label") = false)
 
-    .def("permute_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
-                        self.permute_(mapper,rowrank); 
-                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+    .def(
+      "permute_",
+      [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
+        self.permute_(mapper, rowrank);
+      },
+      py::arg("mapper"), py::arg("rowrank") = (cytnx_int64)(-1))
 
-    .def("permute", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated warning][permute] by_label=true with integer recognized as label be deprecated soon. use strings instead.%s","\n");
-                        }
-                        return self.permute(mapper,rowrank,by_label);
-                         
-                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1), py::arg("by_label")=false)
+    .def(
+      "permute",
+      [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
+         const bool &by_label) {
+        if (by_label) {
+          cytnx_warning_msg(true,
+                            "[Deprecated warning][permute] by_label=true with integer recognized "
+                            "as label be deprecated soon. use strings instead.%s",
+                            "\n");
+        }
+        return self.permute(mapper, rowrank, by_label);
+      },
+      py::arg("mapper"), py::arg("rowrank") = (cytnx_int64)(-1), py::arg("by_label") = false)
 
-    .def("permute", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
-                        return self.permute(mapper,rowrank); 
-                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
-    
-
-
+    .def(
+      "permute",
+      [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
+        return self.permute(mapper, rowrank);
+      },
+      py::arg("mapper"), py::arg("rowrank") = (cytnx_int64)(-1))
 
     .def("make_contiguous", &UniTensor::contiguous)
     .def("contiguous_", &UniTensor::contiguous_)
@@ -2270,12 +2305,8 @@ PYBIND11_MODULE(cytnx, m) {
     .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
 
-
     .def("group_basis_", &UniTensor::group_basis_)
     .def("group_basis", &UniTensor::group_basis)
-
-    
-
 
     .def(
       "get_block",
@@ -2351,31 +2382,32 @@ PYBIND11_MODULE(cytnx, m) {
     .def("combineBonds", &UniTensor::combineBonds, py::arg("indicators"),
          py::arg("permute_back") = true, py::arg("by_label") = true)
     */
-    .def("combineBonds", 
-         [](UniTensor &self, const std::vector<cytnx_int64> &indicators, const bool &force,
-            const bool &by_label)
-         {  
-            if(by_label){
-                cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                self.combineBonds(indicators,force,by_label);
-            }else{
-                self.combineBonds(indicators,force);
-            }
-         },
-         py::arg("indicators"), py::arg("force") = false, py::arg("by_label") = false)
+    .def(
+      "combineBonds",
+      [](UniTensor &self, const std::vector<cytnx_int64> &indicators, const bool &force,
+         const bool &by_label) {
+        if (by_label) {
+          cytnx_warning_msg(true,
+                            "[Deprecated notice] by_label option is going to be deprecated. using "
+                            "string will automatically recognized as labels.%s",
+                            "\n");
+          self.combineBonds(indicators, force, by_label);
+        } else {
+          self.combineBonds(indicators, force);
+        }
+      },
+      py::arg("indicators"), py::arg("force") = false, py::arg("by_label") = false)
 
-    .def("combineBonds",
-         [](UniTensor &self, const std::vector<std::string> &indicators, const bool &force)
-         {
-            self.combineBonds(indicators,force);
-         },
-         py::arg("indicators"), py::arg("force") = false)
-
-
+    .def(
+      "combineBonds",
+      [](UniTensor &self, const std::vector<std::string> &indicators, const bool &force) {
+        self.combineBonds(indicators, force);
+      },
+      py::arg("indicators"), py::arg("force") = false)
 
     .def("contract", &UniTensor::contract)
 
-    .def("getTotalQnums", &UniTensor::getTotalQnums, py::arg("physical")=false)
+    .def("getTotalQnums", &UniTensor::getTotalQnums, py::arg("physical") = false)
 
     .def("get_blocks_qnums", &UniTensor::get_blocks_qnums)
 
@@ -2774,42 +2806,51 @@ PYBIND11_MODULE(cytnx, m) {
     .def("cPow_", &UniTensor::Pow_)
     .def("cConj_", &UniTensor::Conj_)
     .def("Conj", &UniTensor::Conj)
-    
+
     /*
     .def("cTrace_", &UniTensor::Trace_, py::arg("a") = 0, py::arg("b") = 1,
          py::arg("by_label") = false)
     */
 
-    .def("cTrace_", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                            return self.Trace_(a,b,by_label);
-                        }else{
-                            return self.Trace_(a,b);
-                        }
-                    },
-                    py::arg("a")=0, py::arg("b")=1, py::arg("by_label")=false)
+    .def(
+      "cTrace_",
+      [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
+        if (by_label) {
+          cytnx_warning_msg(true,
+                            "[Deprecated notice] by_label option is going to be deprecated. using "
+                            "string will automatically recognized as labels.%s",
+                            "\n");
+          return self.Trace_(a, b, by_label);
+        } else {
+          return self.Trace_(a, b);
+        }
+      },
+      py::arg("a") = 0, py::arg("b") = 1, py::arg("by_label") = false)
 
-    .def("cTrace_", [](UniTensor &self, const std::string &a, const std::string &b){
-                    return self.Trace_(a,b);
-                 },
-                 py::arg("a"), py::arg("b"))
+    .def(
+      "cTrace_",
+      [](UniTensor &self, const std::string &a, const std::string &b) { return self.Trace_(a, b); },
+      py::arg("a"), py::arg("b"))
 
+    .def(
+      "Trace",
+      [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label) {
+        if (by_label) {
+          cytnx_warning_msg(true,
+                            "[Deprecated notice] by_label option is going to be deprecated. using "
+                            "string will automatically recognized as labels.%s",
+                            "\n");
+          return self.Trace(a, b, by_label);
+        } else {
+          return self.Trace(a, b);
+        }
+      },
+      py::arg("a") = 0, py::arg("b") = 1, py::arg("by_label") = false)
 
-    .def("Trace", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b, const bool &by_label){
-                    if(by_label){
-                        cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                        return self.Trace(a,b,by_label);
-                    }else{
-                        return self.Trace(a,b);
-                    }
-                 },
-                 py::arg("a")=0, py::arg("b")=1, py::arg("by_label")=false)
-
-    .def("Trace", [](UniTensor &self, const std::string &a, const std::string &b){
-                    return self.Trace(a,b);
-                 },
-                 py::arg("a"), py::arg("b"))
+    .def(
+      "Trace",
+      [](UniTensor &self, const std::string &a, const std::string &b) { return self.Trace(a, b); },
+      py::arg("a"), py::arg("b"))
 
     .def("Norm", &UniTensor::Norm)
     .def("cTranspose_", &UniTensor::Transpose_)
@@ -2823,39 +2864,48 @@ PYBIND11_MODULE(cytnx, m) {
     .def("ctruncate_", &UniTensor::truncate_);
     */
 
-    .def("truncate",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                       const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                            return self.truncate(bond_idx, dim, by_label);
-                        }else{
-                            return self.truncate(bond_idx, dim);
-                        }
-                    },
-                    py::arg("bond_idx"), py::arg("dim"),py::arg("by_label") = false)
-    .def("truncate",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
-                        return self.truncate(label, dim);
-                    },
-                    py::arg("label"), py::arg("dim"))  
+    .def(
+      "truncate",
+      [](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
+         const bool &by_label) {
+        if (by_label) {
+          cytnx_warning_msg(true,
+                            "[Deprecated notice] by_label option is going to be deprecated. using "
+                            "string will automatically recognized as labels.%s",
+                            "\n");
+          return self.truncate(bond_idx, dim, by_label);
+        } else {
+          return self.truncate(bond_idx, dim);
+        }
+      },
+      py::arg("bond_idx"), py::arg("dim"), py::arg("by_label") = false)
+    .def(
+      "truncate",
+      [](UniTensor &self, const std::string &label,
+         const cytnx_uint64 &dim) { return self.truncate(label, dim); },
+      py::arg("label"), py::arg("dim"))
 
-    .def("ctruncate_",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                       const bool &by_label){
-                        if(by_label){
-                            cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
-                            return self.truncate_(bond_idx, dim, by_label);
-                        }else{
-                            return self.truncate_(bond_idx, dim);
-                        }
-                    },
-                    py::arg("bond_idx"), py::arg("dim"),py::arg("by_label") = false)
+    .def(
+      "ctruncate_",
+      [](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
+         const bool &by_label) {
+        if (by_label) {
+          cytnx_warning_msg(true,
+                            "[Deprecated notice] by_label option is going to be deprecated. using "
+                            "string will automatically recognized as labels.%s",
+                            "\n");
+          return self.truncate_(bond_idx, dim, by_label);
+        } else {
+          return self.truncate_(bond_idx, dim);
+        }
+      },
+      py::arg("bond_idx"), py::arg("dim"), py::arg("by_label") = false)
 
-    .def("ctruncate_",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
-                        return self.truncate(label, dim);
-                    },
-                    py::arg("label"), py::arg("dim"))  
-    ;
-
-
+    .def(
+      "ctruncate_",
+      [](UniTensor &self, const std::string &label,
+         const cytnx_uint64 &dim) { return self.truncate(label, dim); },
+      py::arg("label"), py::arg("dim"));
 
   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
         py::arg("cacheR") = false);
@@ -2903,147 +2953,254 @@ PYBIND11_MODULE(cytnx, m) {
   m_linalg.def("Expf", &cytnx::linalg::Expf, py::arg("Tio"));
 
   // UT, [Note] no bool type!
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = complex128(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = complex64(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = double(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_float &a, const cytnx_float &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = float(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint64(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int64(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint32(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int32(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = complex128(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = complex64(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = double(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_float &a, const cytnx_float &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = float(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint64(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int64(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint32(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int32(0));
 
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint16(0));
-  m_linalg.def("ExpH",[](const UniTensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int16(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint16(0));
+  m_linalg.def(
+    "ExpH",
+    [](const UniTensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int16(0));
 
-
-  m_linalg.def("ExpH",[](const UniTensor &Tin){
-                          return cytnx::linalg::ExpH(Tin);
-                      },py::arg("Tin"));
-  
-
+  m_linalg.def(
+    "ExpH", [](const UniTensor &Tin) { return cytnx::linalg::ExpH(Tin); }, py::arg("Tin"));
 
   // Tn
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = complex128(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = complex64(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_double &a, const cytnx_double &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = double(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_float &a, const cytnx_float &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = float(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint64(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int64(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint32(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int32(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = complex128(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = complex64(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = double(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_float &a, const cytnx_float &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = float(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint64(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int64(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint32(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int32(0));
 
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint16(0));
-  m_linalg.def("ExpH",[](const Tensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b) {
-                          return cytnx::linalg::ExpH(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int16(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint16(0));
+  m_linalg.def(
+    "ExpH",
+    [](const Tensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b) {
+      return cytnx::linalg::ExpH(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int16(0));
 
-  m_linalg.def("ExpH",[](const Tensor &Tin){
-                          return cytnx::linalg::ExpH(Tin);
-                      },py::arg("Tin"));
-  
+  m_linalg.def(
+    "ExpH", [](const Tensor &Tin) { return cytnx::linalg::ExpH(Tin); }, py::arg("Tin"));
+
   // UT
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_float &a, const cytnx_float &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_float &a, const cytnx_float &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
 
-  m_linalg.def("ExpM",[](const UniTensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const UniTensor &Tin){
-                          return cytnx::linalg::ExpM(Tin);
-                      },py::arg("Tin"));
+  m_linalg.def(
+    "ExpM",
+    [](const UniTensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM", [](const UniTensor &Tin) { return cytnx::linalg::ExpM(Tin); }, py::arg("Tin"));
 
   // Tn
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_double &a, const cytnx_double &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_float &a, const cytnx_float &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_double &a, const cytnx_double &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_float &a, const cytnx_float &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
 
-  m_linalg.def("ExpM",[](const Tensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
-                          return cytnx::linalg::ExpM(Tin, a, b);
-                      },py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  m_linalg.def("ExpM",[](const Tensor &Tin){
-                          return cytnx::linalg::ExpM(Tin);
-                      },py::arg("Tin"));
+  m_linalg.def(
+    "ExpM",
+    [](const Tensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b) {
+      return cytnx::linalg::ExpM(Tin, a, b);
+    },
+    py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
+  m_linalg.def(
+    "ExpM", [](const Tensor &Tin) { return cytnx::linalg::ExpM(Tin); }, py::arg("Tin"));
 
   m_linalg.def(
     "Qr",
@@ -3089,7 +3246,6 @@ PYBIND11_MODULE(cytnx, m) {
   m_linalg.def("Axpy", &cytnx::linalg::Axpy, py::arg("a"), py::arg("x"), py::arg("y") = Tensor());
   m_linalg.def("Axpy_", &cytnx::linalg::Axpy_, py::arg("a"), py::arg("x"), py::arg("y"));
 
-
   m_linalg.def(
     "Trace",
     [](const cytnx::UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b,
@@ -3123,9 +3279,12 @@ PYBIND11_MODULE(cytnx, m) {
   m_linalg.def("Min", &cytnx::linalg::Min, py::arg("Tn"));
   m_linalg.def("Sum", &cytnx::linalg::Sum, py::arg("Tn"));
 
-  m_linalg.def("Directsum",[](const Tensor &T1, const Tensor &T2, const std::vector<cytnx_uint64> &shared_axes){
-                                return linalg::Directsum(T1,T2,shared_axes);
-                           },py::arg("T1"),py::arg("T2"),py::arg("shared_axes"));
+  m_linalg.def(
+    "Directsum",
+    [](const Tensor &T1, const Tensor &T2, const std::vector<cytnx_uint64> &shared_axes) {
+      return linalg::Directsum(T1, T2, shared_axes);
+    },
+    py::arg("T1"), py::arg("T2"), py::arg("shared_axes"));
 
   m_linalg.def(
     "Hosvd",
@@ -3143,7 +3302,7 @@ PYBIND11_MODULE(cytnx, m) {
     },
     py::arg("Tn"), py::arg("mode"), py::arg("is_core") = true, py::arg("is_Ls") = false,
     py::arg("truncate_dim") = std::vector<cytnx_int64>());
- 
+
   m_linalg.def(
     "Lanczos",
     [](LinOp *Hop, const Tensor &Tin, const std::string method, const double &CvgCrit,
@@ -3166,7 +3325,7 @@ PYBIND11_MODULE(cytnx, m) {
     py::arg("Hop"), py::arg("Tin"), py::arg("method"), py::arg("CvgCrit") = 1.0e-14,
     py::arg("Maxiter") = 10000, py::arg("k") = 1, py::arg("is_V") = true, py::arg("is_row") = false,
     py::arg("max_krydim") = 0, py::arg("verbose") = false);
-  /* 
+  /*
   m_linalg.def("c_Lanczos_ER",
                [](LinOp *Hop, const cytnx_uint64 &k, const bool &is_V, const cytnx_uint64 &maxiter,
                   const double &CvgCrit, const bool &is_row, const Tensor &Tin,
@@ -3194,16 +3353,14 @@ PYBIND11_MODULE(cytnx, m) {
     },
     py::arg("A"), py::arg("b"), py::arg("rcond") = float(-1));
 
-
   // [Submodule algo]
   pybind11::module m_algo = m.def_submodule("algo", "algorithm related.");
   m_algo.def("Sort", &cytnx::algo::Sort, py::arg("Tn"));
   m_algo.def("Concatenate", &cytnx::algo::Concatenate, py::arg("T1"), py::arg("T2"));
   m_algo.def("Vstack", &cytnx::algo::Vstack, py::arg("Tlist"));
   m_algo.def("Hstack", &cytnx::algo::Hstack, py::arg("Tlist"));
-  m_algo.def("Vsplit", &cytnx::algo::Vsplit, py::arg("Tin"),py::arg("dims"));
-  m_algo.def("Hsplit", &cytnx::algo::Hsplit, py::arg("Tin"),py::arg("dims"));
-
+  m_algo.def("Vsplit", &cytnx::algo::Vsplit, py::arg("Tin"), py::arg("dims"));
+  m_algo.def("Hsplit", &cytnx::algo::Hsplit, py::arg("Tin"), py::arg("dims"));
 
   // [Submodule physics]
   pybind11::module m_physics = m.def_submodule("physics", "physics related.");

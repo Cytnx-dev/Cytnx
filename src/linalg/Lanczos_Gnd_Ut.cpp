@@ -20,31 +20,29 @@ namespace cytnx {
       // perform UL -= a*UR) for each blocks.
       //[Warning] 1. This function does not check the Bond mismatch of UL and UR. Use with caution.
       //           2. This function does not check if UL and UR are of the same UTenType!
-      if(UL.uten_type() == UTenType.Block){
-          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
-            UL.get_block_(UR.get_itoi()[blk]) -= a * UR.get_block_(blk);
-          }
-      }else{
-          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
-            UL.get_block_(blk) -= a * UR.get_block_(blk);
-          }
-
+      if (UL.uten_type() == UTenType.Block) {
+        for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+          UL.get_block_(UR.get_itoi()[blk]) -= a * UR.get_block_(blk);
+        }
+      } else {
+        for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+          UL.get_block_(blk) -= a * UR.get_block_(blk);
+        }
       }
-    
     }
 
     void unsafe_Add_(UniTensor &UL, const Scalar &a, const UniTensor &UR) {
       // perform UL += a*UR) for each blocks.
       //[Warning] 1. This function does not check the Bond mismatch of UL and UR. Use with caution.
       //           2. This function does not check if UL and UR are of the same UTenType!
-      if(UL.uten_type() == UTenType.Block){
-          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
-            UL.get_block_(UR.get_itoi()[blk]) += a * UR.get_block_(blk);
-          }
-      }else{
-          for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
-            UL.get_block_(blk) += a * UR.get_block_(blk);
-          }
+      if (UL.uten_type() == UTenType.Block) {
+        for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+          UL.get_block_(UR.get_itoi()[blk]) += a * UR.get_block_(blk);
+        }
+      } else {
+        for (cytnx_int64 blk = 0; blk < UL.Nblocks(); blk++) {
+          UL.get_block_(blk) += a * UR.get_block_(blk);
+        }
       }
     }
 
@@ -99,7 +97,7 @@ namespace cytnx {
                       "\n");
 
       As(0) = Contract(new_psi.Dagger(), psi_1).item().real();
-      
+
       // As(0) =
       // linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true);
 

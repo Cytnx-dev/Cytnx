@@ -1,7 +1,22 @@
-import os
-import numpy
+import os,sys
 from .cytnx import *
 
+#1) check if numpy is previous imported, if it is, pop warning:
+if ('numpy' in sys.modules) or ('scipy' in sys.modules):
+    raise ValueError("[ERROR] please import cytnx first before import numpy and/or scipy!")
+
+    
+
+## [NOTE!!] These part has to execute first before import numpy!
+#set_mkl_ilp64()
+def init_mkl():
+    a = zeros(2)
+    b = zeros(2)
+    linalg.Dot(a,b)
+    return 0
+init_mkl()
+
+import numpy
 from .Storage_conti import *
 from .Tensor_conti import *
 from .linalg_conti import *

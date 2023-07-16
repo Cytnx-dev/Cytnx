@@ -58,11 +58,12 @@ namespace cytnx {
   __host__ __device__ bool operator==(const cytnx_uint16 &rn, const cuFloatComplex &ln);
   __host__ __device__ bool operator==(const cytnx_bool &rn, const cuFloatComplex &ln);
 
+  //[MUL::]
 
-//[MUL::]
-
-  __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln, const cuDoubleComplex &rn);
-  __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln, const cuFloatComplex &rn);
+  __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln,
+                                                const cuDoubleComplex &rn);
+  __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln,
+                                                const cuFloatComplex &rn);
   __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln, const cytnx_double &rn);
   __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln, const cytnx_float &rn);
   __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln, const cytnx_uint64 &rn);
@@ -74,7 +75,8 @@ namespace cytnx {
   __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln, const cytnx_uint16 &rn);
   __host__ __device__ cuDoubleComplex operator*(const cuDoubleComplex &ln, const cytnx_bool &rn);
 
-  __host__ __device__ cuDoubleComplex operator*(const cuFloatComplex &ln, const cuDoubleComplex &rn);
+  __host__ __device__ cuDoubleComplex operator*(const cuFloatComplex &ln,
+                                                const cuDoubleComplex &rn);
   __host__ __device__ cuFloatComplex operator*(const cuFloatComplex &ln, const cuFloatComplex &rn);
   //__host__ __device__ bool operator*(const cuFloatComplex &ln, const cuFloatComplex &rn){
   //    return (ln.x == rn.x)&&(ln.y == rn.y);
@@ -112,8 +114,6 @@ namespace cytnx {
   __host__ __device__ cuFloatComplex operator*(const cytnx_int16 &rn, const cuFloatComplex &ln);
   __host__ __device__ cuFloatComplex operator*(const cytnx_uint16 &rn, const cuFloatComplex &ln);
   __host__ __device__ cuFloatComplex operator*(const cytnx_bool &rn, const cuFloatComplex &ln);
-
-
 
 #endif
 

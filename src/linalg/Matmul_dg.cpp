@@ -26,7 +26,6 @@ namespace cytnx {
       cytnx_error_msg(Tl.shape().back() != Tr.shape()[0],
                       "[Matmul_dg] error, dimension not match.%s", "\n");
 
-
       int diag_L;
       if (Tl.shape().size() == 1)
         diag_L = 1;

@@ -53,29 +53,27 @@ namespace cytnx {
   // Scalar proxy:
   // Sproxy
   Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar::Sproxy& rc) {
-    //std::cout << "entry !!" << std::endl;
-    if(this->_insimpl.get()==0){
-        //std::cout << "entry cpcon, not init!!" << std::endl;
-        //std::cout << std::flush;
-        // not init:
-        this->_insimpl = rc._insimpl;
-        this->_loc = rc._loc;
+    // std::cout << "entry !!" << std::endl;
+    if (this->_insimpl.get() == 0) {
+      // std::cout << "entry cpcon, not init!!" << std::endl;
+      // std::cout << std::flush;
+      //  not init:
+      this->_insimpl = rc._insimpl;
+      this->_loc = rc._loc;
+      return *this;
+    } else {
+      if ((rc._insimpl == this->_insimpl) && (rc._loc == this->_loc)) {
+        // std::cout << "entry same!!" << std::endl;
+        std::cout << std::flush;
         return *this;
-    }else{
-        if((rc._insimpl == this->_insimpl) && (rc._loc == this->_loc)){
-            //std::cout << "entry same!!" << std::endl;
-            std::cout << std::flush;
-            return *this;
-        }else{
-            //std::cout << "entry wrn !!" << std::endl;
-            std::cout << std::flush;
-            Scalar tmp = rc._insimpl->get_item(rc._loc);
-            this->_insimpl->set_item(this->_loc, tmp);
-            return *this;
-        }
+      } else {
+        // std::cout << "entry wrn !!" << std::endl;
+        std::cout << std::flush;
+        Scalar tmp = rc._insimpl->get_item(rc._loc);
+        this->_insimpl->set_item(this->_loc, tmp);
+        return *this;
+      }
     }
-
-
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar& rc) {
     this->_insimpl->set_item(this->_loc, rc);
@@ -126,9 +124,7 @@ namespace cytnx {
     return *this;
   }
 
-  bool Scalar::Sproxy::exists() const{
-        return this->_insimpl->dtype != Type.Void;
-  };
+  bool Scalar::Sproxy::exists() const { return this->_insimpl->dtype != Type.Void; };
 
   Scalar Scalar::Sproxy::real() { return Scalar(*this).real(); }
   Scalar Scalar::Sproxy::imag() { return Scalar(*this).imag(); }
@@ -187,7 +183,7 @@ namespace cytnx {
     return out;
   }
   Scalar_init_interface::Scalar_init_interface() {
-    if(!inited){
+    if (!inited) {
       UScIInit[this->Double] = ScIInit_d;
       UScIInit[this->Float] = ScIInit_f;
       UScIInit[this->ComplexDouble] = ScIInit_cd;

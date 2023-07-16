@@ -37,7 +37,7 @@ namespace cytnx {
         random_internal::rii.Uniform[Tin.dtype()](Tin._impl->storage()._impl, low, high, seed);
       } else {
 #ifdef UNI_GPU
-        cytnx_error_msg(true, "[Developing]%s", "\n");
+        // cytnx_error_msg(true, "[Developing]%s", "\n");
         random_internal::rii.cuUniform[Tin.dtype()](Tin._impl->storage()._impl, low, high, seed);
         // Tin = low + Tin*(high-low);
 #else
@@ -49,7 +49,7 @@ namespace cytnx {
 
     void Make_uniform(UniTensor &Tin, const double &low, const double &high,
                       const unsigned int &seed) {
-      if (Tin.uten_type() == UTenType.Sparse || Tin.uten_type() == UTenType.Block) {
+      if (Tin.uten_type() != UTenType.Dense) {
         for (cytnx_int64 i = 0; i < Tin.get_blocks_().size(); i++) {
           Make_uniform(Tin.get_blocks_()[i], low, high, seed + i);
         }

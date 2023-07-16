@@ -44,13 +44,13 @@ namespace cytnx {
       UniTensor L;
       for (auto Ai : this->_TNs) {
         if (L.uten_type() == UTenType.Void) {
-          auto tA = Ai.relabels({0, 1, 2});
-          L = Contract(tA, tA.Dagger().relabel(0, -2));
+          auto tA = Ai.relabels({"0", "1", "2"});
+          L = Contract(tA, tA.Dagger().relabel("0", "-2"));
         } else {
-          L.set_labels({2, -2});
-          auto tA = Ai.relabels({2, 3, 4});
+          L.set_labels({"2", "-2"});
+          auto tA = Ai.relabels({"2", "3", "4"});
           L = Contract(tA, L);
-          L = Contract(L, tA.Dagger().relabels({-4, -2, 3}));
+          L = Contract(L, tA.Dagger().relabels({"-4", "-2", "3"}));
         }
       }
       return L.Trace().item();
@@ -103,7 +103,7 @@ namespace cytnx {
           dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)), DR);
         }
         this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3}, 0., 1., -1), false, 2);
-        this->_TNs[k].set_labels({2 * k, 2 * k + 1, 2 * k + 2});
+        this->_TNs[k].set_labels({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
         // vec_print(std::cout,this->_TNs[k].shape());// << endl;
       }
       this->S_loc = -1;
@@ -167,7 +167,7 @@ namespace cytnx {
         this->_TNs[k].get_block_()(":", select[k]) = random::normal({dim1, dim3}, 0., 1.);
 
         // this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
-        this->_TNs[k].set_labels({2 * k, 2 * k + 1, 2 * k + 2});
+        this->_TNs[k].set_labels({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
       }
       this->S_loc = -1;
       this->Into_Lortho();

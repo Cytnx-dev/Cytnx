@@ -7,10 +7,9 @@ using namespace std;
 
 namespace cytnx {
   void Gncon_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                                   const std::vector<std::string> &alias,
-                                   const std::string &contract_order) {
-    cytnx_error_msg(true, "[ERROR][Gncon][Contract_plan] call from uninitialize Gncon.%s",
-                    "\n");
+                                 const std::vector<std::string> &alias,
+                                 const std::string &contract_order) {
+    cytnx_error_msg(true, "[ERROR][Gncon][Contract_plan] call from uninitialize Gncon.%s", "\n");
   }
   void Gncon_base::Fromfile(const std::string &fname) {
     cytnx_error_msg(true, "[ERROR][Gncon][Fromfile] call from uninitialize Gncon.%s", "\n");
@@ -28,16 +27,14 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR][Gncon][PutUniTensor] call from uninitialize Gncon.%s", "\n");
   }
   void Gncon_base::PutUniTensors(const std::vector<string> &names,
-                                   const std::vector<UniTensor> &utensors) {
-    cytnx_error_msg(true, "[ERROR][Gncon][PutUniTensors] call from uninitialize Gncon.%s",
-                    "\n");
+                                 const std::vector<UniTensor> &utensors) {
+    cytnx_error_msg(true, "[ERROR][Gncon][PutUniTensors] call from uninitialize Gncon.%s", "\n");
   }
   void Gncon_base::clear() {
     cytnx_error_msg(true, "[ERROR][Gncon][Clear] call from uninitialize Gncon.%s", "\n");
   }
   std::string Gncon_base::getOptimalOrder() {
-    cytnx_error_msg(true, "[ERROR][Gncon][getOptimalOrder] call from uninitialize Gncon.%s",
-                    "\n");
+    cytnx_error_msg(true, "[ERROR][Gncon][getOptimalOrder] call from uninitialize Gncon.%s", "\n");
     return "";
   }
   UniTensor Gncon_base::Launch(const bool &optimal, const std::string &contract_order) {

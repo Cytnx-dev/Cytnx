@@ -21,7 +21,8 @@ namespace cytnx {
   // // using namespace boost::container;
 
   // //This option specifies the desired alignment for the internal value_type
-  // typedef boost::container::small_vector_options<boost::container::inplace_alignment<16u>>::type alignment_16_option_t;
+  // typedef boost::container::small_vector_options<boost::container::inplace_alignment<16u>>::type
+  // alignment_16_option_t;
   // // //This option specifies that a vector will increase its capacity 50%
   // // //each time the previous capacity was exhausted.
   // // typedef small_vector_options< growth_factor<growth_factor_50> >::type growth_50_option_t;
@@ -32,13 +33,12 @@ namespace cytnx {
 
   // template <class T, size_t N = 16>
   // using smallvec = boost::container::small_vector<T, N>;
-  
-  template <class T>
-  using vec3d = std::vector<std::vector<std::vector<T> > >;
-  
-  template <class T>
-  using vec2d = std::vector<std::vector<T> >;
 
+  template <class T>
+  using vec3d = std::vector<std::vector<std::vector<T>>>;
+
+  template <class T>
+  using vec2d = std::vector<std::vector<T>>;
 
   typedef double cytnx_double;
   typedef float cytnx_float;
@@ -73,7 +73,7 @@ namespace cytnx {
 
   struct Type_struct {
     std::string name;
-    //char name[35];
+    // char name[35];
     bool is_unsigned;
     bool is_complex;
     bool is_float;
@@ -104,30 +104,21 @@ namespace cytnx {
     // std::vector<Type_struct> Typeinfos;
     inline static Type_struct Typeinfos[N_Type];
     inline static bool inited = false;
-    Type_class& operator=(const Type_class& rhs){
-       for(int i=0;i<N_Type;i++)
-        this->Typeinfos[i] = rhs.Typeinfos[i];
-        return *this;
+    Type_class &operator=(const Type_class &rhs) {
+      for (int i = 0; i < N_Type; i++) this->Typeinfos[i] = rhs.Typeinfos[i];
+      return *this;
     }
 
-    Type_class(){
+    Type_class() {
       // #ifdef DEBUG
       //   std::cout << "[DEBUG] Type constructor call. " << std::endl;
       // #endif
-      if(!inited){
+      if (!inited) {
         Typeinfos[this->Void] = (Type_struct){"Void", true, false, false, false, 0};
-        Typeinfos[this->ComplexDouble] = (Type_struct){"Complex Double (Complex Float64)",
-                                                      false,
-                                                      true,
-                                                      true,
-                                                      false,
-                                                      sizeof(cytnx_complex128)};
-        Typeinfos[this->ComplexFloat] = (Type_struct){"Complex Float (Complex Float32)",
-                                                      false,
-                                                      true,
-                                                      true,
-                                                      false,
-                                                      sizeof(cytnx_complex64)};
+        Typeinfos[this->ComplexDouble] = (Type_struct){
+          "Complex Double (Complex Float64)", false, true, true, false, sizeof(cytnx_complex128)};
+        Typeinfos[this->ComplexFloat] = (Type_struct){
+          "Complex Float (Complex Float32)", false, true, true, false, sizeof(cytnx_complex64)};
         Typeinfos[this->Double] =
           (Type_struct){"Double (Float64)", false, false, true, false, sizeof(cytnx_double)};
         Typeinfos[this->Float] =
@@ -151,35 +142,37 @@ namespace cytnx {
       }
     }
     const std::string &getname(const unsigned int &type_id) const;
-    unsigned int c_typename_to_id(const std::string &c_name)const;
+    unsigned int c_typename_to_id(const std::string &c_name) const;
     unsigned int typeSize(const unsigned int &type_id) const;
-    bool is_unsigned(const unsigned int &type_id)const;
-    bool is_complex(const unsigned int &type_id)const;
-    bool is_float(const unsigned int &type_id)const;
-    bool is_int(const unsigned int &type_id)const;
+    bool is_unsigned(const unsigned int &type_id) const;
+    bool is_complex(const unsigned int &type_id) const;
+    bool is_float(const unsigned int &type_id) const;
+    bool is_int(const unsigned int &type_id) const;
     // int c_typeindex_to_id(const std::type_index &type_idx);
     template <class T>
-    unsigned int cy_typeid(const T &rc) const{
+    unsigned int cy_typeid(const T &rc) const {
       cytnx_error_msg(true, "[ERROR] invalid type%s", "\n");
       return 0;
     }
-    static unsigned int cy_typeid(const cytnx_complex128 &rc){ return Type_class::ComplexDouble; }
-    static unsigned int cy_typeid(const cytnx_complex64 &rc){ return Type_class::ComplexFloat; }
-    static unsigned int cy_typeid(const cytnx_double &rc){ return Type_class::Double; }
-    static unsigned int cy_typeid(const cytnx_float &rc){ return Type_class::Float; }
-    static unsigned int cy_typeid(const cytnx_uint64 &rc){ return Type_class::Uint64; }
-    static unsigned int cy_typeid(const cytnx_int64 &rc){ return Type_class::Int64; }
-    static unsigned int cy_typeid(const cytnx_uint32 &rc){ return Type_class::Uint32; }
-    static unsigned int cy_typeid(const cytnx_int32 &rc){ return Type_class::Int32; }
-    static unsigned int cy_typeid(const cytnx_uint16 &rc){ return Type_class::Uint16; }
-    static unsigned int cy_typeid(const cytnx_int16 &rc){ return Type_class::Int16; }
-    static unsigned int cy_typeid(const cytnx_bool &rc){ return Type_class::Bool; }
+    static unsigned int cy_typeid(const cytnx_complex128 &rc) { return Type_class::ComplexDouble; }
+    static unsigned int cy_typeid(const cytnx_complex64 &rc) { return Type_class::ComplexFloat; }
+    static unsigned int cy_typeid(const cytnx_double &rc) { return Type_class::Double; }
+    static unsigned int cy_typeid(const cytnx_float &rc) { return Type_class::Float; }
+    static unsigned int cy_typeid(const cytnx_uint64 &rc) { return Type_class::Uint64; }
+    static unsigned int cy_typeid(const cytnx_int64 &rc) { return Type_class::Int64; }
+    static unsigned int cy_typeid(const cytnx_uint32 &rc) { return Type_class::Uint32; }
+    static unsigned int cy_typeid(const cytnx_int32 &rc) { return Type_class::Int32; }
+    static unsigned int cy_typeid(const cytnx_uint16 &rc) { return Type_class::Uint16; }
+    static unsigned int cy_typeid(const cytnx_int16 &rc) { return Type_class::Int16; }
+    static unsigned int cy_typeid(const cytnx_bool &rc) { return Type_class::Bool; }
 
     unsigned int type_promote(const unsigned int &typeL, const unsigned int &typeR);
   };
   /// @endcond
 
+  /// @cond
   int type_promote(const int &typeL, const int &typeR);
+  /// @endcond
 
   /**
    * @brief data type
@@ -207,8 +200,8 @@ namespace cytnx {
    *  Uint16       |  undigned short integer with 16 bits
    *  Bool         |  boolean type
    */
-  extern Type_class Type; // move to cytnx.hpp and guarded
-  //static const Type_class Type = Type_class();
+  extern Type_class Type;  // move to cytnx.hpp and guarded
+  // static const Type_class Type = Type_class();
 
   extern int __blasINTsize__;
 

@@ -40,35 +40,28 @@ namespace cytnx {
    */
   extern SymmetryType_class SymType;
 
+  // helper class, has implicitly conversion to vector<int64>!
+  class Qs {
+   private:
+    std::vector<cytnx_int64> tmpQs;
 
-  // helper class, has implicitly conversion to vector<int64>! 
-  class Qs{
-    private:
-        std::vector<cytnx_int64> tmpQs;
+   public:
+    template <class... Ts>
+    Qs(const cytnx_int64 &e1, const Ts... elems) {
+      this->tmpQs = dynamic_arg_int64_resolver(e1, elems...);
+    }
 
-    public:
-        
-        template <class... Ts>
-        Qs(const cytnx_int64 &e1, const Ts... elems) {
-          this->tmpQs = dynamic_arg_int64_resolver(e1, elems...);
-        }
+    Qs(const std::vector<cytnx_int64> &qin) { this->tmpQs = qin; }
 
-        Qs(const std::vector<cytnx_int64> &qin){
-            this->tmpQs = qin;
-        }
+    // interprete as 2d vector directly implicitly convert!
+    explicit operator std::vector<cytnx_int64>() const { return this->tmpQs; };
 
-        // interprete as 2d vector directly implicitly convert!
-        explicit operator std::vector<cytnx_int64>() const {
-            return this->tmpQs;
-        };
-        
-        std::pair<std::vector<cytnx_int64>, cytnx_uint64> operator>>(const cytnx_uint64 &dim){
-            return make_pair(this->tmpQs,dim);
-        }
-
+    std::pair<std::vector<cytnx_int64>, cytnx_uint64> operator>>(const cytnx_uint64 &dim) {
+      return make_pair(this->tmpQs, dim);
+    }
   };
 
-  /* 
+  /*
   template<class... Ts>
   std::vector<cytnx_int64> Qs(const cytnx_int64 &e1, const Ts &...elems){
     std::vector<cytnx_int64> argv = dynamic_arg_int64_resolver(e1, elems...);
@@ -88,7 +81,8 @@ namespace cytnx {
 
     std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64> &inL,
                                           const std::vector<cytnx_int64> &inR);
-    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
+    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR,
+                             const bool &is_reverse);
 
     cytnx_int64 reverse_rule(const cytnx_int64 &in);
 
@@ -99,7 +93,8 @@ namespace cytnx {
     virtual bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
     virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
                                const std::vector<cytnx_int64> &inR);
-    virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
+    virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
+                               const bool &is_reverse);
     virtual void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     virtual void print_info() const;
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
@@ -125,7 +120,8 @@ namespace cytnx {
     bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
     void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
                        const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
+                       const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
   };
@@ -149,7 +145,8 @@ namespace cytnx {
     bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
     void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
                        const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse);
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
+                       const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
   };
@@ -288,7 +285,8 @@ namespace cytnx {
     int &n() const { return this->_impl->n; }
 
     /**
-    @brief return the symmetry type name of current Symmetry object in string form, see cytnx::SymType.
+    @brief return the symmetry type name of current Symmetry object in string form, see
+    cytnx::SymType.
     @return [std::string]
         the symmetry type name.
 
@@ -306,7 +304,8 @@ namespace cytnx {
     bool check_qnum(const cytnx_int64 &qnum) { return this->_impl->check_qnum(qnum); }
 
     /**
-    @brief check all the quantum numbers \qnums are within the valid value range of current Symmetry.
+    @brief check all the quantum numbers \qnums are within the valid value range of current
+    Symmetry.
     @param[in] qnums the list of quantum numbers
     @return [bool]
 
@@ -344,7 +343,8 @@ namespace cytnx {
     @param[in] inR the #2 quantum number.
     @return the combined quantum number.
     */
-    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse = false) const {
+    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR,
+                             const bool &is_reverse = false) const {
       return this->_impl->combine_rule(inL, inR, is_reverse);
     }
 
@@ -355,13 +355,15 @@ namespace cytnx {
     @param[in] inL the #1 quantum number.
     @param[in] inR the #2 quantum number.
     */
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse=false) {
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
+                       const bool &is_reverse = false) {
       this->_impl->combine_rule_(out, inL, inR, is_reverse);
     }
 
     /**
-    @brief Apply reverse rule of current symmetry to a given quantum number and store in parameter \p out.
-    @details that means, \f$ o = -i \f$, where \f$ o \f$ is the output quantum number \p out, 
+    @brief Apply reverse rule of current symmetry to a given quantum number and store in parameter
+    \p out.
+    @details that means, \f$ o = -i \f$, where \f$ o \f$ is the output quantum number \p out,
     and \f$ i \f$ is the input quantum number \p in.
     @param[out] out the output quantum number.
     @param[in] in the input quantum number.
@@ -416,16 +418,18 @@ namespace cytnx {
 
     /**
      * @brief the equality operator of the Symmetry object.
-    */
+     */
     bool operator==(const Symmetry &rhs) const;
 
     /**
      * @brief the inequality operator of the Symmetry object.
-    */
+     */
     bool operator!=(const Symmetry &rhs) const;
   };
 
+  /// @cond
   std::ostream &operator<<(std::ostream &os, const Symmetry &in);
+  /// @endcond
 
 }  // namespace cytnx
 #endif

@@ -126,8 +126,8 @@ def Conj_(self):
     return self
 
 @add_method(UniTensor)
-def Trace_(self,a:int,b:int,by_label=False):
-    self.cTrace_(a,b,by_label);
+def Trace_(self,a:int,b:int):
+    self.cTrace_(a,b);
     return self
 
 @add_method(UniTensor)
@@ -166,8 +166,8 @@ def Pow_(self,p):
     return self
 
 @add_method(UniTensor)
-def truncate_(self,bond_idx,dim,by_label=False):
-    self.ctruncate_(bond_idx,dim,by_label);
+def truncate_(self,bond_idx,dim):
+    self.ctruncate_(bond_idx,dim);
     return self
 
 @add_method(UniTensor)
@@ -175,12 +175,6 @@ def set_name(self,name):
     self.c_set_name(name);
     return self
 
-
-#[Deprecated]
-@add_method(UniTensor)
-def set_label(self,idx:int,new_label:int,by_label=False):
-    self.c_set_label(inx,new_label,by_label);
-    return self
 
 
 @add_method(UniTensor)
@@ -194,12 +188,6 @@ def set_label(self, idx:int, new_label:str):
     return self
 
 
-
-# [Deprecated]
-@add_method(UniTensor)
-def set_labels(self,new_labels:List[int]):
-    self.c_set_labels(new_labels);
-    return self
 
 @add_method(UniTensor)
 def set_labels(self,new_labels:List[str]):

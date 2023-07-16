@@ -1,4 +1,10 @@
 #include "linalg_internal_interface.hpp"
+#ifdef UNI_MKL
+  #include <mkl.h>
+#endif
+#ifdef UNI_MAGMA
+  #include "magma_v2.h"
+#endif
 
 using namespace std;
 
@@ -7,7 +13,39 @@ namespace cytnx {
 
     linalg_internal_interface lii;
 
+    int linalg_internal_interface::set_mkl_ilp64() {
+#ifdef UNI_MKL
+      int code = mkl_set_interface_layer(MKL_INTERFACE_ILP64);
+      std::cout << "MKL interface code: " << code;
+      if (code % 2)
+        std::cout << " >> using [ilp64] interface" << std::endl;
+      else
+        std::cout << " >> using [ lp64] interface" << std::endl;
+
+#endif
+      return 0;
+    }
+    linalg_internal_interface::~linalg_internal_interface() {
+#ifdef UNI_GPU
+  #ifdef UNI_MAGMA
+      int magma_status = magma_finalize();
+      cytnx_error_msg(magma_status != MAGMA_SUCCESS, "[ERROR] magma system cannot finalize!%s",
+                      "\n");
+  #endif
+#endif
+    }
     linalg_internal_interface::linalg_internal_interface() {
+#ifdef UNI_MKL
+      this->set_mkl_ilp64();
+#endif
+#ifdef UNI_GPU
+  #ifdef UNI_MAGMA
+      int magma_status = magma_init();
+      cytnx_error_msg(magma_status != MAGMA_SUCCESS, "[ERROR] magma system cannot initialize!%s",
+                      "\n");
+  #endif
+#endif
+
       Ari_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type, NULL));
 
       Ari_ii[Type.ComplexDouble][Type.ComplexDouble] = Arithmetic_internal_cdtcd;
@@ -301,7 +339,6 @@ namespace cytnx {
       Gesvd_ii[Type.Double] = Gesvd_internal_d;
       Gesvd_ii[Type.Float] = Gesvd_internal_f;
 
-
       //=====================
       Eigh_ii = vector<Eighfunc_oii>(5);
 
@@ -491,7 +528,6 @@ namespace cytnx {
       Td_ii[Type.Double] = Tridiag_internal_d;
       Td_ii[Type.Float] = Tridiag_internal_f;
 
-
       //=====================
       Trace_ii = vector<Tracefunc_oii>(N_Type);
 
@@ -506,7 +542,6 @@ namespace cytnx {
       Trace_ii[Type.Uint16] = Trace_internal_u16;
       Trace_ii[Type.Int16] = Trace_internal_i16;
       Trace_ii[Type.Bool] = Trace_internal_b;
-
 
       //================
       Kron_ii = vector<vector<Kronfunc_oii>>(N_Type, vector<Kronfunc_oii>(N_Type, NULL));
@@ -714,7 +749,6 @@ namespace cytnx {
       Lstsq_ii[Type.Double] = Lstsq_internal_d;
       Lstsq_ii[Type.Float] = Lstsq_internal_f;
 
-
       //===============
       axpy_ii = std::vector<axpy_oii>(5);
       axpy_ii[Type.ComplexDouble] = Axpy_internal_cd;
@@ -736,6 +770,12 @@ namespace cytnx {
       Gemm_ii[Type.Double] = Gemm_internal_d;
       Gemm_ii[Type.Float] = Gemm_internal_f;
 
+      //===============
+      Gemm_Batch_ii = std::vector<Gemm_Batchfunc_oii>(5);
+      Gemm_Batch_ii[Type.ComplexDouble] = Gemm_Batch_internal_cd;
+      Gemm_Batch_ii[Type.ComplexFloat] = Gemm_Batch_internal_cf;
+      Gemm_Batch_ii[Type.Double] = Gemm_Batch_internal_d;
+      Gemm_Batch_ii[Type.Float] = Gemm_Batch_internal_f;
 
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
@@ -971,7 +1011,6 @@ namespace cytnx {
       cuKron_ii[Type.Uint32][Type.Int16] = cuKron_internal_u32ti16;
       cuKron_ii[Type.Uint32][Type.Bool] = cuKron_internal_u32tb;
 
-
       //=====================
       cuMM_ii = vector<MaxMinfunc_oii>(N_Type);
 
@@ -1002,7 +1041,6 @@ namespace cytnx {
       cuSum_ii[Type.Int16] = cuSum_internal_i16;
       cuSum_ii[Type.Bool] = cuSum_internal_b;
 
-
       //=====================
       cuAbs_ii = vector<Absfunc_oii>(N_Type);
 
@@ -1024,7 +1062,7 @@ namespace cytnx {
       cuGer_ii[Type.ComplexFloat] = cuGer_internal_cf;
       cuGer_ii[Type.Double] = cuGer_internal_d;
       cuGer_ii[Type.Float] = cuGer_internal_f;
-      
+
       //===================
       cuDet_ii = vector<Detfunc_oii>(5);
       cuDet_ii[Type.ComplexDouble] = cuDet_internal_cd;
@@ -1108,6 +1146,20 @@ namespace cytnx {
 
       cuConj_inplace_ii[Type.ComplexDouble] = cuConj_inplace_internal_cd;
       cuConj_inplace_ii[Type.ComplexFloat] = cuConj_inplace_internal_cf;
+
+      //=====================
+      cuGemm_ii = vector<Gemmfunc_oii>(5);
+      cuGemm_ii[Type.ComplexDouble] = cuGemm_internal_cd;
+      cuGemm_ii[Type.ComplexFloat] = cuGemm_internal_cf;
+      cuGemm_ii[Type.Double] = cuGemm_internal_d;
+      cuGemm_ii[Type.Float] = cuGemm_internal_f;
+
+      //=====================
+      cuGemm_Batch_ii = vector<Gemm_Batchfunc_oii>(5);
+      cuGemm_Batch_ii[Type.ComplexDouble] = cuGemm_Batch_internal_cd;
+      cuGemm_Batch_ii[Type.ComplexFloat] = cuGemm_Batch_internal_cf;
+      cuGemm_Batch_ii[Type.Double] = cuGemm_Batch_internal_d;
+      cuGemm_Batch_ii[Type.Float] = cuGemm_Batch_internal_f;
 
       //=====================
       cuMatmul_ii = vector<Matmulfunc_oii>(N_Type);
@@ -1302,6 +1354,15 @@ namespace cytnx {
       cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
       cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
 
+  #ifdef UNI_CUTENSOR
+      cuTensordot_ii = vector<Tensordotfunc_oii>(N_Type);
+      cuTensordot_ii[Type.ComplexDouble] = cuTensordot_internal_cd;
+      cuTensordot_ii[Type.ComplexFloat] = cuTensordot_internal_cf;
+      cuTensordot_ii[Type.Double] = cuTensordot_internal_d;
+      cuTensordot_ii[Type.Float] = cuTensordot_internal_f;
+      cuTensordot_ii[Type.Int32] = cuTensordot_internal_i32;
+      cuTensordot_ii[Type.Uint32] = cuTensordot_internal_u32;
+  #endif
 #endif
     }
 

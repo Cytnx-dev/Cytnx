@@ -14,9 +14,9 @@ namespace cytnx {
     return *this;
   }
   UniTensor UniTensor::Add(const UniTensor &rhs) const { return cytnx::linalg::Add(*this, rhs); }
-  UniTensor UniTensor::Add(const Scalar &rhs) const { 
-    //cout << "lyer1: " << rhs << endl;
-    return cytnx::linalg::Add(*this, rhs); 
+  UniTensor UniTensor::Add(const Scalar &rhs) const {
+    // cout << "lyer1: " << rhs << endl;
+    return cytnx::linalg::Add(*this, rhs);
   }
 
   UniTensor UniTensor::Sub(const UniTensor &rhs) const { return cytnx::linalg::Sub(*this, rhs); }
@@ -67,7 +67,8 @@ namespace cytnx {
       f.write((char *)&tmp, sizeof(this->_impl->_labels[i].size()));
     }
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      f.write((char *)(this->_impl->_labels[i].data()), sizeof(char)*this->_impl->_labels[i].size());
+      f.write((char *)(this->_impl->_labels[i].data()),
+              sizeof(char) * this->_impl->_labels[i].size());
     }
     // f.write((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
@@ -93,10 +94,14 @@ namespace cytnx {
       // temporary disable:
       // cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for
       // SparseUniTensor is under developing!!%s","\n");
-      this->_impl = boost::intrusive_ptr<UniTensor_base>(new SparseUniTensor());
-    } else if(utentype == UTenType.Block){
+      // this->_impl = boost::intrusive_ptr<UniTensor_base>(new SparseUniTensor());
+      cytnx_error_msg(true,
+                      "[ERROR] the file is SparseUniTensor which is deprecated. Either it's from a "
+                      "erly version or something wrong!%s",
+                      "\n");
+    } else if (utentype == UTenType.Block) {
       this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
-    }else {
+    } else {
       cytnx_error_msg(true, "[ERROR] Unknown UniTensor type!%s", "\n");
     }
 
@@ -124,7 +129,8 @@ namespace cytnx {
       this->_impl->_labels[i].resize(tmp);
     }
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      f.read((char *)(this->_impl->_labels[i].data()), sizeof(char)*this->_impl->_labels[i].size());
+      f.read((char *)(this->_impl->_labels[i].data()),
+             sizeof(char) * this->_impl->_labels[i].size());
     }
     // f.read((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {

@@ -48,6 +48,7 @@ target_sources_local(cytnx
     Svd_truncate.cpp
     Gesvd_truncate.cpp
     Gemm.cpp
+    Gemm_Batch.cpp
     Tensordot.cpp
     Directsum.cpp
     Tensordot_dg.cpp

@@ -1,10 +1,11 @@
-import sys
+import os,sys
 from pathlib import Path
 home = str(Path.home())
 sys.path.append(home + '/Cytnx_lib')
 import cytnx
-import numpy as np
 import math
+from cytnx import Qs,BD_IN, BD_OUT
+import numpy as np 
 
 ##
 # Author: Kai-Hsin Wu
@@ -23,32 +24,17 @@ dt = 0.1
 
 ## Create Si Sj local H with symmetry:
 ## SzSz + S+S- + h.c. 
-bdi = cytnx.Bond(cytnx.BD_KET,[[1],[-1]], [1,1]);
-bdo = bdi.clone().set_type(cytnx.BD_BRA);
-H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=[2,3,1,0]);
-# H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=[2,3,0,1]);
-
-# H.print_diagram()
-# H.print_blocks()
-# print(bdi.combineBond(bdi,True))
-# print(bdi.combineBond(bdi,0))
+bdi = cytnx.Bond(BD_IN,[Qs(1)>>1,Qs(-1)>>1]);
+bdo = bdi.clone().set_type(BD_OUT);
+H = cytnx.UniTensor([bdi,bdi,bdo,bdo],labels=['2','3','1','0']);
 
 ## assign:
-# Q = 2  # Q = 0:    # Q = -2:
-# [1]    [[ -1, 1]     [1]
-#         [  1,-1]]
-
-# H.get_block_([2])[0] = 1;
-# T0 = H.get_block_([0])
-# T0[0,0] = T0[1,1] = -1;
-# T0[0,1] = T0[1,0] = 1;
-# H.get_block_([-2])[0] = 1;
-H.get_block_([0,0,0,0])[0,0,0,0] = 1;
-H.get_block_([0,1,0,1])[0,0,0,0] = -1;
-H.get_block_([1,0,1,0])[0,0,0,0] = -1;
-H.get_block_([0,1,1,0])[0,0,0,0] = 1;
-H.get_block_([1,0,0,1])[0,0,0,0] = 1;
-H.get_block_([1,1,1,1])[0,0,0,0] = 1;
+H.at([0,0,0,0]).value = 1;
+H.at([0,1,0,1]).value = -1;
+H.at([1,0,1,0]).value = -1;
+H.at([0,1,1,0]).value = 1;
+H.at([1,0,0,1]).value = 1;
+H.at([1,1,1,1]).value = 1;
 
 ## create gate:
 eH = cytnx.linalg.ExpH(H,-dt)
@@ -60,8 +46,8 @@ eH = cytnx.linalg.ExpH(H,-dt)
 #   --A-la-B-lb-- 
 #
 bd_mid = bdi.combineBond(bdi, True);
-A = cytnx.UniTensor([bdi,bdi,bd_mid.redirect()],labels=[-1,0,-2]);
-B = cytnx.UniTensor([bd_mid,bdi,bdo],labels=[-3,1,-4]);
+A = cytnx.UniTensor([bdi,bdi,bd_mid.redirect()],labels=['a','0','b']);
+B = cytnx.UniTensor([bd_mid,bdi,bdo],labels=['c','1','d']);
 
 for b in range(len(B.get_blocks_())):
     cytnx.random.Make_normal(B.get_block_(b),0,0.2);
@@ -72,8 +58,8 @@ A.print_diagram()
 B.print_diagram()
 
 
-la = cytnx.UniTensor([bd_mid,bd_mid.redirect()],labels=[-2,-3],is_diag=True)
-lb = cytnx.UniTensor([bdi,bdo],labels=[-4,-5],is_diag=True)
+la = cytnx.UniTensor([bd_mid,bd_mid.redirect()],labels=['b','c'],is_diag=True)
+lb = cytnx.UniTensor([bdi,bdo],labels=['d','e'],is_diag=True)
 
 for b in range(len(lb.get_blocks_())):
     lb.get_block_(b).fill(1)
@@ -90,20 +76,25 @@ lb.print_diagram()
 Elast = 0
 for i in range(10000):
 
-    A.set_labels(["-1","0","-2"])
-    B.set_labels(["-3","1","-4"])
-    la.set_labels(["-2","-3"])
-    lb.set_labels(["-4","-5"])
+    A.set_labels(["a","0","b"])
+    B.set_labels(["c","1","d"])
+    la.set_labels(["b","c"])
+    lb.set_labels(["d","e"])
 
     ## contract all
-    X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb.set_label(lb.get_index('-5'),new_label='-1')
+    tmpA = cytnx.Contract(A,la)
+    tmpB = cytnx.Contract(B,lb)
+    X = cytnx.Contract(tmpA,tmpB);# << "this line cause problem!\n";
+    #X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
+    #exit(1)
+    lb.set_label("e",new_label='a')
     X = cytnx.Contract(lb,X)
+
 
     ## X =
     #           (0)  (1)
     #            |    |     
-    #  (-4) --lb-A-la-B-lb-- (-5) 
+    #  (d) --lb-A-la-B-lb-- (e) 
     #
     ## calculate local energy:
     ## <psi|psi>
@@ -112,13 +103,15 @@ for i in range(10000):
 
     ## <psi|H|psi>
     XH = cytnx.Contract(X,H)
-    XH.set_labels(['-4','-5','0','1'])
+    #XH.print_diagram()
+    XH.set_labels(['d','e','0','1'])
     XHX = cytnx.Contract(Xt,XH).item()
-    
     E = XHX/XNorm
 
+
+
     ## check if converged.
-    if(np.abs(E-Elast) < CvgCrit):
+    if(abs(E-Elast) < CvgCrit):
         print("[Converged!]")
         break
     print("Step: %d Enr: %5.8f"%(i,Elast))
@@ -127,30 +120,18 @@ for i in range(10000):
 
     ## Time evolution the MPS
     XeH = cytnx.Contract(X,eH)
-    XeH.permute_(['-4','2','3','-5'])
+    XeH.permute_(['d','2','3','e'])
     
     ## Do Svd + truncate
     ## 
-    #        (2)   (3)                   (2)                                    (3)
-    #         |     |          =>         |         +   (-6)--s--(-7)  +         |
-    #  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)
+    #       (2)   (3)                 (2)                                                (3)
+    #        |     |          =>       |         +   (_aux_L)--s--(_aux_R)  +             |
+    #  (d) --= XeH =-- (e)        (d)--U--(_aux_L)                              (_aux_R)--Vt--(e)
     #
 
     XeH.set_rowrank(2)
-    if(XeH.shape()[0]*XeH.shape()[1] > chi):
-        la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
-    else:
-        la,A,B = cytnx.linalg.Svd(XeH)
-
-
-    Norm = 0;
-    for a in range(len(la.get_blocks_())):
-        Norm += cytnx.linalg.Norm(la.get_block_(a)).item()**2
-
-    Norm = math.sqrt(Norm)
-    for a in range(len(la.get_blocks_())):
-        T = la.get_block_(a) 
-        T /= Norm
+    la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
+    la.normalize_()
          
     # de-contract the lb tensor , so it returns to 
     #             
@@ -158,15 +139,12 @@ for i in range(10000):
     #       --lb-A'-la-B'-lb-- 
     #
     # again, but A' and B' are updated 
-    A.set_labels(['-1','0','-2']); A.set_rowrank(1);
-    B.set_labels(['-3','1','-4']); B.set_rowrank(1);
-
     lb_inv = lb.clone()
     for b in range(len(lb_inv.get_blocks_())):
         T = lb_inv.get_block_(b);
         lb_inv.put_block_(1./T,b);
 
-    
+    lb_inv.set_labels(['e','d'])
  
     A = cytnx.Contract(lb_inv,A)
     B = cytnx.Contract(B,lb_inv)

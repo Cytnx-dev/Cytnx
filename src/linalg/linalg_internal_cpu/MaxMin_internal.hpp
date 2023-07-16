@@ -11,7 +11,7 @@
 namespace cytnx {
   namespace linalg_internal {
 
-    /// note type can be 'x' or 'n', indicating the return is max or min. 
+    /// note type can be 'x' or 'n', indicating the return is max or min.
     void MaxMin_internal_u64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type);

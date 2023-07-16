@@ -34,6 +34,11 @@ add_executable(
   algo_test/Vstack_test.cpp
 
 )
+
+if(USE_CUDA)
+      add_subdirectory(gpu)
+endif()
+
 target_link_libraries(
   test_main
   gtest_main

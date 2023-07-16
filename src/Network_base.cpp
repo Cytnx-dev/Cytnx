@@ -45,7 +45,10 @@ namespace cytnx {
     return UniTensor();
   }
 
-  void Network_base::construct(const std::vector<std::string> &alias, const std::vector<std::vector<std::string>> &lbls, const std::vector<std::string> &outlbl, const cytnx_int64 &outrk, const std::string &order, const bool optim) {
+  void Network_base::construct(const std::vector<std::string> &alias,
+                               const std::vector<std::vector<std::string>> &lbls,
+                               const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
+                               const std::string &order, const bool optim) {
     cytnx_error_msg(true, "[ERROR][Network][construct] call from uninitialize network.%s", "\n");
   }
 

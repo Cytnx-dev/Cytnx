@@ -18,8 +18,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-void generator_binding(py::module &m){
-
+void generator_binding(py::module &m) {
   m.def(
     "zeros",
     [](const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) -> Tensor {
@@ -141,6 +140,4 @@ void generator_binding(py::module &m){
     memcpy(m.storage()._impl->Mem, info.ptr, Totbytes);
     return m;
   });
-
-
 }
