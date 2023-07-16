@@ -25,12 +25,15 @@ jobs:
     - name: Install dependencies
       run: |
         $CONDA/bin/conda config --add channels conda-forge
+        $CONDA/bin/conda create --channel conda-forge --name cytnx python=3.10 _openmp_mutex=*=*_llvm
+        $CONDA/bin/conda activate cytnx
         $CONDA/bin/conda install python=3.10 _openmp_mutex=*=*_llvm
         $CONDA/bin/conda upgrade --all
         $CONDA/bin/conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
 
     - name: Configure CMake
-      run: $CONDA/bin/cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/works/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
+      run: $CONDA/bin/conda activate cytnx
+      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/works/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
 
     - name: Download Coverity Build Tool
       working-directory: ${{github.workspace}}/build
