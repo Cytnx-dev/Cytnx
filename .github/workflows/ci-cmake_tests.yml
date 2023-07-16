@@ -12,9 +12,11 @@ jobs:
 
     defaults:
       run:
-        shell: bash
+        shell: bash -l {0}
 
     steps:
+    - uses: actions/checkout@v3
+
     - uses: conda-incubator/setup-miniconda@v2
       with:
         # Specify python version your environment will have. Remember to quote this, or
