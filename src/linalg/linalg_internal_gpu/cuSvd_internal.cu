@@ -17,12 +17,12 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? 
-        CUSOLVER_EIG_MODE_NOVECTOR : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
-      
+
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
@@ -36,37 +36,42 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem, *vTMem;
-      if(U->Mem){UMem = U->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+      if (U->Mem) {
+        UMem = U->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if(vT->Mem){vTMem = vT->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+      if (vT->Mem) {
+        vTMem = vT->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0;     /* size of workspace */
+      size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0;     /* size of workspace */
+      size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(
-        cusolverH, NULL,              /* params */
-        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-        Mij, ldA, cuda_data_typeR,         /* dataTypeS */
-        S->Mem, cuda_data_type,              /* dataTypeU */
-        vTMem, ldu,                     /* ldu */
-        cuda_data_type,                   /* dataTypeV */
-        UMem, ldvT,                    /* ldv */
-        cuda_data_type,                   /* computeType */
-        &d_lwork, &h_lwork));
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+                                                   jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                                   Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   vTMem, ldu, /* ldu */
+                                                   cuda_data_type, /* dataTypeV */
+                                                   UMem, ldvT, /* ldv */
+                                                   cuda_data_type, /* computeType */
+                                                   &d_lwork, &h_lwork));
 
       // allocate working space:
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * d_lwork));
       if (0 < h_lwork) {
-          h_work = reinterpret_cast<void *>(malloc(h_lwork));
-          if (d_work == nullptr) {
-              throw std::runtime_error("Error: d_work not allocated.");
-          }
+        h_work = reinterpret_cast<void *>(malloc(h_lwork));
+        if (d_work == nullptr) {
+          throw std::runtime_error("Error: d_work not allocated.");
+        }
       }
 
       cytnx_int32 *devinfo;
@@ -75,22 +80,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                  jobz, econ, N, M,
-                                  cuda_data_type,            /* dataTypeA */
-                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                  S->Mem, cuda_data_type,    /* dataTypeU */
-                                  vTMem, ldu,                /* ldu */
-                                  cuda_data_type,            /* dataTypeV */
-                                  UMem, ldvT,                /* ldv */
-                                  cuda_data_type,            /* computeType */
-                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                        Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                        S->Mem, cuda_data_type, /* dataTypeU */
+                        vTMem, ldu, /* ldu */
+                        cuda_data_type, /* dataTypeV */
+                        UMem, ldvT, /* ldv */
+                        cuda_data_type, /* computeType */
+                        d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
       U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-      linalg_internal::cuConj_inplace_internal_cd(U,M*min);
+      linalg_internal::cuConj_inplace_internal_cd(U, M * min);
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
+      cytnx_warning_msg(
+        h_err_sigma > 1e-12,
+        "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n",
+        h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 
@@ -118,12 +125,12 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? 
-        CUSOLVER_EIG_MODE_NOVECTOR : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
-      
+
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
@@ -138,37 +145,42 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem, *vTMem;
-      if(U->Mem){UMem = U->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+      if (U->Mem) {
+        UMem = U->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if(vT->Mem){vTMem = vT->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+      if (vT->Mem) {
+        vTMem = vT->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0;     /* size of workspace */
+      size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0;     /* size of workspace */
+      size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(
-        cusolverH, NULL,              /* params */
-        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-        Mij, ldA, cuda_data_typeR,         /* dataTypeS */
-        S->Mem, cuda_data_type,              /* dataTypeU */
-        vTMem, ldu,                     /* ldu */
-        cuda_data_type,                   /* dataTypeV */
-        UMem, ldvT,                    /* ldv */
-        cuda_data_type,                   /* computeType */
-        &d_lwork, &h_lwork));
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+                                                   jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                                   Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   vTMem, ldu, /* ldu */
+                                                   cuda_data_type, /* dataTypeV */
+                                                   UMem, ldvT, /* ldv */
+                                                   cuda_data_type, /* computeType */
+                                                   &d_lwork, &h_lwork));
 
       // allocate working space:
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * d_lwork));
       if (0 < h_lwork) {
-          h_work = reinterpret_cast<void *>(malloc(h_lwork));
-          if (d_work == nullptr) {
-              throw std::runtime_error("Error: d_work not allocated.");
-          }
+        h_work = reinterpret_cast<void *>(malloc(h_lwork));
+        if (d_work == nullptr) {
+          throw std::runtime_error("Error: d_work not allocated.");
+        }
       }
 
       cytnx_int32 *devinfo;
@@ -177,22 +189,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                  jobz, econ, N, M,
-                                  cuda_data_type,            /* dataTypeA */
-                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                  S->Mem, cuda_data_type,    /* dataTypeU */
-                                  vTMem, ldu,                /* ldu */
-                                  cuda_data_type,            /* dataTypeV */
-                                  UMem, ldvT,                /* ldv */
-                                  cuda_data_type,            /* computeType */
-                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                        Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                        S->Mem, cuda_data_type, /* dataTypeU */
+                        vTMem, ldu, /* ldu */
+                        cuda_data_type, /* dataTypeV */
+                        UMem, ldvT, /* ldv */
+                        cuda_data_type, /* computeType */
+                        d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
       U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-      linalg_internal::cuConj_inplace_internal_cf(U,M*min);
+      linalg_internal::cuConj_inplace_internal_cf(U, M * min);
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
+      cytnx_warning_msg(
+        h_err_sigma > 1e-12,
+        "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n",
+        h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 
@@ -219,12 +233,12 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? 
-        CUSOLVER_EIG_MODE_NOVECTOR : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
-      
+
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
@@ -239,37 +253,42 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem, *vTMem;
-      if(U->Mem){UMem = U->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+      if (U->Mem) {
+        UMem = U->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if(vT->Mem){vTMem = vT->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+      if (vT->Mem) {
+        vTMem = vT->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0;     /* size of workspace */
+      size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0;     /* size of workspace */
+      size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(
-        cusolverH, NULL,              /* params */
-        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-        Mij, ldA, cuda_data_typeR,         /* dataTypeS */
-        S->Mem, cuda_data_type,              /* dataTypeU */
-        vTMem, ldu,                     /* ldu */
-        cuda_data_type,                   /* dataTypeV */
-        UMem, ldvT,                    /* ldv */
-        cuda_data_type,                   /* computeType */
-        &d_lwork, &h_lwork));
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+                                                   jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                                   Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   vTMem, ldu, /* ldu */
+                                                   cuda_data_type, /* dataTypeV */
+                                                   UMem, ldvT, /* ldv */
+                                                   cuda_data_type, /* computeType */
+                                                   &d_lwork, &h_lwork));
 
       // allocate working space:
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * d_lwork));
       if (0 < h_lwork) {
-          h_work = reinterpret_cast<void *>(malloc(h_lwork));
-          if (d_work == nullptr) {
-              throw std::runtime_error("Error: d_work not allocated.");
-          }
+        h_work = reinterpret_cast<void *>(malloc(h_lwork));
+        if (d_work == nullptr) {
+          throw std::runtime_error("Error: d_work not allocated.");
+        }
       }
 
       cytnx_int32 *devinfo;
@@ -278,22 +297,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                  jobz, econ, N, M,
-                                  cuda_data_type,            /* dataTypeA */
-                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                  S->Mem, cuda_data_type,    /* dataTypeU */
-                                  vTMem, ldu,                /* ldu */
-                                  cuda_data_type,            /* dataTypeV */
-                                  UMem, ldvT,                /* ldv */
-                                  cuda_data_type,            /* computeType */
-                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                        Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                        S->Mem, cuda_data_type, /* dataTypeU */
+                        vTMem, ldu, /* ldu */
+                        cuda_data_type, /* dataTypeV */
+                        UMem, ldvT, /* ldv */
+                        cuda_data_type, /* computeType */
+                        d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
       U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-      
+
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
+      cytnx_warning_msg(
+        h_err_sigma > 1e-12,
+        "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n",
+        h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 
@@ -320,12 +341,12 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? 
-        CUSOLVER_EIG_MODE_NOVECTOR : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
-      
+
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
@@ -340,37 +361,42 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem, *vTMem;
-      if(U->Mem){UMem = U->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
+      if (U->Mem) {
+        UMem = U->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if(vT->Mem){vTMem = vT->Mem;}else{
-        if(jobz == CUSOLVER_EIG_MODE_VECTOR) checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
+      if (vT->Mem) {
+        vTMem = vT->Mem;
+      } else {
+        if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+          checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
       }
 
-      size_t d_lwork = 0;     /* size of workspace */
+      size_t d_lwork = 0; /* size of workspace */
       void *d_work = nullptr; /* device workspace for getrf */
-      size_t h_lwork = 0;     /* size of workspace */
+      size_t h_lwork = 0; /* size of workspace */
       void *h_work = nullptr; /* host workspace for getrf */
       cytnx_double h_err_sigma;
       // query working space :
-      checkCudaErrors(cusolverDnXgesvdp_bufferSize(
-        cusolverH, NULL,              /* params */
-        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
-        Mij, ldA, cuda_data_typeR,         /* dataTypeS */
-        S->Mem, cuda_data_type,              /* dataTypeU */
-        vTMem, ldu,                     /* ldu */
-        cuda_data_type,                   /* dataTypeV */
-        UMem, ldvT,                    /* ldv */
-        cuda_data_type,                   /* computeType */
-        &d_lwork, &h_lwork));
+      checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
+                                                   jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                                                   Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   vTMem, ldu, /* ldu */
+                                                   cuda_data_type, /* dataTypeV */
+                                                   UMem, ldvT, /* ldv */
+                                                   cuda_data_type, /* computeType */
+                                                   &d_lwork, &h_lwork));
 
       // allocate working space:
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * d_lwork));
       if (0 < h_lwork) {
-          h_work = reinterpret_cast<void *>(malloc(h_lwork));
-          if (d_work == nullptr) {
-              throw std::runtime_error("Error: d_work not allocated.");
-          }
+        h_work = reinterpret_cast<void *>(malloc(h_lwork));
+        if (d_work == nullptr) {
+          throw std::runtime_error("Error: d_work not allocated.");
+        }
       }
 
       cytnx_int32 *devinfo;
@@ -379,22 +405,24 @@ namespace cytnx {
 
       cytnx_int32 info;
       /// compute:
-      cusolverDnXgesvdp(cusolverH, NULL,                      /* params */
-                                  jobz, econ, N, M,
-                                  cuda_data_type,            /* dataTypeA */
-                                  Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                  S->Mem, cuda_data_type,    /* dataTypeU */
-                                  vTMem, ldu,                /* ldu */
-                                  cuda_data_type,            /* dataTypeV */
-                                  UMem, ldvT,                /* ldv */
-                                  cuda_data_type,            /* computeType */
-                                  d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
+      cusolverDnXgesvdp(cusolverH, NULL, /* params */
+                        jobz, econ, N, M, cuda_data_type, /* dataTypeA */
+                        Mij, ldA, cuda_data_typeR, /* dataTypeS */
+                        S->Mem, cuda_data_type, /* dataTypeU */
+                        vTMem, ldu, /* ldu */
+                        cuda_data_type, /* dataTypeV */
+                        UMem, ldvT, /* ldv */
+                        cuda_data_type, /* computeType */
+                        d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
       U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-      
+
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
-      cytnx_warning_msg(h_err_sigma > 1e-12, "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n", h_err_sigma);
+      cytnx_warning_msg(
+        h_err_sigma > 1e-12,
+        "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n",
+        h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 

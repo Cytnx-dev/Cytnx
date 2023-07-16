@@ -273,7 +273,7 @@ namespace cytnx {
         make_cuDoubleComplex(1, 0));
   #elif defined(UNI_CUTT)
       return cuMovemem_cutt_gpu<cytnx_complex128, cuDoubleComplex>(in, old_shape, mapper, invmapper,
-                                                                 is_inplace);
+                                                                   is_inplace);
   #else
       return cuMovemem_gpu_general<cytnx_complex128, cuDoubleComplex>(in, old_shape, mapper,
                                                                       invmapper, is_inplace);

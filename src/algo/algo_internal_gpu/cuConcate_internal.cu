@@ -5,7 +5,7 @@ namespace cytnx {
   namespace algo_internal {
 
     void cuvConcate_internal(char *out_ptr, std::vector<void *> &ins,
-                           const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &ElemSize) {
+                             const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &ElemSize) {
       // require:
       // 1. Data type of out, all [ins] to be the same
       // 2. out is properly allocated!
@@ -16,15 +16,16 @@ namespace cytnx {
       // char *out_ptr = (char*)out->Mem;
 
       for (cytnx_int32 i = 0; i < ins.size(); i++) {
-        checkCudaErrors(cudaMemcpy(out_ptr + offs, ins[i], ElemSize * lens[i], cudaMemcpyDeviceToDevice));
+        checkCudaErrors(
+          cudaMemcpy(out_ptr + offs, ins[i], ElemSize * lens[i], cudaMemcpyDeviceToDevice));
         offs += ElemSize * lens[i];
         // std::cout << ElemSize*lens[i] << std::endl;
       }
     }
 
     void cuhConcate_internal(char *out_ptr, std::vector<char *> &ins,
-                           const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &Dshare,
-                           const cytnx_uint64 &Dtot, const cytnx_uint64 &ElemSize) {
+                             const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &Dshare,
+                             const cytnx_uint64 &Dtot, const cytnx_uint64 &ElemSize) {
       // require:
       // 1. Data type of out, all [ins] to be the same
       // 2. out is properly allocated!
@@ -41,8 +42,9 @@ namespace cytnx {
       for (cytnx_int64 t = 0; t < lens.size(); t++) {
         // copy segment for each row!
         for (cytnx_int64 r = 0; r < Dshare; r++) {
-          checkCudaErrors(cudaMemcpy(out_ptr + (Dtot * r + offs[t]) * ElemSize, ins[t] + (r * lens[t]) * ElemSize,
-                 ElemSize * lens[t], cudaMemcpyDeviceToDevice));
+          checkCudaErrors(cudaMemcpy(out_ptr + (Dtot * r + offs[t]) * ElemSize,
+                                     ins[t] + (r * lens[t]) * ElemSize, ElemSize * lens[t],
+                                     cudaMemcpyDeviceToDevice));
         }  // r
 
       }  // t
