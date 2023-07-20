@@ -129,68 +129,70 @@ This approach can be convenient if you do not want to maintain the .net files.
 PutUniTensor according to label ordering
 ------------------------------------------
 
-When we put a UniTensor into a Network, we can also specify its leg order by the bond labels in a UniTensor. This way, the user does not need to know or look up the order of the indices of the bonds. As an example, we consider two UniTensors **A** and **B** with three bonds each.  Both tensors have one leg corresponding to physical degrees of freedom and the other two legs are internal indices of the Tensor Network. Tensors of this kind are used in matrix product states, and the internal indices point to the left or right in diagrams, while the physical index is oriented vertically. We first create such tensors and set the corresponding labels:
+When we put a UniTensor into a Network, we can also specify its leg order according to a label ordering, this interface turns out to be convinient since users don't need to memorize look up the index of s desired leg. To be more specific, consider a example, we grab two three leg tensors **A1** and **A2**, they both have one leg that spans the physical space and the other two legs describe the virtual space (such tensors are often appearing as the building block tensors of matrix product state), we create the tensors and set the corresponding lebels as following:
 
 * In Python:
 
 .. code-block:: python
     :linenos:
 
-    A = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    A.relabels_(["phy", "left", "right"])
-    B = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    B.relabels_(["phy", "left", "right"])
+    A1 = cytnx.UniTensor(cytnx.ones([2,8,8]));
+    A1.set_labels(["phy","v1","v2"])
+    A2 = cytnx.UniTensor(cytnx.ones([2,8,8]));
+    A2.set_labels(["phy","v1","v2"])
 
-The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2, corresponding to a spin-half chain) and the other two legs are
-the internal bonds (with bond dimension 8).
+The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2 for spin-half case for example) and the other two legs are the virtual ones (with dimension 8).
 
-If we want to contract the physical legs of the two tensors, we can create the following Network:
+Now suppose somehow we want to contract these two tensors by its physical legs, we create the following Network:
 
-* In Python:
 
-.. code-block:: python
-    :linenos:
+.. .. code-block:: python
+..     :linenos:
 
-    net = cytnx.Network()
-    net.FromString(["T0: v0in, phy, v0out",\
-                    "T1: v1in, phy, v1out",\
-                    "TOUT: v0in, v1in; v0out, v1out"])
-
-Note that this Network uses the convention that the second legs of the tensors are contracted. This is not consistent with the index ordering of **A** and **B**, which have the physical leg in the first position. However, if we specify the labels when we put the tensors, we do not have to worry about the index order:
-
+..     net = cytnx.Network()
+..     net.FromString(["T0: v0in, phy, v0out",\
+..                     "T1: v1in, phy, v1out",\
+..                     "TOUT: v0in, v1in; v0out, v1out"])
 
 * In Python:
 
 .. code-block:: python
     :linenos:
 
-    net.PutUniTensor("T0", A, ["left", "phy", "right"])
-    net.PutUniTensor("T1", B, ["left", "phy", "right"])
-    Tout=net.Launch()
-    Tout.print_diagram()
+    N = cytnx.Network()
+    N.FromString(["A1: 1,-1,2",\
+                "A2: 3,-1,4",\
+                "TOUT: 1,3;2,4"])
 
-Output >> 
+Note that in this Network it is the second leg of the two tensors to be contracted, which will not be consistent since **A1** and **A2** are created such that their physical leg is the first one, while we can do the following:
 
-.. code-block:: text
+* In Python:
 
-    -----------------------
-    tensor Name : 
-    tensor Rank : 4
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-                 ---------     
-                /         \    
-       v0in ____| 8     8 |____ v0out
-                |         |    
-       v1in ____| 8     8 |____ v1out
-                \         /    
-                 ---------     
+.. code-block:: python
+    :linenos:
 
-We added the bond labels as a third argument in PutUniTensor(). In this case, the indices will be permuted according to the label ordering of the Network.
+    N.PutUniTensor("A1",A1,["v1","phy","v2"])
+    N.PutUniTensor("A2",A2,["v1","phy","v2"])
 
-Note that the names of tensors and indices can differ from the names and labels of the UniTensors, which makes it possible to flexibly reuse the Network for different tensor in consecutive contractions.
+.. Output >> 
 
+.. .. code-block:: text
+
+..     -----------------------
+..     tensor Name : 
+..     tensor Rank : 4
+..     block_form  : False
+..     is_diag     : False
+..     on device   : cytnx device: CPU
+..                  ---------     
+..                 /         \    
+..        v0in ____| 8     8 |____ v0out
+..                 |         |    
+..        v1in ____| 8     8 |____ v1out
+..                 \         /    
+..                  ---------     
+
+So when we do the PutUniTensor() we add the third argument which is a labels ordering, what this function will do is nothing but permute the tensor legs according to this label ordering before putting them into the Network.
 
 .. toctree::
 
