@@ -551,7 +551,11 @@ namespace cytnx {
 
     this->RmUniTensor(idx);
   }
-
+  void RegularNetwork::RmUniTensors(const std::vector<string> &names) {
+    for (int i = 0; i < names.size(); i++) {
+      this->RmUniTensor(names[i]);
+    }
+  }
 
   void RegularNetwork::Savefile(const std::string &fname) {
     cytnx_error_msg(
