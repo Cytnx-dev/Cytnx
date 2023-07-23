@@ -65,6 +65,18 @@ void network_binding(py::module &m) {
       [](Network &self, const std::vector<std::string> &names,
          const std::vector<UniTensor> &utensors) { self.PutUniTensors(names, utensors); },
       py::arg("names"), py::arg("utensors"))
+
+    .def(
+      "RmUniTensor", [](Network &self, const std::string &name) { self.RmUniTensor(name); },
+      py::arg("name"))
+    .def(
+      "RmUniTensor", [](Network &self, const cytnx_uint64 &idx) { self.RmUniTensor(idx); },
+      py::arg("idx"))
+    .def(
+      "RmUniTensors",
+      [](Network &self, const std::vector<std::string> &names) { self.RmUniTensors(names); },
+      py::arg("names"))
+
     .def("getOptimalOrder", &Network::getOptimalOrder,
          py::arg("network_type") = (int)NtType.Regular)
     .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",

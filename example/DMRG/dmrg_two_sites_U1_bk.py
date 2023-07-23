@@ -25,7 +25,7 @@ def print_bond_qn(qns):
         for qn in tamed:
             if qn == ele:
                 count += 1
-        print("(",ele,",",count,end=') ') 
+        print("(",ele,",",count,end=') ')
 
 def print_bond_dir(ut):
     bds = ut.bonds()
@@ -47,7 +47,7 @@ class Hxx(cytnx.LinOp):
     def matvec(self, v):
         start = time.time()
 
-        lbl = v.labels(); 
+        lbl = v.labels();
         # print(lbl)
         # self.anet.PutUniTensor("psi",v);
         L_ = self.L.relabels([-5,-1,0]);
@@ -98,12 +98,12 @@ def optimize_psi(psivec, functArgs, maxit, krydim=4):
 
     # psivec.set_labels(lbl)
     #energy ,psivec = cytnx.linalg.Lanczos_Gnd(H,CvgCrit=1.0e-12,Tin=psivec,maxiter=4000)
-    
+
     en  = time.time()
 
     if(psivec.shape()==[chi, 2,2, chi]):
         Lanc_time.append(en-st)
-    
+
     return psivec, energy.item()
 
 print(cytnx.Device.Ncpus)
@@ -117,7 +117,7 @@ maxit = 4 # iterations of Lanczos method
 krydim = 4 # dimension of Krylov subspace
 
 
-## Initialiaze MPO 
+## Initialiaze MPO
 ##>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 d = 2
 s = 0.5
@@ -138,7 +138,7 @@ M.set_elem([3,3,1,1],1);
 # S-
 M.set_elem([0,1,1,0],2**0.5);
 
-# S+ 
+# S+
 M.set_elem([0,2,0,1],2**0.5);
 
 # S+
@@ -148,14 +148,14 @@ M.set_elem([1,3,0,1],2**0.5);
 M.set_elem([2,3,1,0],2**0.5);
 
 
-# q = 0 # conserving glb Qn 
+# q = 0 # conserving glb Qn
 # VbdL = cytnx.Bond(1,cytnx.BD_KET,[[0]]);
 # VbdR = cytnx.Bond(1,cytnx.BD_KET,[[q]]);
 # L0 = cytnx.UniTensor([bd_inner.redirect(),VbdL.redirect(),VbdL],rowrank=1) #Left boundary
 # R0 = cytnx.UniTensor([bd_inner,VbdR,VbdR.redirect()],rowrank=1) #Right boundary
 # L0.set_elem([0,0,0],1); R0.set_elem([3,0,0],1);
 
-q = 0 # conserving glb Qn 
+q = 0 # conserving glb Qn
 VbdL = cytnx.Bond(cytnx.BD_KET,[[0]],[1])
 VbdR = cytnx.Bond(cytnx.BD_KET,[[q]],[1])
 L0 = cytnx.UniTensor([bd_inner.redirect(),VbdL.redirect(),VbdL],rowrank=1) #Left boundary
@@ -166,7 +166,7 @@ R0.set_elem([3,0,0],1)
 
 
 ## Init MPS train
-#   
+#
 #   0->A[0]->2   2->A[1]->4    4->A[2]->6  ...  2k->A[k]->2k+2
 #      |            |             |                 |
 #      v            v             v                 v
@@ -239,7 +239,7 @@ anet.FromString(["L: -2,-1,-3",\
 for p in range(Nsites - 1):
     anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Dagger(),M])
     LR[p+1] = anet.Launch(optimal=True)
-            
+
 
 
 ##checking:
@@ -270,8 +270,8 @@ for k in range(1, numsweeps+2):
 
     st_ = time.time()
 
-    for p in range(Nsites-2,-1,-1): 
-        
+    for p in range(Nsites-2,-1,-1):
+
         dim_l = A[p].shape()[0];
         dim_r = A[p+1].shape()[2];
 
@@ -291,10 +291,10 @@ for k in range(1, numsweeps+2):
         lbl1 = A[p].labels()
         lbl2 = A[p+1].labels()
 
-        psi.set_rowrank(2);  
+        psi.set_rowrank(2);
 
         s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi, keepdim = chi)
-        
+
         # s_,U,_ = cytnx.linalg.Svd(psi)
         # print("shape before truncate : ", s_.shape())
 
@@ -345,7 +345,7 @@ for k in range(1, numsweeps+2):
                          "TOUT: 0;1,2"])
         anet.PutUniTensors(["R","B","M","B_Conj"],[LR[p+2],A[p+1],M,A[p+1].Dagger()])
         LR[p+1] = anet.Launch(optimal=True)
-        
+
         print('Sweep[r->l]: %d/%d, Loc:%d, Energy: %f'%(k,numsweeps,p,Ekeep[-1]))
 
     en_ = time.time()
@@ -357,16 +357,16 @@ for k in range(1, numsweeps+2):
     A[0].set_labels(lbl)
 
     for p in range(Nsites-1):
-        
+
         dim_l = A[p].shape()[0]
         dim_r = A[p+1].shape()[2]
 
         psi = cytnx.Contract(A[p],A[p+1]) ## contract
-        
+
 
         psi, Entemp = optimize_psi(psi, (LR[p],M,M,LR[p+2]), maxit, krydim)
         Ekeep.append(Entemp)
-        
+
         lbl1 = A[p].labels()
         lbl2 = A[p+1].labels()
 
@@ -384,14 +384,14 @@ for k in range(1, numsweeps+2):
         #         val = b[n].item()
         #         nsq += val**2
         # s /= nsq**0.5
-        # print("==========ssss============")       
+        # print("==========ssss============")
         # for b in s.get_blocks():
         #     print(b.shape())
         # print("======================")
         # for b in s_.get_blocks():
         #     print(b.shape())
 
-        # print("==========A[p+1]============")       
+        # print("==========A[p+1]============")
         # for b in A[p+1].get_blocks():
         #     print(b.shape())
         # print("======================")
@@ -416,7 +416,7 @@ for k in range(1, numsweeps+2):
                         "TOUT: 0;1,2"])
         anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Dagger(),M]);
         LR[p+1] = anet.Launch(optimal=True);
-            
+
 
         print('Sweep[l->r]: %d/%d, Loc: %d, Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
 

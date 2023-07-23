@@ -965,4 +965,3 @@
                                     const cytnx_uint64 &j2) {
             cuOuter_general<bool,bool,bool>(out, Lin, Rin, j1,j2);
         }
-

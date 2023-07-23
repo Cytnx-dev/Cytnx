@@ -965,4 +965,3 @@
     const std::vector<cytnx_uint64> &shape2) {
     cuKron_general<bool,bool,bool>(out, Lin, Rin, shape1, shape2);
   }
-

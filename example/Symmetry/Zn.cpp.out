@@ -1,18 +1,17 @@
-Dim = 4 |type: KET>     
+Dim = 4 |type: KET>
  Z2::  +0 +0 +1 +1
 
-Dim = 3 |type: KET>     
+Dim = 3 |type: KET>
  Z2::  +0 +1 +1
 
-Dim = 12 |type: KET>     
+Dim = 12 |type: KET>
  Z2::  +0 +1 +1 +0 +1 +1 +1 +0 +0 +1 +0 +0
 
-Dim = 4 |type: KET>     
+Dim = 4 |type: KET>
  Z4::  +0 +3 +1 +2
 
-Dim = 3 |type: KET>     
+Dim = 3 |type: KET>
  Z4::  +2 +3 +1
 
-Dim = 12 |type: KET>     
+Dim = 12 |type: KET>
  Z4::  +2 +3 +1 +1 +2 +0 +3 +0 +2 +0 +1 +3
-

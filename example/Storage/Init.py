@@ -15,5 +15,3 @@ print(C)
 
 D = Storage()
 D.Init(10,dtype=Type.Double,device=Device.cpu)
-
-

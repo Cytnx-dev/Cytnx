@@ -15,7 +15,7 @@ print(bd_c)
 bd_d = Bond(BD_BRA,[Qs(0,1)>>1,Qs(2,0)>>1,Qs(-4,1)>>1],
                       [Symmetry.U1(),
                        Symmetry.Zn(2)])
-                                
+
 bd_e = Bond(BD_BRA,[Qs(0,0)>>1,Qs(2,1)>>1,Qs(-1,1)>>1,Qs(3,0)>>1],
                       [Symmetry.U1(),
                        Symmetry.Zn(2)])

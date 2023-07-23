@@ -2,21 +2,21 @@ v0.7.8
 
 
 v0.7.7
-1. [Enhance][WARNING] rowrank option now has default value when converting from Tensor. Which is half number of the bonds. Notice that the order of argument are changed between (rowrank) and (is_diag)!    
+1. [Enhance][WARNING] rowrank option now has default value when converting from Tensor. Which is half number of the bonds. Notice that the order of argument are changed between (rowrank) and (is_diag)!
 2. [Fix] Svd will have issue associate to changing of rowrank/is_diag order.
-3. [Enhance] Internal Syntax format change to clang format. 
-4. [Change] USE_OMP option gives openmp access only for in-house implementation. Any linalg funciton calling MKL will be parallel. 
+3. [Enhance] Internal Syntax format change to clang format.
+4. [Change] USE_OMP option gives openmp access only for in-house implementation. Any linalg funciton calling MKL will be parallel.
 
- 
+
 
 v0.7.6
-1. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG. 
-2. [New] Add Contracts for multiple UniTensors contraction.  
-3. [Fix] cytnx.__cpp_lib__ for some version of cmake and conda install, libpath is lib64 instead of lib.  
+1. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG.
+2. [New] Add Contracts for multiple UniTensors contraction.
+3. [Fix] cytnx.__cpp_lib__ for some version of cmake and conda install, libpath is lib64 instead of lib.
 4. [Optimize] SparseUniTensor contiguous (moving elements)
 5. [Optimize] cytnx_error_* will now evaluate the clause first, and then instance the following strings.
 6. [Enhance] Add Global bool variable User_debug, which when set to false some checking will be skipped, which increasing the execution speed
-7. [Enhance] Add Network.getOptimalOrder()  
+7. [Enhance] Add Network.getOptimalOrder()
 
 v0.7.5
 1. [Fix] ICPC cannot compile issue
@@ -25,137 +25,137 @@ v0.7.5
 4. [Enhance] add vec_cast utility.
 5. [Fix] Svd_truncate with err does not properly truncate the values.
 6. [Fix] MatVec dgemv reversed argument.
-7. [New] Add Histogram2d class in stat tools 
-8. [Enhance] Add SparseUniTensor.Save / .Load 
+7. [New] Add Histogram2d class in stat tools
+8. [Enhance] Add SparseUniTensor.Save / .Load
 9. [Enhance] Add vec_fromfile / vec_tofile in utility.
-10. [Enhance] Adding omp parallel for SparseUniTensor moving elements, and L1-optimized. 
+10. [Enhance] Adding omp parallel for SparseUniTensor moving elements, and L1-optimized.
 11. [New] Add Storage.vector<>() for converting Storage to std::vector.
 
 v0.7.4
-1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error. 
-2. [Enhance] Arithmetic of UniTensor(&)constant now preserve the label of input UniTensor. 
-3. [New][experiment] Add MPS class with two variant: iMPS, RegularMPS. 
-4. [New][experiment] Add MPO class. 
+1. [Enhance] Lanczos_ER Lanczos_Gnd not convergence with maxiter will now gives warning instead of error.
+2. [Enhance] Arithmetic of UniTensor(&)constant now preserve the label of input UniTensor.
+3. [New][experiment] Add MPS class with two variant: iMPS, RegularMPS.
+4. [New][experiment] Add MPO class.
 5. [Enhance] Add UniTensor.relabel
-6. [Enhance] Add Network.FromString 
-7. [New][experiment] DMRG API         
+6. [Enhance] Add Network.FromString
+7. [New][experiment] DMRG API
 8. [New][experiment] Add MPS Save/Load, and can now have different phys_dim for each site.
 9. [Fix] SparseUniTensor.permute does not properly update contiguous status when rowrank argument is given.
 10. [Enhance] get_block(_)/put_block(_) by qnums now have a new argument "force" to get blocks from non-braket_form UniTensor.
-11. [New] Add SparseUniTensor contract 
-12. [New] Add SparseUniTensor linalg::Svd support. 
+11. [New] Add SparseUniTensor contract
+12. [New] Add SparseUniTensor linalg::Svd support.
 13. [Enhance] SparseUniTensor print info, add "contiguous" status.
 14. [Enhance] Add print_info for Symmetry descriptor
-15. [Enhance] Add UniTensor.syms() 
-16. [Fix] Tensor.set when one of accessor is Singl will cause error. 
-17. [Enhance] SparseUniTensor diag x diag, diag x dense are finished. 
-18. [Fix] SparseUniTensor when diag permutation issue.  
+15. [Enhance] Add UniTensor.syms()
+16. [Fix] Tensor.set when one of accessor is Singl will cause error.
+17. [Enhance] SparseUniTensor diag x diag, diag x dense are finished.
+18. [Fix] SparseUniTensor when diag permutation issue.
 19. [Fix] Sort does not return out Tensor.
-20. [Fix] Tproxy.item() does not get correct element. 
+20. [Fix] Tproxy.item() does not get correct element.
 21. [Fix] Bug for Svd on SparseUniTensor vT is being set by U
 22. [New][experiment] Svd_truncate for SparseUniTensor
 23. [New] add Bond.redirect(), Bond.retype()
 24. [Fix] SparseUniTensor.permute() does not properly update braket_form
-25. [Fix] SparseUniTensor.set_rowrank should track _inner_rowrank not _rowrank bug. 
-26. [Enhance] Add UniTensor.change_label() <- [Removed!!] use relabel(s)()  
-27. [Fix] Svd_truncate when one of the block has only dim=1 should fill-in the dangling dimension. 
+25. [Fix] SparseUniTensor.set_rowrank should track _inner_rowrank not _rowrank bug.
+26. [Enhance] Add UniTensor.change_label() <- [Removed!!] use relabel(s)()
+27. [Fix] Svd_truncate when one of the block has only dim=1 should fill-in the dangling dimension.
 28. [New][experiment] iTEBD with U1 symmetry example for Heisenberg chain
-29. [Change] v0.7.4 [26.] replace change_label() with relabel. Now only have set_label(s) and relabel(s) with *_label() have by_label option.  
+29. [Change] v0.7.4 [26.] replace change_label() with relabel. Now only have set_label(s) and relabel(s) with *_label() have by_label option.
 30. [Enhance] Add Accessor option Qns, qns()
-31. [Change] Trace now by default trace axis =0 and axis=1 if no argument specify. 
+31. [Change] Trace now by default trace axis =0 and axis=1 if no argument specify.
 32. [Fix] Compare of two Bonds will now also check qnums.
 33. [New][experiment] SparseUniTensor.Trace() now support rank-2 symmetric UniTensor -> scalar
 34. [New][experiment] Contract of SparseUniTensor with two SUT with same labels -> scalar is now avaliable
-35. [Fix] DMRG initialize does not properly normalize the init state.  
+35. [Fix] DMRG initialize does not properly normalize the init state.
 36. [New] Scalar.conj(), Scalar.real(), Scalar.imag(), Scalar.maxval(dtype), Scalar.minval(dtype)
 37. [Enhance] Lanczos internal now written with single general function.
 38. [Enhance] Storage.append() now accept Scalar
-39. [Enhance][Fix] Fix inplace Arithmetic between Tensor +=(-=,*=,/=) Tensor with both non-contiguous leads to inconsistent memory alignment. 
-40. [Enhance] from 39. add iAdd(), iDiv(), iMul(), iSub(), this can be called by user but is not recommended. 
-41. [Enhance] Modify DMRG kernel for generic UniTensor as state. 
+39. [Enhance][Fix] Fix inplace Arithmetic between Tensor +=(-=,*=,/=) Tensor with both non-contiguous leads to inconsistent memory alignment.
+40. [Enhance] from 39. add iAdd(), iDiv(), iMul(), iSub(), this can be called by user but is not recommended.
+41. [Enhance] Modify DMRG kernel for generic UniTensor as state.
 42. [New][experiment] Add Lanczos_Gnd_Ut() which accept Tin as UniTensor
 43. [New][experiment] LinOp now add an matvec option for UniTensor => UniTensor, which can be used together with Lanczos_Gnd_Ut
-44. [Change] Remove LinOp with custom function support, inheritance is forced. 
-45. [Enhance] add Tensor.at() without template. 
-46. [Change][Enhance] Remove UniTensor.get_elem/set_elem, unify them with at(). 
-47. [Fix] Trace for SparseUniTensor with is_diag=True. 
+44. [Change] Remove LinOp with custom function support, inheritance is forced.
+45. [Enhance] add Tensor.at() without template.
+46. [Change][Enhance] Remove UniTensor.get_elem/set_elem, unify them with at().
+47. [Fix] Trace for SparseUniTensor with is_diag=True.
 48. [New][experiment] MPS.Norm()
-49. [Fix] Lanczos_Gnd_Ut when input dimension is only 2 now check if the beta=0. 
-50. [New] Add DMRG U1 example.     
+49. [Fix] Lanczos_Gnd_Ut when input dimension is only 2 now check if the beta=0.
+50. [New] Add DMRG U1 example.
 51. [Change] Behavior change for Svd_truncate. SparseUniTensor the keepdim can exceed the current dimension of UniTensor, in such case it is equivalent to Svd.
-52. [New] Add UniTensor.Norm() 
-53. [New][experiment] add MPS.Init_Msector(), which initialize the state with specify total magnetization. 
+52. [New] Add UniTensor.Norm()
+53. [New][experiment] add MPS.Init_Msector(), which initialize the state with specify total magnetization.
 54. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for Ten
 55. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for DUTen
-56. [Enhance] Add python dmrg example for using tn_algo  
+56. [Enhance] Add python dmrg example for using tn_algo
 
 
 v0.7.3
-1. [Fix] bug for Get slice does not reduce when dim=1. 
-2. [Enhance] checking the memory alloc failing for EL.  
-3. [Change] remove Tensor init assignment op from initializer_list, for conflict with UniTensor init.    
+1. [Fix] bug for Get slice does not reduce when dim=1.
+2. [Enhance] checking the memory alloc failing for EL.
+3. [Change] remove Tensor init assignment op from initializer_list, for conflict with UniTensor init.
 4. [Enhance] print information for Symmetric UniTensor.
 5. [Enhance] linalg::ExpM/ExpH support for symmetric UniTensor.
-6. [Enhance] add UniTensor.get_blocks_qnums() for corresponding qnums for current blocks. 
-7. [Enhance][Safety] add UniTensor.get_blocks_(silent=false) with "silent" option by default pop-up a warning when UniTensor is non-contiguous.   
-8. [Enhance] add operator* and operator*= for combineBond. 
+6. [Enhance] add UniTensor.get_blocks_qnums() for corresponding qnums for current blocks.
+7. [Enhance][Safety] add UniTensor.get_blocks_(silent=false) with "silent" option by default pop-up a warning when UniTensor is non-contiguous.
+8. [Enhance] add operator* and operator*= for combineBond.
 9. [Enhance] add support for Symmetric UniTensor with is_diag=true.
-10. [Fix] remove the dtype & device option for arange(Nelem). Use .astype() .to() instead. 
-11. [Fix] reshape() without postfix const causing error when reshape with const Tensor. 
-12. [Enhance][Experiment] add Lstsq for least square calculation. [PR] 
-13. [Fix][C++] minor issue related to laterial argument passing by variables cannot properly resolved on C++ 
+10. [Fix] remove the dtype & device option for arange(Nelem). Use .astype() .to() instead.
+11. [Fix] reshape() without postfix const causing error when reshape with const Tensor.
+12. [Enhance][Experiment] add Lstsq for least square calculation. [PR]
+13. [Fix][C++] minor issue related to laterial argument passing by variables cannot properly resolved on C++
 14. [Enhance] Diag now support rank-1 Tensor as input for constructing a diagonal tensor with input as diagonal elements.
 15. [Enhance] Add c++ example for DMRG (Ke)
-16. [Fix] Bug fixed in DMRG code and updated to the latest features. 
-17. [Fix] Bug in UniTensor do svd with rowrank=1 and the first rank has dimension=1.        
+16. [Fix] Bug fixed in DMRG code and updated to the latest features.
+17. [Fix] Bug in UniTensor do svd with rowrank=1 and the first rank has dimension=1.
 18. [Enhance] add Scalar: abs, opeartor<, operator>, operator<=, operator>=
 19. [Fix] #31 cd, cf internal swiching error for Lanczos_ER.
 20. [Enhance] add specialization for Tensor iarithmetic with Sproxy.
-21. [Fix] #31 cftcf Mul internal memcpy with wrong unit size. 
-22. [Fix] #31 type accessing now partially via Scalar, so no conflict will occur when ovld matvec() gives mismatched input and output type. 
-23. [Fix] Tensor / Storage set element with Sproxy or Scalar is now available. 
+21. [Fix] #31 cftcf Mul internal memcpy with wrong unit size.
+22. [Fix] #31 type accessing now partially via Scalar, so no conflict will occur when ovld matvec() gives mismatched input and output type.
+23. [Fix] Tensor / Storage set element with Sproxy or Scalar is now available.
 24. [Fix] Lanczos_Gnd on f type accessing now partially via Scalar, so no conflict will occur when ovld matvec() gives mismatched input and output type.
 
-v0.7.2 
+v0.7.2
 1. [Enhance] Add Tensor.set with Scalar
 2. [Enhance][C++] Add Tensor initialize assignment op from initializer_list
-3. [Enhance][C++] Add Storage initialize assignment op from vector & initializer list  
-4. [Fix] bug for set partial elements on Tensor with slicing issue. 
-5. [Fix][DenseUniTensor] set_rowrank cannot set full rank issue #24 
+3. [Enhance][C++] Add Storage initialize assignment op from vector & initializer list
+4. [Fix] bug for set partial elements on Tensor with slicing issue.
+5. [Fix][DenseUniTensor] set_rowrank cannot set full rank issue #24
 
 
 v0.7.1
-1. [Enhance] Finish UniTensor arithmetic. 
-2. [Fix] bug when using Tensor.get() accessing only single element 
-3. [Enhance] Add default argument is_U = True and is_vT = True for Svd_truncate() python API 
+1. [Enhance] Finish UniTensor arithmetic.
+2. [Fix] bug when using Tensor.get() accessing only single element
+3. [Enhance] Add default argument is_U = True and is_vT = True for Svd_truncate() python API
 
 
 v0.7
-1. [Enhance] add binary op. -Tensor.    
-2. [Enhance] New introduce Scalar class, generic scalar placeholder. 
+1. [Enhance] add binary op. -Tensor.
+2. [Enhance] New introduce Scalar class, generic scalar placeholder.
 3. [Enhance][expr] Storage.at(), Storage.back(), Storage.get_item() can now without specialization. The return is Scalar class.
-4. [Enhance] Storage.get_item, Storage.set_item        
-5. [Enhance] Scalar, iadd,isub,imul,idiv  
+4. [Enhance] Storage.get_item, Storage.set_item
+5. [Enhance] Scalar, iadd,isub,imul,idiv
 6. [Important] Storage.resize will match the behavior of vector, new elements are set to zero!
 7. [Enhance] Scalar +,-,*,/ finished
-8. [Enhance] add Histogram class and stat namespace.    
+8. [Enhance] add Histogram class and stat namespace.
 9. [Enhance] add fstream option for Tofile
 10. [Enhance] return self when UniTensor.set_name
 11. [Enhance] return self when UniTensor.set_label(s)
 12. [Enhance] return self when UniTensor.set_rowrank
 13. [Fatal!][Fix] fix bug of wrong answer in Tensor slice for non-contiguous Tensor, with faster internal kernel
-14. [Warning] Slice of GPU Tensor is now off-line for further inspection. 
-15. [Fix] bug causing crash when print non-contiguous Uint64 Tensor    
-16. [Fatal!][Fix] fix bug of wrong answer in Tensor set-element with slice for non-contiguous Tensor. 
+14. [Warning] Slice of GPU Tensor is now off-line for further inspection.
+15. [Fix] bug causing crash when print non-contiguous Uint64 Tensor
+16. [Fatal!][Fix] fix bug of wrong answer in Tensor set-element with slice for non-contiguous Tensor.
 17. [Enhance] Network on the fly construction.
 18. [Enhance] Scalar: Add on TN. TN.item()
-19. [Fix] bug in Mod interanlly calling Cpr fixed.    
+19. [Fix] bug in Mod interanlly calling Cpr fixed.
 20. [Enhance] All operation related to TN <-> Scalar
-21. [Enhance] Reduce RTTR overhead. 
+21. [Enhance] Reduce RTTR overhead.
 
 v0.6.5
-1. [Fix] Bug in UniTensor _Load    
-2. [Enhance] Improve stability in Lanczos_ER  
+1. [Fix] Bug in UniTensor _Load
+2. [Enhance] Improve stability in Lanczos_ER
 3. [Enhance] Move _SII to stack.
 4. [Enhance] Add LinOp operator() for mv_elem
 5. [Enhance] Add c++ API fast link to cutt
@@ -170,13 +170,13 @@ v0.6.5
 
 v0.6.4
 1. [Enhance] Add option mv_elem for Tensordot, which actually move elements in input tensor. This is beneficial when same tensordot is called multiple times.
-2. [Enhance] Add option cacheL, cacheR to Contract of unitensor. which mv the elements of input tensors to the matmul handy position. 
+2. [Enhance] Add option cacheL, cacheR to Contract of unitensor. which mv the elements of input tensors to the matmul handy position.
 3. [Enhance] optimize Network contraction policy to reduce contiguous permute, with is_clone argument when PutUniTensor.
-4. [Enhance] Add Lanczos_Gnd for fast get ground state and it's eigen value (currently only real float). 
+4. [Enhance] Add Lanczos_Gnd for fast get ground state and it's eigen value (currently only real float).
 5. [Enhance] Add Tridiag python API, and option is_row
-6. [Enhance] C++ API storage add .back<>() function. 
-7. [Enhance] C++ API storage fix from_vector() for bool type. 
-8. [Enhance] Change Network Launch optimal=True behavior. if user order is given, optimal will not have effect.   
+6. [Enhance] C++ API storage add .back<>() function.
+7. [Enhance] C++ API storage fix from_vector() for bool type.
+8. [Enhance] Change Network Launch optimal=True behavior. if user order is given, optimal will not have effect.
 9. [Enhance] Add example/iDMRG/dmrg_optim.py for better performace with Lanczos_Gnd and Network cache.
 10. [Fix] wrong error message in linalg::Cpr
 11. [Fix] reshape() on a already contiguous Tensor will resulting as the change in original tensor, which should not happened.
@@ -185,93 +185,93 @@ v0.6.3
 1. [Enhance] Add Device.Ncpus for detecting avaliable omp threads
 2. [Enhance] Add HPTT support on CPU permute.
 3. [Internal] Build version centralize
-4. [Enhance] More info for Device. 
+4. [Enhance] More info for Device.
 6. [Enhance] Add cytnx.__variant_info__ for checking the installed variant.
 
 v0.6.2
-1. [Fix] Bug in CUDA Matmul interface passing the wrong object bug.  
-2. [Enhance] Add Matmul_dg for diagonal matrix mutiply dense matrix. 
+1. [Fix] Bug in CUDA Matmul interface passing the wrong object bug.
+2. [Enhance] Add Matmul_dg for diagonal matrix mutiply dense matrix.
 3. [Enhance] Add Tensordot_dg for tensordot with either Tl or Tr is diagonal matrix
-4. [Enhance] Contract dense & sparse memory optimized.      
+4. [Enhance] Contract dense & sparse memory optimized.
 5. [example] Add iTEBD_gpu.py example
-6. [Fix] Bug in CUDA cuVectordot d and f seg fault 
-7. [Enhance] Add cuReduce for optimized reduction. 
-8. [Enhance] Optimize performance for Mul_internal_cpu. 
-9. [Enhance] Optimize performance for Div_internal_cpu. 
+6. [Fix] Bug in CUDA cuVectordot d and f seg fault
+7. [Enhance] Add cuReduce for optimized reduction.
+8. [Enhance] Optimize performance for Mul_internal_cpu.
+9. [Enhance] Optimize performance for Div_internal_cpu.
 10. [Fix] Bug in permute of UniTensor/Tensor with duplicate entries does not return error.
 
 v0.6.1
 1. [Enhance] add Scalar class (shadow)
 2. [Enhance] change default allocation from Malloc to Calloc.
-3. [Enhance] change storage.raw_ptr() to storage.data() and storage.data<>() 
+3. [Enhance] change storage.raw_ptr() to storage.data() and storage.data<>()
 4. [Enhance] change storage.cap to STORAGE_DEFT_SZ that can be tune.
-5. [Enhance] adding Tproxy/Tproxy, Tproxy/Tensor, Tensor/Tproxy operation 
-6. [Enhance] Add mv_elem type for LinOp, which intrinsically omp the matvec operation.    
+5. [Enhance] adding Tproxy/Tproxy, Tproxy/Tensor, Tensor/Tproxy operation
+6. [Enhance] Add mv_elem type for LinOp, which intrinsically omp the matvec operation.
 7. [Fatal  ] Fix bug in Dot for Matrix-Vector multiplication on both GPU and CPU with complex&real float dtypes.
 
 v0.6.0
 1. [Enhance] behavior change the behavior of permute to prevent redundant copy in UniTensor and Tensor.
 2. add Tensor::same_data to check if two Tensor has same storage.
-3. [Enhance] the behavior of reshape in Tensor to prevent redundant copy.    
+3. [Enhance] the behavior of reshape in Tensor to prevent redundant copy.
 4. [Enhance] behavior change all linalg to follow the same disipline for permute/reshape/contiguous
-5. [Enhance] add print() in C++ API    
+5. [Enhance] add print() in C++ API
 6. [Fix] reshape() does not share memory
 7. [Fix] BoolStorage print_elem does not show the first element in shape
 
 
 v0.5.6a
-1. [Enhance] change linalg::QR -> linalg::Qr for unify the function call 
+1. [Enhance] change linalg::QR -> linalg::Qr for unify the function call
 2. Fix bug in UniTensor Qr, R UniTensor labels bug.
 3. Add Qdr for UniTensor and Tensor.
 4. Fix minor bug in internal, Type.is_float for Uint32.
-5. [Enhance] accessor can now specify with vector. 
+5. [Enhance] accessor can now specify with vector.
 6. [Enhance] Tproxy.item()
 7. Fix inplace reshape_() in new way templ. does not perform inplace operation
 8. [Enhance] Tproxy operator+-/*
-10. Fix bug in division dti64 becomes subtraction bug. 
+10. Fix bug in division dti64 becomes subtraction bug.
 
 v0.5.5a
-1. [Feature] Tensor can now using operator() to access elements just like python. 
+1. [Feature] Tensor can now using operator() to access elements just like python.
 2. [Enhance] Access Tensor can now exactly the same using slice string as in python.
 3. [Enhance] at/reshape/permute in Tensor can now give args without braket{} as in python.
 4. [Enhance] Storage.Load to static, so it can match Tensor
-5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor 
-6. Fix small bug in return ref of Tproxy 
-7. Fix bug in buffer size allocation in Svd_internal 
-   
+5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor
+6. Fix small bug in return ref of Tproxy
+7. Fix bug in buffer size allocation in Svd_internal
+
 
 v0.5.4a-build1
 1. [Important] Fix Subtraction real - complex bug.
 
 v0.5.4a
-1. Add linalg::Det 
+1. Add linalg::Det
 2. Add Type.is_float
 3. [Feature] Add LinOp class for custom linear operators used in iterative solver
 4. enhance arithmetic with scalar Tensors
-5. Add Tensor append with tensor. 
+5. Add Tensor append with tensor.
 6. [Feature] Add iterative solver Lanczos_ER
 7. [Enhance] Tproxy +=,-=,/=,*= on C++ side
 8. Add ED (using Lanczos) example.
 9. Change backend to mkl_ilp64, w/o mkl: OpenBLAS
-10. Change Rowrank->rowrank for CyTensor. 
+10. Change Rowrank->rowrank for CyTensor.
 
 v0.5.3a
 1. Add xlinalg.QR
 2. enhance hosvd.
-3. Fix bug in cytnx.linalg.Abs truncate the floating point part. 
+3. Fix bug in cytnx.linalg.Abs truncate the floating point part.
 4. Add example for HOTRG
 5. Add example for iDMRG
 6. Add CyTensor.truncate/truncate.
-7. Add linalg::Sum. 
+7. Add linalg::Sum.
 8. Complete set_elem for sparse CyTensor dispatch in binding.
-9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse. 
-10. [Important] Add Inv/Inv_ for elementwise inverse with clip. 
+9. [Important] Change Inv/Inv_ to InvM/InvM_ for matrix inverse.
+10. [Important] Add Inv/Inv_ for elementwise inverse with clip.
 11. [Enhance] Add str_strip for removing " ", "\t", "\r" at the end.
 12. [Enhance] Accessor::() allow negative input.
 13. Add GPU Pow/Pow_
 14. Add random.uniform()
 15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
-16. Add a is_diag option for convert Tensor to CyTensor. 
+16. Add a is_diag option for convert Tensor to CyTensor.
 
 
 v0.5.2a-build1
@@ -284,13 +284,13 @@ v0.5.2a
 1. add Trace and Trace_ for CyTensor.
 2. fix bug in Network.Launch does not return the output CyTensor
 3. Add Network.PrintNet, and ostream support.
-4. Add Network.Diagram() for plot the tensor network diagram (python only)    
-5. Add support for floating type Vectordot on GPU. 
-6. Fix bug in to from Anytype to ComplexFloat. 
+4. Add Network.Diagram() for plot the tensor network diagram (python only)
+5. Add support for floating type Vectordot on GPU.
+6. Fix bug in to from Anytype to ComplexFloat.
 7. Add QR for CPU.
-8. Add identity() and it's alias function eye(). 
+8. Add identity() and it's alias function eye().
 9. Add physics namespace/submodule
-10. Add physics::spin() for generating Spin-S representation. 
+10. Add physics::spin() for generating Spin-S representation.
 11. Add physics::pauli() for pauli matrix.
 12. Add ExpM() for generic matrix (CPU only)
 13. Fix bug in python slice, and reverse range slice.
@@ -298,24 +298,24 @@ v0.5.2a
 15. Fix bug in CyTensor contract/Contract(A,B) for tensors with no common label
 16. Enhance error message in Network
 17. Add Min(), Max() (CPU only)
-18. Fix bug in Abs. 
-19. Fix bug in Div i32td.    
+18. Fix bug in Abs.
+19. Fix bug in Div i32td.
 20. [Feature] Add optimal contraction order calculation in Network
-21. Fix SparseCyTensor contiguous address wrong calculation. 
+21. Fix SparseCyTensor contiguous address wrong calculation.
 22. Support at() directly from SparseCyTensor.
 23. Add Transpose, Dagger to CyTensor. For tagged CyTensor, Transpose/Dagger will reverse the direction of all bonds.
 24. Add xlinalg.Svd, xlinalg.Svd_truncate support for tagged CyTensor.
 25. Fix redundant print in optimal contraction order
 26. Add CyTensor.tag() for DenseCyTensor (regular type) directly convert to CyTensor with direction (tagged type)
-27. Add SparseCyTensor.at (currently only floating point type) 
-28. SparseCyTensor.ele_exists. 
-29. SparseCyTensor.Transpose, Conj. 
+27. Add SparseCyTensor.at (currently only floating point type)
+28. SparseCyTensor.ele_exists.
+29. SparseCyTensor.Transpose, Conj.
 30. Symmetry.reverse_rule, Bond.calc_reverse_qnums
 31. Fix Tensor.numpy from GPU bug.
 32. Fix Tensor.setitem/getitem pybind bug.
-33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex)) 
+33. SparseCyTensor.get_elem/set_elem (currently floating type only (complex))
 34. Add xlinalg::ExpH, xlinalg::ExpM, xlinalg::Trace (ovld of CyTensor.Trace)
-35. support Mul/Div operation on SparseCyTensor 
+35. support Mul/Div operation on SparseCyTensor
 36. Add Tensor.flatten();
 37. Add Network.Savefile. Network.PutCyTensors
 38. [Feature] Tensor can now use unify operator[] to get and set elements as python API
@@ -325,7 +325,7 @@ v0.5.2a
 42. fix bug in CyTensor.set_label checking element.
 43. Add xlinalg::Hosvd (currently CyTensor only)
 44. change argument of init CyTensor rowrank->Rowrank
-45. Add PESS example 
+45. Add PESS example
 46. Add support for Norm to generic rank-N Tensor
 47. Add @ operator in python API for shorthand of linalg::Dot
 48. Add DMRG example
@@ -339,39 +339,39 @@ v0.5.2a
 v0.5.1a
 1. add Norm() for CPU and GPU, add to call by Tn
 2. add Dot() for CPU and GPU, with unify API for Vec-Vec/Mat-Vec/Mat-Mat/Ten-Vec product.
-3. add Tensor.rank() 
+3. add Tensor.rank()
 4. [Feature] support Tensor <-> numpy.ndarray
 5. add random::Make_uniform()
-6. Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor. 
-7. Fix bug in Tensor->numpy if the underlying Tensor is non-contiguous. 
+6. Fix bug in Svd_truncate that will change the underlying block for contiguous CyTensor.
+7. Fix bug in Tensor->numpy if the underlying Tensor is non-contiguous.
 8. Add Eig.
-9. Add real() imag() for Tensor. 
+9. Add real() imag() for Tensor.
 10. Enhance python API, Storage & Tensor are now iterable.
 11. Fix buf in Conj and Conj_, for both C++ and python
 12. Fix bug python inplace call return ID Conj_, Inv_, Exp_
 13. Add Conj, Conj_ for CyTensor
-14. Fix non-inplace Arithmetic for non-contiguous tensor. 
-15. Add [trial version] Trace. 
-16. Add Pow, Pow_ for cpu. 
+14. Fix non-inplace Arithmetic for non-contiguous tensor.
+15. Add [trial version] Trace.
+16. Add Pow, Pow_ for cpu.
 17. Add Abs, Abs_ for cpu.
 
 v0.5.0a
-1. Add .imag() .real() for Storage. 
+1. Add .imag() .real() for Storage.
 2. Add xlinalg under cytnx_extension for algebra on CyTensor
-3. Add xlinalg::Svd()  
-4. Change linalg::Eigh() to match numpy 
+3. Add xlinalg::Svd()
+4. Change linalg::Eigh() to match numpy
 5. fix Diag uninitialize elemets bug
 6. add linalg::ExpH()
 7. add random::Make_normal()
 8. add iTEBD example for both C++ and python @ example/iTEBD
 
 v0.4
-1. remove Otimes, add Kron and Outer 
+1. remove Otimes, add Kron and Outer
 2. Add Storage append, capacity, pre-alloc 32x address
-3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...) 
+3. Tensor can now allow redundant dimension (e.g. shape = (1,1,1,1,1...)
 4. Add Storage.from_vector, directly convert the C++ vector to Storage
 5. Add more intruisive way to get slices for Tensor in C++, using operator[]
-6. Add Tensor.append for rank-1 Tensor    
+6. Add Tensor.append for rank-1 Tensor
 7. Add Exp() Expf() Exp\_() Expf\_()
-8. Change UniTensor to CyTensor 
-9. Guarded CyTensor, Bond, Symmetry and Network class with cytnx_extension namespace (cytnx_extension submodule in python).  
+8. Change UniTensor to CyTensor
+9. Guarded CyTensor, Bond, Symmetry and Network class with cytnx_extension namespace (cytnx_extension submodule in python).
