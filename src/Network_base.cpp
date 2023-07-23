@@ -27,6 +27,12 @@ namespace cytnx {
   void Network_base::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensor] call from uninitialize network.%s", "\n");
   }
+  void Network_base::RmUniTensor(const std::string &name) {
+    cytnx_error_msg(true, "[ERROR][Network][RmUniTensor] call from uninitialize network.%s", "\n");
+  }
+  void Network_base::RmUniTensor(const cytnx_uint64 &idx) {
+    cytnx_error_msg(true, "[ERROR][Network][RmUniTensor] call from uninitialize network.%s", "\n");
+  }
   void Network_base::PutUniTensors(const std::vector<string> &names,
                                    const std::vector<UniTensor> &utensors) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensors] call from uninitialize network.%s",
