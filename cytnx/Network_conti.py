@@ -8,7 +8,7 @@ try:
 except ImportError:
     from .NetGraph_empty import *
 
-import numpy as np 
+import numpy as np
 
 
 @add_method(Network)
@@ -17,7 +17,7 @@ def Diagram(self,outname=None,figsize=[6,5],engine="circo"):
         print("[ERROR][Network] The Network does not Load any Network file yet.")
         exit(99)
 
-    
+
     tn_names = np.array(self._cget_tn_names());
     tn_labels = np.array(self._cget_tn_labels());
     tn_out_lbls = np.array(self._cget_tn_out_labels());
@@ -35,10 +35,10 @@ def Diagram(self,outname=None,figsize=[6,5],engine="circo"):
     ## get common label:
     all_l = np.concatenate(tn_labels)
     comm_lbl = np.setdiff1d(all_l,tn_out_lbls)
-    
+
     #print(all_l)
     #print(comm_lbl)
-    edge_info = [] 
+    edge_info = []
     for i in comm_lbl:
         out = []
         for j in range(len(tn_labels)):
@@ -53,23 +53,11 @@ def Diagram(self,outname=None,figsize=[6,5],engine="circo"):
     rtnl = []
     for j in range(len(tn_labels)):
         rtnl.append(np.setdiff1d(tn_labels[j],comm_lbl))
-        
+
 
     dangling_edges = []
     for i in range(len(rtnl)):
         for j in range(len(rtnl[i])):
             dangling_edges.append(("%d"%(rtnl[i][j]),tn_names[i]))
-        
+
     return Drawnet_notag(OUT_fn,tn_names,edge_info,dangling_edges,figsize,engine=engine)
-    
-
- 
-
-
-
-
-
-
-
-
-

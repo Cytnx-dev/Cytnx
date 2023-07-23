@@ -67,14 +67,10 @@ void network_binding(py::module &m) {
       py::arg("names"), py::arg("utensors"))
 
     .def(
-      "RmUniTensor",
-      [](Network &self, const std::string &name) {
-        self.RmUniTensor(name);
-      },
+      "RmUniTensor", [](Network &self, const std::string &name) { self.RmUniTensor(name); },
       py::arg("name"))
     .def(
-      "RmUniTensor",
-      [](Network &self, const cytnx_uint64 &idx) { self.RmUniTensor(idx); },
+      "RmUniTensor", [](Network &self, const cytnx_uint64 &idx) { self.RmUniTensor(idx); },
       py::arg("idx"))
     .def(
       "RmUniTensors",

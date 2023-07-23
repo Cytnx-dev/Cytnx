@@ -1,18 +1,17 @@
-Dim = 10 |type: REGULAR 
+Dim = 10 |type: REGULAR
 
-Dim = 5 |type: REGULAR 
+Dim = 5 |type: REGULAR
 
-Dim = 50 |type: REGULAR 
+Dim = 50 |type: REGULAR
 
-Dim = 3 |type: <BRA     
+Dim = 3 |type: <BRA
  U1::  +0 +2 -4
  Z2::  +1 +0 +1
 
-Dim = 4 |type: <BRA     
+Dim = 4 |type: <BRA
  U1::  +0 +2 -1 +3
  Z2::  +0 +1 +1 +0
 
-Dim = 12 |type: <BRA     
+Dim = 12 |type: <BRA
  U1::  +0 +2 -1 +3 +2 +4 +1 +5 -4 -2 -5 -1
  Z2::  +1 +0 +0 +1 +0 +1 +1 +0 +1 +0 +0 +1
-

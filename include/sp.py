@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 import os,sys
 
 f = open("UniTensor.hpp","r")

@@ -12,7 +12,7 @@ from cytnx import linalg
 #exit(1)
 
 #=====================
-# Storage 
+# Storage
 #=====================
 # testing infrastructure--------
 a = cytnx.Storage(10,cytnx.Type.Double);
@@ -73,8 +73,8 @@ Ta_add_2 = 3. + Ta
 
 # now all the arithmetic require contiguous call.
 # it will becomes implicity in later version.
-Ta.contiguous_() 
-                  
+Ta.contiguous_()
+
 Ta_add_3 = Ta + Ta
 print(Ta_add)
 print(Ta_add_2)
@@ -142,7 +142,3 @@ X.print_diagram()
 
 U.reshape_(6,-1)
 U.print_diagram()
-
-
-
-

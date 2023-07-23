@@ -81,8 +81,6 @@ namespace cytnx {
     virtual void RmUniTensor(const std::string &name);
     virtual void RmUniTensors(const std::vector<std::string> &name);
 
-
-
     virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                                const std::vector<std::string> &alias,
                                const std::string &contract_order);
@@ -335,15 +333,9 @@ namespace cytnx {
       this->Fromfile(fname, network_type);
     }
 
-    void RmUniTensor(const std::string &name){
-        this->_impl->RmUniTensor(name);
-    }
-    void RmUniTensor(const cytnx_uint64 &idx){
-        this->_impl->RmUniTensor(idx);
-    }
-    void RmUniTensors(const std::vector<std::string> &names){
-        this->_impl->RmUniTensors(names);
-    }
+    void RmUniTensor(const std::string &name) { this->_impl->RmUniTensor(name); }
+    void RmUniTensor(const cytnx_uint64 &idx) { this->_impl->RmUniTensor(idx); }
+    void RmUniTensors(const std::vector<std::string> &names) { this->_impl->RmUniTensors(names); }
     void PutUniTensor(const std::string &name, const UniTensor &utensor,
                       const std::vector<std::string> &lbl_order = {}) {
       if (lbl_order.size()) {

@@ -1,38 +1,38 @@
 #ifdef UNI_CUQUANTUM
-#include <stdlib.h>
-#include <stdio.h>
+  #include <stdlib.h>
+  #include <stdio.h>
 
-#include <unordered_map>
-#include <vector>
-#include <cassert>
+  #include <unordered_map>
+  #include <vector>
+  #include <cassert>
 
-#include <cuda_runtime.h>
-#include <cutensornet.h>
+  #include <cuda_runtime.h>
+  #include <cutensornet.h>
 
-#include <cytnx.hpp>
-#include "utils/cutensornet.hpp"
+  #include <cytnx.hpp>
+  #include "utils/cutensornet.hpp"
 
 namespace cytnx {
 
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
 
-  #define HANDLE_ERROR(x)                                                           \
-    {                                                                               \
-      const auto err = x;                                                           \
-      if (err != CUTENSORNET_STATUS_SUCCESS) {                                      \
-        printf("Error: %s in line %d\n", cutensornetGetErrorString(err), __LINE__); \
-        fflush(stdout);                                                             \
-      }                                                                             \
-    };
+    #define HANDLE_ERROR(x)                                                           \
+      {                                                                               \
+        const auto err = x;                                                           \
+        if (err != CUTENSORNET_STATUS_SUCCESS) {                                      \
+          printf("Error: %s in line %d\n", cutensornetGetErrorString(err), __LINE__); \
+          fflush(stdout);                                                             \
+        }                                                                             \
+      };
 
-  #define HANDLE_CUDA_ERROR(x)                                                    \
-    {                                                                             \
-      const auto err = x;                                                         \
-      if (err != cudaSuccess) {                                                   \
-        printf("CUDA Error: %s in line %d\n", cudaGetErrorString(err), __LINE__); \
-        fflush(stdout);                                                           \
-      }                                                                           \
-    };
+    #define HANDLE_CUDA_ERROR(x)                                                    \
+      {                                                                             \
+        const auto err = x;                                                         \
+        if (err != cudaSuccess) {                                                   \
+          printf("CUDA Error: %s in line %d\n", cudaGetErrorString(err), __LINE__); \
+          fflush(stdout);                                                           \
+        }                                                                           \
+      };
 
   struct GPUTimer {
     GPUTimer(cudaStream_t stream) : stream_(stream) {
@@ -364,7 +364,7 @@ namespace cytnx {
                  stridesIn.data(), verbose);
   }
 
-#endif
+  #endif
 
 }  // namespace cytnx
 #endif

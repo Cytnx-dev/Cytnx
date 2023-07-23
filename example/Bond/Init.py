@@ -21,5 +21,3 @@ bd_d = Bond(BD_OUT,[Qs(0 ,0)>>1,
                       Symmetry.Zn(2)])
 
 print(bd_d)
-
-    

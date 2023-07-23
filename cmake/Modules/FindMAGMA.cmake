@@ -16,7 +16,7 @@
 
 #If environment variable MAGMA_ROOT is specified, it has same effect as MAGMA_ROOT
 
-if( MAGMA_ROOT STREQUAL "") 
+if( MAGMA_ROOT STREQUAL "")
     if(NOT $ENV{MAGMA_ROOT} STREQUAL "" )
         set( MAGMA_ROOT $ENV{MAGMA_ROOT})
     endif()

@@ -191,7 +191,7 @@ if(USE_CUDA)
     endif()
 
     if(USE_MAGMA)
-       find_package( MAGMA REQUIRED) 
+       find_package( MAGMA REQUIRED)
        if(NOT MAGMA_FOUND)
           message(FATAL_ERROR "MAGMA not found!")
        endif()
@@ -202,7 +202,7 @@ if(USE_CUDA)
        #add_dependencies(cytnx magma)
        target_include_directories(cytnx PRIVATE ${MAGMA_INCLUDE_DIRS})
        target_compile_definitions(cytnx PRIVATE UNI_MAGMA)
-       target_link_libraries(cytnx PRIVATE ${MAGMA_LIBRARIES})       
+       target_link_libraries(cytnx PRIVATE ${MAGMA_LIBRARIES})
     endif()
 
 endif()
@@ -291,7 +291,7 @@ if(USE_OMP)
 
           else()
             set_property(TARGET OpenMP::OpenMP_CXX
-                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
+                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
           endif()
           target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
           target_compile_definitions(cytnx PRIVATE UNI_OMP)
@@ -316,7 +316,7 @@ else()
 
           else()
             set_property(TARGET OpenMP::OpenMP_CXX
-                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
+                         PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
           endif()
           target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
         endif()
@@ -358,7 +358,7 @@ if(USE_CUDA)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
   endif()
 
-  set_target_properties(cytnx PROPERTIES 
+  set_target_properties(cytnx PROPERTIES
       CUDA_SEPARABLE_COMPILATION ON
                                    )
   set_target_properties(cytnx PROPERTIES CUDA_RESOLVE_DEVICE_SYMBOLS ON)
@@ -394,7 +394,7 @@ if(USE_CUDA)
     endif()
 
   endif()
-  
+
   if(USE_CUQUANTUM)
     find_package(CUQUANTUM REQUIRED)
     if(CUQUANTUM_FOUND)
@@ -472,7 +472,7 @@ IF(BUILD_PYTHON)
             )
         endif()
     endif()
-    pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp 
+    pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp
                                        pybind/generator_py.cpp
                                        pybind/storage_py.cpp
                                        pybind/tensor_py.cpp
@@ -635,35 +635,35 @@ if(USE_CUDA)
   message( STATUS "  - CuBlas library: ${CUDA_cublas_LIBRARY}")
   FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cublas_LIBRARY}\n" "")
   message( STATUS "  - Cuda rt library: ${CUDA_cudart_static_LIBRARY} -ldl")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing 
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudart_static_LIBRARY} -ldl\n" "") # use > to indicate special rt processing
   message( STATUS "  - Cuda devrt library: ${CUDA_cudadevrt_LIBRARY} -lrt")
-  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt\n" "") # use > to indicate special rt processing 
-  if(USE_CUTT)    
+  FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUDA_cudadevrt_LIBRARY} -lrt\n" "") # use > to indicate special rt processing
+  if(USE_CUTT)
         message( STATUS " Build CUTT Support: YES")
         message( STATUS " --CUTT option FINE_TUNE: ${CUTT_ENABLE_FINE_TUNE}")
         message( STATUS " --CUTT option NVTOOLS: ${CUTT_ENABLE_NVTOOLS}")
         message( STATUS " --CUTT option NO_ALIGN_ALLOC: ${HPTT_NO_ALIGN_ALLOC}")
         FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTT\n" "")
   endif()
-  
+
   if(USE_MAGMA)
         message( STATUS "Build with MAGMA: YES")
         FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MAGMA\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${MAGMA_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${MAGMA_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
         message( STATUS "MAGMA: libdir:${MAGMA_LIBRARY_DIRS} incdir:${MAGMA_INCLUDE_DIRS} libs:${MAGMA_LIBRARIES}")
   endif()
 
   if(USE_CUTENSOR)
         message( STATUS "Build with CuTensor: YES")
         FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTENSOR\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUTENSOR_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
         message( STATUS "CuTensor: libdir:${CUTENSOR_LIBRARY_DIRS} incdir:${CUTENSOR_INCLUDE_DIRS} libs:${CUTENSOR_LIBRARIES}")
   endif()
-  
+
   if(USE_CUQUANTUM)
         message( STATUS "Build with CuQuantum: YES")
         FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUQUANTUM\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing 
+        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${CUQUANTUM_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
         message( STATUS "CuQuantum: libdir:${CUQUANTUM_LIBRARY_DIRS} incdir:${CUQUANTUM_INCLUDE_DIRS} libs:${CUQUANTUM_LIBRARIES}")
   endif()
 else()
@@ -689,7 +689,7 @@ else()
       message( STATUS " Build OMP Support: NO")
 endif()
 
-if(USE_HPTT)    
+if(USE_HPTT)
     message( STATUS " Build HPTT Support: YES")
     message( STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")
     message( STATUS " --HPTT option ARM: ${HPTT_ENABLE_ARM}")
@@ -717,7 +717,7 @@ install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFI
 install(FILES ${CMAKE_BINARY_DIR}/version.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 
-if(USE_HPTT) # relocate HPTT library 
+if(USE_HPTT) # relocate HPTT library
 install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
 

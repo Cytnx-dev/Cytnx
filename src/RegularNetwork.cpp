@@ -527,18 +527,16 @@ namespace cytnx {
                     "UniTensor does not match the definition in network file.\n",
                     this->names[idx].c_str());
 
-
     this->tensors[idx] = utensor;
   }
 
-  void RegularNetwork::RmUniTensor(const cytnx_uint64 &idx){
+  void RegularNetwork::RmUniTensor(const cytnx_uint64 &idx) {
     cytnx_error_msg(idx >= this->CtTree.base_nodes.size(),
                     "[ERROR][RegularNetwork][RmUniTensor] index=%d out of range.\n", idx);
 
     this->tensors[idx] = UniTensor();
-
   }
-  void RegularNetwork::RmUniTensor(const std::string &name){
+  void RegularNetwork::RmUniTensor(const std::string &name) {
     cytnx_uint64 idx;
     try {
       idx = this->name2pos.at(name);
