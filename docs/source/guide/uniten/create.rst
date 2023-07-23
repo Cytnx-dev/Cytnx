@@ -168,10 +168,115 @@ Output >>
       [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
 
 
-
 .. note:: 
 
     The UniTensor will have all the elements in the block initialized with zeros. 
+
+
+Type conversion 
+**********************
+It is possible to convert a UniTensor to a different data type. To convert the data type, simply use **UniTensor.astype()**.
+
+For example, consider a UniTensor *A* with **dtype=Type.Int64**, which shall be converted to **Type.Double**:
+
+* In Python:
+
+.. code-block:: python 
+    :linenos:
+    
+
+    A = UniTensor(cytnx.ones([3,4],dtype=cytnx.Type.Int64))
+    B = A.astype(cytnx.Type.Double)
+    print(A.dtype_str())
+    print(B.dtype_str())
+
+>> Output:
+
+.. code-block:: text
+    
+    Int64
+    Double (Float64)
+
+
+
+.. Note::
+    
+    UniTensor.dtype() returns a type-id, while UniTensor.dtype_str() returns the type name. 
+.. 1. A complex data type cannot directly be converted to a real data type. Use UniTensor.real() or UniTensor.imag() if you want to get the real or imaginary part.
+
+
+Transfer between devices
+***************************
+Moving a UniTensor between different devices is very easy. We can use **UniTensor.to()** to move the UniTensor to a different device.
+
+For example, let's create a UniTensor in the memory accessible by the CPU and transfer it to the GPU with gpu-id=0. 
+
+* In Python:
+
+.. code-block:: python 
+    :linenos:
+
+    A = UniTensor(cytnx.ones([2,2])) #on CPU
+    B = A.to(cytnx.Device.cuda+0)
+    print(A) # on CPU
+    print(B) # on GPU
+
+    A.to_(cytnx.Device.cuda) 
+    print(A) # on GPU
+
+>> Output:
+
+.. code-block:: text
+
+    -------- start of print ---------
+    Tensor name: 
+    is_diag    : False
+    contiguous : True
+
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CPU
+    Shape : (2,2)
+    [[1.00000e+00 1.00000e+00 ]
+    [1.00000e+00 1.00000e+00 ]]
+
+
+
+
+    -------- start of print ---------
+    Tensor name: 
+    is_diag    : False
+    contiguous : True
+
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CUDA/GPU-id:0
+    Shape : (2,2)
+    [[1.00000e+00 1.00000e+00 ]
+    [1.00000e+00 1.00000e+00 ]]
+
+
+
+
+    -------- start of print ---------
+    Tensor name: 
+    is_diag    : False
+    contiguous : True
+
+    Total elem: 4
+    type  : Double (Float64)
+    cytnx device: CUDA/GPU-id:0
+    Shape : (2,2)
+    [[1.00000e+00 1.00000e+00 ]
+    [1.00000e+00 1.00000e+00 ]]
+
+
+.. Note::
+    
+    1. You can use **UniTensor.device()** to get the current device-id (cpu = -1), whereas **UniTensor.device_str()** returns the device name. 
+
+    2. **UniTensor.to()** will return a copy on the target device. If you want to move the current Tensor to another device, use **UniTensor.to_()** (with underscore). 
+
 
 Tagged UniTensors and UniTensors with Symmetries
 ********************************************************
