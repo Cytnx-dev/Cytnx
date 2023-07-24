@@ -87,6 +87,8 @@ namespace cytnx {
           out.push_back(vT);
           if (!is_row) out.back().permute_(1, 0);
         }
+
+        return out;
       }
     };
 
