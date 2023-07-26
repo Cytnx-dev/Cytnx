@@ -141,7 +141,7 @@ namespace cytnx {
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
-        cudaFree(dtmp);
+        checkCudaErrors(cudaFree(dtmp));
         return out;
 
       } else {

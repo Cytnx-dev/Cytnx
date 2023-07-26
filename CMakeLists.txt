@@ -25,6 +25,10 @@ set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 # Generate pif code
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+if (USE_DEBUG)
+  set(CMAKE_BUILD_TYPE "DEBUG")
+endif()
+
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "RELEASE")
 endif()
@@ -160,6 +164,12 @@ target_compile_features(cytnx PUBLIC cxx_std_17)
 #set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
+
+if(USE_DEBUG)
+  target_compile_definitions(cytnx PUBLIC UNI_DEBUG)
+  # Remember to add export ASAN_OPTIONS=protect_shadow_gap=0 in Install.sh
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+endif()
 
 if(RUN_TESTS)
 	enable_testing()

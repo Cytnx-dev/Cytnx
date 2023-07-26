@@ -8,7 +8,7 @@ namespace cytnx {
 
     template <class X>
     __device__ void warp_unroll(X* smem, int tid) {
-      X v = smem[tid + 32];
+      X v = smem[tid];
       __syncwarp();
       v += __shfl_down_sync(0xFFFFFFFFU, v, 16);
       v += __shfl_down_sync(0xFFFFFFFFU, v, 8);
@@ -51,6 +51,12 @@ namespace cytnx {
       if (blockDim.x >= 128) {
         if (threadIdx.x < 64) {
           sD[threadIdx.x] += sD[threadIdx.x + 64];
+        }
+        __syncthreads();
+      }
+      if(blockDim.x >= 64){
+        if(threadIdx.x < 32){
+          sD[threadIdx.x] += sD[threadIdx.x + 32];
         }
         __syncthreads();
       }
@@ -242,8 +248,7 @@ namespace cytnx {
       // alloc mem for each block:
       T* dblk;
       // std::cout << NBlocks*sizeof(cytnx_double) << std::endl;
-      cudaMalloc((void**)&dblk, NBlocks * sizeof(T));
-
+      checkCudaErrors(cudaMalloc((void**)&dblk, NBlocks * sizeof(T)));
       if (NBlocks == 1) {
         cuReduce_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, in, Nelems);
       } else {

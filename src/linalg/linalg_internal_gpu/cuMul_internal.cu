@@ -27,7 +27,6 @@ namespace cytnx {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           val * ptr[blockIdx.x * blockDim.x + threadIdx.x];
-        printf("val: %f\n", val);
       }
       __syncthreads();
     }
@@ -1080,14 +1079,12 @@ namespace cytnx {
       cytnx_double *_out = (cytnx_double *)out->Mem;
       cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
       cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
-      std::cout<<"inside cuMul_internal_dtd"<<std::endl;
 
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        std::cout<<"cuMul_internal_dtd---->_Lin[0]:" << _Lin[0] << std::endl;
-        cuMul_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
+        cuMul_lconst_kernel<<<NBlocks, 512>>>(_out, *_Lin, len, _Rin);
       } else if (Rin->size() == 1) {
         cuMul_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {

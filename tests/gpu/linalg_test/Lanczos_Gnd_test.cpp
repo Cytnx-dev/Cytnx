@@ -1,4 +1,5 @@
 #include "Lanczos_Gnd_test.h"
+#include "../test_tools.h"
 
 class MyOp : public LinOp {
  public:
@@ -6,10 +7,7 @@ class MyOp : public LinOp {
 
   UniTensor matvec(const UniTensor& v) override {
     Tensor tA = arange(27 * 27).reshape(27, 27).to(cytnx::Device.cuda);
-    // Tensor tA = arange(27 * 27).reshape(27, 27);
-    // tA.to_(cytnx::Device.cuda);
     UniTensor A = UniTensor(tA).to(cytnx::Device.cuda);
-    // A = A + A.clone().permute({1, 0},-1,false);
     A = A + A.Transpose();
     return UniTensor(linalg::Dot(A.get_block_(), v.get_block_())).to(cytnx::Device.cuda);
     // return UniTensor(linalg::Tensordot(A.get_block_(), v.get_block_(), {1}, {0}))
@@ -34,6 +32,7 @@ class MyOp2 : public LinOp {
     H.put_block(B, 1);
     H.put_block(C, 2);
     H.set_labels({"a", "b"});
+    H.to_(cytnx::Device.cuda);
     // H.print_diagram();
     // H.print_blocks();
   }
@@ -68,12 +67,13 @@ TEST(Lanczos_Gnd, gpu_Bk_Lanczos_Gnd_test) {
 
   Bond lan_I_v = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {9, 9, 9});
   Bond lan_J_v = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {1, 1, 1});
-  UniTensor lan_guess = UniTensor({lan_I_v, lan_J_v}).to(cytnx::Device.cuda);
+  UniTensor lan_guess = UniTensor({lan_I_v, lan_J_v});
 
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 0);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
   lan_guess.set_labels({"b", "c"});
+  lan_guess.to_(cytnx::Device.cuda);
   // lan_guess.print_diagram();
   // lan_guess.print_blocks();
 
