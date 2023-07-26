@@ -3305,7 +3305,7 @@ namespace cytnx {
     @note Compare to Conj_(), this fucntion will create a new object UniTensor.
         @see Conj_()
         */
-    UniTensor Conj() {
+    UniTensor Conj() const {
       UniTensor out;
       out._impl = this->_impl->Conj();
       return out;

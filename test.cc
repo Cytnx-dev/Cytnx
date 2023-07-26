@@ -27,8 +27,15 @@ pair<std::string, cytnx_int64> operator>>(const std::string &a, const cytnx_int6
   return make_pair(a, qnidx);
 }
 
+// pair<std::string, cytnx_int64> operator>>(const char* a[], const cytnx_int64 &qnidx) {
+//   return make_pair(std::string(a), qnidx);
+// }
+
 int main(int argc, char *argv[]) {
-  auto ttss = lbl("a") >> 4;
+  auto ttss = "a"s >> 4;
+  // auto ttss2 = "a" >> 4
+
+  // auto ttss = lbl("a") >> 4;
   return 0;
 
   int size = 5;
