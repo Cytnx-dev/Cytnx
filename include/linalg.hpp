@@ -198,7 +198,6 @@ namespace cytnx {
   2. If the object is UniTensor, then the result will depend on the UniTensor's
   rowrank.
   */
-
   namespace linalg {
 
     // Add:
@@ -838,6 +837,21 @@ namespace cytnx {
      * @see Pow(const UniTensor &Tin, const double &p)
      */
     void Pow_(UniTensor &Tin, const double &p);
+
+    /**
+     * @brief Elementwise conjugate of the UniTensor
+     * @param[in] UT The input UniTensor.
+     * @return [UniTensor] The UniTensor with all element being conjugated
+     * @see See UniTensor.Conj() for further details
+     */
+    cytnx::UniTensor Conj(const cytnx::UniTensor &UT);
+
+    /**
+     * @brief Inplace elementwise conjugate of the UniTensor
+     * @param[in] UT The input UniTensor.
+     * @see See UniTensor.Conj_() for further details
+     */
+    void Conj_(cytnx::UniTensor &UT);
 
     //====================================================================================
     //  [Tensor]

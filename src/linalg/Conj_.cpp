@@ -33,5 +33,7 @@ namespace cytnx {
       }
     }
 
+    void Conj_(UniTensor &UT) { UT.Conj_(); }
+
   }  // namespace linalg
 }  // namespace cytnx
