@@ -55,10 +55,20 @@ namespace cytnx {
             Rt._impl->invmapper(), 2);
         } else {
 #ifdef UNI_GPU
-          cytnx_error_msg(true,
-                          "[Sub][on GPU/CUDA] error two tensors must be contiguous. Call "
-                          "Contiguous_() or Contiguous() first%s",
-                          "\n");
+          // cytnx_error_msg(true,
+          //                 "[Sub][on GPU/CUDA] error two tensors must be contiguous. Call "
+          //                 "Contiguous_() or Contiguous() first%s",
+          //                 "\n");
+          cytnx_warning_msg(
+            true,
+            "[Sub][on GPU/CUDA] error two tensors must be contiguous. Call Contiguous_() or "
+            "Contiguous() first. Automatically did it.%s",
+            "\n");
+          Tensor _Tl = Lt.contiguous(), _Tr = Rt.contiguous();
+          checkCudaErrors(cudaSetDevice(Rt.device()));
+          cytnx::linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
+            out._impl->storage()._impl, _Tl._impl->storage()._impl, _Tr._impl->storage()._impl,
+            out._impl->storage()._impl->size(), {}, {}, {}, 2);
 #else
           cytnx_error_msg(true, "[Sub] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
