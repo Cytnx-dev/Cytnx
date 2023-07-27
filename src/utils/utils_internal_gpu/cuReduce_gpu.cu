@@ -54,8 +54,8 @@ namespace cytnx {
         }
         __syncthreads();
       }
-      if(blockDim.x >= 64){
-        if(threadIdx.x < 32){
+      if (blockDim.x >= 64) {
+        if (threadIdx.x < 32) {
           sD[threadIdx.x] += sD[threadIdx.x + 32];
         }
         __syncthreads();

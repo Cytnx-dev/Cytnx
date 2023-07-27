@@ -170,10 +170,10 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 #=========================================================
 # [Note] Build using debug mode, uncomment to enable (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_DEBUG=ON "
+FLAG="${FLAG} -DUSE_DEBUG=OFF "
 # This is for compile with -fsanitize=address and cuda,
 # if you use DEBUG flag above, you need to export ASAN_OPTIONS=protect_shadow_gap=0
-export ASAN_OPTIONS=protect_shadow_gap=0
+# export ASAN_OPTIONS=protect_shadow_gap=0
 # Just a note: export ASAN_OPTIONS=protect_shadow_gap=0:replace_intrin=0:detect_leaks=0
 #-----------------------------------
 
@@ -183,8 +183,8 @@ mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j`nproc`
-# make install
+make install
 # ctest -R .*gpu.*contract.* -j1
 # ctest -R .*Svd.*gpu.* -j1
 # ctest -R gpu_Lanczos_Gnd_test
-ctest -R .*Lanczos_Gnd_test.*
+# ctest -R .*Lanczos_Gnd_test.*

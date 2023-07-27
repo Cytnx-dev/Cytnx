@@ -198,7 +198,7 @@ if(USE_CUDA)
         add_dependencies(cytnx cutt)
         set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
         target_compile_definitions(cytnx PRIVATE UNI_CUTT)
-        target_link_libraries(cytnx PRIVATE ${install_dir}/lib/libcutt.a)
+        target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libcutt.a)
     endif()
 
     if(USE_MAGMA)
@@ -213,7 +213,7 @@ if(USE_CUDA)
        #add_dependencies(cytnx magma)
        target_include_directories(cytnx PRIVATE ${MAGMA_INCLUDE_DIRS})
        target_compile_definitions(cytnx PRIVATE UNI_MAGMA)
-       target_link_libraries(cytnx PRIVATE ${MAGMA_LIBRARIES})       
+       target_link_libraries(cytnx PUBLIC ${MAGMA_LIBRARIES})       
     endif()
 
 endif()
@@ -227,7 +227,7 @@ if(USE_HPTT)
     message(STATUS "hptt install dir: ${install_dir}")
     add_dependencies(cytnx hptt)
     target_compile_definitions(cytnx PRIVATE UNI_HPTT)
-    target_link_libraries(cytnx PRIVATE ${install_dir}/lib/libhptt.a)
+    target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libhptt.a)
 endif()
 
 
@@ -304,7 +304,7 @@ if(USE_OMP)
             set_property(TARGET OpenMP::OpenMP_CXX
                          PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
           endif()
-          target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
+          target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
           target_compile_definitions(cytnx PRIVATE UNI_OMP)
         endif()
     endif()
@@ -329,7 +329,7 @@ else()
             set_property(TARGET OpenMP::OpenMP_CXX
                          PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")    
           endif()
-          target_link_libraries(cytnx PRIVATE OpenMP::OpenMP_CXX)
+          target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
         endif()
     endif()
 
@@ -390,16 +390,16 @@ if(USE_CUDA)
   #target_compile_options(cytnx PRIVATE ${CMAKE_CUDA_FLAGS})
   #target_compile_options(cytnx PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:>)
   target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
-  target_link_libraries(cytnx PRIVATE CUDA::toolkit)
-  target_link_libraries(cytnx PRIVATE CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
-  target_link_libraries(cytnx PRIVATE -lcudadevrt)
+  target_link_libraries(cytnx PUBLIC CUDA::toolkit)
+  target_link_libraries(cytnx PUBLIC CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
+  target_link_libraries(cytnx PUBLIC -lcudadevrt)
 
   if(USE_CUTENSOR)
     find_package(CUTENSOR REQUIRED)
     if(CUTENSOR_FOUND)
         target_compile_definitions(cytnx PUBLIC UNI_CUTENSOR)
-        target_include_directories(cytnx PRIVATE ${CUTENSOR_INCLUDE_DIRS})
-        target_link_libraries(cytnx PRIVATE ${CUTENSOR_LIBRARIES})
+        target_include_directories(cytnx PUBLIC ${CUTENSOR_INCLUDE_DIRS})
+        target_link_libraries(cytnx PUBLIC ${CUTENSOR_LIBRARIES})
     else()
         message(FATAL_ERROR "cannot find cutensor! please specify cutensor root with -DCUTENSOR_ROOT")
     endif()
@@ -410,8 +410,8 @@ if(USE_CUDA)
     find_package(CUQUANTUM REQUIRED)
     if(CUQUANTUM_FOUND)
         target_compile_definitions(cytnx PUBLIC UNI_CUQUANTUM)
-        target_include_directories(cytnx PRIVATE ${CUQUANTUM_INCLUDE_DIRS})
-        target_link_libraries(cytnx PRIVATE ${CUQUANTUM_LIBRARIES})
+        target_include_directories(cytnx PUBLIC ${CUQUANTUM_INCLUDE_DIRS})
+        target_link_libraries(cytnx PUBLIC ${CUQUANTUM_LIBRARIES})
     else()
         message(FATAL_ERROR "cannot find cuquantum! please specify cuquantum root with -DCUQUANTUM_ROOT")
     endif()
@@ -464,12 +464,13 @@ ENDIF()
 IF(BUILD_PYTHON)
     find_package(PythonInterp REQUIRED)
     find_package(pybind11 REQUIRED)
-    if( NOT PYBIND11_FOUND)
+    
+    if( NOT pybind11_FOUND)
         include(FetchContent)
         FetchContent_Declare(
           pybind11_sources
           GIT_REPOSITORY https://github.com/pybind/pybind11.git
-          GIT_TAG v2.4.3
+          GIT_TAG v2.11.1
           )
 
         FetchContent_GetProperties(pybind11_sources)
@@ -500,8 +501,15 @@ IF(BUILD_PYTHON)
                                        pybind/scalar_py.cpp
                                        pybind/ncon_py.cpp
                                        )
-    target_link_libraries(pycytnx PRIVATE cytnx)
+    target_link_libraries(pycytnx PUBLIC cytnx)
     set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
+    message(STATUS "pybind11 include dir: ${CUTENSOR_LIBRARY_DIRS}")
+    message(STATUS "pybind11 include dir: ${CUQUANTUM_LIBRARY_DIRS}")
+    set_target_properties(pycytnx
+      PROPERTIES
+        INSTALL_RPATH "${CUTENSOR_LIBRARY_DIRS};${CUQUANTUM_LIBRARY_DIRS}"
+    )
+
     #add_library(cytnx MODULE pybind/cytnx.cpp)
     #target_link_libraries(cytnx PRIVATE pybind11::module)
     #set_target_properties(cytnx PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
