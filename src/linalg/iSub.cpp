@@ -65,14 +65,26 @@ namespace cytnx {
           //                 "[iSub][on GPU/CUDA] error two tensors must be contiguous. Call "
           //                 "Contiguous_() or Contiguous() first%s",
           //                 "\n");
-          cytnx_warning_msg(
-            true,
-            "[iSub][on GPU/CUDA] error two tensors must be contiguous. Call Contiguous_() or "
-            "Contiguous() first. Automatically did it.%s",
-            "\n");
+          // cytnx_warning_msg(
+          //   true,
+          //   "[iSub][on GPU/CUDA] error two tensors must be contiguous. Call Contiguous_() or "
+          //   "Contiguous() first. Automatically did it.%s",
+          //   "\n");
 
-          Lt.contiguous_();
-          R.contiguous_();
+          // Lt.contiguous_();
+          // R.contiguous_();
+          // checkCudaErrors(cudaSetDevice(Rt.device()));
+          // Tensor tmpo;
+          // if (Lt.dtype() <= Rt.dtype())
+          //   tmpo = Lt;
+          // else
+          //   tmpo = Lt.clone();
+          // linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
+          //   tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
+          //   Lt._impl->storage()._impl->size(), {}, {}, {}, 2);
+          // // cytnx_error_msg(true, "[Developing] iAdd for GPU%s", "\n");
+
+          // if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
           checkCudaErrors(cudaSetDevice(Rt.device()));
           Tensor tmpo;
           if (Lt.dtype() <= Rt.dtype())
@@ -81,9 +93,8 @@ namespace cytnx {
             tmpo = Lt.clone();
           linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
             tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), {}, {}, {}, 2);
-          // cytnx_error_msg(true, "[Developing] iAdd for GPU%s", "\n");
-
+            Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
+            Rt._impl->invmapper(), 2);
           if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
 
 #else

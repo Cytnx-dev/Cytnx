@@ -66,14 +66,25 @@ namespace cytnx {
           //                 "[iAdd][on GPU/CUDA] error two tensors must be contiguous. Call "
           //                 "Contiguous_() or Contiguous() first%s",
           //                 "\n");
-          cytnx_warning_msg(
-            true,
-            "[iAdd][on GPU/CUDA] error two tensors must be contiguous. Call Contiguous_() or "
-            "Contiguous() first. Automatically did it.%s",
-            "\n");
 
-          Lt.contiguous_();
-          R.contiguous_();
+          // cytnx_warning_msg(
+          //   true,
+          //   "[iAdd][on GPU/CUDA] error two tensors must be contiguous. Call Contiguous_() or "
+          //   "Contiguous() first. Automatically did it.%s",
+          //   "\n");
+          // Lt.contiguous_();
+          // R.contiguous_();
+          // checkCudaErrors(cudaSetDevice(Rt.device()));
+          // Tensor tmpo;
+          // if (Lt.dtype() <= Rt.dtype())
+          //   tmpo = Lt;
+          // else
+          //   tmpo = Lt.clone();
+          // linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
+          //   tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
+          //   Lt._impl->storage()._impl->size(), {}, {}, {}, 0);
+          // if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
+
           checkCudaErrors(cudaSetDevice(Rt.device()));
           Tensor tmpo;
           if (Lt.dtype() <= Rt.dtype())
@@ -82,8 +93,8 @@ namespace cytnx {
             tmpo = Lt.clone();
           linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
             tmpo._impl->storage()._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
-            Lt._impl->storage()._impl->size(), {}, {}, {}, 0);
-
+            Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
+            Rt._impl->invmapper(), 0);
           if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
 #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
