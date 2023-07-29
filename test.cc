@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
   bool is_diag = true;
   auto labels = std::vector<std::string>();
   auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-  random::Make_uniform(T, 0, 10, 0);
+  random::uniform_(T, 0, 10, 0);
   std::cout << T << std::endl;
   std::vector<UniTensor> svds = linalg::Svd(T);
   auto S = svds[0];
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 
   AY = AY.astype(Type.ComplexDouble);
 
-  random::Make_normal(AY.get_block_(),0,0.2);
+  random::normal_(AY.get_block_(),0,0.2);
 
   print(AY);
 
@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
   BUT4 = BUT4.astype(Type.ComplexDouble);
 
   for (int i = 0; i < BUT4.get_blocks_().size(); i++) {
-    random::Make_normal(BUT4.get_blocks_()[i], 0, 0.2);
+    random::normal_(BUT4.get_blocks_()[i], 0, 0.2);
   }
 
   print(BUT4);
