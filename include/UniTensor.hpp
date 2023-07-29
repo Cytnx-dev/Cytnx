@@ -230,7 +230,8 @@ namespace cytnx {
     virtual int device() const;
     virtual std::string dtype_str() const;
     virtual std::string device_str() const;
-    virtual void set_rowrank(const cytnx_uint64 &new_rowrank);
+    virtual void set_rowrank_(const cytnx_uint64 &new_rowrank);
+    virtual boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const;
 
     virtual boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
                                                          const cytnx_int64 &rowrank = -1);
@@ -478,7 +479,7 @@ namespace cytnx {
         return out;
       }
     }
-    void set_rowrank(const cytnx_uint64 &new_rowrank) {
+    void set_rowrank_(const cytnx_uint64 &new_rowrank) {
       cytnx_error_msg(new_rowrank > this->_labels.size(),
                       "[ERROR] rowrank cannot exceed the rank of UniTensor.%s", "\n");
       if (this->is_diag()) {
@@ -487,6 +488,14 @@ namespace cytnx {
       }
 
       this->_rowrank = new_rowrank;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
+      DenseUniTensor *out_raw = this->clone_meta();
+      out_raw->_block = this->_block;
+      out_raw->set_rowrank_(new_rowrank);
+      boost::intrusive_ptr<UniTensor_base> out(out_raw);
+      return out;
     }
 
     boost::intrusive_ptr<UniTensor_base> clone() const {
@@ -1288,7 +1297,7 @@ namespace cytnx {
       return true;
     }
 
-    void set_rowrank(const cytnx_uint64 &new_rowrank) {
+    void set_rowrank_(const cytnx_uint64 &new_rowrank) {
       cytnx_error_msg(new_rowrank > this->rank(),
                       "[ERROR][BlockUniTensor] rowrank should be [>=0] and [<=UniTensor.rank].%s",
                       "\n");
@@ -1299,6 +1308,14 @@ namespace cytnx {
       }
       this->_rowrank = new_rowrank;
       this->_is_braket_form = this->_update_braket();
+    }
+
+    boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
+      BlockUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks = this->_blocks;
+      tmp->set_rowrank_(new_rowrank);
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
     }
 
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
@@ -2013,9 +2030,15 @@ namespace cytnx {
           important if you want to use the linear algebra process.
     @param[in] new_rowrank the new row rank of the UniTensor
     */
-    UniTensor &set_rowrank(const cytnx_uint64 &new_rowrank) {
-      this->_impl->set_rowrank(new_rowrank);
+    UniTensor &set_rowrank_(const cytnx_uint64 &new_rowrank) {
+      this->_impl->set_rowrank_(new_rowrank);
       return *this;
+    }
+
+    UniTensor set_rowrank(const cytnx_uint64 &new_rowrank) const {
+      UniTensor out;
+      out._impl = this->_impl->set_rowrank(new_rowrank);
+      return out;
     }
 
     template <class T>

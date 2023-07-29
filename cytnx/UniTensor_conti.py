@@ -198,8 +198,8 @@ def set_labels(self,new_labels:List[str]):
 
 
 @add_method(UniTensor)
-def set_rowrank(self,new_rowrank):
-    self.c_set_rowrank(new_rowrank);
+def set_rowrank_(self,new_rowrank):
+    self.c_set_rowrank_(new_rowrank);
     return self
 
 

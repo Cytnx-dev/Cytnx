@@ -54,7 +54,12 @@ namespace cytnx {
                     "\n");
     return std::vector<cytnx_uint64>();
   }
-  void UniTensor_base::set_rowrank(const cytnx_uint64 &new_rowrank) {
+  void UniTensor_base::set_rowrank_(const cytnx_uint64 &new_rowrank) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::set_rowrank(
+    const cytnx_uint64 &new_rowrank) const {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
