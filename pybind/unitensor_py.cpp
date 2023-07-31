@@ -170,7 +170,9 @@ void unitensor_binding(py::module &m) {
                         },py::arg("new_labels"))
 
 
-    .def("c_set_rowrank", &UniTensor::set_rowrank, py::arg("new_rowrank"))
+    .def("c_set_rowrank_", &UniTensor::set_rowrank_, py::arg("new_rowrank"))
+
+    .def("set_rowrank", &UniTensor::set_rowrank, py::arg("new_rowrank"))
 
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         return self.relabels(new_labels);
