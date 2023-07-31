@@ -170,7 +170,7 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Random
-OBJS += Make_normal.o normal.o Make_uniform.o uniform.o
+OBJS += normal_.o normal.o uniform_.o uniform.o
 
 
 ALLOBJS = $(OBJS)
@@ -609,9 +609,9 @@ cuUniform_internal.o :  $(CytnxPATH)/src/random/random_internal_gpu/cuUniform_in
 endif
 ## Random:
 ########################
-Make_normal.o: $(CytnxPATH)/src/random/Make_normal.cpp $(CytnxPATH)/include/random.hpp
+normal_.o: $(CytnxPATH)/src/random/normal_.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
-Make_uniform.o: $(CytnxPATH)/src/random/Make_uniform.cpp $(CytnxPATH)/include/random.hpp
+uniform_.o: $(CytnxPATH)/src/random/uniform_.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
 normal.o: $(CytnxPATH)/src/random/normal.cpp $(CytnxPATH)/include/random.hpp
 	$(CC)  $(CCFLAGS) $(INCFLAGS) -c $<
