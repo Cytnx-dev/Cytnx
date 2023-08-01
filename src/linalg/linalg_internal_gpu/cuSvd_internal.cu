@@ -1,4 +1,5 @@
 #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
+#include "linalg/linalg_internal_interface.hpp"
 
 namespace cytnx {
 

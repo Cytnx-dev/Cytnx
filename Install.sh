@@ -184,7 +184,4 @@ cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 make install
-# ctest -R .*gpu.*contract.* -j1
-# ctest -R .*Svd.*gpu.* -j1
-# ctest -R gpu_Lanczos_Gnd_test
-# ctest -R .*Lanczos_Gnd_test.*
+ctest
