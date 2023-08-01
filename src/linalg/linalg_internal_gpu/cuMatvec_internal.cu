@@ -103,7 +103,8 @@ namespace cytnx {
 
       // query working space :
       cytnx_int32 blsMl = Ml, blsNr = Nr;
-      // checkCudaErrors(cublasSgemv(cublasH, CUBLAS_OP_T, blsMl, blsNr, &alpha, _inr, blsMl, _inl, 1,
+      // checkCudaErrors(cublasSgemv(cublasH, CUBLAS_OP_T, blsMl, blsNr, &alpha, _inr, blsMl, _inl,
+      // 1,
       //                             &beta, _out, 1));
       checkCudaErrors(cublasSgemv(cublasH, CUBLAS_OP_T, blsNr, blsMl, &alpha, _inr, blsMl, _inl, 1,
                                   &beta, _out, 1));
