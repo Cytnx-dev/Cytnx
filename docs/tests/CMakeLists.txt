@@ -10,6 +10,9 @@ message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
 
 include(ExternalProject)
 
+# currently cannot use cuda
+option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
+
 option(MAGMA_ROOT "HPTT option AVX" OFF)
 ExternalProject_Add(cytnx
   PREFIX cytnx_src
@@ -18,7 +21,7 @@ ExternalProject_Add(cytnx
   INSTALL_DIR cytnx_install
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DUSE_MKL=ON -DBUILD_PYTHON=ON 
   -DUSE_HPTT=ON -DHPTT_ENABLE_FINE_TUNE=ON -DHPTT_ENABLE_AVX=ON
-  -DUSE_CUDA=OFF
+  -DUSE_CUDA=${USE_CUDA}
 #-DUSE_MAGMA=OFF -DMAGMA_ROOT=/home/hunghaoti/MAGMA 
 #-DUSE_CUTENSOR=OFF -DCUTENSOR_ROOT=/home/hunghaoti/CUTENSOR 
 #-DUSE_CUQUANTUM=OFF -DCUQUANTUM_ROOT=/home/hunghaoti/CUQUANTUM 
@@ -55,6 +58,10 @@ target_include_directories(
   ${install_dir}/include
   ../code/cplusplus/doc_codes
 ) 
+if(USE_CUDA)
+  target_compile_definitions(test_doc_cplusplus PRIVATE UNI_GPU)
+endif()
+
 
 include(GoogleTest)
 
