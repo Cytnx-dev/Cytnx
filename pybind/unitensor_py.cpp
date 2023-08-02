@@ -199,6 +199,15 @@ void unitensor_binding(py::module &m) {
                         },py::arg("old_label"), py::arg("new_label"))
 
 
+    .def("relabels",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
+                        return self.relabels(old_labels,new_labels);
+                    } ,py::arg("old_labels"), py::arg("new_labels"))
+
+    .def("relabels_",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
+                        self.relabels_(old_labels,new_labels);
+                    } ,py::arg("old_labels"), py::arg("new_labels"))
+
+
 
     .def("rowrank", &UniTensor::rowrank)
     .def("Nblocks", &UniTensor::Nblocks)
