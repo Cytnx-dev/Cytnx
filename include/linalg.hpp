@@ -2132,7 +2132,7 @@ namespace cytnx {
      *@pre the \p in should be a Hermitian matrix.
      *@warning If \p in is not a Hermitian matrix, the result will be undefined.
      * @see ExpH(const Tensor &in, const T &a, const T &b = 0)
-    */
+     */
     Tensor ExpH(const Tensor &in);
 
     // ExpM:
@@ -2632,7 +2632,7 @@ namespace cytnx {
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of division.
    * @see linalg::Div(const Tensor &Lt, const Tensor &Rt)
-   * @pre 
+   * @pre
    * 1. The divisor cannot be zero.
    * 2. \p Lt and \p Rt must have the same shape.
    */
