@@ -6,6 +6,9 @@
 #include <algorithm>
 #include <iostream>
 
+
+#include "utils/utils_internal_interface.hpp"
+#include "Generator.hpp"
 using namespace std;
 
 namespace cytnx {
@@ -712,100 +715,145 @@ namespace cytnx {
       // this->name2pos[this->tensors[idx].name()] << endl;
     }
 
-    // 1.5 contraction order:
-    if (ORDER_tokens.size() != 0) {
-      // *set by user
-      CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+    int tn_device = this->tensors[0].device();
+    for(int i = 0; i<this->tensors.size();i++){
+            cytnx_error_msg(this->tensors[i].device() != tn_device,
+            "[ERROR][Launch][RegularNetwork] cannot launch with tensors on different devices, tensor at [0] is on device %d while tensor at [%d] in on device %d. %s",
+            tn_device,i,this->tensors[i].device(),"\n");
+    }
 
-    } else {
-      if (optimal == true) {
-        string Optim_ORDERline = this->getOptimalOrder();
-        this->ORDER_tokens.clear();
-        _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+    if (tn_device == -1){
+      // cpu workflow
+
+      // 1.5 contraction order:
+      if (ORDER_tokens.size() != 0) {
+        // *set by user
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-      } else if (contract_order != "") {
-        this->ORDER_tokens.clear();
-        _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
-        CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+
       } else {
-        CtTree.build_default_contraction_tree();
-      }
-    }
-
-    // 2. contract using postorder traversal:
-    // cout << this->CtTree.nodes_container.size() << endl;
-    stack<Node *> stk;
-    Node *root = &(this->CtTree.nodes_container.back());
-    int ly = 0;
-    bool ict;
-
-    do {
-      // move the lmost
-      while ((root != nullptr)) {
-        if (root->right != nullptr) stk.push(root->right);
-        stk.push(root);
-        root = root->left;
+        if (optimal == true) {
+          string Optim_ORDERline = this->getOptimalOrder();
+          this->ORDER_tokens.clear();
+          _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+          CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+        } else if (contract_order != "") {
+          this->ORDER_tokens.clear();
+          _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
+          CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+        } else {
+          CtTree.build_default_contraction_tree();
+        }
       }
 
-      root = stk.top();
-      stk.pop();
-      // cytnx_error_msg(stk.size()==0,"[eRROR]","\n");
-      ict = true;
-      if ((root->right != nullptr) && !stk.empty()) {
-        if (stk.top() == root->right) {
-          stk.pop();
+      // 2. contract using postorder traversal:
+      // cout << this->CtTree.nodes_container.size() << endl;
+      stack<Node *> stk;
+      Node *root = &(this->CtTree.nodes_container.back());
+      int ly = 0;
+      bool ict;
+
+      do {
+        // move the lmost
+        while ((root != nullptr)) {
+          if (root->right != nullptr) stk.push(root->right);
           stk.push(root);
-          root = root->right;
-          ict = false;
-        }
-      }
-      if (ict) {
-        // process!
-
-        // cout << "OK" << endl;
-        if ((root->right != nullptr) && (root->left != nullptr)) {
-          // cout << "L,R::\n";
-          // root->left->utensor.print_diagram(1);
-          // root->right->utensor.print_diagram(1);
-          root->utensor = Contract(root->left->utensor, root->right->utensor);
-          // cout << "Contract:" << root->left->utensor.name() << " " << root->right->utensor.name()
-          // << endl; root->left->utensor.print_diagram(); root->right->utensor.print_diagram();
-          // root->utensor.print_diagram(); root->utensor.set_name(root->left->utensor.name() +
-          // root->right->utensor.name());
-          root->left->clear_utensor();  // remove intermediate unitensor to save heap space
-          root->right->clear_utensor();  // remove intermediate unitensor to save heap space
-          root->is_assigned = true;
-          // cout << "contract!" << endl;
+          root = root->left;
         }
 
-        root = nullptr;
+        root = stk.top();
+        stk.pop();
+        // cytnx_error_msg(stk.size()==0,"[eRROR]","\n");
+        ict = true;
+        if ((root->right != nullptr) && !stk.empty()) {
+          if (stk.top() == root->right) {
+            stk.pop();
+            stk.push(root);
+            root = root->right;
+            ict = false;
+          }
+        }
+        if (ict) {
+          // process!
+
+          // cout << "OK" << endl;
+          if ((root->right != nullptr) && (root->left != nullptr)) {
+            // cout << "L,R::\n";
+            // root->left->utensor.print_diagram(1);
+            // root->right->utensor.print_diagram(1);
+            root->utensor = Contract(root->left->utensor, root->right->utensor);
+            // cout << "Contract:" << root->left->utensor.name() << " " << root->right->utensor.name()
+            // << endl; root->left->utensor.print_diagram(); root->right->utensor.print_diagram();
+            // root->utensor.print_diagram(); root->utensor.set_name(root->left->utensor.name() +
+            // root->right->utensor.name());
+            root->left->clear_utensor();  // remove intermediate unitensor to save heap space
+            root->right->clear_utensor();  // remove intermediate unitensor to save heap space
+            root->is_assigned = true;
+            // cout << "contract!" << endl;
+          }
+
+          root = nullptr;
+        }
+
+        // cout.flush();
+        // break;
+
+      } while (!stk.empty());
+
+      // 3. get result:
+      UniTensor out = this->CtTree.nodes_container.back().utensor;
+      // std::cout << out << std::endl;
+      // out.print_diagram();
+
+      // 4. reset nodes:
+      this->CtTree.reset_nodes();
+
+      // //5. reset back the original labels:
+      // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
+      //     this->tensors[i].set_labels(old_labels[i]);
+      // }
+
+      // 6. permute accroding to pre-set labels:
+      if (TOUT_labels.size()) {
+        out.permute_(TOUT_labels, TOUT_iBondNum);
       }
 
-      // cout.flush();
-      // break;
+      // UniTensor out;
+      return out;
 
-    } while (!stk.empty());
+    }else{
 
-    // 3. get result:
-    UniTensor out = this->CtTree.nodes_container.back().utensor;
-    // std::cout << out << std::endl;
-    // out.print_diagram();
+      //gpu workflow
+      vector<cytnx_uint64> out_shape;
+      for(int i = 0; i<this->TOUT_labels.size(); i++){
+        for(int j = 0 ;j<this->label_arr.size(); j++){
+          vector<string>::iterator it;
+          it = find(this->label_arr[j].begin(), this->label_arr[j].end(), TOUT_labels[i]);
+          if(it != this->label_arr[j].end()){
+              out_shape.push_back(this->tensors[j].shape()[distance(label_arr[j].begin(), it)]);
+              break;
+          }
+        }
+      }
 
-    // 4. reset nodes:
-    this->CtTree.reset_nodes();
+      UniTensor out = UniTensor(zeros(out_shape, Type.Double, Device.cpu).to(tn_device));
+      out.set_labels(this->TOUT_labels);
+      this->cutn.initialize(out, this->tensors,this->label_arr, true);
+      this->cutn.checkVersion();
+      this->cutn.setDevice();
+      this->cutn.setType();
+      this->cutn.createNetworkDescriptor();
+      // this->cutn.getWorkspacelimit();
+      // this->cutn.findOptimalOrder();
+      // this->cutn.querySlices();    
+      // this->cutn.createWorkspaceDescriptor();
+      // this->cutn.initializePlan();
+      // this->cutn.autotune();
+      // this->cutn.executeContraction();
+      // cout<<out;
+      return out;
 
-    // //5. reset back the original labels:
-    // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-    //     this->tensors[i].set_labels(old_labels[i]);
-    // }
-
-    // 6. permute accroding to pre-set labels:
-    if (TOUT_labels.size()) {
-      out.permute_(TOUT_labels, TOUT_iBondNum);
     }
 
-    // UniTensor out;
-    return out;
   }
 
   void RegularNetwork::construct(const std::vector<std::string> &alias,

@@ -11,6 +11,11 @@
 #include "utils/utils.hpp"
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
+
+#include "utils/cutensornet.hpp"
+
+
+
 namespace cytnx {
   /// @cond
   struct __ntwk {
@@ -48,6 +53,10 @@ namespace cytnx {
     // name of tn.
     std::vector<std::string> names;
     std::map<std::string, cytnx_uint64> name2pos;
+
+    #ifdef UNI_CUQUANTUM
+    cutensornet cutn;
+    #endif
 
     friend class FermionNetwork;
     friend class RegularNetwork;

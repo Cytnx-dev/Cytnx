@@ -73,24 +73,34 @@ namespace cytnx {
     int32_t numInputs;
     void* R_d;
     int32_t nmodeR;
-    int64_t* extentR;
-    int32_t* modesR;
-    void** rawDataIn_d;
-    int32_t** modesIn;
-    int32_t* numModesIn;
-    int64_t** extentsIn;
-    int64_t** stridesIn;
+    // int32_t* modesR;
+    // void** rawDataIn_d;
+    // int32_t** modesIn;
+    // int32_t* numModesIn;
+    // int64_t** extentsIn;
+    // int64_t** stridesIn;
     bool verbose;
+    std::vector<void*> rawDataIn_d;
+    std::vector<int64_t> extentR;
+    std::vector<int32_t> modesR;
+    std::vector<int32_t*> modesIn;
+    std::vector<int32_t> numModesIn;
+    std::vector<int64_t*> extentsIn;
+    std::vector<int64_t*> stridesIn;
+
+    std::map<std::string, int32_t> lblmap;
+    std::vector<std::vector<int32_t>> tmp_modes;
+    std::vector<std::vector<int64_t>> tmp_extents;
 
    public:
     
     cutensornet();
-    cutensornet(UniTensor& res, std::vector<UniTensor>& uts, bool verbose);
-    cutensornet(int32_t numInputs, void* R_d, int32_t nmodeR, int64_t* extentR,
-                    int32_t* modesR, void* rawDataIn_d[], int32_t* modesIn[],
-                    int32_t numModesIn[], int64_t* extentsIn[], int64_t* stridesIn[],
-                    bool verbose);
-    void cutensornetwork();
+    // cutensornet(UniTensor& res, std::vector<UniTensor>& uts, bool verbose);
+    // cutensornet(int32_t numInputs, void* R_d, int32_t nmodeR, int64_t* extentR,
+    //                 int32_t* modesR, void* rawDataIn_d[], int32_t* modesIn[],
+    //                 int32_t numModesIn[], int64_t* extentsIn[], int64_t* stridesIn[],
+    //                 bool verbose);
+    void initialize(UniTensor& res, std::vector<UniTensor>& uts, std::vector<std::vector<std::string>>& labels, bool verbose);
     void checkVersion();
     void setDevice();
     void setType();
