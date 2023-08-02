@@ -1,0 +1,13 @@
+-----------------------
+tensor Name : 
+tensor Rank : 4
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+             ---------     
+            /         \    
+   v0in ____| 8     8 |____ v0out
+            |         |    
+   v1in ____| 8     8 |____ v1out
+            \         /    
+             ---------     

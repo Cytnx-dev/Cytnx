@@ -1,6 +1,6 @@
 ['a', 'b']
 -------- start of print ---------
-Tensor name: Untagged_Unitensor=rr
+Tensor name: Untagged_Unitensor
 is_diag    : False
 contiguous : True
 

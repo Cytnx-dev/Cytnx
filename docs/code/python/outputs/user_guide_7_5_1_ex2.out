@@ -1,0 +1,5 @@
+
+# Cytnx error occur at virtual boost::intrusive_ptr<cytnx::UniTensor_base> cytnx::DenseUniTensor::contract(const boost::intrusive_ptr<cytnx::UniTensor_base>&, const bool&, const bool&)
+# error: [ERROR][DenseUniTensor][contract] cannot contract common label: <2> @ self bond#2 & rhs bond#0, BRA-KET mismatch!
+
+# file : /home/hunghaoti/Workplace/Cytnx_dir/Cytnx_dev/src/DenseUniTensor.cpp (994)
