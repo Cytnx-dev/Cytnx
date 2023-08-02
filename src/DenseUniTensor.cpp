@@ -223,8 +223,14 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
-  void DenseUniTensor::relabels_(const std::vector<std::string> &new_labels) {
-    this->set_labels(new_labels);
+
+  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    DenseUniTensor *tmp = this->clone_meta();
+    tmp->_block = this->_block;
+    tmp->relabels_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const cytnx_int64 &inx,
@@ -235,9 +241,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   }
-  void DenseUniTensor::relabel_(const cytnx_int64 &inx, const std::string &new_label) {
-    this->set_label(inx, new_label);
-  }
+
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(const std::string &inx,
                                                                const std::string &new_label) {
     DenseUniTensor *out_raw = this->clone_meta();
@@ -245,9 +249,6 @@ namespace cytnx {
     out_raw->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
-  }
-  void DenseUniTensor::relabel_(const std::string &inx, const std::string &new_label) {
-    this->set_label(inx, new_label);
   }
 
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::permute(
