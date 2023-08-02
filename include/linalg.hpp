@@ -1658,7 +1658,9 @@ namespace cytnx {
     \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row
     form. Otherwise, the eigen vectors will be column form.
     @pre the \p Tin should be a Hermitian matrix.
-    @warning If \p Tin is not a Hermitian matrix, the result will be undefined.
+    @warning If \p Tin is not a Hermitian matrix, only the lower triangular matrix will be used.
+    (This is strongly not recommended, please use
+    Eig(const Tensor &Tin, const bool &is_V, const bool &row_v) instead.
     */
     std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
 
@@ -2118,7 +2120,9 @@ namespace cytnx {
     @return
         [Tensor]
     @pre the \p in should be a Hermitian matrix.
-    @warning If \p in is not a Hermitian matrix, the result will be undefined.
+    @warning If \p in is not a Hermitian matrix, only the lower triangular matrix will be used.
+    (This is strongly not recommended, please use ExpM(const Tensor &in, const T &a, const T &b)
+    instead).
 
     */
     template <typename T>
@@ -2130,9 +2134,11 @@ namespace cytnx {
      *    O = \exp{M}
      * \f]
      *@pre the \p in should be a Hermitian matrix.
-     *@warning If \p in is not a Hermitian matrix, the result will be undefined.
+     *@warning If \p in is not a Hermitian matrix, only the lower triangular matrix will be used.
+    (This is strongly not recommended, please use ExpM(const Tensor &in) instead).
+
      * @see ExpH(const Tensor &in, const T &a, const T &b = 0)
-     */
+    */
     Tensor ExpH(const Tensor &in);
 
     // ExpM:
