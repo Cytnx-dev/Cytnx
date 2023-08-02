@@ -11,7 +11,7 @@ class MyOp(cytnx.LinOp):
 op = MyOp()
 
 v0 = cytnx.arange(4) # trial state
-ev = cytnx.linalg.Lanczos_ER(op,k=1,Tin=v0)
+ev = cytnx.linalg.Lanczos(op, k=1, Tin=v0, method="ER", max_krydim = 2)
 
 print(ev[0]) #eigenval
 print(ev[1]) #eigenvec
