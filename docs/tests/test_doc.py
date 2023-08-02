@@ -17,9 +17,10 @@ def needGPUTest(obj):
 def get_redirect_code(test_name):
     str_code = '''
 captured = capsys.readouterr()
-text_file = open(output_path + \'''' + test_name + '''.out', 'w')
-text_file.write(captured.out)
-text_file.close()
+if captured.out:
+    text_file = open(output_path + \'''' + test_name + '''.out', 'w')
+    text_file.write(captured.out)
+    text_file.close()
 '''
     return str_code
 
