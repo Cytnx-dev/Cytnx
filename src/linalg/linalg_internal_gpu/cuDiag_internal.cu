@@ -12,8 +12,8 @@ namespace cytnx {
     template <class T>
     __global__ void cuDiag_internal_kernel(T *out, const T *ten, const cytnx_uint64 L) {
       if (blockIdx.x * blockDim.x + threadIdx.x < L) {
-        out[(blockIdx.x * blockDim.x + threadIdx.x) * L + blockIdx.x * blockDim.x + threadIdx.x] =
-          ten[blockIdx.x * blockDim.x + threadIdx.x];
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          ten[(blockIdx.x * blockDim.x + threadIdx.x) * L + blockIdx.x * blockDim.x + threadIdx.x];
       }
       __syncthreads();
     }
@@ -21,8 +21,8 @@ namespace cytnx {
     template <class T>
     __global__ void cuDiag_internal_getdiag_kernel(T *out, const T *ten, const cytnx_uint64 L) {
       if (blockIdx.x * blockDim.x + threadIdx.x < L) {
-        out[blockIdx.x * blockDim.x + threadIdx.x] =
-          ten[(blockIdx.x * blockDim.x + threadIdx.x) * L + blockIdx.x * blockDim.x + threadIdx.x];
+        out[(blockIdx.x * blockDim.x + threadIdx.x) * L + blockIdx.x * blockDim.x + threadIdx.x] =
+          ten[blockIdx.x * blockDim.x + threadIdx.x];
       }
       __syncthreads();
     }

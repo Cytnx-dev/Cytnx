@@ -1084,7 +1084,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        cuMul_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
+        cuMul_lconst_kernel<<<NBlocks, 512>>>(_out, *_Lin, len, _Rin);
       } else if (Rin->size() == 1) {
         cuMul_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {

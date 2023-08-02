@@ -3,7 +3,7 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-//#include "lapack_wrapper.hpp"
+// #include "lapack_wrapper.hpp"
 #include "intrusive_ptr_base.hpp"
 #include <vector>
 #include <initializer_list>
@@ -400,7 +400,7 @@ namespace cytnx {
       return tmp;
     };
 
-    // virtual ~Scalar_base(){};
+    virtual ~Scalar_base(){};
   };
 
   typedef Scalar_base *(*pScalar_init)();

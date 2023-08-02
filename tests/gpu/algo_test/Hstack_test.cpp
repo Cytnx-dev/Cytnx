@@ -122,7 +122,7 @@ namespace HstackTest {
   input:void tensor, cpu
   ====================*/
   TEST(Hstack, gpu_err_tensor_void) {
-    std::vector<Tensor> Ts = {Tensor().to(cytnx::Device.cuda)};
+    std::vector<Tensor> Ts = {Tensor()};
     InitTensorUniform(Ts);
     EXPECT_THROW({ Tensor tens = algo::Hstack(Ts); }, std::logic_error);
   }
@@ -134,8 +134,7 @@ namespace HstackTest {
     T2:void tensor
   ====================*/
   TEST(Hstack, gpu_err_contains_void) {
-    std::vector<Tensor> Ts = {Tensor({4, 3}, Type.Double).to(cytnx::Device.cuda),
-                              Tensor().to(cytnx::Device.cuda)};
+    std::vector<Tensor> Ts = {Tensor({4, 3}, Type.Double).to(cytnx::Device.cuda), Tensor()};
     InitTensorUniform(Ts);
     EXPECT_THROW({ Tensor tens = algo::Hstack(Ts); }, std::logic_error);
   }

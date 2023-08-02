@@ -17,15 +17,9 @@ add_executable(
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
-  linalg_test/Svd_test.cpp
-  linalg_test/linalg_test.cpp
-  algo_test/Hsplit_test.cpp
-  algo_test/Hstack_test.cpp
-  algo_test/Vsplit_test.cpp
-  algo_test/Vstack_test.cpp
-
   linalg_test/Arnoldi_test.cpp
   linalg_test/Svd_test.cpp
+  linalg_test/GeSvd_test.cpp
   linalg_test/linalg_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp

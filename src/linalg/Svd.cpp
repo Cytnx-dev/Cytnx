@@ -63,6 +63,11 @@ namespace cytnx {
         std::vector<Tensor> out;
         out.push_back(S);
         if (is_UvT) {
+          // cout << "Original:\n" << in << endl;
+          // cout << "S:\n" << S << endl;
+          // cout << "Recompose1!:\n" << Matmul(Matmul(U, Diag(S)), vT) << endl;
+          // cout << "Recompose2!:\n"
+          //      << Tensordot(Tensordot(U, Diag(S), {1}, {0}), vT, {1}, {0}) << endl;
           out.push_back(U);
           out.push_back(vT);
         }

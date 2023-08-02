@@ -9,7 +9,6 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Storage.hpp"
-#include "Type.hpp"
 
 namespace cytnx {
   namespace utils_internal {

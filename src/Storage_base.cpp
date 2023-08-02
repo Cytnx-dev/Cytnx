@@ -144,7 +144,7 @@ namespace cytnx {
         free(Mem);
       } else {
 #ifdef UNI_GPU
-        cudaFree(Mem);
+        checkCudaErrors(cudaFree(Mem));
 #else
         cytnx_error_msg(1, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
 #endif
@@ -206,6 +206,8 @@ namespace cytnx {
       cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
                       "internal, the output dtype does not match current storage dtype.\n");
 
+    cytnx_error_msg(this->device != out->device,
+                    "[ERROR] cannot GetElem_byShape_v2 between different device.%s", "\n");
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < locators.size(); i++) {
       if (locators[i].size())
@@ -263,6 +265,8 @@ namespace cytnx {
       cytnx_error_msg(out->dtype != this->dtype, "%s", "[ERROR][DEBUG] %s",
                       "internal, the output dtype does not match current storage dtype.\n");
     }
+    cytnx_error_msg(this->device != out->device,
+                    "[ERROR] cannot GetElem_byShape between different device.%s", "\n");
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
@@ -318,6 +322,8 @@ namespace cytnx {
       cytnx_error_msg(shape.size() != len.size(), "%s",
                       "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
 
+    cytnx_error_msg(this->device != in->device,
+                    "[ERROR] cannot SetElem_byShape between different device.%s", "\n");
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
     cytnx_uint64 TotalElem = 1;
@@ -377,6 +383,9 @@ namespace cytnx {
                                         const cytnx_uint64 &Nunit, const bool &is_scalar) {
     // plan: we assume in is contiguous for now!
     //
+
+    cytnx_error_msg(this->device != in->device,
+                    "[ERROR] cannot SetElem_byShape_v2 between different device.%s", "\n");
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:

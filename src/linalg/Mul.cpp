@@ -73,7 +73,7 @@ namespace cytnx {
     template <>
     Tensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
       // std::cout << "entroy" << std::endl;
-      Storage Cnst(1, Type.ComplexDouble);
+      Storage Cnst(1, Type.ComplexDouble, Rt.device());
       Cnst.at<cytnx_complex128>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -101,7 +101,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_complex64>(const cytnx_complex64 &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.ComplexFloat);
+      Storage Cnst(1, Type.ComplexFloat, Rt.device());
       Cnst.at<cytnx_complex64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -132,7 +132,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_double>(const cytnx_double &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Double);
+      Storage Cnst(1, Type.Double, Rt.device());
       Cnst.at<cytnx_double>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -162,7 +162,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_float>(const cytnx_float &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Float);
+      Storage Cnst(1, Type.Float, Rt.device());
       Cnst.at<cytnx_float>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -191,7 +191,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_int64>(const cytnx_int64 &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Int64);
+      Storage Cnst(1, Type.Int64, Rt.device());
       Cnst.at<cytnx_int64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -220,7 +220,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_uint64>(const cytnx_uint64 &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Uint64);
+      Storage Cnst(1, Type.Uint64, Rt.device());
       Cnst.at<cytnx_uint64>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -250,7 +250,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_int32>(const cytnx_int32 &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Int32);
+      Storage Cnst(1, Type.Int32, Rt.device());
       Cnst.at<cytnx_int32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -279,7 +279,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_uint32>(const cytnx_uint32 &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Uint32);
+      Storage Cnst(1, Type.Uint32, Rt.device());
       Cnst.at<cytnx_uint32>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -309,7 +309,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_int16>(const cytnx_int16 &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Int16);
+      Storage Cnst(1, Type.Int16, Rt.device());
       Cnst.at<cytnx_int16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -338,7 +338,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_uint16>(const cytnx_uint16 &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Uint16);
+      Storage Cnst(1, Type.Uint16, Rt.device());
       Cnst.at<cytnx_uint16>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -368,7 +368,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<cytnx_bool>(const cytnx_bool &lc, const Tensor &Rt) {
-      Storage Cnst(1, Type.Bool);
+      Storage Cnst(1, Type.Bool, Rt.device());
       Cnst.at<cytnx_bool>(0) = lc;
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -397,8 +397,7 @@ namespace cytnx {
 
     template <>
     Tensor Mul<Scalar>(const Scalar &lc, const Tensor &Rt) {
-      Storage Cnst;  // create a shallow container without allocate. Using base!
-
+      Storage Cnst = Storage();  // create a shallow container without allocate. Using base!
       Cnst._impl->Mem = lc._impl->get_raw_address();
       Cnst._impl->len = 1;
 
