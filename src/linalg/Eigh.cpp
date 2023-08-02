@@ -12,7 +12,7 @@ namespace cytnx {
       // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
-                      "[Eigh] error, Eigh should accept a Hermition Tensor%s", "\n");
+                      "[Eigh] error, Eigh should accept a square matrix.%s", "\n");
 
       // std::cout << Tin << std::endl;
       Tensor in = Tin.contiguous();

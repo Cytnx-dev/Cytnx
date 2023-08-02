@@ -1640,7 +1640,7 @@ namespace cytnx {
     @details This function will perform eigen-value decomposition for Hermitian matrix.
     Given a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
-    M = V^\dagger D V,
+    M = V D V^\dagger,
     \f]
     where \f$ V \f$ is a unitary matrix contains the eigen vectors,
     and \f$ D \f$ is a diagonal matrix contains the eigen values.
@@ -1664,7 +1664,7 @@ namespace cytnx {
     @details This function will perform eigen-value decomposition for generic square matrix.
     Given a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
-    M = V^{-1} D V,
+    M = V D V^{-1},
     \f]
     where \f$ V \f$ is a invertible matrix contains the eigen vectors,
     and \f$ D \f$ is a diagonal matrix contains the eigen values.
@@ -2078,11 +2078,11 @@ namespace cytnx {
     //===========================================
     /**
     @brief perform diagonalization of symmetric tri-diagnoal matrix.
-    @param Diag Tensor #1
-    @param Sub_diag Tensor #2
-    @param is_V: if calculate the eigen value.
-    @param k: Return k lowest eigen vector if is_V=True
-    @param throw_excp: Whether to throw exception when error occurs in Tridiag internal function
+    @param[in] Diag Tensor #1
+    @param[in] Sub_diag Tensor #2
+    @param[in] is_V: if calculate the eigen value.
+    @param[in] k: Return k lowest eigen vector if is_V=True
+    @param[in] throw_excp: Whether to throw exception when error occurs in Tridiag internal function
     @return
         [vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor is
     eigenvector of shape [k,L].
@@ -2103,18 +2103,31 @@ namespace cytnx {
     //===========================================
     /**
     @brief perform matrix exponential for Hermitian matrix
-    @param in input Tensor, should be Hermitian
-    @param a rescale factor
-    @param b bias
+    @details This function perform matrix exponential for Hermitian matrix, That is,
+    \f[
+        O = \exp{(aM + b)}
+    \f]
+    @param[in] in input Tensor, should be Hermitian
+    @param[in] a rescale factor
+    @param[in] b bias
     @return
         [Tensor]
-
-    description:
-        perform matrix exponential with \f$O = \exp{aM + b}\f$.
+    @pre the \p in should be a Hermitian matrix.
+    @warning If \p in is not a Hermitian matrix, the result will be undefined.
 
     */
     template <typename T>
     Tensor ExpH(const Tensor &in, const T &a, const T &b = 0);
+    /**
+     * @brief perform matrix exponential for Hermitian matrix
+     * @details This function perform matrix exponential for Hermitian matrix, That is,
+     * \f[
+     *    O = \exp{M}
+     * \f]
+     *@pre the \p in should be a Hermitian matrix.
+     *@warning If \p in is not a Hermitian matrix, the result will be undefined.
+     * @see ExpH(const Tensor &in, const T &a, const T &b = 0)
+    */
     Tensor ExpH(const Tensor &in);
 
     // ExpM:
@@ -2123,11 +2136,12 @@ namespace cytnx {
     @brief perform matrix exponential for generic matrix
     @details This function perform matrix exponential for generic matrix, That is,
     \f[
-        O = \exp{aM + b}
+        O = \exp{(aM + b)}
     \f]
     @param[in] in input Tensor, should be a square rank-2.
     @param[in] a rescale factor
     @param[in] b bias
+    @pre the \p in should be a square matrix.
     @return [Tensor]
     */
     template <typename T>
@@ -2141,6 +2155,7 @@ namespace cytnx {
      * \f]
      * @param[in] in input Tensor, should be a square rank-2.
      * @return [Tensor]
+     * @see ExpM(const Tensor &in, const T &a, const T &b = 0)
      */
     Tensor ExpM(const Tensor &in);
 
@@ -2500,6 +2515,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of addition.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator+(const Tensor &Lt, const Tensor &Rt);
@@ -2536,6 +2552,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of subtraction.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator-(const Tensor &Lt, const Tensor &Rt);
@@ -2572,6 +2589,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of multiplication.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator*(const Tensor &Lt, const Tensor &Rt);
@@ -2609,7 +2627,9 @@ namespace cytnx {
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of division.
    * @see linalg::Div(const Tensor &Lt, const Tensor &Rt)
-   * @pre The divisor cannot be zero.
+   * @pre 
+   * 1. The divisor cannot be zero.
+   * 2. \p Lt and \p Rt must have the same shape.
    */
   Tensor operator/(const Tensor &Lt, const Tensor &Rt);
 
@@ -2647,6 +2667,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of mode.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mod(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator%(const Tensor &Lt, const Tensor &Rt);
@@ -2683,7 +2704,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of comparison.
-   * @see linalg::Equal(const Tensor &Lt, const Tensor &Rt)
+   * @see linalg::Cpr(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator==(const Tensor &Lt, const Tensor &Rt);
 
@@ -2694,7 +2715,7 @@ namespace cytnx {
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of comparison.
-   * @see linalg::Equal(const T &lc, const Tensor &Rt)
+   * @see linalg::Cpr(const T &lc, const Tensor &Rt)
    */
   template <class T>
   Tensor operator==(const T &lc, const Tensor &Rt);
@@ -2706,7 +2727,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] rc Right template type.
    * @return [Tensor] the result of comparison.
-   * @see linalg::Equal(const Tensor &Lt, const T &rc)
+   * @see linalg::Cpr(const Tensor &Lt, const T &rc)
    */
   template <class T>
   Tensor operator==(const Tensor &Lt, const T &rc);
