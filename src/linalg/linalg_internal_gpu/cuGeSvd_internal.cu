@@ -71,9 +71,11 @@ namespace cytnx {
                                          (cytnx_double *)S->Mem, (cuDoubleComplex *)UMem, ldu,
                                          (cuDoubleComplex *)vTMem, ldvT, work, lwork, rwork,
                                          devinfo));
-        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        if (U->dtype != Type.Void)
+          U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         // linalg_internal::cuConj_inplace_internal_cd(U,M*min);
-        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
+        if (vT->dtype != Type.Void)
+          vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cd(vT, N * min);
       }
       // get info
@@ -157,9 +159,11 @@ namespace cytnx {
         checkCudaErrors(cusolverDnCgesvd(
           cusolverH, jobu, jobv, M, N, (cuFloatComplex *)Mij, ldA, (cytnx_float *)S->Mem,
           (cuFloatComplex *)UMem, ldu, (cuFloatComplex *)vTMem, ldvT, work, lwork, rwork, devinfo));
-        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        if (U->dtype != Type.Void)
+          U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         // linalg_internal::cuConj_inplace_internal_cf(U,M*min);
-        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
+        if (vT->dtype != Type.Void)
+          vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cf(vT, N * min);
       }
 
@@ -243,8 +247,10 @@ namespace cytnx {
         cusolverDnDgesvd(cusolverH, jobu, jobv, M, N, (cytnx_double *)Mij, ldA,
                          (cytnx_double *)S->Mem, (cytnx_double *)UMem, ldu, (cytnx_double *)vTMem,
                          ldvT, work, lwork, rwork, devinfo);
-        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
+        if (U->dtype != Type.Void)
+          U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        if (vT->dtype != Type.Void)
+          vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
       }
 
       // get info
@@ -328,8 +334,10 @@ namespace cytnx {
         checkCudaErrors(cusolverDnSgesvd(cusolverH, jobu, jobv, M, N, (cytnx_float *)Mij, ldA,
                                          (cytnx_float *)S->Mem, (cytnx_float *)UMem, ldu,
                                          (cytnx_float *)vTMem, ldvT, work, lwork, rwork, devinfo));
-        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-        vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
+        if (U->dtype != Type.Void)
+          U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        if (vT->dtype != Type.Void)
+          vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
       }
 
       // get info
