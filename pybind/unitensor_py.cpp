@@ -170,8 +170,10 @@ void unitensor_binding(py::module &m) {
                         },py::arg("new_labels"))
 
 
-    .def("c_set_rowrank", &UniTensor::set_rowrank, py::arg("new_rowrank"))
-   
+    .def("c_set_rowrank_", &UniTensor::set_rowrank_, py::arg("new_rowrank"))
+
+    .def("set_rowrank", &UniTensor::set_rowrank, py::arg("new_rowrank"))
+
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         return self.relabels(new_labels);
                     }, py::arg("new_labels"))
@@ -197,7 +199,7 @@ void unitensor_binding(py::module &m) {
                         },py::arg("old_label"), py::arg("new_label"))
 
 
- 
+
     .def("rowrank", &UniTensor::rowrank)
     .def("Nblocks", &UniTensor::Nblocks)
     .def("rank", &UniTensor::rank)
@@ -210,9 +212,9 @@ void unitensor_binding(py::module &m) {
     .def("device_str", &UniTensor::device_str)
     .def("name", &UniTensor::name)
     .def("is_blockform", &UniTensor::is_blockform)
-    
+
     .def("get_index",&UniTensor::get_index)
-  
+
     .def("reshape",
          [](UniTensor &self, py::args args, py::kwargs kwargs) -> UniTensor {
            std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
@@ -455,23 +457,23 @@ void unitensor_binding(py::module &m) {
     .def("permute_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
 
                         self.permute_(mapper,rowrank);
-                         
+
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
-                        self.permute_(mapper,rowrank); 
+                        self.permute_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
 
                         return self.permute(mapper,rowrank);
-                         
+
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
-                        return self.permute(mapper,rowrank); 
+                        return self.permute(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
-    
+
 
 
 
@@ -573,10 +575,10 @@ void unitensor_binding(py::module &m) {
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("to_dense", &UniTensor::to_dense)
     .def("to_dense_", &UniTensor::to_dense_)
-    .def("combineBonds", 
+    .def("combineBonds",
          [](UniTensor &self, const std::vector<cytnx_int64> &indicators, const bool &force,
             const bool &by_label)
-         {  
+         {
             if(by_label){
                 cytnx_warning_msg(true,"[Deprecated notice] by_label option is going to be deprecated. using string will automatically recognized as labels.%s","\n");
                 self.combineBonds(indicators,force,by_label);
@@ -998,9 +1000,9 @@ void unitensor_binding(py::module &m) {
     .def("Conj", &UniTensor::Conj)
 
     .def("cTrace_", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b){
-                        
+
                             return self.Trace_(a,b);
-                        
+
                     },
                     py::arg("a")=0, py::arg("b")=1)
 
@@ -1011,9 +1013,9 @@ void unitensor_binding(py::module &m) {
 
 
     .def("Trace", [](UniTensor &self, const cytnx_int64 &a, const cytnx_int64 &b){
-                   
+
                         return self.Trace(a,b);
-                    
+
                  },
                  py::arg("a")=0, py::arg("b")=1)
 
@@ -1034,25 +1036,25 @@ void unitensor_binding(py::module &m) {
     .def("truncate",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim){
 
                          return self.truncate(bond_idx, dim);
-                        
+
                     },
                     py::arg("bond_idx"), py::arg("dim"))
     .def("truncate",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
                         return self.truncate(label, dim);
                     },
-                    py::arg("label"), py::arg("dim"))  
+                    py::arg("label"), py::arg("dim"))
 
     .def("ctruncate_",[](UniTensor &self, const cytnx_int64 &bond_idx, const cytnx_uint64 &dim){
-                       
+
                             return self.truncate_(bond_idx, dim);
-                        
+
                     },
                     py::arg("bond_idx"), py::arg("dim"))
 
     .def("ctruncate_",[](UniTensor &self, const std::string &label, const cytnx_uint64 &dim){
                         return self.truncate(label, dim);
                     },
-                    py::arg("label"), py::arg("dim"))  
+                    py::arg("label"), py::arg("dim"))
   ;//end of object line
 
   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,

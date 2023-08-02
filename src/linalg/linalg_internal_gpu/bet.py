@@ -18,5 +18,3 @@ for line in lines:
 
 
 fo.close()
-
-

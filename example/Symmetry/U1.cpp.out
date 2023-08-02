@@ -1,13 +1,12 @@
-Dim = 4 |type: KET>     
+Dim = 4 |type: KET>
  U1::  +0 -4 -2 +3
 
-Dim = 4 |type: KET>     
+Dim = 4 |type: KET>
  U1::  +0 -4 -2 +3
 
 1
-Dim = 5 |type: KET>     
+Dim = 5 |type: KET>
  U1::  -1 +1 +2 -2 +0
 
-Dim = 20 |type: KET>     
+Dim = 20 |type: KET>
  U1::  -1 +1 +2 -2 +0 -5 -3 -2 -6 -4 -3 -1 +0 -4 -2 +2 +4 +5 +1 +3
-

@@ -18,4 +18,3 @@ def S_mvleft(self):
 def S_mvright(self):
     self.c_S_mvright();
     return self
-

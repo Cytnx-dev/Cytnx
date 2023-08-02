@@ -2,8 +2,10 @@
 #include "linalg_internal_interface.hpp"
 #include <iostream>
 #include "Tensor.hpp"
+#include "UniTensor.hpp"
 
 namespace cytnx {
+
   namespace linalg {
     Tensor Conj(const Tensor &Tin) {
       // cytnx_error_msg(Tin.shape().size() != 2,"[Inv] error, Inv can only operate on rank-2
@@ -37,6 +39,8 @@ namespace cytnx {
 #endif
       }
     }
+
+    UniTensor Conj(const UniTensor &Tin) { return Tin.Conj(); }
 
   }  // namespace linalg
 }  // namespace cytnx

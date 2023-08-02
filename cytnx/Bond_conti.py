@@ -25,4 +25,3 @@ def group_duplicates(self):
     mapper = []
     out = self.c_group_duplicates_refarg(mapper);
     return out, mapper;
-

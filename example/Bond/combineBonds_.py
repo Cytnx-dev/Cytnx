@@ -10,7 +10,7 @@ bd_c = Bond(5,BD_KET);
 bd_d = Bond(2,BD_KET);
 print( bd_a )
 print( bd_b )
-print( bd_c )   
+print( bd_c )
 print( bd_d )
 
 bd_a.combineBonds_([bd_b,bd_c,bd_d]);
@@ -22,7 +22,7 @@ bd_sym_a = Bond(BD_BRA,[Qs(0,1)>>1,
                         Qs(-4,1)>>1],
                           [Symmetry.U1(),
                            Symmetry.Zn(2)]);
-                            
+
 bd_sym_b = Bond(BD_BRA,[Qs(0 ,0)>>1,
                         Qs(2 ,1)>>1,
                         Qs(-1,1)>>1,

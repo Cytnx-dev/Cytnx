@@ -7,7 +7,7 @@ import numpy as np
 import cytnx
 from cytnx import BD_IN, BD_OUT
 
-#Example of 1D Ising model 
+#Example of 1D Ising model
 ## iTEBD
 ##-------------------------------------
 
@@ -28,7 +28,7 @@ TFterm = cytnx.linalg.Kron(Sx,I) + cytnx.linalg.Kron(I,Sx)
 ZZterm = cytnx.linalg.Kron(Sz,Sz)
 
 
-H = Hx*TFterm + J*ZZterm 
+H = Hx*TFterm + J*ZZterm
 del TFterm, ZZterm
 
 eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
@@ -47,16 +47,16 @@ H.print_diagram()
 
 ## Create MPS, with bond tagged with direction in/out(ket/bra):
 #     ^             ^
-#     |             |       
+#     |             |
 #  ->-A-> ->la->  ->B-> ->lb->
 #
 A = cytnx.UniTensor([cytnx.Bond(chi,BD_IN),
                      cytnx.Bond(2  ,BD_OUT),
-                     cytnx.Bond(chi,BD_OUT)],labels=['a','0','b']); 
+                     cytnx.Bond(chi,BD_OUT)],labels=['a','0','b']);
 B = cytnx.UniTensor(A.bonds(),rowrank=1,labels=['c','1','d']);
-                                
-cytnx.random.Make_normal(B.get_block_(),0,0.2); 
-cytnx.random.Make_normal(A.get_block_(),0,0.2); 
+
+cytnx.random.Make_normal(B.get_block_(),0,0.2);
+cytnx.random.Make_normal(A.get_block_(),0,0.2);
 A.print_diagram()
 B.print_diagram()
 #print(A)
@@ -89,8 +89,8 @@ for i in range(10000):
 
     ## X =
     #           (0)  (1)
-    #            ^    ^     
-    #  (d) ->lb-A-la-B-lb-> (e) 
+    #            ^    ^
+    #  (d) ->lb-A-la-B-lb-> (e)
     #
     #X.print_diagram()
 
@@ -105,7 +105,7 @@ for i in range(10000):
     XH.set_labels(['d','e','0','1'])
     XHX = cytnx.Contract(Xt,XH).item() ## rank-0
     E = XHX/XNorm
-    
+
     ## check if converged.
     if(np.abs(E-Elast) < CvgCrit):
         print("[Converged!]")
@@ -117,9 +117,9 @@ for i in range(10000):
     XeH = cytnx.Contract(X,eH)
     XeH.permute_(['d','2','3','e'])
     #XeH.print_diagram()
-    
+
     ## Do Svd + truncate
-    ## 
+    ##
     #        (2)   (3)                   (2)                                                (3)
     #         ^     ^          =>         ^         +   (_aux_L)->s->(_aux_R)  +             ^
     #  (d) ->= XeH =-> (e)          (d)->U->(_aux_L)                               (_aux_R)->Vt->(e)
@@ -132,16 +132,16 @@ for i in range(10000):
     #A.print_diagram()
     #la.print_diagram()
     #B.print_diagram()
-         
 
-    # de-contract the lb tensor , so it returns to 
-    #             
-    #               ^     ^     
+
+    # de-contract the lb tensor , so it returns to
+    #
+    #               ^     ^
     #      (d) ->lb-A'-la-B'-lb-> (e)
     #
-    # again, but A' and B' are updated 
+    # again, but A' and B' are updated
     lb_inv = 1./lb
-    lb_inv.set_labels(['e','d'])    
+    lb_inv.set_labels(['e','d'])
 
     A = cytnx.Contract(lb_inv,A)
     B = cytnx.Contract(B,lb_inv)
@@ -152,7 +152,3 @@ for i in range(10000):
     # translation symmetry, exchange A and B site
     A,B = B,A
     la,lb = lb,la
-
-
-        
-

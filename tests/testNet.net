@@ -4,10 +4,5 @@ B  : 3 , 5 , 7; 1
   C: 4 , 5 , 7, -1;
 # this is comment line 2
 TOUT: ;-2, 1 #comment at end
-    
+
 ORDER : B,C,A
-
-
-
-
-

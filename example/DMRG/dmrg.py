@@ -2,7 +2,7 @@ import cytnx as cy
 from cytnx import tn_algo
 
 def run_DMRG(mpo, mps, Nsweeps, ortho_mps=[], weight=40):
-    
+
     model = tn_algo.DMRG(mpo, mps, ortho_mps, weight);
     model.initialize();
     for xi in range(Nsweeps):
@@ -10,7 +10,7 @@ def run_DMRG(mpo, mps, Nsweeps, ortho_mps=[], weight=40):
         print(E);
 
     return E;
-    
+
 
 Nsites = 10;
 chi = 16;

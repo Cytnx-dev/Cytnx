@@ -18,7 +18,7 @@ class TensorIterator:
 
     def __next__(self):
         if(self._index < len(self._tn)):
-            
+
             result =  self._tn[self._index]
             self._index +=1;
             return result
@@ -118,4 +118,3 @@ def Pow_(self,p):
 def __ipow__(self,right):
     self.c__ipow__(right);
     return self
-

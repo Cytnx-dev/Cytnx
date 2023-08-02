@@ -29,7 +29,7 @@ for texe in Tensor_exes:
     print("================")
     output_name = texe + ".out"
     os.system("python %s > %s"%(os.path.join("./Tensor",texe),os.path.join("./Tensor",output_name)))
-    
+
 ## generate output
 for texe in Storage_exes:
     print(texe)
@@ -85,7 +85,7 @@ for texe in Storage_exes:
     output_name = (texe.split(".e")[0]).split("Storage_")[-1] + ".cpp.out"
     os.system("./%s > Storage/%s"%(texe,output_name))
     print(texe)
-    print("================") 
+    print("================")
     os.system("cat Storage/%s"%(output_name))
-    print("================") 
+    print("================")
 """

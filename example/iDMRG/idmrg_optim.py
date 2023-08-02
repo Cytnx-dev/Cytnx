@@ -2,24 +2,24 @@ import cytnx
 
 """
 Reference: https://arxiv.org/abs/0804.2509v1
-Author: Kai-Hsin Wu 
+Author: Kai-Hsin Wu
 """
 
 
 class Projector(cytnx.LinOp):
-   
-    
+
+
 
     def __init__(self,L,M1,M2,R,psi_dim,psi_dtype,psi_device):
         cytnx.LinOp.__init__(self,"mv",psi_dim,psi_dtype,psi_device)
-        
+
         self.anet = cytnx.Network("projector.net")
         self.anet.PutUniTensor("M2",M2)
         self.anet.PutUniTensors(["L","M1","R"],[L,M1,R])
-        self.psi_shape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]      
-  
+        self.psi_shape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]
+
     def matvec(self,psi):
-        
+
         psi_p = cytnx.UniTensor(psi.clone(),rowrank=0)  ## clone here
         psi_p.reshape_(*self.psi_shape)
 
@@ -40,7 +40,7 @@ def eig_Lanczos(psivec, functArgs, Cvgcrit=1.0e-15,maxit=100000):
     gs_energy ,psivec = cytnx.linalg.Lanczos(Hop,Tin=psivec,method='Gnd',CvgCrit=Cvgcrit,Maxiter=maxit)
 
     return psivec, gs_energy.item()
-    
+
 
 
 ##### Set bond dimensions and simulation options
@@ -48,9 +48,9 @@ chi = 64;
 Niter = 100; # number of iteration of DMRG
 maxit = 100000 # iterations of Lanczos method
 
-## Initialiaze MPO 
+## Initialiaze MPO
 ##>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-## Here we consider Hamiltonian with 
+## Here we consider Hamiltonian with
 #
 #    [J]*SzSz + 2[Hx]*Sx
 #
@@ -101,7 +101,7 @@ R = R0
 #  2) use Lanczos to get the (local) ground state, the projector is in shape
 #
 #        --         --
-#        |    |  |   |   
+#        |    |  |   |
 #       L[0]--M--M--R[0]
 #        |    |  |   |
 #        --         --
@@ -111,7 +111,7 @@ R = R0
 #
 #    --A[0]--s[0]--B[0]--
 #       |           |
-#    
+#
 psi = cytnx.UniTensor(cytnx.random.normal([1,d,d,1],1,2),rowrank=2)
 shp = psi.shape()
 psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
@@ -149,7 +149,7 @@ R = anet.Launch(optimal=True)
 #  2) use Lanczos to get the (local) ground state, the projector is in shape
 #
 #        --         --
-#        |    |  |   |   
+#        |    |  |   |
 #       L[1]--M--M--R[1]
 #        |    |  |   |
 #        --         --
@@ -193,17 +193,17 @@ for i in range(Niter):
 
     ## rotate left
     #  1) Absorb s into A and put it in shape
-    #            -------------      
-    #           /             \     
+    #            -------------
+    #           /             \
     #  virt ____|             |____ phys
-    #           |             |     
+    #           |             |
     #           |             |____ virt
-    #           \             /     
-    #            -------------   
+    #           \             /
+    #            -------------
     #  2) Do Svd, and get the growing n+1 right site, and the right singular values sR
     #     [Note] we don't need U!!
     #
-    #     --A--s  --B--    =>      --sR--A'  --B--    
+    #     --A--s  --B--    =>      --sR--A'  --B--
     #       |       |                    |     |
     #
     A.set_rowrank(1)
@@ -214,17 +214,17 @@ for i in range(Niter):
 
     ## rotate right
     #  1) Absorb s into B and put it in shape
-    #            -------------      
-    #           /             \     
-    #  virt ____|             |____ virt  
-    #           |             |     
-    #  phys ____|             |        
-    #           \             /     
-    #            -------------    
+    #            -------------
+    #           /             \
+    #  virt ____|             |____ virt
+    #           |             |
+    #  phys ____|             |
+    #           \             /
+    #            -------------
     #  2) Do Svd, and get the growing n+1 left site, and the left singular values sL
     #     [Note] we don't need vT!!
     #
-    #     --A--  s--B--    =>      --A--   B'--sL    
+    #     --A--  s--B--    =>      --A--   B'--sL
     #       |       |                |     |
     #
     B.set_rowrank(2)
@@ -235,13 +235,13 @@ for i in range(Niter):
     #
     #  before:
     #    env-- B'--sL    sR--A' --env
-    #          |             |    
+    #          |             |
     #
     #  after change name:
     #
     #    env-- A--sL     sR--B  --env
     #          |             |
-    # 
+    #
     A,B = B,A
 
 
@@ -250,11 +250,11 @@ for i in range(Niter):
     #
     #        --A--[sL--sb--sR]--B--
     #          |                |
-    #                 
+    #
     #                  to
     #   psi:
-    #        --A--[s2]--B--         
-    #          |        |       
+    #        --A--[s2]--B--
+    #          |        |
     #
     sR.set_label(0,'1')
     sL.set_label(1,'0')
@@ -271,7 +271,7 @@ for i in range(Niter):
     #  again use Lanczos to get the (local) ground state, the projector is in shape
     #
     #        --         --
-    #        |    |  |   |   
+    #        |    |  |   |
     #       L[n]--M--M--R[n]
     #        |    |  |   |
     #        --         --
@@ -295,12 +295,12 @@ for i in range(Niter):
     else:
         ss = abs(cytnx.linalg.Dot(s2.get_block_(),s1.get_block_()).item())
         print("step:%d, diff:%11.11f"%(i,1-ss))
-    if(1-ss<1.0e-10): 
+    if(1-ss<1.0e-10):
         print("[converge!!]")
         break;
 
 
-    ## absorb into L,R enviroment, and start next iteration. 
+    ## absorb into L,R enviroment, and start next iteration.
     #
     #  L[n+1]:            R[n+1]:
     #      ----A[n]--       --B[n]----
@@ -309,7 +309,7 @@ for i in range(Niter):
     #      |    |              |     |
     #      ----A*[n]-       -B*[n]----
     #
-    # 
+    #
     anet = cytnx.Network("L_AMAH.net")
     anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
     L = anet.Launch(optimal=True)
@@ -334,5 +334,3 @@ anet = cytnx.Network("Measure.net")
 anet.PutUniTensors(["psi","psi_conj","M"],[psi,psi,H])
 E = anet.Launch(optimal=True).item()
 print("ground state E",E)
-
-

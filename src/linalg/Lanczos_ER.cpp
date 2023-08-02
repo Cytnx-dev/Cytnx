@@ -78,7 +78,7 @@ namespace cytnx {
           /// construct a random vector for next iteration:
           while (1) {
             bool is_orth = true;
-            cytnx::random::Make_normal(buffer[0], 0., 1.0);
+            cytnx::random::normal_(buffer[0], 0., 1.0);
             buffer[0] /= buffer[0].Norm().item();
             for (cytnx_uint32 ig = 0; ig < converged_ev.size(); ig++) {
               Tensor Res = Vectordot(converged_ev[ig], buffer[0], true);  // reuse variable here.
@@ -186,7 +186,7 @@ namespace cytnx {
                     ///construct a random vector for next iteration:
                     while(1){
                         bool is_orth=true;
-                        cytnx::random::Make_normal(buffer[0],0.,1.0);
+                        cytnx::random::normal_(buffer[0],0.,1.0);
                         buffer[0]/=buffer[0].Norm().item();
                         for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                             Elast = Vectordot(buffer[0],converged_ev[ig]).item<cytnx_double>();
@@ -286,7 +286,7 @@ namespace cytnx {
                     ///construct a random vector for next iteration:
                     while(1){
                         bool is_orth=true;
-                        cytnx::random::Make_normal(buffer[0],0.,1.0);
+                        cytnx::random::normal_(buffer[0],0.,1.0);
                         buffer[0]/=buffer[0].Norm().item();
                         for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                             Elast = Vectordot(buffer[0],converged_ev[ig]).item<cytnx_float>();
@@ -385,7 +385,7 @@ namespace cytnx {
                     ///construct a random vector for next iteration:
                     while(1){
                         bool is_orth=true;
-                        cytnx::random::Make_normal(buffer[0],0.,1.0);
+                        cytnx::random::normal_(buffer[0],0.,1.0);
                         buffer[0]/=buffer[0].Norm().item();
                         for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                             Tensor Res = Vectordot(converged_ev[ig],buffer[0],true); //reuse
@@ -484,7 +484,7 @@ namespace cytnx {
                     ///construct a random vector for next iteration:
                     while(1){
                         bool is_orth=true;
-                        cytnx::random::Make_normal(buffer[0],0.,1.0);
+                        cytnx::random::normal_(buffer[0],0.,1.0);
                         buffer[0]/=buffer[0].Norm().item();
                         for(cytnx_uint32 ig=0;ig<converged_ev.size();ig++){
                             Tensor Res = Vectordot(converged_ev[ig],buffer[0],true); //reuse

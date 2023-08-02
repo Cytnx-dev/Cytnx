@@ -9,4 +9,3 @@ print(A)
 
 B = A[2,:,2:5:1]
 print(B)
-

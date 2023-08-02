@@ -357,8 +357,19 @@ void linalg_binding(py::module &m) {
   m_linalg.def("InvM_", &cytnx::linalg::InvM_, py::arg("Tio"));
   m_linalg.def("Inv_", &cytnx::linalg::Inv_, py::arg("Tio"), py::arg("clip"));
   m_linalg.def("Inv", &cytnx::linalg::Inv, py::arg("Tio"), py::arg("clip"));
-  m_linalg.def("Conj", &cytnx::linalg::Conj, py::arg("Tin"));
-  m_linalg.def("Conj_", &cytnx::linalg::Conj_, py::arg("Tio"));
+
+  m_linalg.def(
+    "Conj", [](const cytnx::Tensor &Tin) { return cytnx::linalg::Conj(Tin); }, py::arg("Tin"));
+
+  m_linalg.def(
+    "Conj_", [](cytnx::Tensor &Tin) { cytnx::linalg::Conj_(Tin); }, py::arg("Tin"));
+
+  m_linalg.def(
+    "Conj", [](const cytnx::UniTensor &Tin) { return cytnx::linalg::Conj(Tin); }, py::arg("Tin"));
+
+  m_linalg.def(
+    "Conj_", [](cytnx::UniTensor &Tin) { cytnx::linalg::Conj_(Tin); }, py::arg("Tin"));
+
   m_linalg.def("Matmul", &cytnx::linalg::Matmul, py::arg("T1"), py::arg("T2"));
   m_linalg.def("Matmul_dg", &cytnx::linalg::Matmul_dg, py::arg("T1"), py::arg("T2"));
   m_linalg.def("Diag", &cytnx::linalg::Diag, py::arg("Tin"));

@@ -8,7 +8,7 @@ class StorageIterator:
 
     def __next__(self):
         if(self._index < len(self._sd)):
-            
+
             result =  self._sd[self._index]
             self._index +=1;
             return result
@@ -63,5 +63,3 @@ def pylist(self):
         return self.c_pylist_bool();
     else:
         raise ValueError("[ERROR] Storage.pylist: invalid Storage dtype!");
-
-

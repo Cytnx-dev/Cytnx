@@ -1,4 +1,4 @@
-import numpy as np 
+import numpy as np
 import cytnx as cy
 
 ##
@@ -12,7 +12,7 @@ def inv_e(A,clip):
         if(b[i].item()<clip):
             b[i] = 0;
         else:
-            b[i] = 1./b[i] 
+            b[i] = 1./b[i]
 
     return out
 
@@ -39,7 +39,7 @@ maxit = 1000
 Hup = H
 Hdown = Hup.clone()
 
-## Hamiltonain 
+## Hamiltonain
 Hu = cy.UniTensor(Hup,rowrank=3)
 Hd = cy.UniTensor(Hdown,rowrank=3)
 
@@ -66,12 +66,12 @@ for i in range(maxit):
 
     ## first do up >>>>>>>>>>>>>>>>>>
     Nup = cy.Network("up.net")
-    Nup.PutUniTensors(["A","B","C","L2A","L2B","L2C","eHu","s1"],[A,B,C,Ls2[0],Ls2[1],Ls2[2],eHu,s1]) 
+    Nup.PutUniTensors(["A","B","C","L2A","L2B","L2C","eHu","s1"],[A,B,C,Ls2[0],Ls2[1],Ls2[2],eHu,s1])
     T = Nup.Launch(True)
     Nrm = cy.Contract(T,T).item();
     T/=np.sqrt(Nrm); #normalize for numerical stability.
     A,B,C,s1,Ls1[0],Ls1[1],Ls1[2] = cy.linalg.Hosvd(T,[2,2,2],True,True,[D,D,D])
-    
+
     ## de-contract Ls'
     Ls2[0].set_labels([-10,A.labels()[0]]); Ls2[0] = 1./Ls2[0];
     Ls2[1].set_labels([-11,B.labels()[0]]); Ls2[1] = 1./Ls2[1];
@@ -86,9 +86,9 @@ for i in range(maxit):
     ## calculate up energy:
     NE = cy.Network("measure.net")
     NE.PutUniTensors(["T","Tt","Op"],[T,T,Hu]);
-    Eup = NE.Launch(True).item()/cy.Contract(T,T).item();    
+    Eup = NE.Launch(True).item()/cy.Contract(T,T).item();
 
-    ## then do down>>>>>>>>>>>>>> 
+    ## then do down>>>>>>>>>>>>>>
     Ndown = cy.Network("down.net")
     Ndown.PutUniTensors(["A","B","C","L1A","L1B","L1C","eHd","s2"],[A,B,C,Ls1[0],Ls1[1],Ls1[2],eHd,s2])
     T = Ndown.Launch(True)
@@ -109,7 +109,7 @@ for i in range(maxit):
     T.set_rowrank(0)
     NE.PutUniTensors(["T","Tt","Op"],[T,T,Hd]);
     Edown = NE.Launch(True).item()/cy.Contract(T,T).item();
-   
+
     ##permute to the current order of bond for next iteration:
     A.permute_([2,1,0]);
     B.permute_([2,1,0]);
@@ -120,7 +120,7 @@ for i in range(maxit):
         cov = True;
         break;
 
-    Eup_old = Eup;  
+    Eup_old = Eup;
     Edown_old = Edown;
 
 
@@ -128,13 +128,3 @@ if cov:
     print("[converge]")
 else:
     print("[not-converge]")
-
-
-
-
-
-
-
-
-
-

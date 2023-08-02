@@ -13,5 +13,3 @@ print(B.shape())
 print(B.is_contiguous()) #false
 B.contiguous_()
 print(B.is_contiguous()) #true
-    
-
