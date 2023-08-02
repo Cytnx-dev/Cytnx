@@ -20,6 +20,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the addtion.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -55,6 +56,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the subtraction.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -90,6 +92,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the multiplication.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -125,6 +128,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the division.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Div(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -160,6 +164,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the modulo.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mod(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
