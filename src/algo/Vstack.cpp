@@ -84,9 +84,14 @@ namespace cytnx {
         algo_internal::vConcate_internal((char *)out.storage().data(), rawPtr, Ds,
                                          Type.typeSize(dtype_id));
       } else {
-        // cytnx_error_msg(true, "[ERROR][Vstack] currently for GPU is under developing.%s", "\n");
+#ifdef UNI_GPU
+        checkCudaErrors(cudaSetDevice(device_id));
         algo_internal::cuvConcate_internal((char *)out.storage().data(), rawPtr, Ds,
                                            Type.typeSize(dtype_id));
+#else
+        cytnx_error_msg(
+          true, "[ERROR][Vstack] fatal error, the tensor is on GPU without CUDA support.%s", "\n");
+#endif
       }
 
       return out;
