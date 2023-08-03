@@ -14,8 +14,6 @@
 
 #include "utils/cutensornet.hpp"
 
-
-
 namespace cytnx {
   /// @cond
   struct __ntwk {
@@ -54,9 +52,9 @@ namespace cytnx {
     std::vector<std::string> names;
     std::map<std::string, cytnx_uint64> name2pos;
 
-    #ifdef UNI_CUQUANTUM
+#ifdef UNI_CUQUANTUM
     cutensornet cutn;
-    #endif
+#endif
 
     friend class FermionNetwork;
     friend class RegularNetwork;

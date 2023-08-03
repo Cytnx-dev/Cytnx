@@ -151,7 +151,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF "
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DRUN_TESTS=ON "
+FLAG="${FLAG} -DRUN_TESTS=OFF "
 #-----------------------------------
 
 
@@ -179,9 +179,9 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF "
 
 echo ${FLAG}
 # rm -rf build
-mkdir build
+# mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 make install
-ctest
+# ctest

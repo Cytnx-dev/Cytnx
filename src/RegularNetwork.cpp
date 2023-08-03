@@ -6,7 +6,6 @@
 #include <algorithm>
 #include <iostream>
 
-
 #include "utils/utils_internal_interface.hpp"
 #include "Generator.hpp"
 using namespace std;
@@ -468,6 +467,9 @@ namespace cytnx {
       cout << endl;
       cytnx_error_msg(true, "%s", "\n");
     }
+
+    // cutensornet
+    this->cutn.parseLabels(this->TOUT_labels, this->label_arr);
   }
 
   void RegularNetwork::Fromfile(const std::string &fname) {
@@ -543,6 +545,10 @@ namespace cytnx {
     //         them.\n",this->names[i].c_str(),this->names[idx].c_str());
 
     this->tensors[idx] = utensor;
+
+#ifdef UNI_CUQUANTUM
+    this->cutn.updateTensor(idx, this->tensors[idx]);
+#endif
   }
 
   void RegularNetwork::Savefile(const std::string &fname) {
@@ -716,13 +722,15 @@ namespace cytnx {
     }
 
     int tn_device = this->tensors[0].device();
-    for(int i = 0; i<this->tensors.size();i++){
-            cytnx_error_msg(this->tensors[i].device() != tn_device,
-            "[ERROR][Launch][RegularNetwork] cannot launch with tensors on different devices, tensor at [0] is on device %d while tensor at [%d] in on device %d. %s",
-            tn_device,i,this->tensors[i].device(),"\n");
+    for (int i = 0; i < this->tensors.size(); i++) {
+      cytnx_error_msg(
+        this->tensors[i].device() != tn_device,
+        "[ERROR][Launch][RegularNetwork] cannot launch with tensors on different devices, tensor "
+        "at [0] is on device %d while tensor at [%d] in on device %d. %s",
+        tn_device, i, this->tensors[i].device(), "\n");
     }
 
-    if (tn_device == -1){
+    if (tn_device == -1) {
       // cpu workflow
 
       // 1.5 contraction order:
@@ -781,7 +789,8 @@ namespace cytnx {
             // root->left->utensor.print_diagram(1);
             // root->right->utensor.print_diagram(1);
             root->utensor = Contract(root->left->utensor, root->right->utensor);
-            // cout << "Contract:" << root->left->utensor.name() << " " << root->right->utensor.name()
+            // cout << "Contract:" << root->left->utensor.name() << " " <<
+            // root->right->utensor.name()
             // << endl; root->left->utensor.print_diagram(); root->right->utensor.print_diagram();
             // root->utensor.print_diagram(); root->utensor.set_name(root->left->utensor.name() +
             // root->right->utensor.name());
@@ -820,40 +829,40 @@ namespace cytnx {
       // UniTensor out;
       return out;
 
-    }else{
-
-      //gpu workflow
+    } else {
+// gpu workflow
+#ifdef UNI_CUQUANTUM
+      // Get out shape
       vector<cytnx_uint64> out_shape;
-      for(int i = 0; i<this->TOUT_labels.size(); i++){
-        for(int j = 0 ;j<this->label_arr.size(); j++){
+      for (int i = 0; i < this->TOUT_labels.size(); i++) {
+        for (int j = 0; j < this->label_arr.size(); j++) {
           vector<string>::iterator it;
           it = find(this->label_arr[j].begin(), this->label_arr[j].end(), TOUT_labels[i]);
-          if(it != this->label_arr[j].end()){
-              out_shape.push_back(this->tensors[j].shape()[distance(label_arr[j].begin(), it)]);
-              break;
+          if (it != this->label_arr[j].end()) {
+            out_shape.push_back(this->tensors[j].shape()[distance(label_arr[j].begin(), it)]);
+            break;
           }
         }
       }
 
-      UniTensor out = UniTensor(zeros(out_shape, Type.Double, Device.cpu).to(tn_device));
-      out.set_labels(this->TOUT_labels);
-      this->cutn.initialize(out, this->tensors,this->label_arr, true);
+      UniTensor out = UniTensor(zeros(out_shape, this->tensors[0].dtype(), tn_device));
+      this->cutn.updateOut(out);
       this->cutn.checkVersion();
       this->cutn.setDevice();
-      this->cutn.setType();
+      this->cutn.createStream();
+      this->cutn.createHandle();
       this->cutn.createNetworkDescriptor();
-      // this->cutn.getWorkspacelimit();
-      // this->cutn.findOptimalOrder();
-      // this->cutn.querySlices();    
-      // this->cutn.createWorkspaceDescriptor();
-      // this->cutn.initializePlan();
-      // this->cutn.autotune();
-      // this->cutn.executeContraction();
-      // cout<<out;
+      this->cutn.getWorkspacelimit();
+      this->cutn.findOptimalOrder();
+      this->cutn.createWorkspaceDescriptor();
+      this->cutn.initializePlan();
+      this->cutn.autotune();
+      this->cutn.executeContraction();
+      this->cutn.free();
+#endif
+
       return out;
-
     }
-
   }
 
   void RegularNetwork::construct(const std::vector<std::string> &alias,

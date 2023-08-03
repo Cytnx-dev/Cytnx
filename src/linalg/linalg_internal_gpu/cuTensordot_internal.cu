@@ -174,7 +174,7 @@ namespace cytnx {
                                        worksize, 0 /* stream */));
 
       /*************************/
-      
+
       cudaDeviceSynchronize();
 
       if (work) checkCudaErrors(cudaFree(work));
