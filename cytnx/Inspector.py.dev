@@ -8,17 +8,9 @@ def inspect_blocks(UTen):
 
     Nin = UTen.rowrank()
     Nout = UTen.rank() - UTen.rowrank()
-    
+
     Rectangle([0,0], height, width)
 
 
 
     plt.show()
-
-
-
-
-
-
-
-

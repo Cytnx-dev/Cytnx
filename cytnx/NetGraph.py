@@ -27,8 +27,3 @@ def Drawnet_notag(opt_name,tn_names, edges_info,dangling_infos,figsize=[6,5],eng
         g.edge(i[0],i[1])
 
     g.view()
-    
-
-
-
-

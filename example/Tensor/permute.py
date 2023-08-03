@@ -13,5 +13,3 @@ print(B.shape())
 print(B is A) #False
 
 print(B.same_data(A)) #True
-
-

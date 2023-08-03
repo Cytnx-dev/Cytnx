@@ -7,7 +7,7 @@ on:
 
 jobs:
   latest:
-    if: (github.event_name == 'schedule' && github.repository == 'kaihsin/Cytnx') || (github.event_name != 'schedule')
+    if: (github.event_name == 'schedule' && github.repository == 'Cytnx-dev/Cytnx') || (github.event_name != 'schedule')
     runs-on: ubuntu-latest
 
     defaults:
@@ -16,47 +16,56 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+
+    - uses: conda-incubator/setup-miniconda@v2
       with:
-        python-version: '3.10'
+        # Specify python version your environment will have. Remember to quote this, or
+        # YAML will think you want python 3.1 not 3.10
+        python-version: "3.10"
+        # This uses *miniforge*, rather than *minicond*. The primary difference is that
+        # the defaults channel is not enabled at all
+        miniforge-version: latest
+        # These properties enable the use of mamba, which is much faster and far less error
+        # prone than conda while being completely compatible with the conda CLI
+        use-mamba: true
+        mamba-version: "*"
 
     - name: Install dependencies
+      shell: bash -l {0}
       run: |
-        $CONDA/bin/conda config --add channels conda-forge
-        $CONDA/bin/conda install python=3.10 _openmp_mutex=*=*_llvm
-        $CONDA/bin/conda upgrade --all
-        $CONDA/bin/conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
+        mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
 
-    - name: Configure CMake
-      run: $CONDA/bin/cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/works/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
+        cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/works/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
 
     - name: Download Coverity Build Tool
+      shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
       run: |
-        wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=kaihsin%2FCytnx" -O cov-analysis-linux64.tar.gz
+        wget -q https://scan.coverity.com/download/cxx/linux64 --post-data "token=$TOKEN&project=Cytnx-dev%2FCytnx" -O cov-analysis-linux64.tar.gz
         mkdir cov-analysis-linux64
         tar xzf cov-analysis-linux64.tar.gz --strip 1 -C cov-analysis-linux64
       env:
         TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
 
     - name: Build with cov-build
+      shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
       run: |
         export PATH=`pwd`/cov-analysis-linux64/bin:$PATH
-        cov-build --dir cov-int $CONDA/bin/cmake --build . -j `nproc`
-    
+        cmake --version
+        cov-build --dir cov-int cmake --build . -j `nproc`
+
     - name: Submit the result to Coverity Scan
+      shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
       run: |
-        tar czvf cytnx.tgz cov-int 
+        tar czvf cytnx.tgz cov-int
         curl \
           --form token=$TOKEN \
           --form email=kaihsinwu@gmail.com \
           --form file=@cytnx.tgz \
-          --form version="v0.7.5" \
+          --form version="v0.9.x" \
           --form description="Cytnx" \
-          https://scan.coverity.com/builds?project=kaihsin%2FCytnx
+          https://scan.coverity.com/builds?project=Cytnx-dev%2FCytnx
       env:
         TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}

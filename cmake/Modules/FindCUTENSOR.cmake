@@ -10,7 +10,7 @@
 #   CUTENSOR_LIBRARIES           ... cutensor libraries
 #
 #   MAGMA_ROOT                this is required to set!
-#                                 
+#
 
 #If environment variable MAGMA_ROOT is specified, it has same effect as MAGMA_ROOT
 
@@ -25,7 +25,7 @@ else()
     message(FATAL_ERROR "Cannot find CUTENSOR_ROOT")
   endif()
 endif()
-  
+
 message(STATUS " cudaver: ${CUDA_VERSION_MAJOR}" )
 if((${CUDAToolkit_VERSION_MAJOR} LESS_EQUAL 10))
   set(CUTNLIB_DIR "lib/10.2")
@@ -56,4 +56,3 @@ find_library(
 set(CUTENSOR_LIBRARIES "${CUTENSOR_LIB};${CUTENSORMg_LIB}")
 message(STATUS "ok")
 set(CUTENSOR_FOUND TRUE)
-

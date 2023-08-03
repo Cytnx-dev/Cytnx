@@ -30,4 +30,3 @@ print(new_bd_sym_u1_c)
 
 new_bd_sym_all = new_bd_sym_u1_a.combineBond(new_bd_sym_u1_c)
 print(new_bd_sym_all)
-

@@ -2,14 +2,14 @@ import sys
 from pathlib import Path
 home = str(Path.home())
 sys.path.append(home + '/Cytnx_lib')
-import cytnx 
+import cytnx
 from  cytnx import linalg as cLA
 import numpy as np
 
 """
 References: https://arxiv.org/pdf/1201.1144.pdf
             https://journals.aps.org/prb/pdf/10.1103/PhysRevB.81.174411
-Author: Kai-Hsin Wu 
+Author: Kai-Hsin Wu
 """
 
 ## 2D Ising model:
@@ -20,13 +20,13 @@ Maxiter = 100
 ## init the local tensor:
 beta = 5
 W = cytnx.zeros([2,2])
-W[0,0] = W[1,0] = np.sqrt(np.cosh(beta)) 
-W[0,1] = np.sqrt(np.sinh(beta)) 
-W[1,1] = -np.sqrt(np.sinh(beta)) 
+W[0,0] = W[1,0] = np.sqrt(np.cosh(beta))
+W[0,1] = np.sqrt(np.sinh(beta))
+W[1,1] = -np.sqrt(np.sinh(beta))
 
-## Method-1 (faster): 
+## Method-1 (faster):
 T = cLA.Kron(cLA.Kron(W[0],W[0]),cLA.Kron(W[0],W[0]))+\
-    cLA.Kron(cLA.Kron(W[1],W[1]),cLA.Kron(W[1],W[1])) 
+    cLA.Kron(cLA.Kron(W[1],W[1]),cLA.Kron(W[1],W[1]))
 T.reshape_(2,2,2,2)
 
 ## Method-2 (slower in python):
@@ -40,11 +40,11 @@ T.reshape_(2,2,2,2)
 cT = cytnx.UniTensor(T,rowrank=2)
 
 
-## Let's start by normalize the block with it's local partition function 
+## Let's start by normalize the block with it's local partition function
 ## to avoid the blow-up of partition function:
 #
 #         1
-#         |  
+#         |
 #     0--cT--2
 #         |
 #         3
@@ -76,7 +76,7 @@ for i in range(Maxiter):
     ## Now, let's check the dimension growth onto a point where truncation is needed:
     if(cT.shape()[1]*cT.shape()[3]>chi):
         # * if combined bond dimension > chi then:
-        # 1) Do Hosvd get only U and D, with it's Ls matrices. 
+        # 1) Do Hosvd get only U and D, with it's Ls matrices.
         cT.permute_(['1','4','3','6','0','5'])
         U,D,Lu,Ld=cytnx.linalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
 
@@ -87,21 +87,21 @@ for i in range(Maxiter):
         ## truncate, and permute back to the original form:
         #              chi
         #               |
-        #              U/D 
+        #              U/D
         #             /   \
         #            |     |
         #           (d)   (d)                    (chi)
-        #            1     4                       1 
-        #            |     |                       | 
+        #            1     4                       1
+        #            |     |                       |
         #     (d) 0--[ cT  ]--5 (d)   =>   (d) 0--cT--2 (d)
         #            |     |                       |
         #            3     6                       3
         #           (d)   (d)                    (chi)
         #             \   /
         #              U/D
-        #               |  
+        #               |
         #              chi
-        # [Note] here "d" is used to indicate the original bond dimension of each rank, 
+        # [Note] here "d" is used to indicate the original bond dimension of each rank,
         #        in general, they could be different for each bond
         U.truncate_(2,chi);
 
@@ -114,17 +114,17 @@ for i in range(Maxiter):
         cT.permute_(['0','1','2','3'])
         cT.set_rowrank(2)
 
-    else: 
+    else:
         # * if combined bond dimension <= chi then we just combined the bond, and return it's original form
         #           (d)  (d)                    (dxd)
-        #            1    4                       1 
-        #            |    |                       | 
+        #            1    4                       1
+        #            |    |                       |
         #    (d) 0--[cT.cT2]--5 (d)   =>   (d)0--cT--2 (d)
         #            |    |                       |
         #            3    6                       3
         #           (d)  (d)                    (dxd)
         #
-        # [Note] here "d" is used to indicate the original bond dimension of each rank, 
+        # [Note] here "d" is used to indicate the original bond dimension of each rank,
         #        in general, they could be different for each bond
         cT.permute_(['0','1','4','5','3','6'])
         cT.contiguous_()
@@ -135,27 +135,27 @@ for i in range(Maxiter):
 
     ## UD:
     #
-    #         1           
-    #         |           
-    #     0--cT--2    
-    #         |           
-    #         3           
+    #         1
+    #         |
+    #     0--cT--2
+    #         |
+    #         3
     #
-    #         3           
-    #         |           
+    #         3
+    #         |
     #     6--cT2--4
-    #         |           
-    #         5           
+    #         |
+    #         5
     #
     #
     cT2 = cT.clone()
     cT2.set_labels(['6','3','4','5'])
     cT = cytnx.Contract(cT,cT2)
-    
+
     ## check the dimension growth onto a point where truncation is needed:
     if(cT.shape()[2]*cT.shape()[4]>chi):
         # * if combined bond dimension > chi then:
-        # 1) Do Hosvd get only L and R, with it's Ls matrices. 
+        # 1) Do Hosvd get only L and R, with it's Ls matrices.
         cT.permute_(['2','4','0','6','1','5'])
         L,R,Ll,Lr=cytnx.linalg.Hosvd(cT,[2,2],is_core=False,is_Ls=True)
 
@@ -165,18 +165,18 @@ for i in range(Maxiter):
 
         ## truncate, and permute back to the original form:
         #               (d)
-        #                1           
+        #                1
         #                |                              (d)
-        #            0--cT --2                           1  
+        #            0--cT --2                           1
         #           /    |    \                          |
         # (chi) --L/R    |    L/R-- (chi)  =>  (chi) 0--cT--2 (chi)
         #           \    |    /                          |
         #            6--cT2--4                          (d)
-        #                |           
-        #                5           
+        #                |
+        #                5
         #               (d)
         #
-        # [Note] here "d" is used to indicate the original bond dimension of each rank, 
+        # [Note] here "d" is used to indicate the original bond dimension of each rank,
         #        in general, they could be different for each bond
         L.truncate_(2,chi);
 
@@ -195,13 +195,13 @@ for i in range(Maxiter):
         #          1                                (d)
         #          |                                 1
         #  (d) 0--cT --2 (d)                         |
-        #          |              =>       (dxd) 0--cT--2 (dxd) 
+        #          |              =>       (dxd) 0--cT--2 (dxd)
         #  (d) 6--cT2--4 (d)                         |
         #          |                                 3
         #          5                                (d)
         #         (d)
         #
-        # [Note] here "d" is used to indicate the original bond dimension of each rank, 
+        # [Note] here "d" is used to indicate the original bond dimension of each rank,
         #        in general, they could be different for each bond
         cT.permute_(['0','6','1','2','4','5'])
         cT.contiguous_()
@@ -231,7 +231,5 @@ for i in range(Maxiter):
 
     prevlnZ = lnZ;
 
-    
+
 print("[Converged!]")
-
-

@@ -44,7 +44,7 @@ namespace cytnx {
     cutensornetContractionOptimizerConfig_t optimizerConfig;
 
     // number of hypersamples
-    int32_t num_hypersamples;
+    int32_t num_hypersamples = 8;
 
     // optimizer info
     cutensornetContractionOptimizerInfo_t optimizerInfo;

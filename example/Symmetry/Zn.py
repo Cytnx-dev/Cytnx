@@ -3,7 +3,7 @@ from pathlib import Path
 home = str(Path.home())
 sys.path.append(home + '/Cytnx_lib')
 from cytnx import *
-#example of Z2 symmetry object 
+#example of Z2 symmetry object
 #------------------------------------
 sym_z2 = Symmetry.Zn(2);
 
@@ -16,7 +16,7 @@ bd_sym_z2all = bd_sym_z2_A.combineBond(bd_sym_z2_B)
 print(bd_sym_z2all)
 
 
-#example of Z4 symmetry object 
+#example of Z4 symmetry object
 #------------------------------------
 sym_z4 = Symmetry.Zn(4)
 
@@ -28,7 +28,7 @@ print(bd_sym_z4_B)
 bd_sym_z4all = bd_sym_z4_A.combineBond(bd_sym_z4_B)
 print(bd_sym_z4all)
 
-#bk example of Z2 symmetry object 
+#bk example of Z2 symmetry object
 #------------------------------------
 new_sym_z2 = Symmetry.Zn(2);
 
@@ -41,7 +41,7 @@ new_bd_sym_z2all = new_bd_sym_z2_A.combineBond(new_bd_sym_z2_B)
 print(new_bd_sym_z2all)
 
 
-#bk example of Z4 symmetry object 
+#bk example of Z4 symmetry object
 #------------------------------------
 new_sym_z4 = Symmetry.Zn(4)
 
@@ -52,4 +52,3 @@ print(new_bd_sym_z4_B)
 
 new_bd_sym_z4all = new_bd_sym_z4_A.combineBond(new_bd_sym_z4_B)
 print(new_bd_sym_z4all)
-

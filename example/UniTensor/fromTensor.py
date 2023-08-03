@@ -29,12 +29,7 @@ print(T)
 print(CyT_nonshare)
 
 CyT_nonshare.set_elem([1,1],2.345);
-    
+
 print("after")
 print(T) # T is unchanged!
 print(CyT_nonshare)
-
-
-
-
-

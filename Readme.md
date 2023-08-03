@@ -1,9 +1,9 @@
-# Cytnx [![Build Status (GitHub Actions)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml/badge.svg?branch=master)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml) [![codecov](https://codecov.io/gh/kaihsin/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/kaihsin/Cytnx) [![Coverity Scan Build Status](https://img.shields.io/coverity/scan/25013.svg)](https://scan.coverity.com/projects/kaihsin-cytnx)
+# Cytnx [![Build Status (GitHub Actions)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml/badge.svg?branch=master)](https://github.com/kaihsin/Cytnx/actions/workflows/ci-cmake_tests.yml) [![codecov](https://codecov.io/gh/Cytnx-dev/Cytnx/branch/master/graph/badge.svg?token=IHXTX7UI6O)](https://codecov.io/gh/Cytnx-dev/Cytnx) [![Coverity Scan Build Status](https://scan.coverity.com/projects/28835/badge.svg)](https://scan.coverity.com/projects/cytnx-dev-cytnx)
 [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/version.svg)](https://anaconda.org/kaihsinwu/cytnx) [![Anaconda-Server Badge](https://anaconda.org/kaihsinwu/cytnx/badges/platforms.svg)](https://anaconda.org/kaihsinwu/cytnx)
 
 ![alt text](./Icon_small.png)
 
-## Install 
+## Install
 See The following user guide for install and using of cytnx:
 
 [https://kaihsinwu.gitlab.io/Cytnx_doc/install.html](https://kaihsinwu.gitlab.io/Cytnx_doc/install.html)
@@ -15,31 +15,41 @@ See The following user guide for install and using of cytnx:
     [v0.9.x]
 
     Implementation of new data structure for symmetric UniTensor, which different from previous version
-     
+
 
 ## Current dev Version:
+    v0.9.3
+
+    v0.9.2
+    1. [Change] Remove all deprecated APIs and old SparseUniTensor data structure
+    2. [Fix] Bugs when batch_matmul when no MKL
+    3. [Update] Update examples to match new APIs
+    4. [New] add labels options when creating UniTensor from Tensor.
+    5. [New] change MKL to mkl_rt instead of fixed interface ilp64/lp64
+
+
     v0.9.1
-    
-    1. [New] Add additional argument share_mem for Tensor.numpy() python API. 
+
+    1. [New] Add additional argument share_mem for Tensor.numpy() python API.
     2. [Fix] UniTensor.at() python API not properly wrapped.
     3. [Fix] Bug in testing for BlockUniTensor.
     4. [Fix] Bug in UniTensor print info (duplicate name, is_diag=true BlockUniTensor dimension display)
-    5. [Change] Svd now using gesdd instead of gesvd. 
-    6. [New] Add linalg.Gesvd function, along with Gesvd_truncate. 
+    5. [Change] Svd now using gesdd instead of gesvd.
+    6. [New] Add linalg.Gesvd function, along with Gesvd_truncate.
     7. [Fix] Strict casting rule cause compiling fail when compile with icpc
     8. [New] Add additional argument for Network.PutUniTensor to match the label.
-    9. [Fix] Network TOUT string lbl bug  
+    9. [Fix] Network TOUT string lbl bug
     10. [Fix] #156 storage python wrapper cause not return.
     11. [Add] linalg.Gemm/Gemm_()
-    12. [Add] UniTensor.normalize()/normalize_() 
+    12. [Add] UniTensor.normalize()/normalize_()
 
     v0.9
 
     1. [New] New Network file format (removing the rowrank requirement
-    2. [New] label can now be string, instead of integer. 
-    3. [New] UniTensor with symmetry are now faster. 
-    
-    
+    2. [New] label can now be string, instead of integer.
+    3. [New] UniTensor with symmetry are now faster.
+
+
 
 
 
@@ -58,16 +68,16 @@ See The following user guide for install and using of cytnx:
     * Storage   [binded]
     * Tensor    [binded]
     * Accessor  [c++ only]
-    * Bond      [binded] 
-    * Symmetry  [binded] 
-    * CyTensor [binded] 
-    * Network   [binded] 
+    * Bond      [binded]
+    * Symmetry  [binded]
+    * CyTensor [binded]
+    * Network   [binded]
 
 ## Feature:
 
 ### Python x C++
-    Benefit from both side. 
-    One can do simple prototype on python side 
+    Benefit from both side.
+    One can do simple prototype on python side
     and easy transfer to C++ with small effort!
 
 
@@ -85,7 +95,7 @@ See The following user guide for install and using of cytnx:
 ```
 
 
-### 1. All the Storage and Tensor can now have mulitple type support. 
+### 1. All the Storage and Tensor can now have mulitple type support.
         The avaliable types are :
 
         | cytnx type       | c++ type             | Type object
@@ -103,8 +113,8 @@ See The following user guide for install and using of cytnx:
         | cytnx_bool       | bool                 | Type.Bool
 
 ### 2. Storage
-        * Memory container with GPU/CPU support. 
-          maintain type conversions (type casting btwn Storages) 
+        * Memory container with GPU/CPU support.
+          maintain type conversions (type casting btwn Storages)
           and moving btwn devices.
         * Generic type object, the behavior is very similar to python.
 
@@ -113,9 +123,9 @@ See The following user guide for install and using of cytnx:
             for(int i=0;i<400;i++)
                 A.at<double>(i) = i;
 
-            Storage B = A; // A and B share same memory, this is similar as python 
-            
-            Storage C = A.to(Device.cuda+0); 
+            Storage B = A; // A and B share same memory, this is similar as python
+
+            Storage C = A.to(Device.cuda+0);
 ```
 
 
@@ -163,20 +173,20 @@ See The following user guide for install and using of cytnx:
 ```c++
             typedef Accessor ac;
             Tensor A({3,4,5},Type.Double);
-            Tensor out = A(0,":","1:4"); 
+            Tensor out = A(0,":","1:4");
             // equivalent to python: out = A[0,:,1:4]
-            
+
 ```
 
 ### 4. UniTensor
-        * extension of Tensor, specifically design for Tensor network simulation. 
+        * extension of Tensor, specifically design for Tensor network simulation.
 
         * See Intro slide for more details
 ```c++
             Tensor A({3,4,5},Type.Double);
             UniTensor tA = UniTensor(A,2); // convert directly.
 
-            UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch. 
+            UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch.
 ```
 
 
@@ -188,7 +198,7 @@ See The following user guide for install and using of cytnx:
     See example/DMRG folder for implementation on DMRG algo.
     See example/iDMRG folder for implementation on iDMRG algo.
     See example/HOTRG folder for implementation on HOTRG algo for classical system.
-    See example/ED folder for implementation using LinOp & Lanczos. 
+    See example/ED folder for implementation using LinOp & Lanczos.
 
 
 ## Avaliable linear-algebra function (Keep updating):
@@ -205,7 +215,7 @@ See The following user guide for install and using of cytnx:
       -,-=[tn]    |   x       |  Y  |  Y   |    Y (Sub_) | Y  |   Y
       *,*=[tn]    |   x       |  Y  |  Y   |    Y (Mul_) | Y  |   Y
       /,/=[tn]    |   x       |  Y  |  Y   |    Y (Div_) | Y  |   Y
-      ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   x 
+      ==[tn]      |   x       |  Y  |  Y   |    Y (Cpr_) | Y  |   x
     --------------|-----------|-----|------|-------------|----|-------
       Svd         |   x       |  Y  |  Y   |    Y        | Y  |   Y
      *Svd_truncate|   x       |  Y  |  Y   |    N        | Y  |   Y
@@ -222,51 +232,51 @@ See The following user guide for install and using of cytnx:
       Matmul      |   x       |  Y  |  Y   |    N        | Y  |   N
       Diag        |   x       |  Y  |  Y   |    N        | Y  |   N
     *Tensordot    |   x       |  Y  |  Y   |    N        | Y  |   N
-     Outer        |   x       |  Y  |  Y   |    N        | Y  |   N 
-     Vectordot    |   x       |  Y  | .Y   |    N        | Y  |   N 
+     Outer        |   x       |  Y  |  Y   |    N        | Y  |   N
+     Vectordot    |   x       |  Y  | .Y   |    N        | Y  |   N
     --------------|-----------|-----|------|-------------|----|-------
       Tridiag     |   x       |  Y  |  N   |    N        | Y  |   N
      Kron         |   x       |  Y  |  N   |    N        | Y  |   N
      Norm         |   x       |  Y  |  Y   |    Y        | Y  |   N
-    *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N 
-     Eig          |   x       |  Y  |  N   |    N        | Y  |   N 
+    *Dot          |   x       |  Y  |  Y   |    N        | Y  |   N
+     Eig          |   x       |  Y  |  N   |    N        | Y  |   N
     --------------|-----------|-----|------|-------------|----|-------
-     Pow          |   Pow_    |  Y  |  Y   |    Y        | Y  |   Y 
-     Abs          |   Abs_    |  Y  |  N   |    Y        | Y  |   N 
-     Qr           |   x       |  Y  |  N   |    N        | Y  |   Y 
-     Qdr          |   x       |  Y  |  N   |    N        | Y  |   Y 
+     Pow          |   Pow_    |  Y  |  Y   |    Y        | Y  |   Y
+     Abs          |   Abs_    |  Y  |  N   |    Y        | Y  |   N
+     Qr           |   x       |  Y  |  N   |    N        | Y  |   Y
+     Qdr          |   x       |  Y  |  N   |    N        | Y  |   Y
      Det          |   x       |  Y  |  N   |    N        | Y  |   N
     --------------|-----------|-----|------|-------------|----|-------
-     Min          |   x       |  Y  |  N   |    Y        | Y  |   N 
-     Max          |   x       |  Y  |  N   |    Y        | Y  |   N 
+     Min          |   x       |  Y  |  N   |    Y        | Y  |   N
+     Max          |   x       |  Y  |  N   |    Y        | Y  |   N
     *Trace        |   x       |  Y  |  N   |    Y        | Y  |   Y
-     Mod          |   x       |  Y  |  Y   |    Y        | Y  |   Y 
-    Matmul_dg     |   x       |  Y  |  Y   |    N        | Y  |   N 
+     Mod          |   x       |  Y  |  Y   |    Y        | Y  |   Y
+    Matmul_dg     |   x       |  Y  |  Y   |    N        | Y  |   N
     --------------|-----------|-----|------|-------------|----|-------
     *Tensordot_dg |   x       |  Y  |  Y   |    N        | Y  |   N
 
     iterative solver:
-     
-        Lanczos_ER           
-    
 
-    * this is a high level linalg 
-    
+        Lanczos_ER
+
+
+    * this is a high level linalg
+
     ^ this is temporary disable
-    
+
     . this is floating point type only
- 
-## Container Generators 
+
+## Container Generators
 
     Tensor: zeros(), ones(), arange(), identity(), eye()
 
-## Physics category 
+## Physics category
 
     Tensor: pauli(), spin()
-    
-     
-## Random 
-      func        | Tn  | Stor | CPU | GPU  
+
+
+## Random
+      func        | Tn  | Stor | CPU | GPU
     -----------------------------------------------------
     *Make_normal() |  Y  |  Y   | Y   |  Y
     *Make_uniform() |  Y  |  Y   | Y   |  N
@@ -277,23 +287,23 @@ See The following user guide for install and using of cytnx:
     ^ this is generator
 
     [Note] The difference of initializer and generator is that initializer is used to initialize the Tensor, and generator generates a new Tensor.
-     
+
 
 ## Developers & Maintainers
 
     [Creator and Project manager]
-    Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com 
+    Kai-Hsin Wu (Boston Univ.) kaihsinwu@gmail.com
 
     Chang Teng Lin (NTU, Taiwan): major maintainer and developer
-    Ke Hsu (NTU, Taiwan): major maintainer and developer 
-    Hao Ti (NTU, Taiwan): documentation and linalg 
+    Ke Hsu (NTU, Taiwan): major maintainer and developer
+    Hao Ti (NTU, Taiwan): documentation and linalg
     Ying-Jer Kao (NTU, Taiwan): setuptool, cmake
-    
+
 
 ## Contributors
- 
+
     Yen-Hsin Wu (NTU, Taiwan)
-    Po-Kwan Wu (OSU)   
+    Po-Kwan Wu (OSU)
     Wen-Han Kao (UMN, USA)
     Yu-Hsueh Chen (NTU, Taiwan)
     PoChung Chen  (NCHU, Taiwan)
@@ -306,8 +316,3 @@ See The following user guide for install and using of cytnx:
 
     * hptt library:
         https://github.com/springer13/hptt
-
-
-
-
-

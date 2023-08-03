@@ -86,6 +86,11 @@ namespace cytnx {
     virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
     virtual void PutUniTensors(const std::vector<std::string> &name,
                                const std::vector<UniTensor> &utensors);
+
+    virtual void RmUniTensor(const cytnx_uint64 &idx);
+    virtual void RmUniTensor(const std::string &name);
+    virtual void RmUniTensors(const std::vector<std::string> &name);
+
     virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                                const std::vector<std::string> &alias,
                                const std::string &contract_order);
@@ -124,6 +129,10 @@ namespace cytnx {
     void PutUniTensors(const std::vector<std::string> &name,
                        const std::vector<UniTensor> &utensors);
     void initialize_CtTree();
+    void RmUniTensor(const cytnx_uint64 &idx);
+    void RmUniTensor(const std::string &name);
+    void RmUniTensors(const std::vector<std::string> &name);
+
     void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                        const std::vector<std::string> &alias = {},
                        const std::string &contract_order = "");
@@ -176,6 +185,10 @@ namespace cytnx {
     FermionNetwork() { this->nwrktype_id = NtType.Fermion; };
     void Fromfile(const std::string &fname){};
     void FromString(const std::vector<std::string> &contents){};
+    void RmUniTensor(const cytnx_uint64 &idx){};
+    void RmUniTensor(const std::string &name){};
+    void RmUniTensors(const std::vector<std::string> &name){};
+
     void PutUniTensor(const std::string &name, const UniTensor &utensor){};
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){};
     void PutUniTensors(const std::vector<std::string> &name,
@@ -344,6 +357,9 @@ namespace cytnx {
       this->Fromfile(fname, network_type);
     }
 
+    void RmUniTensor(const std::string &name) { this->_impl->RmUniTensor(name); }
+    void RmUniTensor(const cytnx_uint64 &idx) { this->_impl->RmUniTensor(idx); }
+    void RmUniTensors(const std::vector<std::string> &names) { this->_impl->RmUniTensors(names); }
     void PutUniTensor(const std::string &name, const UniTensor &utensor,
                       const std::vector<std::string> &lbl_order = {}) {
       if (lbl_order.size()) {

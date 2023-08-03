@@ -565,24 +565,37 @@ namespace cytnx {
                     "UniTensor does not match the definition in network file.\n",
                     this->names[idx].c_str());
 
-    // cytnx_error_msg(this->iBondNums[idx] != utensor.rowrank(),
-    //                 "[ERROR][RegularNetwork][PutUniTensor] tensor name: [%s], the row-rank of "
-    //                 "input UniTensor does not match the semicolon defined in network file.\n",
-    //                 this->names[idx].c_str());
-
-    // for(int i=0;i<this->tensors.size();i++)
-    //     if(this->tensors[i].uten_type()!=UTenType.Void && i!=idx)
-    //         cytnx_error_msg(this->tensors[i].same_data(utensor),"[ERROR] [%s] and [%d] has
-    //         same_data. Network cannot have two tensor with same_data(). If two tensors in a
-    //         Network has the same data, consider set is_clone on either one of
-    //         them.\n",this->names[i].c_str(),this->names[idx].c_str());
-
     this->tensors[idx] = utensor;
     this->CtTreeUpdated = false;
 
 #ifdef UNI_CUQUANTUM
     this->cutn.updateTensor(idx, this->tensors[idx]);
 #endif
+  }
+
+  void RegularNetwork::RmUniTensor(const cytnx_uint64 &idx) {
+    cytnx_error_msg(idx >= this->CtTree.base_nodes.size(),
+                    "[ERROR][RegularNetwork][RmUniTensor] index=%d out of range.\n", idx);
+
+    this->tensors[idx] = UniTensor();
+  }
+  void RegularNetwork::RmUniTensor(const std::string &name) {
+    cytnx_uint64 idx;
+    try {
+      idx = this->name2pos.at(name);
+    } catch (std::out_of_range) {
+      cytnx_error_msg(true,
+                      "[ERROR][RegularNetwork][RmUniTensor] cannot find the tensor name: [%s] in "
+                      "current network.\n",
+                      name.c_str());
+    }
+
+    this->RmUniTensor(idx);
+  }
+  void RegularNetwork::RmUniTensors(const std::vector<string> &names) {
+    for (int i = 0; i < names.size(); i++) {
+      this->RmUniTensor(names[i]);
+    }
   }
 
   void RegularNetwork::Savefile(const std::string &fname) {
@@ -641,12 +654,6 @@ namespace cytnx {
 
   void RegularNetwork::PutUniTensor(const std::string &name, const UniTensor &utensor) {
     cytnx_uint64 idx;
-    /*
-    std::cout << "|" << name <<"|" << std::endl;
-    for(auto it=this->name2pos.begin();it!=this->name2pos.end();it++){
-        std::cout << "|"<<it->first<<"|"<<it->second<<"|" << std::endl;
-    }
-    */
     try {
       idx = this->name2pos.at(name);
     } catch (std::out_of_range) {
