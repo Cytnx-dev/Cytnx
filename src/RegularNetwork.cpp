@@ -183,13 +183,16 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::initialize_CtTree(){
+  void RegularNetwork::initialize_CtTree() {
     // 1. check tensors are all set, and put all unitensor on node for contraction:
-    cytnx_error_msg(this->tensors.size() == 0,
-                    "[ERROR][setOrder][RegularNetwork] Cannot find optimal order for an un-initialize network.%s",
-                    "\n");
+    cytnx_error_msg(
+      this->tensors.size() == 0,
+      "[ERROR][setOrder][RegularNetwork] Cannot find optimal order for an un-initialize network.%s",
+      "\n");
     cytnx_error_msg(this->tensors.size() < 2,
-                    "[ERROR][setOrder][RegularNetwork] Network should contain >=2 tensors to find optimal order.%s", "\n");
+                    "[ERROR][setOrder][RegularNetwork] Network should contain >=2 tensors to find "
+                    "optimal order.%s",
+                    "\n");
 
     // vector<vector<cytnx_int64> > old_labels;
     for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
@@ -596,15 +599,14 @@ namespace cytnx {
 
     for (int i = 0; i < this->label_arr.size(); i++) {
       fo << this->names[i] << " : ";
-      if (this->iBondNums[i] == 0) fo << ";";
+      // if (this->iBondNums[i] == 0) fo << ";";
 
       for (int j = 0; j < this->label_arr[i].size(); j++) {
         fo << this->label_arr[i][j];
 
-        if (j + 1 == this->iBondNums[i])
-          fo << ";";
-        else if (j != this->label_arr[i].size() - 1)
-          fo << ",";
+        // if (j + 1 == this->iBondNums[i])
+        //   fo << ";";
+        if (j != this->label_arr[i].size() - 1) fo << ",";
 
         if (j == this->label_arr[i].size() - 1) fo << "\n";
       }
@@ -705,37 +707,36 @@ namespace cytnx {
     }
   }
 
-  string RegularNetwork::getOrder(){
-     if (this->order_line != ""){
+  string RegularNetwork::getOrder() {
+    if (this->order_line != "") {
       return this->order_line;
-     }else{
+    } else {
       return "No optimal or user specified order found.";
-     }
+    }
   }
 
-
-  void RegularNetwork::setOrder(const bool &optimal,
-                                  const string &contract_order /*default ""*/){
-      cytnx_warning_msg(optimal && (contract_order!=""),
-                    "[WARNING][setOrder][RegularNetwork] Setting Optimal = true while specifying the order, will find the optimal order instead."
-                    "to use the desired order please set Optimal = false.%s",
-                    "\n");
-      cytnx_warning_msg((!optimal) && (contract_order==""),
-                    "[WARNING][setOrder][RegularNetwork] Setting Optimal = false while not specifying the order, will use default contraciton order.%s",
-                    "\n");
-      this->ORDER_tokens.clear();
-      if(optimal){
-        initialize_CtTree();
-        string Optim_ORDERline = this->getOptimalOrder();
-        this->order_line = Optim_ORDERline;
-        _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
-      }else{
-        this->order_line = contract_order;
-        if(contract_order != ""){
-          _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
-        }
-        
+  void RegularNetwork::setOrder(const bool &optimal, const string &contract_order /*default ""*/) {
+    cytnx_warning_msg(optimal && (contract_order != ""),
+                      "[WARNING][setOrder][RegularNetwork] Setting Optimal = true while specifying "
+                      "the order, will find the optimal order instead."
+                      "to use the desired order please set Optimal = false.%s",
+                      "\n");
+    cytnx_warning_msg((!optimal) && (contract_order == ""),
+                      "[WARNING][setOrder][RegularNetwork] Setting Optimal = false while not "
+                      "specifying the order, will use default contraciton order.%s",
+                      "\n");
+    this->ORDER_tokens.clear();
+    if (optimal) {
+      initialize_CtTree();
+      string Optim_ORDERline = this->getOptimalOrder();
+      this->order_line = Optim_ORDERline;
+      _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+    } else {
+      this->order_line = contract_order;
+      if (contract_order != "") {
+        _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
       }
+    }
   }
 
   string RegularNetwork::getOptimalOrder() {
@@ -752,8 +753,7 @@ namespace cytnx {
   }
 
   UniTensor RegularNetwork::Launch() {
-
-    if(!this->CtTreeUpdated){
+    if (!this->CtTreeUpdated) {
       initialize_CtTree();
     }
 
@@ -884,9 +884,9 @@ namespace cytnx {
       this->cutn.executeContraction();
       this->cutn.free();
 #else
-        cytnx_error_msg(true, "[RegularNetwork] fatal error,%s",
-                        "try to call the gpu section without CUQUANTUM support.\n");
-        return UniTensor();
+      cytnx_error_msg(true, "[RegularNetwork] fatal error,%s",
+                      "try to call the gpu section without CUQUANTUM support.\n");
+      return UniTensor();
 #endif
 
       return out;

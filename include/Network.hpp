@@ -94,11 +94,12 @@ namespace cytnx {
     virtual void FromString(const std::vector<std::string> &content);
     virtual void clear();
     virtual std::string getOptimalOrder();
-    // virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    // virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order =
+    // "");
 
     virtual std::string getOrder();
     virtual void setOrder(const bool &optimal = false, const std::string &contract_order = "");
-    
+
     virtual UniTensor Launch();
 
     virtual void construct(const std::vector<std::string> &alias,
@@ -138,8 +139,8 @@ namespace cytnx {
       this->ORDER_tokens.clear();
     }
     std::string getOptimalOrder();
-    //UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
-    
+    // UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+
     std::string getOrder();
     void setOrder(const bool &optimal = false, const std::string &contract_order = "");
     UniTensor Launch();
@@ -372,9 +373,7 @@ namespace cytnx {
       }
     }
 
-    std::string getOrder() {
-      return this->_impl->getOrder();
-    }
+    std::string getOrder() { return this->_impl->getOrder(); }
 
     void setOrder(const bool &optimal, const std::string &contract_order /*default ""*/) {
       return this->_impl->setOrder(optimal, contract_order);

@@ -2,8 +2,8 @@
 
 // TEST_F(NetworkTest, gpu_Network_stringLbl) {
 //   auto Hi = Network();
-//   EXPECT_NO_THROW(Hi.FromString({"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "TOUT: c_,d_;f_,g_"}));
-//   EXPECT_NO_THROW(Hi.PutUniTensors({"A", "B", "C"}, {ut1, ut2, ut3}));
+//   EXPECT_NO_THROW(Hi.FromString({"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "TOUT:
+//   c_,d_;f_,g_"})); EXPECT_NO_THROW(Hi.PutUniTensors({"A", "B", "C"}, {ut1, ut2, ut3}));
 //   EXPECT_NO_THROW(Hi.Launch(false));
 //   EXPECT_NO_THROW(Hi.PutUniTensors({"A", "B", "C"}, {bkut1, bkut2, bkut3}));
 //   EXPECT_NO_THROW(Hi.Launch(false));
@@ -24,4 +24,3 @@ TEST_F(NetworkTest, gpu_Network_dense) {
   net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
   EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
 }
-

@@ -23,21 +23,21 @@ class NetworkTest : public ::testing::Test {
   UniTensor ut2 = UniTensor(ones({5, 11, 3, 5}));
   UniTensor ut3 = UniTensor(ones({5, 11, 3, 5}));
 
-  UniTensor utdnA = UniTensor(arange(0,8,1, Type.ComplexDouble)).reshape({2,2,2});
-  UniTensor utdnB = UniTensor(ones({2,2}, Type.ComplexDouble));
+  UniTensor utdnA = UniTensor(arange(0, 8, 1, Type.ComplexDouble)).reshape({2, 2, 2});
+  UniTensor utdnB = UniTensor(ones({2, 2}, Type.ComplexDouble));
   UniTensor utdnC = UniTensor(eye(2, Type.ComplexDouble));
-  UniTensor utdnAns = UniTensor(zeros({2,2,2}, Type.ComplexDouble));
+  UniTensor utdnAns = UniTensor(zeros({2, 2, 2}, Type.ComplexDouble));
 
  protected:
   void SetUp() override {
-    utdnAns.at({0,0,0}) = 1;
-    utdnAns.at({0,0,1}) = 1;
-    utdnAns.at({0,1,0}) = 5;
-    utdnAns.at({0,1,1}) = 5;
-    utdnAns.at({1,0,0}) = 9;
-    utdnAns.at({1,0,1}) = 9;
-    utdnAns.at({1,1,0}) = 13;
-    utdnAns.at({1,1,1}) = 13;
+    utdnAns.at({0, 0, 0}) = 1;
+    utdnAns.at({0, 0, 1}) = 1;
+    utdnAns.at({0, 1, 0}) = 5;
+    utdnAns.at({0, 1, 1}) = 5;
+    utdnAns.at({1, 0, 0}) = 9;
+    utdnAns.at({1, 0, 1}) = 9;
+    utdnAns.at({1, 1, 0}) = 13;
+    utdnAns.at({1, 1, 1}) = 13;
   }
   void TearDown() override {
     // NEmpty = cytnx::Network();

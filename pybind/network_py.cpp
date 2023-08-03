@@ -72,13 +72,13 @@ void network_binding(py::module &m) {
 
     .def(
       "setOrder",
-      [](Network &self, const bool &optimal, const std::string &contract_order) { self.setOrder(optimal, contract_order); },
+      [](Network &self, const bool &optimal, const std::string &contract_order) {
+        self.setOrder(optimal, contract_order);
+      },
       py::arg("optimal") = false, py::arg("contract_order") = "")
 
-    .def(
-      "getOrder",
-      [](Network &self) { return self.getOrder();})
-      
+    .def("getOrder", [](Network &self) { return self.getOrder(); })
+
     // .def("getOrder", &Network::getOrder)
     .def("Launch", &Network::Launch, py::arg("network_type") = (int)NtType.Regular)
 
