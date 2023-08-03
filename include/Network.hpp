@@ -52,6 +52,9 @@ namespace cytnx {
     std::vector<std::string> names;
     std::map<std::string, cytnx_uint64> name2pos;
 
+    // order line
+    std::string order_line = "";
+
 #ifdef UNI_CUQUANTUM
     cutensornet cutn;
 #endif
@@ -91,7 +94,13 @@ namespace cytnx {
     virtual void FromString(const std::vector<std::string> &content);
     virtual void clear();
     virtual std::string getOptimalOrder();
-    virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    // virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+
+    virtual std::string getOrder();
+    virtual void setOrder(const bool &optimal = false, const std::string &contract_order = "");
+    
+    UniTensor Launch();
+
     virtual void construct(const std::vector<std::string> &alias,
                            const std::vector<std::vector<std::string>> &lbls,
                            const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
@@ -127,7 +136,12 @@ namespace cytnx {
       this->ORDER_tokens.clear();
     }
     std::string getOptimalOrder();
-    UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    //UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    
+    std::string getOrder();
+    void setOrder(const bool &optimal = false, const std::string &contract_order = "");
+    UniTensor Launch();
+
     void construct(const std::vector<std::string> &alias,
                    const std::vector<std::vector<std::string>> &lbls,
                    const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
@@ -355,10 +369,18 @@ namespace cytnx {
         cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
       }
     }
-    UniTensor Launch(const bool &optimal, const std::string &contract_order = "",
-                     const int &network_type = NtType.Regular) {
+
+    std::string getOrder() {
+      return this->_impl->getOrder();
+    }
+
+    void setOrder(const bool &optimal, const std::string &contract_order /*default ""*/) {
+      return this->_impl->setOrder(optimal, contract_order);
+    }
+
+    UniTensor Launch(const int &network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
-        return this->_impl->Launch(optimal);
+        return this->_impl->Launch();
       } else {
         cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
       }

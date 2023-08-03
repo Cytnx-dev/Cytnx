@@ -674,6 +674,60 @@ namespace cytnx {
     }
   }
 
+  string RegularNetwork::getOrder(){
+     if (this->order_line != ""){
+      return this->order_line;
+     }else{
+      return "No optimal order or user specified order found.";
+     }
+  }
+
+  void RegularNetwork::setOrder(const bool &optimal,
+                                  const string &contract_order /*default ""*/){
+      cytnx_warning_msg(optimal && (contract_order!=""),
+                    "[WARNING][setOrder][RegularNetwork] Setting Optimal = true while specifying the order, will find the optimal order instead."
+                    "to use the desired order please set Optimal = false.%s",
+                    "\n");
+      cytnx_warning_msg((!optimal) && (contract_order==""),
+                    "[WARNING][setOrder][RegularNetwork] Setting Optimal = false while not specifying the order, will use default contraciton order.%s",
+                    "\n");
+      this->ORDER_tokens.clear();
+      if(optimal){
+            // 1. check tensors are all set, and put all unitensor on node for contraction:
+        cytnx_error_msg(this->tensors.size() == 0,
+                        "[ERROR][setOrder][RegularNetwork] Cannot find optimal order for an un-initialize network.%s",
+                        "\n");
+        cytnx_error_msg(this->tensors.size() < 2,
+                        "[ERROR][setOrder][RegularNetwork] Network should contain >=2 tensors to find optimal order.%s", "\n");
+
+        // vector<vector<cytnx_int64> > old_labels;
+        for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
+          cytnx_error_msg(this->tensors[idx].uten_type() == UTenType.Void,
+                          "[ERROR][setOrder][RegularNetwork] tensor at [%d], name: [%s] is not set.\n",
+                          idx, this->names[idx].c_str());
+          // transion save old labels:
+          //  old_labels.push_back(this->tensors[idx].labels());
+
+          // modify the label of unitensor (shared):
+          //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
+
+          this->CtTree.base_nodes[idx].utensor =
+            this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+          // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
+          this->CtTree.base_nodes[idx].is_assigned = true;
+
+          // cout << this->tensors[idx].name() << " " << idx << "from dict:" <<
+          // this->name2pos[this->tensors[idx].name()] << endl;
+        }
+        string Optim_ORDERline = this->getOptimalOrder();
+        this->order_line = Optim_ORDERline;
+        _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+      }else{
+        this->order_line = contract_order;
+        _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
+      }
+  }
+
   string RegularNetwork::getOptimalOrder() {
     // Creat a SearchTree to search for optim contraction order.
     SearchTree Stree;
@@ -686,40 +740,9 @@ namespace cytnx {
     Stree.search_order();
     return Stree.nodes_container.back()[0].accu_str;
   }
-  UniTensor RegularNetwork::Launch(const bool &optimal,
-                                   const string &contract_order /*default ""*/) {
-    // 1. check tensors are all set, and put all unitensor on node for contraction:
-    cytnx_error_msg(this->tensors.size() == 0,
-                    "[ERROR][Launch][RegularNetwork] cannot launch an un-initialize network.%s",
-                    "\n");
-    cytnx_error_msg(this->tensors.size() < 2,
-                    "[ERROR][Launch][RegularNetwork] Network should contain >=2 tensors.%s", "\n");
 
-    // check not both optimal=true and contract_order not nullptr
-    cytnx_error_msg(
-      optimal and contract_order != "",
-      "[ERROR][Launch][RegularNetwork] cannot launch with optimal=True and given contract_order.%s",
-      "\n");
+  UniTensor RegularNetwork::Launch() {
 
-    // vector<vector<cytnx_int64> > old_labels;
-    for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
-      cytnx_error_msg(this->tensors[idx].uten_type() == UTenType.Void,
-                      "[ERROR][Launch][RegularNetwork] tensor at [%d], name: [%s] is not set.\n",
-                      idx, this->names[idx].c_str());
-      // transion save old labels:
-      //  old_labels.push_back(this->tensors[idx].labels());
-
-      // modify the label of unitensor (shared):
-      //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
-
-      this->CtTree.base_nodes[idx].utensor =
-        this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
-      // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
-      this->CtTree.base_nodes[idx].is_assigned = true;
-
-      // cout << this->tensors[idx].name() << " " << idx << "from dict:" <<
-      // this->name2pos[this->tensors[idx].name()] << endl;
-    }
 
     int tn_device = this->tensors[0].device();
     for (int i = 0; i < this->tensors.size(); i++) {
@@ -735,22 +758,10 @@ namespace cytnx {
 
       // 1.5 contraction order:
       if (ORDER_tokens.size() != 0) {
-        // *set by user
+        // *set by user or optimally found
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-
       } else {
-        if (optimal == true) {
-          string Optim_ORDERline = this->getOptimalOrder();
-          this->ORDER_tokens.clear();
-          _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
-          CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-        } else if (contract_order != "") {
-          this->ORDER_tokens.clear();
-          _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
-          CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-        } else {
-          CtTree.build_default_contraction_tree();
-        }
+        CtTree.build_default_contraction_tree();
       }
 
       // 2. contract using postorder traversal:
@@ -859,6 +870,10 @@ namespace cytnx {
       this->cutn.autotune();
       this->cutn.executeContraction();
       this->cutn.free();
+#else
+        cytnx_error_msg(true, "[RegularNetwork] fatal error,%s",
+                        "try to call the gpu section without CUQUANTUM support.\n");
+        return UniTensor();
 #endif
 
       return out;

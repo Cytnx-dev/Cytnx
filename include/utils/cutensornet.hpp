@@ -100,7 +100,6 @@ namespace cytnx {
     void createNetworkDescriptor();
     void getWorkspacelimit();
     void findOptimalOrder();
-    void querySlices();
     void createWorkspaceDescriptor();
     void initializePlan();
     void autotune();

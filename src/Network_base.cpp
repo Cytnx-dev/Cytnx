@@ -40,7 +40,20 @@ namespace cytnx {
                     "\n");
     return "";
   }
-  UniTensor Network_base::Launch(const bool &optimal, const std::string &contract_order) {
+
+  void Network_base::setOrder(const bool &optimal, const std::string &contract_order) {
+    cytnx_error_msg(true, "[ERROR][Network][setOrder] call from uninitialize network.%s",
+                    "\n");
+  }
+
+  std::string Network_base::getOrder() {
+    cytnx_error_msg(true, "[ERROR][Network][getOrder] call from uninitialize network.%s",
+                    "\n");
+    return "";
+  }
+
+
+  UniTensor Network_base::Launch() {
     cytnx_error_msg(true, "[ERROR][Network][Launch] call from uninitialize network.%s", "\n");
     return UniTensor();
   }
