@@ -99,7 +99,7 @@ namespace cytnx {
     virtual std::string getOrder();
     virtual void setOrder(const bool &optimal = false, const std::string &contract_order = "");
     
-    UniTensor Launch();
+    virtual UniTensor Launch();
 
     virtual void construct(const std::vector<std::string> &alias,
                            const std::vector<std::vector<std::string>> &lbls,
@@ -114,6 +114,7 @@ namespace cytnx {
 
   class RegularNetwork : public Network_base {
    public:
+    bool CtTreeUpdated = false;
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
     void Fromfile(const std::string &fname);
     void FromString(const std::vector<std::string> &contents);
@@ -121,6 +122,7 @@ namespace cytnx {
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
     void PutUniTensors(const std::vector<std::string> &name,
                        const std::vector<UniTensor> &utensors);
+    void initialize_CtTree();
     void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                        const std::vector<std::string> &alias = {},
                        const std::string &contract_order = "");
