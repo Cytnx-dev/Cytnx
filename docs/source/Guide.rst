@@ -59,3 +59,4 @@ Continue reading:
     guide/linalg.rst
     guide/itersol.rst
     guide/xlinalg.rst
+    guide/common.rst
