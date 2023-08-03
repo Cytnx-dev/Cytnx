@@ -74,9 +74,10 @@ namespace cytnx {
         if (U->dtype != Type.Void)
           U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         // linalg_internal::cuConj_inplace_internal_cd(U,M*min);
-        if (vT->dtype != Type.Void){
+        if (vT->dtype != Type.Void) {
           vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
-        linalg_internal::cuConj_inplace_internal_cd(vT, N * min);}
+          linalg_internal::cuConj_inplace_internal_cd(vT, N * min);
+        }
       }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
@@ -162,9 +163,10 @@ namespace cytnx {
         if (U->dtype != Type.Void)
           U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         // linalg_internal::cuConj_inplace_internal_cf(U,M*min);
-        if (vT->dtype != Type.Void){
+        if (vT->dtype != Type.Void) {
           vT->Move_memory_({(cytnx_uint64)N, (cytnx_uint64)min}, {1, 0}, {1, 0});
-        linalg_internal::cuConj_inplace_internal_cf(vT, N * min);}
+          linalg_internal::cuConj_inplace_internal_cf(vT, N * min);
+        }
       }
 
       // get info
