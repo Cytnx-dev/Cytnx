@@ -155,7 +155,6 @@ namespace DocTest {
   }
 
   // 3.3.3 Low-level API (C++ only)
-  /*
   TEST(Doc, guide_basic_obj_Tensor_3_access_c_accessor) {
     #include "guide_basic_obj_Tensor_3_access_c_accessor.cpp"
   }
@@ -165,9 +164,8 @@ namespace DocTest {
   }
 
   TEST(Doc, guide_basic_obj_Tensor_3_access_c_get_set) {
-  }
     #include "guide_basic_obj_Tensor_3_access_c_get_set.cpp"
-  */
+  }
 
   // 3.4 Tensor arithmetic
   // 3.4.2 Tensor-scalar arithmetic

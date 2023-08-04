@@ -1,4 +1,4 @@
-typedef ac = cytnx::Accessor;
+using ac = cytnx::Accessor;
 
 ac(4);  // this is equal to index '4' in Python
 ac::all();  // this is equal to ':' in Python
