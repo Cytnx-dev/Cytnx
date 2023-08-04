@@ -6,4 +6,4 @@ bond_f = cytnx.Bond(cytnx.BD_OUT,\
 bond_g = cytnx.Bond(2,cytnx.BD_OUT)
 bond_h = cytnx.Bond(2,cytnx.BD_IN)
 Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels(["d","e","f"])
-Tdiag= cytnx.UniTensor([bond_g, bond_h], is_diag=True, name="diag tensor").relabels(["g","h"])
+Tdiag = cytnx.UniTensor([bond_g, bond_h], is_diag=True, name="diag tensor").relabels(["g","h"])
