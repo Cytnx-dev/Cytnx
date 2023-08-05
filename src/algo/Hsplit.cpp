@@ -36,9 +36,14 @@ namespace cytnx {
         algo_internal::hSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
                                        _Tn.shape()[0], Type.typeSize(Tin.dtype()));
       } else {
-        // cytnx_error_msg(true, "[ERROR][Vsplit_] currently for GPU is under developing.%s", "\n");
+#ifdef UNI_GPU
         algo_internal::cuhSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
                                          _Tn.shape()[0], Type.typeSize(Tin.dtype()));
+#else
+        cytnx_error_msg(
+          true, "[ERROR][Hsplit_] input is on GPU but current cytnx is compiled without GPU.%s",
+          "\n");
+#endif
       }
     }
 

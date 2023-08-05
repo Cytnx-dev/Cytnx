@@ -85,8 +85,14 @@ namespace cytnx {
                                          Type.typeSize(dtype_id));
       } else {
         // cytnx_error_msg(true, "[ERROR][Vstack] currently for GPU is under developing.%s", "\n");
+#ifdef UNI_GPU
         algo_internal::cuhConcate_internal((char *)out.storage().data(), rawPtr, Ds, Dshare, Dcomb,
                                            Type.typeSize(dtype_id));
+#else
+        cytnx_error_msg(
+          true, "[ERROR][Hstack_] input is on GPU but current cytnx is compiled without GPU.%s",
+          "\n");
+#endif
       }
 
       return out;

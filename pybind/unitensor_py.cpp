@@ -430,6 +430,10 @@ void unitensor_binding(py::module &m) {
     .def("same_data", &UniTensor::same_data)
     .def("labels", &UniTensor::labels)
     .def("bonds", [](UniTensor &self) { return self.bonds(); })
+    .def("bond_", [](UniTensor &self, const cytnx_uint64 &idx){return self.bond_(idx);} ,py::arg("idx"))
+    .def("bond_", [](UniTensor &self, const std::string &label){return self.bond_(label);} ,py::arg("label"))
+    .def("bond", [](UniTensor &self, const cytnx_uint64 &idx){return self.bond(idx);} ,py::arg("idx"))
+    .def("bond", [](UniTensor &self, const std::string &label){return self.bond(label);} ,py::arg("label"))
     .def("shape", &UniTensor::shape)
     .def("to_", &UniTensor::to_)
     .def(
