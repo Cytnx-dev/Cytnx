@@ -3,7 +3,6 @@ sys.path.append('.')
 from link import *
 
 
-
 html_theme = 'sphinxbootstrap4theme'
 import sphinxbootstrap4theme
 html_theme_path = [sphinxbootstrap4theme.get_path()]
@@ -30,7 +29,7 @@ html_theme_path = [sphinxbootstrap4theme.get_path()]
 project = 'Cytnx'
 copyright = '2019-, Kai-Hsin Wu'
 author = 'Kai-Hsin Wu'
-_version = 'v0.9.1'
+_version = 'v0.9.2'
 #version = 'v0.5.5a'
 
 # -- General configuration ---------------------------------------------------
@@ -64,7 +63,7 @@ exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 
-html_logo = 'Icon_i.png' 
+html_logo = "_static/Iconi.png"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
@@ -111,7 +110,7 @@ html_theme_options = {
     # False indicates path of pages in the document.
     'navbar_links' : [
          ('API Doc', 'https://kaihsinwu.gitlab.io/cytnx_api', True),
-         ("Github", "https://github.com/kaihsin/Cytnx", True),
+         ("Github", "https://github.com/Cytnx-dev/Cytnx", True),
          ("%s"%(_version), "#", False)
     ],
 

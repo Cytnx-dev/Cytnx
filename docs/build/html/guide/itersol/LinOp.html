@@ -1,26 +1,25 @@
+
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>10.1. LinOp class &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
-    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -34,7 +33,7 @@
     </button>
       <div class="navbar-collapse collapse" id="exCollapsingNavbar2">
            <a class="navbar-brand py-1" href="../../index.html">
-                  Cytnx
+              <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
           </a>
           <ul class="navbar-nav mr-auto">
           
@@ -196,14 +195,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -268,42 +263,17 @@
 <li class="toctree-l4"><a class="reference internal" href="#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -364,9 +334,9 @@
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
               
-                  <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                  <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -381,7 +351,7 @@
           <div class="collapse navbar-toggleable-xs container" id="exCollapsingNavbar2">
               <div class="container">
              　　 <a class="navbar-brand" href="../../index.html">
-                      Cytnx
+                      <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
                   </a>
               </div>
               <ul class="nav navbar-nav">
@@ -390,9 +360,9 @@
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
                   
-                      <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                      <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -594,14 +564,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -666,42 +632,17 @@
 <li class="toctree-l4"><a class="reference internal" href="#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -758,16 +699,12 @@
               </div>
             
           
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="../itersol.html"
-                          title="previous chapter"><span class="section-number">10. </span>Iterative solver</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="Lanczos.html"
-                          title="next chapter"><span class="section-number">10.2. </span>Lanczos solver</a></p>
-  </div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="../itersol.html"
+                        title="previous chapter"><span class="section-number">10. </span>Iterative solver</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Lanczos.html"
+                        title="next chapter"><span class="section-number">10.2. </span>Lanczos solver</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -789,8 +726,8 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="linop-class">
-<h1><span class="section-number">10.1. </span>LinOp class<a class="headerlink" href="#linop-class" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="linop-class">
+<h1><span class="section-number">10.1. </span>LinOp class<a class="headerlink" href="#linop-class" title="Permalink to this headline">¶</a></h1>
 <p>Cytnx provides the ability to define a customized linear operators using the <strong>LinOp</strong> class.</p>
 <p>Before diving into the <strong>LinOp</strong> class, let’s take a look at a simple example:</p>
 <p>In linear algebra, a linear operator can be represented as a matrix <span class="math notranslate nohighlight">\(\boldsymbol{\hat{H}}\)</span> that operates on a vector <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span>, resulting in an output vector <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span> as</p>
@@ -801,29 +738,43 @@
 <ul class="simple">
 <li><p>In Python :</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="linenos">2</span><span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">y</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">5</span>
-<span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">7</span><span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
-<span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">);</span>
-<span class="linenos">5</span>
-<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">7</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">8</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">H</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">16</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+
+<span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Dot</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="n">x</span><span class="p">);</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">H</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output&gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 4
 type  : Double (Float64)
@@ -868,121 +819,193 @@ Instead of thinking of it as a matrix and making use of various different intern
 <li><p>Inherit the LinOp class and overload the <strong>matvec</strong> member function.</p></li>
 </ol>
 <p>Let’s consider a simple example of an operator that acts on an input vector <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span> with 4 elements. It interchanges the 1st and 4th element, and adds one to both the 2nd and 3rd elements. The output then is again a dim=4 vector <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>.</p>
-<section id="inherit-the-linop-class">
-<h2><span class="section-number">10.1.1. </span>Inherit the LinOp class<a class="headerlink" href="#inherit-the-linop-class" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="inherit-the-linop-class">
+<h2><span class="section-number">10.1.1. </span>Inherit the LinOp class<a class="headerlink" href="#inherit-the-linop-class" title="Permalink to this headline">¶</a></h2>
 <p>Cytnx exposes the interface <strong>LinOp.matvec</strong>, which provides more flexibility for users who want to include additional data/functions associated with the mapping. This can be achieved with inheritance from the <strong>LinOp</strong> class.</p>
 <p>Let’s demonstrate this in a similar example as previously. Again, we consider an operator that interchanges the 1st and 4th elements. But this time, we want to add a constant, which is an external parameter, to the 2nd and 3rd elements.</p>
 <p>First, let’s create a class that inherits from <strong>LinOp</strong>, with a class member <strong>AddConst</strong>.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">MyOp</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
-<span class="linenos"> 2</span>    <span class="n">AddConst</span> <span class="o">=</span> <span class="mi">1</span><span class="c1"># class member.</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">aconst</span><span class="p">):</span>
-<span class="linenos"> 5</span>        <span class="c1"># here, we fix nx=4, dtype=double on CPU,</span>
-<span class="linenos"> 6</span>        <span class="c1"># so the constructor only takes the external argument &#39;aconst&#39;</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span>        <span class="c1">## Remember to init the mother class.</span>
-<span class="linenos"> 9</span>        <span class="c1">## Here, we don&#39;t specify custom_f!</span>
-<span class="linenos">10</span>        <span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span>\
-<span class="linenos">11</span>                                   <span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span> <span class="p">)</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span>        <span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="o">=</span> <span class="n">aconst</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyOp</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+    <span class="n">AddConst</span> <span class="o">=</span> <span class="mi">1</span><span class="c1"># class member.</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">aconst</span><span class="p">):</span>
+        <span class="c1"># here, we fix nx=4, dtype=double on CPU,</span>
+        <span class="c1"># so the constructor only takes the external argument &#39;aconst&#39;</span>
+
+        <span class="c1">## Remember to init the mother class.</span>
+        <span class="c1">## Here, we don&#39;t specify custom_f!</span>
+        <span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span>\
+                                   <span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="o">=</span> <span class="n">aconst</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
-<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span>
-<span class="linenos"> 3</span><span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="linenos"> 4</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">AddConst</span><span class="p">;</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="w">        </span><span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">aconst</span><span class="p">)</span><span class="o">:</span>
-<span class="linenos"> 7</span><span class="w">            </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">){</span><span class="w"> </span><span class="c1">//invoke base class constructor!</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aconst</span><span class="p">;</span>
-<span class="linenos">10</span><span class="w">        </span><span class="p">}</span>
-<span class="linenos">11</span>
-<span class="linenos">12</span><span class="p">};</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cytnx</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">MyOp</span><span class="o">:</span> <span class="k">public</span> <span class="n">LinOp</span><span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">double</span> <span class="n">AddConst</span><span class="p">;</span>
+
+        <span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span> <span class="n">aconst</span><span class="p">)</span><span class="o">:</span>
+            <span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">){</span> <span class="c1">//invoke base class constructor!</span>
+
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span> <span class="o">=</span> <span class="n">aconst</span><span class="p">;</span>
+        <span class="p">}</span>
+
+<span class="p">};</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Next, we need to overload the <strong>matvec</strong> member function, as it defines the mapping from input <span class="math notranslate nohighlight">\(\boldsymbol{x}\)</span> to the output <span class="math notranslate nohighlight">\(\boldsymbol{y}\)</span>.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">MyOp</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
-<span class="linenos"> 2</span>    <span class="n">AddConst</span> <span class="o">=</span> <span class="mi">1</span><span class="c1"># class member.</span>
-<span class="linenos"> 3</span>
-<span class="linenos"> 4</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">aconst</span><span class="p">):</span>
-<span class="linenos"> 5</span>        <span class="c1"># here, we fix nx=4, dtype=double on CPU,</span>
-<span class="linenos"> 6</span>        <span class="c1"># so the constructor only takes the external argument &#39;aconst&#39;</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span>        <span class="c1">## Remember to init the mother class.</span>
-<span class="linenos"> 9</span>        <span class="c1">## Here, we don&#39;t specify custom_f!</span>
-<span class="linenos">10</span>        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span>\
-<span class="linenos">11</span>                                         <span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span> <span class="p">)</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span>        <span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="o">=</span> <span class="n">aconst</span>
-<span class="linenos">14</span>
-<span class="hll"><span class="linenos">15</span>    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
-</span><span class="hll"><span class="linenos">16</span>        <span class="n">out</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
-</span><span class="hll"><span class="linenos">17</span>        <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">out</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># swap</span>
-</span><span class="hll"><span class="linenos">18</span>        <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="c1">#add constant</span>
-</span><span class="hll"><span class="linenos">19</span>        <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="c1">#add constant</span>
-</span><span class="hll"><span class="linenos">20</span>        <span class="k">return</span> <span class="n">out</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyOp</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+    <span class="n">AddConst</span> <span class="o">=</span> <span class="mi">1</span><span class="c1"># class member.</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">aconst</span><span class="p">):</span>
+        <span class="c1"># here, we fix nx=4, dtype=double on CPU,</span>
+        <span class="c1"># so the constructor only takes the external argument &#39;aconst&#39;</span>
+
+        <span class="c1">## Remember to init the mother class.</span>
+        <span class="c1">## Here, we don&#39;t specify custom_f!</span>
+        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span>\
+                                         <span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span> <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="o">=</span> <span class="n">aconst</span>
+
+<span class="hll">    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+</span><span class="hll">        <span class="n">out</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+</span><span class="hll">        <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">out</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># swap</span>
+</span><span class="hll">        <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="c1">#add constant</span>
+</span><span class="hll">        <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="bp">self</span><span class="o">.</span><span class="n">AddConst</span> <span class="c1">#add constant</span>
+</span><span class="hll">        <span class="k">return</span> <span class="n">out</span>
 </span></pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">cytnx</span><span class="p">;</span>
-<span class="linenos"> 2</span><span class="k">class</span><span class="w"> </span><span class="nc">MyOp</span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">LinOp</span><span class="p">{</span>
-<span class="linenos"> 3</span><span class="w">    </span><span class="k">public</span><span class="o">:</span>
-<span class="linenos"> 4</span><span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">AddConst</span><span class="p">;</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="w">        </span><span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">aconst</span><span class="p">)</span><span class="o">:</span>
-<span class="linenos"> 7</span><span class="w">            </span><span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">){</span><span class="w"> </span><span class="c1">//invoke base class constructor!</span>
-<span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="w">            </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">aconst</span><span class="p">;</span>
-<span class="linenos">10</span><span class="w">        </span><span class="p">}</span>
-<span class="linenos">11</span>
-<span class="hll"><span class="linenos">12</span><span class="w">        </span><span class="n">Tensor</span><span class="w"> </span><span class="n">matvec</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Tensor</span><span class="o">&amp;</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">{</span>
-</span><span class="hll"><span class="linenos">13</span><span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
-</span><span class="hll"><span class="linenos">14</span><span class="w">            </span><span class="n">out</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w"> </span><span class="c1">//swap</span>
-</span><span class="hll"><span class="linenos">15</span><span class="w">            </span><span class="n">out</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">//swap</span>
-</span><span class="hll"><span class="linenos">16</span><span class="w">            </span><span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="p">;</span><span class="w"> </span><span class="c1">//add const</span>
-</span><span class="hll"><span class="linenos">17</span><span class="w">            </span><span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="p">;</span><span class="w"> </span><span class="c1">//add const</span>
-</span><span class="hll"><span class="linenos">18</span><span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">out</span><span class="p">;</span>
-</span><span class="hll"><span class="linenos">19</span><span class="w">        </span><span class="p">}</span>
-</span><span class="linenos">20</span>
-<span class="linenos">21</span><span class="p">};</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">cytnx</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">MyOp</span><span class="o">:</span> <span class="k">public</span> <span class="n">LinOp</span><span class="p">{</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">double</span> <span class="n">AddConst</span><span class="p">;</span>
+
+        <span class="n">MyOp</span><span class="p">(</span><span class="kt">double</span> <span class="n">aconst</span><span class="p">)</span><span class="o">:</span>
+            <span class="n">LinOp</span><span class="p">(</span><span class="s">&quot;mv&quot;</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="n">Type</span><span class="p">.</span><span class="n">Double</span><span class="p">,</span><span class="n">Device</span><span class="p">.</span><span class="n">cpu</span><span class="p">){</span> <span class="c1">//invoke base class constructor!</span>
+
+            <span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span> <span class="o">=</span> <span class="n">aconst</span><span class="p">;</span>
+        <span class="p">}</span>
+
+<span class="hll">        <span class="n">Tensor</span> <span class="n">matvec</span><span class="p">(</span><span class="k">const</span> <span class="n">Tensor</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span> <span class="k">override</span><span class="p">{</span>
+</span><span class="hll">            <span class="k">auto</span> <span class="n">out</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+</span><span class="hll">            <span class="n">out</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">=</span> <span class="n">v</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span> <span class="c1">//swap</span>
+</span><span class="hll">            <span class="n">out</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="n">v</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">//swap</span>
+</span><span class="hll">            <span class="n">out</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="p">;</span> <span class="c1">//add const</span>
+</span><span class="hll">            <span class="n">out</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">+=</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AddConst</span><span class="p">;</span> <span class="c1">//add const</span>
+</span><span class="hll">            <span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+</span><span class="hll">        <span class="p">}</span>
+</span>
+<span class="p">};</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Now, the class can be be used. We demonstrate this in in the following and set the constant to be added to 7:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">myop</span> <span class="o">=</span> <span class="n">MyOp</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
-<span class="linenos">2</span><span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-<span class="linenos">3</span><span class="n">y</span> <span class="o">=</span> <span class="n">myop</span><span class="o">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">4</span>
-<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">myop</span> <span class="o">=</span> <span class="n">MyOp</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">myop</span><span class="o">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">myop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyOp</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">3</span><span class="k">auto</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">myop</span><span class="p">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
-<span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">6</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">myop</span> <span class="o">=</span> <span class="n">MyOp</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">myop</span><span class="p">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output&gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 4
 type  : Double (Float64)
@@ -998,42 +1021,67 @@ Shape : (4)
 [3.00000e+00 8.00000e+00 9.00000e+00 0.00000e+00 ]
 </pre></div>
 </div>
-</section>
-<section id="example-sparse-data-structure-with-mapping-function">
-<h2><span class="section-number">10.1.2. </span>Example: sparse data structure with mapping function<a class="headerlink" href="#example-sparse-data-structure-with-mapping-function" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="example-sparse-data-structure-with-mapping-function">
+<h2><span class="section-number">10.1.2. </span>Example: sparse data structure with mapping function<a class="headerlink" href="#example-sparse-data-structure-with-mapping-function" title="Permalink to this headline">¶</a></h2>
 <p>With the flexibility provided by overloading the <strong>matvec</strong> member function, users can actually define their own sparse data structures of an operator.</p>
 <p>As an example, we want to define a sparse matrix <span class="math notranslate nohighlight">\(\boldsymbol{A}\)</span> with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. All other elements are zero. We do not have to construct a dense tensor with size <span class="math notranslate nohighlight">\(10^6\)</span>. Instead, we can simply use the <strong>LinOp</strong> class:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">Oper</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
-<span class="linenos"> 2</span>    <span class="n">Loc</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos"> 3</span>    <span class="n">Val</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="linenos"> 4</span>
-<span class="linenos"> 5</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="linenos"> 6</span>        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
-<span class="linenos"> 7</span>
-<span class="linenos"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">])</span>
-<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">Val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">4.</span><span class="p">)</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-<span class="linenos">12</span>        <span class="bp">self</span><span class="o">.</span><span class="n">Val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">7.</span><span class="p">)</span>
-<span class="linenos">13</span>
-<span class="linenos">14</span>    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
-<span class="linenos">15</span>        <span class="n">out</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">device</span><span class="p">())</span>
-<span class="linenos">16</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="p">)):</span>
-<span class="linenos">17</span>            <span class="n">out</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">v</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">Val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-<span class="linenos">18</span>        <span class="k">return</span> <span class="n">out</span>
-<span class="linenos">19</span>
-<span class="linenos">20</span>
-<span class="linenos">21</span><span class="n">A</span> <span class="o">=</span> <span class="n">Oper</span><span class="p">();</span>
-<span class="linenos">22</span><span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-<span class="linenos">23</span><span class="n">y</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">24</span>
-<span class="linenos">25</span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">x</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
-<span class="linenos">26</span><span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">y</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Oper</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+    <span class="n">Loc</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Val</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">4.</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Val</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">7.</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">v</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">dtype</span><span class="p">(),</span><span class="n">v</span><span class="o">.</span><span class="n">device</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="p">)):</span>
+            <span class="n">out</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">v</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">Loc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">Val</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">Oper</span><span class="p">();</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">x</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">y</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output&gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>1.0 100.0
 400.0 7.0
@@ -1043,36 +1091,49 @@ Shape : (4)
 <p class="admonition-title">Hint</p>
 <p>In this example, we use the python API. C++ can be used similarly.</p>
 </div>
-</section>
-<section id="prestore-preconstruct-sparse-elements">
-<h2><span class="section-number">10.1.3. </span>Prestore/preconstruct sparse elements<a class="headerlink" href="#prestore-preconstruct-sparse-elements" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="prestore-preconstruct-sparse-elements">
+<h2><span class="section-number">10.1.3. </span>Prestore/preconstruct sparse elements<a class="headerlink" href="#prestore-preconstruct-sparse-elements" title="Permalink to this headline">¶</a></h2>
 <p>In the previous example, we showed how to construct a linear operator by overloading the <strong>matvec</strong> member function of the LinOp class. This is straight forward and simple, but in cases where the custom mapping contains many for-loops, handling them in Python is not optimal for performance reasons.</p>
 <p>Since v0.6.3a, the option <strong>“mv_elem”</strong> is available in the constructor of the LinOp class. It allows users to pre-store the indices and values of the non-zero elements, similar to the standard sparse storage structure. If this is used, Cytnx handles the internal structure and optimizes the matvec performance. Again, let’s use the previous example: a sparse matrix <span class="math notranslate nohighlight">\(\boldsymbol{A}\)</span> with shape=(1000,1000) and ONLY two non-zero elements A[1,100]=4 and A[100,1]=7.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">Oper</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
-<span class="linenos"> 2</span>
-<span class="linenos"> 3</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="linenos"> 4</span>        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv_elem&quot;</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
-<span class="linenos"> 5</span>
-<span class="hll"><span class="linenos"> 6</span>        <span class="bp">self</span><span class="o">.</span><span class="n">set_elem</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mf">4.</span><span class="p">)</span>
-</span><span class="hll"><span class="linenos"> 7</span>        <span class="bp">self</span><span class="o">.</span><span class="n">set_elem</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">7.</span><span class="p">)</span>
-</span><span class="linenos"> 8</span>
-<span class="linenos"> 9</span><span class="n">A</span> <span class="o">=</span> <span class="n">Oper</span><span class="p">();</span>
-<span class="linenos">10</span><span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
-<span class="linenos">11</span><span class="n">y</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="linenos">12</span>
-<span class="linenos">13</span><span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">x</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
-<span class="linenos">14</span><span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">y</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Oper</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv_elem&quot;</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">set_elem</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mf">4.</span><span class="p">)</span>
+</span><span class="hll">        <span class="bp">self</span><span class="o">.</span><span class="n">set_elem</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">7.</span><span class="p">)</span>
+</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">Oper</span><span class="p">();</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">matvec</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">x</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span><span class="n">y</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Notice that instead of overloading the <strong>matvec</strong> function, we use the <strong>set_elem</strong> member function in the LinOp class to set the indices and values of the elements. This information is then stored internally in the LinOp class, and we let the LinOp class provide and optimize <strong>matvec</strong>.</p>
 <p>In <a class="reference internal" href="Lanczos.html#lanczos-solver"><span class="std std-ref">Lanczos solver</span></a>, we will see how we can benefit from the LinOp class by passing this object to Cytnx’s iterative solver. This way the eigenvalue problem can be solved efficiently with our customized linear operator.</p>
 <div class="toctree-wrapper compound">
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -1085,7 +1146,7 @@ Shape : (4)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.0.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
