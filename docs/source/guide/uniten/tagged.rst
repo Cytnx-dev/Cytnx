@@ -35,13 +35,11 @@ To demonstrate this, we use :ref:`contract` and try:
 
 While the first contraction works well, the second one throws a RuntimeError stating "BRA-KET mismatch":
 
-
 Output >> 
 
-.. code-block:: text
-    
-    RuntimeError: 
-    # Cytnx error occur at virtual boost::intrusive_ptr<cytnx::UniTensor_base> cytnx::DenseUniTensor::contract(const boost::intrusive_ptr<cytnx::UniTensor_base>&, const bool&, const bool&)
-    # error: [ERROR][DenseUniTensor][contract] cannot contract common label: <2> @ self bond#2 & rhs bond#0, BRA-KET mismatch!
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_tagged_contract.out
+    :language: text
+    :lines: 1-3
+
 
 .. toctree::

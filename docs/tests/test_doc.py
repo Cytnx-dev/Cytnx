@@ -215,6 +215,13 @@ def test_guide_uniten_create_complex(capsys):
 def test_guide_uniten_create_scratch(capsys):
     excute_and_output('guide_uniten_create_scratch', capsys)
 
+def test_guide_uniten_create_astype(capsys):
+    excute_and_output('guide_uniten_create_astype', capsys)
+
+@needGPUTest
+def test_guide_uniten_create_to(capsys):
+    excute_and_output('guide_uniten_create_to', capsys)
+
 # -Changing labels
 def test_guide_uniten_labels_relabel(capsys):
     test_names = ['guide_uniten_labels_relabel_', \
@@ -298,6 +305,15 @@ def test_guide_uniten_manipulation_reshape(capsys):
 
 def test_guide_uniten_manipulation_combine(capsys):
     excute_and_output('guide_uniten_manipulation_combine', capsys)
+
+def test_guide_uniten_manipulation_rowrank(capsys):
+    excute_and_output('guide_uniten_manipulation_rowrank', capsys)
+
+def test_guide_uniten_manipulation_Transpose(capsys):
+    excute_and_output('guide_uniten_manipulation_Transpose', capsys)
+
+def test_guide_uniten_manipulation_Transpose_tagged(capsys):
+    excute_and_output('guide_uniten_manipulation_Transpose_tagged', capsys)
 
 # Save/Load a UniTensor
 def test_guide_uniten_io_Save(capsys):

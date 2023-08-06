@@ -1,4 +1,4 @@
-net = cytnx.Network()
-net.FromString(["T0: v0in, phy, v0out",\
-                "T1: v1in, phy, v1out",\
-                "TOUT: v0in, v1in; v0out, v1out"])
+N = cytnx.Network()
+N.FromString(["A1: 1,-1,2",\
+              "A2: 3,-1,4",\
+              "TOUT: 1,3;2,4"])

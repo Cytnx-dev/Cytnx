@@ -12,4 +12,6 @@ make
 
 #run python test
 cd "$cur_path"
+rm -r __pycache__
 pytest -v test_doc.py
+cd "$cur_path"

@@ -1,11 +1,11 @@
 class MyOp(cytnx.LinOp):
-    def __init__(self):
-        cytnx.LinOp.__init__(self,"mv",4)
+  def __init__(self):
+    cytnx.LinOp.__init__(self,"mv",4)
 
-    def matvec(self,v):
-        A = cytnx.arange(16).reshape(4,4)
-        A += A.permute(1,0)
-        return cytnx.linalg.Dot(A,v)
+  def matvec(self,v):
+    A = cytnx.arange(16).reshape(4,4)
+    A += A.permute(1,0)
+    return cytnx.linalg.Dot(A,v)
 
 
 op = MyOp()

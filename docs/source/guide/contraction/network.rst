@@ -104,14 +104,6 @@ The legs of these tensors are arranged such that the first leg is the physical l
 Now suppose somehow we want to contract these two tensors by its physical legs, we create the following Network:
 
 
-.. .. code-block:: python
-..     :linenos:
-
-..     net = cytnx.Network()
-..     net.FromString(["T0: v0in, phy, v0out",\
-..                     "T1: v1in, phy, v1out",\
-..                     "TOUT: v0in, v1in; v0out, v1out"])
-
 * In Python:
 
 .. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_label_ord-2.py
@@ -131,23 +123,6 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_contraction_network_label_ord-3.out
     :language: text
 
-.. Output >> 
-
-.. .. code-block:: text
-
-..     -----------------------
-..     tensor Name : 
-..     tensor Rank : 4
-..     block_form  : False
-..     is_diag     : False
-..     on device   : cytnx device: CPU
-..                  ---------     
-..                 /         \    
-..        v0in ____| 8     8 |____ v0out
-..                 |         |    
-..        v1in ____| 8     8 |____ v1out
-..                 \         /    
-..                  ---------     
 
 So when we do the PutUniTensor() we add the third argument which is a labels ordering, what this function will do is nothing but permute the tensor legs according to this label ordering before putting them into the Network.
 

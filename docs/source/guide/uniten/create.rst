@@ -122,22 +122,14 @@ For example, consider a UniTensor *A* with **dtype=Type.Int64**, which shall be 
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_astype.py
+    :language: python
     :linenos:
-    
 
-    A = UniTensor(cytnx.ones([3,4],dtype=cytnx.Type.Int64))
-    B = A.astype(cytnx.Type.Double)
-    print(A.dtype_str())
-    print(B.dtype_str())
+Output >>
 
->> Output:
-
-.. code-block:: text
-    
-    Int64
-    Double (Float64)
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_create_astype.out
+    :language: text
 
 
 .. Note::
@@ -154,16 +146,9 @@ For example, let's create a UniTensor in the memory accessible by the CPU and tr
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_to.py
+    :language: python
     :linenos:
-
-    A = UniTensor(cytnx.ones([2,2])) #on CPU
-    B = A.to(cytnx.Device.cuda+0)
-    print(A) # on CPU
-    print(B) # on GPU
-
-    A.to_(cytnx.Device.cuda) 
-    print(A) # on GPU
 
 >> Output:
 

@@ -91,54 +91,17 @@ Most of the linear algebra algorithms take a matrix as an input. We thus use row
 
 The rowrank can be specified when initializing the UniTenosr, one can also use **.set_rowrank()** to modify the rowrank of a UniTensor:
 
-
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_manipulation_rowrank.py
+    :language: python
     :linenos:
 
-      T = cytnx.UniTensor(cytnx.ones([5,5,5,5,5]), rowrank = 2) # set the rowrank to be 2.
-      T.print_diagram()
+Output >>
 
-      T.set_rowrank(3)  # modify the rowrank.
-      T.print_diagram()
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_manipulation_rowrank.out
+    :language: text
 
-
-
-Output >> 
-
-.. code-block:: text
-
-      -----------------------
-      tensor Name : 
-      tensor Rank : 5
-      block_form  : False
-      is_diag     : False
-      on device   : cytnx device: CPU
-            ---------     
-            /         \    
-      0 ____| 5     5 |____ 2
-            |         |    
-      1 ____| 5     5 |____ 3
-            |         |    
-            |       5 |____ 4
-            \         /    
-            ---------     
-      -----------------------
-      tensor Name : 
-      tensor Rank : 5
-      block_form  : False
-      is_diag     : False
-      on device   : cytnx device: CPU
-            ---------     
-            /         \    
-      0 ____| 5     5 |____ 3
-            |         |    
-      1 ____| 5     5 |____ 4
-            |         |    
-      2 ____| 5       |        
-            \         /    
-            ---------     
 
 We leave the examples of linalg algebra operations incoporating the rowrank concept such as **singular value decomposition (SVD)** to the chapter :ref:`linalg extension`.
 
@@ -150,48 +113,15 @@ One common operation that is sensitive to the **rowrank** of a UniTensor is the 
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_manipulation_Transpose.py
+    :language: python
     :linenos:
 
-      T = cytnx.UniTensor(cytnx.ones([5,5,5]), rowrank = 2, labels = ["a","b","c"])
-      T.print_diagram()
-      print("Rowrank of T = ", T.rowrank())
-      T.Transpose().print_diagram()  # print the transposed T
-      print("Rowrank of transposed T = ", T.Transpose().rowrank())
+Output >>
 
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_manipulation_Transpose.out
+    :language: text
 
-Output >> 
-
-.. code-block:: text
-
-      -----------------------
-      tensor Name : 
-      tensor Rank : 3
-      block_form  : False
-      is_diag     : False
-      on device   : cytnx device: CPU
-            ---------     
-            /         \    
-      a ____| 5     5 |____ c
-            |         |    
-      b ____| 5       |        
-            \         /    
-            ---------     
-      Rowrank of T =  2
-      -----------------------
-      tensor Name : 
-      tensor Rank : 3
-      block_form  : False
-      is_diag     : False
-      on device   : cytnx device: CPU
-            ---------     
-            /         \    
-      c ____| 5     5 |____ a
-            |         |    
-            |       5 |____ b
-            \         /    
-            ---------     
-      Rowrank of transposed T =  1
 
 We see that .Transpose() swap the legs in the row space and column space, also the *rowrank* itself is modified.
 
@@ -199,57 +129,15 @@ Next we consider the tranposition of a tagged UniTensor:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_manipulation_Transpose_tagged.py
+    :language: python
     :linenos:
-      bd1 = cytnx.Bond(cytnx.BD_IN,[[1],[-1]],[1,1])
-      bd2 = cytnx.Bond(cytnx.BD_IN,[[1],[-1]],[1,1])
-      bd3 = cytnx.Bond(cytnx.BD_OUT,[[2],[0],[0],[-2]],[1,1,1,1])
 
-      T = cytnx.UniTensor([bd1,bd2,bd3], rowrank = 2, labels = ["a","b","c"])
-      T.print_diagram()
-      print("Rowrank of T = ", T.rowrank())
-      T.Transpose().print_diagram()  # print the transposed T
-      print("Rowrank of transposed T = ", T.Transpose().rowrank())
+Output >>
 
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_manipulation_Transpose_tagged.out
+    :language: text
 
-Output >> 
-
-.. code-block:: text
-
-      -----------------------
-      tensor Name : 
-      tensor Rank : 3
-      contiguous  : True
-      valid blocks : 6
-      is diag   : False
-      on device   : cytnx device: CPU
-            row           col 
-            -----------    
-            |         |    
-      a  -->| 2     4 |-->  c
-            |         |    
-      b  -->| 2       |        
-            |         |    
-            -----------    
-
-      Rowrank of T =  2
-      -----------------------
-      tensor Name : 
-      tensor Rank : 3
-      contiguous  : True
-      valid blocks : 6
-      is diag   : False
-      on device   : cytnx device: CPU
-            row           col 
-            -----------    
-            |         |    
-      a *<--| 2     4 |<--* c
-            |         |    
-      b *<--| 2       |        
-            |         |    
-            -----------    
-
-      Rowrank of transposed T =  2
 
 We see that for the tagged UniTensor the rowrank (and the row/column space the legs belong to) is not changed, instead the .Transpose() **inverted the direction of each bond**. 
 
