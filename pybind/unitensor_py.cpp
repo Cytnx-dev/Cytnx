@@ -284,6 +284,14 @@ void unitensor_binding(py::module &m) {
                },py::arg("locator"))
 
 
+    .def("c_at",[](UniTensor &self, const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &locator){
+                  Scalar::Sproxy tmp = self.at(lbls,locator);
+                  //std::cout << "ok" << std::endl;
+                  return cHclass(tmp);
+               },py::arg("labels"), py::arg("locator"))
+
+
+
     .def("__getitem__",
          [](const UniTensor &self, py::object locators) {
            cytnx_error_msg(self.shape().size() == 0,

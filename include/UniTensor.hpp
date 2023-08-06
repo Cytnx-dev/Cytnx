@@ -2604,6 +2604,48 @@ namespace cytnx {
       }
     }
 
+    template <class T>
+    const T &at(const std::vector<std::string> &lbls,
+                const std::vector<cytnx_uint64> &locator) const {
+      // giving label <-> locator one to one corresponding, return the element:
+      cytnx_error_msg(locator.size() != lbls.size(),
+                      "[ERROR][at] length of list should be the same for label and locator.%s",
+                      "\n");
+      cytnx_error_msg(
+        lbls.size() != this->rank(),
+        "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
+      std::vector<cytnx_uint64> new_locator(this->rank());
+      cytnx_uint64 new_loc;
+      for (int i = 0; i < lbls.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+        cytnx_error_msg(res == this->_impl->_labels.end(),
+                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+        new_loc = std::distance(this->_impl->_labels.begin(), res);
+        new_locator[new_loc] = locator[i];
+      }
+      return this->at<T>(new_locator);
+    }
+    template <class T>
+    T &at(const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &locator) {
+      // giving label <-> locator one to one corresponding, return the element:
+      cytnx_error_msg(locator.size() != lbls.size(),
+                      "[ERROR][at] length of list should be the same for label and locator.%s",
+                      "\n");
+      cytnx_error_msg(
+        lbls.size() != this->rank(),
+        "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
+      std::vector<cytnx_uint64> new_locator(this->rank());
+      cytnx_uint64 new_loc;
+      for (int i = 0; i < lbls.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+        cytnx_error_msg(res == this->_impl->_labels.end(),
+                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+        new_loc = std::distance(this->_impl->_labels.begin(), res);
+        new_locator[new_loc] = locator[i];
+      }
+      return this->at<T>(new_locator);
+    }
+
     /**
     @brief Get an element at specific location.
     @details see more information at user guide 6.3.5.
@@ -2640,6 +2682,48 @@ namespace cytnx {
       } else {
         return this->get_block_().at(locator);
       }
+    }
+
+    Scalar::Sproxy at(const std::vector<std::string> &lbls,
+                      const std::vector<cytnx_uint64> &locator) {
+      // giving label <-> locator one to one corresponding, return the element:
+      cytnx_error_msg(locator.size() != lbls.size(),
+                      "[ERROR][at] length of list should be the same for label and locator.%s",
+                      "\n");
+      cytnx_error_msg(
+        lbls.size() != this->rank(),
+        "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
+      std::vector<cytnx_uint64> new_locator(this->rank());
+      cytnx_uint64 new_loc;
+      for (int i = 0; i < lbls.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+        cytnx_error_msg(res == this->_impl->_labels.end(),
+                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+        new_loc = std::distance(this->_impl->_labels.begin(), res);
+        new_locator[new_loc] = locator[i];
+      }
+      return this->at(new_locator);
+    }
+
+    const Scalar::Sproxy at(const std::vector<std::string> &lbls,
+                            const std::vector<cytnx_uint64> &locator) const {
+      // giving label <-> locator one to one corresponding, return the element:
+      cytnx_error_msg(locator.size() != lbls.size(),
+                      "[ERROR][at] length of list should be the same for label and locator.%s",
+                      "\n");
+      cytnx_error_msg(
+        lbls.size() != this->rank(),
+        "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
+      std::vector<cytnx_uint64> new_locator(this->rank());
+      cytnx_uint64 new_loc;
+      for (int i = 0; i < lbls.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+        cytnx_error_msg(res == this->_impl->_labels.end(),
+                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+        new_loc = std::distance(this->_impl->_labels.begin(), res);
+        new_locator[new_loc] = locator[i];
+      }
+      return this->at(new_locator);
     }
 
     // return a clone of block
