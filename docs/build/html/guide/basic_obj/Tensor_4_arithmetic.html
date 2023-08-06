@@ -1,25 +1,24 @@
+
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>3.4. Tensor arithmetic &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -33,7 +32,7 @@
     </button>
       <div class="navbar-collapse collapse" id="exCollapsingNavbar2">
            <a class="navbar-brand py-1" href="../../index.html">
-                  Cytnx
+              <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
           </a>
           <ul class="navbar-nav mr-auto">
           
@@ -195,14 +194,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -267,42 +262,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -363,9 +333,9 @@
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
               
-                  <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                  <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -380,7 +350,7 @@
           <div class="collapse navbar-toggleable-xs container" id="exCollapsingNavbar2">
               <div class="container">
              　　 <a class="navbar-brand" href="../../index.html">
-                      Cytnx
+                      <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
                   </a>
               </div>
               <ul class="nav navbar-nav">
@@ -389,9 +359,9 @@
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
                   
-                      <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                      <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -593,14 +563,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../uniten/bond.html">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -665,42 +631,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -757,16 +698,12 @@
               </div>
             
           
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="Tensor_3_access.html"
-                          title="previous chapter"><span class="section-number">3.3. </span>Accessing elements</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="Tensor_5_numpy.html"
-                          title="next chapter"><span class="section-number">3.5. </span>To/From numpy.array</a></p>
-  </div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="Tensor_3_access.html"
+                        title="previous chapter"><span class="section-number">3.3. </span>Accessing elements</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Tensor_5_numpy.html"
+                        title="next chapter"><span class="section-number">3.5. </span>To/From numpy.array</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -788,11 +725,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="tensor-arithmetic">
-<h1><span class="section-number">3.4. </span>Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="tensor-arithmetic">
+<h1><span class="section-number">3.4. </span>Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Permalink to this headline">¶</a></h1>
 <p>In Cytnx, arithmetic operations such as <strong>+, -, *, /, +=, -=, *=, /=</strong> can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. See also <a class="reference internal" href="../linalg.html#linear-algebra"><span class="std std-ref">Linear algebra</span></a> for a list of arithmetic operations and further linear algebra functions.</p>
-<section id="type-promotion">
-<h2><span class="section-number">3.4.1. </span>Type promotion<a class="headerlink" href="#type-promotion" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="type-promotion">
+<h2><span class="section-number">3.4.1. </span>Type promotion<a class="headerlink" href="#type-promotion" title="Permalink to this headline">¶</a></h2>
 <p>Arithmetic operations in Cytnx follow a similar pattern of type promotion as standard C++/Python.
 When an arithmetic operation between a Tensor and another Tensor or scalar is performed, the output Tensor will have the same dtype as the input with the stronger type.</p>
 <p>The Type order from strong to weak is:</p>
@@ -811,37 +748,51 @@ When an arithmetic operation between a Tensor and another Tensor or scalar is pe
 <li><p>Type.Bool</p></li>
 </ul>
 </div></blockquote>
-</section>
-<section id="tensor-scalar-arithmetic">
-<h2><span class="section-number">3.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="tensor-scalar-arithmetic">
+<h2><span class="section-number">3.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this headline">¶</a></h2>
 <p>Several arithmetic operations between a Tensor and a scalar are possible.
 For example:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
-<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">4</span>
-<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
-<span class="linenos">6</span>
-<span class="linenos">7</span><span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="mi">7</span><span class="n">j</span> <span class="c1"># type promotion</span>
-<span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">4</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="mi">7</span><span class="n">j</span> <span class="c1"># type promotion</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">});</span>
-<span class="linenos">2</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">6</span>
-<span class="linenos">7</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span><span class="w"> </span><span class="c1">//type promotion</span>
-<span class="linenos">8</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">});</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">-</span> <span class="n">std</span><span class="o">::</span><span class="n">complex</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">7</span><span class="p">);</span> <span class="c1">//type promotion</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output&gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 12
 type  : Double (Float64)
@@ -872,37 +823,51 @@ Shape : (3,4)
  [1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]]
 </pre></div>
 </div>
-</section>
-<section id="tensor-tensor-arithmetic">
-<h2><span class="section-number">3.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="tensor-tensor-arithmetic">
+<h2><span class="section-number">3.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this headline">¶</a></h2>
 <p>Arithmetic operations between two Tensors of the same shape are possible.
 For example:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
-<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
-<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
-<span class="linenos">6</span>
-<span class="linenos">7</span><span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
-<span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">])</span><span class="o">*</span><span class="mi">4</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">C</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">2</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">6</span>
-<span class="linenos">7</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">;</span>
-<span class="linenos">8</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span><span class="o">*</span><span class="mi">4</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">B</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+
+<span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span> <span class="o">*</span> <span class="n">B</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">C</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output&gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Total elem: 12
 type  : Double (Float64)
@@ -937,25 +902,33 @@ Shape : (3,4)
 <p class="admonition-title">Note</p>
 <p>An elementwise multiplication is applied if the operator <strong>‘*’</strong> is used. For tensor contractions or matrix multiplications, see <a class="reference internal" href="../contraction.html#contraction"><span class="std std-ref">Contraction</span></a>.</p>
 </div>
-</section>
-<section id="equivalent-apis-c-only">
-<h2><span class="section-number">3.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="equivalent-apis-c-only">
+<h2><span class="section-number">3.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Permalink to this headline">¶</a></h2>
 <p>Cytnx also provides some equivalent APIs for users who are familiar with/coming from pytorch and similar libraries.
 For example, there are two different ways to perform the + operation: <strong>Tensor.Add()/Tensor.Add_()</strong> and <strong>linalg.Add()</strong></p>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">});</span>
-<span class="linenos">2</span><span class="k">auto</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="c1">// these two are equivalent to C = A+B;</span>
-<span class="linenos">5</span><span class="k">auto</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
-<span class="linenos">6</span><span class="k">auto</span><span class="w"> </span><span class="n">D</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Add</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
-<span class="linenos">7</span>
-<span class="linenos">8</span><span class="c1">// this is equivalent to A+=B;</span>
-<span class="linenos">9</span><span class="n">A</span><span class="p">.</span><span class="n">Add_</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">ones</span><span class="p">({</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">});</span>
+<span class="k">auto</span> <span class="n">B</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+
+<span class="c1">// these two are equivalent to C = A+B;</span>
+<span class="k">auto</span> <span class="n">C</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+<span class="k">auto</span> <span class="n">D</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">linalg</span><span class="o">::</span><span class="n">Add</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">);</span>
+
+<span class="c1">// this is equivalent to A+=B;</span>
+<span class="n">A</span><span class="p">.</span><span class="n">Add_</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ol class="arabic simple">
@@ -972,8 +945,8 @@ For example, there are two different ways to perform the + operation: <strong>Te
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -986,7 +959,7 @@ For example, there are two different ways to perform the + operation: <strong>Te
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.0.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

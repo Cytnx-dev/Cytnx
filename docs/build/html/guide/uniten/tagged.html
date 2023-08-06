@@ -1,25 +1,24 @@
+
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>7.5. Tagged UniTensor &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -33,7 +32,7 @@
     </button>
       <div class="navbar-collapse collapse" id="exCollapsingNavbar2">
            <a class="navbar-brand py-1" href="../../index.html">
-                  Cytnx
+              <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
           </a>
           <ul class="navbar-nav mr-auto">
           
@@ -195,14 +194,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="bond.html">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -267,42 +262,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -363,9 +333,9 @@
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
               
-                  <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                  <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -380,7 +350,7 @@
           <div class="collapse navbar-toggleable-xs container" id="exCollapsingNavbar2">
               <div class="container">
              　　 <a class="navbar-brand" href="../../index.html">
-                      Cytnx
+                      <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
                   </a>
               </div>
               <ul class="nav navbar-nav">
@@ -389,9 +359,9 @@
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
                   
-                      <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                      <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -593,14 +563,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="bond.html">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="bond.html#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -665,42 +631,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -757,16 +698,12 @@
               </div>
             
           
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="bond.html"
-                          title="previous chapter"><span class="section-number">7.4. </span>Bond</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="symmetric.html"
-                          title="next chapter"><span class="section-number">7.6. </span>UniTensor with Symmetries</a></p>
-  </div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="bond.html"
+                        title="previous chapter"><span class="section-number">7.4. </span>Bond</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="symmetric.html"
+                        title="next chapter"><span class="section-number">7.6. </span>UniTensor with Symmetries</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -788,29 +725,39 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="tagged-unitensor">
-<h1><span class="section-number">7.5. </span>Tagged UniTensor<a class="headerlink" href="#tagged-unitensor" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="tagged-unitensor">
+<h1><span class="section-number">7.5. </span>Tagged UniTensor<a class="headerlink" href="#tagged-unitensor" title="Permalink to this headline">¶</a></h1>
 <p>In this section we introduce <strong>tagged UniTensor</strong>, which is a UniTensor with <em>directional</em> bonds. Mathematically, a bond directing towards a tensor represents a vectorspace, while a bond directing away from a tensor represents the corresponding dual space. In physics, this is often represented as a “Ket” or “Bra” vector. We use the convention that “Ket” is represented by a bond directing towards the tensor, while “Bra” points away from the tensor.</p>
 <p>If symmetric tensors are considered, the bonds carry quantum numbers and are always tagged. Therefore, tagged UniTensors can further be categorized into <strong>non-symmetric</strong> and <strong>symmetric</strong> (block form) tensors. The latter are covered in <a class="reference internal" href="symmetric.html#unitensor-with-symmetries"><span class="std std-ref">UniTensor with Symmetries</span></a>.</p>
-<section id="non-symmetric-tagged-unitensor">
-<h2><span class="section-number">7.5.1. </span>Non-symmetric Tagged UniTensor<a class="headerlink" href="#non-symmetric-tagged-unitensor" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="non-symmetric-tagged-unitensor">
+<h2><span class="section-number">7.5.1. </span>Non-symmetric Tagged UniTensor<a class="headerlink" href="#non-symmetric-tagged-unitensor" title="Permalink to this headline">¶</a></h2>
 <p>To create the non-symmetric, tagged UniTensor, we initialize it with <strong>directional</strong> bonds (BD_IN/BD_KET or BD_OUT/BD_BRA). Let’s create UniTensors <strong>Ta</strong>, <strong>Tb</strong> and <strong>Tc</strong> in this way and investigate their properties:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">bond_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">)</span>
-<span class="linenos"> 2</span><span class="n">bond_b</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)</span>
-<span class="linenos"> 3</span><span class="n">Ta</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
-<span class="linenos"> 4</span><span class="n">Ta</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Ta&quot;</span><span class="p">)</span>
-<span class="linenos"> 5</span><span class="n">Ta</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
-<span class="linenos"> 6</span><span class="n">Tb</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos"> 7</span><span class="n">Tb</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Tb&quot;</span><span class="p">)</span>
-<span class="linenos"> 8</span><span class="n">Tb</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
-<span class="linenos"> 9</span><span class="n">Tc</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
-<span class="linenos">10</span><span class="n">Tc</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Tc&quot;</span><span class="p">)</span>
-<span class="linenos">11</span><span class="n">Tc</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bond_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">)</span>
+<span class="n">bond_b</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_BRA</span><span class="p">)</span>
+<span class="n">Ta</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">Ta</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Ta&quot;</span><span class="p">)</span>
+<span class="n">Ta</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">Tb</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_a</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">Tb</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Tb&quot;</span><span class="p">)</span>
+<span class="n">Tb</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="n">Tc</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">,</span> <span class="n">bond_b</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">Tc</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;Tc&quot;</span><span class="p">)</span>
+<span class="n">Tc</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
 tensor Name : Ta
@@ -865,10 +812,11 @@ braket_form : False
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="n">Tb</span><span class="p">)</span>
-<span class="linenos">2</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="n">Tc</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="n">Tb</span><span class="p">)</span>
+<span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span> <span class="n">Tc</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>While the first contraction works well, the second one throws a RuntimeError stating “BRA-KET mismatch”:</p>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>RuntimeError:
@@ -878,8 +826,8 @@ braket_form : False
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -892,7 +840,7 @@ braket_form : False
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.0.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

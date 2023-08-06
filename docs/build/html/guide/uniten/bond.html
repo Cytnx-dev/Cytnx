@@ -1,25 +1,24 @@
+
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
     <title>7.4. Bond &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -33,7 +32,7 @@
     </button>
       <div class="navbar-collapse collapse" id="exCollapsingNavbar2">
            <a class="navbar-brand py-1" href="../../index.html">
-                  Cytnx
+              <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
           </a>
           <ul class="navbar-nav mr-auto">
           
@@ -195,14 +194,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -267,42 +262,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -363,9 +333,9 @@
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
               
-                  <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                  <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+              <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -380,7 +350,7 @@
           <div class="collapse navbar-toggleable-xs container" id="exCollapsingNavbar2">
               <div class="container">
              　　 <a class="navbar-brand" href="../../index.html">
-                      Cytnx
+                      <img class="logo" src="../../_static/Iconi.png" alt="Cytnx"/>
                   </a>
               </div>
               <ul class="nav navbar-nav">
@@ -389,9 +359,9 @@
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
                   
-                      <a  class="nav-link" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+                      <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.1</a></li>
+                  <a  class="nav-link" href="../../%23.html">v0.9.2</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -593,14 +563,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a></li>
 </ul>
 </li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">7.4. Bond</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#symmetry-object">7.4.1. Symmetry object</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#combining-bonds">7.4.3. Combining Bonds</a></li>
@@ -665,42 +631,17 @@
 <li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/Lanczos.html#Lanczos_ER"><code class="docutils literal notranslate"><span class="pre">Lanczos_ER()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a></li>
 </ul>
 </li>
 </ul>
@@ -757,16 +698,12 @@
               </div>
             
           
-  <div>
-    <h4>Previous topic</h4>
-    <p class="topless"><a href="labels.html"
-                          title="previous chapter"><span class="section-number">7.3. </span>Changing labels</a></p>
-  </div>
-  <div>
-    <h4>Next topic</h4>
-    <p class="topless"><a href="tagged.html"
-                          title="next chapter"><span class="section-number">7.5. </span>Tagged UniTensor</a></p>
-  </div>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="labels.html"
+                        title="previous chapter"><span class="section-number">7.3. </span>Changing labels</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tagged.html"
+                        title="next chapter"><span class="section-number">7.5. </span>Tagged UniTensor</a></p>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../../search.html" method="get">
       <input type="text" name="q" class="form-control" placeholder="Search..." />
@@ -788,17 +725,17 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="bond">
-<h1><span class="section-number">7.4. </span>Bond<a class="headerlink" href="#bond" title="Permalink to this heading">¶</a></h1>
+  <div class="section" id="bond">
+<h1><span class="section-number">7.4. </span>Bond<a class="headerlink" href="#bond" title="Permalink to this headline">¶</a></h1>
 <p>A <strong>Bond</strong> is an object that represents the legs or indices of a tensor. It carries information such as the direction, dimension and quantum numbers (if symmetries given).</p>
 <p>There are in general two types of Bonds: <strong>directional</strong> and <strong>undirectional</strong>, depending on whether the bond has a direction (pointing inward or outward with respect to the tensor) or not. The inward Bond is also defined as <strong>Ket</strong>/<strong>In</strong> type, while the outward Bond is defined as <strong>Bra</strong>/<strong>Out</strong> type as in the <em>Braket</em> notation in the quantum mechanics:</p>
 <a class="reference internal image-reference" href="../../_images/bond.png"><img alt="../../_images/bond.png" class="align-center" src="../../_images/bond.png" style="width: 400px;" /></a>
 <p>The API for constructing a simple Bond (with or without direction) is:</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="Bond">
-<span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Bond" title="Permalink to this definition">¶</a></dt>
+<dt id="Bond">
+<code class="sig-name descname"><span class="pre">Bond</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Bond" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dim</strong> (<em>int</em>) – The dimension of the bond.</p></li>
 <li><p><strong>bd_type</strong> (<em>bondType</em>) – The type (direction) of the bond, can be BD_REG–undirectional, BD_KET–inward (same as BD_IN), BD.BRA–outward (same as BD_OUT)</p></li>
@@ -811,16 +748,23 @@
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span>
-<span class="linenos">2</span><span class="c1"># This creates an in-going Bond with dimension 10.</span>
-<span class="linenos">3</span><span class="n">bond_1</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">BD_IN</span><span class="p">)</span>
-<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">bond_1</span><span class="p">)</span>
-<span class="linenos">5</span><span class="c1"># If one doesn&#39;t specify the Bond type, the default bond type will be</span>
-<span class="linenos">6</span><span class="n">regular</span> <span class="ow">or</span> <span class="n">undirectional</span><span class="o">.</span>
-<span class="linenos">7</span><span class="n">bond_2</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
-<span class="linenos">8</span><span class="nb">print</span><span class="p">(</span><span class="n">bond_2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span>
+<span class="c1"># This creates an in-going Bond with dimension 10.</span>
+<span class="n">bond_1</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">BD_IN</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bond_1</span><span class="p">)</span>
+<span class="c1"># If one doesn&#39;t specify the Bond type, the default bond type will be</span>
+<span class="n">regular</span> <span class="ow">or</span> <span class="n">undirectional</span><span class="o">.</span>
+<span class="n">bond_2</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bond_2</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 10 |type: KET&gt;
 Dim = 10 |type: REGULAR&gt;
@@ -831,41 +775,52 @@ to BD_KET or the opposite, one can then use .redirect() method:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span>
-<span class="linenos">2</span><span class="n">bond_1</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">BD_IN</span><span class="p">)</span>
-<span class="linenos">3</span><span class="n">bond_2</span> <span class="o">=</span> <span class="n">bond_1</span><span class="o">.</span><span class="n">redirect</span><span class="p">()</span>
-<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">bond_1</span><span class="p">)</span>
-<span class="linenos">5</span><span class="nb">print</span><span class="p">(</span><span class="n">bond_2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cytnx</span> <span class="kn">import</span> <span class="n">Bond</span>
+<span class="n">bond_1</span> <span class="o">=</span> <span class="n">Bond</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">BD_IN</span><span class="p">)</span>
+<span class="n">bond_2</span> <span class="o">=</span> <span class="n">bond_1</span><span class="o">.</span><span class="n">redirect</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bond_1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bond_2</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 10 |type: KET&gt;
 Dim = 10 |type: &lt;BRA
 </pre></div>
 </div>
-<section id="symmetry-object">
-<h2><span class="section-number">7.4.1. </span>Symmetry object<a class="headerlink" href="#symmetry-object" title="Permalink to this heading">¶</a></h2>
+<div class="section" id="symmetry-object">
+<h2><span class="section-number">7.4.1. </span>Symmetry object<a class="headerlink" href="#symmetry-object" title="Permalink to this headline">¶</a></h2>
 <p>Symmetries play an important role in physical simulations. Tensors and bonds can be defined in a way that preserves the symmetries. This helps to reduce the numerical costs, can increase precision and it allows to do calculations restricted to specific symmetry sectors.</p>
 <p>In Cytnx, the symmetry type is defined by a Symmetry object. It contains the name, type, combine rule and the reverse rule of that symmetry. The combine rule contains the information how two quantum numbers are combined to a new quantum number. Let us create Symmetry objects for a <em>U1</em> and a <em>Z_2</em> symmetry and print their info:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">sym_u1</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()</span>
-<span class="linenos">2</span><span class="n">sym_z2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">sym_u1</span><span class="p">)</span>
-<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">sym_z2</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">sym_u1</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()</span>
+<span class="n">sym_z2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sym_u1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sym_z2</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">();</span>
-<span class="linenos">2</span><span class="n">Symmetry</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
-<span class="linenos">3</span>
-<span class="linenos">4</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_u1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
-<span class="linenos">5</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sym_z2</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">endl</span><span class="p">;</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">Symmetry</span> <span class="n">sym_u1</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">();</span>
+<span class="n">Symmetry</span> <span class="n">sym_z2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sym_u1</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sym_z2</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--------------------
 [Symmetry]
@@ -882,16 +837,16 @@ reverse rule : Q*(-1)
 --------------------
 </pre></div>
 </div>
-</section>
-<section id="creating-bonds-with-quantum-numbers">
-<h2><span class="section-number">7.4.2. </span>Creating Bonds with quantum numbers<a class="headerlink" href="#creating-bonds-with-quantum-numbers" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="creating-bonds-with-quantum-numbers">
+<h2><span class="section-number">7.4.2. </span>Creating Bonds with quantum numbers<a class="headerlink" href="#creating-bonds-with-quantum-numbers" title="Permalink to this headline">¶</a></h2>
 <p>In order to implement symmetries on the level of tensors, we assign a quantum number to each value of an index. The quantum numbers can have a degeneracy, such that several values of an index correspond to the same quantum number.</p>
 <p>To construct a Bond with symmetries and associate quantum numbers, the following API can be used:</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnums_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degeneracies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dt id="id0">
+<code class="sig-name descname"><span class="pre">Bond</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnums_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">degeneracies</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bd_type</strong> (<em>bondType</em>) – type (direction) of the bond, this can ONLY be BD_KET–inward (BD_IN) or BD_BRA–outward (BD_OUT) when quantum numbers are used</p></li>
 <li><p><strong>qnums_list</strong> (<em>list</em>) – quantum number list</p></li>
@@ -904,10 +859,10 @@ reverse rule : Q*(-1)
 
 <p>The two arguments <em>qnums_list</em> and <em>degeneracies</em> can be combined into a single argument by using the following API:</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="id1">
-<span class="sig-name descname"><span class="pre">Bond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnums_degeneracy_pair</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dt id="id1">
+<code class="sig-name descname"><span class="pre">Bond</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bd_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qnums_degeneracy_pair</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>bd_type</strong> (<em>bondType</em>) – type (direction) of the bond, this can ONLY be BD_KET–inward (BD_IN) or BD_BRA–outward (BD_OUT) when quantum numbers are used</p></li>
 <li><p><strong>qnums_degeneracy_pair_list</strong> (<em>list</em>) – list of pairs of quantum numbers and degeneracies, which can be constructed with the helper class <em>Qs</em></p></li>
@@ -922,35 +877,55 @@ reverse rule : Q*(-1)
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.</span>
-<span class="linenos"> 2</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span>\
-<span class="linenos"> 3</span>                        <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],</span>\
-<span class="linenos"> 4</span>                        <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="c1"># equivalent:</span>
-<span class="linenos"> 7</span><span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span>\
-<span class="linenos"> 8</span>                        <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span>\
-<span class="linenos"> 9</span>                        <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.</span>
+<span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span>\
+                        <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],</span>\
+                        <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+
+<span class="c1"># equivalent:</span>
+<span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span>\
+                        <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)],</span>\
+                        <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">// This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.</span>
-<span class="linenos"> 2</span><span class="n">Bond</span><span class="w"> </span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_KET</span><span class="p">,</span>
-<span class="linenos"> 3</span><span class="w">                               </span><span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},</span>
-<span class="linenos"> 4</span><span class="w">                               </span><span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
-<span class="linenos"> 5</span>
-<span class="linenos"> 6</span><span class="c1">// equivalent:</span>
-<span class="linenos"> 7</span><span class="n">bd_sym_u1_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_IN</span><span class="p">,</span>
-<span class="linenos"> 8</span><span class="w">                          </span><span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)},</span>
-<span class="linenos"> 9</span><span class="w">                          </span><span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
-<span class="linenos">10</span>
-<span class="linenos">11</span><span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1">// This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.</span>
+<span class="n">Bond</span> <span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_KET</span><span class="p">,</span>
+                               <span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},</span>
+                               <span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
+
+<span class="c1">// equivalent:</span>
+<span class="n">bd_sym_u1_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_IN</span><span class="p">,</span>
+                          <span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="p">)},</span>
+                          <span class="p">{</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">},{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">()});</span>
+
+<span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1_a</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 12 |type: |IN (KET)&gt;     
  U1::   +0  -4  -2  +3
@@ -961,31 +936,47 @@ Deg&gt;&gt;    3   4   3   2
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># This creates a KET (IN) Bond with U1xZ2 symmetry</span>
-<span class="linenos"> 2</span><span class="c1"># and quantum numbers (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.</span>
-<span class="linenos"> 3</span><span class="n">bd_sym_u1z2_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span>\
-<span class="linenos"> 4</span>                           <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
-<span class="linenos"> 5</span>                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>\
-<span class="linenos"> 6</span>                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
-<span class="linenos"> 7</span>                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],</span>\
-<span class="linenos"> 8</span>                           <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
-<span class="linenos"> 9</span>
-<span class="linenos">10</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="c1"># This creates a KET (IN) Bond with U1xZ2 symmetry</span>
+<span class="c1"># and quantum numbers (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.</span>
+<span class="n">bd_sym_u1z2_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span>\
+                           <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
+                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>\
+                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>\
+                            <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">],</span>\
+                           <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">(),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <ul class="simple">
 <li><p>In C++:</p></li>
 </ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="k">auto</span><span class="w"> </span><span class="n">bd_sym_u1z2_a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_KET</span><span class="p">,</span>
-<span class="linenos">2</span><span class="w">                                 </span><span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
-<span class="linenos">3</span><span class="w">                                  </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>
-<span class="linenos">4</span><span class="w">                                  </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
-<span class="linenos">5</span><span class="w">                                  </span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},</span>
-<span class="linenos">6</span><span class="w">                                 </span><span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">(),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
-<span class="linenos">7</span>
-<span class="linenos">8</span><span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">);</span>
+<div class="highlight-c++ notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="k">auto</span> <span class="n">bd_sym_u1z2_a</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">::</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">::</span><span class="n">BD_KET</span><span class="p">,</span>
+                                 <span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span> <span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
+                                  <span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-4</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span>
+                                  <span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">-2</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span>
+                                  <span class="n">cytnx</span><span class="o">::</span><span class="n">Qs</span><span class="p">(</span><span class="mi">3</span> <span class="p">,</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">},</span>
+                                 <span class="p">{</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">U1</span><span class="p">(),</span><span class="n">cytnx</span><span class="o">::</span><span class="n">Symmetry</span><span class="o">::</span><span class="n">Zn</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
+
+<span class="n">print</span><span class="p">(</span><span class="n">bd_sym_u1z2_a</span><span class="p">);</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 12 |type: KET&gt;
  U1::   +0  -4  -2  +3
@@ -993,22 +984,27 @@ Deg&gt;&gt;    3   4   3   2
 Deg&gt;&gt;    3   4   3   2
 </pre></div>
 </div>
-</section>
-<section id="combining-bonds">
-<h2><span class="section-number">7.4.3. </span>Combining Bonds<a class="headerlink" href="#combining-bonds" title="Permalink to this heading">¶</a></h2>
+</div>
+<div class="section" id="combining-bonds">
+<h2><span class="section-number">7.4.3. </span>Combining Bonds<a class="headerlink" href="#combining-bonds" title="Permalink to this headline">¶</a></h2>
 <p>In typical algorithms, two bonds often get combined to one bond. This can be done with Bonds involving Symmetries as well. The quantum numbers are merged according to the combine rules.</p>
 <p>As an example, let us create another <em>U1</em> Bond <strong>bd_sym_u1_c</strong> and combine it with <strong>bd_sym_u1_a</strong>:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_u1_c</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span>\
-<span class="linenos">2</span>                <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">6</span><span class="p">])</span>
-<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
-<span class="linenos">4</span>
-<span class="linenos">5</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
-<span class="linenos">6</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
+<div class="highlight-python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bd_sym_u1_c</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">BD_KET</span><span class="p">,</span>\
+                <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">3</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">4</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">5</span><span class="p">,</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">6</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
+
+<span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 20 |type: KET&gt;
 U1::   -1  +1  +2  -2  +0
@@ -1037,10 +1033,11 @@ Deg&gt;&gt;   20   8  39  18  49  15  30  19  16  12   6   8
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">,</span><span class="n">is_grp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="linenos">2</span><span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
+<div class="highlight-Python notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">bd_sym_all</span> <span class="o">=</span> <span class="n">bd_sym_u1_a</span><span class="o">.</span><span class="n">combineBond</span><span class="p">(</span><span class="n">bd_sym_u1_c</span><span class="p">,</span><span class="n">is_grp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">bd_sym_all</span><span class="p">)</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Dim = 240 |type: KET&gt;
  U1::   -1  +1  +2  -2  +0  -5  -3  -2  -6  -4  -3  -1  +0  -4  -2  +2  +4  +5  +1  +3
@@ -1053,8 +1050,8 @@ Deg&gt;&gt;    6   9  12  15  18   8  12  16  20  24   6   9  12  15  18   4   6
 </div>
 <div class="toctree-wrapper compound">
 </div>
-</section>
-</section>
+</div>
+</div>
 
 
           </div>
@@ -1067,7 +1064,7 @@ Deg&gt;&gt;    6   9  12  15  18   8  12  16  20  24   6   9  12  15  18   4   6
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.0.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 3.5.4 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
