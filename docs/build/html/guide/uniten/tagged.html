@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -16,10 +15,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/basic.css" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
-    <script src="../../_static/underscore.js"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/doctools.js"></script>
     <script src="../../_static/sphinx_highlight.js"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
@@ -35,7 +33,7 @@
     </button>
       <div class="navbar-collapse collapse" id="exCollapsingNavbar2">
            <a class="navbar-brand py-1" href="../../index.html">
-              <img class="logo" src="../../_static/Icon_i.png" alt="Cytnx"/>
+                  Cytnx
           </a>
           <ul class="navbar-nav mr-auto">
           
@@ -124,7 +122,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Tensor_6_app.html">3.6. Appending elements</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Tensor_7_io.html">3.7. Save/Load</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Tensor_7_io.html">3.7. Save/Load a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Tensor_7_io.html#save-a-tensor">3.7.1. Save a Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Tensor_7_io.html#load-a-tensor">3.7.2. Load a Tensor</a></li>
 </ul>
@@ -158,7 +156,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load a storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. Save &amp; load from/to binary</a></li>
@@ -191,7 +189,9 @@
 <li class="toctree-l3"><a class="reference internal" href="create.html">7.2. Creating a UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="create.html#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="create.html#from-scratch">7.2.2. From scratch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.3. Tagged UniTensors and UniTensors with Symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create.html#type-conversion">7.2.3. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create.html#transfer-between-devices">7.2.4. Transfer between devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.5. Tagged UniTensors and UniTensors with Symmetries</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="labels.html">7.3. Changing labels</a><ul>
@@ -227,10 +227,16 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="manipulation.html">7.9. Manipulate UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#permute">7.9.1. permute:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#reshape">7.9.2. reshape:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#arithmetic">7.9.3. Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#rowrank">7.9.4. rowrank</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#permute">7.9.1. Permute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#reshape">7.9.2. Reshape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#combine-bonds">7.9.3. Combine bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#arithmetic">7.9.4. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#rowrank">7.9.5. Rowrank</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="io.html">7.10. Save/Load a UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="io.html#save-a-unitensor">7.10.1. Save a UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="io.html#load-a-unitensor">7.10.2. Load a UniTensor</a></li>
 </ul>
 </li>
 </ul>
@@ -256,10 +262,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../itersol.html">10. Iterative solver</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">10.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">10.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">10.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#example-sparse-data-structure-with-mapping-function">10.1.3. Example: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">10.1.1. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#example-sparse-data-structure-with-mapping-function">10.1.2. Example: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
@@ -269,6 +274,35 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -346,7 +380,7 @@
           <div class="collapse navbar-toggleable-xs container" id="exCollapsingNavbar2">
               <div class="container">
              　　 <a class="navbar-brand" href="../../index.html">
-                      <img class="logo" src="../../_static/Icon_i.png" alt="Cytnx"/>
+                      Cytnx
                   </a>
               </div>
               <ul class="nav navbar-nav">
@@ -486,7 +520,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Tensor_6_app.html">3.6. Appending elements</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Tensor_7_io.html">3.7. Save/Load</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Tensor_7_io.html">3.7. Save/Load a Tensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Tensor_7_io.html#save-a-tensor">3.7.1. Save a Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Tensor_7_io.html#load-a-tensor">3.7.2. Load a Tensor</a></li>
 </ul>
@@ -520,7 +554,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load a storage</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-a-storage">4.5.1. Save a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#load-a-storage">4.5.2. Load a Storage</a></li>
 <li class="toctree-l4"><a class="reference internal" href="../basic_obj/Storage_5_io.html#save-load-from-to-binary">4.5.3. Save &amp; load from/to binary</a></li>
@@ -553,7 +587,9 @@
 <li class="toctree-l3"><a class="reference internal" href="create.html">7.2. Creating a UniTensor</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="create.html#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
 <li class="toctree-l4"><a class="reference internal" href="create.html#from-scratch">7.2.2. From scratch</a></li>
-<li class="toctree-l4"><a class="reference internal" href="create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.3. Tagged UniTensors and UniTensors with Symmetries</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create.html#type-conversion">7.2.3. Type conversion</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create.html#transfer-between-devices">7.2.4. Transfer between devices</a></li>
+<li class="toctree-l4"><a class="reference internal" href="create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.5. Tagged UniTensors and UniTensors with Symmetries</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="labels.html">7.3. Changing labels</a><ul>
@@ -589,10 +625,16 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="manipulation.html">7.9. Manipulate UniTensor</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#permute">7.9.1. permute:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#reshape">7.9.2. reshape:</a></li>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#arithmetic">7.9.3. Arithmetic</a></li>
-<li class="toctree-l4"><a class="reference internal" href="manipulation.html#rowrank">7.9.4. rowrank</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#permute">7.9.1. Permute</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#reshape">7.9.2. Reshape</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#combine-bonds">7.9.3. Combine bonds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#arithmetic">7.9.4. Arithmetic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="manipulation.html#rowrank">7.9.5. Rowrank</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="io.html">7.10. Save/Load a UniTensor</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="io.html#save-a-unitensor">7.10.1. Save a UniTensor</a></li>
+<li class="toctree-l4"><a class="reference internal" href="io.html#load-a-unitensor">7.10.2. Load a UniTensor</a></li>
 </ul>
 </li>
 </ul>
@@ -618,10 +660,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../itersol.html">10. Iterative solver</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../itersol/LinOp.html">10.1. LinOp class</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#pass-a-function">10.1.1. Pass a function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">10.1.2. Inherit the LinOp class</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#example-sparse-data-structure-with-mapping-function">10.1.3. Example: sparse data structure with mapping function</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.4. Prestore/preconstruct sparse elements</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#inherit-the-linop-class">10.1.1. Inherit the LinOp class</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#example-sparse-data-structure-with-mapping-function">10.1.2. Example: sparse data structure with mapping function</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../itersol/LinOp.html#prestore-preconstruct-sparse-elements">10.1.3. Prestore/preconstruct sparse elements</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a><ul>
@@ -631,6 +672,35 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#data-type">12.1. Data type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#device">12.2. Device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#save-load">12.3. Save &amp; Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../common.html#operations">12.4. Operations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -822,7 +892,7 @@ braket_form : False
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 5.3.0 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.0.1 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

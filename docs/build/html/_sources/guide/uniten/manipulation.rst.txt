@@ -6,7 +6,7 @@ we show the basic functionalities to manipulate UniTensors.
 
 Permutation, reshaping and arithmetic operations are accessed similarly to **Tensor** objects as introduced before, with slight modifications for symmetric UniTensors.
 
-permute:
+Permute
 ************************************
 
 The bond order can be changed with *permute* for all kinds of UniTensors. The order can either be defined by the index order as for the permute method of a *Tensor*, or by specifying the label order after the permutation.
@@ -87,7 +87,7 @@ For example, we permute the indices of the symmetric tensor that we introduced b
 
 We did the same permutation in two ways in this example, once using indices, once using labels. The first index of the permuted tensor corresponds to the last index of the original tensor (original index 2, label "f"), the second new index to the first old index (old index 0, label "d") and the last new bond has the old index 1 and label "e".
 
-reshape:
+Reshape
 ************************************
 
 Untagged UniTensors can be reshaped just like normal Tensors.
@@ -126,6 +126,226 @@ Output >>
 
     A tagged UniTensor can not be reshaped. This includes symmetric UniTensors as well.
 
+Combine bonds
+************************************
+
+The tagged UniTensors include symmetric UniTensors cannot be reshaped, since the bonds to be combinded or splited now includes the direction and quantum number infomation,
+the reshape process involves the fusion or split of the qunatum basis, we provide combindBonds API for the tagged UniTensor as an alternative to the usual reshape function.
+Note that currently there is no API for splitting a bond, since the way to split the quantum basis will be ambiguous.
+Let's see the complete function usage for combining bonds:
+
+
+.. py:function:: UniTensor.combineBonds(indicators, force)	
+     
+    :param list indicators: A list of **integer** indicating the indices of bonds to be combined. If a list of **string** is passed the bonds with those string labels will be combined.
+    :param bool force: If set to **True** the bonds will be combined regardless the direction or type of the bonds, otherwise the bond types will be checked. The default is **False**.
+
+
+Consider a specific example:
+
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+      from cytnx import Bond, BD_IN, BD_OUT, Qs, Symmetry
+      # bond1 = Bond(BD_IN,[[2,0], [4,1]],[3,5],[Symmetry.U1(), Symmetry.Zn(2)])
+      # bond2 = Bond(BD_IN,[Qs(2,0)>>3, Qs(4,1)>>5],[Symmetry.U1(), Symmetry.Zn(2)])
+      bd1 = cytnx.Bond(cytnx.BD_IN,[[1],[-1]],[1,1])
+      bd2 = cytnx.Bond(cytnx.BD_IN,[[1],[-1]],[1,1])
+      bd3 = cytnx.Bond(cytnx.BD_OUT,[[2],[0],[0],[-2]],[1,1,1,1])
+
+      ut = cytnx.UniTensor([bd1,bd2,bd3],rowrank=2)
+      print(ut)
+      
+      ut.combineBonds([0,1])
+      print(ut)
+
+Output >> 
+
+.. code-block:: text
+
+      -------- start of print ---------
+      Tensor name: 
+      braket_form : True
+      is_diag    : False
+      [OVERALL] contiguous : True
+      ========================
+      BLOCK [#0]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                    -----------
+                    |         |
+      [0] U1(1)  -->| 1     1 |-->  [0] U1(2)
+                    |         |
+      [0] U1(1)  -->| 1       |
+                    |         |
+                    -----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1,1)
+      [[[0.00000e+00 ]]]
+
+      ========================
+      BLOCK [#1]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                     -----------
+                     |         |
+      [0] U1(1)   -->| 1     1 |-->  [1] U1(0)
+                     |         |
+      [1] U1(-1)  -->| 1       |
+                     |         |
+                     -----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1,1)
+      [[[0.00000e+00 ]]]
+
+      ========================
+      BLOCK [#2]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                     -----------
+                     |         |
+      [0] U1(1)   -->| 1     1 |-->  [2] U1(0)
+                     |         |
+      [1] U1(-1)  -->| 1       |
+                     |         |
+                     -----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1,1)
+      [[[0.00000e+00 ]]]
+
+      ========================
+      BLOCK [#3]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                     -----------
+                     |         |
+      [1] U1(-1)  -->| 1     1 |-->  [1] U1(0)
+                     |         |
+      [0] U1(1)   -->| 1       |
+                     |         |
+                     -----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1,1)
+      [[[0.00000e+00 ]]]
+
+      ========================
+      BLOCK [#4]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                     -----------
+                     |         |
+      [1] U1(-1)  -->| 1     1 |-->  [2] U1(0)
+                     |         |
+      [0] U1(1)   -->| 1       |
+                     |         |
+                     -----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1,1)
+      [[[0.00000e+00 ]]]
+
+      ========================
+      BLOCK [#5]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                     -----------
+                     |         |
+      [1] U1(-1)  -->| 1     1 |-->  [3] U1(-2)
+                     |         |
+      [1] U1(-1)  -->| 1       |
+                     |         |
+                     -----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1,1)
+      [[[0.00000e+00 ]]]
+
+
+
+
+      # Cytnx warning occur at void cytnx::Bond_impl::combineBond_(const boost::intrusive_ptr<cytnx::Bond_impl>&, const bool&)
+      # warning: [WARNING] duplicated qnums might appears!
+
+      # file : /home/j9263178/Cytnx/src/Bond.cpp (327)
+      -------- start of print ---------
+      Tensor name: 
+      braket_form : False
+      is_diag    : False
+      [OVERALL] contiguous : True
+      ========================
+      BLOCK [#0]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                    ----------
+                    |        |
+      [2] U1(2)  -->| 1      |
+                    |        |
+      [2] U1(2) *<--| 1      |
+                    |        |
+                    ----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1)
+      [[0.00000e+00 ]]
+
+      ========================
+      BLOCK [#1]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                    ----------
+                    |        |
+      [1] U1(0)  -->| 2      |
+                    |        |
+      [1] U1(0) *<--| 2      |
+                    |        |
+                    ----------
+
+      Total elem: 4
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (2,2)
+      [[0.00000e+00 0.00000e+00 ]
+      [0.00000e+00 0.00000e+00 ]]
+
+      ========================
+      BLOCK [#2]
+      |- []   : Qn index 
+      |- Sym(): Qnum of correspond symmetry
+                     ----------
+                     |        |
+      [0] U1(-2)  -->| 1      |
+                     |        |
+      [0] U1(-2) *<--| 1      |
+                     |        |
+                     ----------
+
+      Total elem: 1
+      type  : Double (Float64)
+      cytnx device: CPU
+      Shape : (1,1)
+      [[0.00000e+00 ]]
+            
+
 
 Arithmetic
 ************************************
@@ -133,7 +353,7 @@ Arithmetic
 
 Arithmetic operations for un-tagged UniTensors can be done exactly the same as with Tensors, see :ref:`Tensor arithmetic`. The supported arithmetic operations and further linear algebra functions are listed in :ref:`Linear algebra`.
 
-rowrank
+Rowrank
 *********
 
 Another property that we may want to maintain in UniTensor is its rowrank. It tells us how the legs of the a UniTensor are split into two halves, one part belongs to the rowspace and the other to the column space. A UniTensor can then be seen as a linear operator between these two spaces, or as a matrix. The matrix results in having the first *rowrank* indices combined to the first (row-)index and the other indices combined to the second (column-)index. Most of the linear algebra algorithms take a matrix as an input. We thus use rowrank to specify how to cast the input UniTensor into a matrix. In Cytnx, this specification makes it easy to use linear algebra operations on UniTensors. Here is an example where a **singular value decomposition (SVD)** is performed on a UniTensor:

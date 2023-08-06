@@ -47,48 +47,14 @@ For example:
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_4_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::ones({3,4});
-    cout << A << endl;
-
-    auto B = A + 4;
-    cout << B << endl;
-
-    auto C = A - std::complex<double>(0,7); //type promotion
-    cout << C << endl;
 
 Output>>
 
-.. code-block:: text
-
-    Total elem: 12
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
-
-
-    Total elem: 12
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[5.00000e+00 5.00000e+00 5.00000e+00 5.00000e+00 ]
-     [5.00000e+00 5.00000e+00 5.00000e+00 5.00000e+00 ]
-     [5.00000e+00 5.00000e+00 5.00000e+00 5.00000e+00 ]]
-
-
-    Total elem: 12
-    type  : Complex Double (Complex Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]
-     [1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]
-     [1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j 1.00000e+00-7.00000e+00j ]]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/3_4_2_ex1.out
+    :language: text
 
 
 Tensor-Tensor arithmetic
@@ -114,48 +80,14 @@ For example:
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_4_3_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::arange(12).reshape(3,4);
-    cout << A << endl;
-
-    auto B = cytnx::ones({3,4})*4;
-    cout << B << endl;
-
-    auto C = A * B;
-    cout << C << endl;
 
 Output>>
 
-.. code-block:: text
-
-    Total elem: 12
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
-     [4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
-     [8.00000e+00 9.00000e+00 1.00000e+01 1.10000e+01 ]]
-
-
-    Total elem: 12
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[4.00000e+00 4.00000e+00 4.00000e+00 4.00000e+00 ]
-     [4.00000e+00 4.00000e+00 4.00000e+00 4.00000e+00 ]
-     [4.00000e+00 4.00000e+00 4.00000e+00 4.00000e+00 ]]
-
-
-    Total elem: 12
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[0.00000e+00 4.00000e+00 8.00000e+00 1.20000e+01 ]
-     [1.60000e+01 2.00000e+01 2.40000e+01 2.80000e+01 ]
-     [3.20000e+01 3.60000e+01 4.00000e+01 4.40000e+01 ]]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/3_4_3_ex1.out
+    :language: text
 
 .. Note::
 
@@ -169,19 +101,9 @@ For example, there are two different ways to perform the + operation: **Tensor.A
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_4_4_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::ones({3,4});
-    auto B = cytnx::arange(12).reshape(3,4);
-    
-    // these two are equivalent to C = A+B;
-    auto C = A.Add(B); 
-    auto D = cytnx::linalg::Add(A,B);
-
-    // this is equivalent to A+=B;
-    A.Add_(B);
-
 
 .. Note::
 

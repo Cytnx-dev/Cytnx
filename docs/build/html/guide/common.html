@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     
-    <title>7. UniTensor &#8212; Cytnx  documentation</title>
+    <title>12. Common APIs &#8212; Cytnx  documentation</title>
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../_static/basic.css" />
@@ -24,8 +24,8 @@
     <script src="../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="7.1. Print and display" href="uniten/print.html" />
-    <link rel="prev" title="6. Tensor notation" href="TNotation.html" /> 
+    <link rel="next" title="Examples" href="../Examples.html" />
+    <link rel="prev" title="11. linalg extension" href="xlinalg.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -179,7 +179,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">7. UniTensor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uniten.html">7. UniTensor</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="uniten/print.html">7.1. Print and display</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="uniten/print.html#print-diagram">7.1.1. print_diagram()</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uniten/print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
@@ -276,31 +276,31 @@
 <li class="toctree-l2"><a class="reference internal" href="xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">12. Common APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-type">12.1. Data type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#device">12.2. Device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#save-load">12.3. Save &amp; Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operations">12.4. Operations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -414,15 +414,15 @@
                          accesskey="U"
                          class="active"
                        >User Guide</a></li>
-            <li class="breadcrumb-item active"><span class="section-number">7. </span>UniTensor</li>
+            <li class="breadcrumb-item active"><span class="section-number">12. </span>Common APIs</li>
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="TNotation.html" title="Previous Chapter: 6. Tensor notation" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 6. Tensor notation
+               <a href="xlinalg.html" title="Previous Chapter: 11. linalg extension" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 11. linalg extension
                </a>
-               <a href="uniten/print.html" title="Next Chapter: 7.1. Print and display" class="btn btn-primary" role="botton" accesskey="N">
-                   7.1. Print an... &raquo;
+               <a href="../Examples.html" title="Next Chapter: Examples" class="btn btn-primary" role="botton" accesskey="N">
+                   Examples &raquo;
                </a>
            </div>
        </div>
@@ -575,7 +575,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">7. UniTensor</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="uniten.html">7. UniTensor</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="uniten/print.html">7.1. Print and display</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="uniten/print.html#print-diagram">7.1.1. print_diagram()</a></li>
 <li class="toctree-l4"><a class="reference internal" href="uniten/print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
@@ -672,31 +672,31 @@
 <li class="toctree-l2"><a class="reference internal" href="xlinalg.html">11. linalg extension</a><ul class="simple">
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="common.html">12. Common APIs</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="common.html#data-type">12.1. Data type</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">12. Common APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#data-type">12.1. Data type</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#dtype"><code class="docutils literal notranslate"><span class="pre">.dtype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dtype_str"><code class="docutils literal notranslate"><span class="pre">.dtype_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#astype"><code class="docutils literal notranslate"><span class="pre">.astype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#real"><code class="docutils literal notranslate"><span class="pre">.real()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#imag"><code class="docutils literal notranslate"><span class="pre">.imag()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="common.html#device">12.2. Device</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#device">12.2. Device</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">.device()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device_str"><code class="docutils literal notranslate"><span class="pre">.device_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to"><code class="docutils literal notranslate"><span class="pre">.to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#to_"><code class="docutils literal notranslate"><span class="pre">.to_()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="common.html#save-load">12.3. Save &amp; Load</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="common.html#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#save-load">12.3. Save &amp; Load</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Save"><code class="docutils literal notranslate"><span class="pre">.Save()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Load"><code class="docutils literal notranslate"><span class="pre">.Load()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Tofile"><code class="docutils literal notranslate"><span class="pre">.Tofile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Fromfile"><code class="docutils literal notranslate"><span class="pre">.Fromfile()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="common.html#operations">12.4. Operations</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="common.html#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#operations">12.4. Operations</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#clone"><code class="docutils literal notranslate"><span class="pre">.clone()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -757,13 +757,13 @@
           
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="TNotation.html"
-                          title="previous chapter"><span class="section-number">6. </span>Tensor notation</a></p>
+    <p class="topless"><a href="xlinalg.html"
+                          title="previous chapter"><span class="section-number">11. </span>linalg extension</a></p>
   </div>
   <div>
     <h4>Next topic</h4>
-    <p class="topless"><a href="uniten/print.html"
-                          title="next chapter"><span class="section-number">7.1. </span>Print and display</a></p>
+    <p class="topless"><a href="../Examples.html"
+                          title="next chapter">Examples</a></p>
   </div>
 <div id="searchbox" style="display: none">
     <form class="form search" action="../search.html" method="get">
@@ -775,7 +775,7 @@
 
 <script type="text/javascript">$('#searchbox').show(0);</script>
   <ul class="this-page-menu list-unstyled text-right">
-    <li><a href="../_sources/guide/uniten.rst.txt"
+    <li><a href="../_sources/guide/common.rst.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
@@ -786,113 +786,123 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <section id="unitensor">
-<h1><span class="section-number">7. </span>UniTensor<a class="headerlink" href="#unitensor" title="Permalink to this heading">¶</a></h1>
-<p>Besides the generic Tensor structure, Cytnx provides further objects that are designed specifically for tensor network simulations, based on the <strong>cytnx.Tensor</strong> class.</p>
-<p><strong>UniTensor</strong> is an enhanced version of <strong>cytnx.Tensor</strong> which provides features such as labels for each index (which we call “bond”) and Bra/Ket (In/Out) convention of bonds. These features are handy for contractions of multiple tensors, as well as for the implementation of ensor network diagrams. Also, symmetries can be included.</p>
-<p>A <strong>UniTensor</strong> consist of three important parts:</p>
-<a class="reference internal image-reference" href="../_images/UT.png"><img alt="../_images/UT.png" class="align-center" src="../_images/UT.png" style="width: 600px;" /></a>
-<ol class="arabic simple">
-<li><p>Block(s), which is a <strong>cytnx.Tensor</strong> (or a list/vector thereof). Block(s) store all the elements of the tensor.</p></li>
-<li><p>Bonds, which contain the information associated to each index of the tensor.</p></li>
-<li><p>Labels, which give each bond a name by which it can be accessed.</p></li>
-</ol>
-<p>In the simplest case where no symmetries of the system are considered, a <strong>UniTensor</strong> can be thought of as adding the meta data bonds and labels to a <strong>cytnx.Tensor</strong>.
-A <strong>UniTensor</strong> can be constructed with a <strong>Bond</strong> object, or directly from a <strong>cytnx.Tensor</strong> which gets converted to a <strong>UniTensor</strong>.</p>
-<p>In the following, let’s look into these objects:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="uniten/print.html">7.1. Print and display</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/print.html#print-diagram">7.1.1. print_diagram()</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/print.html#print-and-print-blocks">7.1.2. print() and print_blocks()</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/print.html#print-block">7.1.3. print_block()</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/create.html">7.2. Creating a UniTensor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/create.html#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/create.html#from-scratch">7.2.2. From scratch</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uniten/create.html#UniTensor"><code class="docutils literal notranslate"><span class="pre">UniTensor()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/create.html#type-conversion">7.2.3. Type conversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/create.html#transfer-between-devices">7.2.4. Transfer between devices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/create.html#tagged-unitensors-and-unitensors-with-symmetries">7.2.5. Tagged UniTensors and UniTensors with Symmetries</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/labels.html">7.3. Changing labels</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/labels.html#UniTensor.relabel_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/labels.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabel_()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/labels.html#UniTensor.relabels_"><code class="docutils literal notranslate"><span class="pre">UniTensor.relabels_()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/labels.html#creating-unitensors-with-different-labels-that-share-data">7.3.1. Creating UniTensors with different labels that share data</a><ul class="simple">
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/bond.html">7.4. Bond</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/bond.html#Bond"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/bond.html#symmetry-object">7.4.1. Symmetry object</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/bond.html#creating-bonds-with-quantum-numbers">7.4.2. Creating Bonds with quantum numbers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uniten/bond.html#id0"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uniten/bond.html#id1"><code class="docutils literal notranslate"><span class="pre">Bond()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/bond.html#combining-bonds">7.4.3. Combining Bonds</a><ul class="simple">
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/tagged.html">7.5. Tagged UniTensor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/tagged.html#non-symmetric-tagged-unitensor">7.5.1. Non-symmetric Tagged UniTensor</a><ul class="simple">
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/symmetric.html">7.6. UniTensor with Symmetries</a><ul class="simple">
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/blocks.html">7.7. Accessing the block(s)</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/blocks.html#unitensor-without-symmetries">7.7.1. UniTensor without symmetries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/blocks.html#unitensor-with-symmetries">7.7.2. UniTensor with symmetries</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uniten/blocks.html#UniTensor.get_block"><code class="docutils literal notranslate"><span class="pre">UniTensor.get_block()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uniten/blocks.html#id0"><code class="docutils literal notranslate"><span class="pre">UniTensor.get_block()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/blocks.html#putting-a-block">7.7.3. Putting a block</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uniten/blocks.html#UniTensor.put_block"><code class="docutils literal notranslate"><span class="pre">UniTensor.put_block()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="uniten/blocks.html#id1"><code class="docutils literal notranslate"><span class="pre">UniTensor.put_block()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/elements.html">7.8. Get/set UniTensor element</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/elements.html#unitensor-without-symmetries">7.8.1. UniTensor without symmetries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/elements.html#unitensor-with-symmetries">7.8.2. UniTensor with symmetries</a><ul class="simple">
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/manipulation.html">7.9. Manipulate UniTensor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/manipulation.html#permute">7.9.1. Permute</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/manipulation.html#reshape">7.9.2. Reshape</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/manipulation.html#combine-bonds">7.9.3. Combine bonds</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="uniten/manipulation.html#UniTensor.combineBonds"><code class="docutils literal notranslate"><span class="pre">UniTensor.combineBonds()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/manipulation.html#arithmetic">7.9.4. Arithmetic</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/manipulation.html#rowrank">7.9.5. Rowrank</a><ul class="simple">
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="uniten/io.html">7.10. Save/Load a UniTensor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="uniten/io.html#save-a-unitensor">7.10.1. Save a UniTensor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="uniten/io.html#load-a-unitensor">7.10.2. Load a UniTensor</a><ul class="simple">
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</div>
+  <section id="common-apis">
+<h1><span class="section-number">12. </span>Common APIs<a class="headerlink" href="#common-apis" title="Permalink to this heading">¶</a></h1>
+<p>The central objects that store data in Cytnx such as <strong>Storage</strong>, <strong>Tensor</strong> and <strong>UniTensor</strong> share very similar member functions and attributes, in this seciton we summerize these APIs and the hyperlink to the correspnding guide page for convenience.</p>
+<section id="data-type">
+<h2><span class="section-number">12.1. </span>Data type<a class="headerlink" href="#data-type" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="dtype">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">dtype</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dtype" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dtype-id of current Storage, Tensor or UniTensor.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="dtype_str">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">dtype_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dtype_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dtype (string) of current Storage, Tensor or UniTensor.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="astype">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">astype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#astype" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cast the type of current Storage, Tensor or UniTensor.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="real">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">real</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#real" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the real part of the current Storage or Tensor.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="imag">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">imag</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#imag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the imaginary part of the current Storage or Tensor.</p>
+</dd></dl>
+
+<dl>
+<dt>See:</dt><dd><p><a class="reference internal" href="basic_obj/Storage_1_create.html#creating-a-storage"><span class="std std-ref">Creating a Storage</span></a></p>
+<p><a class="reference internal" href="basic_obj/Tensor_1_create.html#creating-a-tensor"><span class="std std-ref">Creating a Tensor</span></a></p>
+<p><a class="reference internal" href="uniten/create.html#creating-a-unitensor"><span class="std std-ref">Creating a UniTensor</span></a></p>
+</dd>
+</dl>
+</section>
+<section id="device">
+<h2><span class="section-number">12.2. </span>Device<a class="headerlink" href="#device" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">device</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>The device-id of current Storage, Tensor or UniTensor.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="device_str">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">device_str</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#device_str" title="Permalink to this definition">¶</a></dt>
+<dd><p>The device(string) of current Storage, Tensor or UniTensor.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="to">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#to" title="Permalink to this definition">¶</a></dt>
+<dd><p>move the current Storage, Tensor or UniTensor to different deivce.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="to_">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">to_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#to_" title="Permalink to this definition">¶</a></dt>
+<dd><p>move a new Storage, Tensor or UniTensor with same content as current object on different deivce.</p>
+</dd></dl>
+
+<dl>
+<dt>See:</dt><dd><p><a class="reference internal" href="basic_obj/Storage_1_create.html#creating-a-storage"><span class="std std-ref">Creating a Storage</span></a></p>
+<p><a class="reference internal" href="basic_obj/Tensor_1_create.html#creating-a-tensor"><span class="std std-ref">Creating a Tensor</span></a></p>
+<p><a class="reference internal" href="uniten/create.html#creating-a-unitensor"><span class="std std-ref">Creating a UniTensor</span></a></p>
+</dd>
+</dl>
+</section>
+<section id="save-load">
+<h2><span class="section-number">12.3. </span>Save &amp; Load<a class="headerlink" href="#save-load" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="Save">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">Save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save current Storage, Tensor or UniTensor to file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Load">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">Load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Load" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a Storage, Tensor or UniTensor from file.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Tofile">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">Tofile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Tofile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save current Storage or Tensor to binary file without any additional header information.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Fromfile">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">Fromfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Fromfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the Storage or Tensor from binary file.</p>
+</dd></dl>
+
+<dl>
+<dt>See:</dt><dd><p><a class="reference internal" href="basic_obj/Storage_5_io.html#save-load-a-storage"><span class="std std-ref">Save/Load a storage</span></a></p>
+<p><a class="reference internal" href="basic_obj/Tensor_7_io.html#save-load-a-tensor"><span class="std std-ref">Save/Load a Tensor</span></a></p>
+<p><a class="reference internal" href="uniten/io.html#save-load-a-unitensor"><span class="std std-ref">Save/Load a UniTensor</span></a></p>
+</dd>
+</dl>
+</section>
+<section id="operations">
+<h2><span class="section-number">12.4. </span>Operations<a class="headerlink" href="#operations" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="clone">
+<span class="sig-prename descclassname"><span class="pre">.</span></span><span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a clone of the current Storage, Tensor or UniTensor.</p>
+</dd></dl>
+
+</section>
 </section>
 
 

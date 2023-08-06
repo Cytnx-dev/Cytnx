@@ -81,32 +81,14 @@ In Cytnx, the symmetry type is defined by a Symmetry object. It contains the nam
     
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/7_4_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    Symmetry sym_u1 = cytnx::Symmetry::U1();
-    Symmetry sym_z2 = cytnx::Symmetry::Zn(2);
-
-    cout << sym_u1 << endl;
-    cout << sym_z2 << endl;
 
 Output >>
 
-.. code-block:: text
-
-    --------------------
-    [Symmetry]
-    type : Abelian, U1
-    combine rule : Q1 + Q2
-    reverse rule : Q*(-1) 
-    --------------------
-
-    --------------------
-    [Symmetry]
-    type : Abelian, Z(2)
-    combine rule : (Q1 + Q2)%2
-    reverse rule : Q*(-1) 
-    --------------------
+.. literalinclude:: ../../../code/cplusplus/outputs/7_4_1_ex1.out
+    :language: text
 
 
 Creating Bonds with quantum numbers
@@ -156,29 +138,14 @@ For example:
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/7_4_2_ex1.cpp
+    :language: c++
     :linenos:
-    
-    // This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.
-    Bond bd_sym_u1_a = cytnx::Bond(cytnx::BD_KET,
-                                   {cytnx::Qs(0)>>3,cytnx::Qs(-4)>>4,cytnx::Qs(-2)>>3,cytnx::Qs(3)>>2},
-                                   {cytnx::Symmetry::U1()});
-    
-    // equivalent:
-    bd_sym_u1_a = cytnx::Bond(cytnx::BD_IN,
-                              {cytnx::Qs(0),cytnx::Qs(-4),cytnx::Qs(-2),cytnx::Qs(3)},
-                              {3,4,3,2},{cytnx::Symmetry::U1()});
-
-    print(bd_sym_u1_a);
 
 Output >>
 
-.. code-block:: text
-
-    Dim = 12 |type: KET>     
-     U1::   +0  -4  -2  +3
-    Deg>>    3   4   3   2
-
+.. literalinclude:: ../../../code/cplusplus/outputs/7_4_2_ex1.out
+    :language: text
 
 If several symmetries are present, this can be achieved by giving several quantum numbers inside *Qs()*. Let us consider a *U1 x Z2* symmetry for example:
 
@@ -200,6 +167,7 @@ If several symmetries are present, this can be achieved by giving several quantu
 
 
 * In C++:
+
 
 .. code-block:: c++
     :linenos:
