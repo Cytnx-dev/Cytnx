@@ -121,6 +121,21 @@ namespace cytnx {
     }
     const std::vector<Bond> &bonds() const { return this->_bonds; }
     std::vector<Bond> &bonds() { return this->_bonds; }
+
+    Bond &bond_(const cytnx_uint64 &idx) {
+      cytnx_error_msg(idx >= this->_bonds.size(), "[ERROR][bond] index %d out of bound, total %d\n",
+                      idx, this->_bonds.size());
+      return this->_bonds[idx];
+    }
+
+    Bond &bond_(const std::string &lbl) {
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), lbl);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", lbl.c_str());
+      cytnx_uint64 idx = std::distance(this->_labels.begin(), res);
+
+      return this->bond_(idx);
+    }
+
     const std::string &name() const { return this->_name; }
     cytnx_uint64 rank() const { return this->_labels.size(); }
     void set_name(const std::string &in) { this->_name = in; }
@@ -2148,6 +2163,15 @@ namespace cytnx {
         @see bonds();
     */
     std::vector<Bond> &bonds() { return this->_impl->bonds(); }
+
+    const Bond &bond_(const cytnx_uint64 &idx) const { return this->_impl->bond_(idx); }
+    Bond &bond_(const cytnx_uint64 &idx) { return this->_impl->bond_(idx); }
+
+    const Bond &bond_(const std::string &lbl) const { return this->_impl->bond_(lbl); }
+    Bond &bond_(const std::string &lbl) { return this->_impl->bond_(lbl); }
+
+    Bond bond(const cytnx_uint64 &idx) const { return this->_impl->bond_(idx).clone(); }
+    Bond bond(const std::string &lbl) const { return this->_impl->bond_(lbl).clone(); }
 
     /**
     @brief Get the shape of the UniTensor.
