@@ -612,7 +612,7 @@ So we are done! With the other loop to control the number of times we sweep, we 
 
         print('done : %d'% k)
 
-Results
+Compare DMRG Results
 ************************************
 
 Here, we plot the energy as a function of iteration. We see that after iterations, the energy successfully converge to a value that is consistent with the exact solution. 
