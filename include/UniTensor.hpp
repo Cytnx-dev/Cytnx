@@ -2663,6 +2663,33 @@ namespace cytnx {
       return this->_impl->get_block(qidx, force);
     }
 
+    Tensor get_block(const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qidx,
+                     const bool &force = false) const {
+      cytnx_error_msg(
+        lbls.size() != qidx.size(),
+        "[ERROR][get_block] length of lists must be the same for both lables and qnidices%s", "\n");
+      cytnx_error_msg(lbls.size() != this->rank(),
+                      "[ERROR][get_block] length of lists must be the rank (# of legs)%s", "\n");
+
+      std::vector<cytnx_int64> loc_id(this->rank());
+      std::vector<cytnx_int64> new_qidx(this->rank());
+
+      cytnx_uint64 new_loc;
+      std::vector<cytnx_uint64> new_order(this->rank());
+      for (int i = 0; i < lbls.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+        cytnx_error_msg(res == this->_impl->_labels.end(),
+                        "[ERROR][get_block] label:%s does not exists in current Tensor.\n",
+                        lbls[i].c_str());
+        new_loc = std::distance(this->_impl->_labels.begin(), res);
+        new_qidx[new_loc] = qidx[i];
+        new_order[i] = new_loc;
+      }
+      auto out = this->_impl->get_block(new_qidx, force);
+      if (out.dtype() != Type.Void) out.permute_(new_order);
+      return out;
+    }
+
     /**
      * @see
      * get_block(const std::vector<cytnx_int64> &qnum, const bool &force)const
@@ -2680,6 +2707,12 @@ namespace cytnx {
     Tensor get_block(const std::vector<cytnx_uint64> &qnum, const bool &force = false) const {
       std::vector<cytnx_int64> iqnum(qnum.begin(), qnum.end());
       return this->_impl->get_block(iqnum, force);
+    }
+
+    Tensor get_block(const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &qidx,
+                     const bool &force = false) const {
+      std::vector<cytnx_int64> iqnum(qidx.begin(), qidx.end());
+      return this->get_block(lbls, iqnum, force);
     }
 
     /**
@@ -2710,6 +2743,50 @@ namespace cytnx {
     }
 
     /**
+    @brief Get the shared (data) view of block for the given quantum indices on given labels
+        @param[in] lbls the labels of the bonds.
+        @param[in] qidx input the quantum indices you want to get the corresponding block.
+        @param[in] force If force is true, it will return the tensor anyway (Even the
+            corresponding block is empty, it will return void type tensor if \p force is
+                set as true. Otherwise, it will trow the exception.)
+        @return Tensor&
+
+        @note lbls and qidx forming one to one pairs. e.g. it means get `qidx[i]` qnum at Bond
+    `lbls[i]`. Also note that the return Tensor will have axes in the same order specified by lbls.
+
+    */
+    // developer note: Tensor is not the same object (Thus Tensor instead of Tensor& ),
+    //                 since we permute! but they have shared data memory.
+    Tensor get_block_(const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qidx,
+                      const bool &force = false) {
+      cytnx_error_msg(
+        lbls.size() != qidx.size(),
+        "[ERROR][get_block] length of lists must be the same for both lables and qnidices%s", "\n");
+      cytnx_error_msg(lbls.size() != this->rank(),
+                      "[ERROR][get_block] length of lists must be the rank (# of legs)%s", "\n");
+
+      std::vector<cytnx_int64> loc_id(this->rank());
+      std::vector<cytnx_int64> new_qidx(this->rank());
+
+      cytnx_uint64 new_loc;
+      std::vector<cytnx_uint64> new_order(this->rank());
+      for (int i = 0; i < lbls.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+        cytnx_error_msg(res == this->_impl->_labels.end(),
+                        "[ERROR][get_block] label:%s does not exists in current Tensor.\n",
+                        lbls[i].c_str());
+        new_loc = std::distance(this->_impl->_labels.begin(), res);
+        new_qidx[new_loc] = qidx[i];
+        new_order[i] = new_loc;
+      }
+      auto out = this->_impl->get_block_(new_qidx, force);
+      if (out.dtype() != Type.Void) {
+        out = out.permute(new_order);
+      }
+      return out;
+    }
+
+    /**
     @see get_block_(const std::vector<cytnx_int64> &qidx, const bool &force)
     */
     Tensor &get_block_(const std::initializer_list<cytnx_int64> &qidx, const bool &force = false) {
@@ -2723,6 +2800,12 @@ namespace cytnx {
     Tensor &get_block_(const std::vector<cytnx_uint64> &qidx, const bool &force = false) {
       std::vector<cytnx_int64> iqidx(qidx.begin(), qidx.end());
       return get_block_(iqidx, force);
+    }
+
+    Tensor get_block_(const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &qidx,
+                      const bool &force = false) {
+      std::vector<cytnx_int64> iqidx(qidx.begin(), qidx.end());
+      return get_block_(lbls, iqidx, force);
     }
     //================================
 

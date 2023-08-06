@@ -518,21 +518,22 @@ void unitensor_binding(py::module &m) {
         return self.get_block(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
+
     .def(
-      "get_block_",
-      [](const UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block_(qnum, force);
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &lbl, const std::vector<cytnx_int64> &qnum, const bool &force) {
+        return self.get_block(lbl, qnum, force);
       },
-      py::arg("qnum"), py::arg("force") = false)
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block",
+      [](const UniTensor &self, const std::vector<std::string> &lbl, const std::vector<cytnx_uint64> &qnum, const bool &force) {
+        return self.get_block(lbl,qnum, force);
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
     .def(
       "get_block_",
       [](UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block_(qnum, force);
-      },
-      py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block_",
-      [](const UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block_(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
@@ -542,10 +543,21 @@ void unitensor_binding(py::module &m) {
         return self.get_block_(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
+
     .def(
       "get_block_",
-      [](const UniTensor &self, const cytnx_uint64 &idx) { return self.get_block_(idx); },
-      py::arg("idx") = (cytnx_uint64)(0))
+      [](UniTensor &self, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum, const bool &force) {
+        return self.get_block_(lbls, qnum, force);
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+    .def(
+      "get_block_",
+      [](UniTensor &self, const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &qnum, const bool &force) {
+        return self.get_block_(lbls,qnum, force);
+      },
+      py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
+
+
     .def(
       "get_block_", [](UniTensor &self, const cytnx_uint64 &idx) { return self.get_block_(idx); },
       py::arg("idx") = (cytnx_uint64)(0))
