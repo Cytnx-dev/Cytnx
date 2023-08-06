@@ -16,23 +16,14 @@ To create a Storage, with dtype=Type.Double on the CPU:
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(10,cytnx::Type.Double,cytnx::Device.cpu);
-    A.set_zeros();
-    
-    cout << A << endl;
     
 Output>>
 
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 10
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_1_ex1.out
+    :language: text
 
 .. Note::
     
@@ -68,32 +59,14 @@ The available data types are the same as for a Tensor, see :ref:`Tensor with dif
 
 * In C++:
  
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_1_ex1.cpp
+    :language: c++
     :linenos:
-    
-    auto A = cytnx::Storage(10);
-    A.set_zeros();
-
-    auto B = A.astype(cytnx::Type.ComplexDouble);
-
-    cout << A << endl;
-    cout << B << endl;
 
 Output >>
 
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 10
-    [ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-
-
-    dtype : Complex Double (Complex Float64)
-    device: cytnx device: CPU
-    size  : 10
-    [ 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j 0.00000e+00+0.00000e+00j  ]
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_1_1_ex1.out
+    :language: text
 
 Transfer between devices
 ************************
@@ -116,17 +89,9 @@ We can also transfer the storage between different devices. Similar to Tensor, w
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::Storage(4);
-
-    auto B = A.to(cytnx::Device.cuda);
-    cout << A.device_str() << endl;
-    cout << B.device_str() << endl;
-
-    A.to_(cytnx::Device.cuda);
-    cout << A.device_str() << endl;
 
 Output>>
 
@@ -161,33 +126,14 @@ Internally, the data of a Tensor is saved in a Storage. We can get the Storage o
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_3_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::arange(10).reshape(2,5);
-    auto B = A.storage();
-
-    cout << A << endl;
-    cout << B << endl;
 
 Output >>
 
-.. code-block:: text
-
-    Total elem: 10
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,5)
-    [[0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 ]
-     [5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]]
-
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 10
-    [ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 8.00000e+00 9.00000e+00 ]
-
-
+.. literalinclude:: ../../../code/cplusplus/outputs/4_1_3_ex1.out
+    :language: text
 
 .. Note::
 

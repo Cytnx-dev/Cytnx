@@ -18,10 +18,9 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    cytnx::Tensor A = cytnx::zeros({3,4,5});
 
 .. Note::
 
@@ -44,6 +43,10 @@ Tensors can also be created and initialized with **arange()** (similar as np.ara
     D = cytnx.eye(3);         #Tensor of shape (3,3) with diagonal elements set to one, all other entries are zero.
 
 * In C++:
+
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_1_ex2.cpp
+    :language: c++
+    :linenos:
 
 .. code-block:: c++
     :linenos:
@@ -73,13 +76,9 @@ Often, Tensors shall be initialized with random values. This can be achieved wit
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_2_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::random::normal({3,4,5}, 0., 1.);    //Tensor of shape (3,4,5) with all elements distributed according
-                                                        //to a normal distribution around 0 with standard deviation 1
-    auto B = cytnx::random::uniform({3,4,5}, -1., 1.);  //Tensor of shape (3,4,5) with all elements distributed uniformly
-                                                        //between -1 and 1
 
 
 Tensor with different dtype and device 
@@ -96,10 +95,8 @@ You can create a Tensor with a different data type, and/or on different devices 
 
 * In C++:
 
-.. code-block:: c++
-
-    auto A = cytnx::zeros({3,4,5},cytnx::Type.Int64,cytnx::Device.cuda);
-
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_3_ex1.cpp
+    :language: c++
 
 .. Note:: 
     
@@ -177,13 +174,9 @@ For example, consider a Tensor *A* with **dtype=Type.Int64**, which shall be con
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_4_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::ones({3,4},cytnx::Type.Int64);
-    auto B = A.astype(cytnx::Type.Double);
-    cout << A.dtype_str() << endl;
-    cout << B.dtype_str() << endl;
 
 >> Output:
 
@@ -222,19 +215,14 @@ For example, let's create a Tensor in the memory accessible by the CPU and trans
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_5_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto A = cytnx::ones({2,2}); //on CPU
-    auto B = A.to(cytnx::Device.cuda+0);
-    cout << A << endl; // on CPU
-    cout << B << endl; // on GPU
-    
-    A.to_(cytnx::Device.cuda);
-    cout << A << endl; // on GPU
 
 
 >> Output:
+
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_5_ex1.cpp
 
 .. code-block:: text
 
@@ -288,16 +276,9 @@ Tensor from Storage [v0.6.6+]
     
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_6_ex1.cpp
+    :language: c++
     :linenos:
-
-    // A & B share same memory
-    auto A = cytnx::Storage(10);
-    auto B = cytnx::Tensor::from_storage(A);
-
-    // A & C have different memory
-    auto C = cytnx::Tensor::from_storage(A.clone());
-
 
 .. Note::
 

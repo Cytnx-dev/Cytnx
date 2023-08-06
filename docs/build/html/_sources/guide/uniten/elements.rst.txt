@@ -21,17 +21,14 @@ Accessing an element in a UniTensor without symmetries is straightforward by usi
    
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/7_8_1_ex1.cpp
+    :language: c++
     :linenos:
-
-    auto T = cytnx::UniTensor(cytnx::arange(9).reshape(3,3));
-    print(T.at({0,2}));
 
 Output >> 
 
-.. code-block:: text
-
-    2.0
+.. literalinclude:: ../../../code/cplusplus/outputs/7_8_1_ex1.out
+    :language: text
 
 .. Note::
 
@@ -52,22 +49,14 @@ The proxy returned by **at** also serves as reference, so we can directly assign
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/guide_codes/7_8_1_ex2.cpp
+    :language: c++
     :linenos:
-    
-    auto T = cytnx::UniTensor(cytnx::arange(9).reshape(3,3));
-    print(T.at({0,2}));
-    T.at({0,2}) = 7;
-    print(T.at({0,2}));
-
 
 Output >> 
 
-.. code-block:: text
-
-    2.0
-    7.0
-
+.. literalinclude:: ../../../code/cplusplus/outputs/7_8_1_ex2.out
+    :language: text
 
 
     
