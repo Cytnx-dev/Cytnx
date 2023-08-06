@@ -11,7 +11,7 @@ The webpage of Cytnx
     - $conda install -c kaihsinwu cytnx  
 
 2. Install additional requirements (this might not all be required and/or additional configuration steps might be needed!):  
-    - $conda install sphinx=v5.3.0 sphinxcontrib-bibtex doxygen breathe  
+    - $conda install sphinx sphinxcontrib-bibtex doxygen breathe sphinxcontrib-jquery 
     - $pip install pip install sphinxbootstrap4theme  
 
 3. Run make  
