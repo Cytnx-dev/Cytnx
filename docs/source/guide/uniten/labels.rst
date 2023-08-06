@@ -27,49 +27,15 @@ If we wish to change the labels of all legs, we can use:
 For example:
 
 * In Python:
-  
-.. code-block:: python 
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_labels_relabel_.py
+    :language: python
     :linenos:
-
-    T = cytnx.arange(2*3*4).reshape(2,3,4)
-    uT = cytnx.UniTensor(T)
-
-    uT.relabel_(1,"xx")
-    uT.print_diagram()
-
-    uT.relabels_(["a","b","c"])
-    uT.print_diagram()
 
 Output >>
 
-.. code-block:: text
-
-    -----------------------
-    tensor Name : 
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-              ---------     
-             /         \    
-       0 ____| 2     3 |____ xx
-             |         |    
-             |       4 |____ 2
-             \         /    
-              ---------     
-    -----------------------
-    tensor Name : 
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-              ---------     
-             /         \    
-       a ____| 2     3 |____ b
-             |         |    
-             |       4 |____ c
-             \         /    
-              ---------       
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_labels_relabel_.out
+    :language: text
 
 
 .. note:: 
@@ -88,49 +54,15 @@ Creating UniTensors with different labels that share data
 In some scenarios, especially in contractions with *cytnx.Contract()* and *cytnx.Contracts()*, we want to create a UniTensor with changed labels. However, we might not want to modify the original tensor. Creating a copy of the tensor data is also not desired, since it would double the memory usage. In such a case one can use the function **relabel(s)** without underscore. This returns a new UniTensor with different meta (in this case  only the labels are changed), but the actual memory block(s) are still referring to the old ones. The arguments of **relabel(s)** are similar to **relabel(s)_**, see above. For example:
 
 * In Python:
-  
-.. code-block:: python
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_labels_relabel.py
+    :language: python
     :linenos:
 
-    
-    uT_new = uT.relabel("a","xx")
-    uT.print_diagram()
-    uT_new.print_diagram()
+Output >>
 
-    print(uT_new.same_data(uT))
-
-
-
-.. code-block:: text
-
-    -----------------------
-    tensor Name : 
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-              ---------     
-             /         \    
-       a ____| 2     3 |____ b
-             |         |    
-             |       4 |____ c
-             \         /    
-              ---------     
-    -----------------------
-    tensor Name : 
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-               ---------     
-              /         \    
-       xx ____| 2     3 |____ b
-              |         |    
-              |       4 |____ c
-              \         /    
-               ---------     
-    True
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_labels_relabel.out
+    :language: text
 
 
 .. toctree::

@@ -403,6 +403,12 @@ namespace DocTest {
     OUT_RESET
   }
 
+  TEST(Doc, guide_uniten_bond_multi_sym_bond) {
+    OUT_REDIRECT
+    #include "guide_uniten_bond_multi_sym_bond.cpp"
+    OUT_RESET
+  }
+
   // 7.8 Get/set UniTensor element
   // 7.8.1 UniTensor without symmetries
   TEST(Doc, guide_uniten_elements_at_get) {
@@ -441,9 +447,14 @@ namespace DocTest {
   }
 
   // 10.1.2 Inherit the LinOp class
+  TEST(Doc, guide_itersol_LinOp_inherit) {
+    #include "guide_itersol_LinOp_inherit.cpp"
+  }
+
   TEST(Doc, guide_itersol_LinOp_matvec) {
-    OUT_REDIRECT
     #include "guide_itersol_LinOp_matvec.cpp"
+    OUT_REDIRECT
+    #include "guide_itersol_LinOp_demo.cpp"
     OUT_RESET
   }
 

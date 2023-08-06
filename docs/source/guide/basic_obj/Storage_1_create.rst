@@ -6,23 +6,19 @@ To create a Storage, with dtype=Type.Double on the CPU:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_1_create_create.py
+    :language: python
     :linenos:
-
-    A = cytnx.Storage(10,dtype=cytnx.Type.Double,device=cytnx.Device.cpu)
-    A.set_zeros();
-
-    print(A);
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_1_create_create.cpp
     :language: c++
     :linenos:
-    
-Output>>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_1_ex1.out
+Output >>
+
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_1_create_create.out
     :language: text
 
 .. Note::
@@ -37,7 +33,6 @@ Output>>
     2. For complex type Storage, you can use **.real()** and **.imag()** to get the real part/imaginary part of the data. 
 
 
-
 Type conversion
 ****************
 Conversion between different data types is possible for a Storage. Just like Tensor, call **Storage.astype()** to convert between different data types. 
@@ -46,26 +41,19 @@ The available data types are the same as for a Tensor, see :ref:`Tensor with dif
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_1_create_astype.py
+    :language: python
     :linenos:
 
-    A = cytnx.Storage(10)
-    A.set_zeros()
-
-    B = A.astype(cytnx.Type.ComplexDouble)
-
-    print(A)
-    print(B)
-
 * In C++:
- 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_1_ex1.cpp
+
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_1_create_astype.cpp
     :language: c++
     :linenos:
 
 Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_1_1_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_1_create_astype.out
     :language: text
 
 Transfer between devices
@@ -74,22 +62,13 @@ We can also transfer the storage between different devices. Similar to Tensor, w
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_1_create_to.py
+    :language: python
     :linenos:
-    
-    A = cytnx.Storage(4)
-    B = A.to(cytnx.Device.cuda)
-
-    print(A.device_str())
-    print(B.device_str())
-
-    A.to_(cytnx.Device.cuda)
-    print(A.device_str())
-
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_1_create_to.cpp
     :language: c++
     :linenos:
 
@@ -115,24 +94,19 @@ Internally, the data of a Tensor is saved in a Storage. We can get the Storage o
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_1_create_get_storage.py
+    :language: python
     :linenos:
-
-    A = cytnx.arange(10).reshape(2,5);
-    B = A.storage();
-
-    print(A)
-    print(B)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_1_3_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_1_create_get_storage.cpp
     :language: c++
     :linenos:
 
 Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_1_3_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_1_create_get_storage.out
     :language: text
 
 .. Note::
@@ -146,51 +120,14 @@ We demonstrate this using the Python API. The C++ API can be used in a similar w
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_1_create_contiguous_check.py
+    :language: python
     :linenos:
 
-    A = cytnx.arange(8).reshape(2,2,2)
-    print(A.storage()) 
+Output >>
 
-    # Let's make it non-contiguous 
-    A.permute_(0,2,1)
-    print(A.is_contiguous()) 
-
-    # Note that the storage is not changed
-    print(A.storage())
-
-    # Now let's make it contiguous
-    # thus the elements is moved
-    A.contiguous_();
-    print(A.is_contiguous())
-
-    # Note that the storage now is changed 
-    print(A.storage())
-    
-
-Output>>
-
-.. code-block:: text
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 8
-    [ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
-
-    False
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 8
-    [ 0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 4.00000e+00 5.00000e+00 6.00000e+00 7.00000e+00 ]
-
-    True
-
-    dtype : Double (Float64)
-    device: cytnx device: CPU
-    size  : 8
-    [ 0.00000e+00 2.00000e+00 1.00000e+00 3.00000e+00 4.00000e+00 6.00000e+00 5.00000e+00 7.00000e+00 ]
-
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_1_create_contiguous_check.out
+    :language: text
 
 
 .. toctree::

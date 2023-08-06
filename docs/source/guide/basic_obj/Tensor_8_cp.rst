@@ -20,28 +20,23 @@ Reference to & Copy of objects
 ******************************
 One of the most important features in Python is the *referencing* of objects. All the Cytnx objects follow the same behavior:
 
-
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_8_cp_assign.py
+    :language: python
     :linenos:
-    
-    A = cytnx.zeros([3,4,5])
-    B = A
-
-    print(B is A)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_8_cp_assign.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. code-block:: text
-    
-    True
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_8_cp_assign.out
+    :language: text
+
 
 Here, **B** is a reference to **A**, so essentially **B** and **A** are the same object. We can use **is** to check if two objects are the same. Since they are the same object, all changes made to **B** will affect **A** as well.  
 
@@ -49,25 +44,20 @@ To really create a copy of **A**, we can use the **clone()** method. **clone()**
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_8_cp_clone.py
+    :language: python
     :linenos:
-    
-    A = cytnx.zeros([3,4,5])
-    B = A.clone()
-    
-    print(B is A)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_1_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_8_cp_clone.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. code-block:: text
-
-    False
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_8_cp_clone.out
+    :language: text
 
 
 Permute 
@@ -77,77 +67,39 @@ Now let us take a look at what happens if we perform a **permute()** operation o
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_8_cp_permute-1.py
+    :language: python
     :linenos:
-    
-    A = cytnx.zeros([2,3,4])
-    B = A.permute(0,2,1)
-    
-    print(A)
-    print(B)
-
-    print(B is A)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_8_cp_permute-1.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. code-block:: text
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,3,4)
-    [[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
-     [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,4,3)
-    [[[0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]]
-     [[0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-
-    False
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_8_cp_permute-1.out
+    :language: text
 
 
 We see that **A** and **B** are now two different objects (as it should be, they have different shapes!). Now let's see what happens if we change an element in **A**:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_8_cp_permute-2.py
+    :language: python
     :linenos:
-    
-    A[0,0,0] = 300
 
-    print(A)
-    print(B)
-    
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_2_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_8_cp_permute-2.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/3_8_2_ex2.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_8_cp_permute-2.out
     :language: text
 
 Notice that the element in **B** is also changed! So what actually happened? When we called **permute()**, a new object was created, which has different *meta*, but the two Tensors actually share the *same* data storage! There is NO copy of the tensor elements in memory performed:
@@ -160,23 +112,20 @@ We can use **Tensor.same_data()** to check if two objects share the same memory 
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_8_cp_permute-3.py
+    :language: python
     :linenos:
-    
-    print(B.same_data(A))
-    
+
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_2_ex3.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_8_cp_permute-3.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. code-block:: text
-    
-    True
-
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_8_cp_permute-3.out
+    :language: text
 
 As you can see, **permute()** never copies the memory storage. 
 
@@ -185,30 +134,22 @@ Contiguous
 ********************
 Next, let's have a look at the **contiguous** property. In the above example, we see that **permute()** created a new Tensor object with different *meta* but sharing the same memory storage. The memory layout of the **B** Tensor no longer corresponds to the tensors shape after the permutation. A Tensor in with this status is called **non-contiguous**. We can use **is_contiguous()** to check if a Tensor is with this status. 
 
- 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_8_cp_contiguous-1.py
+    :language: python
     :linenos:
-    
-    A = cytnx.zeros([2,3,4])
-    B = A.permute(0,2,1)
-    
-    print(A.is_contiguous())
-    print(B.is_contiguous())
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_3_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_8_cp_contiguous-1.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. code-block:: text
-
-    True
-    False
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_8_cp_contiguous-1.out
+    :language: text
 
 
 We can make a contiguous Tensor **C** that has the same shape as **B** by calling **contiguous()**. Creating such a contiguous Tensor requires moving the elements in memory to their right position, matching the shape of the Tensor. 
@@ -219,45 +160,20 @@ We can make a contiguous Tensor **C** that has the same shape as **B** by callin
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_8_cp_contiguous-2.py
+    :language: python
     :linenos:
-    
-    C = B.contiguous()
-
-    print(C)
-    print(C.is_contiguous())
-
-    print(C.same_data(B))
-     
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_8_3_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_8_cp_contiguous-2.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. code-block:: text
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,4,3)
-    [[[0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]]
-     [[0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-    True
-    False
-
-
-
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_8_cp_contiguous-2.out
+    :language: text
 
 
 .. hint::
@@ -279,12 +195,5 @@ Reshape is an operation that combines/splits indices of a Tensor while keeping t
 
 1. If the Tensor object is in *contiguous* status, then only the *meta* is changed, and the Storage is shared 
 2. If the Tensor object is in *non-contiguous* status, then the *contiguous()* will be called first before the *meta* will be changed.
-
-
-
-
-
-
-
 
 .. toctree::
