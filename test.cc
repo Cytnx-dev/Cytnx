@@ -32,6 +32,9 @@ pair<std::string, cytnx_int64> operator>>(const std::string &a, const cytnx_int6
 // }
 
 int main(int argc, char *argv[]) {
+  auto ss1 = (2, 3);
+  return 0;
+
   auto ttss = "a"s >> 4;
   // auto ttss2 = "a" >> 4
 
