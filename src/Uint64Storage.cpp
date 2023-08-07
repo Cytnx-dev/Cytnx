@@ -699,9 +699,9 @@ namespace cytnx {
     this->at<cytnx_uint64>(idx) = val;
   }
 
-  bool UInt64Storage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
-                                const cytnx_double tol = 0) {
-    if (rhs->dtype != Type.UInt64) return false;
+  bool Uint64Storage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
+                                const cytnx_double tol) {
+    if (rhs->dtype != Type.Uint64) return false;
     if (rhs->size() != this->len) return false;
     for (cytnx_uint64 i = 0; i < this->len; i++) {
       if (abs(this->at<cytnx_uint64>(i) - rhs->at<cytnx_uint64>(i)) > tol) return false;

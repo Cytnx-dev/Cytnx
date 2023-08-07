@@ -1593,7 +1593,7 @@ namespace cytnx {
                   << "not equal to rhs tensor flag " << rhs.is_contiguous() << std::endl;
         return false;
       }
-      return this->_impl->_storage->equivelem(rhs._impl->_storage, tol);
+      return this->_impl->_storage.equivelem(rhs._impl->_storage._impl, tol);
     }
 
     // template<class T>

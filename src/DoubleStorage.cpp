@@ -712,7 +712,7 @@ namespace cytnx {
   }
 
   bool DoubleStorage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
-                                const cytnx_double tol = 0) {
+                                const cytnx_double tol) {
     if (rhs->dtype != Type.Double) return false;
     if (rhs->size() != this->len) return false;
     for (cytnx_uint64 i = 0; i < this->len; i++) {

@@ -218,7 +218,8 @@ namespace cytnx {
     virtual void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     virtual void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    virtual bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    virtual bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
+                           const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -289,7 +290,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -360,7 +361,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -431,7 +432,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -502,7 +503,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -573,7 +574,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -644,7 +645,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
   ///@cond
@@ -713,7 +714,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -783,7 +784,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -854,7 +855,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -924,7 +925,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
@@ -994,7 +995,7 @@ namespace cytnx {
     void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
 
-    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs);
+    bool equivelem(const boost::intrusive_ptr<Storage_base> &rhs, const cytnx_double tol = 0);
   };
   ///@endcond
 
