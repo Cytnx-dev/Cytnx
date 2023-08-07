@@ -236,7 +236,6 @@ namespace cytnx {
       cytnx_int64 ldA = N, ldu = N, ldvT = min;
       if (N < M) {
         ldA = M, ldu = M, ldvT = min;
-        std::cout<<"inside"<<std::endl;
       }
 
       void *UMem, *vTMem;

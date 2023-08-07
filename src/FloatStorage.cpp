@@ -697,7 +697,13 @@ namespace cytnx {
     if (rhs->dtype != Type.Float) return false;
     if (rhs->size() != this->len) return false;
     for (cytnx_uint64 i = 0; i < this->len; i++) {
-      if (abs(this->at<cytnx_float>(i) - rhs->at<cytnx_float>(i)) > tol) return false;
+      if (abs(this->at<cytnx_float>(i) - rhs->at<cytnx_float>(i)) > tol) {
+        std::cout << "tensor different at idx:" << i << "\nlhs:" << this->at<cytnx_float>(i)
+                  << " rhs:" << rhs->at<cytnx_float>(i) << "\n"
+                  << "difference in absolute value: "
+                  << abs(this->at<cytnx_float>(i) - rhs->at<cytnx_float>(i)) << std::endl;
+        return false;
+      }
     }
     return true;
   }
