@@ -700,11 +700,12 @@ namespace cytnx {
     this->at<cytnx_int32>(idx) = val;
   }
 
-  bool Int32Storage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs) {
+  bool Int32Storage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
+                               const cytnx_double tol = 0) {
     if (rhs->dtype != Type.Int32) return false;
     if (rhs->size() != this->len) return false;
     for (cytnx_uint64 i = 0; i < this->len; i++) {
-      if (this->at<cytnx_int32>(i) != rhs->at<cytnx_int32>(i)) return false;
+      if (abs(this->at<cytnx_int32>(i) - rhs->at<cytnx_int32>(i)) > tol) return false;
     }
     return true;
   }

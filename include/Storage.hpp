@@ -1619,7 +1619,9 @@ namespace cytnx {
      * @note Two Storage are equivalent if they have the same type, and elements.
      * @return If two Storage are equivalent.
      */
-    bool equivelem(const Storage &rhs) const { return this->_impl->equivelem(rhs._impl); };
+    bool equivelem(const Storage &rhs, const cytnx_double tol = 0) const {
+      return this->_impl->equivelem(rhs._impl, tol);
+    };
   };
 
   ///@cond

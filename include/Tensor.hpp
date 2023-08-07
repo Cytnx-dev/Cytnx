@@ -1572,7 +1572,7 @@ namespace cytnx {
      * @details This function Compare each element of the current tensor with the input tensor.
      * @param[in] rhs the compared tensor.
      */
-    bool equivelem(const Tensor &rhs) {
+    bool equivelem(const Tensor &rhs, const cytnx_double tol = 0) {
       if (this->device() != rhs.device()) {
         std::cout << "[equivelem] Tensor device " << this->device()
                   << "not equal to rhs tensor device " << rhs.device() << std::endl;
@@ -1593,7 +1593,7 @@ namespace cytnx {
                   << "not equal to rhs tensor flag " << rhs.is_contiguous() << std::endl;
         return false;
       }
-      return AreNearlyEqStorage(T1.storage(), T2.storage(), tol);
+      return this->_impl->_storage->equivelem(rhs._impl->_storage, tol);
     }
 
     // template<class T>

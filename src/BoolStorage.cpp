@@ -707,11 +707,12 @@ namespace cytnx {
     this->at<cytnx_bool>(idx) = val;
   }
 
-  bool BoolStorage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs) {
+  bool BoolStorage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
+                              const cytnx_double tol = 0) {
     if (rhs->dtype != Type.Bool) return false;
     if (rhs->size() != this->len) return false;
     for (cytnx_uint64 i = 0; i < this->len; i++) {
-      if (this->at<cytnx_bool>(i) != rhs->at<cytnx_bool>(i)) return false;
+      if (abs(this->at<cytnx_bool>(i) - rhs->at<cytnx_bool>(i)) > tol) return false;
     }
     return true;
   }

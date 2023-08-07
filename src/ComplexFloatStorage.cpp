@@ -788,11 +788,12 @@ namespace cytnx {
     this->at<cytnx_complex64>(idx) = val;
   }
 
-  bool ComplexFloatStorage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs) {
+  bool ComplexFloatStorage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
+                                      const cytnx_double tol = 0) {
     if (rhs->dtype != Type.ComplexFloat) return false;
     if (rhs->size() != this->len) return false;
     for (cytnx_uint64 i = 0; i < this->len; i++) {
-      if (this->at<cytnx_complex64>(i) != rhs->at<cytnx_complex64>(i)) return false;
+      if (abs(this->at<cytnx_complex64>(i) - rhs->at<cytnx_complex64>(i)) > tol) return false;
     }
     return true;
   }
