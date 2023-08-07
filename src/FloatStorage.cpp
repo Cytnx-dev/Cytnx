@@ -692,4 +692,12 @@ namespace cytnx {
     this->at<cytnx_float>(idx) = val;
   }
 
+  bool FloatStorage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs) {
+    if (rhs->dtype != Type.Float) return false;
+    if (rhs->size() != this->len) return false;
+    for (cytnx_uint64 i = 0; i < this->len; i++) {
+      if (this->at<cytnx_float>(i) != rhs->at<cytnx_float>(i)) return false;
+    }
+    return true;
+  }
 }  // namespace cytnx

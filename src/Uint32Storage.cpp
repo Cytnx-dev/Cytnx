@@ -704,4 +704,12 @@ namespace cytnx {
     this->at<cytnx_uint32>(idx) = val;
   }
 
+  bool UInt32Storage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs) {
+    if (rhs->dtype != Type.UInt32) return false;
+    if (rhs->size() != this->len) return false;
+    for (cytnx_uint64 i = 0; i < this->len; i++) {
+      if (this->at<cytnx_uint32>(i) != rhs->at<cytnx_uint32>(i)) return false;
+    }
+    return true;
+  }
 }  // namespace cytnx

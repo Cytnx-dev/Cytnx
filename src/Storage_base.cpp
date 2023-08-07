@@ -1046,4 +1046,9 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
 
+  bool Storage_base::equivelem(const boost::intrusive_ptr<Storage_base> &rhs) {
+    cytnx_error_msg(true, "[ERROR] trying to call Storage.equivelem() from void Storage%s", "\n");
+    return false;
+  }
+
 }  // namespace cytnx
