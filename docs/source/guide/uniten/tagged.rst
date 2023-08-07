@@ -17,16 +17,15 @@ To create the non-symmetric, tagged UniTensor, we initialize it with **direction
 
     bond_a = cytnx.Bond(3, cytnx.BD_KET)
     bond_b = cytnx.Bond(3, cytnx.BD_BRA)
-    Ta = cytnx.UniTensor([bond_a, bond_a, bond_b], labels=[0, 1, 2], rowrank = 2)
+    Ta = cytnx.UniTensor([bond_a, bond_a, bond_b], labels=["a", "b", "c"], rowrank = 2)
     Ta.set_name("Ta")
     Ta.print_diagram()
-    Tb = cytnx.UniTensor([bond_a, bond_b, bond_b], labels=[2, 3, 4], rowrank = 1)
+    Tb = cytnx.UniTensor([bond_a, bond_b, bond_b], labels=["c", "d", "e"], rowrank = 1)
     Tb.set_name("Tb")
     Tb.print_diagram()
-    Tc = cytnx.UniTensor([bond_b, bond_b, bond_b], labels=[2, 3, 4], rowrank = 1)
+    Tc = cytnx.UniTensor([bond_b, bond_b, bond_b], labels=["c", "d", "e"], rowrank = 1)
     Tc.set_name("Tc")
     Tc.print_diagram()
-
 
 Output >> 
 
@@ -42,9 +41,9 @@ Output >>
           row           col 
              -----------    
              |         |    
-       0  -->| 3     3 |-->  2
+       a  -->| 3     3 |-->  c
              |         |    
-       1  -->| 3       |        
+       b  -->| 3       |        
              |         |    
              -----------    
     -----------------------
@@ -57,9 +56,9 @@ Output >>
           row           col 
              -----------    
              |         |    
-       2  -->| 3     3 |-->  3
+       c  -->| 3     3 |-->  d
              |         |    
-             |       3 |-->  4
+             |       3 |-->  e
              |         |    
              -----------    
     -----------------------
@@ -72,11 +71,11 @@ Output >>
           row           col 
              -----------    
              |         |    
-       2 *<--| 3     3 |-->  3
+       c *<--| 3     3 |-->  d
              |         |    
-             |       3 |-->  4
+             |       3 |-->  e
              |         |    
-             -----------   
+             -----------    
             
 In this example, the UniTensors **Ta** and  **Tb**  are created to be in the **braket form (braket_form : True)**. This means that all bonds in the rowspace are Kets (inward) and all the bonds in the colspace are Bras(outward), which can be seen in the diagram as well. The property rowrank of a UniTensor defines these spaces: the first bonds are part of rowspace, and rowspace contains *rowrank* bonds.
 

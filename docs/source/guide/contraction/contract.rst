@@ -143,7 +143,7 @@ Output >>
                ---------     
 
 
-The function **.relabels()** creates a copy of the initial UniTensor and changes the labels, while keeping the labels on the inital tensor unchanged. The actual data is shared between the old and new tensor, only the meta is independent.
+The function **.relabels()** creates a copy of the initial UniTensor and changes the labels, while keeping the labels on the initial tensor unchanged. The actual data is shared between the old and new tensor, only the meta is independent.
 
 Contracts
 ------------------
@@ -164,9 +164,11 @@ This corresponds to the Python program:
 .. code-block:: python
     :linenos:
 
+    
     # Creating A1, A2, M
-    A1 = cytnx.UniTensor(cytnx.ones([2,8,8]), name = "A1")
-    A2 = cytnx.UniTensor(cytnx.ones([2,8,8]), name = "A2")
+    A1 = cytnx.UniTensor(cytnx.random.normal([2,8,8], mean=0., std=1., dtype=cytnx.Type.ComplexDouble), name = "A1");
+    A2 = A1.Conj();
+    A2.set_name("A2");
     M = cytnx.UniTensor(cytnx.ones([2,2,4,4]), name = "M")
 
     # Assign labels
@@ -175,8 +177,9 @@ This corresponds to the Python program:
     A2.relabels_(["phy2","v5","v6"])
 
     # Use Contracts
-    res = cytnx.Contracts(TNs = [A1,M,A2], order = "(M,(A1,A2))", optimal = False)
-    res.print_diagram()
+    Res = cytnx.Contracts(TNs = [A1,M,A2], order = "(M,(A1,A2))", optimal = False)
+    Res.print_diagram()
+
 
 Output >> 
 
@@ -203,3 +206,6 @@ Output >>
                ---------     
 
 Note that the UniTensors' names have to be specified for an explicitly given contraction order. In this case we specified them in the constructor argument. The order *(M,(A1,A2))* indicates that first all common indices of *A1* and *A2* are contracted, then all common indices of the resulting tensor and *M*.
+
+.. Note::
+    All tensors contracted with `Contracts()` need to have unique tensor names. Use `UniTensor.set_name()` to specify the name of a tensor.

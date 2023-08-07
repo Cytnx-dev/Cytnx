@@ -136,10 +136,10 @@ When we put a UniTensor into a Network, we can also specify its leg order accord
 .. code-block:: python
     :linenos:
 
-    A1 = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    A1.set_labels(["phy","v1","v2"])
-    A2 = cytnx.UniTensor(cytnx.ones([2,8,8]));
-    A2.set_labels(["phy","v1","v2"])
+    A1 = cytnx.UniTensor(cytnx.random.normal([2,8,8], mean=0., std=1., dtype=cytnx.Type.ComplexDouble));
+    A1.relabels_(["phy","v1","v2"]);
+    A2 = A1.Conj();
+    A2.relabels_(["phy*","v1*","v2*"]);
 
 The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2 for spin-half case for example) and the other two legs are the virtual ones (with dimension 8).
 
@@ -160,11 +160,11 @@ Now suppose somehow we want to contract these two tensors by its physical legs, 
     :linenos:
 
     N = cytnx.Network()
-    N.FromString(["A1: 1,-1,2",\
-                "A2: 3,-1,4",\
-                "TOUT: 1,3;2,4"])
+    N.FromString(["A1: in1,phys,out1",\
+                  "A2: in2,phys,out2",\
+                  "TOUT: in1,in2;out1,out2"])
 
-Note that in this Network it is the second leg of the two tensors to be contracted, which will not be consistent since **A1** and **A2** are created such that their physical leg is the first one, while we can do the following:
+Note that in this Network the second leg of the two tensors are to be contracted. This is not consistent to the definition of **A1** and **A2** which are created such that their physical leg is the first one. We can call `PutUniTensor` and specify the labels though:
 
 * In Python:
 
@@ -172,27 +172,29 @@ Note that in this Network it is the second leg of the two tensors to be contract
     :linenos:
 
     N.PutUniTensor("A1",A1,["v1","phy","v2"])
-    N.PutUniTensor("A2",A2,["v1","phy","v2"])
+    N.PutUniTensor("A2",A2,["v1*","phy*","v2*"])
+    Res=N.Launch()
+    Res.print_diagram()
 
-.. Output >> 
+Output >> 
 
-.. .. code-block:: text
+.. code-block:: text
 
-..     -----------------------
-..     tensor Name : 
-..     tensor Rank : 4
-..     block_form  : False
-..     is_diag     : False
-..     on device   : cytnx device: CPU
-..                  ---------     
-..                 /         \    
-..        v0in ____| 8     8 |____ v0out
-..                 |         |    
-..        v1in ____| 8     8 |____ v1out
-..                 \         /    
-..                  ---------     
+    -----------------------
+    tensor Name : 
+    tensor Rank : 4
+    block_form  : False
+    is_diag     : False
+    on device   : cytnx device: CPU
+                ---------     
+               /         \    
+       in1 ____| 8     8 |____ out1
+               |         |    
+       in2 ____| 8     8 |____ out2
+               \         /    
+                ---------     
 
-So when we do the PutUniTensor() we add the third argument which is a labels ordering, what this function will do is nothing but permute the tensor legs according to this label ordering before putting them into the Network.
+So when calling `PutUniTensor()` we add the third argument which is a labels ordering. This will permute the tensor legs according to the given label ordering before putting them into the Network.
 
 .. toctree::
 

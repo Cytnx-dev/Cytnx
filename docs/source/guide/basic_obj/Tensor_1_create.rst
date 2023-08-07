@@ -156,6 +156,17 @@ Concerning devices, Cytnx currently supports
 | CUDA-enabled GPU | Device.cuda+x        |
 +------------------+----------------------+
 
+Tensors can also be initialized randomly as in :ref:`Random Tensor` with different **dtype**. For example, complex tensors can be created with:
+
+* In Python : 
+
+.. code-block:: python 
+    :linenos:
+
+    A = cytnx.random.normal([3,4,5], mean=0., std=1., dtype=cytnx.Type.ComplexDouble)
+    B = cytnx.random.uniform([3,4,5], low=-1., high=1., dtype=cytnx.Type.ComplexDouble)
+    
+
 Type conversion 
 **********************
 It is possible to convert a Tensor to a different data type. To convert the data type, simply use **Tensor.astype()**.
