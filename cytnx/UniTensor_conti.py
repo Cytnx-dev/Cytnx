@@ -1,6 +1,8 @@
 from .utils import *
 from cytnx import *
 from typing import List
+from functools import singledispatch
+
 ## load the submodule from pybind and inject the methods
 
 class Hclass:
@@ -194,6 +196,23 @@ def set_labels(self,new_labels:List[str]):
     self.c_set_labels(new_labels);
     return self
 
+
+@add_method(UniTensor)
+def relabel_(self, old_label:str, new_label:str):
+    self.c_relabel_(old_label,new_label);
+    return self
+
+@add_method(UniTensor)
+def relabel_(self, idx:int, new_label:str):
+    self.c_relabel_(idx,new_label);
+    return self
+
+
+
+@add_method(UniTensor)
+def relabels_(self, new_labels:List[str],old_labels:List[str]=[]):
+    self.c_relabels_(new_labels);
+    return self
 
 
 
