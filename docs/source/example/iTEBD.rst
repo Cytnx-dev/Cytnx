@@ -306,7 +306,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb_l = lb.relabel(lb.get_index('e'),X.labels()[0])
+    lb_l = lb.relabel(old_label=lb.get_index('e'), new_label=X.labels()[0])
     X = cytnx.Contract(lb_l,X)
 
 
@@ -480,7 +480,7 @@ Let's put everything together in a loop for iteration:
 
         ## contract all
         X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-        lb_l = lb.relabel(lb.get_index('e'),X.labels()[0])
+        lb_l = lb.relabel(old_label=lb.get_index('e'), new_label=X.labels()[0])
         X = cytnx.Contract(lb_l,X)
 
         Xt = X.clone()

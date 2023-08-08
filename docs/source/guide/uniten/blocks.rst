@@ -54,7 +54,7 @@ Let's use the same example of a UniTensor with *U1* symmetry that we introduced 
     bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
     bond_f = cytnx.Bond(cytnx.BD_OUT,\
                         [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels_(["d","e","f"])
+    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor", labels=["d","e","f"])
 
 There are two ways to get a certain block from a UniTensor. 
 
