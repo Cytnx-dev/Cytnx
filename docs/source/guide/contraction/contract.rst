@@ -13,12 +13,8 @@ The function **cytnx.Contract()** contracts all common labels of two UniTensors.
     :linenos:
 
 
-    A = cytnx.UniTensor(cytnx.ones([2,3,4]), rowrank = 1)
-    A.relabels_(["i","j","l"])
-
-    B = cytnx.UniTensor(cytnx.ones([3,2,4,5]), rowrank = 2)
-    B.relabels_(["j","k","l","m"])
-
+    A = cytnx.UniTensor(cytnx.ones([2,3,4]), rowrank=1, labels=["i","j","l"])
+    B = cytnx.UniTensor(cytnx.ones([3,2,4,5]), rowrank=2, labels=["j","k","l","m"])
     C = cytnx.Contract(A, B)
 
     A.print_diagram()
@@ -72,7 +68,7 @@ Output >>
 
 Here we see that the labels **j** and **l** appear on both input tensors. Thus, they are contracted. Note that the bond dimensions of the contracted tensors must agree on both tensors.
 
-In order to define which indices shall be contracted without changing the labels on the initial tensors, Cyntx provides the method **.relabels()**. It allows to set common labels on the indices to be contracted and distinct labels on the others. Also, the labels on the resulting tensor can be defined this way. Suppose that we only want to contract the index *j* in the previous example, but not sum over *l*. We can use **.relabels()** for this task:
+In order to define which indices shall be contracted without changing the labels on the initial tensors, Cyntx provides the method **.relabels()**. It allows to set common labels on the indices to be contracted and distinct labels on the others. Also, the labels on the resulting tensor can be defined this way. See :ref:`Changing labels` for further details. Suppose that we only want to contract the index *j* in the previous example, but not sum over *l*. We can use **.relabels()** for this task:
 
 
 * In Python:
@@ -81,12 +77,10 @@ In order to define which indices shall be contracted without changing the labels
     :linenos:
 
 
-    A = cytnx.UniTensor(cytnx.ones([2,3,4]), rowrank = 1)
-    A.relabels_(["i","j","l"])
+    A = cytnx.UniTensor(cytnx.ones([2,3,4]), rowrank=1, labels=["i","j","l"])
     Are = A.relabels(["i","j","lA"])
 
-    B = cytnx.UniTensor(cytnx.ones([3,2,4,5]), rowrank = 2)
-    B.relabels_(["j","k","l","m"])
+    B = cytnx.UniTensor(cytnx.ones([3,2,4,5]), rowrank=2, labels=["j","k","l","m"])
     Bre = B.relabels(["j","k","lB","m"])
 
     C = cytnx.Contract(Are, Bre)
@@ -165,7 +159,7 @@ This corresponds to the Python program:
     :linenos:
 
     
-    # Creating A1, A2, M
+    # Create A1, A2, M
     A1 = cytnx.UniTensor(cytnx.random.normal([2,8,8], mean=0., std=1., dtype=cytnx.Type.ComplexDouble), name = "A1");
     A2 = A1.Conj();
     A2.set_name("A2");
