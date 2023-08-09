@@ -66,12 +66,16 @@ namespace cytnx {
           cytnx::linalg_internal::lii.cuGeSvd_ii[in.dtype()](
             in._impl->storage()._impl, vT._impl->storage()._impl, U._impl->storage()._impl,
             S._impl->storage()._impl, in.shape()[0], in.shape()[1]);
-          U._impl->storage()._impl->Move_memory_(
-            {(cytnx_uint64)std::min(in.shape()[0], in.shape()[1]), (cytnx_uint64)in.shape()[1]},
-            {1, 0}, {1, 0});
-          vT._impl->storage()._impl->Move_memory_(
-            {(cytnx_uint64)in.shape()[0], (cytnx_uint64)std::min(in.shape()[0], in.shape()[1])},
-            {1, 0}, {1, 0});
+          if (is_U) {
+            U._impl->storage()._impl->Move_memory_(
+              {(cytnx_uint64)std::min(in.shape()[0], in.shape()[1]), (cytnx_uint64)in.shape()[1]},
+              {1, 0}, {1, 0});
+          }
+          if (is_vT) {
+            vT._impl->storage()._impl->Move_memory_(
+              {(cytnx_uint64)in.shape()[0], (cytnx_uint64)std::min(in.shape()[0], in.shape()[1])},
+              {1, 0}, {1, 0});
+          }
           in.permute_({1, 0});
           in.contiguous_();
         }
