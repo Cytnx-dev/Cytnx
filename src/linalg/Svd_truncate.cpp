@@ -10,7 +10,8 @@ namespace cytnx {
     typedef Accessor ac;
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err, const bool &is_UvT,
-                                     const bool &return_err) {
+                                     const unsigned int &return_err) {
+      cytnx_error_msg(return_err < 0, "[ERROR] return_err can only be positive int%s", "\n");
       std::vector<Tensor> tmps = Svd(Tin, is_UvT);
 
       cytnx_uint64 id = 0;
@@ -40,7 +41,11 @@ namespace cytnx {
       Tensor terr({1}, Type.Double);
 
       if (truc_dim != ts.size()) {
-        terr = tmps[id](truc_dim);
+        if (return_err == 1)
+          terr = tmps[id](truc_dim);
+        else if (return_err)
+          terr = tmps[id].get({ac::tilend(truc_dim)});
+
         tmps[id] = tmps[id].get({ac::range(0, truc_dim)});
 
         if (is_UvT) {
@@ -65,7 +70,7 @@ namespace cytnx {
 
     void _svd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
-                                const bool &return_err) {
+                                const unsigned int &return_err) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -167,7 +172,7 @@ namespace cytnx {
 
     void _svd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
-                                const bool &return_err) {
+                                const int &return_err) {
       cytnx_uint64 keep_dim = keepdim;
 
       outCyT = linalg::Svd(Tin, is_UvT);
@@ -182,21 +187,26 @@ namespace cytnx {
 
       // 2) get the minimum base on the args input.
       Scalar Smin;
+      cytnx_uint64 smidx;
       if (keep_dim < Sall.shape()[0]) {
-        Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+        smidx = Sall.shape()[0] - keep_dim;
+        Smin = Sall.storage()(smidx);
         while ((Smin < err)) {
           keep_dim -= 1;
           if (keep_dim == 0) break;
-          Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+          smidx = Sall.shape()[0] - keep_dim;
+          Smin = Sall.storage()(smidx);
         }
 
       } else {
         keep_dim = Sall.shape()[0];
         Smin = Sall.storage()(0);
+        smidx = 0;
         while ((Smin < err)) {
           keep_dim -= 1;
           if (keep_dim == 0) break;
-          Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+          smidx = Sall.shape()[0] - keep_dim;
+          Smin = Sall.storage()(smidx);
         }
       }
 
@@ -300,15 +310,17 @@ namespace cytnx {
       }
 
       // handle return_err!
-      if (return_err) {
+      if (return_err == 1) {
         outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
         outCyT.back().get_block_().storage().at(0) = Smin;
+      } else if (return_err) {
+        outCyT.push_back(UniTensor(Sall.get({ac::tilend(smidx)})));
       }
     }
 
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
-                                               const bool &is_UvT, const bool &return_err) {
+                                               const bool &is_UvT, const unsigned int &return_err) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
                       "[Svd][ERROR] Svd for UniTensor should have rank>1 and rank>rowrank>0%s",
