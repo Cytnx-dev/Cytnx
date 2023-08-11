@@ -1,6 +1,5 @@
 import sys
-CYTNX_ROOT = '/home/hunghaoti/Libraries/Cytnx_lib'
-#CYTNX_ROOT = './build/cytnx_install/'
+CYTNX_ROOT = './build/cytnx_install/'
 sys.path.insert(0, CYTNX_ROOT)
 import cytnx
 import pytest
