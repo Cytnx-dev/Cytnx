@@ -178,7 +178,7 @@ namespace cytnx {
 
       outCyT = linalg::Gesvd(Tin, is_U, is_vT);
 
-      // process runcate:
+      // process truncate:
       // 1) concate all s vals from all blk
       Tensor Sall = outCyT[0].get_block_(0);
       for (int i = 1; i < outCyT[0].Nblocks(); i++) {
