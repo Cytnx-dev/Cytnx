@@ -2228,8 +2228,9 @@ namespace cytnx {
         2. Compare to relabels(const std::vector<std::string> &new_labels) const, this
         function set the new label to itself.
     */
-    void relabels_(const std::vector<std::string> &new_labels) const {
+    UniTensor &relabels_(const std::vector<std::string> &new_labels) {
       this->_impl->relabels_(new_labels);
+      return *this;
     }
 
     /**
@@ -2265,13 +2266,14 @@ namespace cytnx {
     /**
     @see relabels_(const std::vector<std::string> &new_labels)
      */
-    void relabels_(const std::initializer_list<char *> &new_lbls) {
+    UniTensor &relabels_(const std::initializer_list<char *> &new_lbls) {
       std::vector<char *> new_labels(new_lbls);
       std::vector<std::string> vs(new_labels.size());
       transform(new_labels.begin(), new_labels.end(), vs.begin(),
                 [](char *x) -> std::string { return std::string(x); });
 
       this->_impl->relabels_(vs);
+      return *this;
     }
 
     /**
@@ -2303,9 +2305,10 @@ namespace cytnx {
     still shared with the original UniTensor. That is the meta data of the UniTensor is
     different, but the internal data is still shared.
      */
-    void relabels_(const std::vector<std::string> &old_labels,
-                   const std::vector<std::string> &new_labels) {
+    UniTensor &relabels_(const std::vector<std::string> &old_labels,
+                         const std::vector<std::string> &new_labels) {
       this->_impl->relabels_(old_labels, new_labels);
+      return *this;
     }
 
     /**
@@ -2331,8 +2334,8 @@ namespace cytnx {
     @see relabels_(const std::vector<std::string> &old_labels, const std::vector<std::string>
     &new_labels)
      */
-    void relabels_(const std::initializer_list<char *> &old_lbls,
-                   const std::initializer_list<char *> &new_lbls) {
+    UniTensor &relabels_(const std::initializer_list<char *> &old_lbls,
+                         const std::initializer_list<char *> &new_lbls) {
       std::vector<char *> new_labels(new_lbls);
       std::vector<std::string> vs(new_labels.size());
       transform(new_labels.begin(), new_labels.end(), vs.begin(),
@@ -2344,6 +2347,7 @@ namespace cytnx {
                 [](char *x) -> std::string { return std::string(x); });
 
       this->relabels_(vs_old, vs);
+      return *this;
     }
 
     /**
@@ -2373,8 +2377,9 @@ namespace cytnx {
         @param[in] new_label the new label of the UniTensor in the index \p inx
     @see set_label(const cytnx_int64 &idx, const std::string &new_label)
      */
-    void relabel_(const cytnx_int64 &inx, const std::string &new_label) const {
+    UniTensor &relabel_(const cytnx_int64 &inx, const std::string &new_label) {
       this->_impl->relabel_(inx, new_label);
+      return *this;
     }
 
     /**
@@ -2385,8 +2390,9 @@ namespace cytnx {
           @param[in] new_label the new label
     @see set_label(const std::string &old_label, const std::string &new_label)
      */
-    void relabel_(const std::string &old_label, const std::string &new_label) const {
+    UniTensor &relabel_(const std::string &old_label, const std::string &new_label) {
       this->_impl->relabel_(old_label, new_label);
+      return *this;
     }
 
     /**
