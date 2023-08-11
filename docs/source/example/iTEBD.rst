@@ -298,15 +298,15 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 .. code-block:: python 
     :linenos:
 
-    A.set_labels(["a","0","b"])
-    B.set_labels(["c","1","d"])
-    la.set_labels(["b","c"])
-    lb.set_labels(["d","e"])
+    A.relabels_(["a","0","b"]);
+    B.relabels_(["c","1","d"]);
+    la.relabels_(["b","c"]);
+    lb.relabels_(["d","e"]);
 
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb_l = lb.relabel(lb.get_index('e'),X.labels()[0])
+    lb_l = lb.relabel(old_label=lb.get_index('e'), new_label=X.labels()[0])
     X = cytnx.Contract(lb_l,X)
 
 
@@ -323,7 +323,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
     # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
     XNorm = cytnx.Contract(X,Xt).item()
     XH = cytnx.Contract(X,H)
-    XH.set_labels(["d","e","0","1"]) 
+    XH.relabels_(["d","e","0","1"]) ;
     
     
     XHX = cytnx.Contract(Xt,XH)
@@ -437,7 +437,7 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
 
     lb_inv = 1./lb
 
-    lb_inv.set_labels([B.labels()[2],A.labels()[0]])
+    lb_inv.relabels_([B.labels()[2],A.labels()[0]]);
    
     A = cytnx.Contract(lb_inv,A)
     B = cytnx.Contract(B,lb_inv)
@@ -473,14 +473,14 @@ Let's put everything together in a loop for iteration:
 
     for i in range(10000):
 
-        A.set_labels(["a","0","b"])
-        B.set_labels(["c","1","d"])
-        la.set_labels(["b","c"])
-        lb.set_labels(["d","e"])
+        A.relabels_(["a","0","b"]);
+        B.relabels_(["c","1","d"]);
+        la.relabels_(["b","c"]);
+        lb.relabels_(["d","e"]);
 
         ## contract all
         X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-        lb_l = lb.relabel(lb.get_index('e'),X.labels()[0])
+        lb_l = lb.relabel(old_label=lb.get_index('e'), new_label=X.labels()[0])
         X = cytnx.Contract(lb_l,X)
 
         Xt = X.clone()
@@ -489,7 +489,7 @@ Let's put everything together in a loop for iteration:
         # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
         XNorm = cytnx.Contract(X,Xt).item()
         XH = cytnx.Contract(X,H)
-        XH.set_labels(["d","e","0","1"]) 
+        XH.relabels_(["d","e","0","1"]);
         
         
         XHX = cytnx.Contract(Xt,XH)
@@ -515,7 +515,7 @@ Let's put everything together in a loop for iteration:
         la *= 1./Norm
 
         lb_inv = 1./lb
-        lb_inv.set_labels([B.labels()[2],A.labels()[0]])
+        lb_inv.relabels_([B.labels()[2],A.labels()[0]]);
     
         A = cytnx.Contract(lb_inv,A)
         B = cytnx.Contract(B,lb_inv)

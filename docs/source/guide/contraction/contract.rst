@@ -36,7 +36,7 @@ Output >>
     :language: text
 
 
-The function **.relabels()** creates a copy of the initial UniTensor and changes the labels, while keeping the labels on the inital tensor unchanged. The actual data is shared between the old and new tensor, only the meta is independent.
+The function **.relabels()** creates a copy of the initial UniTensor and changes the labels, while keeping the labels on the initial tensor unchanged. The actual data is shared between the old and new tensor, only the meta is independent.
 
 Contracts
 ------------------

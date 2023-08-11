@@ -24,6 +24,13 @@ If we wish to change the labels of all legs, we can use:
 
     :param List[string] new_labels: a list of new labels 
 
+or
+
+.. py:function:: UniTensor.relabels_(old_labels, new_labels)
+
+    :param List[string] old_labels: a list of current labels 
+    :param List[string] new_labels: a list of the corresponding new labels 
+
 For example:
 
 * In Python:
