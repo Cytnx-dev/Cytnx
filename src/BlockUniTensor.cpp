@@ -680,8 +680,14 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void BlockUniTensor::relabels_(const std::vector<string> &new_labels) {
-    this->set_labels(new_labels);
+
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->relabels_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
@@ -692,9 +698,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void BlockUniTensor::relabel_(const cytnx_int64 &inx, const string &new_label) {
-    this->set_label(inx, new_label);
-  }
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string &inx,
                                                                const string &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
@@ -702,9 +706,6 @@ namespace cytnx {
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
-  }
-  void BlockUniTensor::relabel_(const string &inx, const string &new_label) {
-    this->set_label(inx, new_label);
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contract(

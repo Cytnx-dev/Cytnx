@@ -42,7 +42,8 @@ namespace cytnx {
                                          _Tn.shape()[1], Type.typeSize(Tin.dtype()));
 #else
         cytnx_error_msg(
-          true, "[ERROR][Vsplit_] fatal error, the tensor is on GPU without CUDA support.%s", "\n");
+          true, "[ERROR][Vsplit_] input is on GPU but current cytnx is compiled without GPU.%s",
+          "\n");
 #endif
       }
     }
