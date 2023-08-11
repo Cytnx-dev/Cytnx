@@ -77,8 +77,8 @@ void network_binding(py::module &m) {
       [](Network &self, const std::vector<std::string> &names) { self.RmUniTensors(names); },
       py::arg("names"))
 
-    .def("getOptimalOrder", &Network::getOptimalOrder,
-         py::arg("network_type") = (int)NtType.Regular)
+    // .def("getOptimalOrder", &Network::getOptimalOrder,
+    //      py::arg("network_type") = (int)NtType.Regular)
     // .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",
     //      py::arg("network_type") = (int)NtType.Regular)
 

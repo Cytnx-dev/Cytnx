@@ -67,7 +67,7 @@ namespace cytnx {
     type_mapper[Type.ComplexFloat] = CUDA_C_32F;
     type_mapper[Type.Double] = CUDA_R_64F;
     type_mapper[Type.Float] = CUDA_R_32F;
-    verbose = true;
+    verbose = false;
   };
 
   void cutensornet::parseLabels(std::vector<std::string> res_label,
@@ -76,6 +76,7 @@ namespace cytnx {
 
     extentsIn = std::vector<int64_t *>(labels.size());
     stridesIn = std::vector<int64_t *>(labels.size());
+    tns = std::vector<UniTensor>(labels.size());
     rawDataIn_d = std::vector<void *>(labels.size());
     extentR = std::vector<int64_t>(res_label.size());
 
@@ -99,12 +100,13 @@ namespace cytnx {
     nmodeR = res_label.size();
   }
 
-  void cutensornet::updateOut(UniTensor &res) {
+  void cutensornet::updateOutputShape(std::vector<cytnx_uint64> &outshape) {
     // reversed tranversal the labels and extents because cuTensor is column-major by default
-    for (size_t i = 0; i < nmodeR; i++) extentR[i] = res.shape()[nmodeR - 1 - i];
+    for (size_t i = 0; i < nmodeR; i++) extentR[i] = outshape[nmodeR - 1 - i];
+  }
+
+  void cutensornet::setOutputMem(UniTensor &res) {
     R_d = (void *)res.get_block_()._impl->storage()._impl->Mem;
-    typeData = type_mapper[res.dtype()];
-    typeCompute = CUTENSORNET_COMPUTE_64F;
   }
 
   void cutensornet::updateTensor(int idx, UniTensor &ut) {
@@ -113,7 +115,43 @@ namespace cytnx {
       tmp_extents[idx][j] = ut.shape()[numModesIn[idx] - 1 - j];
     extentsIn[idx] = tmp_extents[idx].data();
     stridesIn[idx] = NULL;
-    rawDataIn_d[idx] = (void *)ut.get_block_()._impl->storage()._impl->Mem;
+    // if(ut.is_contiguous())
+    //   rawDataIn_d[idx] = (void *)ut.get_block_()._impl->storage()._impl->Mem;
+    // else
+    //   rawDataIn_d[idx] = (void *)ut.get_block_().contiguous()._impl->storage()._impl->Mem;
+    if (ut.is_contiguous())
+      tns[idx] = ut;
+    else
+      tns[idx] = ut.contiguous();
+
+    rawDataIn_d[idx] = tns[idx].get_block_()._impl->storage()._impl->Mem;
+    typeData = type_mapper[ut.dtype()];
+    typeCompute = CUTENSORNET_COMPUTE_64F;
+  }
+
+  // void cutensornet::setContractionPath(){
+  //   //cutensornetContractionOptimizerConfigAttributes_t attr
+  //   cutensornetContractionPath_t path;
+  //   path.numContractions = 0;
+  //   path.data = (cutensornetNodePair_t *) malloc(100*sizeof(cutensornetNodePair_t));
+  //   HANDLE_ERROR(cutensornetContractionOptimizerInfoSetAttribute(handle, optimizerInfo,
+  //   CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
+  // }
+
+  std::string cutensornet::getContractionPath() {
+    cutensornetContractionPath_t path;
+    path.numContractions = 0;
+    path.data = (cutensornetNodePair_t *)malloc(100 * sizeof(cutensornetNodePair_t));
+
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
+
+    std::cout << "Number of contractions : " << path.numContractions << std::endl;
+    for (int i = 0; i < path.numContractions; i++) {
+      std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
+    }
+
+    return "";
   }
 
   // void cutensornet::updateDatas(UniTensor &res, std::vector<UniTensor> &uts){
@@ -148,10 +186,10 @@ namespace cytnx {
     if (verbose) std::cout << "Cutensornet version: " << cuTensornetVersion << std::endl;
   }
 
-  void cutensornet::setDevice() {
+  void cutensornet::setDevice(int id) {
     HANDLE_CUDA_ERROR(cudaGetDeviceCount(&numDevices));
-    HANDLE_CUDA_ERROR(cudaSetDevice(deviceId));
-    HANDLE_CUDA_ERROR(cudaGetDeviceProperties(&prop, deviceId));
+    HANDLE_CUDA_ERROR(cudaSetDevice(id));
+    HANDLE_CUDA_ERROR(cudaGetDeviceProperties(&prop, id));
     if (verbose) {
       std::cout << "Cutensornet number of available devices =  " << numDevices << std::endl;
       std::cout << "Cutensornet set device id =  " << deviceId << std::endl;
@@ -266,37 +304,41 @@ namespace cytnx {
   }
 
   void cutensornet::executeContraction() {
-    HANDLE_ERROR(cutensornetCreateSliceGroupFromIDRange(handle, 0, numSlices, 1, &sliceGroup));
-    GPUTimer timer{stream};
-    double minTimeCUTENSORNET = 1e100;
-    const int numRuns = 3;  // number of repeats to get stable performance results
-    for (int i = 0; i < numRuns; ++i) {
-      /*
-       * Contract all slices of the tensor network
-       */
-      timer.start();
+    cutensornetSliceGroup_t sliceGroup_{};
+    HANDLE_ERROR(cutensornetCreateSliceGroupFromIDRange(handle, 0, numSlices, 1, &sliceGroup_));
+    // GPUTimer timer{stream};
+    // double minTimeCUTENSORNET = 1e100;
+    // const int numRuns = 10;  // number of repeats to get stable performance results
+    // for (int i = 0; i < numRuns; ++i) {
+    /*
+     * Contract all slices of the tensor network
+     */
+    // timer.start();
 
-      int32_t accumulateOutput = 0;  // output tensor data will be overwritten
-      HANDLE_ERROR(cutensornetContractSlices(
-        handle, plan, rawDataIn_d.data(), R_d, accumulateOutput, workDesc,
-        sliceGroup,  // slternatively, NULL can also be used to contract over all slices
-                     // instead of specifying a sliceGroup object
-        stream));
-      // Synchronize and measure best timing
-      auto time = timer.seconds();
-      minTimeCUTENSORNET = (time > minTimeCUTENSORNET) ? minTimeCUTENSORNET : time;
-    }
+    int32_t accumulateOutput = 0;  // output tensor data will be overwritten
+    // HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
+    HANDLE_ERROR(cutensornetContractSlices(
+      handle, plan, rawDataIn_d.data(), R_d, accumulateOutput, workDesc,
+      sliceGroup_,  // alternatively, NULL can also be used to contract over all slices
+                    // instead of specifying a sliceGroup object
+      stream));
+    HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
+    // Synchronize and measure best timing
+    // auto time = timer.seconds();
+    // minTimeCUTENSORNET = (time > minTimeCUTENSORNET) ? minTimeCUTENSORNET : time;
+    // }
     if (verbose)
       printf("Contracted the tensor network, each slice used the same contraction plan\n");
 
-    HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
     // HANDLE_CUDA_ERROR( cudaMemcpy(R, R_d, sizeR, cudaMemcpyDeviceToHost) ); // restore the
     // output tensor on Host
 
-    if (verbose) {
-      printf("Number of tensor network slices = %ld\n", numSlices);
-      printf("Tensor network contraction time (ms) = %.3f\n", minTimeCUTENSORNET * 1000.f);
-    }
+    // if (verbose) {
+    //   printf("Number of tensor network slices = %ld\n", numSlices);
+    //   printf("Tensor network contraction time (ms) = %.3f\n", minTimeCUTENSORNET * 1000.f);
+    // }
+    // HANDLE_ERROR(cutensornetDestroySliceGroup(sliceGroup_));
+    // HANDLE_ERROR(cutensornetDestroyContractionPlan(plan));
   }
 
   void cutensornet::QueryFlopCount() {

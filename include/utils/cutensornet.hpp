@@ -73,7 +73,8 @@ namespace cytnx {
     int32_t numInputs;
     void *R_d;
     int32_t nmodeR;
-    bool verbose;
+    bool verbose = false;  // For DEBUG use
+    std::vector<UniTensor> tns;
     std::vector<void *> rawDataIn_d;
     std::vector<int64_t> extentR;
     std::vector<int32_t> modesR;
@@ -87,14 +88,16 @@ namespace cytnx {
     std::vector<std::vector<int64_t>> tmp_extents;
 
    public:
+    UniTensor out;
     cutensornet();
     void parseLabels(std::vector<std::string> res_label,
                      std::vector<std::vector<std::string>> &labels);
-    void updateOut(UniTensor &res);
+    void setOutputMem(UniTensor &res);
     void updateTensor(int idx, UniTensor &ut);
     // void updateDatas(UniTensor &res, std::vector<UniTensor> &uts);
+    void updateOutputShape(std::vector<cytnx_uint64> &outshape);
     void checkVersion();
-    void setDevice();
+    void setDevice(int id);
     void createStream();
     void createHandle();
     void createNetworkDescriptor();
@@ -105,6 +108,9 @@ namespace cytnx {
     void autotune();
     void executeContraction();
     void QueryFlopCount();
+
+    std::string getContractionPath();
+
     void free();
   };
 

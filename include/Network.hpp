@@ -55,6 +55,9 @@ namespace cytnx {
     // order line
     std::string order_line = "";
 
+    // maintan tout leg position : (tesnor id, leg idx) for each open leg.
+    std::vector<std::pair<int, int>> TOUT_pos;
+
 #ifdef UNI_CUQUANTUM
     cutensornet cutn;
 #endif
@@ -120,7 +123,6 @@ namespace cytnx {
 
   class RegularNetwork : public Network_base {
    public:
-    bool CtTreeUpdated = false;
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
     void Fromfile(const std::string &fname);
     void FromString(const std::vector<std::string> &contents);
@@ -128,7 +130,7 @@ namespace cytnx {
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
     void PutUniTensors(const std::vector<std::string> &name,
                        const std::vector<UniTensor> &utensors);
-    void initialize_CtTree();
+    // void initialize_CtTree();
     void RmUniTensor(const cytnx_uint64 &idx);
     void RmUniTensor(const std::string &name);
     void RmUniTensors(const std::vector<std::string> &name);
