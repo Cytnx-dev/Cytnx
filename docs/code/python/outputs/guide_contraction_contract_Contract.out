@@ -26,14 +26,16 @@ on device   : cytnx device: CPU
           ---------     
 -----------------------
 tensor Name : 
-tensor Rank : 3
+tensor Rank : 5
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
-   i ____| 2     5 |____ m
-         |         |    
-   k ____| 2       |        
-         \         /    
-          ---------     
+           ---------     
+          /         \    
+   i  ____| 2     2 |____ k
+          |         |    
+   lA ____| 4     4 |____ lB
+          |         |    
+          |       5 |____ m
+          \         /    
+           ---------     
