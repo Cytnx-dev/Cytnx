@@ -290,3 +290,10 @@ TEST_F(TensorTest, set) {
             EXPECT_EQ(tar3456(i, j, k, l).item().real(), tmp(i, j, k, l).item().real());
           }
 }
+
+TEST_F(TensorTest, equivelem) {
+  EXPECT_TRUE(tar3456.equivelem(tar3456));
+  EXPECT_FALSE(tar345.equivelem(tar345.permute(1, 0, 2)));
+  EXPECT_FALSE(tar3456.equivelem(tarcomplex3456));
+  EXPECT_FALSE(tone3456.equivelem(tone3456.astype(Type.ComplexFloat)));
+}
