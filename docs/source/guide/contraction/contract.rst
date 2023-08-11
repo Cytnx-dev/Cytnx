@@ -64,3 +64,6 @@ Output >>
     :language: text
 
 Note that the UniTensors' names have to be specified for an explicitly given contraction order. In this case we specified them in the constructor argument. The order *(M,(A1,A2))* indicates that first all common indices of *A1* and *A2* are contracted, then all common indices of the resulting tensor and *M*.
+
+.. Note::
+    All tensors contracted with `Contracts()` need to have unique tensor names. Use `UniTensor.set_name()` to specify the name of a tensor.

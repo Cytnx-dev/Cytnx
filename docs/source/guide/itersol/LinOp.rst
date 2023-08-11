@@ -51,20 +51,11 @@ This is precisely what the LinOp class is designed to do. Users can define the m
     This functionality can also be helpful if the matrix has a known internal structure which can be used to speed up the algorithm. For example, in typical tensor network algorithms, the linear operator is often defined by the contraction of a tensor network. Instead of explicitly doing all the contractions and storing the result in a possibly large matrix :math:`\boldsymbol{\hat{H}}`, it can be much more efficient to contract the tensor network directly with the input tensor :math:`\boldsymbol{x}`. Then, the order of the index summations can be chosen in a way that minimizes the number of operations needed. An example of this is given in the :ref:`SectionDMRG` algorithm. 
     
 
-There are two ways to define a linear operator:
-
-1. Pass a callable function with appropriate signature to the LinOp object.
-
-2. Inherit the LinOp class and overload the **matvec** member function.
-
-Let's consider a simple example of an operator that acts on an input vector :math:`\boldsymbol{x}` with 4 elements. It interchanges the 1st and 4th element, and adds one to both the 2nd and 3rd elements. The output then is again a dim=4 vector :math:`\boldsymbol{y}`. 
-
-
 Inherit the LinOp class
 ************************
-Cytnx exposes the interface **LinOp.matvec**, which provides more flexibility for users who want to include additional data/functions associated with the mapping. This can be achieved with inheritance from the **LinOp** class. 
+Cytnx exposes the interface **LinOp.matvec**, which provides a way to implement any linear mapping from an input to an output vector. This can be achieved with inheritance from the **LinOp** class.
 
-Let's demonstrate this in a similar example as previously. Again, we consider an operator that interchanges the 1st and 4th elements. But this time, we want to add a constant, which is an external parameter, to the 2nd and 3rd elements. 
+Let's demonstrate this in a simple example of an operator that acts on an input vector :math:`\boldsymbol{x}` with 4 elements. It interchanges the 1st and 4th element. Additionally, a constant, which is an external parameter, is added to the 2nd and 3rd element. The output then is again a dim=4 vector :math:`\boldsymbol{y}`.
 
 First, let's create a class that inherits from **LinOp**, with a class member **AddConst**. 
 

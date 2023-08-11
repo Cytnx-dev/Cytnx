@@ -29,6 +29,9 @@ In the figure we labelled the internal bonds using unique positive numbers. Exte
     :language: python
     :linenos:
 
+.. literalinclude:: ../../../code/python/outputs/guide_contraction_ncon_ncon.out
+    :language: text
+
 We see that **ncon** accomplishes contractions similar to **Contracts** or a contraction **Network**. While the code becomes very compact with *ncon*, the user must take care of the correct index order of all tensors. 
 
 .. bibliography:: ref.ncon.bib

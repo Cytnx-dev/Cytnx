@@ -110,7 +110,8 @@ Now suppose somehow we want to contract these two tensors by its physical legs, 
     :language: python
     :linenos:
 
-Note that in this Network it is the second leg of the two tensors to be contracted, which will not be consistent since **A1** and **A2** are created such that their physical leg is the first one, while we can do the following:
+Note that in this Network the second leg of the two tensors are to be contracted. This is not consistent to the definition of **A1** and **A2** which are created such that their physical leg is the first one. We can call `PutUniTensor` and specify the labels though:
+
 
 * In Python:
 
@@ -124,7 +125,7 @@ Output >>
     :language: text
 
 
-So when we do the PutUniTensor() we add the third argument which is a labels ordering, what this function will do is nothing but permute the tensor legs according to this label ordering before putting them into the Network.
+So when calling `PutUniTensor()` we add the third argument which is a labels ordering. This will permute the tensor legs according to the given label ordering before putting them into the Network.
 
 .. toctree::
 

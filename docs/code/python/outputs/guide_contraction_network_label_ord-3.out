@@ -4,10 +4,10 @@ tensor Rank : 4
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
-   1 ____| 8     8 |____ 2
-         |         |    
-   3 ____| 8     8 |____ 4
-         \         /    
-          ---------     
+            ---------     
+           /         \    
+   in1 ____| 8     8 |____ out1
+           |         |    
+   in2 ____| 8     8 |____ out2
+           \         /    
+            ---------     

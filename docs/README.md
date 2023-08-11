@@ -15,7 +15,7 @@ The webpage of Cytnx
 2. Install additional requirements (this might not all be required and/or additional configuration steps might be needed!):
     ```bash
     - $ conda install sphinx sphinxcontrib-bibtex doxygen breathe sphinxcontrib-jquery 
-    - $ pip install pip install sphinxbootstrap4theme  
+    - $ pip install sphinxbootstrap4theme  
     ```
 
 3. Run make  

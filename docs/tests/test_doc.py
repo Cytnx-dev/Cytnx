@@ -1,5 +1,6 @@
 import sys
 CYTNX_ROOT = '/home/hunghaoti/Libraries/Cytnx_lib'
+#CYTNX_ROOT = './build/cytnx_install/'
 sys.path.insert(0, CYTNX_ROOT)
 import cytnx
 import pytest
@@ -73,6 +74,9 @@ def test_guide_basic_obj_Tensor_1_create_rand(capsys):
 @needGPUTest
 def test_guide_basic_obj_Tensor_1_create_zeros_cuda(capsys):
     excute_and_output('guide_basic_obj_Tensor_1_create_zeros_cuda', capsys)
+
+def test_guide_basic_obj_Tensor_1_create_rand_dtype(capsys):
+    excute_and_output('guide_basic_obj_Tensor_1_create_rand_dtype', capsys)
 
 def test_guide_basic_obj_Tensor_1_create_astype(capsys):
     excute_and_output('guide_basic_obj_Tensor_1_create_astype', capsys)
