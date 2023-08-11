@@ -323,6 +323,10 @@ namespace cytnx {
       cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
       return 0;
     }
+    virtual bool approx_eq(const Scalar_base *c, const double &tol) {
+      cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
+      return 0;
+    }
 
     virtual void set_maxval() {
       cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
@@ -633,6 +637,9 @@ namespace cytnx {
     }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_complex128(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs(this->_elem - c->to_cytnx_complex128()) < tol;
+    }
 
     void set_maxval() {
       cytnx_error_msg(true, "[ERROR] maxval not supported for complex type%s", "\n");
@@ -880,6 +887,9 @@ namespace cytnx {
     }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_complex64(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs(this->_elem - c->to_cytnx_complex64()) < tol;
+    }
 
     void set_maxval() {
       cytnx_error_msg(true, "[ERROR] maxval not supported for complex type%s", "\n");
@@ -1065,6 +1075,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_double(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs(this->_elem - c->to_cytnx_double()) < tol;
+    }
 
     void set_maxval() { this->_elem = std::numeric_limits<double>::max(); }
     void set_minval() { this->_elem = std::numeric_limits<double>::min(); }
@@ -1234,6 +1247,10 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_float(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs(this->_elem - c->to_cytnx_float()) < tol;
+    }
+
     void isqrt() { this->_elem = std::sqrt(this->_elem); }
 
     void conj_() { return; }
@@ -1409,6 +1426,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_int64(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_int64()) < tol;
+    }
 
     void conj_() { return; }
     Scalar_base *get_real() { return this->copy(); }
@@ -1580,6 +1600,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_uint64(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_uint64()) < tol;
+    }
 
     void conj_() { return; }
     Scalar_base *get_real() { return this->copy(); }
@@ -1751,6 +1774,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_int32(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_int32()) < tol;
+    }
 
     void conj_() { return; }
     Scalar_base *get_real() { return this->copy(); }
@@ -1923,6 +1949,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_uint32(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_uint32()) < tol;
+    }
 
     void conj_() { return; }
     Scalar_base *get_real() { return this->copy(); }
@@ -2094,6 +2123,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_int16(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_int16()) < tol;
+    }
 
     void conj_() { return; }
     Scalar_base *get_real() { return this->copy(); }
@@ -2265,6 +2297,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_uint16(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_uint16()) < tol;
+    }
 
     void conj_() { return; }
     Scalar_base *get_real() { return this->copy(); }
@@ -2436,6 +2471,9 @@ namespace cytnx {
     bool greater(const cytnx_bool &c) { return this->_elem > c; }
 
     bool eq(const Scalar_base *c) { return this->_elem == c->to_cytnx_bool(); }
+    bool approx_eq(const Scalar_base *c, const cytnx_double &tol = 1e-8) {
+      return std::abs((cytnx_double)this->_elem - (cytnx_double)c->to_cytnx_bool()) < tol;
+    }
 
     void conj_() { return; }
     Scalar_base *get_real() { return this->copy(); }
@@ -3081,6 +3119,23 @@ namespace cytnx {
         return this->_impl->eq(rc);
       }
     }
+    /**
+     * @brief Return whether the current Scalar is approximately equal to a given template number \p
+     * rc.
+     * @details That is, whether \f$ abs(s-r)<tol \f$, where \f$ s \f$ is the current Scalar
+     * itself, \f$ r \f$ is the given number \p rc and \p tol is the tolerance value.
+     */
+    template <class T>
+    bool approx_eq(const T &rc, cytnx_double tol) const {
+      Scalar tmp;
+      int rid = Type.cy_typeid(rc);
+      if (rid < this->dtype()) {
+        tmp = this->astype(rid);
+        return tmp._impl->approx_eq(rc, tol);
+      } else {
+        return this->_impl->approx_eq(rc, tol);
+      }
+    }
 
     /**
      * @brief Return whether the current Scalar is equal to a given Scalar \p rhs.
@@ -3095,6 +3150,20 @@ namespace cytnx {
         return tmp._impl->eq(rhs._impl);
       } else {
         return this->_impl->eq(rhs._impl);
+      }
+    }
+    /**
+     * @brief Return whether the current Scalar is approximately equal to a given Scalar \p rhs.
+     * @details That is, whether \f$ abs(s-r)<tol \f$, where \f$ s \f$ is the current Scalar
+     * itself, \f$ r \f$ is the given Scalar \p rhs and \p tol is the tolerance value.
+     */
+    bool approx_eq(const Scalar &rhs, cytnx_double tol) const {
+      Scalar tmp;
+      if (rhs.dtype() < this->dtype()) {
+        tmp = this->astype(rhs.dtype());
+        return tmp._impl->approx_eq(rhs._impl, tol);
+      } else {
+        return this->_impl->approx_eq(rhs._impl, tol);
       }
     }
 

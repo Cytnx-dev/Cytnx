@@ -696,16 +696,24 @@ namespace cytnx {
     this->at<cytnx_uint16>(idx) = val;
   }
 
-  bool Uint16Storage::equivelem(const boost::intrusive_ptr<Storage_base> &rhs,
+  bool Uint16Storage::approx_eq(const boost::intrusive_ptr<Storage_base> &rhs,
                                 const cytnx_double tol) {
-    if (rhs->dtype != Type.Uint16) return false;
-    if (rhs->size() != this->len) return false;
+    boost::intrusive_ptr<Storage_base> _lhs, _rhs;
+    if (rhs->dtype == this->dtype) {
+      _lhs = this;
+      _rhs = rhs;
+    } else if (rhs->dtype > this->dtype) {
+      _lhs = this;
+      _rhs = rhs->astype(this->dtype);
+    } else {
+      _lhs = this->astype(rhs->dtype);
+      _rhs = rhs;
+    }
+    if (_rhs->size() != _lhs->len) return false;
     for (cytnx_uint64 i = 0; i < this->len; i++) {
-      if (abs(this->at<cytnx_uint16>(i) - rhs->at<cytnx_uint16>(i)) > tol) {
-        std::cout << "tensor different at idx:" << i << "\nlhs:" << this->at<cytnx_uint16>(i)
-                  << " rhs:" << rhs->at<cytnx_uint16>(i) << "\n"
-                  << "difference in absolute value: "
-                  << abs(this->at<cytnx_uint16>(i) - rhs->at<cytnx_uint16>(i)) << std::endl;
+      if (_lhs->get_item(i).approx_eq(_rhs->get_item(i), tol) == false) {
+        std::cout << "tensor different at idx:" << i << "\n"
+                  << "lhs:" << _lhs->get_item(i) << " rhs:" << _rhs->get_item(i) << "\n";
         return false;
       }
     }
