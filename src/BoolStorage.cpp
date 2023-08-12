@@ -720,11 +720,15 @@ namespace cytnx {
       _lhs = this->astype(rhs->dtype);
       _rhs = rhs;
     }
-    if (_rhs->size() != _lhs->len) return false;
+    if (_rhs->size() != _lhs->size()) {
+      if (User_debug) std::cout << "different tensor size." << std::endl;
+      return false;
+    }
     for (cytnx_uint64 i = 0; i < this->len; i++) {
       if (_lhs->get_item(i).approx_eq(_rhs->get_item(i), tol) == false) {
-        std::cout << "tensor different at idx:" << i << "\n"
-                  << "lhs:" << _lhs->get_item(i) << " rhs:" << _rhs->get_item(i) << "\n";
+        if (User_debug)
+          std::cout << "tensor different at idx:" << i << "\n"
+                    << "lhs:" << _lhs->get_item(i) << " rhs:" << _rhs->get_item(i) << "\n";
         return false;
       }
     }
