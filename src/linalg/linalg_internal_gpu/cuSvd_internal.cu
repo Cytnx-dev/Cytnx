@@ -36,7 +36,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
@@ -147,7 +147,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
@@ -257,7 +257,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
@@ -366,7 +366,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
