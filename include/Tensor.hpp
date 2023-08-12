@@ -602,6 +602,13 @@ namespace cytnx {
       std::vector<cytnx_int64> tmp = accs;
       return (*this)[tmp];
     }
+    const Tproxy operator[](const std::vector<cytnx_uint64> &accs) const {
+      std::vector<cytnx::Accessor> acc_in;
+      for (int i = 0; i < accs.size(); i++) {
+        acc_in.push_back(cytnx::Accessor(accs[i]));
+      }
+      return Tproxy(this->_impl, acc_in);
+    }
     const Tproxy operator[](const std::vector<cytnx_int64> &accs) const {
       std::vector<cytnx::Accessor> acc_in;
       for (int i = 0; i < accs.size(); i++) {
