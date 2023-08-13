@@ -396,6 +396,8 @@ namespace cytnx {
     virtual const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                              const cytnx_int16 &aux) const;
 
+    virtual void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
+
     virtual void group_basis_();
     virtual const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const;
     virtual std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx);
@@ -956,6 +958,8 @@ namespace cytnx {
      */
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
     void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
+
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
     void group_basis_() {
       cytnx_warning_msg(true, "[WARNING] group basis will not have any effect on DensUniTensor.%s",
@@ -1617,6 +1621,7 @@ namespace cytnx {
         "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
         "operation on the block(s).");
     }
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
     void group_basis_();
 
@@ -3914,6 +3919,11 @@ namespace cytnx {
     void _Load(std::fstream &f);
     void _Save(std::fstream &f) const;
     /// @endcond
+
+    UniTensor &from(const UniTensor &rhs, const bool &force = false) {
+      this->_impl->from_(rhs._impl, force);
+      return *this;
+    }
 
   };  // class UniTensor
 
