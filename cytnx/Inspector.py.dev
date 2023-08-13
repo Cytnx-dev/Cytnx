@@ -1,24 +1,50 @@
-from .utils import *
 from cytnx import *
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+from bokeh.io import show
+from bokeh.plotting import figure
+from bokeh.layouts import row,column
+import numpy as np
 
-def inspect_blocks(UTen):
-    plt.figure(figsize=[14,6])
+def MakeBond(Bd, yloc, arrow_length, is_left_side, UBody_width):
+
+    if is_left_side:
+        if (Bd.type() == BD_IN):
+            return Arrow(end=NormalHead(fill_color="orange"),
+                   x_start=-arrow_length, y_start=yloc, x_end=0, y_end=yloc)
+        elif Bd.type() == BD_OUT):
+            return Arrow(end=NormalHead(fill_color="orange"),
+                   x_start=0, y_start=yloc, x_end=-arrow_length, y_end=yloc)
+        else:
+            return Line(x=[-1,0],y=[yloc,yloc])
+
+    else:
+        if (Bd.type() == BD_IN):
+            return Arrow(end=NormalHead(fill_color="orange"),
+                   x_start=UBody_width+arrow_length, y_start=yloc, x_end=UBody_width, y_end=yloc)
+        elif Bd.type() == BD_OUT):
+            return Arrow(end=NormalHead(fill_color="orange"),
+                   x_start=UBody_width, y_start=yloc, x_end=UBody_width+arrow_length, y_end=yloc)
+        else:
+            return Line(x=[UBody_width,UBody_width+arrow_length],y=[yloc,yloc])
+
+
+
+
+def _inspect_blocks(UTen):
 
     Nin = UTen.rowrank()
     Nout = UTen.rank() - UTen.rowrank()
-    
-    Rectangle([0,0], height, width)
+
+    Ht = np.max(Nout,Nin)
+    Wt = 2
+
+    p = figure(width=200,height=200)
+    p.patches([[0,Wt,Wt,0]], [[0.5,0.5,-Ht-0.5,-Ht-0.5]], color = ["navy"], alpha=[0.3], linewidth=2)
+
+    for b in range(Nin):
+        p.add_layout(MakeBond(UTen.bond(b),-b,1,True,2))
+
+    for b in range(Nout):
+        p.add_layout(MakeBond(UTen.bond(UTen.rowrank()+b),-b,1,True,2))
 
 
-
-    plt.show()
-
-
-
-
-
-
-
-
+    show(p)
