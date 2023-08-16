@@ -1046,10 +1046,10 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
 
-  bool Storage_base::approx_eq(const boost::intrusive_ptr<Storage_base> &rhs,
-                               const cytnx_double tol) {
-    cytnx_error_msg(true, "[ERROR] trying to call Storage.approx_eq() from void Storage%s", "\n");
-    return false;
-  }
+  // bool Storage_base::approx_eq(const boost::intrusive_ptr<Storage_base> &rhs,
+  //                              const cytnx_double tol) {
+  //   cytnx_error_msg(true, "[ERROR] trying to call Storage.approx_eq() from void Storage%s",
+  //   "\n"); return false;
+  // }
 
 }  // namespace cytnx
