@@ -39,9 +39,8 @@ namespace BMTest_Svd {
   BENCHMARK(BM_Tensor_Svd_C128)->Args({1, 1})->Args({10, 10})->Args({100, 100})->Args({1000, 1000});
 
   // DenseUniTensor
-  UniTensor ConstructDenseUT(const int D, const int dtype,
-                             const unsigned int device=Device.cpu) {
-	auto bd_vi = Bond(D, BD_IN);
+  UniTensor ConstructDenseUT(const int D, const int dtype, const unsigned int device = Device.cpu) {
+    auto bd_vi = Bond(D, BD_IN);
     auto bd_pi = Bond(2, BD_IN);
     auto bd_po = Bond(2, BD_OUT);
     auto bd_vo = Bond(D, BD_OUT);
@@ -150,4 +149,4 @@ namespace BMTest_Svd {
   }
   BENCHMARK(BM_bkUT_U1_Svd_C128)->Args({2})->Args({20})->Args({200});
 
-}  // namespace BMTest_Directsum
+}  // namespace BMTest_Svd

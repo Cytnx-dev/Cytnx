@@ -5,9 +5,8 @@ using namespace cytnx;
 namespace BMTest_Svd_truncate {
 
   // DenseUniTensor
-  UniTensor ConstructDenseUT(const int D, const int dtype,
-                             const unsigned int device=Device.cpu) {
-	auto bd_vi = Bond(D, BD_IN);
+  UniTensor ConstructDenseUT(const int D, const int dtype, const unsigned int device = Device.cpu) {
+    auto bd_vi = Bond(D, BD_IN);
     auto bd_pi = Bond(2, BD_IN);
     auto bd_po = Bond(2, BD_OUT);
     auto bd_vo = Bond(D, BD_OUT);
@@ -117,4 +116,4 @@ namespace BMTest_Svd_truncate {
   }
   BENCHMARK(BM_bkUT_U1_Svd_truncate_C128)->Args({2})->Args({20})->Args({200});
 
-}  // namespace BMTest_Directsum
+}  // namespace BMTest_Svd_truncate
