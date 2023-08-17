@@ -37,6 +37,7 @@ namespace cytnx {
                                        _Tn.shape()[0], Type.typeSize(Tin.dtype()));
       } else {
 #ifdef UNI_GPU
+        checkCudaErrors(cudaSetDevice(Tin.device()));
         algo_internal::cuhSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
                                          _Tn.shape()[0], Type.typeSize(Tin.dtype()));
 #else

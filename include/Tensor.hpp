@@ -11,7 +11,7 @@
 #include "utils/vec_range.hpp"
 #include "utils/vec_cast.hpp"
 #include "utils/dynamic_arg_resolver.hpp"
-//#include "linalg.hpp"
+// #include "linalg.hpp"
 #include "Accessor.hpp"
 #include <utility>
 #include <vector>
@@ -1362,7 +1362,7 @@ namespace cytnx {
      * @brief compare the shape of two tensors.
      * @param[in] rhs the tensor to be compared.
      */
-    bool equiv(const Tensor &rhs) {
+    bool equivshape(const Tensor &rhs) {
       if (this->shape() != rhs.shape()) return false;
       return true;
     }
@@ -1573,6 +1573,38 @@ namespace cytnx {
     Tensor Cpr(const T &rhs) {
       return *this == rhs;
     }
+
+    // /**
+    //  * @brief Compare each element of the current tensor with the input tensor.
+    //  * @details This function Compare each element of the current tensor with the input tensor.
+    //  * @param[in] rhs the compared tensor.
+    //  */
+    // bool approx_eq(const Tensor &rhs, const cytnx_double tol = 0) {
+    //   if (this->device() != rhs.device()) {
+    //     if (User_debug)
+    //       std::cout << "[approx_eq] Tensor device " << this->device()
+    //                 << "not equal to rhs tensor device " << rhs.device() << std::endl;
+    //     return false;
+    //   }
+    //   // if (this->dtype() != rhs.dtype()) {
+    //   //   std::cout << "[approx_eq] Tensor dtype " << this->dtype()
+    //   //             << "not equal to rhs tensor dtype " << rhs.dtype() << std::endl;
+    //   //   return false;
+    //   // }
+    //   if (this->shape() != rhs.shape()) {
+    //     if (User_debug)
+    //       std::cout << "[approx_eq] Tensor shape " << this->shape()
+    //                 << "not equal to rhs tensor shape " << rhs.shape() << std::endl;
+    //     return false;
+    //   }
+    //   if (this->is_contiguous() != rhs.is_contiguous()) {
+    //     if (User_debug)
+    //       std::cout << "[AreNearlyEqTensor] Tensor contiguous flag " << this->is_contiguous()
+    //                 << "not equal to rhs tensor flag " << rhs.is_contiguous() << std::endl;
+    //     return false;
+    //   }
+    //   return this->_impl->_storage.approx_eq(rhs._impl->_storage._impl, tol);
+    // }
 
     // template<class T>
     // Tensor& Cpr_(const T &rhs){

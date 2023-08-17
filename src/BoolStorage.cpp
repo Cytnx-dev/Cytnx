@@ -707,4 +707,32 @@ namespace cytnx {
     this->at<cytnx_bool>(idx) = val;
   }
 
+  // bool BoolStorage::approx_eq(const boost::intrusive_ptr<Storage_base> &rhs,
+  //                             const cytnx_double tol) {
+  //   boost::intrusive_ptr<Storage_base> _lhs, _rhs;
+  //   if (rhs->dtype == this->dtype) {
+  //     _lhs = this;
+  //     _rhs = rhs;
+  //   } else if (rhs->dtype > this->dtype) {
+  //     _lhs = this;
+  //     _rhs = rhs->astype(this->dtype);
+  //   } else {
+  //     _lhs = this->astype(rhs->dtype);
+  //     _rhs = rhs;
+  //   }
+  //   if (_rhs->size() != _lhs->size()) {
+  //     if (User_debug) std::cout << "different tensor size." << std::endl;
+  //     return false;
+  //   }
+  //   for (cytnx_uint64 i = 0; i < this->len; i++) {
+  //     if (_lhs->get_item(i).approx_eq(_rhs->get_item(i), tol) == false) {
+  //       if (User_debug)
+  //         std::cout << "tensor different at idx:" << i << "\n"
+  //                   << "lhs:" << _lhs->get_item(i) << " rhs:" << _rhs->get_item(i) << "\n";
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // }
+
 }  // namespace cytnx

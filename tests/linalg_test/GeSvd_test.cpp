@@ -172,7 +172,7 @@ namespace GesvdTest {
     //  std::vector<UniTensor> GesvdsUV = linalg::Gesvd(src_T, need_U = true, need_VT = true);
     //  EXPECT_EQ(GesvdsUV.size(), 3) << "The number of the output of Gesvd not correct. Line:"
     //      << __LINE__ << std::endl;
-    std::vector<UniTensor> GesvdsUV = linalg::Gesvd(src_T, compute_uv = true);
+    std::vector<UniTensor> GesvdsUV = linalg::Gesvd(src_T, compute_uv = true, true);
     EXPECT_EQ(GesvdsUV.size(), 3) << "The number of the output of Gesvd not correct. Line:"
                                   << __LINE__ << std::endl;
 

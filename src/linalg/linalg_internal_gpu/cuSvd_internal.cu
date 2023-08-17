@@ -36,7 +36,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
@@ -90,8 +90,10 @@ namespace cytnx {
                         UMem, ldvT, /* ldv */
                         cuda_data_type, /* computeType */
                         d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
-      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-      linalg_internal::cuConj_inplace_internal_cd(U, M * min);
+      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        linalg_internal::cuConj_inplace_internal_cd(U, M * min);
+      }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
@@ -145,7 +147,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
@@ -199,8 +201,10 @@ namespace cytnx {
                         UMem, ldvT, /* ldv */
                         cuda_data_type, /* computeType */
                         d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
-      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
-      linalg_internal::cuConj_inplace_internal_cf(U, M * min);
+      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+        linalg_internal::cuConj_inplace_internal_cf(U, M * min);
+      }
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
@@ -253,7 +257,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
@@ -307,7 +311,8 @@ namespace cytnx {
                         UMem, ldvT, /* ldv */
                         cuda_data_type, /* computeType */
                         d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
-      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+      if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
 
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
@@ -361,7 +366,7 @@ namespace cytnx {
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
-      void *UMem, *vTMem;
+      void *UMem = nullptr, *vTMem = nullptr;
       if (U->Mem) {
         UMem = U->Mem;
       } else {
@@ -415,7 +420,8 @@ namespace cytnx {
                         UMem, ldvT, /* ldv */
                         cuda_data_type, /* computeType */
                         d_work, d_lwork, h_work, h_lwork, devinfo, &h_err_sigma);
-      U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
+      if (jobz == CUSOLVER_EIG_MODE_VECTOR)
+        U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
 
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));

@@ -12,6 +12,14 @@ namespace cytnx {
     //====================================================================
     // generic R+R kernel
     template <class T1, class T2, class T3>
+    __global__ void cuSub_constconst_kernel(T1 *out, const T2 ptr, const cytnx_uint64 Nelem,
+                                            const T3 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - val;
+      }
+      __syncthreads();
+    }
+    template <class T1, class T2, class T3>
     __global__ void cuSub_rconst_kernel(T1 *out, const T2 *ptr, const cytnx_uint64 Nelem,
                                         const T3 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -70,6 +78,13 @@ namespace cytnx {
     //=====================================================================
 
     /// cuSub
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -132,7 +147,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -182,6 +199,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, cuComplexFloatToDouble(val));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -245,7 +269,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -295,6 +321,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_double val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_double val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -355,7 +388,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -405,6 +440,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_float val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_float val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -465,7 +507,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -515,6 +559,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint64 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_uint64 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -576,7 +627,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -626,6 +679,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint32 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_uint32 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -687,7 +747,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -737,6 +799,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int64 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_int64 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -798,7 +867,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -848,6 +919,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int32 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_int32 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -909,7 +987,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -959,6 +1039,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int16 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_int16 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1020,7 +1107,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1070,6 +1159,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint16 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_uint16 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1131,7 +1227,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1181,6 +1279,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuDoubleComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(ptr, make_cuDoubleComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuDoubleComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_bool val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1241,7 +1346,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1292,6 +1399,13 @@ namespace cytnx {
     }
 
     //-------------------------------------------------------
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(cuComplexFloatToDouble(ptr), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cuFloatComplex *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1355,7 +1469,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1405,6 +1521,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1467,7 +1590,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1517,6 +1642,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_double val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_double val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1577,7 +1709,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1627,6 +1761,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_float val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_float val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1687,7 +1828,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1737,6 +1880,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint64 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_uint64 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -1798,7 +1948,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1848,8 +2000,15 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint32 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                        const cytnx_uint32 Nelem, const cytnx_uint32 val) {
+                                        const cytnx_uint64 Nelem, const cytnx_uint32 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x], make_cuFloatComplex(val, 0));
@@ -1857,7 +2016,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val,
-                                        const cytnx_uint32 Nelem, const cytnx_uint32 *ptr) {
+                                        const cytnx_uint64 Nelem, const cytnx_uint32 *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(val, make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0));
@@ -1865,7 +2024,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                    const cytnx_uint32 Nelem, const cytnx_uint32 *val) {
+                                    const cytnx_uint64 Nelem, const cytnx_uint32 *val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x],
@@ -1909,7 +2068,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -1959,8 +2120,15 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int64 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                        const cytnx_int64 Nelem, const cytnx_int64 val) {
+                                        const cytnx_uint64 Nelem, const cytnx_int64 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x], make_cuFloatComplex(val, 0));
@@ -1968,7 +2136,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val,
-                                        const cytnx_int64 Nelem, const cytnx_int64 *ptr) {
+                                        const cytnx_uint64 Nelem, const cytnx_int64 *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(val, make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0));
@@ -1976,7 +2144,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                    const cytnx_int64 Nelem, const cytnx_int64 *val) {
+                                    const cytnx_uint64 Nelem, const cytnx_int64 *val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x],
@@ -2020,7 +2188,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2070,8 +2240,15 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int32 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                        const cytnx_int32 Nelem, const cytnx_int32 val) {
+                                        const cytnx_uint64 Nelem, const cytnx_int32 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x], make_cuFloatComplex(val, 0));
@@ -2079,7 +2256,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val,
-                                        const cytnx_int32 Nelem, const cytnx_int32 *ptr) {
+                                        const cytnx_uint64 Nelem, const cytnx_int32 *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(val, make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0));
@@ -2087,7 +2264,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                    const cytnx_int32 Nelem, const cytnx_int32 *val) {
+                                    const cytnx_uint64 Nelem, const cytnx_int32 *val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x],
@@ -2131,7 +2308,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2181,8 +2360,15 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int16 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                        const cytnx_int32 Nelem, const cytnx_int16 val) {
+                                        const cytnx_uint64 Nelem, const cytnx_int16 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x], make_cuFloatComplex(val, 0));
@@ -2190,7 +2376,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val,
-                                        const cytnx_int32 Nelem, const cytnx_int16 *ptr) {
+                                        const cytnx_uint64 Nelem, const cytnx_int16 *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(val, make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0));
@@ -2198,7 +2384,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                    const cytnx_int32 Nelem, const cytnx_int16 *val) {
+                                    const cytnx_uint64 Nelem, const cytnx_int16 *val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x],
@@ -2242,7 +2428,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2291,8 +2479,16 @@ namespace cytnx {
         }
       }
     }
+
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint16 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                        const cytnx_int32 Nelem, const cytnx_uint16 val) {
+                                        const cytnx_uint64 Nelem, const cytnx_uint16 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x], make_cuFloatComplex(val, 0));
@@ -2300,7 +2496,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val,
-                                        const cytnx_int32 Nelem, const cytnx_uint16 *ptr) {
+                                        const cytnx_uint64 Nelem, const cytnx_uint16 *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(val, make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0));
@@ -2308,7 +2504,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                    const cytnx_int32 Nelem, const cytnx_uint16 *val) {
+                                    const cytnx_uint64 Nelem, const cytnx_uint16 *val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x],
@@ -2352,7 +2548,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2402,8 +2600,15 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cuFloatComplex ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(ptr, make_cuFloatComplex(val, 0));
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                        const cytnx_int32 Nelem, const cytnx_bool val) {
+                                        const cytnx_uint64 Nelem, const cytnx_bool val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x], make_cuFloatComplex(val, 0));
@@ -2411,7 +2616,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_lconst_kernel(cuFloatComplex *out, const cuFloatComplex val,
-                                        const cytnx_int32 Nelem, const cytnx_bool *ptr) {
+                                        const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(val, make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0));
@@ -2419,7 +2624,7 @@ namespace cytnx {
       __syncthreads();
     }
     __global__ void cuSub_tn_kernel(cuFloatComplex *out, const cuFloatComplex *ptr,
-                                    const cytnx_int32 Nelem, const cytnx_bool *val) {
+                                    const cytnx_uint64 Nelem, const cytnx_bool *val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCsubf(ptr[blockIdx.x * blockDim.x + threadIdx.x],
@@ -2462,7 +2667,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2513,6 +2720,13 @@ namespace cytnx {
     }
 
     //------------------------------------------
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_double ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_double *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -2576,7 +2790,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2626,6 +2842,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_double ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_double *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -2689,7 +2912,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2752,7 +2977,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2814,7 +3041,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2876,7 +3105,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -2938,7 +3169,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3000,7 +3233,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3062,7 +3297,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3124,7 +3361,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3186,7 +3425,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3236,6 +3477,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_double *out, const cytnx_double ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_double(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_lconst_kernel(cytnx_double *out, const cytnx_double val,
                                         const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -3289,7 +3537,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, double(_Rin[0]));
@@ -3341,6 +3591,13 @@ namespace cytnx {
 
     //-------------------------------
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_float ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_float *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -3404,7 +3661,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3454,6 +3713,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_float ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_float *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -3517,7 +3783,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3580,7 +3848,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3642,7 +3912,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3704,7 +3976,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3766,7 +4040,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3828,7 +4104,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3890,7 +4168,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -3952,7 +4232,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4014,7 +4296,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4073,6 +4357,13 @@ namespace cytnx {
       __syncthreads();
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_float *out, const cytnx_float ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_float(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_tn_kernel(cytnx_float *out, const cytnx_float *val,
                                     const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -4118,7 +4409,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, float(_Rin[0]));
@@ -4169,6 +4462,13 @@ namespace cytnx {
     }
 
     //-----------------------------------
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_int64 ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_int64 *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -4233,7 +4533,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4283,6 +4585,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_int64 ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_int64 *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -4347,7 +4656,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4410,7 +4721,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4472,7 +4785,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4535,7 +4850,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4598,7 +4915,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4661,7 +4980,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4724,7 +5045,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4787,7 +5110,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4850,7 +5175,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -4900,6 +5227,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_int64 *out, const cytnx_int64 ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_int64(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_lconst_kernel(cytnx_int64 *out, const cytnx_int64 val,
                                         const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -4953,7 +5287,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, cytnx_int64(_Rin[0]));
@@ -5004,6 +5340,13 @@ namespace cytnx {
     }
 
     //-------------------------------
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_uint64 ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_uint64 *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -5068,7 +5411,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5118,6 +5463,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_uint64 ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_uint64 *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -5182,7 +5534,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5244,7 +5598,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5306,7 +5662,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5369,7 +5727,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5432,7 +5792,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5495,7 +5857,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5558,7 +5922,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5621,7 +5987,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5684,7 +6052,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5734,6 +6104,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_uint64 *out, const cytnx_uint64 ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_uint64(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_lconst_kernel(cytnx_uint64 *out, const cytnx_uint64 val,
                                         const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -5787,7 +6164,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, cytnx_uint64(_Rin[0]));
@@ -5839,6 +6218,13 @@ namespace cytnx {
 
     //----------------------------------------
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_int32 ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_int32 *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -5903,7 +6289,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -5953,6 +6341,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_int32 ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_int32 *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -6017,7 +6412,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6079,7 +6476,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6141,7 +6540,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6204,7 +6605,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6267,7 +6670,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6330,7 +6735,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6393,7 +6800,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6456,7 +6865,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6519,7 +6930,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6569,6 +6982,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_int32 *out, const cytnx_int32 ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_int32(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_lconst_kernel(cytnx_int32 *out, const cytnx_int32 val,
                                         const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -6622,7 +7042,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, cytnx_int32(_Rin[0]));
@@ -6674,6 +7096,13 @@ namespace cytnx {
 
     //--------------------------------------
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_uint32 ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_uint32 *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -6738,7 +7167,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6788,6 +7219,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_uint32 ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_uint32 *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -6852,7 +7290,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6914,7 +7354,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -6976,7 +7418,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7039,7 +7483,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7102,7 +7548,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7165,7 +7613,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7228,7 +7678,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7292,7 +7744,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7355,7 +7809,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7405,6 +7861,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_uint32 *out, const cytnx_uint32 ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_uint32(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_lconst_kernel(cytnx_uint32 *out, const cytnx_uint32 val,
                                         const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -7458,7 +7921,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, cytnx_uint32(_Rin[0]));
@@ -7510,6 +7975,13 @@ namespace cytnx {
 
     //--------------------------------------
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_int16 ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_int16 *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -7574,7 +8046,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7624,6 +8098,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_int16 ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_int16 *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -7688,7 +8169,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7750,7 +8233,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7812,7 +8297,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7875,7 +8362,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -7938,7 +8427,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8001,7 +8492,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8064,7 +8557,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8128,7 +8623,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8191,7 +8688,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8241,6 +8740,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_int16 *out, const cytnx_int16 ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_int16(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_lconst_kernel(cytnx_int16 *out, const cytnx_int16 val,
                                         const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -8294,7 +8800,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, cytnx_int16(_Rin[0]));
@@ -8346,6 +8854,13 @@ namespace cytnx {
 
     //--------------------------------------
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_uint16 ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_uint16 *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -8410,7 +8925,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8460,6 +8977,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_uint16 ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_uint16 *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -8524,7 +9048,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8586,7 +9112,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8648,7 +9176,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8711,7 +9241,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8774,7 +9306,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8837,7 +9371,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8900,7 +9436,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -8964,7 +9502,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9027,7 +9567,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9077,6 +9619,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_uint16 *out, const cytnx_uint16 ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_bool val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = ptr - cytnx_uint16(val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_lconst_kernel(cytnx_uint16 *out, const cytnx_uint16 val,
                                         const cytnx_uint64 Nelem, const cytnx_bool *ptr) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -9130,7 +9679,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, cytnx_uint16(_Rin[0]));
@@ -9182,6 +9733,13 @@ namespace cytnx {
 
     //--------------------------------------
 
+    __global__ void cuSub_constconst_kernel(cuDoubleComplex *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsub(make_cuDoubleComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuDoubleComplex *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cuDoubleComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -9238,7 +9796,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, make_cuDoubleComplex(_Lin[0], 0), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9288,6 +9848,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cuFloatComplex *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cuCsubf(make_cuFloatComplex(ptr, 0), val);
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cuFloatComplex *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cuFloatComplex val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -9344,7 +9911,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, make_cuFloatComplex(_Lin[0], 0), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9394,6 +9963,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_double *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_double val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_double(ptr) - val;
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cytnx_double *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_double val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -9447,7 +10023,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_double(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9495,6 +10073,13 @@ namespace cytnx {
           checkCudaErrors(cudaFree(m_invmapper_R));
         }
       }
+    }
+    __global__ void cuSub_constconst_kernel(cytnx_float *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_float val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_float(ptr) - val;
+      }
+      __syncthreads();
     }
     __global__ void cuSub_rconst_kernel(cytnx_float *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_float val) {
@@ -9549,7 +10134,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_float(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9597,6 +10184,13 @@ namespace cytnx {
           checkCudaErrors(cudaFree(m_invmapper_R));
         }
       }
+    }
+    __global__ void cuSub_constconst_kernel(cytnx_int64 *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int64 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_int64(ptr) - val;
+      }
+      __syncthreads();
     }
     __global__ void cuSub_rconst_kernel(cytnx_int64 *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_int64 val) {
@@ -9651,7 +10245,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_int64(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9699,6 +10295,13 @@ namespace cytnx {
           checkCudaErrors(cudaFree(m_invmapper_R));
         }
       }
+    }
+    __global__ void cuSub_constconst_kernel(cytnx_uint64 *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint64 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_uint64(ptr) - val;
+      }
+      __syncthreads();
     }
     __global__ void cuSub_rconst_kernel(cytnx_uint64 *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_uint64 val) {
@@ -9753,7 +10356,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_uint64(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9801,6 +10406,13 @@ namespace cytnx {
           checkCudaErrors(cudaFree(m_invmapper_R));
         }
       }
+    }
+    __global__ void cuSub_constconst_kernel(cytnx_int32 *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int32 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_int32(ptr) - val;
+      }
+      __syncthreads();
     }
     __global__ void cuSub_rconst_kernel(cytnx_int32 *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_int32 val) {
@@ -9855,7 +10467,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_int32(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -9903,6 +10517,13 @@ namespace cytnx {
           checkCudaErrors(cudaFree(m_invmapper_R));
         }
       }
+    }
+    __global__ void cuSub_constconst_kernel(cytnx_uint32 *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint32 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_uint32(ptr) - val;
+      }
+      __syncthreads();
     }
     __global__ void cuSub_rconst_kernel(cytnx_uint32 *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_uint32 val) {
@@ -9957,7 +10578,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_uint32(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -10007,6 +10630,13 @@ namespace cytnx {
       }
     }
 
+    __global__ void cuSub_constconst_kernel(cytnx_int16 *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_int16 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_int16(ptr) - val;
+      }
+      __syncthreads();
+    }
     __global__ void cuSub_rconst_kernel(cytnx_int16 *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_int16 val) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
@@ -10060,7 +10690,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_int16(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -10108,6 +10740,13 @@ namespace cytnx {
           checkCudaErrors(cudaFree(m_invmapper_R));
         }
       }
+    }
+    __global__ void cuSub_constconst_kernel(cytnx_uint16 *out, const cytnx_bool ptr,
+                                            const cytnx_uint64 Nelem, const cytnx_uint16 val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] = cytnx_uint16(ptr) - val;
+      }
+      __syncthreads();
     }
     __global__ void cuSub_rconst_kernel(cytnx_uint16 *out, const cytnx_bool *ptr,
                                         const cytnx_uint64 Nelem, const cytnx_uint16 val) {
@@ -10162,7 +10801,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_uint16(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
@@ -10225,7 +10866,9 @@ namespace cytnx {
       cytnx_uint32 NBlocks = len / 512;
       if (len % 512) NBlocks += 1;
 
-      if (Lin->size() == 1) {
+      if (Lin->size() == 1 and Rin->size() == 1) {
+        cuSub_constconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin[0]);
+      } else if (Lin->size() == 1) {
         cuSub_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cuSub_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
