@@ -12,6 +12,7 @@
 
 namespace cytnx {
   int set_mkl_ilp64();
+  int get_mkl_code();
 
   /**
    * @brief The addtion operator between two UniTensor.

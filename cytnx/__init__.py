@@ -9,12 +9,24 @@ if ('numpy' in sys.modules) or ('scipy' in sys.modules):
 
 ## [NOTE!!] These part has to execute first before import numpy!
 #set_mkl_ilp64()
-def init_mkl():
+def _init_mkl():
     a = zeros(2)
     b = zeros(2)
     linalg.Dot(a,b)
     return 0
-init_mkl()
+_init_mkl()
+
+
+def get_mkl_interface():
+    code = get_mkl_code()
+    if code < 0:
+        raise Warning("does not compile with mkl.")
+
+    if(code%2):
+        return "ilp64"
+    else:
+        return "lp64"
+
 
 import numpy
 from .Storage_conti import *
