@@ -9,27 +9,20 @@ Let's look at the following example. Consider the **Tensor** object in Cytnx
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../code/python/doc_codes/guide_behavior_assign.py
+    :language: python
     :linenos:
-
-    A = cytnx.Tensor([2,3])
-    B = A
-
-    print(B is A) # true
-
 
 * In C++:
 
-.. literalinclude:: ../../code/cplusplus/guide_codes/1_1_ex1.cpp
+.. literalinclude:: ../../code/cplusplus/doc_codes/guide_behavior_assign.cpp
     :language: c++
     :linenos:
 
 Output >>
 
-.. code-block:: text
-
-    True
-
+.. literalinclude:: ../../code/python/outputs/guide_behavior_assign.out
+    :language: text
 
 .. Note::
     
@@ -42,31 +35,20 @@ In the case where a copy of an object is needed, you can use **clone()**.
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../code/python/doc_codes/guide_behavior_clone.py
+    :language: python
     :linenos:
-    
-    A = cytnx.Tensor([2,3]);
-    B = A;
-    C = A.clone();
-    
-    print(B is A)
-    print(C is A)
-
-
 
 * In C++:
 
-.. literalinclude:: ../../code/cplusplus/guide_codes/1_2_ex1.cpp
+.. literalinclude:: ../../code/cplusplus/doc_codes/guide_behavior_clone.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. code-block:: text
-
-    True
-    False
-
+.. literalinclude:: ../../code/python/outputs/guide_behavior_clone.out
+    :language: text
 
 .. Note::
 

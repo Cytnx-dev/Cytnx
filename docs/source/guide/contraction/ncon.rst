@@ -25,43 +25,12 @@ In the figure we labelled the internal bonds using unique positive numbers. Exte
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_ncon_ncon.py
+    :language: python
     :linenos:
 
-    # Creating A1, A2, M
-    A1 = cytnx.UniTensor(cytnx.random.normal([2,8,8], mean=0., std=1., dtype=cytnx.Type.ComplexDouble));
-    A2 = A1.Conj();
-    M = cytnx.UniTensor(cytnx.ones([2,2,4,4]))
-    
-    # Calling ncon
-    Res = cytnx.ncon([A1,M,A2],[[1,-1,-2],[1,2,-3,-4],[2,-5,-6]])
-    Res.print_diagram()
-
-Output >> 
-
-.. code-block:: text
-
-    -----------------------
-    tensor Name : 
-    tensor Rank : 6
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-             --------     
-            /        \    
-            |      8 |____ -1
-            |        |    
-            |      8 |____ -2
-            |        |    
-            |      4 |____ -3
-            |        |    
-            |      4 |____ -4
-            |        |    
-            |      8 |____ -5
-            |        |    
-            |      8 |____ -6
-            \        /    
-             --------     
+.. literalinclude:: ../../../code/python/outputs/guide_contraction_ncon_ncon.out
+    :language: text
 
 We see that **ncon** accomplishes contractions similar to **Contracts** or a contraction **Network**. While the code becomes very compact with *ncon*, the user must take care of the correct index order of all tensors. 
 

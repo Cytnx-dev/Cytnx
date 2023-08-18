@@ -5,9 +5,9 @@ Cytnx provides a way to convert directly between a C++ *vector* and a Storage in
 
 To convert a C++ vector to a Storage, use **Storage::from_vector**:
 
-* In C++
+* In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_4_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_4_vec_from_vec.cpp
     :language: c++
     :linenos:
 
@@ -40,21 +40,20 @@ Output >>
 To convert a Storage to std::vector with type *T*, use **Storage.vector<T>()**:
 
 
-* In C++
+* In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_4_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_4_vec_to_vec.cpp
     :language: c++
     :linenos:
-    
+
 Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_4_ex2.out
+.. literalinclude:: ../../../code/cplusplus/outputs/guide_basic_obj_Storage_4_vec_to_vec.out
     :language: text
 
 .. Note::
 
     The type T has to match the dtype of the Storage, otherwise an error will be raised. 
-
 
 
 .. toctree::

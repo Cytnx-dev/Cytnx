@@ -38,59 +38,33 @@ We use the .net file to create a Network. Then, we can load instances of UniTens
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_PutUniTensor.py
+    :language: python
     :linenos:
-
-    # initialize tensors
-    w = cytnx.UniTensor(cytnx.random.normal([2,2,2,2], mean=0., std=1.))
-    c0 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-    c1 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-    c2 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-    c3 = cytnx.UniTensor(cytnx.random.normal([8,8], mean=0., std=1.))
-    t0 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
-    t1 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
-    t2 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
-    t3 = cytnx.UniTensor(cytnx.random.normal([8,2,8], mean=0., std=1.))
-
-    # initialize network object from ctm.net file
-    net = cytnx.Network("ctm.net")
-
-    # put tensors
-    net.PutUniTensor("w",w)  
-    net.PutUniTensor("c0",c0)
-    net.PutUniTensor("c1",c1)
-    net.PutUniTensor("c2",c2)
-    net.PutUniTensor("c3",c3)
-    net.PutUniTensor("t0",t0)
-    net.PutUniTensor("t1",t1)
-    net.PutUniTensor("t2",t2)  
-    net.PutUniTensor("t3",t3)
-
-    print(net)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/8_1_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_contraction_network_PutUniTensor.cpp
     :language: c++
     :linenos:
 
-Output >> 
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/8_1_2_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_contraction_network_PutUniTensor.out
     :language: text
+
 
 To perform the contraction and get the outcome, we use the .Launch():
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_launch.py
+    :language: python
     :linenos:
-
-    Res = net.Launch(optimal = True)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/8_1_2_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_contraction_network_launch.cpp
     :language: c++
     :linenos:
 
@@ -108,21 +82,9 @@ Alternatively, we can implement the contraction directly in the program with Fro
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_FromString.py
+    :language: python
     :linenos:
-
-    net = cytnx.Network()
-    net.FromString(["c0: t0-c0, t3-c0",\
-                    "c1: t1-c1, t0-c1",\
-                    "c2: t2-c2, t1-c2",\
-                    "c3: t3-c3, t2-c3",\
-                    "t0: t0-c1, w-t0, t0-c0",\
-                    "t1: t1-c2, w-t1, t1-c1",\
-                    "t2: t2-c3, w-t2, t2-c2",\
-                    "t3: t3-c0, w-t3, t3-c3",\
-                    "w: w-t0, w-t1, w-t2, w-t3",\
-                    "TOUT:",\
-                    "ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)"])
 
 This approach can be convenient if you do not want to maintain the .net files.
 
@@ -133,66 +95,35 @@ When we put a UniTensor into a Network, we can also specify its leg order accord
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_label_ord-1.py
+    :language: python
     :linenos:
-
-    A1 = cytnx.UniTensor(cytnx.random.normal([2,8,8], mean=0., std=1., dtype=cytnx.Type.ComplexDouble));
-    A1.relabels_(["phy","v1","v2"]);
-    A2 = A1.Conj();
-    A2.relabels_(["phy*","v1*","v2*"]);
 
 The legs of these tensors are arranged such that the first leg is the physical leg (with dimension 2 for spin-half case for example) and the other two legs are the virtual ones (with dimension 8).
 
 Now suppose somehow we want to contract these two tensors by its physical legs, we create the following Network:
 
 
-.. .. code-block:: python
-..     :linenos:
-
-..     net = cytnx.Network()
-..     net.FromString(["T0: v0in, phy, v0out",\
-..                     "T1: v1in, phy, v1out",\
-..                     "TOUT: v0in, v1in; v0out, v1out"])
-
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_label_ord-2.py
+    :language: python
     :linenos:
-
-    N = cytnx.Network()
-    N.FromString(["A1: in1,phys,out1",\
-                  "A2: in2,phys,out2",\
-                  "TOUT: in1,in2;out1,out2"])
 
 Note that in this Network the second leg of the two tensors are to be contracted. This is not consistent to the definition of **A1** and **A2** which are created such that their physical leg is the first one. We can call `PutUniTensor` and specify the labels though:
 
+
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_label_ord-3.py
+    :language: python
     :linenos:
 
-    N.PutUniTensor("A1",A1,["v1","phy","v2"])
-    N.PutUniTensor("A2",A2,["v1*","phy*","v2*"])
-    Res=N.Launch()
-    Res.print_diagram()
+Output >>
 
-Output >> 
+.. literalinclude:: ../../../code/python/outputs/guide_contraction_network_label_ord-3.out
+    :language: text
 
-.. code-block:: text
-
-    -----------------------
-    tensor Name : 
-    tensor Rank : 4
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-                ---------     
-               /         \    
-       in1 ____| 8     8 |____ out1
-               |         |    
-       in2 ____| 8     8 |____ out2
-               \         /    
-                ---------     
 
 So when calling `PutUniTensor()` we add the third argument which is a labels ordering. This will permute the tensor legs according to the given label ordering before putting them into the Network.
 

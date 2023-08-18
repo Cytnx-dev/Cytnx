@@ -10,26 +10,14 @@ A UniTensor without symmetries is simply a Tensor with labeled bonds. In this ca
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_blocks_get_block.py
+    :language: python
     :linenos:
 
-    # Create an UniTensor from Tensor
-    T = cytnx.UniTensor(cytnx.ones([3,3]))
-    print(T.get_block())
+Output >>
 
-Output >> 
-
-.. code-block:: text
-
-    Total elem: 9
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,3)
-    [[1.00000e+00 1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 1.00000e+00 ]]
-
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_blocks_get_block.out
+    :language: text
 
 .. note::
 
@@ -47,14 +35,9 @@ Let's use the same example of a UniTensor with *U1* symmetry that we introduced 
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_blocks_init.py
+    :language: python
     :linenos:
-
-    bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_f = cytnx.Bond(cytnx.BD_OUT,\
-                        [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor", labels=["d","e","f"])
 
 There are two ways to get a certain block from a UniTensor. 
 
@@ -76,21 +59,14 @@ As an example, we want to access the block with quantum numbers [Qs(1),Qs(-1),Qs
 
 * In Python:
 
-.. code-block:: Python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_blocks_get_block_qidx.py
+    :language: python
     :linenos:
 
-    B1 = Tsymm.get_block_([0,1,1])
-    print(B1)
+Output >>
 
-Output >> 
-
-.. code-block:: text
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_blocks_get_block_qidx.out
+    :language: text
 
 
 **2. Getting a block by its block index**
@@ -103,22 +79,14 @@ If we know the block index, we can access the data directly. For example, if we 
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_blocks_get_block_bkidx.py
+    :language: python
     :linenos:
 
-    B1 = Tsymm.get_block_(1)
-    print(B1)
+Output >>
 
-Output >> 
-
-.. code-block:: text
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_blocks_get_block_bkidx.out
+    :language: text
 
 .. note::
 
@@ -131,48 +99,14 @@ To access all valid blocks in a UniTensor with block structure (with symmetries)
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_blocks_get_blocks_.py
+    :language: python
     :linenos:
-    
-    Blks = Tsymm.get_blocks_()
-    print(len(Blks))
-    print(*Blks)
 
-Output >> 
+Output >>
 
-.. code-block:: text
-    
-    4
-
-    Total elem: 1
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,1)
-    [[[0.00000e+00 ]]]
-
-
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
-
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
-
-
-    Total elem: 1
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,1)
-    [[[0.00000e+00 ]]]
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_blocks_get_blocks_.out
+    :language: text
 
 
 .. note::
@@ -195,30 +129,14 @@ We can, for example, put the block to the location in the UniTensor with quantum
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_blocks_put_block_qidx.py
+    :language: python
     :linenos:
 
-    B1new = cytnx.ones([1,1,2])
-    B1 = Tsymm.get_block_([0,1,1])
-    print(B1)
-    Tsymm.put_block(B1new,[0,1,1])
-    print(Tsymm.get_block_([0,1,1]))
+Output >>
 
-Output >> 
-
-.. code-block:: text
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[1.00000e+00 1.00000e+00 ]]]
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_blocks_put_block_qidx.out
+    :language: text
 
 
 .. toctree::
@@ -234,28 +152,12 @@ For example, if we want to put the tensor to the block with block index 2, then:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_blocks_put_block_bkidx.py
+    :language: python
     :linenos:
 
-    B2new = cytnx.ones([1,1,2])
-    B2 = Tsymm.get_block_(2)
-    print(B2)
-    Tsymm.put_block(B2new,2)
-    print(Tsymm.get_block_(2))
-    
+Output >>
 
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_blocks_put_block_bkidx.out
+    :language: text
 
-.. code-block:: text
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[1.00000e+00 1.00000e+00 ]]]

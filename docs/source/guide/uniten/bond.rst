@@ -20,45 +20,29 @@ A Bond object (without any symmetry) can thus be created as follows:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_bond_create.py
+    :language: python
     :linenos:
-
-    from cytnx import Bond
-    # This creates an in-going Bond with dimension 10.
-    bond_1 = Bond(10, BD_IN)
-    print(bond_1)
-    # If one doesn't specify the Bond type, the default bond type will be
-    regular or undirectional.
-    bond_2 = Bond(10)
-    print(bond_2)
 
 Output >>
 
-.. code-block:: text
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_bond_create.out
+    :language: text
 
-    Dim = 10 |type: KET>
-    Dim = 10 |type: REGULAR>
 
 In some scenarios, one may want to change the direction of the bond, namely from BD_BRA
 to BD_KET or the opposite, one can then use .redirect() method:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_bond_redirect.py
+    :language: python
     :linenos:
-
-    from cytnx import Bond
-    bond_1 = Bond(10, BD_IN)
-    bond_2 = bond_1.redirect()
-    print(bond_1)
-    print(bond_2)
 
 Output >>
 
-.. code-block:: text
-
-    Dim = 10 |type: KET>
-    Dim = 10 |type: <BRA
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_bond_redirect.out
+    :language: text
 
 
 Symmetry object
@@ -70,24 +54,18 @@ In Cytnx, the symmetry type is defined by a Symmetry object. It contains the nam
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_bond_symobj.py
+    :language: python
     :linenos:
 
-
-    sym_u1 = cytnx.Symmetry.U1()
-    sym_z2 = cytnx.Symmetry.Zn(2)
-    print(sym_u1)
-    print(sym_z2)
-    
 * In C++:
-
-.. literalinclude:: ../../../code/cplusplus/guide_codes/7_4_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_bond_symobj.cpp
     :language: c++
     :linenos:
 
 Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/7_4_1_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_bond_symobj.out
     :language: text
 
 
@@ -121,77 +99,37 @@ For example:
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_bond_sym_bond.py
+    :language: python
     :linenos:
-    
-    # This creates an KET (IN) Bond with quantum number 0,-4,-2,3 with degs 3,4,3,2 respectively.
-    bd_sym_u1_a = cytnx.Bond(cytnx.BD_KET,\
-                            [cytnx.Qs(0)>>3,cytnx.Qs(-4)>>4,cytnx.Qs(-2)>>3,cytnx.Qs(3)>>2],\
-                            [cytnx.Symmetry.U1()])
-
-    # equivalent:
-    bd_sym_u1_a = cytnx.Bond(cytnx.BD_IN,\
-                            [cytnx.Qs(0),cytnx.Qs(-4),cytnx.Qs(-2),cytnx.Qs(3)],\
-                            [3,4,3,2],[cytnx.Symmetry.U1()])
-
-    print(bd_sym_u1_a)
 
 * In C++:
-
-.. literalinclude:: ../../../code/cplusplus/guide_codes/7_4_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_bond_sym_bond.cpp
     :language: c++
     :linenos:
 
 Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/7_4_2_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_bond_sym_bond.out
     :language: text
 
 If several symmetries are present, this can be achieved by giving several quantum numbers inside *Qs()*. Let us consider a *U1 x Z2* symmetry for example:
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_bond_multi_sym_bond.py
+    :language: python
     :linenos:
-
-    # This creates a KET (IN) Bond with U1xZ2 symmetry
-    # and quantum numbers (0,0),(-4,1),(-2,0),(3,1) with degs 3,4,3,2 respectively.
-    bd_sym_u1z2_a = cytnx.Bond(cytnx.BD_KET,\
-                               [cytnx.Qs(0 ,0)>>3,\
-                                cytnx.Qs(-4,1)>>4,\
-                                cytnx.Qs(-2,0)>>3,\
-                                cytnx.Qs(3 ,1)>>2],\
-                               [cytnx.Symmetry.U1(),cytnx.Symmetry.Zn(2)])
-
-    print(bd_sym_u1z2_a)
-
 
 * In C++:
-
-
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_bond_multi_sym_bond.cpp
+    :language: c++
     :linenos:
-
-    auto bd_sym_u1z2_a = cytnx::Bond(cytnx::BD_KET,
-                                     {cytnx::Qs(0 ,0)>>3,
-                                      cytnx::Qs(-4,1)>>4,
-                                      cytnx::Qs(-2,0)>>3,
-                                      cytnx::Qs(3 ,1)>>2},
-                                     {cytnx::Symmetry::U1(),cytnx::Symmetry::Zn(2)});
-
-    print(bd_sym_u1z2_a);
-    
 
 Output >>
 
-.. code-block:: text
-
-    Dim = 12 |type: KET>     
-     U1::   +0  -4  -2  +3
-     Z2::   +0  +1  +0  +1
-    Deg>>    3   4   3   2
-
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_bond_multi_sym_bond.out
+    :language: text
 
 Combining Bonds
 *****************
@@ -202,29 +140,14 @@ As an example, let us create another *U1* Bond **bd_sym_u1_c** and combine it wi
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_bond_combine.py
+    :language: python
     :linenos:
-
-    bd_sym_u1_c = cytnx.Bond(cytnx.BD_KET,\
-                    [cytnx.Qs(-1)>>2,cytnx.Qs(1)>>3,cytnx.Qs(2)>>4,cytnx.Qs(-2)>>5,cytnx.Qs(0)>>6])
-    print(bd_sym_u1_c)
-
-    bd_sym_all = bd_sym_u1_a.combineBond(bd_sym_u1_c)
-    print(bd_sym_all)
-
 
 Output >>
 
-.. code-block:: text
-
-    Dim = 20 |type: KET>     
-    U1::   -1  +1  +2  -2  +0
-    Deg>>    2   3   4   5   6
-
-
-    Dim = 240 |type: KET>     
-     U1::   -6  -5  -4  -3  -2  -1  +0  +1  +2  +3  +4  +5
-    Deg>>   20   8  39  18  49  15  30  19  16  12   6   8
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_bond_combine.out
+    :language: text
 
 
 Here, we can observe the quantum numbers of **bd_sym_u1_a** combine with **bd_sym_u1_c** and generate 12 quantum numbers, respecting the combine rule (addition) of the *U1* symmetry.
@@ -239,7 +162,6 @@ Here, we can observe the quantum numbers of **bd_sym_u1_a** combine with **bd_sy
     When no symmetry argument is given in the creation of a Bond with quantum numbers, *U1* is assumed by default as the symmetry group. 
 
 
-
 .. tip::
     
     Using **combineBond_()** (with underscore) will modify the instance directly (as the general convention with underscore indicates inplace). 
@@ -249,21 +171,14 @@ By default, *combineBond* will group any quantum numbers of the same type togeth
 
 * In Python:
 
-.. code-block:: Python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_bond_combine_no_grp.py
+    :language: python
     :linenos:
-
-    bd_sym_all = bd_sym_u1_a.combineBond(bd_sym_u1_c,is_grp=False)
-    print(bd_sym_all)
-
 
 Output >>
 
-.. code-block:: text
-    
-
-    Dim = 240 |type: KET>     
-     U1::   -1  +1  +2  -2  +0  -5  -3  -2  -6  -4  -3  -1  +0  -4  -2  +2  +4  +5  +1  +3
-    Deg>>    6   9  12  15  18   8  12  16  20  24   6   9  12  15  18   4   6   8  10  12
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_bond_combine_no_grp.out
+    :language: text
 
 .. warning::
 

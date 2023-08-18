@@ -38,58 +38,31 @@ We can convert such a Tensor to a UniTensor:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_from_tensor.py
+    :language: python
     :linenos:
-
-    # create a rank-3 tensor with shape [2,3,4]
-    T = cytnx.arange(2*3*4).reshape(2,3,4)
-    # convert to UniTensor:
-    uT = cytnx.UniTensor(T)
-
     
 Here, the Tensor **T** is converted to a UniTensor **uT** simply by wrapping it with constructor *cytnx.UniTensor()*. Formally, we can think of this as constructing a UniTensor **uT** with **T** being its *block* (data). 
 If we want to create a UniTensor with different dtype, for example, a complex UniTensor, we can do:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_complex.py
+    :language: python
     :linenos:
-
-    # initialize a tensor with complex data type
-    T = cytnx.zeros([2,3,4], dtype=cytnx.Type.ComplexDouble)
-    # convert to UniTensor
-    uT = cytnx.UniTensor(T)
-    # randomize the elements with a uniform distribution in the range [low, high]
-    cytnx.random.Make_uniform(uT, low = -1., high = 1.)
-
 
 We can use **print_diagram()** to visualize a UniTensor in a more straightforward way as a diagram: 
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_print_diagram.py
+    :language: python
     :linenos:
-        
-    uT.print_diagram()
 
-Output >> 
+Output >>
 
-.. code-block:: text
-    
-    -----------------------
-    tensor Name : 
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-              ---------     
-             /         \    
-       0 ____| 2     3 |____ 1
-             |         |    
-             |       4 |____ 2
-             \         /    
-              ---------   
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_create_print_diagram.out
+    :language: text
 
 
 The information provided by this output is explained in detail in :ref:`print_diagram()`. We see that a UniTensor with the same shape as *T* was created. The bond labels are set to the default values "0", "1" and "2".
@@ -126,46 +99,14 @@ Now let's construct the rank-3 UniTensor with the same shape as in the above exa
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_scratch.py
+    :language: python
     :linenos:
-
-    uT2 = cytnx.UniTensor([cytnx.Bond(2),cytnx.Bond(3),cytnx.Bond(4)],labels=["a","b","c"],rowrank=1)
-    uT2.set_name("uT2 scratch")
-    uT2.print_diagram()
-    print(uT2)
 
 Output >>
 
-.. code-block:: text
-    
-    -----------------------
-    tensor Name : uT2 scratch
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-              ---------     
-             /         \    
-       a ____| 2     3 |____ b
-             |         |    
-             |       4 |____ c
-             \         /    
-              ---------     
-    -------- start of print ---------
-    Tensor name: uT2 scratch
-    is_diag    : False
-    contiguous : True
-    
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,3,4)
-    [[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
-     [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
-      [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_create_scratch.out
+    :language: text
 
 
 .. note:: 
@@ -181,22 +122,14 @@ For example, consider a UniTensor *A* with **dtype=Type.Int64**, which shall be 
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_astype.py
+    :language: python
     :linenos:
-    
 
-    A = UniTensor(cytnx.ones([3,4],dtype=cytnx.Type.Int64))
-    B = A.astype(cytnx.Type.Double)
-    print(A.dtype_str())
-    print(B.dtype_str())
+Output >>
 
->> Output:
-
-.. code-block:: text
-    
-    Int64
-    Double (Float64)
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_create_astype.out
+    :language: text
 
 
 .. Note::
@@ -213,16 +146,9 @@ For example, let's create a UniTensor in the memory accessible by the CPU and tr
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_to.py
+    :language: python
     :linenos:
-
-    A = UniTensor(cytnx.ones([2,2])) #on CPU
-    B = A.to(cytnx.Device.cuda+0)
-    print(A) # on CPU
-    print(B) # on GPU
-
-    A.to_(cytnx.Device.cuda) 
-    print(A) # on GPU
 
 >> Output:
 

@@ -15,30 +15,21 @@ If we consider :math:`\boldsymbol{\hat{H}}` to be a matrix, this matrix-vector m
 
 As an example, we multiply a matrix :math:`\boldsymbol{\hat{H}}` with shape (4,4) and a vector :math:`\boldsymbol{x}` with 4 elements: 
 
-* In Python :
+* In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_Dot.py
+    :language: python
     :linenos:
-
-    x = cytnx.ones(4)
-    H = cytnx.arange(16).reshape(4,4)
-
-    y = cytnx.linalg.Dot(H,x)
-
-    print(x)
-    print(H)
-    print(y)
-
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/10_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_itersol_LinOp_Dot.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/10_1_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_itersol_LinOp_Dot.out
     :language: text
 
 
@@ -62,152 +53,60 @@ This is precisely what the LinOp class is designed to do. Users can define the m
 
 Inherit the LinOp class
 ************************
-Cytnx exposes the interface **LinOp.matvec**, which provides a way to implement any linear mapping from an input to an output vector. This can be achieved with inheritance from the **LinOp** class. 
+Cytnx exposes the interface **LinOp.matvec**, which provides a way to implement any linear mapping from an input to an output vector. This can be achieved with inheritance from the **LinOp** class.
 
-Let's demonstrate this in a simple example of an operator that acts on an input vector :math:`\boldsymbol{x}` with 4 elements. It interchanges the 1st and 4th element. Additionally, a constant, which is an external parameter, is added to the 2nd and 3rd element. The output then is again a dim=4 vector :math:`\boldsymbol{y}`. 
+Let's demonstrate this in a simple example of an operator that acts on an input vector :math:`\boldsymbol{x}` with 4 elements. It interchanges the 1st and 4th element. Additionally, a constant, which is an external parameter, is added to the 2nd and 3rd element. The output then is again a dim=4 vector :math:`\boldsymbol{y}`.
 
 First, let's create a class that inherits from **LinOp**, with a class member **AddConst**. 
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_inherit.py
+    :language: python
     :linenos:
-
-    class MyOp(cytnx.LinOp):
-        AddConst = 1# class member.
-
-        def __init__(self,aconst):
-            # here, we fix nx=4, dtype=double on CPU, 
-            # so the constructor only takes the external argument 'aconst'
-            
-            ## Remember to init the mother class. 
-            ## Here, we don't specify custom_f!
-            LinOp.__init__(self,"mv",4,cytnx.Type.Double,\
-                                       cytnx.Device.cpu )
-
-            self.AddConst = aconst
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_itersol_LinOp_inherit.cpp
+    :language: c++
     :linenos:
-
-    using namespace cytnx;
-    class MyOp: public LinOp{
-        public:
-            double AddConst;
-
-            MyOp(double aconst):
-                LinOp("mv",4,Type.Double,Device.cpu){ //invoke base class constructor!
-
-                this->AddConst = aconst;
-            }
-
-    };
 
 
 Next, we need to overload the **matvec** member function, as it defines the mapping from input :math:`\boldsymbol{x}` to the output :math:`\boldsymbol{y}`.
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_matvec.py
+    :language: python
     :linenos:
     :emphasize-lines: 15-20
 
-    class MyOp(cytnx.LinOp):
-        AddConst = 1# class member.
-
-        def __init__(self,aconst):
-            # here, we fix nx=4, dtype=double on CPU, 
-            # so the constructor only takes the external argument 'aconst'
-            
-            ## Remember to init the mother class. 
-            ## Here, we don't specify custom_f!
-            cytnx.LinOp.__init__(self,"mv",4,cytnx.Type.Double,\
-                                             cytnx.Device.cpu )
-
-            self.AddConst = aconst
-
-        def matvec(self, v):
-            out = v.clone()
-            out[0],out[3] = v[3],v[0] # swap
-            out[1]+=self.AddConst #add constant
-            out[2]+=self.AddConst #add constant
-            return out
-
-
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_itersol_LinOp_matvec.cpp
+    :language: c++
     :linenos:
-    :emphasize-lines: 12-19
+    :emphasize-lines: 10-17
 
-    using namespace cytnx;
-    class MyOp: public LinOp{
-        public:
-            double AddConst;
-
-            MyOp(double aconst):
-                LinOp("mv",4,Type.Double,Device.cpu){ //invoke base class constructor!
-
-                this->AddConst = aconst;
-            }
-
-            Tensor matvec(const Tensor& v) override{
-                auto out = v.clone();
-                out(0) = v(3); //swap
-                out(3) = v(0); //swap
-                out[1]+=this->AddConst; //add const
-                out[2]+=this->AddConst; //add const
-                return out;
-            }
-
-    };
 
 Now, the class can be be used. We demonstrate this in in the following and set the constant to be added to 7: 
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_demo.py
+    :language: python
     :linenos:
-
-    myop = MyOp(7)
-    x = cytnx.arange(4)
-    y = myop.matvec(x)
-
-    print(x)
-    print(y)
-
-
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_itersol_LinOp_demo.cpp
+    :language: c++
     :linenos:
 
-    auto myop = MyOp(7);
-    auto x = cytnx::arange(4);
-    auto y = myop.matvec(x);
+Output >>
 
-    cout << x << endl;
-    cout << y << endl;
-
-Output>>
-
-.. code-block:: text
-    
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (4)
-    [0.00000e+00 1.00000e+00 2.00000e+00 3.00000e+00 ]
-
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (4)
-    [3.00000e+00 8.00000e+00 9.00000e+00 0.00000e+00 ]
+.. literalinclude:: ../../../code/python/outputs/guide_itersol_LinOp_demo.out
+    :language: text
 
 
 Example: sparse data structure with mapping function 
@@ -218,44 +117,14 @@ As an example, we want to define a sparse matrix :math:`\boldsymbol{A}` with sha
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_sparse_mv.py
+    :language: python
     :linenos:
 
-    class Oper(cytnx.LinOp):
-        Loc = []
-        Val = []
+Output >>
 
-        def __init__(self):
-            cytnx.LinOp.__init__(self,"mv",1000)
-
-            self.Loc.append([1,100])
-            self.Val.append(4.)
-
-            self.Loc.append([100,1])
-            self.Val.append(7.)
-
-        def matvec(self,v):
-            out = cytnx.zeros(v.shape(),v.dtype(),v.device())
-            for i in range(len(self.Loc)):
-                out[self.Loc[i][0]] += v[self.Loc[i][1]]*self.Val[i]
-            return out
-
-
-    A = Oper();
-    x = cytnx.arange(1000)
-    y = A.matvec(x)
-
-    print(x[1].item(),x[100].item())
-    print(y[1].item(),y[100].item())
-
-
-Output>>
-
-.. code-block:: text
-    
-    1.0 100.0
-    400.0 7.0
-
+.. literalinclude:: ../../../code/python/outputs/guide_itersol_LinOp_sparse_mv.out
+    :language: text
 
 
 .. Hint::
@@ -271,25 +140,15 @@ Since v0.6.3a, the option **"mv_elem"** is available in the constructor of the L
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_LinOp_sparse_mv_elem.py
+    :language: python
     :linenos:
-    :emphasize-lines: 6,7
-    
-    class Oper(cytnx.LinOp):
+    :emphasize-lines: 6-7
 
-        def __init__(self):
-            cytnx.LinOp.__init__(self,"mv_elem",1000)
+Output >>
 
-            self.set_elem(1,100,4.)
-            self.set_elem(100,1,7.)
-
-    A = Oper();
-    x = cytnx.arange(1000)
-    y = A.matvec(x)
-
-    print(x[1].item(),x[100].item())
-    print(y[1].item(),y[100].item())
-
+.. literalinclude:: ../../../code/python/outputs/guide_itersol_LinOp_sparse_mv_elem.out
+    :language: text
 
 Notice that instead of overloading the **matvec** function, we use the **set_elem** member function in the LinOp class to set the indices and values of the elements. This information is then stored internally in the LinOp class, and we let the LinOp class provide and optimize **matvec**. 
 

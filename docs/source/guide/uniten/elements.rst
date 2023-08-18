@@ -13,21 +13,19 @@ Accessing an element in a UniTensor without symmetries is straightforward by usi
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_elements_at_get.py
+    :language: python
     :linenos:
 
-    T = cytnx.UniTensor(cytnx.arange(9).reshape(3,3))
-    print(T.at([0,2]).value)
-   
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/7_8_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_elements_at_get.cpp
     :language: c++
     :linenos:
 
-Output >> 
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/7_8_1_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_elements_at_get.out
     :language: text
 
 .. Note::
@@ -39,25 +37,20 @@ The proxy returned by **at** also serves as reference, so we can directly assign
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_elements_at_set.py
+    :language: python
     :linenos:
-    
-    T = cytnx.UniTensor(cytnx.arange(9).reshape(3,3))
-    print(T.at([0,2]).value)
-    T.at([0,2]).value = 7
-    print(T.at([0,2]).value)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/7_8_1_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_elements_at_set.cpp
     :language: c++
     :linenos:
 
-Output >> 
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/7_8_1_ex2.out
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_elements_at_set.out
     :language: text
-
 
     
 UniTensor with symmetries
@@ -75,25 +68,17 @@ Let's consider the same example of a symmetric tensor as in the previous section
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_elements_init_sym.py
+    :language: python
     :linenos:
-    
-    bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_f = cytnx.Bond(cytnx.BD_OUT,\
-                        [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor", labels=["d","e","f"])
-
 
 An existing element (here: at [0,0,0]) can be accessed as in the case without symmetries:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_elements_at_qidx.py
+    :language: python
     :linenos:
-
-    print(Tsymm.at([0,0,0]).value)
-
 
 * In C++:
 
@@ -102,24 +87,19 @@ An existing element (here: at [0,0,0]) can be accessed as in the case without sy
 
     print(Tsymm.at({0,0,0}));
         
-        
+Output >>
 
-Output>>
-
-.. code-block:: text
-    
-    0.0
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_elements_at_qidx.out
+    :language: text
 
 
 If we try to access an element that does not correspond to a valid block (for example at [0,0,1]), an error is thrown:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_elements_at_non_exist.py
+    :language: python
     :linenos:
-
-    print(Tsymm.at([0,0,1]).value)
-
 
 * In C++:
 
@@ -128,24 +108,18 @@ If we try to access an element that does not correspond to a valid block (for ex
 
     print(Tsymm.at({0,0,1}));
 
-Output>>
+Output >>
 
-.. code-block:: text
-    
-    ValueError: [ERROR] trying access an element that is not exists!, using T.if_exists = sth or checking with T.exists() to verify before access element!
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_elements_at_non_exist.out
+    :language: text
 
 To avoid this error, we can check if the element is valid before accessing it. The proxy provides the method **exists()** for this purpose. For example, if we want to assign the value 8 to all valid elements with indices of the form [0,0,i], we can use:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_elements_exists.py
+    :language: python
     :linenos:
-
-    for i in [0,1]:
-        tmp = Tsymm.at([0,0,i])
-        if(tmp.exists()):
-            tmp.value = 8.
 
 * In C++:
 
@@ -160,8 +134,6 @@ To avoid this error, we can check if the element is valid before accessing it. T
 
 
 This will set the element at [0,0,0] to 8 while ignoring the [0,0,1] element that does not exist. 
-
-
 
 
 .. toctree::

@@ -33,137 +33,33 @@ As a simple example, lets create a 3-rank tensor with *U(1)* symmetry:
 Here, we use the notation *{Qnum}>>dimension*. First, three bonds  **bond_c** (in), **bond_d** (in) and **bond_e** (out) are created with corresponding quantum numbers. See :ref:`Bond` for further information related to the bonds and their creation with quantum numbers. We then initialize a UniTensor **Td** using these three bonds:
 
 * In Python:
-  
-.. code-block:: python
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_symmetric_create.py
+    :language: python
     :linenos:
 
-    bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_f = cytnx.Bond(cytnx.BD_OUT,\
-                        [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor", labels=["d","e","f"])
-    Tsymm.print_diagram()
+Output >>
 
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_symmetric_create.out
+    :language: text
 
-Output >> 
-
-.. code-block:: text
- 
-    -----------------------
-    tensor Name : symm. tensor
-    tensor Rank : 3
-    contiguous  : True
-    valid blocks : 4
-    is diag   : False
-    on device   : cytnx device: CPU
-          row           col 
-             -----------    
-             |         |    
-       d  -->| 2     4 |-->  f
-             |         |    
-       e  -->| 2       |        
-             |         |    
-             -----------    
 
 As shown in the previous figure, this UniTensor has only **4** valid blocks which carry zero-flux. We can print the blocks explicitly:
 
 * In Python:
-  
-.. code-block:: python
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_symmetric_print_blocks.py
+    :language: python
     :linenos:
 
-    Tsymm.print_blocks()
+Output >>
 
-
-Output >> 
-
-.. code-block:: text
-
-    -------- start of print ---------
-    Tensor name: symm. tensor
-    braket_form : True
-    is_diag    : False
-    [OVERALL] contiguous : True
-    ========================
-    BLOCK [#0]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                     -----------
-                     |         |
-       [0] U1(1)  -->| 1     1 |-->  [0] U1(2)
-                     |         |
-       [0] U1(1)  -->| 1       |
-                     |         |
-                     -----------
-    
-    Total elem: 1
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,1)
-    [[[0.00000e+00 ]]]
-    
-    ========================
-    BLOCK [#1]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                      -----------
-                      |         |
-       [0] U1(1)   -->| 1     2 |-->  [1] U1(0)
-                      |         |
-       [1] U1(-1)  -->| 1       |
-                      |         |
-                      -----------
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-    
-    ========================
-    BLOCK [#2]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                      -----------
-                      |         |
-       [1] U1(-1)  -->| 1     2 |-->  [1] U1(0)
-                      |         |
-       [0] U1(1)   -->| 1       |
-                      |         |
-                      -----------
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
-    ========================
-    BLOCK [#3]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                      -----------
-                      |         |
-       [1] U1(-1)  -->| 1     1 |-->  [2] U1(-2)
-                      |         |
-       [1] U1(-1)  -->| 1       |
-                      |         |
-                      -----------
-    
-    Total elem: 1
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,1)
-    [[[0.00000e+00 ]]]
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_symmetric_print_blocks.out
+    :language: text
 
 .. Note::
 
     The number in the square braket **[]** in print_blocks() indicates the Qnum index. It refers to the order of the quantum numbers on the corresponding bond. In the previous example, bond *f* contains three quantum numbers. The element with quantum number *U1(2)* has the Qnum index [0] on this link, the *U1(0)* elements have Qnum index [1], and *U1(2)* element has Qnum index [2]. More information on the output can be found in :ref:`print() and print_blocks()`.
-
-
-
-
 
 
 .. toctree::
