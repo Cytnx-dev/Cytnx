@@ -77,27 +77,27 @@ namespace cytnx {
     extentsIn = std::vector<int64_t *>(labels.size());
     stridesIn = std::vector<int64_t *>(labels.size());
     tns = std::vector<UniTensor>(labels.size());
-    // rawDataIn_d = std::vector<void *>(labels.size());
-    // extentR = std::vector<int64_t>(res_label.size());
+    rawDataIn_d = std::vector<void *>(labels.size());
+    extentR = std::vector<int64_t>(res_label.size());
 
-    // // reversed tranversal the labels and extents because cuTensor is column-major by default
-    // for (size_t i = 0; i < labels.size(); i++) {
-    //   tmp_modes.push_back(std::vector<int32_t>(labels[i].size()));
-    //   tmp_extents.push_back(std::vector<int64_t>(labels[i].size()));
-    //   for (size_t j = 0; j < labels[i].size(); j++) {
-    //     lblmap.insert(
-    //       std::pair<std::string, int64_t>(labels[i][labels[i].size() - 1 - j], lbl_int));
-    //     tmp_modes[i][j] = (lblmap[labels[i][labels[i].size() - 1 - j]]);
-    //     lbl_int += 1;
-    //   }
-    //   modesIn.push_back(tmp_modes[i].data());
-    //   numModesIn.push_back(labels[i].size());
-    // }
-    // for (size_t i = 0; i < res_label.size(); i++) {
-    //   modesR.push_back(lblmap[res_label[res_label.size() - 1 - i]]);
-    // }
-    // numInputs = labels.size();
-    // nmodeR = res_label.size();
+    // reversed tranversal the labels and extents because cuTensor is column-major by default
+    for (size_t i = 0; i < labels.size(); i++) {
+      tmp_modes.push_back(std::vector<int32_t>(labels[i].size()));
+      tmp_extents.push_back(std::vector<int64_t>(labels[i].size()));
+      for (size_t j = 0; j < labels[i].size(); j++) {
+        lblmap.insert(
+          std::pair<std::string, int64_t>(labels[i][labels[i].size() - 1 - j], lbl_int));
+        tmp_modes[i][j] = (lblmap[labels[i][labels[i].size() - 1 - j]]);
+        lbl_int += 1;
+      }
+      modesIn.push_back(tmp_modes[i].data());
+      numModesIn.push_back(labels[i].size());
+    }
+    for (size_t i = 0; i < res_label.size(); i++) {
+      modesR.push_back(lblmap[res_label[res_label.size() - 1 - i]]);
+    }
+    numInputs = labels.size();
+    nmodeR = res_label.size();
   }
 
   void cutensornet::updateOutputShape(std::vector<cytnx_uint64> &outshape) {
