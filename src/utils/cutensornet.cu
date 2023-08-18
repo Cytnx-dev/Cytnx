@@ -1,21 +1,21 @@
-
 #include <stdlib.h>
 #include <stdio.h>
-
 #include <unordered_map>
 #include <vector>
 #include <cassert>
-
-#include <cuda_runtime.h>
-#include <cutensornet.h>
-
 #include <cytnx.hpp>
 #include "cutensornet.hpp"
 
-#ifdef UNI_CUQUANTUM
-namespace cytnx {
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include <cutensornet.h>
+    #include <cuda_runtime.h>
+  #endif
+#endif
 
-  #ifdef UNI_GPU
+namespace cytnx {
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
 
     #define HANDLE_ERROR(x)                                                           \
       {                                                                               \
@@ -77,27 +77,27 @@ namespace cytnx {
     extentsIn = std::vector<int64_t *>(labels.size());
     stridesIn = std::vector<int64_t *>(labels.size());
     tns = std::vector<UniTensor>(labels.size());
-    rawDataIn_d = std::vector<void *>(labels.size());
-    extentR = std::vector<int64_t>(res_label.size());
+    // rawDataIn_d = std::vector<void *>(labels.size());
+    // extentR = std::vector<int64_t>(res_label.size());
 
-    // reversed tranversal the labels and extents because cuTensor is column-major by default
-    for (size_t i = 0; i < labels.size(); i++) {
-      tmp_modes.push_back(std::vector<int32_t>(labels[i].size()));
-      tmp_extents.push_back(std::vector<int64_t>(labels[i].size()));
-      for (size_t j = 0; j < labels[i].size(); j++) {
-        lblmap.insert(
-          std::pair<std::string, int64_t>(labels[i][labels[i].size() - 1 - j], lbl_int));
-        tmp_modes[i][j] = (lblmap[labels[i][labels[i].size() - 1 - j]]);
-        lbl_int += 1;
-      }
-      modesIn.push_back(tmp_modes[i].data());
-      numModesIn.push_back(labels[i].size());
-    }
-    for (size_t i = 0; i < res_label.size(); i++) {
-      modesR.push_back(lblmap[res_label[res_label.size() - 1 - i]]);
-    }
-    numInputs = labels.size();
-    nmodeR = res_label.size();
+    // // reversed tranversal the labels and extents because cuTensor is column-major by default
+    // for (size_t i = 0; i < labels.size(); i++) {
+    //   tmp_modes.push_back(std::vector<int32_t>(labels[i].size()));
+    //   tmp_extents.push_back(std::vector<int64_t>(labels[i].size()));
+    //   for (size_t j = 0; j < labels[i].size(); j++) {
+    //     lblmap.insert(
+    //       std::pair<std::string, int64_t>(labels[i][labels[i].size() - 1 - j], lbl_int));
+    //     tmp_modes[i][j] = (lblmap[labels[i][labels[i].size() - 1 - j]]);
+    //     lbl_int += 1;
+    //   }
+    //   modesIn.push_back(tmp_modes[i].data());
+    //   numModesIn.push_back(labels[i].size());
+    // }
+    // for (size_t i = 0; i < res_label.size(); i++) {
+    //   modesR.push_back(lblmap[res_label[res_label.size() - 1 - i]]);
+    // }
+    // numInputs = labels.size();
+    // nmodeR = res_label.size();
   }
 
   void cutensornet::updateOutputShape(std::vector<cytnx_uint64> &outshape) {
@@ -337,7 +337,7 @@ namespace cytnx {
     //   printf("Number of tensor network slices = %ld\n", numSlices);
     //   printf("Tensor network contraction time (ms) = %.3f\n", minTimeCUTENSORNET * 1000.f);
     // }
-    // HANDLE_ERROR(cutensornetDestroySliceGroup(sliceGroup_));
+    HANDLE_ERROR(cutensornetDestroySliceGroup(sliceGroup_));
     // HANDLE_ERROR(cutensornetDestroyContractionPlan(plan));
   }
 
@@ -349,18 +349,19 @@ namespace cytnx {
       sizeof(flops)));
   }
 
-  void cutensornet::free() {
-    // Free cuTensorNet resources
-    HANDLE_ERROR(cutensornetDestroySliceGroup(sliceGroup));
-    HANDLE_ERROR(cutensornetDestroyContractionPlan(plan));
-    HANDLE_ERROR(cutensornetDestroyWorkspaceDescriptor(workDesc));
+  // free resources
+  void cutensornet::freePlan() { HANDLE_ERROR(cutensornetDestroyContractionPlan(plan)); }
+  void cutensornet::freeOptimizer() {
     HANDLE_ERROR(cutensornetDestroyContractionOptimizerInfo(optimizerInfo));
     HANDLE_ERROR(cutensornetDestroyContractionOptimizerConfig(optimizerConfig));
-    HANDLE_ERROR(cutensornetDestroyNetworkDescriptor(descNet));
-    HANDLE_ERROR(cutensornetDestroy(handle));
   }
-
+  void cutensornet::freeWorkspaceDescriptor() {
+    HANDLE_ERROR(cutensornetDestroyWorkspaceDescriptor(workDesc));
+  }
+  void cutensornet::freeNetworkDescriptor() {
+    HANDLE_ERROR(cutensornetDestroyNetworkDescriptor(descNet));
+  }
+  void cutensornet::freeHandle() { HANDLE_ERROR(cutensornetDestroy(handle)); }
   #endif
-
-}  // namespace cytnx
 #endif
+}  // namespace cytnx

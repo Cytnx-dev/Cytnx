@@ -58,8 +58,10 @@ namespace cytnx {
     // maintan tout leg position : (tesnor id, leg idx) for each open leg.
     std::vector<std::pair<int, int>> TOUT_pos;
 
-#ifdef UNI_CUQUANTUM
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
     cutensornet cutn;
+  #endif
 #endif
 
     friend class FermionNetwork;

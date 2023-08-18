@@ -1,14 +1,22 @@
 #ifndef __cutensornet_H_
 #define __cutensornet_H_
 
-#ifdef UNI_CUQUANTUM
+#include "Type.hpp"
+#include "cytnx_error.hpp"
+// #include "Tensor.hpp"
+// #include "UniTensor.hpp"
 
-  #include "Type.hpp"
-  #include "cytnx_error.hpp"
-  #include <cuda_runtime.h>
-  #include <cutensornet.h>
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include <cutensornet.h>
+    #include <cuda_runtime.h>
+  #endif
+#endif
 
 namespace cytnx {
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
 
   class cutensornet {
    private:
@@ -111,10 +119,15 @@ namespace cytnx {
 
     std::string getContractionPath();
 
-    void free();
+    void freePlan();
+    void freeOptimizer();
+    void freeWorkspaceDescriptor();
+    void freeNetworkDescriptor();
+    void freeHandle();
   };
 
+  #endif
+#endif
 }  // namespace cytnx
 
-#endif
 #endif
