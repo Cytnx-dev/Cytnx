@@ -58,11 +58,6 @@ namespace cytnx {
     // maintan tout leg position : (tesnor id, leg idx) for each open leg.
     std::vector<std::pair<int, int>> TOUT_pos;
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    cutensornet cutn;
-  #endif
-#endif
 
     friend class FermionNetwork;
     friend class RegularNetwork;
@@ -124,6 +119,12 @@ namespace cytnx {
   };  // Network_base
 
   class RegularNetwork : public Network_base {
+   private:
+    #ifdef UNI_GPU
+      #ifdef UNI_CUQUANTUM
+        cutensornet cutn;
+      #endif
+    #endif
    public:
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
     void Fromfile(const std::string &fname);

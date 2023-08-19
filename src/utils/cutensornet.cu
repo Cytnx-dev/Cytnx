@@ -62,15 +62,55 @@ namespace cytnx {
   };
 
   cutensornet::cutensornet() {
-    type_mapper = std::vector<cudaDataType_t>(11);
-    type_mapper[Type.ComplexDouble] = CUDA_C_64F;
-    type_mapper[Type.ComplexFloat] = CUDA_C_32F;
-    type_mapper[Type.Double] = CUDA_R_64F;
-    type_mapper[Type.Float] = CUDA_R_32F;
+    // type_mapper = std::vector<cudaDataType_t>(11);
+    // for(int i = 0; i<11; i++)
+    //   type_mapper[i] = CUDA_C_64F;
+    // type_mapper[Type.ComplexDouble] = CUDA_C_64F;
+    // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
+    // type_mapper[Type.Double] = CUDA_R_64F;
+    // type_mapper[Type.Float] = CUDA_R_32F;
+    // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
+    // extentsIn = std::vector<int64_t *>();
+    // stridesIn = std::vector<int64_t *>();
+    // tns = std::vector<UniTensor>();
+    // rawDataIn_d = std::vector<void *>();
+    // extentR = std::vector<int64_t>();
+    // tmp_modes = std::vector<std::vector<int32_t>>();
+    // tmp_extents = std::vector<std::vector<int64_t>>();
+    // lblmap = std::map<std::string, int32_t>();
+    // modesIn =  std::vector<int32_t *>();
+    // numModesIn = std::vector<int32_t>();
+    // modesR = std::vector<int32_t>();
     verbose = false;
   };
 
-  void cutensornet::parseLabels(std::vector<std::string> res_label,
+  // cutensornet::~cutensornet() {
+  //   // type_mapper = std::vector<cudaDataType_t>(11);
+  //   // for(int i = 0; i<11; i++)
+  //   //   type_mapper[i] = CUDA_C_64F;
+  //   // type_mapper[Type.ComplexDouble] = CUDA_C_64F;
+  //   // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
+  //   // type_mapper[Type.Double] = CUDA_R_64F;
+  //   // type_mapper[Type.Float] = CUDA_R_32F;
+  //   // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
+  //   extentsIn.clear();
+  //   stridesIn.clear();
+  //   rawDataIn_d.clear();
+  //   extentR.clear();
+  //   numModesIn.clear();
+  //   modesR.clear();
+  //   tns.clear();
+  //   modesIn.clear();
+  //   // // for (size_t i = 0; i < tmp_modes.size(); i++) {
+  //   //   tmp_modes[i].clear();
+  //   //   tmp_extents[i].clear();
+  //   // }
+  //   tmp_modes.clear();
+  //   lblmap.clear();
+  //   tmp_extents.clear();
+  // };
+
+  void cutensornet::parseLabels(std::vector<std::string> &res_label,
                                 std::vector<std::vector<std::string>> &labels) {
     int64_t lbl_int = 0;
 
@@ -79,22 +119,31 @@ namespace cytnx {
     tns = std::vector<UniTensor>(labels.size());
     rawDataIn_d = std::vector<void *>(labels.size());
     extentR = std::vector<int64_t>(res_label.size());
+    tmp_modes = std::vector<std::vector<int32_t>>(labels.size());
+    tmp_extents = std::vector<std::vector<int64_t>>(labels.size());
+    lblmap = std::map<std::string, int32_t>();
+    modesIn =  std::vector<int32_t *>(labels.size());
+    numModesIn = std::vector<int32_t>(labels.size());
+    modesR = std::vector<int32_t>(labels.size());
 
-    // reversed tranversal the labels and extents because cuTensor is column-major by default
     for (size_t i = 0; i < labels.size(); i++) {
-      tmp_modes.push_back(std::vector<int32_t>(labels[i].size()));
-      tmp_extents.push_back(std::vector<int64_t>(labels[i].size()));
+      // tmp_modes.push_back(std::vector<int32_t>(labels[i].size()));
+      // tmp_extents.push_back(std::vector<int64_t>(labels[i].size()));
+      tmp_modes[i] = std::vector<int32_t>(labels[i].size());
+      tmp_extents[i] = std::vector<int64_t>(labels[i].size());
       for (size_t j = 0; j < labels[i].size(); j++) {
         lblmap.insert(
           std::pair<std::string, int64_t>(labels[i][labels[i].size() - 1 - j], lbl_int));
         tmp_modes[i][j] = (lblmap[labels[i][labels[i].size() - 1 - j]]);
         lbl_int += 1;
       }
-      modesIn.push_back(tmp_modes[i].data());
-      numModesIn.push_back(labels[i].size());
+      // modesIn.push_back(tmp_modes[i].data());
+      // numModesIn.push_back(labels[i].size());
+      modesIn[i] = tmp_modes[i].data();
+      numModesIn[i] = labels[i].size();
     }
     for (size_t i = 0; i < res_label.size(); i++) {
-      modesR.push_back(lblmap[res_label[res_label.size() - 1 - i]]);
+      modesR[i] = lblmap[res_label[res_label.size() - 1 - i]];
     }
     numInputs = labels.size();
     nmodeR = res_label.size();
@@ -115,17 +164,17 @@ namespace cytnx {
       tmp_extents[idx][j] = ut.shape()[numModesIn[idx] - 1 - j];
     extentsIn[idx] = tmp_extents[idx].data();
     stridesIn[idx] = NULL;
-    // if(ut.is_contiguous())
-    //   rawDataIn_d[idx] = (void *)ut.get_block_()._impl->storage()._impl->Mem;
-    // else
-    //   rawDataIn_d[idx] = (void *)ut.get_block_().contiguous()._impl->storage()._impl->Mem;
+    if(ut.is_contiguous())
+      rawDataIn_d[idx] = (void *)ut.get_block_()._impl->storage()._impl->Mem;
+    else
+      rawDataIn_d[idx] = (void *)ut.get_block_().contiguous()._impl->storage()._impl->Mem;
     if (ut.is_contiguous())
       tns[idx] = ut;
     else
       tns[idx] = ut.contiguous();
 
     rawDataIn_d[idx] = tns[idx].get_block_()._impl->storage()._impl->Mem;
-    typeData = type_mapper[ut.dtype()];
+    typeData = CUDA_C_64F; //type_mapper[ut.dtype()];
     typeCompute = CUTENSORNET_COMPUTE_64F;
   }
 
@@ -135,7 +184,7 @@ namespace cytnx {
   //   path.numContractions = 0;
   //   path.data = (cutensornetNodePair_t *) malloc(100*sizeof(cutensornetNodePair_t));
   //   HANDLE_ERROR(cutensornetContractionOptimizerInfoSetAttribute(handle, optimizerInfo,
-  //   CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
+  //   CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &fpath, sizeof(path)));
   // }
 
   std::string cutensornet::getContractionPath() {

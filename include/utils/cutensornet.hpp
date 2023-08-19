@@ -20,7 +20,7 @@ namespace cytnx {
 
   class cutensornet {
    private:
-    std::vector<cudaDataType_t> type_mapper;
+    //std::vector<cudaDataType_t> type_mapper;
 
     // cuTensorNet version
     size_t cuTensornetVersion;
@@ -82,8 +82,9 @@ namespace cytnx {
     void *R_d;
     int32_t nmodeR;
     bool verbose = false;  // For DEBUG use
-    std::vector<UniTensor> tns;
+
     std::vector<void *> rawDataIn_d;
+    std::vector<UniTensor> tns;
     std::vector<int64_t> extentR;
     std::vector<int32_t> modesR;
     std::vector<int32_t *> modesIn;
@@ -94,11 +95,12 @@ namespace cytnx {
     std::map<std::string, int32_t> lblmap;
     std::vector<std::vector<int32_t>> tmp_modes;
     std::vector<std::vector<int64_t>> tmp_extents;
-
+    
    public:
     UniTensor out;
     cutensornet();
-    void parseLabels(std::vector<std::string> res_label,
+    // ~cutensornet();
+    void parseLabels(std::vector<std::string> &res_label,
                      std::vector<std::vector<std::string>> &labels);
     void setOutputMem(UniTensor &res);
     void updateTensor(int idx, UniTensor &ut);
