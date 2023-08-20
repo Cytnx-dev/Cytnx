@@ -47,7 +47,7 @@ if(USE_CUDA)
   if(USE_CUQUANTUM)
     target_sources_local(cytnx
     PRIVATE
-    # cutensornet.hpp
+    cutensornet.hpp
     cutensornet.cu
   )
   endif()

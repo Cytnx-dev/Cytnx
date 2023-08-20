@@ -1,17 +1,27 @@
 #ifndef __cutensornet_H_
 #define __cutensornet_H_
 
-#ifdef UNI_CUQUANTUM
+#include "Type.hpp"
+#include "cytnx_error.hpp"
+// #include "Tensor.hpp"
+// #include "UniTensor.hpp"
 
-  #include "Type.hpp"
-  #include "cytnx_error.hpp"
-  #include <cuda_runtime.h>
-  #include <cutensornet.h>
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include <cutensornet.h>
+    #include <cuda_runtime.h>
+  #endif
+#endif
 
 namespace cytnx {
 
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+
   class cutensornet {
    private:
+    //std::vector<cudaDataType_t> type_mapper;
+
     // cuTensorNet version
     size_t cuTensornetVersion;
 
@@ -42,7 +52,7 @@ namespace cytnx {
     cutensornetContractionOptimizerConfig_t optimizerConfig;
 
     // number of hypersamples
-    int32_t num_hypersamples;
+    int32_t num_hypersamples = 8;
 
     // optimizer info
     cutensornetContractionOptimizerInfo_t optimizerInfo;
@@ -55,7 +65,7 @@ namespace cytnx {
 
     // required workspace
     int64_t requiredWorkspaceSize = 0;
-    void* work = nullptr;
+    void *work = nullptr;
 
     // contraction plan
     cutensornetContractionPlan_t plan;
@@ -69,46 +79,57 @@ namespace cytnx {
 
     // input datas
     int32_t numInputs;
-    void* R_d;
+    void *R_d;
     int32_t nmodeR;
-    int64_t* extentR;
-    int32_t* modesR;
-    void** rawDataIn_d;
-    int32_t** modesIn;
-    int32_t* numModesIn;
-    int64_t** extentsIn;
-    int64_t** stridesIn;
-    bool verbose;
+    bool verbose = false;  // For DEBUG use
 
+    std::vector<void *> rawDataIn_d;
+    std::vector<UniTensor> tns;
+    std::vector<int64_t> extentR;
+    std::vector<int32_t> modesR;
+    std::vector<int32_t *> modesIn;
+    std::vector<int32_t> numModesIn;
+    std::vector<int64_t *> extentsIn;
+    std::vector<int64_t *> stridesIn;
+
+    std::map<std::string, int32_t> lblmap;
+    std::vector<std::vector<int32_t>> tmp_modes;
+    std::vector<std::vector<int64_t>> tmp_extents;
+    
    public:
+    UniTensor out;
     cutensornet();
-    cutensornet(UniTensor& res, std::vector<UniTensor>& uts, bool verbose);
-    cutensornet(int32_t numInputs, void* R_d, int32_t nmodeR, int64_t* extentR, int32_t* modesR,
-                void* rawDataIn_d[], int32_t* modesIn[], int32_t numModesIn[], int64_t* extentsIn[],
-                int64_t* stridesIn[], bool verbose);
-    void cutensornetwork();
+    // ~cutensornet();
+    void parseLabels(std::vector<std::string> &res_label,
+                     std::vector<std::vector<std::string>> &labels);
+    void setOutputMem(UniTensor &res);
+    void updateTensor(int idx, UniTensor &ut);
+    // void updateDatas(UniTensor &res, std::vector<UniTensor> &uts);
+    void updateOutputShape(std::vector<cytnx_uint64> &outshape);
     void checkVersion();
-    void setDevice();
-    void setType();
+    void setDevice(int id);
     void createStream();
     void createHandle();
     void createNetworkDescriptor();
     void getWorkspacelimit();
     void findOptimalOrder();
-    void querySlices();
     void createWorkspaceDescriptor();
     void initializePlan();
     void autotune();
     void executeContraction();
+    void QueryFlopCount();
+
+    std::string getContractionPath();
+
+    void freePlan();
+    void freeOptimizer();
+    void freeWorkspaceDescriptor();
+    void freeNetworkDescriptor();
+    void freeHandle();
   };
 
-  void cuTensornet_(const int32_t numInputs, void* R_d, int32_t nmodeR, int64_t* extentR,
-                    int32_t* modesR, void* rawDataIn_d[], int32_t* modesIn[],
-                    int32_t const numModesIn[], int64_t* extentsIn[], int64_t* stridesIn[],
-                    bool verbose);
-  void callcuTensornet(UniTensor& res, std::vector<UniTensor>& uts, bool verbose);
-
+  #endif
+#endif
 }  // namespace cytnx
 
-#endif
 #endif

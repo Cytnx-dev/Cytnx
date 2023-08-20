@@ -6,9 +6,11 @@
 #include <algorithm>
 #include <iostream>
 #include "Generator.hpp"
+#include "utils/cutensornet.hpp"
 using namespace std;
 
 namespace cytnx {
+
   // these two are internal functions:
   void _parse_ORDER_line_(vector<string> &tokens, const string &line,
                           const cytnx_uint64 &line_num) {
@@ -511,12 +513,12 @@ namespace cytnx {
         }
       }
     }
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    // cutensornet
-    this->cutn.parseLabels(this->TOUT_labels, this->label_arr);
-  #endif
-#endif
+// #ifdef UNI_GPU
+//   #ifdef UNI_CUQUANTUM
+//     // cutensornet
+//     cutn.parseLabels(this->TOUT_labels, this->label_arr);
+//   #endif
+// #endif
   }
 
   void RegularNetwork::Fromfile(const std::string &fname) {
@@ -583,11 +585,6 @@ namespace cytnx {
     this->CtTree.base_nodes[idx].utensor = utensor.relabels(this->label_arr[idx]);  // this conflict
     // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
     this->CtTree.base_nodes[idx].is_assigned = true;
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    this->cutn.updateTensor(idx, this->tensors[idx]);
-  #endif
-#endif
   }
 
   void RegularNetwork::RmUniTensor(const cytnx_uint64 &idx) {
@@ -768,21 +765,22 @@ namespace cytnx {
           for (int i = 0; i < this->TOUT_labels.size(); i++) {
             out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
           }
-          this->cutn.updateOutputShape(out_shape);
-          this->cutn.checkVersion();
-          this->cutn.setDevice(this->tensors[0].device());
-          this->cutn.createStream();
-          this->cutn.createHandle();
-          this->cutn.createNetworkDescriptor();
-          this->cutn.getWorkspacelimit();
-          this->cutn.findOptimalOrder();
-          // this->cutn.getContractionPath();
-          this->cutn.createWorkspaceDescriptor();
-          this->cutn.initializePlan();
+          cutensornet cutn;
+          cutn.updateOutputShape(out_shape);
+          cutn.checkVersion();
+          cutn.setDevice(this->tensors[0].device());
+          cutn.createStream();
+          cutn.createHandle();
+          cutn.createNetworkDescriptor();
+          cutn.getWorkspacelimit();
+          cutn.findOptimalOrder();
+          //cutn.getContractionPath();
+          cutn.createWorkspaceDescriptor();
+          cutn.initializePlan();
 
-          // this->cutn.freeNetworkDescriptor();
-          // this->cutn.freeWorkspaceDescriptor();
-          // this->cutn.freeOptimizer();
+          cutn.freeNetworkDescriptor();
+          cutn.freeWorkspaceDescriptor();
+          cutn.freeOptimizer();
 
           this->order_line = "Optimal order found by cuQuantum.";
         }
@@ -926,9 +924,10 @@ namespace cytnx {
         }
         UniTensor out =
           UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
-        this->cutn.setOutputMem(out);
-        this->cutn.autotune();
-        this->cutn.executeContraction();
+        // cutensornet cutn;
+        // cutn.setOutputMem(out);
+        // cutn.autotune();
+        // cutn.executeContraction();
         return out;
       }
   #else

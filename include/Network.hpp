@@ -12,8 +12,6 @@
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
 
-#include "utils/cutensornet.hpp"
-
 namespace cytnx {
   /// @cond
   struct __ntwk {
@@ -119,12 +117,6 @@ namespace cytnx {
   };  // Network_base
 
   class RegularNetwork : public Network_base {
-   private:
-    #ifdef UNI_GPU
-      #ifdef UNI_CUQUANTUM
-        cutensornet cutn;
-      #endif
-    #endif
    public:
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
     void Fromfile(const std::string &fname);
