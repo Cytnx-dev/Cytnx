@@ -20,7 +20,7 @@ namespace cytnx {
 
   class cutensornet {
    private:
-    //std::vector<cudaDataType_t> type_mapper;
+    // std::vector<cudaDataType_t> type_mapper;
 
     // cuTensorNet version
     size_t cuTensornetVersion;
@@ -95,7 +95,7 @@ namespace cytnx {
     std::map<std::string, int32_t> lblmap;
     std::vector<std::vector<int32_t>> tmp_modes;
     std::vector<std::vector<int64_t>> tmp_extents;
-    
+
    public:
     UniTensor out;
     cutensornet();
@@ -117,9 +117,11 @@ namespace cytnx {
     void initializePlan();
     void autotune();
     void executeContraction();
-    void QueryFlopCount();
 
-    std::string getContractionPath();
+    void setContractionPath(std::vector<std::string> order_token);
+    std::vector<std::pair<int, int>> getContractionPath();
+
+    void QueryFlopCount();
 
     void freePlan();
     void freeOptimizer();

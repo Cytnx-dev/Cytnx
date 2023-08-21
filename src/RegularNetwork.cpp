@@ -23,8 +23,8 @@ namespace cytnx {
                     "\'(\' and \')\'");
 
     // check mismatch:
-    size_t lbrac_n = std::count(line.begin(), line.end(), '(');
-    size_t rbrac_n = std::count(line.begin(), line.end(), ')');
+    size_t lbrac_n = count(line.begin(), line.end(), '(');
+    size_t rbrac_n = count(line.begin(), line.end(), ')');
     cytnx_error_msg(lbrac_n != rbrac_n, "[ERROR][Network][Fromfile] parentheses mismatch.%s", "\n");
 
     // slice the line into pieces by parentheses and comma
@@ -34,7 +34,7 @@ namespace cytnx {
                     line_num, "\n");
   }
 
-  void _parse_TOUT_line_(vector<std::string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
+  void _parse_TOUT_line_(vector<string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
                          const cytnx_uint64 &line_num) {
     lbls.clear();
     vector<string> tmp = str_split(line, false, ";");
@@ -183,7 +183,28 @@ namespace cytnx {
     }
   }
 
-  void check(std::vector<UniTensor> &tns, std::vector<std::string> &tn_names) {
+  string einsumpath_to_string(vector<pair<int, int>> path, vector<string> tns) {
+    string res;
+    for (int i = 0; i < path.size(); i++) {
+      int id1 = path[i].first;
+      int id2 = path[i].second;
+      res.clear();
+      res.append("(");
+      res.append(tns[id1]);
+      res.append(",");
+      res.append(tns[id2]);
+      res.append(")");
+      tns.erase(tns.begin() + id1);
+      if (id1 > id2)
+        tns.erase(tns.begin() + id2);
+      else
+        tns.erase(tns.begin() + id2 - 1);
+      tns.push_back(res);
+    }
+    return res;
+  }
+
+  void check(vector<UniTensor> &tns, vector<string> &tn_names) {
     // check tensors are all set, and put all unitensor on node for contraction:
     cytnx_error_msg(
       tns.size() == 0,
@@ -216,9 +237,8 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::Contract_plan(const std::vector<UniTensor> &utensors,
-                                     const std::string &Tout, const std::vector<std::string> &alias,
-                                     const std::string &contract_order) {
+  void RegularNetwork::Contract_plan(const vector<UniTensor> &utensors, const string &Tout,
+                                     const vector<string> &alias, const string &contract_order) {
     cytnx_error_msg(utensors.size() < 2,
                     "[ERROR][Network] invalid network. Should have at least 2 tensors defined.%s",
                     "\n");
@@ -248,7 +268,7 @@ namespace cytnx {
     }
 
     // assign input tensors into slots:
-    std::string name;
+    string name;
     for (unsigned int i = 0; i < utensors.size(); i++) {
       if (alias.size()) {
         this->names.push_back(alias[i]);
@@ -272,7 +292,7 @@ namespace cytnx {
 
       this->name2pos[name] = names.size() - 1;  // register
       // cout << name << "|" << names.size() - 1 << endl;
-      this->label_arr.push_back(vector<std::string>());
+      this->label_arr.push_back(vector<string>());
       cytnx_uint64 tmp_iBN;
       // this is an internal function that is defined in this cpp file.
       this->label_arr.back() = utensors[i].labels();
@@ -288,16 +308,16 @@ namespace cytnx {
     // checking if all TN are set in ORDER.
     //  only alias assigned will activate order
     if (isORDER_exist) {
-      std::vector<string> TN_names;  // this should be integer!
+      vector<string> TN_names;  // this should be integer!
       _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
       cytnx_error_msg(TN_names.size() != utensors.size(),
                       "[ERROR][Network][Contract--planning] order assigned but the [%d] tensors "
                       "appears in ORDER does not match the # input tensors [%d]\n",
                       TN_names.size(), utensors.size());
       for (int i = 0; i < this->names.size(); i++) {
-        auto it = std::find(TN_names.begin(), TN_names.end(), this->names[i]);
+        auto it = find(TN_names.begin(), TN_names.end(), this->names[i]);
         cytnx_error_msg(
-          it == std::end(TN_names),
+          it == end(TN_names),
           "[ERROR][Network][Contract--planning] TN: <%s> defined but is not used in ORDER line\n",
           this->names[i].c_str());
         TN_names.erase(it);
@@ -313,7 +333,7 @@ namespace cytnx {
     }  // check all RN.
 
     // checking label matching:
-    map<std::string, cytnx_int64> lblcnt;
+    map<string, cytnx_int64> lblcnt;
     for (int i = 0; i < this->names.size(); i++) {
       for (int j = 0; j < this->label_arr[i].size(); j++) {
         if (lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
@@ -322,16 +342,16 @@ namespace cytnx {
           lblcnt[this->label_arr[i][j]] += 1;
       }
     }
-    vector<std::string> expected_TOUT;
-    for (map<std::string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
+    vector<string> expected_TOUT;
+    for (map<string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
     bool err = false;
     if (expected_TOUT.size() != TOUT_labels.size()) {
-      std::cout << expected_TOUT.size() << std::endl;
+      cout << expected_TOUT.size() << endl;
       err = true;
     }
-    vector<std::string> itrsct = vec_intersect(expected_TOUT, this->TOUT_labels);
+    vector<string> itrsct = vec_intersect(expected_TOUT, this->TOUT_labels);
     if (itrsct.size() != expected_TOUT.size()) {
       err = true;
     }
@@ -352,7 +372,7 @@ namespace cytnx {
     for (int i = 0; i < utensors.size(); i++) this->tensors[i] = utensors[i];
   }
 
-  void RegularNetwork::FromString(const std::vector<std::string> &contents) {
+  void RegularNetwork::FromString(const vector<string> &contents) {
     this->clear();
 
     string line;
@@ -393,6 +413,7 @@ namespace cytnx {
         if (content.length()) {
           // cut the line into tokens,
           // and leave it to process by CtTree after read all lines.
+          this->order_line = content;
           _parse_ORDER_line_(this->ORDER_tokens, content, i);
           isORDER_exist = true;
         }
@@ -447,12 +468,12 @@ namespace cytnx {
 
     // checking if all TN are set in ORDER.
     if (isORDER_exist) {
-      std::vector<string> TN_names;
+      vector<string> TN_names;
       _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {
-        auto it = std::find(TN_names.begin(), TN_names.end(), this->names[i]);
+        auto it = find(TN_names.begin(), TN_names.end(), this->names[i]);
         cytnx_error_msg(
-          it == std::end(TN_names),
+          it == end(TN_names),
           "[ERROR][Network][Fromfile] TN: <%s> defined but is not used in ORDER line\n",
           this->names[i].c_str());
         TN_names.erase(it);
@@ -501,34 +522,34 @@ namespace cytnx {
       cytnx_error_msg(true, "%s", "\n");
     }
 
-    TOUT_pos = std::vector<std::pair<int, int>>();
+    TOUT_pos = vector<pair<int, int>>();
     // maintain TOUT leg position
     for (int i = 0; i < TOUT_labels.size(); i++) {
       for (int j = 0; j < label_arr.size(); j++) {
         vector<string>::iterator it;
         it = find(this->label_arr[j].begin(), this->label_arr[j].end(), TOUT_labels[i]);
         if (it != this->label_arr[j].end()) {
-          TOUT_pos.push_back(std::make_pair(j, distance(label_arr[j].begin(), it)));
+          TOUT_pos.push_back(make_pair(j, distance(label_arr[j].begin(), it)));
           break;
         }
       }
     }
-// #ifdef UNI_GPU
-//   #ifdef UNI_CUQUANTUM
-//     // cutensornet
-//     cutn.parseLabels(this->TOUT_labels, this->label_arr);
-//   #endif
-// #endif
+    // #ifdef UNI_GPU
+    //   #ifdef UNI_CUQUANTUM
+    //     // cutensornet
+    //     cutn.parseLabels(this->TOUT_labels, this->label_arr);
+    //   #endif
+    // #endif
   }
 
-  void RegularNetwork::Fromfile(const std::string &fname) {
+  void RegularNetwork::Fromfile(const string &fname) {
     const cytnx_uint64 MAXLINES = 1024;
 
     // empty all
     // this->clear();
 
     // open file
-    std::ifstream infile;
+    ifstream infile;
     infile.open(fname.c_str());
     if (!(infile.is_open())) {
       cytnx_error_msg(true, "[Network] Error in opening file \'", fname.c_str(), "\'.\n");
@@ -560,8 +581,8 @@ namespace cytnx {
     this->FromString(contents);
   }
 
-  void RegularNetwork::PutUniTensors(const std::vector<string> &names,
-                                     const std::vector<UniTensor> &utensors) {
+  void RegularNetwork::PutUniTensors(const vector<string> &names,
+                                     const vector<UniTensor> &utensors) {
     cytnx_error_msg(names.size() != utensors.size(),
                     "[ERROR][RegularNetwork][PutUniTensors] total number of names does not match "
                     "number of input UniTensors.%s",
@@ -583,7 +604,7 @@ namespace cytnx {
 
     this->tensors[idx] = utensor;
     this->CtTree.base_nodes[idx].utensor = utensor.relabels(this->label_arr[idx]);  // this conflict
-    // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
+    this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
     this->CtTree.base_nodes[idx].is_assigned = true;
   }
 
@@ -593,11 +614,11 @@ namespace cytnx {
 
     this->tensors[idx] = UniTensor();
   }
-  void RegularNetwork::RmUniTensor(const std::string &name) {
+  void RegularNetwork::RmUniTensor(const string &name) {
     cytnx_uint64 idx;
     try {
       idx = this->name2pos.at(name);
-    } catch (std::out_of_range) {
+    } catch (out_of_range) {
       cytnx_error_msg(true,
                       "[ERROR][RegularNetwork][RmUniTensor] cannot find the tensor name: [%s] in "
                       "current network.\n",
@@ -606,13 +627,13 @@ namespace cytnx {
 
     this->RmUniTensor(idx);
   }
-  void RegularNetwork::RmUniTensors(const std::vector<string> &names) {
+  void RegularNetwork::RmUniTensors(const vector<string> &names) {
     for (int i = 0; i < names.size(); i++) {
       this->RmUniTensor(names[i]);
     }
   }
 
-  void RegularNetwork::Savefile(const std::string &fname) {
+  void RegularNetwork::Savefile(const string &fname) {
     cytnx_error_msg(
       this->label_arr.size() == 0,
       "[ERROR][RegularNetwork][Savefile] cannot save empty network to network file!%s", "\n");
@@ -666,11 +687,11 @@ namespace cytnx {
     fo.close();
   }
 
-  void RegularNetwork::PutUniTensor(const std::string &name, const UniTensor &utensor) {
+  void RegularNetwork::PutUniTensor(const string &name, const UniTensor &utensor) {
     cytnx_uint64 idx;
     try {
       idx = this->name2pos.at(name);
-    } catch (std::out_of_range) {
+    } catch (out_of_range) {
       cytnx_error_msg(true,
                       "[ERROR][RegularNetwork][PutUniTensor] cannot find the tensor name: [%s] in "
                       "current network.\n",
@@ -680,7 +701,7 @@ namespace cytnx {
     this->PutUniTensor(idx, utensor);
   }
 
-  void RegularNetwork::PrintNet(std::ostream &os) {
+  void RegularNetwork::PrintNet(ostream &os) {
     string status;
     os << "==== Network ====" << endl;
     if (this->tensors.size() == 0) {
@@ -766,7 +787,9 @@ namespace cytnx {
             out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
           }
           cutensornet cutn;
+          cutn.parseLabels(this->TOUT_labels, this->label_arr);
           cutn.updateOutputShape(out_shape);
+          for (int i = 0; i < this->tensors.size(); i++) cutn.updateTensor(i, this->tensors[i]);
           cutn.checkVersion();
           cutn.setDevice(this->tensors[0].device());
           cutn.createStream();
@@ -774,15 +797,20 @@ namespace cytnx {
           cutn.createNetworkDescriptor();
           cutn.getWorkspacelimit();
           cutn.findOptimalOrder();
-          //cutn.getContractionPath();
           cutn.createWorkspaceDescriptor();
           cutn.initializePlan();
 
-          cutn.freeNetworkDescriptor();
-          cutn.freeWorkspaceDescriptor();
-          cutn.freeOptimizer();
+          // cutn.freeNetworkDescriptor();
+          // cutn.freeWorkspaceDescriptor();
+          // cutn.freeOptimizer();
 
-          this->order_line = "Optimal order found by cuQuantum.";
+          // Get contraction path
+          vector<pair<int, int>> path = cutn.getContractionPath();
+          vector<string> names;
+          for (int i = 0; i < this->names.size(); i++) {
+            names.push_back(this->names[i]);
+          }
+          this->order_line = einsumpath_to_string(path, names);
         }
   #else
         cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
@@ -890,7 +918,7 @@ namespace cytnx {
 
       // 3. get result:
       UniTensor out = this->CtTree.nodes_container.back().utensor;
-      // std::cout << out << std::endl;
+      // cout << out << endl;
       // out.print_diagram();
 
       // 4. reset nodes:
@@ -922,12 +950,16 @@ namespace cytnx {
         for (int i = 0; i < this->TOUT_labels.size(); i++) {
           out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
         }
+
         UniTensor out =
           UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
+
         // cutensornet cutn;
         // cutn.setOutputMem(out);
+        // cutn.setOptimalOrder();
         // cutn.autotune();
         // cutn.executeContraction();
+
         return out;
       }
   #else
@@ -944,10 +976,9 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::construct(const std::vector<std::string> &alias,
-                                 const std::vector<std::vector<std::string>> &lbls,
-                                 const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
-                                 const std::string &order, const bool optim) {
+  void RegularNetwork::construct(const vector<string> &alias, const vector<vector<string>> &lbls,
+                                 const vector<string> &outlbl, const cytnx_int64 &outrk,
+                                 const string &order, const bool optim) {
     for (int i = 0; i < alias.size(); i++) {
       this->names.push_back(alias[i]);
       this->name2pos[alias[i]] = names.size() - 1;  // register
@@ -962,12 +993,12 @@ namespace cytnx {
     if (order.length()) {
       // checking if all TN are set in ORDER.
       _parse_ORDER_line_(this->ORDER_tokens, order, 0);
-      std::vector<string> TN_names;
+      vector<string> TN_names;
       _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {
-        auto it = std::find(TN_names.begin(), TN_names.end(), this->names[i]);
+        auto it = find(TN_names.begin(), TN_names.end(), this->names[i]);
         cytnx_error_msg(
-          it == std::end(TN_names),
+          it == end(TN_names),
           "[ERROR][Network][Fromfile] TN: <%s> defined but is not used in ORDER line\n",
           this->names[i].c_str());
         TN_names.erase(it);
@@ -1004,13 +1035,13 @@ namespace cytnx {
     for (map<string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
-    // std::cout<<this->TOUT_labels.size();
+    // cout<<this->TOUT_labels.size();
     if (this->TOUT_labels.size() == 0) {
-      // std::cout<<expected_TOUT;
+      // cout<<expected_TOUT;
       this->TOUT_labels = expected_TOUT;
-      // std::cout<<this->TOUT_labels;
+      // cout<<this->TOUT_labels;
     } else {
-      // std::cout<<this->TOUT_labels;
+      // cout<<this->TOUT_labels;
       bool err = false;
       if (expected_TOUT.size() != TOUT_labels.size()) {
         err = true;

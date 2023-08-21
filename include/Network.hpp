@@ -12,6 +12,12 @@
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
 
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include <cutensornet.h>
+  #endif
+#endif
+
 namespace cytnx {
   /// @cond
   struct __ntwk {
@@ -55,7 +61,6 @@ namespace cytnx {
 
     // maintan tout leg position : (tesnor id, leg idx) for each open leg.
     std::vector<std::pair<int, int>> TOUT_pos;
-
 
     friend class FermionNetwork;
     friend class RegularNetwork;
@@ -117,6 +122,25 @@ namespace cytnx {
   };  // Network_base
 
   class RegularNetwork : public Network_base {
+   private:
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+
+    // stream
+    cudaStream_t stream;
+
+    // cutensornet handle
+    cutensornetHandle_t handle;
+
+    // network descriptor
+    cutensornetNetworkDescriptor_t descNet;
+
+    // optimizer info
+    cutensornetContractionOptimizerInfo_t optimizerInfo;
+
+  #endif
+#endif
+
    public:
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
     void Fromfile(const std::string &fname);

@@ -81,7 +81,7 @@ namespace cytnx {
     // modesIn =  std::vector<int32_t *>();
     // numModesIn = std::vector<int32_t>();
     // modesR = std::vector<int32_t>();
-    verbose = false;
+    verbose = true;
   };
 
   // cutensornet::~cutensornet() {
@@ -122,7 +122,7 @@ namespace cytnx {
     tmp_modes = std::vector<std::vector<int32_t>>(labels.size());
     tmp_extents = std::vector<std::vector<int64_t>>(labels.size());
     lblmap = std::map<std::string, int32_t>();
-    modesIn =  std::vector<int32_t *>(labels.size());
+    modesIn = std::vector<int32_t *>(labels.size());
     numModesIn = std::vector<int32_t>(labels.size());
     modesR = std::vector<int32_t>(labels.size());
 
@@ -164,7 +164,7 @@ namespace cytnx {
       tmp_extents[idx][j] = ut.shape()[numModesIn[idx] - 1 - j];
     extentsIn[idx] = tmp_extents[idx].data();
     stridesIn[idx] = NULL;
-    if(ut.is_contiguous())
+    if (ut.is_contiguous())
       rawDataIn_d[idx] = (void *)ut.get_block_()._impl->storage()._impl->Mem;
     else
       rawDataIn_d[idx] = (void *)ut.get_block_().contiguous()._impl->storage()._impl->Mem;
@@ -174,20 +174,20 @@ namespace cytnx {
       tns[idx] = ut.contiguous();
 
     rawDataIn_d[idx] = tns[idx].get_block_()._impl->storage()._impl->Mem;
-    typeData = CUDA_C_64F; //type_mapper[ut.dtype()];
+    typeData = CUDA_C_64F;  // type_mapper[ut.dtype()];
     typeCompute = CUTENSORNET_COMPUTE_64F;
   }
 
-  // void cutensornet::setContractionPath(){
-  //   //cutensornetContractionOptimizerConfigAttributes_t attr
-  //   cutensornetContractionPath_t path;
-  //   path.numContractions = 0;
-  //   path.data = (cutensornetNodePair_t *) malloc(100*sizeof(cutensornetNodePair_t));
-  //   HANDLE_ERROR(cutensornetContractionOptimizerInfoSetAttribute(handle, optimizerInfo,
-  //   CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &fpath, sizeof(path)));
-  // }
+  void cutensornet::setContractionPath(std::vector<std::string> order_token) {
+    // cutensornetContractionOptimizerConfigAttributes_t attr
+    cutensornetContractionPath_t path;
+    path.numContractions = 0;
+    path.data = (cutensornetNodePair_t *)malloc(100 * sizeof(cutensornetNodePair_t));
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoSetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
+  }
 
-  std::string cutensornet::getContractionPath() {
+  std::vector<std::pair<int32_t, int32_t>> cutensornet::getContractionPath() {
     cutensornetContractionPath_t path;
     path.numContractions = 0;
     path.data = (cutensornetNodePair_t *)malloc(100 * sizeof(cutensornetNodePair_t));
@@ -195,12 +195,20 @@ namespace cytnx {
     HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
       handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
 
+    std::vector<std::pair<int32_t, int32_t>> einsum_path;
+
     std::cout << "Number of contractions : " << path.numContractions << std::endl;
     for (int i = 0; i < path.numContractions; i++) {
+      einsum_path.push_back(
+        std::pair<int32_t, int32_t>((int32_t)path.data[i].first, (int32_t)path.data[i].second));
       std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
     }
+    // HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+    //   handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
+    //   sizeof(numSlices))); //get numslices
+    // assert(numSlices > 0);
 
-    return "";
+    return einsum_path;
   }
 
   // void cutensornet::updateDatas(UniTensor &res, std::vector<UniTensor> &uts){
@@ -306,16 +314,16 @@ namespace cytnx {
 
     HANDLE_ERROR(cutensornetContractionOptimizerConfigSetAttribute(
       handle, optimizerConfig, CUTENSORNET_CONTRACTION_OPTIMIZER_CONFIG_HYPER_NUM_SAMPLES,
-      &num_hypersamples, sizeof(num_hypersamples)));
+      &num_hypersamples,
+      sizeof(num_hypersamples)));  // OptimizerConfig means the pathfinder's config.
 
-    HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(handle, descNet, &optimizerInfo));
+    HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(
+      handle, descNet,
+      &optimizerInfo));  // OptimizerInfo means the info of optimized path and slices.
 
     HANDLE_ERROR(cutensornetContractionOptimize(handle, descNet, optimizerConfig, workspaceLimit,
                                                 optimizerInfo));
-    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
-      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
-      sizeof(numSlices)));
-    assert(numSlices > 0);
+
     if (verbose) printf("Found an optimized contraction path using cuTensorNet optimizer\n");
   }
 
