@@ -789,20 +789,15 @@ namespace cytnx {
           cutensornet cutn;
           cutn.parseLabels(this->TOUT_labels, this->label_arr);
           cutn.updateOutputShape(out_shape);
-          for (int i = 0; i < this->tensors.size(); i++) cutn.updateTensor(i, this->tensors[i]);
+          cutn.set_extents(this->tensors);
           cutn.checkVersion();
           cutn.setDevice(this->tensors[0].device());
           cutn.createStream();
           cutn.createHandle();
-          cutn.createNetworkDescriptor();
+          this->descNet = cutn.createNetworkDescriptor();
           cutn.getWorkspacelimit();
-          cutn.findOptimalOrder();
-          cutn.createWorkspaceDescriptor();
-          cutn.initializePlan();
-
-          // cutn.freeNetworkDescriptor();
-          // cutn.freeWorkspaceDescriptor();
-          // cutn.freeOptimizer();
+          this->optimizerInfo = cutn.findOptimalOrder();
+          cutn.freeHandle();
 
           // Get contraction path
           vector<pair<int, int>> path = cutn.getContractionPath();
@@ -954,11 +949,22 @@ namespace cytnx {
         UniTensor out =
           UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
 
-        // cutensornet cutn;
-        // cutn.setOutputMem(out);
-        // cutn.setOptimalOrder();
-        // cutn.autotune();
-        // cutn.executeContraction();
+        cutensornet cutn;
+        cutn.updateOutputShape(out_shape);
+        cutn.setOutputMem(out);
+        cutn.setInputMem(this->tensors);
+        cutn.createStream();
+        cutn.createHandle();
+        cutn.setNetworkDescriptor(this->descNet);
+        cutn.setOptimizerInfo(this->optimizerInfo);
+        cutn.createWorkspaceDescriptor();
+        cutn.initializePlan();
+        cutn.autotune();
+        cutn.executeContraction();
+
+        cutn.freePlan();
+        cutn.freeWorkspaceDescriptor();
+        cutn.freeHandle();
 
         return out;
       }
