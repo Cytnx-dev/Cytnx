@@ -20,13 +20,34 @@
 
 TEST_F(NetworkTest, Network_dense_FromString) {
   auto net = Network();
-  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
+  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "ORDER:(A,(B,C))", "TOUT: a,b;e"});
 }
 
-TEST_F(NetworkTest, Network_dense) {
+TEST_F(NetworkTest, Network_dense_no_order) {
+  auto net = Network();
+  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
+  net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
+  EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
+}
+
+TEST_F(NetworkTest, Network_dense_find_optimal) {
   auto net = Network();
   net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
   net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
   net.setOrder(true, "");
+  EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
+}
+
+TEST_F(NetworkTest, Network_dense_order_line) {
+  auto net = Network();
+  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "ORDER:(A,(B,C))","TOUT: a,b;e"});
+  net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
+  EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
+}
+TEST_F(NetworkTest, Network_dense_specified_order) {
+  auto net = Network();
+  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
+  net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
+  net.setOrder(false, "(A,(B,C))");
   EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
 }

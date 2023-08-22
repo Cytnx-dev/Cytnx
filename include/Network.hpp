@@ -47,6 +47,10 @@ namespace cytnx {
     // Contraction order.
     ContractionTree CtTree;
     std::vector<std::string> ORDER_tokens;
+    // order line
+    std::string order_line = "";
+    // einsum path representation of order
+    std::vector<std::pair<cytnx_int64, cytnx_int64>> einsum_path;
 
     // labels corr to the tn list.
     std::vector<std::vector<std::string>> label_arr;
@@ -56,11 +60,12 @@ namespace cytnx {
     std::vector<std::string> names;
     std::map<std::string, cytnx_uint64> name2pos;
 
-    // order line
-    std::string order_line = "";
-
     // maintan tout leg position : (tesnor id, leg idx) for each open leg.
     std::vector<std::pair<int, int>> TOUT_pos;
+
+    // pure int version of the contract labels
+    std::vector<std::vector<cytnx_int64>> int_modes;
+    std::vector<cytnx_int64> int_out_mode;
 
     friend class FermionNetwork;
     friend class RegularNetwork;
@@ -125,19 +130,15 @@ namespace cytnx {
    private:
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
-
-    // stream
-    cudaStream_t stream;
-
-    // cutensornet handle
-    cutensornetHandle_t handle;
+    // // stream
+    // cudaStream_t stream;
+    // // cutensornet handle
+    // cutensornetHandle_t handle;
 
     // network descriptor
     cutensornetNetworkDescriptor_t descNet;
-
     // optimizer info
     cutensornetContractionOptimizerInfo_t optimizerInfo;
-
   #endif
 #endif
 

@@ -7,6 +7,7 @@
 #include <iostream>
 #include "Generator.hpp"
 #include "utils/cutensornet.hpp"
+
 using namespace std;
 
 namespace cytnx {
@@ -183,7 +184,7 @@ namespace cytnx {
     }
   }
 
-  string einsumpath_to_string(vector<pair<int, int>> path, vector<string> tns) {
+  string einsumpath_to_string(vector<pair<cytnx_int64, cytnx_int64>> path, vector<string> tns) {
     string res;
     for (int i = 0; i < path.size(); i++) {
       int id1 = path[i].first;
@@ -202,6 +203,52 @@ namespace cytnx {
       tns.push_back(res);
     }
     return res;
+  }
+
+  vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree, vector<string> tns){
+    vector<pair<cytnx_int64, cytnx_int64>> path;
+    stack<Node *> stk;
+    Node *root = &(CtTree.nodes_container.back());
+    int ly = 0;
+    bool ict;
+    do {
+      while ((root != nullptr)) {
+        if (root->right != nullptr) stk.push(root->right);
+        stk.push(root);
+        root = root->left;
+      }
+      root = stk.top();
+      stk.pop();
+      ict = true;
+      if ((root->right != nullptr) && !stk.empty()) {
+        if (stk.top() == root->right) {
+          stk.pop();
+          stk.push(root);
+          root = root->right;
+          ict = false;
+        }
+      }
+      if (ict) {
+        if ((root->right != nullptr) && (root->left != nullptr)) {
+          auto it = find(tns.begin(),tns.end(), root->left->name);
+          int id1 = it - tns.begin();
+          it = find(tns.begin(),tns.end(), root->right->name);
+          int id2 = it - tns.begin();
+          tns.erase(tns.begin() + id1);
+          if (id1 > id2)
+            tns.erase(tns.begin() + id2);
+          else
+            tns.erase(tns.begin() + id2 - 1);
+          tns.push_back(root->name);
+          path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1,id2));
+        }
+        root = nullptr;
+      }
+    } while (!stk.empty());
+    // for (int i = 0; i < path.size(); i++) {
+    //   std::cout << path[i].first << ", " << path[i].second << std::endl;
+    // }
+    return path;
   }
 
   void check(vector<UniTensor> &tns, vector<string> &tn_names) {
@@ -522,8 +569,8 @@ namespace cytnx {
       cytnx_error_msg(true, "%s", "\n");
     }
 
-    TOUT_pos = vector<pair<int, int>>();
     // maintain TOUT leg position
+    TOUT_pos = vector<pair<int, int>>();
     for (int i = 0; i < TOUT_labels.size(); i++) {
       for (int j = 0; j < label_arr.size(); j++) {
         vector<string>::iterator it;
@@ -534,12 +581,41 @@ namespace cytnx {
         }
       }
     }
-    // #ifdef UNI_GPU
-    //   #ifdef UNI_CUQUANTUM
-    //     // cutensornet
-    //     cutn.parseLabels(this->TOUT_labels, this->label_arr);
-    //   #endif
-    // #endif
+
+    //get int_label
+    std::map<std::string, cytnx_int64> lblmap = std::map<std::string, cytnx_int64>();
+    this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
+    this->int_out_mode =  std::vector<cytnx_int64>(this->TOUT_labels.size());
+    cytnx_int64 lbl_int = 0;
+    for (size_t i = 0; i < this->label_arr.size(); i++) {
+      this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
+      for (size_t j = 0; j < this->label_arr[i].size(); j++) {
+        lblmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], lbl_int));
+        this->int_modes[i][j] = lblmap[this->label_arr[i][j]];
+        lbl_int += 1;
+      }
+    }
+    for (size_t i = 0; i < TOUT_labels.size(); i++) {
+      this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
+    }
+
+    #ifdef UNI_GPU
+     #ifdef UNI_CUQUANTUM
+       this->optimizerInfo = nullptr;
+     #endif
+    #endif
+
+    vector<string> names;
+    for (int i = 0; i < this->names.size(); i++) {
+      names.push_back(this->names[i]);
+      CtTree.base_nodes[i].name = this->names[i];
+    }
+    if (ORDER_tokens.size() != 0) {
+      CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+    } else {
+      CtTree.build_default_contraction_tree();
+    }
+    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }
 
   void RegularNetwork::Fromfile(const string &fname) {
@@ -604,7 +680,6 @@ namespace cytnx {
 
     this->tensors[idx] = utensor;
     this->CtTree.base_nodes[idx].utensor = utensor.relabels(this->label_arr[idx]);  // this conflict
-    this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
     this->CtTree.base_nodes[idx].is_assigned = true;
   }
 
@@ -787,24 +862,26 @@ namespace cytnx {
             out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
           }
           cutensornet cutn;
-          cutn.parseLabels(this->TOUT_labels, this->label_arr);
-          cutn.updateOutputShape(out_shape);
-          cutn.set_extents(this->tensors);
-          cutn.checkVersion();
           cutn.setDevice(this->tensors[0].device());
           cutn.createStream();
           cutn.createHandle();
+          cutn.parseLabels(this->int_out_mode, this->int_modes);
+          cutn.set_output_extents(out_shape);
+          cutn.set_extents(this->tensors);
+          cutn.checkVersion();
           this->descNet = cutn.createNetworkDescriptor();
           cutn.getWorkspacelimit();
           this->optimizerInfo = cutn.findOptimalOrder();
+        
+          // Get contraction path
+          vector<pair<cytnx_int64, cytnx_int64>> path = cutn.getContractionPath();
           cutn.freeHandle();
 
-          // Get contraction path
-          vector<pair<int, int>> path = cutn.getContractionPath();
           vector<string> names;
           for (int i = 0; i < this->names.size(); i++) {
             names.push_back(this->names[i]);
           }
+          this->einsum_path = path;
           this->order_line = einsumpath_to_string(path, names);
         }
   #else
@@ -823,6 +900,8 @@ namespace cytnx {
       this->order_line = contract_order;
       if (contract_order != "") {
         _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
+        CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+        this->einsum_path = CtTree_to_eisumpath(CtTree, names);
       }
     }
   }
@@ -945,23 +1024,30 @@ namespace cytnx {
         for (int i = 0; i < this->TOUT_labels.size(); i++) {
           out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
         }
-
         UniTensor out =
           UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
-
         cutensornet cutn;
-        cutn.updateOutputShape(out_shape);
-        cutn.setOutputMem(out);
-        cutn.setInputMem(this->tensors);
+        cutn.setDevice(this->tensors[0].device());
         cutn.createStream();
         cutn.createHandle();
-        cutn.setNetworkDescriptor(this->descNet);
-        cutn.setOptimizerInfo(this->optimizerInfo);
+        cutn.parseLabels(this->int_out_mode, this->int_modes);
+        cutn.set_output_extents(out_shape);
+        cutn.set_extents(this->tensors);
+        this->descNet = cutn.createNetworkDescriptor();
+        cutn.setOutputMem(out);
+        cutn.setInputMem(this->tensors);
+        // cutn.setNetworkDescriptor(this->descNet);
+        if(optimizerInfo != nullptr){
+          cutn.setOptimizerInfo(this->optimizerInfo);
+        }else{
+          //std::cout<<"No optimizer info, creating new one with default value."<<std::endl;
+          this->optimizerInfo = cutn.createOptimizerInfo();
+        }
+        cutn.setContractionPath(einsum_path);
         cutn.createWorkspaceDescriptor();
         cutn.initializePlan();
         cutn.autotune();
         cutn.executeContraction();
-
         cutn.freePlan();
         cutn.freeWorkspaceDescriptor();
         cutn.freeHandle();

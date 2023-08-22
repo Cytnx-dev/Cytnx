@@ -100,12 +100,12 @@ namespace cytnx {
     UniTensor out;
     cutensornet();
     // ~cutensornet();
-    void parseLabels(std::vector<std::string> &res_label,
-                     std::vector<std::vector<std::string>> &labels);
+    void parseLabels(std::vector<int64_t> &res_label,
+                     std::vector<std::vector<int64_t>> &labels);
     void setOutputMem(UniTensor &res);
     void setInputMem(std::vector<UniTensor> &uts);
     void set_extents(std::vector<UniTensor> &uts);
-    void updateOutputShape(std::vector<cytnx_uint64> &outshape);
+    void set_output_extents(std::vector<cytnx_uint64> &outshape);
     void checkVersion();
     void setDevice(int id);
     void createStream();
@@ -113,13 +113,14 @@ namespace cytnx {
     cutensornetWorkspaceDescriptor_t createNetworkDescriptor();
     void getWorkspacelimit();
     cutensornetContractionOptimizerInfo_t findOptimalOrder();
+    cutensornetContractionOptimizerInfo_t createOptimizerInfo();
     void createWorkspaceDescriptor();
     void initializePlan();
     void autotune();
     void executeContraction();
 
-    void setContractionPath(std::vector<std::string> order_token);
-    std::vector<std::pair<int, int>> getContractionPath();
+    void setContractionPath(std::vector<std::pair<int64_t, int64_t>> einsum_path);
+    std::vector<std::pair<int64_t, int64_t>> getContractionPath();
 
     void setNetworkDescriptor(cutensornetNetworkDescriptor_t in);
     void setOptimizerInfo(cutensornetContractionOptimizerInfo_t in);

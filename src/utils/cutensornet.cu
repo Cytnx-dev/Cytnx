@@ -81,7 +81,7 @@ namespace cytnx {
     // modesIn =  std::vector<int32_t *>();
     // numModesIn = std::vector<int32_t>();
     // modesR = std::vector<int32_t>();
-    verbose = true;
+    verbose = false;
   };
 
   // cutensornet::~cutensornet() {
@@ -110,9 +110,9 @@ namespace cytnx {
   //   tmp_extents.clear();
   // };
 
-  void cutensornet::parseLabels(std::vector<std::string> &res_label,
-                                std::vector<std::vector<std::string>> &labels) {
-    int64_t lbl_int = 0;
+  void cutensornet::parseLabels(std::vector<int64_t> &res_label,
+                                std::vector<std::vector<int64_t>> &labels) {
+    // int64_t lbl_int = 0;
 
     extentsIn = std::vector<int64_t *>(labels.size());
     stridesIn = std::vector<int64_t *>(labels.size());
@@ -127,29 +127,22 @@ namespace cytnx {
     rawDataIn_d = std::vector<void *>(labels.size());
 
     for (size_t i = 0; i < labels.size(); i++) {
-      // tmp_modes.push_back(std::vector<int32_t>(labels[i].size()));
-      // tmp_extents.push_back(std::vector<int64_t>(labels[i].size()));
       tmp_modes[i] = std::vector<int32_t>(labels[i].size());
       tmp_extents[i] = std::vector<int64_t>(labels[i].size());
       for (size_t j = 0; j < labels[i].size(); j++) {
-        lblmap.insert(
-          std::pair<std::string, int64_t>(labels[i][labels[i].size() - 1 - j], lbl_int));
-        tmp_modes[i][j] = (lblmap[labels[i][labels[i].size() - 1 - j]]);
-        lbl_int += 1;
+        tmp_modes[i][j] = (labels[i][labels[i].size() - 1 - j]);
       }
-      // modesIn.push_back(tmp_modes[i].data());
-      // numModesIn.push_back(labels[i].size());
       modesIn[i] = tmp_modes[i].data();
       numModesIn[i] = labels[i].size();
     }
     for (size_t i = 0; i < res_label.size(); i++) {
-      modesR[i] = lblmap[res_label[res_label.size() - 1 - i]];
+      modesR[i] = res_label[res_label.size() - 1 - i];
     }
     numInputs = labels.size();
     nmodeR = res_label.size();
   }
 
-  void cutensornet::updateOutputShape(std::vector<cytnx_uint64> &outshape) {
+  void cutensornet::set_output_extents(std::vector<cytnx_uint64> &outshape) {
     extentR = std::vector<int64_t>(outshape.size());
     // reversed tranversal the labels and extents because cuTensor is column-major by default
     for (size_t i = 0; i < outshape.size(); i++) extentR[i] = outshape[outshape.size() - 1 - i];
@@ -187,16 +180,20 @@ namespace cytnx {
     }
   }
 
-  void cutensornet::setContractionPath(std::vector<std::string> order_token) {
+  void cutensornet::setContractionPath(std::vector<std::pair<int64_t, int64_t>> einsum_path) {
     // cutensornetContractionOptimizerConfigAttributes_t attr
     cutensornetContractionPath_t path;
-    path.numContractions = 0;
-    path.data = (cutensornetNodePair_t *)malloc(100 * sizeof(cutensornetNodePair_t));
+    path.numContractions = einsum_path.size();
+    path.data = (cutensornetNodePair_t *)malloc(einsum_path.size() * sizeof(cutensornetNodePair_t));
+    for(int i = 0; i< einsum_path.size();i++){
+      path.data[i].first = einsum_path[i].first;
+      path.data[i].second = einsum_path[i].second;
+    }
     HANDLE_ERROR(cutensornetContractionOptimizerInfoSetAttribute(
       handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
   }
 
-  std::vector<std::pair<int32_t, int32_t>> cutensornet::getContractionPath() {
+  std::vector<std::pair<int64_t, int64_t>> cutensornet::getContractionPath() {
     cutensornetContractionPath_t path;
     path.numContractions = 0;
     path.data = (cutensornetNodePair_t *)malloc(100 * sizeof(cutensornetNodePair_t));
@@ -204,14 +201,14 @@ namespace cytnx {
     HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
       handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
 
-    std::vector<std::pair<int32_t, int32_t>> einsum_path;
+    std::vector<std::pair<int64_t, int64_t>> einsum_path;
 
-    std::cout << "Number of contractions : " << path.numContractions << std::endl;
-    for (int i = 0; i < path.numContractions; i++) {
-      einsum_path.push_back(
-        std::pair<int32_t, int32_t>((int32_t)path.data[i].first, (int32_t)path.data[i].second));
-      std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
-    }
+    // std::cout << "Number of contractions : " << path.numContractions << std::endl;
+    // for (int i = 0; i < path.numContractions; i++) {
+    //   einsum_path.push_back(
+    //     std::pair<int64_t, int64_t>((int64_t)path.data[i].first, (int64_t)path.data[i].second));
+    //   std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
+    // }
     // HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
     //   handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
     //   sizeof(numSlices))); //get numslices
@@ -318,6 +315,13 @@ namespace cytnx {
     HANDLE_ERROR(cutensornetDestroyContractionOptimizerConfig(optimizerConfig));
     return optimizerInfo;
   }
+  
+  cutensornetContractionOptimizerInfo_t cutensornet::createOptimizerInfo() {
+    HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(
+      handle, descNet,
+      &optimizerInfo));  // OptimizerInfo means the info of optimized path and slices.
+    return optimizerInfo;
+  }
 
   void cutensornet::createWorkspaceDescriptor() {
     HANDLE_ERROR(cutensornetCreateWorkspaceDescriptor(handle, &workDesc));
@@ -365,40 +369,48 @@ namespace cytnx {
   }
 
   void cutensornet::executeContraction() {
-    cutensornetSliceGroup_t sliceGroup_{};
-    HANDLE_ERROR(cutensornetCreateSliceGroupFromIDRange(handle, 0, numSlices, 1, &sliceGroup_));
-    // GPUTimer timer{stream};
-    // double minTimeCUTENSORNET = 1e100;
-    // const int numRuns = 10;  // number of repeats to get stable performance results
+    HANDLE_ERROR( cutensornetContractionOptimizerInfoGetAttribute(
+                  handle,
+                  optimizerInfo,
+                  CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES,
+                  &numSlices,
+                  sizeof(numSlices)));
+    HANDLE_ERROR(cutensornetCreateSliceGroupFromIDRange(handle, 0, numSlices, 1, &sliceGroup));
+
+    HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
+    GPUTimer timer{stream};
+    double minTimeCUTENSORNET = 1e100;
+    const int numRuns = 10;  // number of repeats to get stable performance results
+
     // for (int i = 0; i < numRuns; ++i) {
     /*
      * Contract all slices of the tensor network
      */
-    // timer.start();
+    timer.start();
 
     int32_t accumulateOutput = 0;  // output tensor data will be overwritten
     // HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
     HANDLE_ERROR(
       cutensornetContractSlices(handle, plan, rawDataIn_d.data(), R_d, accumulateOutput, workDesc,
-                                NULL,  // alternatively, NULL can also be used to contract over all
+                                sliceGroup,  // alternatively, NULL can also be used to contract over all
                                        // slices instead of specifying a sliceGroup object
                                 stream));
     HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
     // Synchronize and measure best timing
-    // auto time = timer.seconds();
-    // minTimeCUTENSORNET = (time > minTimeCUTENSORNET) ? minTimeCUTENSORNET : time;
-    // }
+    auto time = timer.seconds();
+    minTimeCUTENSORNET = (time > minTimeCUTENSORNET) ? minTimeCUTENSORNET : time;
+    
     if (verbose)
       printf("Contracted the tensor network, each slice used the same contraction plan\n");
 
     // HANDLE_CUDA_ERROR( cudaMemcpy(R, R_d, sizeR, cudaMemcpyDeviceToHost) ); // restore the
     // output tensor on Host
 
-    // if (verbose) {
-    //   printf("Number of tensor network slices = %ld\n", numSlices);
-    //   printf("Tensor network contraction time (ms) = %.3f\n", minTimeCUTENSORNET * 1000.f);
-    // }
-    HANDLE_ERROR(cutensornetDestroySliceGroup(sliceGroup_));
+    if (verbose) {
+      printf("Number of tensor network slices = %ld\n", numSlices);
+      printf("Tensor network contraction time (ms) = %.3f\n", minTimeCUTENSORNET * 1000.f);
+    }
+    HANDLE_ERROR(cutensornetDestroySliceGroup(sliceGroup));
     // HANDLE_ERROR(cutensornetDestroyContractionPlan(plan));
   }
 
