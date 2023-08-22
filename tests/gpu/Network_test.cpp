@@ -40,7 +40,7 @@ TEST_F(NetworkTest, gpu_Network_dense_find_optimal) {
 
 TEST_F(NetworkTest, gpu_Network_dense_order_line) {
   auto net = Network();
-  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "ORDER:(A,(B,C))","TOUT: a,b;e"});
+  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "ORDER:(A,(B,C))", "TOUT: a,b;e"});
   net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
   EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
 }

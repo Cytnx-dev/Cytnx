@@ -185,7 +185,7 @@ namespace cytnx {
     cutensornetContractionPath_t path;
     path.numContractions = einsum_path.size();
     path.data = (cutensornetNodePair_t *)malloc(einsum_path.size() * sizeof(cutensornetNodePair_t));
-    for(int i = 0; i< einsum_path.size();i++){
+    for (int i = 0; i < einsum_path.size(); i++) {
       path.data[i].first = einsum_path[i].first;
       path.data[i].second = einsum_path[i].second;
     }
@@ -315,7 +315,7 @@ namespace cytnx {
     HANDLE_ERROR(cutensornetDestroyContractionOptimizerConfig(optimizerConfig));
     return optimizerInfo;
   }
-  
+
   cutensornetContractionOptimizerInfo_t cutensornet::createOptimizerInfo() {
     HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(
       handle, descNet,
@@ -369,12 +369,9 @@ namespace cytnx {
   }
 
   void cutensornet::executeContraction() {
-    HANDLE_ERROR( cutensornetContractionOptimizerInfoGetAttribute(
-                  handle,
-                  optimizerInfo,
-                  CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES,
-                  &numSlices,
-                  sizeof(numSlices)));
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
+      sizeof(numSlices)));
     HANDLE_ERROR(cutensornetCreateSliceGroupFromIDRange(handle, 0, numSlices, 1, &sliceGroup));
 
     HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
@@ -390,16 +387,16 @@ namespace cytnx {
 
     int32_t accumulateOutput = 0;  // output tensor data will be overwritten
     // HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
-    HANDLE_ERROR(
-      cutensornetContractSlices(handle, plan, rawDataIn_d.data(), R_d, accumulateOutput, workDesc,
-                                sliceGroup,  // alternatively, NULL can also be used to contract over all
-                                       // slices instead of specifying a sliceGroup object
-                                stream));
+    HANDLE_ERROR(cutensornetContractSlices(
+      handle, plan, rawDataIn_d.data(), R_d, accumulateOutput, workDesc,
+      sliceGroup,  // alternatively, NULL can also be used to contract over all
+                   // slices instead of specifying a sliceGroup object
+      stream));
     HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
     // Synchronize and measure best timing
     auto time = timer.seconds();
     minTimeCUTENSORNET = (time > minTimeCUTENSORNET) ? minTimeCUTENSORNET : time;
-    
+
     if (verbose)
       printf("Contracted the tensor network, each slice used the same contraction plan\n");
 

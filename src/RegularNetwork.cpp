@@ -205,7 +205,8 @@ namespace cytnx {
     return res;
   }
 
-  vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree, vector<string> tns){
+  vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree,
+                                                             vector<string> tns) {
     vector<pair<cytnx_int64, cytnx_int64>> path;
     stack<Node *> stk;
     Node *root = &(CtTree.nodes_container.back());
@@ -230,9 +231,9 @@ namespace cytnx {
       }
       if (ict) {
         if ((root->right != nullptr) && (root->left != nullptr)) {
-          auto it = find(tns.begin(),tns.end(), root->left->name);
+          auto it = find(tns.begin(), tns.end(), root->left->name);
           int id1 = it - tns.begin();
-          it = find(tns.begin(),tns.end(), root->right->name);
+          it = find(tns.begin(), tns.end(), root->right->name);
           int id2 = it - tns.begin();
           tns.erase(tns.begin() + id1);
           if (id1 > id2)
@@ -240,7 +241,7 @@ namespace cytnx {
           else
             tns.erase(tns.begin() + id2 - 1);
           tns.push_back(root->name);
-          path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1,id2));
+          path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1, id2));
         }
         root = nullptr;
       }
@@ -582,10 +583,10 @@ namespace cytnx {
       }
     }
 
-    //get int_label
+    // get int_label
     std::map<std::string, cytnx_int64> lblmap = std::map<std::string, cytnx_int64>();
     this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
-    this->int_out_mode =  std::vector<cytnx_int64>(this->TOUT_labels.size());
+    this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
     cytnx_int64 lbl_int = 0;
     for (size_t i = 0; i < this->label_arr.size(); i++) {
       this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
@@ -599,11 +600,11 @@ namespace cytnx {
       this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
     }
 
-    #ifdef UNI_GPU
-     #ifdef UNI_CUQUANTUM
-       this->optimizerInfo = nullptr;
-     #endif
-    #endif
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    this->optimizerInfo = nullptr;
+  #endif
+#endif
 
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
@@ -872,7 +873,7 @@ namespace cytnx {
           this->descNet = cutn.createNetworkDescriptor();
           cutn.getWorkspacelimit();
           this->optimizerInfo = cutn.findOptimalOrder();
-        
+
           // Get contraction path
           vector<pair<cytnx_int64, cytnx_int64>> path = cutn.getContractionPath();
           cutn.freeHandle();
@@ -1037,10 +1038,10 @@ namespace cytnx {
         cutn.setOutputMem(out);
         cutn.setInputMem(this->tensors);
         // cutn.setNetworkDescriptor(this->descNet);
-        if(optimizerInfo != nullptr){
+        if (optimizerInfo != nullptr) {
           cutn.setOptimizerInfo(this->optimizerInfo);
-        }else{
-          //std::cout<<"No optimizer info, creating new one with default value."<<std::endl;
+        } else {
+          // std::cout<<"No optimizer info, creating new one with default value."<<std::endl;
           this->optimizerInfo = cutn.createOptimizerInfo();
         }
         cutn.setContractionPath(einsum_path);
