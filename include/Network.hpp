@@ -67,6 +67,19 @@ namespace cytnx {
     std::vector<std::vector<cytnx_int64>> int_modes;
     std::vector<cytnx_int64> int_out_mode;
 
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    // // stream
+    // cudaStream_t stream;
+    // // cutensornet handle
+    // cutensornetHandle_t handle;
+
+    // network descriptor
+    cutensornetNetworkDescriptor_t descNet;
+    // optimizer info
+    cutensornetContractionOptimizerInfo_t optimizerInfo;
+  #endif
+#endif
     friend class FermionNetwork;
     friend class RegularNetwork;
     friend class Network;
@@ -127,21 +140,6 @@ namespace cytnx {
   };  // Network_base
 
   class RegularNetwork : public Network_base {
-   private:
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    // // stream
-    // cudaStream_t stream;
-    // // cutensornet handle
-    // cutensornetHandle_t handle;
-
-    // network descriptor
-    cutensornetNetworkDescriptor_t descNet;
-    // optimizer info
-    cutensornetContractionOptimizerInfo_t optimizerInfo;
-  #endif
-#endif
-
    public:
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
     void Fromfile(const std::string &fname);
