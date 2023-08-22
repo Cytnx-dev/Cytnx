@@ -5,6 +5,13 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+      #include "linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
+  #endif
+#endif
+
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
@@ -67,6 +74,97 @@ namespace cytnx {
   namespace linalg {
     using namespace std;
     typedef Accessor ac;
+
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
+    void _cuquantum_gesvdj_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
+                                  const bool &is_vT, const unsigned int &return_err){
+
+        //Retrieve tensor from UniTensor
+        Tensor tmp;
+        if (Tin.is_contiguous())
+          tmp = Tin.get_block_();
+        else {
+          tmp = Tin.get_block();
+          tmp.contiguous_();
+        }
+      
+        vector<cytnx_uint64> tmps = tmp.shape();
+        vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+        tmps.clear();
+        vector<string> oldlabel = Tin.labels();
+
+        // collapse as Matrix:
+        cytnx_int64 rowdim = 1;
+        for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
+        tmp.reshape_({rowdim, -1});
+
+        cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(tmp.shape()[0], tmp.shape()[1]));
+        Tensor in = tmp.contiguous();
+        //if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
+
+        //prepare U, S, vT
+        Tensor U, S, vT;
+        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+              in.device());  // if type is complex, S should be real
+        U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+        vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+
+        linalg_internal::cuQuantumGeSvd_internal_cd(in, keepdim, err, return_err, U, S, vT); 
+        
+        std::vector<Tensor> outT;
+        outT.push_back(S);
+        outT.push_back(U);
+        outT.push_back(vT);
+
+        //set output
+        int t = 0;
+        outCyT.resize(outT.size());
+        cytnx::UniTensor &Cy_S = outCyT[t];
+        cytnx::Bond newBond(outT[0].shape()[0]);
+        Cy_S.Init({newBond, newBond}, {string("_aux_L"), string("_aux_R")}, 1, Type.Double,
+                  Device.cpu,
+                  true);  // it is just reference so no hurt to alias ^^
+        Cy_S.put_block_(outT[t]);
+        t++;
+
+        if (is_U) {
+          cytnx::UniTensor &Cy_U = outCyT[t];
+          // shape
+          vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
+          shapeU.push_back(-1);
+
+          outT[t].reshape_(shapeU);
+
+          Cy_U.Init(outT[t], false, Tin.rowrank());
+          vector<string> labelU = vec_clone(oldlabel, Tin.rowrank());
+          labelU.push_back(Cy_S.labels()[0]);
+          Cy_U.set_labels(labelU);
+          t++;  // U
+        }
+
+        if (is_vT) {
+          cytnx::UniTensor &Cy_vT = outCyT[t];
+          // shape
+          vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
+          shapevT[0] = -1;
+          memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
+
+          outT[t].reshape_(shapevT);
+
+          Cy_vT.Init(outT[t], false, 1);
+          vector<string> labelvT(shapevT.size());
+          labelvT[0] = Cy_S.labels()[1];
+          std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
+          Cy_vT.set_labels(labelvT);
+          t++;  // vT
+        }
+
+        //if (return_err) outCyT.back().Init(outT.back(), false, 0);
+    }
+    #endif
+  #endif
 
     void _gesvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                   const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
@@ -330,7 +428,22 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
+        if(Tin.device() == -1){
+          _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
+        }else{
+          #ifdef UNI_GPU
+            #ifdef UNI_CUQUANTUM
+              _cuquantum_gesvdj_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
+            #else
+              cytnx_error_msg(true, "[cuQuantumSvd] fatal error,%s",
+                          "try to call the cuquantum section without cuQunatum support.\n");
+            #endif
+
+          #else
+              cytnx_error_msg(true, "[cuQuantumSvd] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          #endif
+        }
 
       } else if (Tin.uten_type() == UTenType.Block) {
         _gesvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
@@ -339,6 +452,8 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR] only support gesvd for Dense and Block UniTensor.%s", "\n");
       }
       return outCyT;
+
+
 
     }  // Gesvd_truncate
 

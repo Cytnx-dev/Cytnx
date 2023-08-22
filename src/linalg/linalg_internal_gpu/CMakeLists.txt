@@ -30,7 +30,7 @@ target_sources_local(cytnx
     cuMaxMin_internal.hpp
     cuKron_internal.hpp
     cuTensordot_internal.hpp
-
+    cuQuantumGeSvd_internal.hpp
 
     cuAbs_internal.cu
     cuAdd_internal.cu
@@ -63,4 +63,5 @@ target_sources_local(cytnx
     cuMaxMin_internal.cu
     cuKron_internal.cu
     cuTensordot_internal.cu
+    cuQuantumGeSvd_internal.cu
 )
