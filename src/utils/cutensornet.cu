@@ -196,23 +196,23 @@ namespace cytnx {
   std::vector<std::pair<int64_t, int64_t>> cutensornet::getContractionPath() {
     cutensornetContractionPath_t path;
     path.numContractions = 0;
-    path.data = (cutensornetNodePair_t *)malloc(100 * sizeof(cutensornetNodePair_t));
+    path.data = (cutensornetNodePair_t *)malloc(numInputs * sizeof(cutensornetNodePair_t));
 
     HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
       handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
 
     std::vector<std::pair<int64_t, int64_t>> einsum_path;
 
-    // std::cout << "Number of contractions : " << path.numContractions << std::endl;
-    // for (int i = 0; i < path.numContractions; i++) {
-    //   einsum_path.push_back(
-    //     std::pair<int64_t, int64_t>((int64_t)path.data[i].first, (int64_t)path.data[i].second));
-    //   std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
-    // }
-    // HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
-    //   handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
-    //   sizeof(numSlices))); //get numslices
-    // assert(numSlices > 0);
+    //std::cout << "Number of contractions : " << path.numContractions << std::endl;
+    for (int i = 0; i < path.numContractions; i++) {
+      einsum_path.push_back(
+        std::pair<int64_t, int64_t>((int64_t)path.data[i].first, (int64_t)path.data[i].second));
+      //std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
+    }
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
+      sizeof(numSlices))); //get numslices
+    assert(numSlices > 0);
 
     return einsum_path;
   }

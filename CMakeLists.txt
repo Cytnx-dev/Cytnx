@@ -386,7 +386,7 @@ if(USE_CUDA)
 #      -gencode=arch=compute_75,code=sm_75 \
 #      -gencode=arch=compute_75,code=compute_75 ")
   set_target_properties(cytnx PROPERTIES CUDA_ARCHITECTURES native)
-  target_compile_definitions(cytnx PRIVATE UNI_GPU)
+  target_compile_definitions(cytnx PUBLIC UNI_GPU)
   #target_compile_options(cytnx PRIVATE ${CMAKE_CUDA_FLAGS})
   #target_compile_options(cytnx PRIVATE $<$<COMPILE_LANGUAGE:CUDA>:>)
   target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})

@@ -1038,13 +1038,15 @@ namespace cytnx {
         cutn.setOutputMem(out);
         cutn.setInputMem(this->tensors);
         // cutn.setNetworkDescriptor(this->descNet);
-        if (optimizerInfo != nullptr) {
+        if (this->optimizerInfo != nullptr) {
           cutn.setOptimizerInfo(this->optimizerInfo);
         } else {
-          // std::cout<<"No optimizer info, creating new one with default value."<<std::endl;
           this->optimizerInfo = cutn.createOptimizerInfo();
         }
         cutn.setContractionPath(einsum_path);
+
+        //cutn.getContractionPath();
+
         cutn.createWorkspaceDescriptor();
         cutn.initializePlan();
         cutn.autotune();
