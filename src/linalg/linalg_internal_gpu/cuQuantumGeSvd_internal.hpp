@@ -11,7 +11,6 @@
 #include "lapack_wrapper.hpp"
 #include "linalg/linalg_internal_interface.hpp"
 
-
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
     #include <cutensornet.h>
@@ -21,14 +20,15 @@
 
 namespace cytnx {
   namespace linalg_internal {
-    
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
     /// cuSvd
     void cuQuantumGeSvd_internal_cd(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                       const double &err, const unsigned int &return_err, Tensor U, Tensor S, Tensor vT);
-    #endif
+                                    const double &err, const unsigned int &return_err, Tensor U,
+                                    Tensor S, Tensor vT);
   #endif
+#endif
 
   }  // namespace linalg_internal
 }  // namespace cytnx
