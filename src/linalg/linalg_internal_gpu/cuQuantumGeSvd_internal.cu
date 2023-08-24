@@ -108,7 +108,7 @@ namespace cytnx {
       printf("========================\n");
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_R_64F;
+      cudaDataType_t typeData = CUDA_C_64F;
       /******************
        * cuTensorNet
        *******************/
@@ -162,7 +162,7 @@ namespace cytnx {
       HANDLE_ERROR(cutensornetCreateTensorSVDConfig(handle, &svdConfig));
 
       // set up truncation parameters
-      double absCutoff = 0;
+      double absCutoff = err;
       HANDLE_ERROR(cutensornetTensorSVDConfigSetAttribute(handle, svdConfig,
                                                           CUTENSORNET_TENSOR_SVD_CONFIG_ABS_CUTOFF,
                                                           &absCutoff, sizeof(absCutoff)));

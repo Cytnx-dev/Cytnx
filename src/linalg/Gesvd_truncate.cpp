@@ -100,7 +100,7 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp.reshape_({rowdim, -1});
 
-      cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(tmp.shape()[0], tmp.shape()[1]));
+      cytnx_uint64 n_singlu = std::min(keepdim, std::min(tmp.shape()[0], tmp.shape()[1]));
       Tensor in = tmp.contiguous();
       // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
