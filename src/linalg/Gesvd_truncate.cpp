@@ -5,6 +5,8 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
+#include "linalg_internal_interface.hpp"
+
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
     #include "linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
@@ -111,7 +113,9 @@ namespace cytnx {
       U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
       vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
 
-      linalg_internal::cuQuantumGeSvd_internal_cd(in, keepdim, err, return_err, U, S, vT);
+      // linalg_internal::cuQuantumGeSvd_internal_cd(in, keepdim, err, return_err, U, S, vT);
+      cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U, S,
+                                                                vT);
 
       std::vector<Tensor> outT;
       outT.push_back(S);

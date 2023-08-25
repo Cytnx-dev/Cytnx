@@ -25,8 +25,17 @@ namespace cytnx {
   #ifdef UNI_CUQUANTUM
     /// cuSvd
     void cuQuantumGeSvd_internal_cd(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                    const double &err, const unsigned int &return_err, Tensor U,
-                                    Tensor S, Tensor vT);
+                                    const double &err, const unsigned int &return_err, Tensor &U,
+                                    Tensor &S, Tensor &vT);
+    void cuQuantumGeSvd_internal_cf(const Tensor &Tin, const cytnx_uint64 &keepdim,
+                                    const double &err, const unsigned int &return_err, Tensor &U,
+                                    Tensor &S, Tensor &vT);
+    void cuQuantumGeSvd_internal_d(const Tensor &Tin, const cytnx_uint64 &keepdim,
+                                   const double &err, const unsigned int &return_err, Tensor &U,
+                                   Tensor &S, Tensor &vT);
+    void cuQuantumGeSvd_internal_f(const Tensor &Tin, const cytnx_uint64 &keepdim,
+                                   const double &err, const unsigned int &return_err, Tensor &U,
+                                   Tensor &S, Tensor &vT);
   #endif
 #endif
 
