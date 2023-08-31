@@ -90,7 +90,8 @@ namespace cytnx {
                                            Type.typeSize(dtype_id));
 #else
         cytnx_error_msg(
-          true, "[ERROR][Hstack] fatal error, the tensor is on GPU without CUDA support.%s", "\n");
+          true, "[ERROR][Hstack_] input is on GPU but current cytnx is compiled without GPU.%s",
+          "\n");
 #endif
       }
 

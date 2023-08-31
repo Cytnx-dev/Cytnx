@@ -28,7 +28,7 @@ HPTT_Enable=1
 CUTT_Enable=0
 
 ## comiple with cuTensor library:
-CUTN_Enable=1
+CUTN_Enable=0
 CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 
 ## compile with cuQuantum library:

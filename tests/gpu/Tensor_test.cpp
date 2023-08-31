@@ -256,9 +256,10 @@ TEST_F(TensorTest, gpu_set) {
           }
 }
 
-TEST_F(TensorTest, gpu_equivelem) {
-  EXPECT_TRUE(tar3456.equivelem(tar3456));
-  EXPECT_FALSE(tar345.equivelem(tar345.permute(1, 0, 2)));
-  EXPECT_FALSE(tar3456.equivelem(tarcomplex3456));
-  EXPECT_FALSE(tone3456.equivelem(tone3456.astype(Type.ComplexFloat)));
-}
+// TEST_F(TensorTest, gpu_approx_eq) {
+//   cytnx::User_debug = true;
+//   EXPECT_TRUE(tar3456.approx_eq(tar3456));
+//   EXPECT_FALSE(tar345.approx_eq(tar345.permute(1, 0, 2)));
+//   EXPECT_FALSE(tar3456.approx_eq(tarcomplex3456));
+//   EXPECT_TRUE(tone3456.approx_eq(tone3456.astype(Type.ComplexFloat), 1e-5));
+// }

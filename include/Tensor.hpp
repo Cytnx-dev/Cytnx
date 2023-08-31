@@ -602,6 +602,13 @@ namespace cytnx {
       std::vector<cytnx_int64> tmp = accs;
       return (*this)[tmp];
     }
+    const Tproxy operator[](const std::vector<cytnx_uint64> &accs) const {
+      std::vector<cytnx::Accessor> acc_in;
+      for (int i = 0; i < accs.size(); i++) {
+        acc_in.push_back(cytnx::Accessor(accs[i]));
+      }
+      return Tproxy(this->_impl, acc_in);
+    }
     const Tproxy operator[](const std::vector<cytnx_int64> &accs) const {
       std::vector<cytnx::Accessor> acc_in;
       for (int i = 0; i < accs.size(); i++) {
@@ -1567,34 +1574,37 @@ namespace cytnx {
       return *this == rhs;
     }
 
-    /**
-     * @brief Compare each element of the current tensor with the input tensor.
-     * @details This function Compare each element of the current tensor with the input tensor.
-     * @param[in] rhs the compared tensor.
-     */
-    bool equivelem(const Tensor &rhs, const cytnx_double tol = 0) {
-      if (this->device() != rhs.device()) {
-        std::cout << "[equivelem] Tensor device " << this->device()
-                  << "not equal to rhs tensor device " << rhs.device() << std::endl;
-        return false;
-      }
-      if (this->dtype() != rhs.dtype()) {
-        std::cout << "[equivelem] Tensor dtype " << this->dtype()
-                  << "not equal to rhs tensor dtype " << rhs.dtype() << std::endl;
-        return false;
-      }
-      if (this->shape() != rhs.shape()) {
-        std::cout << "[equivelem] Tensor shape " << this->shape()
-                  << "not equal to rhs tensor shape " << rhs.shape() << std::endl;
-        return false;
-      }
-      if (this->is_contiguous() != rhs.is_contiguous()) {
-        std::cout << "[AreNearlyEqTensor] Tensor contiguous flag " << this->is_contiguous()
-                  << "not equal to rhs tensor flag " << rhs.is_contiguous() << std::endl;
-        return false;
-      }
-      return this->_impl->_storage.equivelem(rhs._impl->_storage._impl, tol);
-    }
+    // /**
+    //  * @brief Compare each element of the current tensor with the input tensor.
+    //  * @details This function Compare each element of the current tensor with the input tensor.
+    //  * @param[in] rhs the compared tensor.
+    //  */
+    // bool approx_eq(const Tensor &rhs, const cytnx_double tol = 0) {
+    //   if (this->device() != rhs.device()) {
+    //     if (User_debug)
+    //       std::cout << "[approx_eq] Tensor device " << this->device()
+    //                 << "not equal to rhs tensor device " << rhs.device() << std::endl;
+    //     return false;
+    //   }
+    //   // if (this->dtype() != rhs.dtype()) {
+    //   //   std::cout << "[approx_eq] Tensor dtype " << this->dtype()
+    //   //             << "not equal to rhs tensor dtype " << rhs.dtype() << std::endl;
+    //   //   return false;
+    //   // }
+    //   if (this->shape() != rhs.shape()) {
+    //     if (User_debug)
+    //       std::cout << "[approx_eq] Tensor shape " << this->shape()
+    //                 << "not equal to rhs tensor shape " << rhs.shape() << std::endl;
+    //     return false;
+    //   }
+    //   if (this->is_contiguous() != rhs.is_contiguous()) {
+    //     if (User_debug)
+    //       std::cout << "[AreNearlyEqTensor] Tensor contiguous flag " << this->is_contiguous()
+    //                 << "not equal to rhs tensor flag " << rhs.is_contiguous() << std::endl;
+    //     return false;
+    //   }
+    //   return this->_impl->_storage.approx_eq(rhs._impl->_storage._impl, tol);
+    // }
 
     // template<class T>
     // Tensor& Cpr_(const T &rhs){

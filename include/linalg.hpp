@@ -12,6 +12,7 @@
 
 namespace cytnx {
   int set_mkl_ilp64();
+  int get_mkl_code();
 
   /**
    * @brief The addtion operator between two UniTensor.
@@ -709,14 +710,14 @@ namespace cytnx {
      * do the truncation on the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For more details, please refer to the documentation of the function
      * Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *              const bool &is_UvT, const bool &return_err).
+     *              const bool &is_UvT, const unsigned int &return_err).
      * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *                   const bool &is_UvT, const bool &return_err)
+     *                   const bool &is_UvT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err = 0,
                                                const bool &is_UvT = true,
-                                               const bool &return_err = false);
+                                               const unsigned int &return_err = 0);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
@@ -724,14 +725,14 @@ namespace cytnx {
      * do the truncation on the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For more details, please refer to the documentation of the function
      * Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *              const bool &is_U, const bool &is_vT, const bool &return_err).
+     *              const bool &is_U, const bool &is_vT, const unsigned int &return_err).
      * @see Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *                   const bool &is_U, const bool &is_vT, const bool &return_err)
+     *                   const bool &is_U, const bool &is_vT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim, const double &err = 0,
                                                  const bool &is_U = true, const bool &is_vT = true,
-                                                 const bool &return_err = false);
+                                                 const unsigned int &return_err = 0);
 
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
@@ -1471,7 +1472,7 @@ namespace cytnx {
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see \ref Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const
-    bool &is_UvT, const bool &return_err) "Svd_truncate"
+    bool &is_UvT, const unsigned int &return_err) "Svd_truncate"
     */
     std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT = true);
 
@@ -1502,7 +1503,7 @@ namespace cytnx {
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see \ref Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-    const bool &is_U, const bool &is_vT, const bool &return_err) "Gesvd_truncate"
+    const bool &is_U, const bool &is_vT, const unsigned int &return_err) "Gesvd_truncate"
     */
     std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
 
@@ -1525,8 +1526,9 @@ namespace cytnx {
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT whether need to return a left unitary matrix and a right unitary matrix.
     @param[in] return_err whether need to return the error. If \p return_err is \em true, then
-    the error will be pushed back to the vector. It is the smallest singular value in the
-    singular values matrix \f$ S \f$.
+    largest error will be pushed back to the vector (The smallest singular value in the return
+    singular values matrix \f$ S \f$.) If \p return_err is \em positive int, then it will return the
+    full list of truncated singular values.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1540,7 +1542,7 @@ namespace cytnx {
     */
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err = 0, const bool &is_UvT = true,
-                                     const bool &return_err = false);
+                                     const unsigned int &return_err = 0);
 
     // Gesvd_truncate:
     //==================================================
@@ -1562,8 +1564,9 @@ namespace cytnx {
     @param[in] is_U whether need to return a left unitary matrix.
     @param[in] is_vT whether need to return a right unitary matrix.
     @param[in] return_err whether need to return the error. If \p return_err is \em true, then
-    the error will be pushed back to the vector. It is the smallest singular value in the
-    singular values matrix \f$ S \f$.
+    largest error will be pushed back to the vector (The smallest singular value in the return
+    singular values matrix \f$ S \f$.) If \p return_err is \em positive int, then it will return the
+    full list of truncated singular values.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1578,7 +1581,8 @@ namespace cytnx {
     */
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err = 0, const bool &is_U = true,
-                                       const bool &is_vT = true, const bool &return_err = false);
+                                       const bool &is_vT = true,
+                                       const unsigned int &return_err = 0);
 
     // Hosvd:
     std::vector<Tensor> Hosvd(

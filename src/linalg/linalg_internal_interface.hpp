@@ -215,6 +215,7 @@ namespace cytnx {
 
       std::vector<axpy_oii> axpy_ii;
       std::vector<ger_oii> ger_ii;
+      int mkl_code;
 
 #ifdef UNI_GPU
       std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
@@ -247,6 +248,7 @@ namespace cytnx {
       linalg_internal_interface();
       ~linalg_internal_interface();
       int set_mkl_ilp64();
+      int get_mkl_code();
     };
     extern linalg_internal_interface lii;
   }  // namespace linalg_internal

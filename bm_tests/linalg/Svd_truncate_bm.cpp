@@ -2,41 +2,7 @@
 #include <cytnx.hpp>
 using namespace cytnx;
 
-namespace BMTest_Svd {
-
-  // Tensor
-  Tensor ConstructMat(const cytnx_uint64 row, const cytnx_uint64 col, const int dtype) {
-    Tensor T = Tensor({row, col}, dtype);
-    double l_bd, h_bd;
-    int rnd_seed;
-    return T;
-  }
-
-  static void BM_Tensor_Svd_F64(benchmark::State& state) {
-    // prepare data
-    auto row = state.range(0);
-    auto col = state.range(1);
-    Tensor T = ConstructMat(row, col, Type.Double);
-
-    // start test here
-    for (auto _ : state) {
-      std::vector<Tensor> svds = linalg::Svd(T);
-    }
-  }
-  BENCHMARK(BM_Tensor_Svd_F64)->Args({1, 1})->Args({10, 10})->Args({100, 100})->Args({1000, 1000});
-
-  static void BM_Tensor_Svd_C128(benchmark::State& state) {
-    // prepare data
-    auto row = state.range(0);
-    auto col = state.range(1);
-    Tensor T = ConstructMat(row, col, Type.ComplexDouble);
-
-    // start test here
-    for (auto _ : state) {
-      std::vector<Tensor> svds = linalg::Svd(T);
-    }
-  }
-  BENCHMARK(BM_Tensor_Svd_C128)->Args({1, 1})->Args({10, 10})->Args({100, 100})->Args({1000, 1000});
+namespace BMTest_Svd_truncate {
 
   // DenseUniTensor
   UniTensor ConstructDenseUT(const int D, const int dtype, const unsigned int device = Device.cpu) {
@@ -55,54 +21,54 @@ namespace BMTest_Svd {
     return UT;
   }
 
-  static void BM_DenseUT_Svd_F64(benchmark::State& state) {
+  static void BM_DenseUT_Svd_truncate_F64(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
     UniTensor UT = ConstructDenseUT(D, Type.Double);
 
     // start test here
     for (auto _ : state) {
-      std::vector<UniTensor> svds = linalg::Svd(UT);
+      std::vector<UniTensor> svds = linalg::Svd_truncate(UT, D);
     }
   }
-  BENCHMARK(BM_DenseUT_Svd_F64)->Args({1})->Args({5})->Args({50})->Args({500});
+  BENCHMARK(BM_DenseUT_Svd_truncate_F64)->Args({1})->Args({5})->Args({50})->Args({500});
 
-  static void BM_DenseUT_Svd_C128(benchmark::State& state) {
+  static void BM_DenseUT_Svd_truncate_C128(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
     UniTensor UT = ConstructDenseUT(D, Type.ComplexDouble);
 
     // start test here
     for (auto _ : state) {
-      std::vector<UniTensor> svds = linalg::Svd(UT);
+      std::vector<UniTensor> svds = linalg::Svd_truncate(UT, D);
     }
   }
-  BENCHMARK(BM_DenseUT_Svd_C128)->Args({1})->Args({5})->Args({50})->Args({500});
+  BENCHMARK(BM_DenseUT_Svd_truncate_C128)->Args({1})->Args({5})->Args({50})->Args({500});
 
 #ifdef UNI_GPU
-  static void BM_gpu_DenseUT_Svd_F64(benchmark::State& state) {
+  static void BM_gpu_DenseUT_Svd_truncate_F64(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
     UniTensor UT = ConstructDenseUT(D, Type.Double, Device.cuda);
 
     // start test here
     for (auto _ : state) {
-      std::vector<UniTensor> svds = linalg::Svd(UT);
+      std::vector<UniTensor> svds = linalg::Svd_truncate(UT, D);
     }
   }
-  BENCHMARK(BM_gpu_DenseUT_Svd_F64)->Args({1})->Args({5})->Args({50})->Args({500});
+  BENCHMARK(BM_gpu_DenseUT_Svd_truncate_F64)->Args({1})->Args({5})->Args({50});
 
-  static void BM_gpu_DenseUT_Svd_C128(benchmark::State& state) {
+  static void BM_gpu_DenseUT_Svd_truncate_C128(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
     UniTensor UT = ConstructDenseUT(D, Type.ComplexDouble, Device.cuda);
 
     // start test here
     for (auto _ : state) {
-      std::vector<UniTensor> svds = linalg::Svd(UT);
+      std::vector<UniTensor> svds = linalg::Svd_truncate(UT, D);
     }
   }
-  BENCHMARK(BM_gpu_DenseUT_Svd_C128)->Args({1})->Args({5})->Args({50})->Args({500});
+  BENCHMARK(BM_gpu_DenseUT_Svd_truncate_C128)->Args({1})->Args({5})->Args({50});
 #endif
 
   // Block UniTensor
@@ -125,28 +91,29 @@ namespace BMTest_Svd {
     random::Make_uniform(UT, l_bd = -1000, h_bd = 1000, rnd_seed);
     return UT;
   }
-  static void BM_bkUT_U1_Svd_F64(benchmark::State& state) {
+
+  static void BM_bkUT_U1_Svd_truncate_F64(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
     UniTensor bkUT = ConstructBkUT(D, Type.Double, SymType.U);
 
     // start test here
     for (auto _ : state) {
-      std::vector<UniTensor> svds = linalg::Svd(bkUT);
+      std::vector<UniTensor> svds = linalg::Svd_truncate(bkUT, D);
     }
   }
-  BENCHMARK(BM_bkUT_U1_Svd_F64)->Args({2})->Args({20})->Args({200});
+  BENCHMARK(BM_bkUT_U1_Svd_truncate_F64)->Args({2})->Args({20})->Args({200});
 
-  static void BM_bkUT_U1_Svd_C128(benchmark::State& state) {
+  static void BM_bkUT_U1_Svd_truncate_C128(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
     UniTensor bkUT = ConstructBkUT(D, Type.ComplexDouble, SymType.U);
 
     // start test here
     for (auto _ : state) {
-      std::vector<UniTensor> svds = linalg::Svd(bkUT);
+      std::vector<UniTensor> svds = linalg::Svd_truncate(bkUT, D);
     }
   }
-  BENCHMARK(BM_bkUT_U1_Svd_C128)->Args({2})->Args({20})->Args({200});
+  BENCHMARK(BM_bkUT_U1_Svd_truncate_C128)->Args({2})->Args({20})->Args({200});
 
-}  // namespace BMTest_Svd
+}  // namespace BMTest_Svd_truncate

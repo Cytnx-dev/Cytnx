@@ -677,4 +677,8 @@ namespace cytnx {
                     "\n");
   }
 
+  void UniTensor_base::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
 }  // namespace cytnx
