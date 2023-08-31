@@ -42,7 +42,13 @@ if(USE_CUDA)
     PRIVATE
     cucomplex_arithmetic.hpp
     cucomplex_arithmetic.cu
+  )
+
+  if(USE_CUQUANTUM)
+    target_sources_local(cytnx
+    PRIVATE
     cutensornet.hpp
     cutensornet.cu
   )
+  endif()
 endif()

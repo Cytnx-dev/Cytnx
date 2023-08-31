@@ -99,9 +99,10 @@ namespace cytnx {
     }
     // cout << N;
     if (!optimize) {
-      out = N.Launch(false, str_order.substr(7));  // Remove "ORDER: "
+      N.setOrder(false, str_order.substr(7));
+      out = N.Launch();  // Remove "ORDER: "
     } else {
-      out = N.Launch(true);
+      out = N.Launch();
     }
     if (!out_labels.empty()) out.set_labels(out_labels);
     return out;
