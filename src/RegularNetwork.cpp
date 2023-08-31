@@ -1045,7 +1045,7 @@ namespace cytnx {
         }
         cutn.setContractionPath(einsum_path);
 
-        //cutn.getContractionPath();
+        // cutn.getContractionPath();
 
         cutn.createWorkspaceDescriptor();
         cutn.initializePlan();
