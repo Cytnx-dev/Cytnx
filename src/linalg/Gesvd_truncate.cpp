@@ -19,6 +19,8 @@ namespace cytnx {
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const bool &is_U, const bool &is_vT,
                                        const unsigned int &return_err) {
+
+      if(Tin.device() == -1){
       std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
 
       cytnx_uint64 id = 0;
@@ -67,6 +69,50 @@ namespace cytnx {
       if (return_err) tmps.push_back(terr);
 
       return tmps;
+
+      }else{
+        #ifdef UNI_GPU
+          #ifdef UNI_CUQUANTUM
+            cytnx_error_msg(Tin.shape().size() != 2,
+                            "[Gesvd_truncate] error, Gesvd_truncate can only operate on rank-2 Tensor.%s", "\n");
+                            
+            Tensor in = Tin.contiguous();
+
+            cytnx_uint64 n_singlu = std::min(keepdim, std::min(Tin.shape()[0], Tin.shape()[1]));
+
+            // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
+            // prepare U, S, vT
+            Tensor U, S, vT;
+            S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+                  in.device());  // if type is complex, S should be real
+            U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+            vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+
+            // linalg_internal::cuQuantumGeSvd_internal_cd(in, keepdim, err, return_err, U, S, vT);
+            cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U, S,
+                                                                      vT);
+
+            std::vector<Tensor> outT;
+            outT.push_back(S);
+            if(is_U) outT.push_back(U);
+            if(is_vT) outT.push_back(vT);
+            cytnx_warning_msg(return_err,
+                  "[Gesvd_truncate] The result for return_err != 0 will not returned for Gesvd_truncate on cuda device.%s",
+                  "\n");
+
+            return outT;
+          #else
+          cytnx_error_msg(true, "[Gesvd_truncate] fatal error,%s",
+                "try to call the cuquantum section without cuQunatum support.\n");
+          return std::vector<Tensor>();
+          #endif
+        #else
+          cytnx_error_msg(true, "[Gesvd_truncate] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          return std::vector<Tensor>();
+        #endif
+      }
+      
     }
   }  // namespace linalg
 }  // namespace cytnx
@@ -99,28 +145,8 @@ namespace cytnx {
 
       // collapse as Matrix:
       cytnx_int64 rowdim = 1;
-      for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
-      tmp.reshape_({rowdim, -1});
-
-      cytnx_uint64 n_singlu = std::min(keepdim, std::min(tmp.shape()[0], tmp.shape()[1]));
-      Tensor in = tmp.contiguous();
-      // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
-
-      // prepare U, S, vT
-      Tensor U, S, vT;
-      S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
-             in.device());  // if type is complex, S should be real
-      U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
-      vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
-
-      // linalg_internal::cuQuantumGeSvd_internal_cd(in, keepdim, err, return_err, U, S, vT);
-      cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U, S,
-                                                                vT);
-
-      std::vector<Tensor> outT;
-      outT.push_back(S);
-      outT.push_back(U);
-      outT.push_back(vT);
+      for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= Tin.shape()[i];
+      vector<Tensor> outT = cytnx::linalg::Gesvd_truncate(tmp.reshape({rowdim, -1}), keepdim, err, is_U, is_vT, return_err);
 
       // set output
       int t = 0;
@@ -441,11 +467,13 @@ namespace cytnx {
   #else
           cytnx_error_msg(true, "[cuQuantumSvd] fatal error,%s",
                           "try to call the cuquantum section without cuQunatum support.\n");
+          return std::vector<cytnx::UniTensor>();
   #endif
 
 #else
           cytnx_error_msg(true, "[cuQuantumSvd] fatal error,%s",
                           "try to call the gpu section without CUDA support.\n");
+          return std::vector<cytnx::UniTensor>();
 #endif
         }
 
