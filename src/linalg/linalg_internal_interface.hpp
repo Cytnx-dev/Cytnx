@@ -187,7 +187,7 @@ namespace cytnx {
   #ifdef UNI_CUQUANTUM
     typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const unsigned int &return_err, Tensor &U,
-                                       Tensor &S, Tensor &vT);
+                                       Tensor &S, Tensor &vT, Tensor &terr);
   #endif
 #endif
     class linalg_internal_interface {

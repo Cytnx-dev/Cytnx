@@ -70,28 +70,218 @@ struct GPUTimer {
   #endif
 #endif
 
-int64_t computeCombinedExtent(const std::unordered_map<int32_t, int64_t> &extentMap,
-                              const std::vector<int32_t> &modes) {
-  int64_t combinedExtent{1};
-  for (auto mode : modes) {
-    auto it = extentMap.find(mode);
-    if (it != extentMap.end()) combinedExtent *= it->second;
-  }
-  return combinedExtent;
-}
+// int64_t computeCombinedExtent(const std::unordered_map<int32_t, int64_t> &extentMap,
+//                               const std::vector<int32_t> &modes) {
+//   int64_t combinedExtent{1};
+//   for (auto mode : modes) {
+//     auto it = extentMap.find(mode);
+//     if (it != extentMap.end()) combinedExtent *= it->second;
+//   }
+//   return combinedExtent;
+// }
 
 namespace cytnx {
   namespace linalg_internal {
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
+
+    void memcpy_truncation_cd(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
+                              const cytnx_uint64 &truc_dim, const bool &is_U, const bool &is_vT,
+                              const unsigned int &return_err) {
+      Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+      Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+      Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
+      HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
+                                   (cytnx_double *)S._impl->storage()._impl->Mem,
+                                   truc_dim * sizeof(cytnx_double), cudaMemcpyDeviceToDevice));
+      if (is_U) {
+        int src = 0;
+        int dest = 0;
+        // copy with strides.
+        for (int i = 0; i < U.shape()[0]; i++) {
+          HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_complex128 *)newU._impl->storage()._impl->Mem + src,
+                                       (cytnx_complex128 *)U._impl->storage()._impl->Mem + dest,
+                                       truc_dim * sizeof(cytnx_complex128),
+                                       cudaMemcpyDeviceToDevice));
+          src += truc_dim;
+          dest += U.shape()[1];
+        }
+        U = newU;
+      }
+      if (is_vT) {
+        // simply copy a new one dropping the tail.
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_complex128 *)newvT._impl->storage()._impl->Mem,
+                                     (cytnx_complex128 *)vT._impl->storage()._impl->Mem,
+                                     vT.shape()[1] * truc_dim * sizeof(cytnx_complex128),
+                                     cudaMemcpyDeviceToDevice));
+        vT = newvT;
+      }
+      if (return_err == 1) {
+        Tensor newterr = Tensor({1}, S.dtype(), S.device());
+        ((cytnx_double *)newterr._impl->storage()._impl->Mem)[0] =
+          ((cytnx_double *)S._impl->storage()._impl->Mem)[truc_dim];
+        terr = newterr;
+      } else if (return_err) {
+        cytnx_uint64 discared_dim = S.shape()[0] - truc_dim;
+        Tensor newterr = Tensor({discared_dim}, S.dtype(), S.device());
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newterr._impl->storage()._impl->Mem,
+                                     (cytnx_double *)S._impl->storage()._impl->Mem + truc_dim,
+                                     discared_dim * sizeof(cytnx_double),
+                                     cudaMemcpyDeviceToDevice));
+        terr = newterr;
+      }
+      S = newS;
+    }
+
+    void memcpy_truncation_cf(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
+                              const cytnx_uint64 &truc_dim, const bool &is_U, const bool &is_vT,
+                              const unsigned int &return_err) {
+      Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+      Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+      Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
+      HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
+                                   (cytnx_double *)S._impl->storage()._impl->Mem,
+                                   truc_dim * sizeof(cytnx_double), cudaMemcpyDeviceToDevice));
+      if (is_U) {
+        int src = 0;
+        int dest = 0;
+        // copy with strides.
+        for (int i = 0; i < U.shape()[0]; i++) {
+          HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_complex64 *)newU._impl->storage()._impl->Mem + src,
+                                       (cytnx_complex64 *)U._impl->storage()._impl->Mem + dest,
+                                       truc_dim * sizeof(cytnx_complex64),
+                                       cudaMemcpyDeviceToDevice));
+          src += truc_dim;
+          dest += U.shape()[1];
+        }
+        U = newU;
+      }
+      if (is_vT) {
+        // simply copy a new one dropping the tail.
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_complex64 *)newvT._impl->storage()._impl->Mem,
+                                     (cytnx_complex64 *)vT._impl->storage()._impl->Mem,
+                                     vT.shape()[1] * truc_dim * sizeof(cytnx_complex64),
+                                     cudaMemcpyDeviceToDevice));
+        vT = newvT;
+      }
+      if (return_err == 1) {
+        Tensor newterr = Tensor({1}, S.dtype(), S.device());
+        ((cytnx_double *)newterr._impl->storage()._impl->Mem)[0] =
+          ((cytnx_double *)S._impl->storage()._impl->Mem)[truc_dim];
+        terr = newterr;
+      } else if (return_err) {
+        cytnx_uint64 discared_dim = S.shape()[0] - truc_dim;
+        Tensor newterr = Tensor({discared_dim}, S.dtype(), S.device());
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newterr._impl->storage()._impl->Mem,
+                                     (cytnx_double *)S._impl->storage()._impl->Mem + truc_dim,
+                                     discared_dim * sizeof(cytnx_double),
+                                     cudaMemcpyDeviceToDevice));
+        terr = newterr;
+      }
+      S = newS;
+    }
+
+    void memcpy_truncation_d(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
+                             const cytnx_uint64 &truc_dim, const bool &is_U, const bool &is_vT,
+                             const unsigned int &return_err) {
+      Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+      Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+      Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
+      HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
+                                   (cytnx_double *)S._impl->storage()._impl->Mem,
+                                   truc_dim * sizeof(cytnx_double), cudaMemcpyDeviceToDevice));
+      if (is_U) {
+        int src = 0;
+        int dest = 0;
+        // copy with strides.
+        for (int i = 0; i < U.shape()[0]; i++) {
+          HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newU._impl->storage()._impl->Mem + src,
+                                       (cytnx_double *)U._impl->storage()._impl->Mem + dest,
+                                       truc_dim * sizeof(cytnx_double), cudaMemcpyDeviceToDevice));
+          src += truc_dim;
+          dest += U.shape()[1];
+        }
+        U = newU;
+      }
+      if (is_vT) {
+        // simply copy a new one dropping the tail.
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newvT._impl->storage()._impl->Mem,
+                                     (cytnx_double *)vT._impl->storage()._impl->Mem,
+                                     vT.shape()[1] * truc_dim * sizeof(cytnx_double),
+                                     cudaMemcpyDeviceToDevice));
+        vT = newvT;
+      }
+      if (return_err == 1) {
+        Tensor newterr = Tensor({1}, S.dtype(), S.device());
+        ((cytnx_double *)newterr._impl->storage()._impl->Mem)[0] =
+          ((cytnx_double *)S._impl->storage()._impl->Mem)[truc_dim];
+        terr = newterr;
+      } else if (return_err) {
+        cytnx_uint64 discared_dim = S.shape()[0] - truc_dim;
+        Tensor newterr = Tensor({discared_dim}, S.dtype(), S.device());
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newterr._impl->storage()._impl->Mem,
+                                     (cytnx_double *)S._impl->storage()._impl->Mem + truc_dim,
+                                     discared_dim * sizeof(cytnx_double),
+                                     cudaMemcpyDeviceToDevice));
+        terr = newterr;
+      }
+      S = newS;
+    }
+
+    void memcpy_truncation_f(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
+                             const cytnx_uint64 &truc_dim, const bool &is_U, const bool &is_vT,
+                             const unsigned int &return_err) {
+      Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+      Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+      Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
+      HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
+                                   (cytnx_double *)S._impl->storage()._impl->Mem,
+                                   truc_dim * sizeof(cytnx_double), cudaMemcpyDeviceToDevice));
+      if (is_U) {
+        int src = 0;
+        int dest = 0;
+        // copy with strides.
+        for (int i = 0; i < U.shape()[0]; i++) {
+          HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_float *)newU._impl->storage()._impl->Mem + src,
+                                       (cytnx_float *)U._impl->storage()._impl->Mem + dest,
+                                       truc_dim * sizeof(cytnx_float), cudaMemcpyDeviceToDevice));
+          src += truc_dim;
+          dest += U.shape()[1];
+        }
+        U = newU;
+      }
+      if (is_vT) {
+        // simply copy a new one dropping the tail.
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_float *)newvT._impl->storage()._impl->Mem,
+                                     (cytnx_float *)vT._impl->storage()._impl->Mem,
+                                     vT.shape()[1] * truc_dim * sizeof(cytnx_float),
+                                     cudaMemcpyDeviceToDevice));
+        vT = newvT;
+      }
+      if (return_err == 1) {
+        Tensor newterr = Tensor({1}, S.dtype(), S.device());
+        ((cytnx_double *)newterr._impl->storage()._impl->Mem)[0] =
+          ((cytnx_double *)S._impl->storage()._impl->Mem)[truc_dim];
+        terr = newterr;
+      } else if (return_err) {
+        cytnx_uint64 discared_dim = S.shape()[0] - truc_dim;
+        Tensor newterr = Tensor({discared_dim}, S.dtype(), S.device());
+        HANDLE_CUDA_ERROR(cudaMemcpy((cytnx_double *)newterr._impl->storage()._impl->Mem,
+                                     (cytnx_double *)S._impl->storage()._impl->Mem + truc_dim,
+                                     discared_dim * sizeof(cytnx_double),
+                                     cudaMemcpyDeviceToDevice));
+        terr = newterr;
+      }
+      S = newS;
+    }
+
     /// cuGeSvd
     void cuQuantumGeSvd_internal_cd(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                     const double &err, const unsigned int &return_err, Tensor &U,
-                                    Tensor &S, Tensor &vT) {
+                                    Tensor &S, Tensor &vT, Tensor &terr) {
       const size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
-
       cudaDeviceProp prop;
       int deviceId = Tin.device();
       HANDLE_CUDA_ERROR(cudaSetDevice(deviceId));
@@ -160,9 +350,15 @@ namespace cytnx {
 
       cutensornetTensorSVDConfig_t svdConfig;
       HANDLE_ERROR(cutensornetCreateTensorSVDConfig(handle, &svdConfig));
-
+      double absCutoff;
       // set up truncation parameters
-      double absCutoff = err;
+      if (return_err) {
+        // do manually truncation instead, so no cuquantum truncate here
+        absCutoff = 0;
+      } else {
+        absCutoff = err;
+      }
+
       HANDLE_ERROR(cutensornetTensorSVDConfigSetAttribute(handle, svdConfig,
                                                           CUTENSORNET_TENSOR_SVD_CONFIG_ABS_CUTOFF,
                                                           &absCutoff, sizeof(absCutoff)));
@@ -277,11 +473,12 @@ namespace cytnx {
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
 
-      // printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
-      // printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-      //        gesvdjStatus.sweeps);
-      // printf("reduced extent found at runtime: %lu\n", reducedExtent);
-      // printf("discarded weight: %.2f\n", discardedWeight);
+      printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
+      printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
+             gesvdjStatus.sweeps);
+      printf("reduced extent found at runtime: %lu\n", reducedExtent);
+      std::cout << "discarded weight: " << discardedWeight << std::endl;
+      // printf("discarded weight: %.15f\n", discardedWeight);
 
       // Sphinx: #9
       /***************
@@ -298,13 +495,33 @@ namespace cytnx {
 
       if (devWork) cudaFree(devWork);
       if (hostWork) free(hostWork);
-
       // printf("Free resource and exit.\n");
+
+      // Manually truncation
+      cytnx_uint64 Kdim = keepdim;
+      cytnx_uint64 nums = S.storage().size();
+      if (nums < keepdim) {
+        Kdim = nums;
+      }
+      cytnx_uint64 truc_dim = Kdim;
+      for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+          truc_dim--;
+        } else {
+          break;
+        }
+      }
+      if (truc_dim == 0) {
+        truc_dim = 1;
+      }
+      if (truc_dim != nums) {
+        memcpy_truncation_cd(U, vT, S, terr, truc_dim, true, true, return_err);
+      }
     }
 
     void cuQuantumGeSvd_internal_cf(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                     const double &err, const unsigned int &return_err, Tensor &U,
-                                    Tensor &S, Tensor &vT) {
+                                    Tensor &S, Tensor &vT, Tensor &terr) {
       const size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
@@ -376,9 +593,15 @@ namespace cytnx {
 
       cutensornetTensorSVDConfig_t svdConfig;
       HANDLE_ERROR(cutensornetCreateTensorSVDConfig(handle, &svdConfig));
-
+      double absCutoff;
       // set up truncation parameters
-      double absCutoff = err;
+      if (return_err) {
+        // do manually truncation instead, so no cuquantum truncate here
+        absCutoff = 0;
+      } else {
+        absCutoff = err;
+      }
+
       HANDLE_ERROR(cutensornetTensorSVDConfigSetAttribute(handle, svdConfig,
                                                           CUTENSORNET_TENSOR_SVD_CONFIG_ABS_CUTOFF,
                                                           &absCutoff, sizeof(absCutoff)));
@@ -493,11 +716,12 @@ namespace cytnx {
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
 
-      // printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
-      // printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-      //        gesvdjStatus.sweeps);
-      // printf("reduced extent found at runtime: %lu\n", reducedExtent);
-      // printf("discarded weight: %.2f\n", discardedWeight);
+      printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
+      printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
+             gesvdjStatus.sweeps);
+      printf("reduced extent found at runtime: %lu\n", reducedExtent);
+      std::cout << "discarded weight: " << discardedWeight << std::endl;
+      // printf("discarded weight: %.15f\n", discardedWeight);
 
       // Sphinx: #9
       /***************
@@ -514,13 +738,33 @@ namespace cytnx {
 
       if (devWork) cudaFree(devWork);
       if (hostWork) free(hostWork);
-
       // printf("Free resource and exit.\n");
+
+      // Manually truncation
+      cytnx_uint64 Kdim = keepdim;
+      cytnx_uint64 nums = S.storage().size();
+      if (nums < keepdim) {
+        Kdim = nums;
+      }
+      cytnx_uint64 truc_dim = Kdim;
+      for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+          truc_dim--;
+        } else {
+          break;
+        }
+      }
+      if (truc_dim == 0) {
+        truc_dim = 1;
+      }
+      if (truc_dim != nums) {
+        memcpy_truncation_cf(U, vT, S, terr, truc_dim, true, true, return_err);
+      }
     }
 
     void cuQuantumGeSvd_internal_d(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                    const double &err, const unsigned int &return_err, Tensor &U,
-                                   Tensor &S, Tensor &vT) {
+                                   Tensor &S, Tensor &vT, Tensor &terr) {
       const size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
@@ -592,9 +836,15 @@ namespace cytnx {
 
       cutensornetTensorSVDConfig_t svdConfig;
       HANDLE_ERROR(cutensornetCreateTensorSVDConfig(handle, &svdConfig));
-
+      double absCutoff;
       // set up truncation parameters
-      double absCutoff = err;
+      if (return_err) {
+        // do manually truncation instead, so no cuquantum truncate here
+        absCutoff = 0;
+      } else {
+        absCutoff = err;
+      }
+
       HANDLE_ERROR(cutensornetTensorSVDConfigSetAttribute(handle, svdConfig,
                                                           CUTENSORNET_TENSOR_SVD_CONFIG_ABS_CUTOFF,
                                                           &absCutoff, sizeof(absCutoff)));
@@ -709,11 +959,12 @@ namespace cytnx {
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
 
-      // printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
-      // printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-      //        gesvdjStatus.sweeps);
-      // printf("reduced extent found at runtime: %lu\n", reducedExtent);
-      // printf("discarded weight: %.2f\n", discardedWeight);
+      printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
+      printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
+             gesvdjStatus.sweeps);
+      printf("reduced extent found at runtime: %lu\n", reducedExtent);
+      std::cout << "discarded weight: " << discardedWeight << std::endl;
+      // printf("discarded weight: %.15f\n", discardedWeight);
 
       // Sphinx: #9
       /***************
@@ -730,13 +981,33 @@ namespace cytnx {
 
       if (devWork) cudaFree(devWork);
       if (hostWork) free(hostWork);
-
       // printf("Free resource and exit.\n");
+
+      // Manually truncation
+      cytnx_uint64 Kdim = keepdim;
+      cytnx_uint64 nums = S.storage().size();
+      if (nums < keepdim) {
+        Kdim = nums;
+      }
+      cytnx_uint64 truc_dim = Kdim;
+      for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+          truc_dim--;
+        } else {
+          break;
+        }
+      }
+      if (truc_dim == 0) {
+        truc_dim = 1;
+      }
+      if (truc_dim != nums) {
+        memcpy_truncation_d(U, vT, S, terr, truc_dim, true, true, return_err);
+      }
     }
 
     void cuQuantumGeSvd_internal_f(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                    const double &err, const unsigned int &return_err, Tensor &U,
-                                   Tensor &S, Tensor &vT) {
+                                   Tensor &S, Tensor &vT, Tensor &terr) {
       const size_t cuTensornetVersion = cutensornetGetVersion();
       // printf("cuTensorNet-vers:%ld\n", cuTensornetVersion);
 
@@ -808,9 +1079,15 @@ namespace cytnx {
 
       cutensornetTensorSVDConfig_t svdConfig;
       HANDLE_ERROR(cutensornetCreateTensorSVDConfig(handle, &svdConfig));
-
+      double absCutoff;
       // set up truncation parameters
-      double absCutoff = err;
+      if (return_err) {
+        // do manually truncation instead, so no cuquantum truncate here
+        absCutoff = 0;
+      } else {
+        absCutoff = err;
+      }
+
       HANDLE_ERROR(cutensornetTensorSVDConfigSetAttribute(handle, svdConfig,
                                                           CUTENSORNET_TENSOR_SVD_CONFIG_ABS_CUTOFF,
                                                           &absCutoff, sizeof(absCutoff)));
@@ -925,11 +1202,12 @@ namespace cytnx {
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
 
-      // printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
-      // printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-      //        gesvdjStatus.sweeps);
-      // printf("reduced extent found at runtime: %lu\n", reducedExtent);
-      // printf("discarded weight: %.2f\n", discardedWeight);
+      printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
+      printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
+             gesvdjStatus.sweeps);
+      printf("reduced extent found at runtime: %lu\n", reducedExtent);
+      std::cout << "discarded weight: " << discardedWeight << std::endl;
+      // printf("discarded weight: %.15f\n", discardedWeight);
 
       // Sphinx: #9
       /***************
@@ -946,8 +1224,28 @@ namespace cytnx {
 
       if (devWork) cudaFree(devWork);
       if (hostWork) free(hostWork);
-
       // printf("Free resource and exit.\n");
+
+      // Manually truncation
+      cytnx_uint64 Kdim = keepdim;
+      cytnx_uint64 nums = S.storage().size();
+      if (nums < keepdim) {
+        Kdim = nums;
+      }
+      cytnx_uint64 truc_dim = Kdim;
+      for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+          truc_dim--;
+        } else {
+          break;
+        }
+      }
+      if (truc_dim == 0) {
+        truc_dim = 1;
+      }
+      if (truc_dim != nums) {
+        memcpy_truncation_f(U, vT, S, terr, truc_dim, true, true, return_err);
+      }
     }
 
   #endif
