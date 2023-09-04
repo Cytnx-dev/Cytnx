@@ -1367,6 +1367,14 @@ namespace cytnx {
       cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
       cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
 
+  #ifdef UNI_CUQUANTUM
+      cuQuantumGeSvd_ii = vector<cuQuantumGeSvd_oii>(N_Type);
+      cuQuantumGeSvd_ii[Type.ComplexDouble] = cuQuantumGeSvd_internal_cd;
+      cuQuantumGeSvd_ii[Type.ComplexFloat] = cuQuantumGeSvd_internal_cf;
+      cuQuantumGeSvd_ii[Type.Double] = cuQuantumGeSvd_internal_d;
+      cuQuantumGeSvd_ii[Type.Float] = cuQuantumGeSvd_internal_f;
+  #endif
+
   #ifdef UNI_CUTENSOR
       cuTensordot_ii = vector<Tensordotfunc_oii>(N_Type);
       cuTensordot_ii[Type.ComplexDouble] = cuTensordot_internal_cd;
