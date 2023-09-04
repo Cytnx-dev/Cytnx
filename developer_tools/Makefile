@@ -27,6 +27,8 @@ current_dir = $(shell pwd)
 ##
 CytnxPATH=$(current_dir)
 INCFLAGS :=-I$(CytnxPATH)/include -I$(CytnxPATH)/src
+INCFLAGS +=-I$(CONDA_PREFIX)/include/
+
 
 HPTT_PATH=$(CytnxPATH)/thirdparty/hptt
 CUTT_PATH=$(CytnxPATH)/thirdparty/cutt
