@@ -1373,6 +1373,12 @@ namespace cytnx {
       cuQuantumGeSvd_ii[Type.ComplexFloat] = cuQuantumGeSvd_internal_cf;
       cuQuantumGeSvd_ii[Type.Double] = cuQuantumGeSvd_internal_d;
       cuQuantumGeSvd_ii[Type.Float] = cuQuantumGeSvd_internal_f;
+
+      cuQuantumQr_ii = vector<cuQuantumQr_oii>(N_Type);
+      cuQuantumQr_ii[Type.ComplexDouble] = cuQuantumQr_internal_cd;
+      cuQuantumQr_ii[Type.ComplexFloat] = cuQuantumQr_internal_cf;
+      cuQuantumQr_ii[Type.Double] = cuQuantumQr_internal_d;
+      cuQuantumQr_ii[Type.Float] = cuQuantumQr_internal_f;
   #endif
 
   #ifdef UNI_CUTENSOR
