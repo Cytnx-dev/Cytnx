@@ -3,7 +3,7 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
 #include <iostream>

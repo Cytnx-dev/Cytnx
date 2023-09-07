@@ -1,22 +1,20 @@
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 #include "utils/utils_internal_interface.hpp"
+
 using namespace std;
-using namespace cytnx;
 
 namespace cytnx {
-  //+++++++++++++++++++
-  void BoolStorage::Init(const unsigned long long &len_in, const int &device,
-                         const bool &init_zero) {
-    // cout << "Bool.init" << endl;
-    // check:
+  void Int32Storage::Init(const unsigned long long &len_in, const int &device,
+                          const bool &init_zero) {
+    // cout << "Int32.init" << endl;
     this->len = len_in;
 
     // check:
     // cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
-    this->dtype = Type.Bool;
+    this->dtype = Type.Int32;
 
     if (this->len % STORAGE_DEFT_SZ) {
       this->cap = ((unsigned long long)((this->len) / STORAGE_DEFT_SZ) + 1) * STORAGE_DEFT_SZ;
@@ -26,15 +24,15 @@ namespace cytnx {
 
     if (device == Device.cpu) {
       if (init_zero)
-        this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(bool));
+        this->Mem = utils_internal::Calloc_cpu(this->cap, sizeof(cytnx_int32));
       else
-        this->Mem = utils_internal::Malloc_cpu(this->cap * sizeof(bool));
+        this->Mem = utils_internal::Malloc_cpu(this->cap * sizeof(cytnx_int32));
     } else {
 #ifdef UNI_GPU
       cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
       cudaSetDevice(device);
-      // this->Mem = utils_internal::cuMalloc_gpu(this->cap*sizeof(bool));
-      this->Mem = utils_internal::cuCalloc_gpu(this->cap, sizeof(bool));
+      // this->Mem = utils_internal::cuMalloc_gpu(this->cap*sizeof(cytnx_int32));
+      this->Mem = utils_internal::cuCalloc_gpu(this->cap, sizeof(cytnx_int32));
 #else
       cytnx_error_msg(1, "%s", "[ERROR] cannot init a Storage on gpu without CUDA support.");
 #endif
@@ -42,8 +40,8 @@ namespace cytnx {
     this->device = device;
   }
 
-  void BoolStorage::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device,
-                                const bool &iscap, const unsigned long long &cap_in) {
+  void Int32Storage::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device,
+                                 const bool &iscap, const unsigned long long &cap_in) {
     this->Mem = rawptr;
     this->len = len_in;
     if (iscap) {
@@ -59,24 +57,25 @@ namespace cytnx {
     cytnx_error_msg(this->cap < this->len, "%s",
                     "[ERROR] _Init_by_ptr cannot have capacity < size.");
 #endif
-    this->dtype = Type.Bool;
+    this->dtype = Type.Int32;
     this->device = device;
   }
 
-  boost::intrusive_ptr<Storage_base> BoolStorage::_create_new_sametype() {
-    boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+  boost::intrusive_ptr<Storage_base> Int32Storage::_create_new_sametype() {
+    boost::intrusive_ptr<Storage_base> out(new Int32Storage());
     return out;
   }
 
-  boost::intrusive_ptr<Storage_base> BoolStorage::clone() {
-    boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+  boost::intrusive_ptr<Storage_base> Int32Storage::clone() {
+    boost::intrusive_ptr<Storage_base> out(new Int32Storage());
     out->Init(this->len, this->device);
     if (this->device == Device.cpu) {
-      memcpy(out->Mem, this->Mem, sizeof(bool) * this->len);
+      memcpy(out->Mem, this->Mem, sizeof(cytnx_int32) * this->len);
     } else {
 #ifdef UNI_GPU
+      checkCudaErrors(cudaSetDevice(this->device));
       checkCudaErrors(
-        cudaMemcpy(out->Mem, this->Mem, sizeof(bool) * this->len, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(out->Mem, this->Mem, sizeof(cytnx_int32) * this->len, cudaMemcpyDeviceToDevice));
 #else
       cytnx_error_msg(1, "%s", "[ERROR] cannot clone a Storage on gpu without CUDA support.");
 #endif
@@ -84,46 +83,48 @@ namespace cytnx {
     return out;
   }
 
-  void BoolStorage::Move_memory_(const std::vector<cytnx_uint64> &old_shape,
-                                 const std::vector<cytnx_uint64> &mapper,
-                                 const std::vector<cytnx_uint64> &invmapper) {
+  void Int32Storage::Move_memory_(const std::vector<cytnx_uint64> &old_shape,
+                                  const std::vector<cytnx_uint64> &mapper,
+                                  const std::vector<cytnx_uint64> &invmapper) {
     boost::intrusive_ptr<Storage_base> tmp(this);
     if (this->device == Device.cpu) {
-      utils_internal::Movemem_cpu_b(tmp, old_shape, mapper, invmapper, 1);
+      utils_internal::Movemem_cpu_i32(tmp, old_shape, mapper, invmapper, 1);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuMovemem_gpu_b(tmp, old_shape, mapper, invmapper, 1);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuMovemem_gpu_i32(tmp, old_shape, mapper, invmapper, 1);
 #else
       cytnx_error_msg(1, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
 #endif
     }
   }
 
-  boost::intrusive_ptr<Storage_base> BoolStorage::Move_memory(
+  boost::intrusive_ptr<Storage_base> Int32Storage::Move_memory(
     const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper,
     const std::vector<cytnx_uint64> &invmapper) {
     boost::intrusive_ptr<Storage_base> tmp(this);
     if (this->device == Device.cpu) {
-      return utils_internal::Movemem_cpu_b(tmp, old_shape, mapper, invmapper, 0);
+      return utils_internal::Movemem_cpu_i32(tmp, old_shape, mapper, invmapper, 0);
     } else {
 #ifdef UNI_GPU
-      return utils_internal::cuMovemem_gpu_b(tmp, old_shape, mapper, invmapper, 0);
+      checkCudaErrors(cudaSetDevice(this->device));
+      return utils_internal::cuMovemem_gpu_i32(tmp, old_shape, mapper, invmapper, 0);
 #else
       cytnx_error_msg(1, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
       return nullptr;
 #endif
     }
   }
-  void BoolStorage::to_(const int &device) {
+  void Int32Storage::to_(const int &device) {
     if (this->device != device) {
       if (this->device == Device.cpu) {
 // here, cpu->gpu with gid=device
 #ifdef UNI_GPU
         cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
         cudaSetDevice(device);
-        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(bool) * this->cap);
+        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32) * this->cap);
         checkCudaErrors(
-          cudaMemcpy(dtmp, this->Mem, sizeof(bool) * this->cap, cudaMemcpyHostToDevice));
+          cudaMemcpy(dtmp, this->Mem, sizeof(cytnx_int32) * this->len, cudaMemcpyHostToDevice));
         free(this->Mem);
         this->Mem = dtmp;
         this->device = device;
@@ -135,9 +136,9 @@ namespace cytnx {
         if (device == Device.cpu) {
           // here, gpu->cpu
           cudaSetDevice(this->device);
-          void *htmp = malloc(sizeof(bool) * this->cap);
+          void *htmp = malloc(sizeof(cytnx_int32) * this->cap);
           checkCudaErrors(
-            cudaMemcpy(htmp, this->Mem, sizeof(bool) * this->cap, cudaMemcpyDeviceToHost));
+            cudaMemcpy(htmp, this->Mem, sizeof(cytnx_int32) * this->len, cudaMemcpyDeviceToHost));
           cudaFree(this->Mem);
           this->Mem = htmp;
           this->device = device;
@@ -145,9 +146,9 @@ namespace cytnx {
           // here, gpu->gpu
           cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
           cudaSetDevice(device);
-          void *dtmp = utils_internal::cuMalloc_gpu(sizeof(bool) * this->cap);
+          void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32) * this->cap);
           checkCudaErrors(
-            cudaMemcpyPeer(dtmp, device, this->Mem, this->device, sizeof(bool) * this->cap));
+            cudaMemcpyPeer(dtmp, device, this->Mem, this->device, sizeof(cytnx_int32) * this->len));
           cudaFree(this->Mem);
           this->Mem = dtmp;
           this->device = device;
@@ -160,7 +161,7 @@ namespace cytnx {
       }
     }
   }
-  boost::intrusive_ptr<Storage_base> BoolStorage::to(const int &device) {
+  boost::intrusive_ptr<Storage_base> Int32Storage::to(const int &device) {
     // Here, we follow pytorch scheme. if the device is the same as this->device, then return this
     // (python self) otherwise, return a clone on different device.
     if (this->device == device) {
@@ -171,10 +172,10 @@ namespace cytnx {
 #ifdef UNI_GPU
         cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
         cudaSetDevice(device);
-        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(bool) * this->cap);
+        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32) * this->cap);
         checkCudaErrors(
-          cudaMemcpy(dtmp, this->Mem, sizeof(bool) * this->cap, cudaMemcpyHostToDevice));
-        boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+          cudaMemcpy(dtmp, this->Mem, sizeof(cytnx_int32) * this->len, cudaMemcpyHostToDevice));
+        boost::intrusive_ptr<Storage_base> out(new Int32Storage());
         out->_Init_byptr(dtmp, this->len, device, true, this->cap);
         return out;
 #else
@@ -186,20 +187,20 @@ namespace cytnx {
         if (device == Device.cpu) {
           // here, gpu->cpu
           cudaSetDevice(this->device);
-          void *htmp = malloc(sizeof(bool) * this->cap);
+          void *htmp = malloc(sizeof(cytnx_int32) * this->cap);
           checkCudaErrors(
-            cudaMemcpy(htmp, this->Mem, sizeof(bool) * this->cap, cudaMemcpyDeviceToHost));
-          boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+            cudaMemcpy(htmp, this->Mem, sizeof(cytnx_int32) * this->len, cudaMemcpyDeviceToHost));
+          boost::intrusive_ptr<Storage_base> out(new Int32Storage());
           out->_Init_byptr(htmp, this->len, device, true, this->cap);
           return out;
         } else {
           // here, gpu->gpu
           cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
           cudaSetDevice(device);
-          void *dtmp = utils_internal::cuMalloc_gpu(sizeof(bool) * this->cap);
+          void *dtmp = utils_internal::cuMalloc_gpu(sizeof(cytnx_int32) * this->cap);
           checkCudaErrors(
-            cudaMemcpyPeer(dtmp, device, this->Mem, this->device, sizeof(bool) * this->cap));
-          boost::intrusive_ptr<Storage_base> out(new BoolStorage());
+            cudaMemcpyPeer(dtmp, device, this->Mem, this->device, sizeof(cytnx_int32) * this->len));
+          boost::intrusive_ptr<Storage_base> out(new Int32Storage());
           out->_Init_byptr(dtmp, this->len, device, true, this->cap);
           return out;
         }
@@ -213,8 +214,8 @@ namespace cytnx {
     }
   }
 
-  void BoolStorage::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
-                                      const std::vector<cytnx_uint64> &mapper) {
+  void Int32Storage::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
+                                       const std::vector<cytnx_uint64> &mapper) {
     char *buffer = (char *)malloc(sizeof(char) * 256);
     // checking:
     cytnx_uint64 Ne = 1;
@@ -239,12 +240,12 @@ namespace cytnx {
       os << Device.getname(this->device) << std::endl;
 
       sprintf(buffer, "%s", "Shape :");
-      os << string(buffer);
-      sprintf(buffer, " (%lu", shape[0]);
-      os << string(buffer);
-      for (cytnx_size_t i = 1; i < shape.size(); i++) {
-        sprintf(buffer, ",%lu", shape[i]);
-        os << string(buffer);
+      os << std::string(buffer);
+      sprintf(buffer, " (%llu", shape[0]);
+      os << std::string(buffer);
+      for (cytnx_int32 i = 1; i < shape.size(); i++) {
+        sprintf(buffer, ",%llu", shape[i]);
+        os << std::string(buffer);
       }
       os << ")" << std::endl;
 
@@ -256,31 +257,26 @@ namespace cytnx {
       std::vector<cytnx_uint64> stk(shape.size(), 0), stk2;
 
       cytnx_uint64 s;
-      cytnx_bool *elem_ptr_ = static_cast<cytnx_bool *>(this->Mem);
+      cytnx_int32 *elem_ptr_ = static_cast<cytnx_int32 *>(this->Mem);
 
       if (mapper.size() == 0) {
         cytnx_uint64 cnt = 0;
         while (1) {
-          for (cytnx_size_t i = 0; i < shape.size(); i++) {
+          for (cytnx_int32 i = 0; i < shape.size(); i++) {
             if (i < shape.size() - stk.size()) {
               sprintf(buffer, "%s", " ");
-              os << string(buffer);
+              os << std::string(buffer);
             } else {
               stk2.push_back(0);
               sprintf(buffer, "%s", "[");
-              os << string(buffer);
+              os << std::string(buffer);
               stk.pop_back();
             }
           }
-          for (cytnx_size_t i = 0; i < shape.back(); i++) {
+          for (cytnx_uint64 i = 0; i < shape.back(); i++) {
             stk2.back() = i;
-            if (elem_ptr_[cnt]) {
-              sprintf(buffer, "True %s", " ");
-              os << string(buffer);
-            } else {
-              sprintf(buffer, "False%s", " ");
-              os << string(buffer);
-            }
+            sprintf(buffer, "%+10d ", elem_ptr_[cnt]);
+            os << std::string(buffer);
             cnt++;
           }
 
@@ -294,7 +290,7 @@ namespace cytnx {
               s++;
               stk2.pop_back();
               sprintf(buffer, "%s", "]");
-              os << string(buffer);
+              os << std::string(buffer);
             } else {
               stk2.back() += 1;
               break;
@@ -323,15 +319,15 @@ namespace cytnx {
           accu *= c_shape[i];
         }
 
-        while (true) {
-          for (cytnx_size_t i = 0; i < shape.size(); i++) {
+        while (1) {
+          for (cytnx_int32 i = 0; i < shape.size(); i++) {
             if (i < shape.size() - stk.size()) {
               sprintf(buffer, "%s", " ");
-              os << string(buffer);
+              os << std::string(buffer);
             } else {
               stk2.push_back(0);
               sprintf(buffer, "%s", "[");
-              os << string(buffer);
+              os << std::string(buffer);
               stk.pop_back();
             }
           }
@@ -343,13 +339,8 @@ namespace cytnx {
             for (cytnx_uint64 n = 0; n < shape.size(); n++) {
               RealMemPos += c_offj[n] * stk2[mapper[n]];  // mapback + backmap = normal-map
             }
-            if (elem_ptr_[RealMemPos]) {
-              sprintf(buffer, "True %s", " ");
-              os << string(buffer);
-            } else {
-              sprintf(buffer, "False%s", " ");
-              os << string(buffer);
-            }
+            sprintf(buffer, "%+10d ", elem_ptr_[RealMemPos]);
+            os << std::string(buffer);
             // cnt++;
           }
 
@@ -363,7 +354,7 @@ namespace cytnx {
               s++;
               stk2.pop_back();
               sprintf(buffer, "%s", "]");
-              os << string(buffer);
+              os << std::string(buffer);
             } else {
               stk2.back() += 1;
               break;
@@ -385,139 +376,143 @@ namespace cytnx {
     free(buffer);
   }
 
-  void BoolStorage::print_elems() {
+  void Int32Storage::print_elems() {
     char *buffer = (char *)malloc(sizeof(char) * 256);
-    auto *elem_ptr_ = static_cast<cytnx_bool *>(this->Mem);
+    cytnx_int32 *elem_ptr_ = static_cast<cytnx_int32 *>(this->Mem);
     cout << "[ ";
     for (unsigned long long cnt = 0; cnt < this->len; cnt++) {
-      if (elem_ptr_[cnt]) {
-        sprintf(buffer, "True %s", " ");
-        cout << string(buffer);
-      } else {
-        sprintf(buffer, "False%s", " ");
-        cout << string(buffer);
-      }
+      sprintf(buffer, "%+10d ", elem_ptr_[cnt]);
+      cout << std::string(buffer);
     }
-    cout << "]" << endl;
+    cout << " ]" << endl;
     free(buffer);
   }
 
-  void BoolStorage::fill(const cytnx_complex128 &val) {
+  void Int32Storage::fill(const cytnx_complex128 &val) {
     cytnx_error_msg(true, "[ERROR]%s", " cannot fill complex value into real container");
   }
-  void BoolStorage::fill(const cytnx_complex64 &val) {
+  void Int32Storage::fill(const cytnx_complex64 &val) {
     cytnx_error_msg(true, "[ERROR]%s", " cannot fill complex value into real container");
   }
-  void BoolStorage::fill(const cytnx_double &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_double &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_float &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_float &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_int64 &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_int64 &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_uint64 &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_uint64 &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_int32 &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_int32 &val) {
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&val), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&val), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_uint32 &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_uint32 &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_int16 &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_int16 &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_uint16 &val) {
-    cytnx_bool tmp = val;
+  void Int32Storage::fill(const cytnx_uint16 &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&tmp), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
 #endif
     }
   }
-  void BoolStorage::fill(const cytnx_bool &val) {
+  void Int32Storage::fill(const cytnx_bool &val) {
+    cytnx_int32 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_b(this->Mem, (void *)(&val), this->len);
+      utils_internal::Fill_cpu_i32(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuFill_gpu_b(this->Mem, (void *)(&val), this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuFill_gpu_i32(this->Mem, (void *)(&tmp), this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -525,12 +520,13 @@ namespace cytnx {
     }
   }
 
-  void BoolStorage::set_zeros() {
+  void Int32Storage::set_zeros() {
     if (this->device == Device.cpu) {
-      utils_internal::SetZeros(this->Mem, sizeof(cytnx_bool) * this->len);
+      utils_internal::SetZeros(this->Mem, sizeof(cytnx_int32) * this->len);
     } else {
 #ifdef UNI_GPU
-      utils_internal::cuSetZeros(this->Mem, sizeof(cytnx_bool) * this->len);
+      checkCudaErrors(cudaSetDevice(this->device));
+      utils_internal::cuSetZeros(this->Mem, sizeof(cytnx_int32) * this->len);
 #else
       cytnx_error_msg(1, "[ERROR][set_zeros] fatal, the storage is on gpu without CUDA support.%s",
                       "\n");
@@ -538,7 +534,7 @@ namespace cytnx {
     }
   }
 
-  void BoolStorage::resize(const cytnx_uint64 &newsize) {
+  void Int32Storage::resize(const cytnx_uint64 &newsize) {
     // cytnx_error_msg(newsize < 1,"[ERROR]resize should have size > 0%s","\n");
 
     if (newsize > this->cap) {
@@ -548,17 +544,17 @@ namespace cytnx {
         this->cap = newsize;
       }
       if (this->device == Device.cpu) {
-        void *htmp = calloc(this->cap, sizeof(cytnx_bool));
-        memcpy(htmp, this->Mem, sizeof(cytnx_bool) * this->len);
+        void *htmp = calloc(this->cap, sizeof(cytnx_int32));
+        memcpy(htmp, this->Mem, sizeof(cytnx_int32) * this->len);
         free(this->Mem);
         this->Mem = htmp;
       } else {
 #ifdef UNI_GPU
         cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
         cudaSetDevice(device);
-        void *dtmp = utils_internal::cuCalloc_gpu(this->cap, sizeof(cytnx_bool));
+        void *dtmp = utils_internal::cuCalloc_gpu(this->cap, sizeof(cytnx_int32));
         checkCudaErrors(
-          cudaMemcpyPeer(dtmp, device, this->Mem, this->device, sizeof(cytnx_bool) * this->len));
+          cudaMemcpyPeer(dtmp, device, this->Mem, this->device, sizeof(cytnx_int32) * this->len));
         cudaFree(this->Mem);
         this->Mem = dtmp;
 #else
@@ -571,144 +567,141 @@ namespace cytnx {
     this->len = newsize;
   }
 
-  void BoolStorage::append(const Scalar &val) {
-    if (this->len + 1 > this->cap) {
-      this->resize(this->len + 1);
-    } else {
-      this->len += 1;
-    }
-    this->at<cytnx_bool>(this->len - 1) = bool(val);
-  }
-  void BoolStorage::append(const cytnx_complex128 &val) {
+  void Int32Storage::append(const cytnx_complex128 &val) {
     cytnx_error_msg(true, "[ERROR]%s", " cannot append complex value into real container");
   }
-  void BoolStorage::append(const cytnx_complex64 &val) {
+  void Int32Storage::append(const cytnx_complex64 &val) {
     cytnx_error_msg(true, "[ERROR]%s", " cannot append complex value into real container");
   }
-  void BoolStorage::append(const cytnx_double &val) {
+  void Int32Storage::append(const Scalar &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = cytnx_int32(val);
   }
-  void BoolStorage::append(const cytnx_float &val) {
+  void Int32Storage::append(const cytnx_double &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  void BoolStorage::append(const cytnx_int64 &val) {
+  void Int32Storage::append(const cytnx_float &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  void BoolStorage::append(const cytnx_int32 &val) {
+  void Int32Storage::append(const cytnx_int64 &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  void BoolStorage::append(const cytnx_int16 &val) {
+  void Int32Storage::append(const cytnx_int32 &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  void BoolStorage::append(const cytnx_uint64 &val) {
+  void Int32Storage::append(const cytnx_int16 &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  void BoolStorage::append(const cytnx_uint32 &val) {
+  void Int32Storage::append(const cytnx_uint64 &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  void BoolStorage::append(const cytnx_uint16 &val) {
+  void Int32Storage::append(const cytnx_uint32 &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  void BoolStorage::append(const cytnx_bool &val) {
+  void Int32Storage::append(const cytnx_uint16 &val) {
     if (this->len + 1 > this->cap) {
       this->resize(this->len + 1);
     } else {
       this->len += 1;
     }
-    this->at<cytnx_bool>(this->len - 1) = val;
+    this->at<cytnx_int32>(this->len - 1) = val;
   }
-  boost::intrusive_ptr<Storage_base> BoolStorage::real() {
+  void Int32Storage::append(const cytnx_bool &val) {
+    if (this->len + 1 > this->cap) {
+      this->resize(this->len + 1);
+    } else {
+      this->len += 1;
+    }
+    this->at<cytnx_int32>(this->len - 1) = val;
+  }
+  boost::intrusive_ptr<Storage_base> Int32Storage::real() {
     cytnx_error_msg(true, "[ERROR] Storage.real() can only be called from complex type.%s", "\n");
   }
-  boost::intrusive_ptr<Storage_base> BoolStorage::imag() {
+  boost::intrusive_ptr<Storage_base> Int32Storage::imag() {
     cytnx_error_msg(true, "[ERROR] Storage.imag() can only be called from complex type.%s", "\n");
   }
-
-  Scalar BoolStorage::get_item(const cytnx_uint64 &idx) const {
-    return Scalar(this->at<cytnx_bool>(idx));
+  Scalar Int32Storage::get_item(const cytnx_uint64 &idx) const {
+    return Scalar(this->at<cytnx_int32>(idx));
   }
 
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const Scalar &val) {
-    this->at<cytnx_bool>(idx) = cytnx_bool(val);
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const Scalar &val) {
+    this->at<cytnx_int32>(idx) = cytnx_int32(val);
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_complex128 &val) {
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_complex128 &val) {
     cytnx_error_msg(true, "[ERROR] cannot set complex to real.%s", "\n");
-    // this->at<cytnx_bool>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_complex64 &val) {
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_complex64 &val) {
     cytnx_error_msg(true, "[ERROR] cannot set complex to real.%s", "\n");
-    // this->at<cytnx_bool>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_double &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_double &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_float &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_float &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_int64 &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_int64 &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_uint64 &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_uint64 &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_int32 &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_int32 &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_uint32 &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_uint32 &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_int16 &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_int16 &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
-  void BoolStorage::set_item(const cytnx_uint64 &idx, const cytnx_bool &val) {
-    this->at<cytnx_bool>(idx) = val;
+  void Int32Storage::set_item(const cytnx_uint64 &idx, const cytnx_bool &val) {
+    this->at<cytnx_int32>(idx) = val;
   }
 
-  // bool BoolStorage::approx_eq(const boost::intrusive_ptr<Storage_base> &rhs,
-  //                             const cytnx_double tol) {
+  // bool Int32Storage::approx_eq(const boost::intrusive_ptr<Storage_base> &rhs,
+  //                              const cytnx_double tol) {
   //   boost::intrusive_ptr<Storage_base> _lhs, _rhs;
   //   if (rhs->dtype == this->dtype) {
   //     _lhs = this;
@@ -734,5 +727,4 @@ namespace cytnx {
   //   }
   //   return true;
   // }
-
 }  // namespace cytnx

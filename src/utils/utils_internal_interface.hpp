@@ -37,7 +37,7 @@
   #include "utils/cucomplex_arithmetic.hpp"
 #endif
 
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 namespace cytnx {
   namespace utils_internal {
 

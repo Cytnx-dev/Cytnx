@@ -3,7 +3,6 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Storage.hpp"
 #include "Device.hpp"
 #include "Tensor.hpp"
 #include "Scalar.hpp"

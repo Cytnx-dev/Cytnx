@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <climits>
 #include "Type.hpp"
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 
 #include "Tensor.hpp"
 #include <vector>

@@ -2,7 +2,7 @@
 #define __cuArithmetic_internal_H_
 
 #include "Type.hpp"
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 #include "linalg/linalg_internal_gpu/cuAdd_internal.hpp"
 #include "linalg/linalg_internal_gpu/cuMul_internal.hpp"
 #include "linalg/linalg_internal_gpu/cuSub_internal.hpp"

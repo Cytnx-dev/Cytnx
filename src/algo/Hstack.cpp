@@ -1,5 +1,7 @@
 #include "algo.hpp"
 #include "algo_internal_interface.hpp"
+#include "backend/Storage.hpp"
+#include "Scalar.hpp"
 #include "Accessor.hpp"
 #include "Generator.hpp"
 namespace cytnx {

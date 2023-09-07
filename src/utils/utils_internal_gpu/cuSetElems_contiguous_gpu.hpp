@@ -8,7 +8,7 @@
 #include <vector>
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 
 namespace cytnx {
   namespace utils_internal {

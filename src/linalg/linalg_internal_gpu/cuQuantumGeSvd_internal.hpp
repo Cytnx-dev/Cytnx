@@ -5,7 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "lapack_wrapper.hpp"

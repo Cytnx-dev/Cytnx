@@ -9,7 +9,7 @@
 #endif
 
 #include "Type.hpp"
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 namespace cytnx {
   namespace random_internal {
 
