@@ -32,6 +32,16 @@ pair<std::string, cytnx_int64> operator>>(const std::string &a, const cytnx_int6
 // }
 
 int main(int argc, char *argv[]) {
+  UniTensor src_T = UniTensor::Load("tests/test_data_base/linalg/Gesvd/sym_UT_U1_F64.cytnx");
+
+  print(src_T);
+
+  auto GesvdsUV = linalg::Svd(src_T, true);
+
+  print(GesvdsUV.size());
+
+  return 0;
+
   Bond bdSp(BD_IN, {Qs(0) >> 1, Qs(1) >> 1});
 
   auto UTSp_sym = UniTensor({bdSp, bdSp.redirect(), Bond(BD_IN, {Qs(1) >> 1})});

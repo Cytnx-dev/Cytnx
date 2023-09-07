@@ -10,7 +10,7 @@ class NconTest : public ::testing::Test {
   std::pair<std::vector<cytnx::UniTensor>, std::vector<std::vector<cytnx::cytnx_int64>>> input;
 
  protected:
-  void SetUp() override { input = getNconParameter("output.txt"); }
+  void SetUp() override { input = getNconParameter("utils/output.txt"); }
   void TearDown() override {}
 };
 

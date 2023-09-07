@@ -5,7 +5,7 @@ using namespace cytnx;
 
 TEST_F(NconTest, ncon) {
   double dans;
-  ifstream fin("answer.txt");
+  ifstream fin("utils/answer.txt");
   UniTensor res = ncon(input.first, input.second, true);
   res.reshape_({-1});
 
