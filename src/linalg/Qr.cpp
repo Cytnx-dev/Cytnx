@@ -27,7 +27,7 @@ namespace cytnx {
       Tensor tau, Q, R, D;  // D is not used here.
       tau.Init({n_tau}, in.dtype(), in.device());
       tau.storage().set_zeros();  // if type is complex, S should be real
-      Q.Init(Tin.shape(), in.dtype(), in.device());
+      Q.Init({Tin.shape()[0], Tin.shape()[1]}, in.dtype(), in.device());
       Q.storage().set_zeros();
       R.Init({n_tau, Tin.shape()[1]}, in.dtype(), in.device());
       R.storage().set_zeros();
@@ -53,6 +53,9 @@ namespace cytnx {
         // cytnx_error_msg(true, "[Qr] error,%s", "Currently QR does not support CUDA.\n");
 
         checkCudaErrors(cudaSetDevice(in.device()));
+
+        if (in.shape()[0] < in.shape()[1]) Q = Q[{ac::all(), ac::range(0, in.shape()[0], 1)}];
+
         cytnx::linalg_internal::lii.cuQuantumQr_ii[in.dtype()](
           in._impl->storage()._impl, Q._impl->storage()._impl, R._impl->storage()._impl,
           D._impl->storage()._impl, tau._impl->storage()._impl, in.shape()[0], in.shape()[1],

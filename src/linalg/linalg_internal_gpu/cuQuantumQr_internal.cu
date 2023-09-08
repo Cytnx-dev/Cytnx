@@ -113,9 +113,11 @@ namespace cytnx {
       std::vector<int32_t> modesQ{'s', 'i'};
       std::vector<int32_t> modesR{'j', 's'};  // QR output
 
-      std::vector<int64_t> extentT{M, N};
-      std::vector<int64_t> extentQ{M, N};
-      std::vector<int64_t> extentR{N, N};
+      int n_tau = std::max(1, int(std::min(M, N)));
+
+      std::vector<int64_t> extentT{N, M};
+      std::vector<int64_t> extentQ{n_tau, M};
+      std::vector<int64_t> extentR{N, n_tau};
 
       const int32_t numModesIn = modesT.size();
       const int32_t numModesQ = modesQ.size();
