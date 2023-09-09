@@ -1,7 +1,7 @@
 #ifndef __cuSplit_internal_H__
 #define __cuSplit_internal_H__
 
-#include "algo/algo_internal_interface.hpp"
+#include "backend/algo_internal_interface.hpp"
 #include <assert.h>
 #include <iostream>
 #include <iomanip>
