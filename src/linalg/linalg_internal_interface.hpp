@@ -5,7 +5,7 @@
 
 #include "Type.hpp"
 #include "backend/Storage.hpp"
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 #include "linalg/linalg_internal_cpu/Arithmetic_internal.hpp"
 #include "linalg/linalg_internal_cpu/iArithmetic_internal.hpp"
 #include "linalg/linalg_internal_cpu/Sdd_internal.hpp"

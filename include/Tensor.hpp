@@ -14,7 +14,7 @@
 #include <vector>
 #include <initializer_list>
 #include <string>
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 
 // move to backend?
 #include "Tensor_impl.hpp"

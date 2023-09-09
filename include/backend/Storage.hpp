@@ -15,7 +15,7 @@
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
 #include "cytnx_error.hpp"
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 
 #define STORAGE_DEFT_SZ 2
 

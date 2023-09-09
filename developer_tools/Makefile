@@ -127,7 +127,7 @@ endif
 OBJS = Scalar.o Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o ncon.o
+OBJS += LinOp.o Storage.o Tensor.o Tensor_impl.o Accessor.o Generator.o Physics.o ncon.o
 OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o BlockUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 ## TN
@@ -266,7 +266,10 @@ endif
 Tensor.o: $(CytnxPATH)/src/Tensor.cpp $(CytnxPATH)/include/Tensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Storage.o: $(CytnxPATH)/src/Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Tensor_impl.o: $(CytnxPATH)/src/Tensor_impl.cpp $(CytnxPATH)/include/Tensor_impl.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+Storage.o: $(CytnxPATH)/src/backend/Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 Accessor.o: $(CytnxPATH)/src/Accessor.cpp $(CytnxPATH)/include/Accessor.hpp
@@ -315,32 +318,32 @@ LinOp.o: $(CytnxPATH)/src/LinOp.cpp $(CytnxPATH)/include/LinOp.hpp
 
 ## Storage
 ###########################
-Storage_base.o: $(CytnxPATH)/src/Storage_base.cpp $(CytnxPATH)/include/Storage.hpp
+Storage_base.o: $(CytnxPATH)/src/backend/Storage_base.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-BoolStorage.o: $(CytnxPATH)/src/BoolStorage.cpp $(CytnxPATH)/include/Storage.hpp
+BoolStorage.o: $(CytnxPATH)/src/backend/BoolStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uint16Storage.o: $(CytnxPATH)/src/Uint16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Uint16Storage.o: $(CytnxPATH)/src/backend/Uint16Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Int16Storage.o: $(CytnxPATH)/src/Int16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Int16Storage.o: $(CytnxPATH)/src/backend/Int16Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uint32Storage.o: $(CytnxPATH)/src/Uint32Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Uint32Storage.o: $(CytnxPATH)/src/backend/Uint32Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Int32Storage.o: $(CytnxPATH)/src/Int32Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Int32Storage.o: $(CytnxPATH)/src/backend/Int32Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uint64Storage.o: $(CytnxPATH)/src/Uint64Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Uint64Storage.o: $(CytnxPATH)/src/backend/Uint64Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Int64Storage.o: $(CytnxPATH)/src/Int64Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Int64Storage.o: $(CytnxPATH)/src/backend/Int64Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-FloatStorage.o: $(CytnxPATH)/src/FloatStorage.cpp $(CytnxPATH)/include/Storage.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-DoubleStorage.o: $(CytnxPATH)/src/DoubleStorage.cpp $(CytnxPATH)/include/Storage.hpp
+FloatStorage.o: $(CytnxPATH)/src/backend/FloatStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-ComplexFloatStorage.o: $(CytnxPATH)/src/ComplexFloatStorage.cpp $(CytnxPATH)/include/Storage.hpp
+DoubleStorage.o: $(CytnxPATH)/src/backend/DoubleStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-ComplexDoubleStorage.o: $(CytnxPATH)/src/ComplexDoubleStorage.cpp $(CytnxPATH)/include/Storage.hpp
+ComplexFloatStorage.o: $(CytnxPATH)/src/backend/ComplexFloatStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+ComplexDoubleStorage.o: $(CytnxPATH)/src/backend/ComplexDoubleStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 
@@ -628,7 +631,7 @@ Type.o : $(CytnxPATH)/src/Type.cpp $(CytnxPATH)/include/Type.hpp
 Device.o: $(CytnxPATH)/src/Device.cpp $(CytnxPATH)/include/Device.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Scalar.o : $(CytnxPATH)/src/Scalar.cpp $(CytnxPATH)/include/Scalar.hpp
+Scalar.o : $(CytnxPATH)/src/backend/Scalar.cpp $(CytnxPATH)/include/backend/Scalar.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Utils

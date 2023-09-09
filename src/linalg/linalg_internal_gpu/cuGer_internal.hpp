@@ -7,7 +7,7 @@
 #include <vector>
 #include "backend/Storage.hpp"
 #include "Type.hpp"
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 
 namespace cytnx {
 

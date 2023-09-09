@@ -6,6 +6,7 @@
 
 target_sources_local(cytnx
   PRIVATE
+    Scalar.cpp
     Storage.cpp
     Storage_base.cpp
     ComplexDoubleStorage.cpp

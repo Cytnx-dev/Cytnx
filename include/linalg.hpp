@@ -6,7 +6,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "backend/Storage.hpp"
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 #include "LinOp.hpp"
 #include <functional>
 
