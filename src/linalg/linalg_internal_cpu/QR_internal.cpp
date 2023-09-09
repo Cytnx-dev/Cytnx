@@ -98,7 +98,7 @@ namespace cytnx {
 
       lapack_int ldA = N;
       lapack_int info;
-      lapack_int K = N;
+      lapack_int K = M < N ? M : N;
 
       // call linalg:
       info = LAPACKE_cgelqf(LAPACK_COL_MAJOR, N, M, (lapack_complex_float *)pQ, ldA,
@@ -124,10 +124,11 @@ namespace cytnx {
 
       // getQ:
       // query lwork & alloc
-      lapack_int col = M < N ? N : M;
+      lapack_int col = M;
+      lapack_int row = M >= N ? N : M;
 
       // call linalg:
-      info = LAPACKE_cunglq(LAPACK_COL_MAJOR, N, col, K, (lapack_complex_float *)pQ, ldA,
+      info = LAPACKE_cunglq(LAPACK_COL_MAJOR, row, col, K, (lapack_complex_float *)pQ, ldA,
                             (lapack_complex_float *)ptau);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'cunglq': Lapack INFO = ", info);
@@ -148,7 +149,7 @@ namespace cytnx {
 
       lapack_int ldA = N;
       lapack_int info;
-      lapack_int K = N;
+      lapack_int K = M < N ? M : N;
 
       // call linalg:
       info = LAPACKE_dgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
@@ -173,8 +174,10 @@ namespace cytnx {
 
       // getQ:
       // query lwork & alloc
-      lapack_int col = M < N ? N : M;
-      info = LAPACKE_dorglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);
+      lapack_int col = M;
+      lapack_int row = M >= N ? N : M;
+
+      info = LAPACKE_dorglq(LAPACK_COL_MAJOR, row, col, K, pQ, ldA, ptau);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'dorglq': Lapack INFO = ", info);
     }
@@ -195,7 +198,7 @@ namespace cytnx {
 
       lapack_int ldA = N;
       lapack_int info;
-      lapack_int K = N;
+      lapack_int K = M < N ? M : N;
 
       // call linalg:
       info = LAPACKE_sgelqf(LAPACK_COL_MAJOR, N, M, pQ, ldA, ptau);
@@ -220,8 +223,10 @@ namespace cytnx {
 
       // getQ:
       // query lwork & alloc
-      lapack_int col = M < N ? N : M;
-      info = LAPACKE_sorglq(LAPACK_COL_MAJOR, N, col, K, pQ, ldA, ptau);
+      lapack_int col = M;
+      lapack_int row = M >= N ? N : M;
+
+      info = LAPACKE_sorglq(LAPACK_COL_MAJOR, row, col, K, pQ, ldA, ptau);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'sorglq': Lapack INFO = ", info);
     }
