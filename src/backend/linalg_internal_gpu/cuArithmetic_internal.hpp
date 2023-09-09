@@ -3,12 +3,12 @@
 
 #include "Type.hpp"
 #include "backend/Storage.hpp"
-#include "linalg/linalg_internal_gpu/cuAdd_internal.hpp"
-#include "linalg/linalg_internal_gpu/cuMul_internal.hpp"
-#include "linalg/linalg_internal_gpu/cuSub_internal.hpp"
-#include "linalg/linalg_internal_gpu/cuDiv_internal.hpp"
-#include "linalg/linalg_internal_gpu/cuCpr_internal.hpp"
-#include "linalg/linalg_internal_gpu/cuMod_internal.hpp"
+#include "backend/linalg_internal_gpu/cuAdd_internal.hpp"
+#include "backend/linalg_internal_gpu/cuMul_internal.hpp"
+#include "backend/linalg_internal_gpu/cuSub_internal.hpp"
+#include "backend/linalg_internal_gpu/cuDiv_internal.hpp"
+#include "backend/linalg_internal_gpu/cuCpr_internal.hpp"
+#include "backend/linalg_internal_gpu/cuMod_internal.hpp"
 namespace cytnx {
   namespace linalg_internal {
 

@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_gpu/cuDet_internal.hpp"
+#include "backend/linalg_internal_gpu/cuDet_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"

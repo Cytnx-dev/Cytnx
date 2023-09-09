@@ -2207,1301 +2207,1301 @@ src/linalg/Vectordot.cpp.s:
 	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/Vectordot.cpp.s
 .PHONY : src/linalg/Vectordot.cpp.s
 
-src/linalg/linalg_internal_cpu/Abs_internal.o: src/linalg/linalg_internal_cpu/Abs_internal.cpp.o
+src/backend/linalg_internal_cpu/Abs_internal.o: src/backend/linalg_internal_cpu/Abs_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Abs_internal.o
-
-# target to build an object file
-src/linalg/linalg_internal_cpu/Abs_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Abs_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Abs_internal.cpp.o
-
-src/linalg/linalg_internal_cpu/Abs_internal.i: src/linalg/linalg_internal_cpu/Abs_internal.cpp.i
-
-.PHONY : src/linalg/linalg_internal_cpu/Abs_internal.i
-
-# target to preprocess a source file
-src/linalg/linalg_internal_cpu/Abs_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Abs_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Abs_internal.cpp.i
-
-src/linalg/linalg_internal_cpu/Abs_internal.s: src/linalg/linalg_internal_cpu/Abs_internal.cpp.s
-
-.PHONY : src/linalg/linalg_internal_cpu/Abs_internal.s
-
-# target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Abs_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Abs_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Abs_internal.cpp.s
-
-src/linalg/linalg_internal_cpu/Add_internal.o: src/linalg/linalg_internal_cpu/Add_internal.cpp.o
-
-.PHONY : src/linalg/linalg_internal_cpu/Add_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Abs_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Add_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Add_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Add_internal.cpp.o
+src/backend/linalg_internal_cpu/Abs_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Abs_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Abs_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Add_internal.i: src/linalg/linalg_internal_cpu/Add_internal.cpp.i
+src/backend/linalg_internal_cpu/Abs_internal.i: src/backend/linalg_internal_cpu/Abs_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Add_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Abs_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Add_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Add_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Add_internal.cpp.i
+src/backend/linalg_internal_cpu/Abs_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Abs_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Abs_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Add_internal.s: src/linalg/linalg_internal_cpu/Add_internal.cpp.s
+src/backend/linalg_internal_cpu/Abs_internal.s: src/backend/linalg_internal_cpu/Abs_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Add_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Abs_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Add_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Add_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Add_internal.cpp.s
+src/backend/linalg_internal_cpu/Abs_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Abs_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Abs_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Arithmetic_internal.o: src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.o
+src/backend/linalg_internal_cpu/Add_internal.o: src/backend/linalg_internal_cpu/Add_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Arithmetic_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Add_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.o
+src/backend/linalg_internal_cpu/Add_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Add_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Add_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Arithmetic_internal.i: src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.i
+src/backend/linalg_internal_cpu/Add_internal.i: src/backend/linalg_internal_cpu/Add_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Arithmetic_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Add_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.i
+src/backend/linalg_internal_cpu/Add_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Add_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Add_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Arithmetic_internal.s: src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.s
+src/backend/linalg_internal_cpu/Add_internal.s: src/backend/linalg_internal_cpu/Add_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Arithmetic_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Add_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp.s
+src/backend/linalg_internal_cpu/Add_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Add_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Add_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Conj_inplace_internal.o: src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.o
+src/backend/linalg_internal_cpu/Arithmetic_internal.o: src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Conj_inplace_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Arithmetic_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.o
+src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Conj_inplace_internal.i: src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.i
+src/backend/linalg_internal_cpu/Arithmetic_internal.i: src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Conj_inplace_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Arithmetic_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.i
+src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Conj_inplace_internal.s: src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.s
+src/backend/linalg_internal_cpu/Arithmetic_internal.s: src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Conj_inplace_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Arithmetic_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp.s
+src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Arithmetic_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Cpr_internal.o: src/linalg/linalg_internal_cpu/Cpr_internal.cpp.o
+src/backend/linalg_internal_cpu/Conj_inplace_internal.o: src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Cpr_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Conj_inplace_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Cpr_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Cpr_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Cpr_internal.cpp.o
+src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Cpr_internal.i: src/linalg/linalg_internal_cpu/Cpr_internal.cpp.i
+src/backend/linalg_internal_cpu/Conj_inplace_internal.i: src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Cpr_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Conj_inplace_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Cpr_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Cpr_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Cpr_internal.cpp.i
+src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Cpr_internal.s: src/linalg/linalg_internal_cpu/Cpr_internal.cpp.s
+src/backend/linalg_internal_cpu/Conj_inplace_internal.s: src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Cpr_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Conj_inplace_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Cpr_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Cpr_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Cpr_internal.cpp.s
+src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Det_internal.o: src/linalg/linalg_internal_cpu/Det_internal.cpp.o
+src/backend/linalg_internal_cpu/Cpr_internal.o: src/backend/linalg_internal_cpu/Cpr_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Det_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Cpr_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Det_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Det_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Det_internal.cpp.o
+src/backend/linalg_internal_cpu/Cpr_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Cpr_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Cpr_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Det_internal.i: src/linalg/linalg_internal_cpu/Det_internal.cpp.i
+src/backend/linalg_internal_cpu/Cpr_internal.i: src/backend/linalg_internal_cpu/Cpr_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Det_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Cpr_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Det_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Det_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Det_internal.cpp.i
+src/backend/linalg_internal_cpu/Cpr_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Cpr_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Cpr_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Det_internal.s: src/linalg/linalg_internal_cpu/Det_internal.cpp.s
+src/backend/linalg_internal_cpu/Cpr_internal.s: src/backend/linalg_internal_cpu/Cpr_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Det_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Cpr_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Det_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Det_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Det_internal.cpp.s
+src/backend/linalg_internal_cpu/Cpr_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Cpr_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Cpr_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Diag_internal.o: src/linalg/linalg_internal_cpu/Diag_internal.cpp.o
+src/backend/linalg_internal_cpu/Det_internal.o: src/backend/linalg_internal_cpu/Det_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Diag_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Det_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Diag_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Diag_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Diag_internal.cpp.o
+src/backend/linalg_internal_cpu/Det_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Det_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Det_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Diag_internal.i: src/linalg/linalg_internal_cpu/Diag_internal.cpp.i
+src/backend/linalg_internal_cpu/Det_internal.i: src/backend/linalg_internal_cpu/Det_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Diag_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Det_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Diag_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Diag_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Diag_internal.cpp.i
+src/backend/linalg_internal_cpu/Det_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Det_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Det_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Diag_internal.s: src/linalg/linalg_internal_cpu/Diag_internal.cpp.s
+src/backend/linalg_internal_cpu/Det_internal.s: src/backend/linalg_internal_cpu/Det_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Diag_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Det_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Diag_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Diag_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Diag_internal.cpp.s
+src/backend/linalg_internal_cpu/Det_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Det_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Det_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Div_internal.o: src/linalg/linalg_internal_cpu/Div_internal.cpp.o
+src/backend/linalg_internal_cpu/Diag_internal.o: src/backend/linalg_internal_cpu/Diag_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Div_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Diag_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Div_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Div_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Div_internal.cpp.o
+src/backend/linalg_internal_cpu/Diag_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Diag_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Diag_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Div_internal.i: src/linalg/linalg_internal_cpu/Div_internal.cpp.i
+src/backend/linalg_internal_cpu/Diag_internal.i: src/backend/linalg_internal_cpu/Diag_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Div_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Diag_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Div_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Div_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Div_internal.cpp.i
+src/backend/linalg_internal_cpu/Diag_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Diag_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Diag_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Div_internal.s: src/linalg/linalg_internal_cpu/Div_internal.cpp.s
+src/backend/linalg_internal_cpu/Diag_internal.s: src/backend/linalg_internal_cpu/Diag_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Div_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Diag_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Div_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Div_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Div_internal.cpp.s
+src/backend/linalg_internal_cpu/Diag_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Diag_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Diag_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Eig_internal.o: src/linalg/linalg_internal_cpu/Eig_internal.cpp.o
+src/backend/linalg_internal_cpu/Div_internal.o: src/backend/linalg_internal_cpu/Div_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Eig_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Div_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Eig_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Eig_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Eig_internal.cpp.o
+src/backend/linalg_internal_cpu/Div_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Div_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Div_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Eig_internal.i: src/linalg/linalg_internal_cpu/Eig_internal.cpp.i
+src/backend/linalg_internal_cpu/Div_internal.i: src/backend/linalg_internal_cpu/Div_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Eig_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Div_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Eig_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Eig_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Eig_internal.cpp.i
+src/backend/linalg_internal_cpu/Div_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Div_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Div_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Eig_internal.s: src/linalg/linalg_internal_cpu/Eig_internal.cpp.s
+src/backend/linalg_internal_cpu/Div_internal.s: src/backend/linalg_internal_cpu/Div_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Eig_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Div_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Eig_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Eig_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Eig_internal.cpp.s
+src/backend/linalg_internal_cpu/Div_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Div_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Div_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Eigh_internal.o: src/linalg/linalg_internal_cpu/Eigh_internal.cpp.o
+src/backend/linalg_internal_cpu/Eig_internal.o: src/backend/linalg_internal_cpu/Eig_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Eigh_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Eig_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Eigh_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Eigh_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Eigh_internal.cpp.o
+src/backend/linalg_internal_cpu/Eig_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Eig_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Eig_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Eigh_internal.i: src/linalg/linalg_internal_cpu/Eigh_internal.cpp.i
+src/backend/linalg_internal_cpu/Eig_internal.i: src/backend/linalg_internal_cpu/Eig_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Eigh_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Eig_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Eigh_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Eigh_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Eigh_internal.cpp.i
+src/backend/linalg_internal_cpu/Eig_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Eig_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Eig_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Eigh_internal.s: src/linalg/linalg_internal_cpu/Eigh_internal.cpp.s
+src/backend/linalg_internal_cpu/Eig_internal.s: src/backend/linalg_internal_cpu/Eig_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Eigh_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Eig_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Eigh_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Eigh_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Eigh_internal.cpp.s
+src/backend/linalg_internal_cpu/Eig_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Eig_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Eig_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Exp_internal.o: src/linalg/linalg_internal_cpu/Exp_internal.cpp.o
+src/backend/linalg_internal_cpu/Eigh_internal.o: src/backend/linalg_internal_cpu/Eigh_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Exp_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Eigh_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Exp_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Exp_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Exp_internal.cpp.o
+src/backend/linalg_internal_cpu/Eigh_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Eigh_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Eigh_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Exp_internal.i: src/linalg/linalg_internal_cpu/Exp_internal.cpp.i
+src/backend/linalg_internal_cpu/Eigh_internal.i: src/backend/linalg_internal_cpu/Eigh_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Exp_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Eigh_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Exp_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Exp_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Exp_internal.cpp.i
+src/backend/linalg_internal_cpu/Eigh_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Eigh_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Eigh_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Exp_internal.s: src/linalg/linalg_internal_cpu/Exp_internal.cpp.s
+src/backend/linalg_internal_cpu/Eigh_internal.s: src/backend/linalg_internal_cpu/Eigh_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Exp_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Eigh_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Exp_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Exp_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Exp_internal.cpp.s
+src/backend/linalg_internal_cpu/Eigh_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Eigh_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Eigh_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/InvM_inplace_internal.o: src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.o
+src/backend/linalg_internal_cpu/Exp_internal.o: src/backend/linalg_internal_cpu/Exp_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/InvM_inplace_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Exp_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.o
+src/backend/linalg_internal_cpu/Exp_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Exp_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Exp_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/InvM_inplace_internal.i: src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.i
+src/backend/linalg_internal_cpu/Exp_internal.i: src/backend/linalg_internal_cpu/Exp_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/InvM_inplace_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Exp_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.i
+src/backend/linalg_internal_cpu/Exp_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Exp_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Exp_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/InvM_inplace_internal.s: src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.s
+src/backend/linalg_internal_cpu/Exp_internal.s: src/backend/linalg_internal_cpu/Exp_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/InvM_inplace_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Exp_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp.s
+src/backend/linalg_internal_cpu/Exp_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Exp_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Exp_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Inv_inplace_internal.o: src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.o
+src/backend/linalg_internal_cpu/InvM_inplace_internal.o: src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Inv_inplace_internal.o
+.PHONY : src/backend/linalg_internal_cpu/InvM_inplace_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.o
+src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Inv_inplace_internal.i: src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.i
+src/backend/linalg_internal_cpu/InvM_inplace_internal.i: src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Inv_inplace_internal.i
+.PHONY : src/backend/linalg_internal_cpu/InvM_inplace_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.i
+src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Inv_inplace_internal.s: src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.s
+src/backend/linalg_internal_cpu/InvM_inplace_internal.s: src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Inv_inplace_internal.s
+.PHONY : src/backend/linalg_internal_cpu/InvM_inplace_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp.s
+src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Kron_internal.o: src/linalg/linalg_internal_cpu/Kron_internal.cpp.o
+src/backend/linalg_internal_cpu/Inv_inplace_internal.o: src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Kron_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Inv_inplace_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Kron_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Kron_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Kron_internal.cpp.o
+src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Kron_internal.i: src/linalg/linalg_internal_cpu/Kron_internal.cpp.i
+src/backend/linalg_internal_cpu/Inv_inplace_internal.i: src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Kron_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Inv_inplace_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Kron_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Kron_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Kron_internal.cpp.i
+src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Kron_internal.s: src/linalg/linalg_internal_cpu/Kron_internal.cpp.s
+src/backend/linalg_internal_cpu/Inv_inplace_internal.s: src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Kron_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Inv_inplace_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Kron_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Kron_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Kron_internal.cpp.s
+src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Matmul_internal.o: src/linalg/linalg_internal_cpu/Matmul_internal.cpp.o
+src/backend/linalg_internal_cpu/Kron_internal.o: src/backend/linalg_internal_cpu/Kron_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Matmul_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Kron_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Matmul_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Matmul_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Matmul_internal.cpp.o
+src/backend/linalg_internal_cpu/Kron_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Kron_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Kron_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Matmul_internal.i: src/linalg/linalg_internal_cpu/Matmul_internal.cpp.i
+src/backend/linalg_internal_cpu/Kron_internal.i: src/backend/linalg_internal_cpu/Kron_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Matmul_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Kron_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Matmul_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Matmul_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Matmul_internal.cpp.i
+src/backend/linalg_internal_cpu/Kron_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Kron_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Kron_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Matmul_internal.s: src/linalg/linalg_internal_cpu/Matmul_internal.cpp.s
+src/backend/linalg_internal_cpu/Kron_internal.s: src/backend/linalg_internal_cpu/Kron_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Matmul_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Kron_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Matmul_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Matmul_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Matmul_internal.cpp.s
+src/backend/linalg_internal_cpu/Kron_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Kron_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Kron_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Matvec_internal.o: src/linalg/linalg_internal_cpu/Matvec_internal.cpp.o
+src/backend/linalg_internal_cpu/Matmul_internal.o: src/backend/linalg_internal_cpu/Matmul_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Matvec_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Matmul_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Matvec_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Matvec_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Matvec_internal.cpp.o
+src/backend/linalg_internal_cpu/Matmul_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Matmul_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Matmul_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Matvec_internal.i: src/linalg/linalg_internal_cpu/Matvec_internal.cpp.i
+src/backend/linalg_internal_cpu/Matmul_internal.i: src/backend/linalg_internal_cpu/Matmul_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Matvec_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Matmul_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Matvec_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Matvec_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Matvec_internal.cpp.i
+src/backend/linalg_internal_cpu/Matmul_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Matmul_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Matmul_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Matvec_internal.s: src/linalg/linalg_internal_cpu/Matvec_internal.cpp.s
+src/backend/linalg_internal_cpu/Matmul_internal.s: src/backend/linalg_internal_cpu/Matmul_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Matvec_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Matmul_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Matvec_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Matvec_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Matvec_internal.cpp.s
+src/backend/linalg_internal_cpu/Matmul_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Matmul_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Matmul_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/MaxMin_internal.o: src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.o
+src/backend/linalg_internal_cpu/Matvec_internal.o: src/backend/linalg_internal_cpu/Matvec_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/MaxMin_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Matvec_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.o
+src/backend/linalg_internal_cpu/Matvec_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Matvec_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Matvec_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/MaxMin_internal.i: src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.i
+src/backend/linalg_internal_cpu/Matvec_internal.i: src/backend/linalg_internal_cpu/Matvec_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/MaxMin_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Matvec_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.i
+src/backend/linalg_internal_cpu/Matvec_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Matvec_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Matvec_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/MaxMin_internal.s: src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.s
+src/backend/linalg_internal_cpu/Matvec_internal.s: src/backend/linalg_internal_cpu/Matvec_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/MaxMin_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Matvec_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/MaxMin_internal.cpp.s
+src/backend/linalg_internal_cpu/Matvec_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Matvec_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Matvec_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Mod_internal.o: src/linalg/linalg_internal_cpu/Mod_internal.cpp.o
+src/backend/linalg_internal_cpu/MaxMin_internal.o: src/backend/linalg_internal_cpu/MaxMin_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Mod_internal.o
+.PHONY : src/backend/linalg_internal_cpu/MaxMin_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Mod_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Mod_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Mod_internal.cpp.o
+src/backend/linalg_internal_cpu/MaxMin_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/MaxMin_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/MaxMin_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Mod_internal.i: src/linalg/linalg_internal_cpu/Mod_internal.cpp.i
+src/backend/linalg_internal_cpu/MaxMin_internal.i: src/backend/linalg_internal_cpu/MaxMin_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Mod_internal.i
+.PHONY : src/backend/linalg_internal_cpu/MaxMin_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Mod_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Mod_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Mod_internal.cpp.i
+src/backend/linalg_internal_cpu/MaxMin_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/MaxMin_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/MaxMin_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Mod_internal.s: src/linalg/linalg_internal_cpu/Mod_internal.cpp.s
+src/backend/linalg_internal_cpu/MaxMin_internal.s: src/backend/linalg_internal_cpu/MaxMin_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Mod_internal.s
+.PHONY : src/backend/linalg_internal_cpu/MaxMin_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Mod_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Mod_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Mod_internal.cpp.s
+src/backend/linalg_internal_cpu/MaxMin_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/MaxMin_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/MaxMin_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Mul_internal.o: src/linalg/linalg_internal_cpu/Mul_internal.cpp.o
+src/backend/linalg_internal_cpu/Mod_internal.o: src/backend/linalg_internal_cpu/Mod_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Mul_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Mod_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Mul_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Mul_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Mul_internal.cpp.o
+src/backend/linalg_internal_cpu/Mod_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Mod_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Mod_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Mul_internal.i: src/linalg/linalg_internal_cpu/Mul_internal.cpp.i
+src/backend/linalg_internal_cpu/Mod_internal.i: src/backend/linalg_internal_cpu/Mod_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Mul_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Mod_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Mul_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Mul_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Mul_internal.cpp.i
+src/backend/linalg_internal_cpu/Mod_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Mod_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Mod_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Mul_internal.s: src/linalg/linalg_internal_cpu/Mul_internal.cpp.s
+src/backend/linalg_internal_cpu/Mod_internal.s: src/backend/linalg_internal_cpu/Mod_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Mul_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Mod_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Mul_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Mul_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Mul_internal.cpp.s
+src/backend/linalg_internal_cpu/Mod_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Mod_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Mod_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Norm_internal.o: src/linalg/linalg_internal_cpu/Norm_internal.cpp.o
+src/backend/linalg_internal_cpu/Mul_internal.o: src/backend/linalg_internal_cpu/Mul_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Norm_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Mul_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Norm_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Norm_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Norm_internal.cpp.o
+src/backend/linalg_internal_cpu/Mul_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Mul_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Mul_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Norm_internal.i: src/linalg/linalg_internal_cpu/Norm_internal.cpp.i
+src/backend/linalg_internal_cpu/Mul_internal.i: src/backend/linalg_internal_cpu/Mul_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Norm_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Mul_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Norm_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Norm_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Norm_internal.cpp.i
+src/backend/linalg_internal_cpu/Mul_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Mul_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Mul_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Norm_internal.s: src/linalg/linalg_internal_cpu/Norm_internal.cpp.s
+src/backend/linalg_internal_cpu/Mul_internal.s: src/backend/linalg_internal_cpu/Mul_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Norm_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Mul_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Norm_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Norm_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Norm_internal.cpp.s
+src/backend/linalg_internal_cpu/Mul_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Mul_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Mul_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Outer_internal.o: src/linalg/linalg_internal_cpu/Outer_internal.cpp.o
+src/backend/linalg_internal_cpu/Norm_internal.o: src/backend/linalg_internal_cpu/Norm_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Outer_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Norm_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Outer_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Outer_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Outer_internal.cpp.o
+src/backend/linalg_internal_cpu/Norm_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Norm_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Norm_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Outer_internal.i: src/linalg/linalg_internal_cpu/Outer_internal.cpp.i
+src/backend/linalg_internal_cpu/Norm_internal.i: src/backend/linalg_internal_cpu/Norm_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Outer_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Norm_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Outer_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Outer_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Outer_internal.cpp.i
+src/backend/linalg_internal_cpu/Norm_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Norm_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Norm_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Outer_internal.s: src/linalg/linalg_internal_cpu/Outer_internal.cpp.s
+src/backend/linalg_internal_cpu/Norm_internal.s: src/backend/linalg_internal_cpu/Norm_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Outer_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Norm_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Outer_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Outer_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Outer_internal.cpp.s
+src/backend/linalg_internal_cpu/Norm_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Norm_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Norm_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Pow_internal.o: src/linalg/linalg_internal_cpu/Pow_internal.cpp.o
+src/backend/linalg_internal_cpu/Outer_internal.o: src/backend/linalg_internal_cpu/Outer_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Pow_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Outer_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Pow_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Pow_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Pow_internal.cpp.o
+src/backend/linalg_internal_cpu/Outer_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Outer_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Outer_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Pow_internal.i: src/linalg/linalg_internal_cpu/Pow_internal.cpp.i
+src/backend/linalg_internal_cpu/Outer_internal.i: src/backend/linalg_internal_cpu/Outer_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Pow_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Outer_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Pow_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Pow_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Pow_internal.cpp.i
+src/backend/linalg_internal_cpu/Outer_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Outer_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Outer_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Pow_internal.s: src/linalg/linalg_internal_cpu/Pow_internal.cpp.s
+src/backend/linalg_internal_cpu/Outer_internal.s: src/backend/linalg_internal_cpu/Outer_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Pow_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Outer_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Pow_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Pow_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Pow_internal.cpp.s
+src/backend/linalg_internal_cpu/Outer_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Outer_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Outer_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/QR_internal.o: src/linalg/linalg_internal_cpu/QR_internal.cpp.o
+src/backend/linalg_internal_cpu/Pow_internal.o: src/backend/linalg_internal_cpu/Pow_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/QR_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Pow_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/QR_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/QR_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/QR_internal.cpp.o
+src/backend/linalg_internal_cpu/Pow_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Pow_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Pow_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/QR_internal.i: src/linalg/linalg_internal_cpu/QR_internal.cpp.i
+src/backend/linalg_internal_cpu/Pow_internal.i: src/backend/linalg_internal_cpu/Pow_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/QR_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Pow_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/QR_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/QR_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/QR_internal.cpp.i
+src/backend/linalg_internal_cpu/Pow_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Pow_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Pow_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/QR_internal.s: src/linalg/linalg_internal_cpu/QR_internal.cpp.s
+src/backend/linalg_internal_cpu/Pow_internal.s: src/backend/linalg_internal_cpu/Pow_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/QR_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Pow_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/QR_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/QR_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/QR_internal.cpp.s
+src/backend/linalg_internal_cpu/Pow_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Pow_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Pow_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Sub_internal.o: src/linalg/linalg_internal_cpu/Sub_internal.cpp.o
+src/backend/linalg_internal_cpu/QR_internal.o: src/backend/linalg_internal_cpu/QR_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Sub_internal.o
+.PHONY : src/backend/linalg_internal_cpu/QR_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Sub_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Sub_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Sub_internal.cpp.o
+src/backend/linalg_internal_cpu/QR_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/QR_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/QR_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Sub_internal.i: src/linalg/linalg_internal_cpu/Sub_internal.cpp.i
+src/backend/linalg_internal_cpu/QR_internal.i: src/backend/linalg_internal_cpu/QR_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Sub_internal.i
+.PHONY : src/backend/linalg_internal_cpu/QR_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Sub_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Sub_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Sub_internal.cpp.i
+src/backend/linalg_internal_cpu/QR_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/QR_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/QR_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Sub_internal.s: src/linalg/linalg_internal_cpu/Sub_internal.cpp.s
+src/backend/linalg_internal_cpu/QR_internal.s: src/backend/linalg_internal_cpu/QR_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Sub_internal.s
+.PHONY : src/backend/linalg_internal_cpu/QR_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Sub_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Sub_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Sub_internal.cpp.s
+src/backend/linalg_internal_cpu/QR_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/QR_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/QR_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Sum_internal.o: src/linalg/linalg_internal_cpu/Sum_internal.cpp.o
+src/backend/linalg_internal_cpu/Sub_internal.o: src/backend/linalg_internal_cpu/Sub_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Sum_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Sub_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Sum_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Sum_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Sum_internal.cpp.o
+src/backend/linalg_internal_cpu/Sub_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Sub_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Sub_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Sum_internal.i: src/linalg/linalg_internal_cpu/Sum_internal.cpp.i
+src/backend/linalg_internal_cpu/Sub_internal.i: src/backend/linalg_internal_cpu/Sub_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Sum_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Sub_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Sum_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Sum_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Sum_internal.cpp.i
+src/backend/linalg_internal_cpu/Sub_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Sub_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Sub_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Sum_internal.s: src/linalg/linalg_internal_cpu/Sum_internal.cpp.s
+src/backend/linalg_internal_cpu/Sub_internal.s: src/backend/linalg_internal_cpu/Sub_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Sum_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Sub_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Sum_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Sum_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Sum_internal.cpp.s
+src/backend/linalg_internal_cpu/Sub_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Sub_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Sub_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Svd_internal.o: src/linalg/linalg_internal_cpu/Svd_internal.cpp.o
+src/backend/linalg_internal_cpu/Sum_internal.o: src/backend/linalg_internal_cpu/Sum_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Svd_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Sum_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Svd_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Svd_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Svd_internal.cpp.o
+src/backend/linalg_internal_cpu/Sum_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Sum_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Sum_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Svd_internal.i: src/linalg/linalg_internal_cpu/Svd_internal.cpp.i
+src/backend/linalg_internal_cpu/Sum_internal.i: src/backend/linalg_internal_cpu/Sum_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Svd_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Sum_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Svd_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Svd_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Svd_internal.cpp.i
+src/backend/linalg_internal_cpu/Sum_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Sum_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Sum_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Svd_internal.s: src/linalg/linalg_internal_cpu/Svd_internal.cpp.s
+src/backend/linalg_internal_cpu/Sum_internal.s: src/backend/linalg_internal_cpu/Sum_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Svd_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Sum_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Svd_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Svd_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Svd_internal.cpp.s
+src/backend/linalg_internal_cpu/Sum_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Sum_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Sum_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Tridiag_internal.o: src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.o
+src/backend/linalg_internal_cpu/Svd_internal.o: src/backend/linalg_internal_cpu/Svd_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Tridiag_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Svd_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.o
+src/backend/linalg_internal_cpu/Svd_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Svd_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Svd_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Tridiag_internal.i: src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.i
+src/backend/linalg_internal_cpu/Svd_internal.i: src/backend/linalg_internal_cpu/Svd_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Tridiag_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Svd_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.i
+src/backend/linalg_internal_cpu/Svd_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Svd_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Svd_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Tridiag_internal.s: src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.s
+src/backend/linalg_internal_cpu/Svd_internal.s: src/backend/linalg_internal_cpu/Svd_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Tridiag_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Svd_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Tridiag_internal.cpp.s
+src/backend/linalg_internal_cpu/Svd_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Svd_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Svd_internal.cpp.s
 
-src/linalg/linalg_internal_cpu/Vectordot_internal.o: src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.o
+src/backend/linalg_internal_cpu/Tridiag_internal.o: src/backend/linalg_internal_cpu/Tridiag_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_cpu/Vectordot_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Tridiag_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.o
-.PHONY : src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.o
+src/backend/linalg_internal_cpu/Tridiag_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Tridiag_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Tridiag_internal.cpp.o
 
-src/linalg/linalg_internal_cpu/Vectordot_internal.i: src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.i
+src/backend/linalg_internal_cpu/Tridiag_internal.i: src/backend/linalg_internal_cpu/Tridiag_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_cpu/Vectordot_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Tridiag_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.i
-.PHONY : src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.i
+src/backend/linalg_internal_cpu/Tridiag_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Tridiag_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Tridiag_internal.cpp.i
 
-src/linalg/linalg_internal_cpu/Vectordot_internal.s: src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.s
+src/backend/linalg_internal_cpu/Tridiag_internal.s: src/backend/linalg_internal_cpu/Tridiag_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_cpu/Vectordot_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Tridiag_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.s
-.PHONY : src/linalg/linalg_internal_cpu/Vectordot_internal.cpp.s
+src/backend/linalg_internal_cpu/Tridiag_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Tridiag_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Tridiag_internal.cpp.s
 
-src/linalg/linalg_internal_gpu/cuAdd_internal.o: src/linalg/linalg_internal_gpu/cuAdd_internal.cu.o
+src/backend/linalg_internal_cpu/Vectordot_internal.o: src/backend/linalg_internal_cpu/Vectordot_internal.cpp.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuAdd_internal.o
+.PHONY : src/backend/linalg_internal_cpu/Vectordot_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuAdd_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuAdd_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuAdd_internal.cu.o
+src/backend/linalg_internal_cpu/Vectordot_internal.cpp.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Vectordot_internal.cpp.o
+.PHONY : src/backend/linalg_internal_cpu/Vectordot_internal.cpp.o
 
-src/linalg/linalg_internal_gpu/cuAdd_internal.i: src/linalg/linalg_internal_gpu/cuAdd_internal.cu.i
+src/backend/linalg_internal_cpu/Vectordot_internal.i: src/backend/linalg_internal_cpu/Vectordot_internal.cpp.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuAdd_internal.i
+.PHONY : src/backend/linalg_internal_cpu/Vectordot_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuAdd_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuAdd_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuAdd_internal.cu.i
+src/backend/linalg_internal_cpu/Vectordot_internal.cpp.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Vectordot_internal.cpp.i
+.PHONY : src/backend/linalg_internal_cpu/Vectordot_internal.cpp.i
 
-src/linalg/linalg_internal_gpu/cuAdd_internal.s: src/linalg/linalg_internal_gpu/cuAdd_internal.cu.s
+src/backend/linalg_internal_cpu/Vectordot_internal.s: src/backend/linalg_internal_cpu/Vectordot_internal.cpp.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuAdd_internal.s
+.PHONY : src/backend/linalg_internal_cpu/Vectordot_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuAdd_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuAdd_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuAdd_internal.cu.s
+src/backend/linalg_internal_cpu/Vectordot_internal.cpp.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Vectordot_internal.cpp.s
+.PHONY : src/backend/linalg_internal_cpu/Vectordot_internal.cpp.s
 
-src/linalg/linalg_internal_gpu/cuArithmetic_internal.o: src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.o
+src/backend/linalg_internal_gpu/cuAdd_internal.o: src/backend/linalg_internal_gpu/cuAdd_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuArithmetic_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuAdd_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.o
+src/backend/linalg_internal_gpu/cuAdd_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuAdd_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuAdd_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuArithmetic_internal.i: src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.i
+src/backend/linalg_internal_gpu/cuAdd_internal.i: src/backend/linalg_internal_gpu/cuAdd_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuArithmetic_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuAdd_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.i
+src/backend/linalg_internal_gpu/cuAdd_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuAdd_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuAdd_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuArithmetic_internal.s: src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.s
+src/backend/linalg_internal_gpu/cuAdd_internal.s: src/backend/linalg_internal_gpu/cuAdd_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuArithmetic_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuAdd_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu.s
+src/backend/linalg_internal_gpu/cuAdd_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuAdd_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuAdd_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuConj_inplace_internal.o: src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.o
+src/backend/linalg_internal_gpu/cuArithmetic_internal.o: src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuConj_inplace_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuArithmetic_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.o
+src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuConj_inplace_internal.i: src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.i
+src/backend/linalg_internal_gpu/cuArithmetic_internal.i: src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuConj_inplace_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuArithmetic_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.i
+src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuConj_inplace_internal.s: src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.s
+src/backend/linalg_internal_gpu/cuArithmetic_internal.s: src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuConj_inplace_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuArithmetic_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu.s
+src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuArithmetic_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuCpr_internal.o: src/linalg/linalg_internal_gpu/cuCpr_internal.cu.o
+src/backend/linalg_internal_gpu/cuConj_inplace_internal.o: src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuCpr_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuConj_inplace_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuCpr_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuCpr_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuCpr_internal.cu.o
+src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuCpr_internal.i: src/linalg/linalg_internal_gpu/cuCpr_internal.cu.i
+src/backend/linalg_internal_gpu/cuConj_inplace_internal.i: src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuCpr_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuConj_inplace_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuCpr_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuCpr_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuCpr_internal.cu.i
+src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuCpr_internal.s: src/linalg/linalg_internal_gpu/cuCpr_internal.cu.s
+src/backend/linalg_internal_gpu/cuConj_inplace_internal.s: src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuCpr_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuConj_inplace_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuCpr_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuCpr_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuCpr_internal.cu.s
+src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuDiag_internal.o: src/linalg/linalg_internal_gpu/cuDiag_internal.cu.o
+src/backend/linalg_internal_gpu/cuCpr_internal.o: src/backend/linalg_internal_gpu/cuCpr_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuDiag_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuCpr_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuDiag_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuDiag_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuDiag_internal.cu.o
+src/backend/linalg_internal_gpu/cuCpr_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuCpr_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuCpr_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuDiag_internal.i: src/linalg/linalg_internal_gpu/cuDiag_internal.cu.i
+src/backend/linalg_internal_gpu/cuCpr_internal.i: src/backend/linalg_internal_gpu/cuCpr_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuDiag_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuCpr_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuDiag_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuDiag_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuDiag_internal.cu.i
+src/backend/linalg_internal_gpu/cuCpr_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuCpr_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuCpr_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuDiag_internal.s: src/linalg/linalg_internal_gpu/cuDiag_internal.cu.s
+src/backend/linalg_internal_gpu/cuCpr_internal.s: src/backend/linalg_internal_gpu/cuCpr_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuDiag_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuCpr_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuDiag_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuDiag_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuDiag_internal.cu.s
+src/backend/linalg_internal_gpu/cuCpr_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuCpr_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuCpr_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuDiv_internal.o: src/linalg/linalg_internal_gpu/cuDiv_internal.cu.o
+src/backend/linalg_internal_gpu/cuDiag_internal.o: src/backend/linalg_internal_gpu/cuDiag_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuDiv_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuDiag_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuDiv_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuDiv_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuDiv_internal.cu.o
+src/backend/linalg_internal_gpu/cuDiag_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuDiag_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuDiag_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuDiv_internal.i: src/linalg/linalg_internal_gpu/cuDiv_internal.cu.i
+src/backend/linalg_internal_gpu/cuDiag_internal.i: src/backend/linalg_internal_gpu/cuDiag_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuDiv_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuDiag_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuDiv_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuDiv_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuDiv_internal.cu.i
+src/backend/linalg_internal_gpu/cuDiag_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuDiag_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuDiag_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuDiv_internal.s: src/linalg/linalg_internal_gpu/cuDiv_internal.cu.s
+src/backend/linalg_internal_gpu/cuDiag_internal.s: src/backend/linalg_internal_gpu/cuDiag_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuDiv_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuDiag_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuDiv_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuDiv_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuDiv_internal.cu.s
+src/backend/linalg_internal_gpu/cuDiag_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuDiag_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuDiag_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuEigh_internal.o: src/linalg/linalg_internal_gpu/cuEigh_internal.cu.o
+src/backend/linalg_internal_gpu/cuDiv_internal.o: src/backend/linalg_internal_gpu/cuDiv_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuEigh_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuDiv_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuEigh_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuEigh_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuEigh_internal.cu.o
+src/backend/linalg_internal_gpu/cuDiv_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuDiv_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuDiv_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuEigh_internal.i: src/linalg/linalg_internal_gpu/cuEigh_internal.cu.i
+src/backend/linalg_internal_gpu/cuDiv_internal.i: src/backend/linalg_internal_gpu/cuDiv_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuEigh_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuDiv_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuEigh_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuEigh_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuEigh_internal.cu.i
+src/backend/linalg_internal_gpu/cuDiv_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuDiv_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuDiv_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuEigh_internal.s: src/linalg/linalg_internal_gpu/cuEigh_internal.cu.s
+src/backend/linalg_internal_gpu/cuDiv_internal.s: src/backend/linalg_internal_gpu/cuDiv_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuEigh_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuDiv_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuEigh_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuEigh_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuEigh_internal.cu.s
+src/backend/linalg_internal_gpu/cuDiv_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuDiv_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuDiv_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuExp_internal.o: src/linalg/linalg_internal_gpu/cuExp_internal.cu.o
+src/backend/linalg_internal_gpu/cuEigh_internal.o: src/backend/linalg_internal_gpu/cuEigh_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuExp_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuEigh_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuExp_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuExp_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuExp_internal.cu.o
+src/backend/linalg_internal_gpu/cuEigh_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuEigh_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuEigh_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuExp_internal.i: src/linalg/linalg_internal_gpu/cuExp_internal.cu.i
+src/backend/linalg_internal_gpu/cuEigh_internal.i: src/backend/linalg_internal_gpu/cuEigh_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuExp_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuEigh_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuExp_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuExp_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuExp_internal.cu.i
+src/backend/linalg_internal_gpu/cuEigh_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuEigh_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuEigh_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuExp_internal.s: src/linalg/linalg_internal_gpu/cuExp_internal.cu.s
+src/backend/linalg_internal_gpu/cuEigh_internal.s: src/backend/linalg_internal_gpu/cuEigh_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuExp_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuEigh_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuExp_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuExp_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuExp_internal.cu.s
+src/backend/linalg_internal_gpu/cuEigh_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuEigh_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuEigh_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.o: src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.o
+src/backend/linalg_internal_gpu/cuExp_internal.o: src/backend/linalg_internal_gpu/cuExp_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuExp_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.o
+src/backend/linalg_internal_gpu/cuExp_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuExp_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuExp_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.i: src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.i
+src/backend/linalg_internal_gpu/cuExp_internal.i: src/backend/linalg_internal_gpu/cuExp_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuExp_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.i
+src/backend/linalg_internal_gpu/cuExp_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuExp_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuExp_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.s: src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.s
+src/backend/linalg_internal_gpu/cuExp_internal.s: src/backend/linalg_internal_gpu/cuExp_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuExp_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu.s
+src/backend/linalg_internal_gpu/cuExp_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuExp_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuExp_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuInv_inplace_internal.o: src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.o
+src/backend/linalg_internal_gpu/cuInvM_inplace_internal.o: src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuInv_inplace_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuInvM_inplace_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.o
+src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuInv_inplace_internal.i: src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.i
+src/backend/linalg_internal_gpu/cuInvM_inplace_internal.i: src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuInv_inplace_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuInvM_inplace_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.i
+src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuInv_inplace_internal.s: src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.s
+src/backend/linalg_internal_gpu/cuInvM_inplace_internal.s: src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuInv_inplace_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuInvM_inplace_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu.s
+src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuMatmul_internal.o: src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.o
+src/backend/linalg_internal_gpu/cuInv_inplace_internal.o: src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMatmul_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuInv_inplace_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.o
+src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuMatmul_internal.i: src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.i
+src/backend/linalg_internal_gpu/cuInv_inplace_internal.i: src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMatmul_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuInv_inplace_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.i
+src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuMatmul_internal.s: src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.s
+src/backend/linalg_internal_gpu/cuInv_inplace_internal.s: src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMatmul_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuInv_inplace_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuMatmul_internal.cu.s
+src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuMatvec_internal.o: src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.o
+src/backend/linalg_internal_gpu/cuMatmul_internal.o: src/backend/linalg_internal_gpu/cuMatmul_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMatvec_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuMatmul_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.o
+src/backend/linalg_internal_gpu/cuMatmul_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMatmul_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuMatmul_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuMatvec_internal.i: src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.i
+src/backend/linalg_internal_gpu/cuMatmul_internal.i: src/backend/linalg_internal_gpu/cuMatmul_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMatvec_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuMatmul_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.i
+src/backend/linalg_internal_gpu/cuMatmul_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMatmul_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuMatmul_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuMatvec_internal.s: src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.s
+src/backend/linalg_internal_gpu/cuMatmul_internal.s: src/backend/linalg_internal_gpu/cuMatmul_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMatvec_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuMatmul_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuMatvec_internal.cu.s
+src/backend/linalg_internal_gpu/cuMatmul_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMatmul_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuMatmul_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuMod_internal.o: src/linalg/linalg_internal_gpu/cuMod_internal.cu.o
+src/backend/linalg_internal_gpu/cuMatvec_internal.o: src/backend/linalg_internal_gpu/cuMatvec_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMod_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuMatvec_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuMod_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMod_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuMod_internal.cu.o
+src/backend/linalg_internal_gpu/cuMatvec_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMatvec_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuMatvec_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuMod_internal.i: src/linalg/linalg_internal_gpu/cuMod_internal.cu.i
+src/backend/linalg_internal_gpu/cuMatvec_internal.i: src/backend/linalg_internal_gpu/cuMatvec_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMod_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuMatvec_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuMod_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMod_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuMod_internal.cu.i
+src/backend/linalg_internal_gpu/cuMatvec_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMatvec_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuMatvec_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuMod_internal.s: src/linalg/linalg_internal_gpu/cuMod_internal.cu.s
+src/backend/linalg_internal_gpu/cuMatvec_internal.s: src/backend/linalg_internal_gpu/cuMatvec_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMod_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuMatvec_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuMod_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMod_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuMod_internal.cu.s
+src/backend/linalg_internal_gpu/cuMatvec_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMatvec_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuMatvec_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuMul_internal.o: src/linalg/linalg_internal_gpu/cuMul_internal.cu.o
+src/backend/linalg_internal_gpu/cuMod_internal.o: src/backend/linalg_internal_gpu/cuMod_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMul_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuMod_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuMul_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMul_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuMul_internal.cu.o
+src/backend/linalg_internal_gpu/cuMod_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMod_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuMod_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuMul_internal.i: src/linalg/linalg_internal_gpu/cuMul_internal.cu.i
+src/backend/linalg_internal_gpu/cuMod_internal.i: src/backend/linalg_internal_gpu/cuMod_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMul_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuMod_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuMul_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMul_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuMul_internal.cu.i
+src/backend/linalg_internal_gpu/cuMod_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMod_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuMod_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuMul_internal.s: src/linalg/linalg_internal_gpu/cuMul_internal.cu.s
+src/backend/linalg_internal_gpu/cuMod_internal.s: src/backend/linalg_internal_gpu/cuMod_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuMul_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuMod_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuMul_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuMul_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuMul_internal.cu.s
+src/backend/linalg_internal_gpu/cuMod_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMod_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuMod_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuNorm_internal.o: src/linalg/linalg_internal_gpu/cuNorm_internal.cu.o
+src/backend/linalg_internal_gpu/cuMul_internal.o: src/backend/linalg_internal_gpu/cuMul_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuNorm_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuMul_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuNorm_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuNorm_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuNorm_internal.cu.o
+src/backend/linalg_internal_gpu/cuMul_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMul_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuMul_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuNorm_internal.i: src/linalg/linalg_internal_gpu/cuNorm_internal.cu.i
+src/backend/linalg_internal_gpu/cuMul_internal.i: src/backend/linalg_internal_gpu/cuMul_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuNorm_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuMul_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuNorm_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuNorm_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuNorm_internal.cu.i
+src/backend/linalg_internal_gpu/cuMul_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMul_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuMul_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuNorm_internal.s: src/linalg/linalg_internal_gpu/cuNorm_internal.cu.s
+src/backend/linalg_internal_gpu/cuMul_internal.s: src/backend/linalg_internal_gpu/cuMul_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuNorm_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuMul_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuNorm_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuNorm_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuNorm_internal.cu.s
+src/backend/linalg_internal_gpu/cuMul_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuMul_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuMul_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuOuter_internal.o: src/linalg/linalg_internal_gpu/cuOuter_internal.cu.o
+src/backend/linalg_internal_gpu/cuNorm_internal.o: src/backend/linalg_internal_gpu/cuNorm_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuOuter_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuNorm_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuOuter_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuOuter_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuOuter_internal.cu.o
+src/backend/linalg_internal_gpu/cuNorm_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuNorm_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuNorm_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuOuter_internal.i: src/linalg/linalg_internal_gpu/cuOuter_internal.cu.i
+src/backend/linalg_internal_gpu/cuNorm_internal.i: src/backend/linalg_internal_gpu/cuNorm_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuOuter_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuNorm_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuOuter_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuOuter_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuOuter_internal.cu.i
+src/backend/linalg_internal_gpu/cuNorm_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuNorm_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuNorm_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuOuter_internal.s: src/linalg/linalg_internal_gpu/cuOuter_internal.cu.s
+src/backend/linalg_internal_gpu/cuNorm_internal.s: src/backend/linalg_internal_gpu/cuNorm_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuOuter_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuNorm_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuOuter_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuOuter_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuOuter_internal.cu.s
+src/backend/linalg_internal_gpu/cuNorm_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuNorm_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuNorm_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuPow_internal.o: src/linalg/linalg_internal_gpu/cuPow_internal.cu.o
+src/backend/linalg_internal_gpu/cuOuter_internal.o: src/backend/linalg_internal_gpu/cuOuter_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuPow_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuOuter_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuPow_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuPow_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuPow_internal.cu.o
+src/backend/linalg_internal_gpu/cuOuter_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuOuter_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuOuter_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuPow_internal.i: src/linalg/linalg_internal_gpu/cuPow_internal.cu.i
+src/backend/linalg_internal_gpu/cuOuter_internal.i: src/backend/linalg_internal_gpu/cuOuter_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuPow_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuOuter_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuPow_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuPow_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuPow_internal.cu.i
+src/backend/linalg_internal_gpu/cuOuter_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuOuter_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuOuter_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuPow_internal.s: src/linalg/linalg_internal_gpu/cuPow_internal.cu.s
+src/backend/linalg_internal_gpu/cuOuter_internal.s: src/backend/linalg_internal_gpu/cuOuter_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuPow_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuOuter_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuPow_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuPow_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuPow_internal.cu.s
+src/backend/linalg_internal_gpu/cuOuter_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuOuter_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuOuter_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuSub_internal.o: src/linalg/linalg_internal_gpu/cuSub_internal.cu.o
+src/backend/linalg_internal_gpu/cuPow_internal.o: src/backend/linalg_internal_gpu/cuPow_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuSub_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuPow_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuSub_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuSub_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuSub_internal.cu.o
+src/backend/linalg_internal_gpu/cuPow_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuPow_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuPow_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuSub_internal.i: src/linalg/linalg_internal_gpu/cuSub_internal.cu.i
+src/backend/linalg_internal_gpu/cuPow_internal.i: src/backend/linalg_internal_gpu/cuPow_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuSub_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuPow_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuSub_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuSub_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuSub_internal.cu.i
+src/backend/linalg_internal_gpu/cuPow_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuPow_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuPow_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuSub_internal.s: src/linalg/linalg_internal_gpu/cuSub_internal.cu.s
+src/backend/linalg_internal_gpu/cuPow_internal.s: src/backend/linalg_internal_gpu/cuPow_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuSub_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuPow_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuSub_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuSub_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuSub_internal.cu.s
+src/backend/linalg_internal_gpu/cuPow_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuPow_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuPow_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuSvd_internal.o: src/linalg/linalg_internal_gpu/cuSvd_internal.cu.o
+src/backend/linalg_internal_gpu/cuSub_internal.o: src/backend/linalg_internal_gpu/cuSub_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuSvd_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuSub_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuSvd_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuSvd_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuSvd_internal.cu.o
+src/backend/linalg_internal_gpu/cuSub_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuSub_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuSub_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuSvd_internal.i: src/linalg/linalg_internal_gpu/cuSvd_internal.cu.i
+src/backend/linalg_internal_gpu/cuSub_internal.i: src/backend/linalg_internal_gpu/cuSub_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuSvd_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuSub_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuSvd_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuSvd_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuSvd_internal.cu.i
+src/backend/linalg_internal_gpu/cuSub_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuSub_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuSub_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuSvd_internal.s: src/linalg/linalg_internal_gpu/cuSvd_internal.cu.s
+src/backend/linalg_internal_gpu/cuSub_internal.s: src/backend/linalg_internal_gpu/cuSub_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuSvd_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuSub_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuSvd_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuSvd_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuSvd_internal.cu.s
+src/backend/linalg_internal_gpu/cuSub_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuSub_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuSub_internal.cu.s
 
-src/linalg/linalg_internal_gpu/cuVectordot_internal.o: src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.o
+src/backend/linalg_internal_gpu/cuSvd_internal.o: src/backend/linalg_internal_gpu/cuSvd_internal.cu.o
 
-.PHONY : src/linalg/linalg_internal_gpu/cuVectordot_internal.o
+.PHONY : src/backend/linalg_internal_gpu/cuSvd_internal.o
 
 # target to build an object file
-src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.o
-.PHONY : src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.o
+src/backend/linalg_internal_gpu/cuSvd_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuSvd_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuSvd_internal.cu.o
 
-src/linalg/linalg_internal_gpu/cuVectordot_internal.i: src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.i
+src/backend/linalg_internal_gpu/cuSvd_internal.i: src/backend/linalg_internal_gpu/cuSvd_internal.cu.i
 
-.PHONY : src/linalg/linalg_internal_gpu/cuVectordot_internal.i
+.PHONY : src/backend/linalg_internal_gpu/cuSvd_internal.i
 
 # target to preprocess a source file
-src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.i
-.PHONY : src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.i
+src/backend/linalg_internal_gpu/cuSvd_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuSvd_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuSvd_internal.cu.i
 
-src/linalg/linalg_internal_gpu/cuVectordot_internal.s: src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.s
+src/backend/linalg_internal_gpu/cuSvd_internal.s: src/backend/linalg_internal_gpu/cuSvd_internal.cu.s
 
-.PHONY : src/linalg/linalg_internal_gpu/cuVectordot_internal.s
+.PHONY : src/backend/linalg_internal_gpu/cuSvd_internal.s
 
 # target to generate assembly for a file
-src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.s
-.PHONY : src/linalg/linalg_internal_gpu/cuVectordot_internal.cu.s
+src/backend/linalg_internal_gpu/cuSvd_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuSvd_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuSvd_internal.cu.s
+
+src/backend/linalg_internal_gpu/cuVectordot_internal.o: src/backend/linalg_internal_gpu/cuVectordot_internal.cu.o
+
+.PHONY : src/backend/linalg_internal_gpu/cuVectordot_internal.o
+
+# target to build an object file
+src/backend/linalg_internal_gpu/cuVectordot_internal.cu.o:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuVectordot_internal.cu.o
+.PHONY : src/backend/linalg_internal_gpu/cuVectordot_internal.cu.o
+
+src/backend/linalg_internal_gpu/cuVectordot_internal.i: src/backend/linalg_internal_gpu/cuVectordot_internal.cu.i
+
+.PHONY : src/backend/linalg_internal_gpu/cuVectordot_internal.i
+
+# target to preprocess a source file
+src/backend/linalg_internal_gpu/cuVectordot_internal.cu.i:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuVectordot_internal.cu.i
+.PHONY : src/backend/linalg_internal_gpu/cuVectordot_internal.cu.i
+
+src/backend/linalg_internal_gpu/cuVectordot_internal.s: src/backend/linalg_internal_gpu/cuVectordot_internal.cu.s
+
+.PHONY : src/backend/linalg_internal_gpu/cuVectordot_internal.s
+
+# target to generate assembly for a file
+src/backend/linalg_internal_gpu/cuVectordot_internal.cu.s:
+	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_gpu/cuVectordot_internal.cu.s
+.PHONY : src/backend/linalg_internal_gpu/cuVectordot_internal.cu.s
 
 src/linalg/linalg_internal_interface.o: src/linalg/linalg_internal_interface.cpp.o
 
@@ -5011,150 +5011,150 @@ help:
 	@echo "... src/linalg/Vectordot.o"
 	@echo "... src/linalg/Vectordot.i"
 	@echo "... src/linalg/Vectordot.s"
-	@echo "... src/linalg/linalg_internal_cpu/Abs_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Abs_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Abs_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Add_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Add_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Add_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Arithmetic_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Arithmetic_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Arithmetic_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Conj_inplace_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Conj_inplace_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Conj_inplace_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Cpr_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Cpr_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Cpr_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Det_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Det_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Det_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Diag_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Diag_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Diag_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Div_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Div_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Div_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Eig_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Eig_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Eig_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Eigh_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Eigh_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Eigh_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Exp_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Exp_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Exp_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/InvM_inplace_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/InvM_inplace_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/InvM_inplace_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Inv_inplace_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Inv_inplace_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Inv_inplace_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Kron_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Kron_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Kron_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Matmul_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Matmul_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Matmul_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Matvec_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Matvec_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Matvec_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/MaxMin_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/MaxMin_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/MaxMin_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Mod_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Mod_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Mod_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Mul_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Mul_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Mul_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Norm_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Norm_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Norm_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Outer_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Outer_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Outer_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Pow_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Pow_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Pow_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/QR_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/QR_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/QR_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Sub_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Sub_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Sub_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Sum_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Sum_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Sum_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Svd_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Svd_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Svd_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Tridiag_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Tridiag_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Tridiag_internal.s"
-	@echo "... src/linalg/linalg_internal_cpu/Vectordot_internal.o"
-	@echo "... src/linalg/linalg_internal_cpu/Vectordot_internal.i"
-	@echo "... src/linalg/linalg_internal_cpu/Vectordot_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuAdd_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuAdd_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuAdd_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuArithmetic_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuArithmetic_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuArithmetic_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuConj_inplace_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuConj_inplace_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuConj_inplace_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuCpr_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuCpr_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuCpr_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuDiag_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuDiag_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuDiag_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuDiv_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuDiv_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuDiv_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuEigh_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuEigh_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuEigh_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuExp_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuExp_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuExp_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuInv_inplace_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuInv_inplace_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuInv_inplace_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuMatmul_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuMatmul_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuMatmul_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuMatvec_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuMatvec_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuMatvec_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuMod_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuMod_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuMod_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuMul_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuMul_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuMul_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuNorm_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuNorm_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuNorm_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuOuter_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuOuter_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuOuter_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuPow_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuPow_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuPow_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuSub_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuSub_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuSub_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuSvd_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuSvd_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuSvd_internal.s"
-	@echo "... src/linalg/linalg_internal_gpu/cuVectordot_internal.o"
-	@echo "... src/linalg/linalg_internal_gpu/cuVectordot_internal.i"
-	@echo "... src/linalg/linalg_internal_gpu/cuVectordot_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Abs_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Abs_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Abs_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Add_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Add_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Add_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Arithmetic_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Arithmetic_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Arithmetic_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Conj_inplace_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Conj_inplace_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Conj_inplace_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Cpr_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Cpr_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Cpr_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Det_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Det_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Det_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Diag_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Diag_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Diag_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Div_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Div_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Div_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Eig_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Eig_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Eig_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Eigh_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Eigh_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Eigh_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Exp_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Exp_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Exp_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/InvM_inplace_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/InvM_inplace_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/InvM_inplace_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Inv_inplace_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Inv_inplace_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Inv_inplace_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Kron_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Kron_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Kron_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Matmul_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Matmul_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Matmul_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Matvec_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Matvec_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Matvec_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/MaxMin_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/MaxMin_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/MaxMin_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Mod_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Mod_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Mod_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Mul_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Mul_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Mul_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Norm_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Norm_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Norm_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Outer_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Outer_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Outer_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Pow_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Pow_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Pow_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/QR_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/QR_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/QR_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Sub_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Sub_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Sub_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Sum_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Sum_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Sum_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Svd_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Svd_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Svd_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Tridiag_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Tridiag_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Tridiag_internal.s"
+	@echo "... src/backend/linalg_internal_cpu/Vectordot_internal.o"
+	@echo "... src/backend/linalg_internal_cpu/Vectordot_internal.i"
+	@echo "... src/backend/linalg_internal_cpu/Vectordot_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuAdd_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuAdd_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuAdd_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuArithmetic_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuArithmetic_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuArithmetic_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuConj_inplace_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuConj_inplace_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuConj_inplace_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuCpr_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuCpr_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuCpr_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuDiag_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuDiag_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuDiag_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuDiv_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuDiv_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuDiv_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuEigh_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuEigh_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuEigh_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuExp_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuExp_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuExp_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuInvM_inplace_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuInvM_inplace_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuInvM_inplace_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuInv_inplace_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuInv_inplace_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuInv_inplace_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuMatmul_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuMatmul_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuMatmul_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuMatvec_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuMatvec_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuMatvec_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuMod_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuMod_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuMod_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuMul_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuMul_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuMul_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuNorm_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuNorm_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuNorm_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuOuter_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuOuter_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuOuter_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuPow_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuPow_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuPow_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuSub_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuSub_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuSub_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuSvd_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuSvd_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuSvd_internal.s"
+	@echo "... src/backend/linalg_internal_gpu/cuVectordot_internal.o"
+	@echo "... src/backend/linalg_internal_gpu/cuVectordot_internal.i"
+	@echo "... src/backend/linalg_internal_gpu/cuVectordot_internal.s"
 	@echo "... src/linalg/linalg_internal_interface.o"
 	@echo "... src/linalg/linalg_internal_interface.i"
 	@echo "... src/linalg/linalg_internal_interface.s"

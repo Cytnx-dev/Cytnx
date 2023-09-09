@@ -2,7 +2,7 @@
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#include "linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
 

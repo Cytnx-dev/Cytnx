@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_cpu/Kron_internal.hpp"
+#include "backend/linalg_internal_cpu/Kron_internal.hpp"
 
 #include "utils/complex_arithmetic.hpp"
 #include "utils/utils_internal_interface.hpp"

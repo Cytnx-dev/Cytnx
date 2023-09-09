@@ -9,14 +9,6 @@
 typedef cytnx::Accessor ac;
 namespace cytnx {
 
-  // void DenseUniTensor::Init(const std::vector<Bond> &bonds,
-  //                           const std::vector<cytnx_int64> &in_labels, const cytnx_int64
-  //                           &rowrank, const unsigned int &dtype, const int &device, const bool
-  //                           &is_diag, const bool &no_alloc) {
-  //   std::vector<std::string> vs;
-  //   for (int i = 0; i < (int)in_labels.size(); i++) vs.push_back(std::to_string(in_labels[i]));
-  //   DenseUniTensor::Init(bonds, in_labels, rowrank, dtype, device, is_diag, no_alloc);
-  // }
   void DenseUniTensor::Init(const std::vector<Bond> &bonds,
                             const std::vector<std::string> &in_labels, const cytnx_int64 &rowrank,
                             const unsigned int &dtype, const int &device, const bool &is_diag,

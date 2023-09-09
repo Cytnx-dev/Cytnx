@@ -1,5 +1,5 @@
 #include "linalg.hpp"
-#include "linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include "backend/Scalar.hpp"

@@ -5,7 +5,7 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
-#include "linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM

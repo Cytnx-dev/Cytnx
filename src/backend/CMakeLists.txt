@@ -6,6 +6,9 @@
 
 target_sources_local(cytnx
   PRIVATE
+    linalg_internal_interface.hpp
+    linalg_internal_interface.cpp
+
     Scalar.cpp
     Storage.cpp
     Storage_base.cpp
@@ -23,6 +26,11 @@ target_sources_local(cytnx
 
     Tensor_impl.cpp
 )
+
+add_subdirectory(linalg_internal_cpu)
+if(USE_CUDA)
+  add_subdirectory(linalg_internal_gpu)
+endif()
 
 #if(UNI_GPU)
 #    target_sourse_local(cytnx

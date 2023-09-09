@@ -1,4 +1,4 @@
-#include "linalg/linalg_internal_cpu/Stat_internal.hpp"
+#include "backend/linalg_internal_cpu/Pow_internal.hpp"
 #include "cytnx_error.hpp"
 
 #ifdef UNI_OMP
@@ -8,8 +8,9 @@
 namespace cytnx {
   namespace linalg_internal {
 
-    void Stat_internal_d(boost::intrusive_ptr<Storage_base> &out,
-                         const boost::intrusive_ptr<Storage_base> &ten) {
+    void Pow_internal_d(boost::intrusive_ptr<Storage_base> &out,
+                        const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
+                        const cytnx_double &p) {
       cytnx_double *_out = (cytnx_double *)out->Mem;
       cytnx_double *_ten = (cytnx_double *)ten->Mem;
 
@@ -21,8 +22,9 @@ namespace cytnx {
       }
     }
 
-    void Stat_internal_f(boost::intrusive_ptr<Storage_base> &out,
-                         const boost::intrusive_ptr<Storage_base> &ten) {
+    void Pow_internal_f(boost::intrusive_ptr<Storage_base> &out,
+                        const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
+                        const cytnx_double &p) {
       cytnx_float *_out = (cytnx_float *)out->Mem;
       cytnx_float *_ten = (cytnx_float *)ten->Mem;
 
@@ -34,8 +36,9 @@ namespace cytnx {
       }
     }
 
-    void Stat_internal_cd(boost::intrusive_ptr<Storage_base> &out,
-                          const boost::intrusive_ptr<Storage_base> &ten) {
+    void Pow_internal_cd(boost::intrusive_ptr<Storage_base> &out,
+                         const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
+                         const cytnx_double &p) {
       cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
       cytnx_complex128 *_ten = (cytnx_complex128 *)ten->Mem;
 
@@ -47,8 +50,9 @@ namespace cytnx {
       }
     }
 
-    void Stat_internal_cf(boost::intrusive_ptr<Storage_base> &out,
-                          const boost::intrusive_ptr<Storage_base> &ten) {
+    void Pow_internal_cf(boost::intrusive_ptr<Storage_base> &out,
+                         const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
+                         const cytnx_double &p) {
       cytnx_complex64 *_out = (cytnx_complex64 *)out->Mem;
       cytnx_complex64 *_ten = (cytnx_complex64 *)ten->Mem;
 
