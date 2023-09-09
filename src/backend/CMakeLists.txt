@@ -20,6 +20,8 @@ target_sources_local(cytnx
     Uint16Storage.cpp
     Int16Storage.cpp
     BoolStorage.cpp
+
+    Tensor_impl.cpp
 )
 
 #if(UNI_GPU)

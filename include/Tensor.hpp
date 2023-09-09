@@ -17,7 +17,7 @@
 #include "backend/Scalar.hpp"
 
 // move to backend?
-#include "Tensor_impl.hpp"
+#include "backend/Tensor_impl.hpp"
 
 namespace cytnx {
 

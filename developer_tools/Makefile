@@ -266,7 +266,7 @@ endif
 Tensor.o: $(CytnxPATH)/src/Tensor.cpp $(CytnxPATH)/include/Tensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Tensor_impl.o: $(CytnxPATH)/src/Tensor_impl.cpp $(CytnxPATH)/include/Tensor_impl.hpp
+Tensor_impl.o: $(CytnxPATH)/src/backend/Tensor_impl.cpp $(CytnxPATH)/include/backend/Tensor_impl.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 Storage.o: $(CytnxPATH)/src/backend/Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
