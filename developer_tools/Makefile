@@ -595,20 +595,20 @@ endif
 
 ## random_internal
 ###########################
-random_internal_interface.o : $(CytnxPATH)/src/random/random_internal_interface.cpp $(CytnxPATH)/src/random/random_internal_interface.hpp
+random_internal_interface.o : $(CytnxPATH)/src/backend/random_internal_interface.cpp $(CytnxPATH)/src/backend/random_internal_interface.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Normal_internal.o :  $(CytnxPATH)/src/random/random_internal_cpu/Normal_internal.cpp $(CytnxPATH)/src/random/random_internal_cpu/Normal_internal.hpp
+Normal_internal.o :  $(CytnxPATH)/src/backend/random_internal_cpu/Normal_internal.cpp $(CytnxPATH)/src/backend/random_internal_cpu/Normal_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uniform_internal.o :  $(CytnxPATH)/src/random/random_internal_cpu/Uniform_internal.cpp $(CytnxPATH)/src/random/random_internal_cpu/Uniform_internal.hpp
+Uniform_internal.o :  $(CytnxPATH)/src/backend/random_internal_cpu/Uniform_internal.cpp $(CytnxPATH)/src/backend/random_internal_cpu/Uniform_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ifeq ($(GPU_Enable),1)
 
-cuNormal_internal.o :  $(CytnxPATH)/src/random/random_internal_gpu/cuNormal_internal.cu $(CytnxPATH)/src/random/random_internal_gpu/cuNormal_internal.hpp
+cuNormal_internal.o :  $(CytnxPATH)/src/backend/random_internal_gpu/cuNormal_internal.cu $(CytnxPATH)/src/backend/random_internal_gpu/cuNormal_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuUniform_internal.o :  $(CytnxPATH)/src/random/random_internal_gpu/cuUniform_internal.cu $(CytnxPATH)/src/random/random_internal_gpu/cuUniform_internal.hpp
+cuUniform_internal.o :  $(CytnxPATH)/src/backend/random_internal_gpu/cuUniform_internal.cu $(CytnxPATH)/src/backend/random_internal_gpu/cuUniform_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 endif

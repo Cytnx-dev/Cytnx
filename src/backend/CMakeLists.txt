@@ -9,6 +9,9 @@ target_sources_local(cytnx
     linalg_internal_interface.hpp
     linalg_internal_interface.cpp
 
+    random_internal_interface.hpp
+    random_internal_interface.cpp
+
     Scalar.cpp
     Storage.cpp
     Storage_base.cpp
@@ -28,9 +31,14 @@ target_sources_local(cytnx
 )
 
 add_subdirectory(linalg_internal_cpu)
+add_subdirectory(random_internal_cpu)
 if(USE_CUDA)
   add_subdirectory(linalg_internal_gpu)
+  add_subdirectory(random_internal_gpu)
 endif()
+
+
+
 
 #if(UNI_GPU)
 #    target_sourse_local(cytnx

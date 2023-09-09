@@ -1,5 +1,5 @@
 #include "random.hpp"
-#include "random_internal_interface.hpp"
+#include "backend/random_internal_interface.hpp"
 
 namespace cytnx {
   namespace random {
