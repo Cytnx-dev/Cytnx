@@ -2,7 +2,7 @@
   #include "cuTensordot_internal.hpp"
   #include "cytnx_error.hpp"
   #include "Type.hpp"
-  #include "lapack_wrapper.hpp"
+  #include "backend/lapack_wrapper.hpp"
   #include <cutensor.h>
 
   #define HANDLE_ERROR(x)                                                        \

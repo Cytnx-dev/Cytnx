@@ -6,7 +6,7 @@
 
 #include "cytnx_error.hpp"
 #include "Type.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 #include <iostream>
 
 namespace cytnx {

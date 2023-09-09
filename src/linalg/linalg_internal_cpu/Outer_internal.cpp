@@ -2,7 +2,7 @@
 #include "Ger_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/complex_arithmetic.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 
 #ifdef UNI_OMP
   #include <omp.h>

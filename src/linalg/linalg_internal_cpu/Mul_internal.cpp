@@ -4,7 +4,7 @@
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 
 namespace cytnx {
 

@@ -1,6 +1,6 @@
 #include "cytnx_error.hpp"
 #include "InvM_inplace_internal.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 
 namespace cytnx {
 

@@ -2,7 +2,7 @@
 #include "utils/utils_internal_interface.hpp"
 
 //#include "cytnx_error.hpp"
-//#include "utils/lapack_wrapper.hpp"
+//#include "utils/backend/lapack_wrapper.hpp"
 
 #ifdef UNI_OMP
   #include <omp.h>

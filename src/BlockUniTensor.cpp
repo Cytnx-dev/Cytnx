@@ -14,7 +14,6 @@
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
-#include "lapack_wrapper.hpp"
 
 using namespace std;
 namespace cytnx {

@@ -1,7 +1,7 @@
 #include "linalg/linalg_internal_gpu/cuDet_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 
 #include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
 

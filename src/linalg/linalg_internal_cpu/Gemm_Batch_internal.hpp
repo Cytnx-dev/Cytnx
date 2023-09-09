@@ -7,7 +7,7 @@
 #include <vector>
 #include "backend/Storage.hpp"
 #include "Type.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 
 namespace cytnx {
 

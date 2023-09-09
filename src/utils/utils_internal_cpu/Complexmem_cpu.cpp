@@ -1,6 +1,6 @@
 #include "utils/utils_internal_cpu/Complexmem_cpu.hpp"
 #include "backend/Storage.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 
 #ifdef UNI_OMP
   #include <omp.h>

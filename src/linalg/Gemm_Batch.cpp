@@ -3,7 +3,6 @@
 #include <iostream>
 #include "Tensor.hpp"
 #include "Generator.hpp"
-#include "lapack_wrapper.hpp"
 
 using namespace std;
 namespace cytnx {

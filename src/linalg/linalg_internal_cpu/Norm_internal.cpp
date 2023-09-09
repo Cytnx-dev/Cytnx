@@ -1,7 +1,7 @@
 #include "Norm_internal.hpp"
 #include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 #ifdef UNI_OMP
   #include <omp.h>
 #endif

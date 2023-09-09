@@ -3,7 +3,6 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-// #include "lapack_wrapper.hpp"
 #include "intrusive_ptr_base.hpp"
 #include <vector>
 #include <initializer_list>

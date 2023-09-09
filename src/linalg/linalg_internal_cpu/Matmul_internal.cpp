@@ -1,6 +1,6 @@
 #include "Matmul_internal.hpp"
 #include "cytnx_error.hpp"
-#include "lapack_wrapper.hpp"
+#include "backend/lapack_wrapper.hpp"
 
 #ifdef UNI_OMP
   #include <omp.h>
