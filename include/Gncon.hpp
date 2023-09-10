@@ -11,6 +11,9 @@
 #include "utils/utils.hpp"
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
+
+#ifdef BACKEND_TORCH
+#else
 namespace cytnx {
   /// @cond
   // struct __ntwk {
@@ -358,5 +361,7 @@ namespace cytnx {
   std::ostream &operator<<(std::ostream &os, const Gncon &bin);
   ///@endcond
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

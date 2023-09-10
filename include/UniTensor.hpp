@@ -5,7 +5,6 @@
 #include "cytnx_error.hpp"
 #include "Device.hpp"
 #include "Tensor.hpp"
-#include "backend/Scalar.hpp"
 #include "utils/utils.hpp"
 #include "intrusive_ptr_base.hpp"
 #include <iostream>
@@ -17,6 +16,10 @@
 #include <algorithm>
 #include "Symmetry.hpp"
 #include "Bond.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "backend/Scalar.hpp"
 
 // namespace cytnx{
 namespace cytnx {
@@ -1121,31 +1124,31 @@ namespace cytnx {
     };
 
     unsigned int dtype() const {
-#ifdef UNI_DEBUG
+  #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-#endif
+  #endif
       return this->_blocks[0].dtype();
     };
     int device() const {
-#ifdef UNI_DEBUG
+  #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-#endif
+  #endif
       return this->_blocks[0].device();
     };
     std::string dtype_str() const {
-#ifdef UNI_DEBUG
+  #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-#endif
+  #endif
       return this->_blocks[0].dtype_str();
     };
     std::string device_str() const {
-#ifdef UNI_DEBUG
+  #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
-#endif
+  #endif
       return this->_blocks[0].device_str();
     };
 
@@ -1795,14 +1798,14 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const std::string &name = "")
         : _impl(new UniTensor_base()) {
-#ifdef UNI_DEBUG
+  #ifdef UNI_DEBUG
       cytnx_warning_msg(
         true,
         "[DEBUG] message: entry for UniTensor(const std::vector<Bond> &bonds, const "
         "std::vector<std::string> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned int "
         "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
         "\n");
-#endif
+  #endif
       this->Init(bonds, in_labels, rowrank, dtype, device, is_diag, name);
     }
 
@@ -1869,9 +1872,9 @@ namespace cytnx {
 
       // dynamical dispatch:
       if (is_sym) {
-#ifdef UNI_DEBUG
+  #ifdef UNI_DEBUG
         cytnx_warning_msg(true, "[DEBUG] message: entry dispatch: UniTensor: symmetric%s", "\n");
-#endif
+  #endif
         // cytnx_warning_msg(true,"[warning, still developing, some functions will display
         // \"[Developing]\"][SparseUniTensor]%s","\n");
         if (sym_fver == 0) {
@@ -3989,4 +3992,7 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
+
 #endif

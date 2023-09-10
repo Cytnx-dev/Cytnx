@@ -9,6 +9,9 @@
 #include <iostream>
 #include <ostream>
 #include "utils/vec_clone.hpp"
+
+#ifdef BACKEND_TORCH
+#else
 namespace cytnx {
   ///@cond
   struct __sym {
@@ -424,4 +427,6 @@ namespace cytnx {
   /// @endcond
 
 }  // namespace cytnx
+#endif  // BACKEND_TORCH
+
 #endif

@@ -3,12 +3,14 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-//#include "Tensor.hpp"
 #include <vector>
 #include <cstring>
 #include <string>
 #include <iostream>
 #include <initializer_list>
+
+#ifdef BACKEND_TORCH
+#else
 namespace cytnx {
   /**
    * @brief object that mimic the python slice to access elements in C++ [this is for c++ API only].
@@ -189,5 +191,7 @@ namespace cytnx {
   ///@endcond
 
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

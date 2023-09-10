@@ -5,10 +5,14 @@
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#include "backend/Storage.hpp"
-#include "backend/Scalar.hpp"
 #include "LinOp.hpp"
-#include <functional>
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/Storage.hpp"
+  #include "backend/Scalar.hpp"
+  #include <functional>
 
 namespace cytnx {
   int set_mkl_ilp64();
@@ -2748,5 +2752,7 @@ namespace cytnx {
   Tensor operator==(const Tensor &Lt, const T &rc);
 
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

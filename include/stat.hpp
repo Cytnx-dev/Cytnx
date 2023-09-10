@@ -3,11 +3,15 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "backend/Storage.hpp"
+
 #include "Tensor.hpp"
 #include <algorithm>
 #include <iostream>
 
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/Storage.hpp"
 namespace cytnx {
   namespace stat {
 
@@ -208,5 +212,7 @@ namespace cytnx {
 
   }  // namespace stat
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif
