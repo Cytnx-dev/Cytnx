@@ -51,8 +51,10 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("User_debug") = cytnx::User_debug;
 
 #ifdef BACKEND_TORCH
-
+  m.atttr("__cytnx_backend__") = std::string("torch");
 #else
+  m.atttr("__cytnx_backend__") = std::string("cytnx");
+
   m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
   m.def("get_mkl_code", &cytnx::get_mkl_code);
 
