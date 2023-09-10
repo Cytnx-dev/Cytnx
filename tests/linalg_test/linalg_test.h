@@ -61,7 +61,7 @@ class linalg_Test : public ::testing::Test {
     svd_T = svd_T.Load(data_dir + "Svd_truncate/Svd_truncate1.cytnx");
     svd_T.permute_({1, 0, 3, 2});
     svd_T.contiguous_();
-    svd_T.set_rowrank(2);
+    svd_T.set_rowrank_(2);
     svd_Sans = Tensor::Load(data_dir + "Svd_truncate/S_truncate1.cytn");
     svd_Sans = algo::Sort(svd_Sans);
     //==================== Lanczos_Gnd_Ut ===================

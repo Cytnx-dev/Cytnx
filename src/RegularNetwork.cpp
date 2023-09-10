@@ -905,6 +905,8 @@ namespace cytnx {
         _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
         this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+      } else {
+        CtTree.build_default_contraction_tree();
       }
     }
   }
@@ -974,9 +976,7 @@ namespace cytnx {
             // root->left->utensor.print_diagram(1);
             // root->right->utensor.print_diagram(1);
             root->utensor = Contract(root->left->utensor, root->right->utensor);
-            // cout << "Contract:" << root->left->utensor.name() << " " <<
-            // root->right->utensor.name()
-            // << endl; root->left->utensor.print_diagram(); root->right->utensor.print_diagram();
+            // root->left->utensor.print_diagram(); root->right->utensor.print_diagram();
             // root->utensor.print_diagram(); root->utensor.set_name(root->left->utensor.name() +
             // root->right->utensor.name());
             root->left->clear_utensor();  // remove intermediate unitensor to save heap space
@@ -1010,7 +1010,6 @@ namespace cytnx {
       if (TOUT_labels.size()) {
         out.permute_(TOUT_labels, TOUT_iBondNum);
       }
-
       // UniTensor out;
       return out;
 
@@ -1076,6 +1075,7 @@ namespace cytnx {
   void RegularNetwork::construct(const vector<string> &alias, const vector<vector<string>> &lbls,
                                  const vector<string> &outlbl, const cytnx_int64 &outrk,
                                  const string &order, const bool optim) {
+    this->clear();
     for (int i = 0; i < alias.size(); i++) {
       this->names.push_back(alias[i]);
       this->name2pos[alias[i]] = names.size() - 1;  // register
@@ -1088,6 +1088,7 @@ namespace cytnx {
     this->TOUT_iBondNum = outlbl.size() - outrk;
 
     if (order.length()) {
+      this->order_line = order;
       // checking if all TN are set in ORDER.
       _parse_ORDER_line_(this->ORDER_tokens, order, 0);
       vector<string> TN_names;
@@ -1134,11 +1135,8 @@ namespace cytnx {
     }
     // cout<<this->TOUT_labels.size();
     if (this->TOUT_labels.size() == 0) {
-      // cout<<expected_TOUT;
       this->TOUT_labels = expected_TOUT;
-      // cout<<this->TOUT_labels;
     } else {
-      // cout<<this->TOUT_labels;
       bool err = false;
       if (expected_TOUT.size() != TOUT_labels.size()) {
         err = true;
@@ -1159,7 +1157,55 @@ namespace cytnx {
         cytnx_error_msg(true, "%s", "\n");
       }
     }
-  }
+
+    // maintain TOUT leg position
+    TOUT_pos = vector<pair<int, int>>();
+    for (int i = 0; i < TOUT_labels.size(); i++) {
+      for (int j = 0; j < label_arr.size(); j++) {
+        vector<string>::iterator it;
+        it = find(this->label_arr[j].begin(), this->label_arr[j].end(), TOUT_labels[i]);
+        if (it != this->label_arr[j].end()) {
+          TOUT_pos.push_back(make_pair(j, distance(label_arr[j].begin(), it)));
+          break;
+        }
+      }
+    }
+
+    // get int_label
+    std::map<std::string, cytnx_int64> lblmap = std::map<std::string, cytnx_int64>();
+    this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
+    this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
+    cytnx_int64 lbl_int = 0;
+    for (size_t i = 0; i < this->label_arr.size(); i++) {
+      this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
+      for (size_t j = 0; j < this->label_arr[i].size(); j++) {
+        lblmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], lbl_int));
+        this->int_modes[i][j] = lblmap[this->label_arr[i][j]];
+        lbl_int += 1;
+      }
+    }
+    for (size_t i = 0; i < TOUT_labels.size(); i++) {
+      this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
+    }
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    this->optimizerInfo = nullptr;
+  #endif
+#endif
+
+    vector<string> names;
+    for (int i = 0; i < this->names.size(); i++) {
+      names.push_back(this->names[i]);
+      CtTree.base_nodes[i].name = this->names[i];
+    }
+    if (ORDER_tokens.size() != 0) {
+      CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+    } else {
+      CtTree.build_default_contraction_tree();
+    }
+    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+  }  // end construct
 
 }  // namespace cytnx
 #endif
