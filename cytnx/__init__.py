@@ -1,7 +1,7 @@
 import os,sys
 from .cytnx import *
 
-if __cytnx_backend__ == "torch":
+if cytnx.__cytnx_backend__ == "torch":
     import numpy, torch
 
 else:
