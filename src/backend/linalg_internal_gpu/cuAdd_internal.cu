@@ -1,4 +1,4 @@
-#include "backend/linalg_internal_gpu/cuAdd_internal.hpp"
+#include "cuAdd_internal.hpp"
 #include "../utils_internal_interface.hpp"
 
 #ifdef UNI_OMP

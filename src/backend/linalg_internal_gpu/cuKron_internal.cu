@@ -1,7 +1,7 @@
-#include "backend/linalg_internal_gpu/cuKron_internal.hpp"
+#include "cuKron_internal.hpp"
 #include "../utils_internal_interface.hpp"
 #include "utils/utils.hpp"
-#include "cuAlloc_gpu.hpp"
+#include "../utils_internal_gpu/cuAlloc_gpu.hpp"
 #include <algorithm>
 
 #include "cytnx_error.hpp"

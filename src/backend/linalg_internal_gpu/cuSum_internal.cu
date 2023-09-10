@@ -2,7 +2,7 @@
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
-#include "cuReduce_gpu.hpp"
+#include "../utils_internal_gpu/cuReduce_gpu.hpp"
 
 namespace cytnx {
 

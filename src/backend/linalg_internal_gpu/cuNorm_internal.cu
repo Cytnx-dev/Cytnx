@@ -1,4 +1,4 @@
-#include "backend/linalg_internal_gpu/cuNorm_internal.hpp"
+#include "cuNorm_internal.hpp"
 #include "../utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include "cytnx_error.hpp"

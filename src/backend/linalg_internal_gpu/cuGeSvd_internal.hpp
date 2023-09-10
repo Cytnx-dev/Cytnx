@@ -9,7 +9,7 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
-//#include "backend/linalg_internal_interface.hpp"
+//#include "../linalg_internal_interface.hpp"
 namespace cytnx {
 
   namespace linalg_internal {
