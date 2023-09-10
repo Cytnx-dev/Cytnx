@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void scalar_binding(py::module &m) {
   py::class_<cytnx::Scalar>(m, "Scalar")
     .def(py::init<>())
@@ -47,3 +50,5 @@ void scalar_binding(py::module &m) {
   py::implicitly_convertible<cytnx_int16, cytnx::Scalar>();
   py::implicitly_convertible<cytnx_bool, cytnx::Scalar>();
 }
+
+#endif

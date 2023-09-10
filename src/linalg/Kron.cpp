@@ -2,8 +2,12 @@
 #include "utils/utils.hpp"
 #include "Device.hpp"
 #include <iostream>
-#include "backend/linalg_internal_interface.hpp"
 #include "Tensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
+
 namespace cytnx {
 
   namespace linalg {
@@ -61,17 +65,17 @@ namespace cytnx {
           out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl,
           pad_shape1, pad_shape2);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         // cytnx_error_msg(true, "[Kron] currently Kron is not support for GPU, pending for fix.%s",
         //                 "\n");
         // checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuKron_ii[Tl.dtype()][Tr.dtype()](
           out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl,
           pad_shape1, pad_shape2);
-#else
+  #else
         cytnx_error_msg(true, "[Kron] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-#endif
+  #endif
       }
 
       return out;
@@ -79,3 +83,4 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

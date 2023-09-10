@@ -50,6 +50,9 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
+#ifdef BACKEND_TORCH
+
+#else
   m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
   m.def("get_mkl_code", &cytnx::get_mkl_code);
 
@@ -126,4 +129,5 @@ PYBIND11_MODULE(cytnx, m) {
   random_binding(m);
   tnalgo_binding(m);
   ncon_binding(m);
+#endif
 }

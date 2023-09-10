@@ -7,7 +7,12 @@
 #include <utility>
 #include <vector>
 typedef cytnx::Accessor ac;
+
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
 
   void DenseUniTensor::Init(const std::vector<Bond> &bonds,
@@ -1422,3 +1427,4 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+#endif

@@ -1,9 +1,13 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include "Device.hpp"
 #include "Tensor.hpp"
 #include <iostream>
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
+
 namespace cytnx {
 
   namespace linalg {
@@ -34,17 +38,17 @@ namespace cytnx {
         cytnx::linalg_internal::lii.Outer_ii[Tl.dtype()][Tr.dtype()](
           out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl, j1, j2);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         // cytnx_error_msg(true, "[Outer] currently Outer is not support for GPU, pending for
         // fix.%s",
         //                 "\n");
         checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuOuter_ii[Tl.dtype()][Tr.dtype()](
           out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl, j1, j2);
-#else
+  #else
         cytnx_error_msg(true, "[Outer] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-#endif
+  #endif
       }
 
       return out;
@@ -52,3 +56,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

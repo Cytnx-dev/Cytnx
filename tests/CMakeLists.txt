@@ -1,3 +1,7 @@
+
+if(BACKEND_TORCH)
+else()
+
 add_executable(
   test_main
   test_tools.cpp
@@ -57,3 +61,5 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_BINARY_DIR})
+
+endif()

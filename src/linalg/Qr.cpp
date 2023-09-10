@@ -1,13 +1,16 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
 #include <iostream>
 #include <vector>
-
 using namespace std;
 typedef cytnx::Accessor ac;
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
+
 namespace cytnx {
   namespace linalg {
 
@@ -48,7 +51,7 @@ namespace cytnx {
         return out;
 
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         cytnx_error_msg(true, "[Qr] error,%s", "Currently QR does not support CUDA.\n");
         /*
         checkCudaErrors(cudaSetDevice(in.device()));
@@ -66,11 +69,11 @@ namespace cytnx {
         return out;
         */
         return std::vector<Tensor>();
-#else
+  #else
         cytnx_error_msg(true, "[QR] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-#endif
+  #endif
       }
     }
 
@@ -389,3 +392,4 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

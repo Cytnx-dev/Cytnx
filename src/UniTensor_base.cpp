@@ -4,6 +4,9 @@
 #include "Network.hpp"
 #include <string>
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   //====================================================
   std::string UniTensorType_class::getname(const int &ut_type) {
@@ -682,3 +685,4 @@ namespace cytnx {
                     "\n");
   }
 }  // namespace cytnx
+#endif

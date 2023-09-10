@@ -1,5 +1,5 @@
 #include "Physics.hpp"
-#include "backend/Storage.hpp"
+
 #include "Generator.hpp"
 #include "utils/utils.hpp"
 
@@ -8,6 +8,12 @@
 #include <iostream>
 #include <cmath>
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/Storage.hpp"
+
 namespace cytnx {
   namespace physics {
     Tensor spin(const cytnx_double &S, const std::string &Comp, const int &device) {
@@ -208,3 +214,4 @@ namespace cytnx {
   }  // namespace operators
 
 }  // namespace cytnx
+#endif

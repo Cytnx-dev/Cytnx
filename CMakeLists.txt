@@ -79,9 +79,9 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/vinfo.tmp" "${CYTNX_VARIANT_INFO}" "")
 ######################################################################
 ### COMMAND LINE OPTIONS
 ######################################################################
-option(BACKEND_PYTORCH "Build Cytnx with pytorch backend (requires pytorch)" OFF)
+option(BACKEND_TORCH "Build Cytnx with pytorch backend (requires pytorch)" OFF)
 
-## the following are only referenced when BACKEND_PYTORCH=OFF
+## the following are only referenced when BACKEND_TORCH=OFF
 option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
 option(BUILD_PYTHON "Build Python wrapper" ON)
 option(USE_MKL "Build using MKL" ON)
@@ -154,8 +154,10 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 
 
 
-if(BACKEND_PYTORCH)
+if(BACKEND_TORCH)
   message(STATUS "backend = pytorch")
+  target_compile_definitions(cytnx PUBLIC BACKEND_TORCH)
+
 else()
   message(STATUS "backend = cytnx")
   include(CytnxBKNDCMakeLists.cmake)

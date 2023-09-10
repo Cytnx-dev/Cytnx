@@ -1,8 +1,11 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
 #include <iostream>
 #include "Tensor.hpp"
 #include "Generator.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -72,16 +75,17 @@ namespace cytnx {
         return out;
 
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         cytnx_error_msg(
           true, "[ERROR] currently Lstsq for non-symmetric matrix is not supported.%s", "\n");
         return std::vector<Tensor>();
-#else
+  #else
         cytnx_error_msg(true, "[Lsq] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-#endif
+  #endif
       }
     }
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

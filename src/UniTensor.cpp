@@ -6,6 +6,9 @@
 
 using namespace std;
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
 
   UniTensor UniTensor::Pow(const double &p) const { return cytnx::linalg::Pow(*this, p); }
@@ -185,3 +188,4 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+#endif

@@ -1,8 +1,13 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
+
 #include <iostream>
 #include "Tensor.hpp"
 #include "Generator.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
+
 namespace cytnx {
   namespace linalg {
 
@@ -89,16 +94,16 @@ namespace cytnx {
                                                 py._impl->storage()._impl, px.shape()[0],
                                                 px.shape()[1], py.shape()[1], pa, pb);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(x.device()));
         linalg_internal::lii.cuGemm_ii[fin_dtype](
           c._impl->storage()._impl, px._impl->storage()._impl, py._impl->storage()._impl,
           px.shape()[0], px.shape()[1], py.shape()[1], pa, pb);
-        // cytnx_error_msg(true, "[Gemm_] fatal error,%s", "Not yet implemented.\n");
-#else
+          // cytnx_error_msg(true, "[Gemm_] fatal error,%s", "Not yet implemented.\n");
+  #else
         cytnx_error_msg(true, "[Gemm_] fatal error,%s",
                         "try to use GPU but not compiled with GPU support.\n");
-#endif
+  #endif
       }
     }
 
@@ -156,16 +161,16 @@ namespace cytnx {
           out._impl->storage()._impl, px._impl->storage()._impl, py._impl->storage()._impl,
           px.shape()[0], px.shape()[1], py.shape()[1], pa, pb);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(x.device()));
         linalg_internal::lii.cuGemm_ii[fin_dtype](
           out._impl->storage()._impl, px._impl->storage()._impl, py._impl->storage()._impl,
           px.shape()[0], px.shape()[1], py.shape()[1], pa, pb);
-        // cytnx_error_msg(true, "[Gemm_] fatal error,%s", "Not yet implemented.\n");
-#else
+          // cytnx_error_msg(true, "[Gemm_] fatal error,%s", "Not yet implemented.\n");
+  #else
         cytnx_error_msg(true, "[Gemm_] fatal error,%s",
                         "try to use GPU but not compiled with GPU support.\n");
-#endif
+  #endif
       }
 
       return out;
@@ -173,3 +178,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif

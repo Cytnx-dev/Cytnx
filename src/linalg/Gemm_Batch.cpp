@@ -1,9 +1,11 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
 #include <iostream>
 #include "Tensor.hpp"
 #include "Generator.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 using namespace std;
 namespace cytnx {
   namespace linalg {
@@ -60,17 +62,17 @@ namespace cytnx {
             (const void **)a_array, k_array.data(), tmp_beta_array, c_array, n_array.data(),
             group_count, group_size.data());
         } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(device));
           linalg_internal::lii.cuGemm_Batch_ii[dtype](
             transb_array.data(), transa_array.data(), n_array.data(), m_array.data(),
             k_array.data(), tmp_alpha_array, (const void **)b_array, n_array.data(),
             (const void **)a_array, k_array.data(), tmp_beta_array, (void **)c_array,
             n_array.data(), group_count, group_size.data());
-#else
+  #else
           cytnx_error_msg(true, "[Gemm_Batch] fatal error,%s",
                           "try to use GPU but not compiled with GPU support.\n");
-#endif
+  #endif
         }
       }
       //       if(device==Device.cpu){
@@ -250,19 +252,21 @@ namespace cytnx {
           (void **)c_array, ns.data(), (blas_int)group_count,
           vec_cast<cytnx_int64, blas_int>(group_size).data());
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(a_tensors[0].device()));
         linalg_internal::lii.cuGemm_Batch_ii[fin_dtype](
           transs.data(), transs.data(), ns.data(), ms.data(), ks.data(), tmp_alpha_array,
           (const void **)b_array, ns.data(), (const void **)a_array, ks.data(), tmp_beta_array,
           (void **)c_array, ns.data(), group_count,
           vec_cast<cytnx_int64, blas_int>(group_size).data());
-#else
+  #else
         cytnx_error_msg(true, "[Gemm_Batch] fatal error,%s",
                         "try to use GPU but not compiled with GPU support.\n");
-#endif
+  #endif
       }
     }
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

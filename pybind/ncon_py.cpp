@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void ncon_binding(py::module &m) {
   m.def(
     "ncon",
@@ -31,3 +34,5 @@ void ncon_binding(py::module &m) {
     py::arg("optimize") = false, py::arg("cont_order") = std::vector<cytnx_int64>(),
     py::arg("out_labels") = std::vector<std::string>());
 }
+
+#endif

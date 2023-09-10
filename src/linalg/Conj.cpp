@@ -1,9 +1,12 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
 #include <iostream>
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+
+  #include "../backend/linalg_internal_interface.hpp"
 namespace cytnx {
 
   namespace linalg {
@@ -26,17 +29,17 @@ namespace cytnx {
         return out;
 
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         if (out.dtype() < 3)
           cytnx::linalg_internal::lii.cuConj_inplace_ii[out.dtype()](out._impl->storage()._impl,
                                                                      out._impl->storage().size());
         return out;
-#else
+  #else
         cytnx_error_msg(true, "[Inv] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return Tensor();
-#endif
+  #endif
       }
     }
 
@@ -44,3 +47,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

@@ -1,8 +1,11 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
+
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+  #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
 
@@ -34,7 +37,7 @@ namespace cytnx {
             nulls._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
             Lt._impl->storage()._impl->size(), {}, {}, {}, 1);
         } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
           Tensor tmpo;
           if (Lt.dtype() <= Rt.dtype())
@@ -48,10 +51,10 @@ namespace cytnx {
 
           if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
 
-#else
+  #else
           cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-#endif
+  #endif
         }
       } else {
         // non-contiguous section
@@ -61,19 +64,20 @@ namespace cytnx {
             Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
             Rt._impl->invmapper(), 1);
         } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
           cytnx_error_msg(true,
                           "[iMul][on GPU/CUDA] error two tensors must be contiguous. Call "
                           "Contiguous_() or Contiguous() first%s",
                           "\n");
 
-#else
+  #else
           cytnx_error_msg(true, "[Mul] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-#endif
+  #endif
         }
       }
     }
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

@@ -5,13 +5,10 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
-#include "backend/linalg_internal_interface.hpp"
+#ifdef BACKEND_TORCH
+#else
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    #include "linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
-  #endif
-#endif
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -70,8 +67,8 @@ namespace cytnx {
         return tmps;
 
       } else {
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
         cytnx_error_msg(
           Tin.shape().size() != 2,
           "[Gesvd_truncate] error, Gesvd_truncate can only operate on rank-2 Tensor.%s", "\n");
@@ -99,16 +96,16 @@ namespace cytnx {
 
         return outT;
 
-  #else
+    #else
         cytnx_error_msg(true, "[Gesvd_truncate] fatal error,%s",
                         "try to call the cuquantum section without cuQunatum support.\n");
         return std::vector<Tensor>();
-  #endif
-#else
+    #endif
+  #else
         cytnx_error_msg(true, "[Gesvd_truncate] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-#endif
+  #endif
       }
     }
   }  // namespace linalg
@@ -119,8 +116,8 @@ namespace cytnx {
     using namespace std;
     typedef Accessor ac;
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
     void _cuquantum_gesvdj_truncate_Dense_UT(std::vector<UniTensor> &outCyT,
                                              const cytnx::UniTensor &Tin,
                                              const cytnx_uint64 &keepdim, const double &err,
@@ -193,8 +190,8 @@ namespace cytnx {
 
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
     }
+    #endif
   #endif
-#endif
 
     void _gesvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                   const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
@@ -461,20 +458,20 @@ namespace cytnx {
         if (Tin.device() == Device.cpu) {
           _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
         } else {
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
           _cuquantum_gesvdj_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
-  #else
+    #else
           cytnx_error_msg(true, "[cuQuantumSvd] fatal error,%s",
                           "try to call the cuquantum section without cuQunatum support.\n");
           return std::vector<cytnx::UniTensor>();
-  #endif
+    #endif
 
-#else
+  #else
           cytnx_error_msg(true, "[cuQuantumSvd] fatal error,%s",
                           "try to call the gpu section without CUDA support.\n");
           return std::vector<cytnx::UniTensor>();
-#endif
+  #endif
         }
 
       } else if (Tin.uten_type() == UTenType.Block) {
@@ -489,3 +486,4 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void tnalgo_binding(py::module &m) {
   //====================
   // [Submodule tn_algo]
@@ -95,3 +98,4 @@ void tnalgo_binding(py::module &m) {
       },
       py::arg("verbose") = false, py::arg("maxit") = 4000, py::arg("krydim") = 4);
 }
+#endif

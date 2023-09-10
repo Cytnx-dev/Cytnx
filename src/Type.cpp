@@ -1,23 +1,32 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#ifdef UNI_MKL
-  #include <mkl.h>
+
+#ifdef BACKEND_TORCH
+namespace cytnx {
+  int __blasINTsize__ = 32;
+}
+#else
+
+  #ifdef UNI_MKL
+    #include <mkl.h>
 namespace cytnx {
   int __blasINTsize__ = sizeof(MKL_INT);
 }
-#else
-  #include <lapacke.h>
+  #else
+    #include <lapacke.h>
 namespace cytnx {
   int __blasINTsize__ = sizeof(lapack_int);
 }
-#endif
+  #endif
+
+#endif  // BACKEND_TORCH
+
+using namespace std;
 
 // global debug flag!
 namespace cytnx {
   bool User_debug = false;
 }
-
-using namespace std;
 
 namespace cytnx {
   Type_class Type;
