@@ -3,16 +3,23 @@
 using namespace std;
 using namespace cytnx;
 
-TEST_F(NconTest, gpu_ncon) {
-  double dans;
-  ifstream fin("answer.txt");
-  UniTensor res = ncon(input.first, input.second, true).to(cytnx::Device.cuda);
-  res.reshape_({-1});
+TEST_F(NconTest, gpu_ncon_default_order) {
+  std::vector<UniTensor> tn_list = {utdnA, utdnB, utdnC};
+  std::vector<std::vector<cytnx_int64>> connect_list = {{-1, -2, 2}, {2, 1}, {1, -3}};
+  UniTensor res = ncon(tn_list, connect_list, true, false);
+  EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
+}
 
-  for (int i = 0; i < res.shape()[0]; i++) {
-    fin >> dans;
-    double dres = *(((double*)res.get_block_().storage().data()) + i);
-    EXPECT_NEAR(dans, dres, 1e-8);  // We should consider change the epsilon since the resulting
-                                    // tensor may be very large in number
-  }
+TEST_F(NconTest, gpu_ncon_specified_order) {
+  std::vector<UniTensor> tn_list = {utdnA, utdnB, utdnC};
+  std::vector<std::vector<cytnx_int64>> connect_list = {{-1, -2, 2}, {2, 1}, {1, -3}};
+  UniTensor res = ncon(tn_list, connect_list, true, true, {2, 1});
+  EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
+}
+
+TEST_F(NconTest, gpu_ncon_optimal_order) {
+  std::vector<UniTensor> tn_list = {utdnA, utdnB, utdnC};
+  std::vector<std::vector<cytnx_int64>> connect_list = {{-1, -2, 2}, {2, 1}, {1, -3}};
+  UniTensor res = ncon(tn_list, connect_list, true, true);
+  EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
 }
