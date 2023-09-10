@@ -1,6 +1,6 @@
 #include <typeinfo>
 #include "Tensor.hpp"
-#include "utils/utils_internal_interface.hpp"
+//#include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
 #include "utils/is.hpp"
 #include "Type.hpp"

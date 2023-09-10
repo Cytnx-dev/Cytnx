@@ -1,12 +1,13 @@
 #include "UniTensor.hpp"
 #include "utils/utils.hpp"
-#include "utils/utils_internal_interface.hpp"
+//#include "utils/utils_internal_interface.hpp"
 #include "Generator.hpp"
 #include "linalg.hpp"
 #include <algorithm>
 #include <utility>
 #include <vector>
 typedef cytnx::Accessor ac;
+using namespace std;
 namespace cytnx {
 
   void DenseUniTensor::Init(const std::vector<Bond> &bonds,
@@ -171,7 +172,7 @@ namespace cytnx {
         bds[1] = bds[0].clone();
         this->_bonds = bds;
         this->_block = in_tensor;
-        std::vector<cytnx_int64> zeroone = utils_internal::range_cpu<cytnx_int64>(2);
+        std::vector<cytnx_int64> zeroone = vec_range<cytnx_int64>(2);
         std::vector<std::string> vs;
         for (int i = 0; i < (int)zeroone.size(); i++) vs.push_back(std::to_string(zeroone[i]));
         this->_labels = vs;
@@ -188,12 +189,11 @@ namespace cytnx {
         }
         this->_bonds = bds;
         this->_block = in_tensor;
-        std::vector<cytnx_int64> tmp =
-          utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
+        std::vector<cytnx_int64> tmp = vec_range<cytnx_int64>(in_tensor.shape().size());
         std::vector<std::string> vs;
         for (int i = 0; i < (int)tmp.size(); i++) vs.push_back(std::to_string(tmp[i]));
         this->_labels = vs;
-        // this->_labels = utils_internal::range_cpu<cytnx_int64>(in_tensor.shape().size());
+        // this->_labels = vec_range<cytnx_int64>(in_tensor.shape().size());
 
         if (i_rowrank == -1) {
           i_rowrank = int(in_tensor.shape().size() / 2);
@@ -991,10 +991,8 @@ namespace cytnx {
 
       // process meta
       // std::cout << this->rank() << " " << rhs->rank() << std::endl;
-      std::vector<cytnx_uint64> non_comm_idx1 =
-        vec_erase(utils_internal::range_cpu(this->rank()), comm_idx1);
-      std::vector<cytnx_uint64> non_comm_idx2 =
-        vec_erase(utils_internal::range_cpu(rhs->rank()), comm_idx2);
+      std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(vec_range(this->rank()), comm_idx1);
+      std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(vec_range(rhs->rank()), comm_idx2);
 
       vec_concatenate_(tmp->_labels, vec_clone(this->_labels, non_comm_idx1),
                        vec_clone(rhs->_labels, non_comm_idx2));
