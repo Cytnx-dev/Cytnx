@@ -3,7 +3,7 @@
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "cuAlloc_gpu.hpp"
 
 #ifdef UNI_MAGMA
   #include "magma_v2.h"

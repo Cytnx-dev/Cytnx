@@ -1,4 +1,4 @@
-#include "utils/utils_internal_cpu/Alloc_cpu.hpp"
+#include "Alloc_cpu.hpp"
 
 using namespace std;
 

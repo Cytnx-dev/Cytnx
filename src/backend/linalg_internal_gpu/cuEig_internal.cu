@@ -1,9 +1,9 @@
-#include "linalg/linalg/internal_gpu/cuEig_internal.hpp"
+#include "linalg/linalg_internal_gpu/cuEig_internal.hpp"
 #include "cytnx_error.hpp"
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#include "utils/utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "cuAlloc_gpu.hpp"
 
 #ifdef UNI_MAGMA
   #include "magma_v2.h"

@@ -1,5 +1,5 @@
 #include "backend/linalg_internal_gpu/cuInv_inplace_internal.hpp"
-#include "utils/utils_internal_interface.hpp"
+#include "../utils_internal_interface
 
 //#ifdef UNI_OMP
 //    #include <omp.h>

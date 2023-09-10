@@ -1,4 +1,4 @@
-#include "utils/utils_internal_cpu/Cast_cpu.hpp"
+#include "Cast_cpu.hpp"
 #include "backend/Storage.hpp"
 #ifdef UNI_OMP
   #include <omp.h>

@@ -1,5 +1,5 @@
 #include "backend/linalg_internal_gpu/cuAbs_internal.hpp"
-#include "utils/utils_internal_interface.hpp"
+#include "../utils_internal_interface.hpp"
 
 //#include "cytnx_error.hpp"
 //#include "utils/backend/lapack_wrapper.hpp"

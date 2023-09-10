@@ -1,7 +1,7 @@
 #include "Generator.hpp"
 #include "backend/Storage.hpp"
 #include "utils/utils.hpp"
-#include "utils/utils_internal_interface.hpp"
+#include "backend/utils_internal_interface.hpp"
 #include "linalg.hpp"
 #include <cfloat>
 #include <iostream>

@@ -41,10 +41,6 @@
 namespace cytnx {
   namespace utils_internal {
 
-    bool _fx_compare_vec_inc(const std::vector<cytnx_int64> &v1,
-                             const std::vector<cytnx_int64> &v2);
-    bool _fx_compare_vec_dec(const std::vector<cytnx_int64> &v1,
-                             const std::vector<cytnx_int64> &v2);
     typedef void (*ElemCast_io)(const boost::intrusive_ptr<Storage_base> &,
                                 boost::intrusive_ptr<Storage_base> &, const unsigned long long &,
                                 const int &);

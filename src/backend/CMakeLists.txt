@@ -15,6 +15,9 @@ target_sources_local(cytnx
     algo_internal_interface.hpp
     algo_internal_interface.cpp
 
+    utils_internal_interface.hpp
+    utils_internal_interface.cpp
+
     Scalar.cpp
     Storage.cpp
     Storage_base.cpp
@@ -37,10 +40,12 @@ target_sources_local(cytnx
 add_subdirectory(linalg_internal_cpu)
 add_subdirectory(random_internal_cpu)
 add_subdirectory(algo_internal_cpu)
+add_subdirectory(utils_internal_cpu)
 if(USE_CUDA)
   add_subdirectory(linalg_internal_gpu)
   add_subdirectory(random_internal_gpu)
   add_subdirectory(algo_internal_gpu)
+  add_subdirectory(utils_internal_gpu)
 endif()
 
 

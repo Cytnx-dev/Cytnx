@@ -1,4 +1,4 @@
-#include "utils/utils_internal_cpu/Movemem_cpu.hpp"
+#include "Movemem_cpu.hpp"
 #include "backend/Storage.hpp"
 #ifdef UNI_OMP
   #include <omp.h>
