@@ -63,6 +63,9 @@
   #include "linalg/linalg_internal_gpu/cuSum_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuKron_internal.hpp"
+
+  #include "linalg/linalg_internal_gpu/cudaMemcpyTruncation.hpp"
+
   #ifdef UNI_CUTENSOR
     #include "linalg/linalg_internal_gpu/cuTensordot_internal.hpp"
   #endif
@@ -185,6 +188,11 @@ namespace cytnx {
                                       const std::vector<cytnx_uint64> &idxl,
                                       const std::vector<cytnx_uint64> &idxr);
 #ifdef UNI_GPU
+
+    typedef void (*cudaMemcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
+                                             const cytnx_uint64 &truc_dim, const bool &is_U,
+                                             const bool &is_vT, const unsigned int &return_err);
+
   #ifdef UNI_CUQUANTUM
     typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const unsigned int &return_err, Tensor &U,
@@ -260,6 +268,8 @@ namespace cytnx {
       std::vector<MaxMinfunc_oii> cuSum_ii;
       std::vector<std::vector<Kronfunc_oii>> cuKron_ii;
       std::vector<Tensordotfunc_oii> cuTensordot_ii;
+
+      std::vector<cudaMemcpyTruncation_oii> cudaMemcpyTruncation_ii;
 
   #ifdef UNI_CUQUANTUM
       std::vector<cuQuantumGeSvd_oii> cuQuantumGeSvd_ii;

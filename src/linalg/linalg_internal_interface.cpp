@@ -1367,6 +1367,14 @@ namespace cytnx {
       cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
       cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
 
+      //========Helper function for svd_truncate on cuda========
+      cudaMemcpyTruncation_ii = vector<cudaMemcpyTruncation_oii>(N_Type);
+
+      cudaMemcpyTruncation_ii[Type.ComplexDouble] = cudaMemcpyTruncation_cd;
+      cudaMemcpyTruncation_ii[Type.ComplexFloat] = cudaMemcpyTruncation_cf;
+      cudaMemcpyTruncation_ii[Type.Double] = cudaMemcpyTruncation_d;
+      cudaMemcpyTruncation_ii[Type.Float] = cudaMemcpyTruncation_f;
+
   #ifdef UNI_CUQUANTUM
       cuQuantumGeSvd_ii = vector<cuQuantumGeSvd_oii>(N_Type);
       cuQuantumGeSvd_ii[Type.ComplexDouble] = cuQuantumGeSvd_internal_cd;
