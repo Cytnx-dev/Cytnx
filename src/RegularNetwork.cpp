@@ -1,6 +1,5 @@
 #include <typeinfo>
 #include "Network.hpp"
-
 #include "search_tree.hpp"
 #include <stack>
 #include <algorithm>
@@ -1188,11 +1187,11 @@ namespace cytnx {
       this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
     }
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
     this->optimizerInfo = nullptr;
+    #endif
   #endif
-#endif
 
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
