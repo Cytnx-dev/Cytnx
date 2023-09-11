@@ -10,6 +10,7 @@
 #include <initializer_list>
 
 namespace cytnx {
+
   /**
    * @brief object that mimic the python slice to access elements in C++ [this is for c++ API only].
    */

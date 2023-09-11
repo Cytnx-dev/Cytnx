@@ -22,6 +22,18 @@
 
 
 
+
+
+- for general develop:
+
+  1. copy dev_test.cpp to repo root directory,
+     This will serve as your scratch pad for experiment on the code base.
+
+  2. add option to cmake `-DDEV_MODE=on` will build `dev_test.cpp` linking with cytnx.
+     After make, an dev_test executable should appears on repo root directory (no `make install` needed)
+
+
+
 ## note:
 1. cmake 3.27.0 changed the FindPythonInterp / FindPythonLib, so install cmake=3.26 instead for now
 2. 3.11 will fail to interact with pybind11, so for now support is up to 3.10

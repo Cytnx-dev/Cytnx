@@ -95,6 +95,7 @@ option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
 option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
 
 
+option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 
 
 ######################################################################
@@ -157,6 +158,28 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
 if(BACKEND_TORCH)
   message(STATUS "backend = pytorch")
   target_compile_definitions(cytnx PUBLIC BACKEND_TORCH)
+
+  # let torch python expose where pytorch.cmake is installed
+  execute_process (
+  COMMAND bash -c "python -c 'import torch;print(torch.utils.cmake_prefix_path)'"
+  OUTPUT_VARIABLE TORCH_CMAKE_PATH_C
+  )
+  string(REGEX REPLACE "\n$" "" TORCH_CMAKE_PATH_C "${TORCH_CMAKE_PATH_C}")
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_CMAKE_PATH_C})
+  message(STATUS ${CMAKE_PREFIX_PATH})
+
+  find_package(Torch REQUIRED)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+  message(STATUS "pytorch: ${TORCH_INSTALL_PREFIX}")
+  message(STATUS "pytorch libs: ${TORCH_LIBRARIES}")
+
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.dylib)
+  else()
+  target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
+  target_link_libraries(cytnx PRIVATE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
+  target_link_libraries(cytnx INTERFACE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
+  endif()
 
 else()
   message(STATUS "backend = cytnx")
@@ -349,7 +372,13 @@ set(libname "${CMAKE_SHARED_LIBRARY_PREFIX}cytnx.${CYTNX_VERSION}${CMAKE_SHARED_
 
 
 
-
+if(DEV_MODE)
+  add_executable(dev_test ${CMAKE_CURRENT_SOURCE_DIR}/dev_test.cpp)
+  target_link_libraries(dev_test cytnx)
+  add_custom_command(TARGET dev_test POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dev_test> ${CMAKE_CURRENT_SOURCE_DIR}/dev_test
+  )
+endif()
 
 
 

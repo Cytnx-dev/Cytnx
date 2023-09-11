@@ -182,6 +182,7 @@ echo ${FLAG}
 rm -rf build
 mkdir build
 cd build
+#cmake ../ ${FLAG} -DDEV_MODE=on
 cmake ../ ${FLAG}
 make -j4
 #make install
