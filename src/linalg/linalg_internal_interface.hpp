@@ -69,6 +69,7 @@
 
   #ifdef UNI_CUQUANTUM
     #include "linalg/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuQuantumQr_internal.hpp"
   #endif
 #endif
 
@@ -188,6 +189,12 @@ namespace cytnx {
     typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const unsigned int &return_err, Tensor &U,
                                        Tensor &S, Tensor &vT, Tensor &terr);
+    typedef void (*cuQuantumQr_oii)(const boost::intrusive_ptr<Storage_base> &in,
+                                    boost::intrusive_ptr<Storage_base> &Q,
+                                    boost::intrusive_ptr<Storage_base> &R,
+                                    boost::intrusive_ptr<Storage_base> &D,
+                                    boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
+                                    const cytnx_int64 &N, const bool &is_d);
   #endif
 #endif
     class linalg_internal_interface {
@@ -256,6 +263,7 @@ namespace cytnx {
 
   #ifdef UNI_CUQUANTUM
       std::vector<cuQuantumGeSvd_oii> cuQuantumGeSvd_ii;
+      std::vector<cuQuantumQr_oii> cuQuantumQr_ii;
   #endif
 #endif
 
