@@ -6,37 +6,37 @@
 #include "Type.hpp"
 #include "backend/Storage.hpp"
 #include "backend/Scalar.hpp"
-#include "backend/linalg_internal_cpu/Arithmetic_internal.hpp"
-#include "backend/linalg_internal_cpu/iArithmetic_internal.hpp"
-#include "backend/linalg_internal_cpu/Sdd_internal.hpp"
-#include "backend/linalg_internal_cpu/Gesvd_internal.hpp"
-#include "backend/linalg_internal_cpu/Eigh_internal.hpp"
-#include "backend/linalg_internal_cpu/Eig_internal.hpp"
-#include "backend/linalg_internal_cpu/InvM_inplace_internal.hpp"
-#include "backend/linalg_internal_cpu/Inv_inplace_internal.hpp"
-#include "backend/linalg_internal_cpu/Conj_inplace_internal.hpp"
-#include "backend/linalg_internal_cpu/Exp_internal.hpp"
-#include "backend/linalg_internal_cpu/Matmul_internal.hpp"
-#include "backend/linalg_internal_cpu/Matmul_dg_internal.hpp"
-#include "backend/linalg_internal_cpu/Diag_internal.hpp"
-#include "backend/linalg_internal_cpu/Outer_internal.hpp"
-#include "backend/linalg_internal_cpu/Kron_internal.hpp"
-#include "backend/linalg_internal_cpu/Vectordot_internal.hpp"
-#include "backend/linalg_internal_cpu/Tridiag_internal.hpp"
-#include "backend/linalg_internal_cpu/Norm_internal.hpp"
-#include "backend/linalg_internal_cpu/Matvec_internal.hpp"
-#include "backend/linalg_internal_cpu/Pow_internal.hpp"
-#include "backend/linalg_internal_cpu/Abs_internal.hpp"
-#include "backend/linalg_internal_cpu/QR_internal.hpp"
-#include "backend/linalg_internal_cpu/MaxMin_internal.hpp"
-#include "backend/linalg_internal_cpu/Sum_internal.hpp"
-#include "backend/linalg_internal_cpu/Det_internal.hpp"
-#include "backend/linalg_internal_cpu/Lstsq_internal.hpp"
-#include "backend/linalg_internal_cpu/Axpy_internal.hpp"
-#include "backend/linalg_internal_cpu/Ger_internal.hpp"
-#include "backend/linalg_internal_cpu/Gemm_internal.hpp"
-#include "backend/linalg_internal_cpu/Gemm_Batch_internal.hpp"
-#include "backend/linalg_internal_cpu/Trace_internal.hpp"
+#include "linalg_internal_cpu/Arithmetic_internal.hpp"
+#include "linalg_internal_cpu/iArithmetic_internal.hpp"
+#include "linalg_internal_cpu/Sdd_internal.hpp"
+#include "linalg_internal_cpu/Gesvd_internal.hpp"
+#include "linalg_internal_cpu/Eigh_internal.hpp"
+#include "linalg_internal_cpu/Eig_internal.hpp"
+#include "linalg_internal_cpu/InvM_inplace_internal.hpp"
+#include "linalg_internal_cpu/Inv_inplace_internal.hpp"
+#include "linalg_internal_cpu/Conj_inplace_internal.hpp"
+#include "linalg_internal_cpu/Exp_internal.hpp"
+#include "linalg_internal_cpu/Matmul_internal.hpp"
+#include "linalg_internal_cpu/Matmul_dg_internal.hpp"
+#include "linalg_internal_cpu/Diag_internal.hpp"
+#include "linalg_internal_cpu/Outer_internal.hpp"
+#include "linalg_internal_cpu/Kron_internal.hpp"
+#include "linalg_internal_cpu/Vectordot_internal.hpp"
+#include "linalg_internal_cpu/Tridiag_internal.hpp"
+#include "linalg_internal_cpu/Norm_internal.hpp"
+#include "linalg_internal_cpu/Matvec_internal.hpp"
+#include "linalg_internal_cpu/Pow_internal.hpp"
+#include "linalg_internal_cpu/Abs_internal.hpp"
+#include "linalg_internal_cpu/QR_internal.hpp"
+#include "linalg_internal_cpu/MaxMin_internal.hpp"
+#include "linalg_internal_cpu/Sum_internal.hpp"
+#include "linalg_internal_cpu/Det_internal.hpp"
+#include "linalg_internal_cpu/Lstsq_internal.hpp"
+#include "linalg_internal_cpu/Axpy_internal.hpp"
+#include "linalg_internal_cpu/Ger_internal.hpp"
+#include "linalg_internal_cpu/Gemm_internal.hpp"
+#include "linalg_internal_cpu/Gemm_Batch_internal.hpp"
+#include "linalg_internal_cpu/Trace_internal.hpp"
 
 #ifdef UNI_GPU
   #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
@@ -69,6 +69,7 @@
 
   #ifdef UNI_CUQUANTUM
     #include "linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
+    #include "linalg_internal_gpu/cuQuantumQr_internal.hpp"
   #endif
 #endif
 
@@ -188,6 +189,12 @@ namespace cytnx {
     typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const unsigned int &return_err, Tensor &U,
                                        Tensor &S, Tensor &vT, Tensor &terr);
+    typedef void (*cuQuantumQr_oii)(const boost::intrusive_ptr<Storage_base> &in,
+                                    boost::intrusive_ptr<Storage_base> &Q,
+                                    boost::intrusive_ptr<Storage_base> &R,
+                                    boost::intrusive_ptr<Storage_base> &D,
+                                    boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
+                                    const cytnx_int64 &N, const bool &is_d);
   #endif
 #endif
     class linalg_internal_interface {
@@ -256,6 +263,7 @@ namespace cytnx {
 
   #ifdef UNI_CUQUANTUM
       std::vector<cuQuantumGeSvd_oii> cuQuantumGeSvd_ii;
+      std::vector<cuQuantumQr_oii> cuQuantumQr_ii;
   #endif
 #endif
 
