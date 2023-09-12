@@ -16,7 +16,7 @@ namespace cytnx {
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> tmps = Svd(Tin, is_UvT);
 
-        Tensor terr({1}, Tin.dtype());
+        Tensor terr({1}, Tin.dtype(), Tin.device());
 
         cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
           tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err);

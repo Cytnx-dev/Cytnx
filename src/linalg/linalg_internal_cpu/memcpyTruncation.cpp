@@ -30,12 +30,13 @@ namespace cytnx {
       }
       if (truc_dim != nums) {
         // perform the manual truncation
-        Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
-        Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+
         Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
         memcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
                (cytnx_double *)S._impl->storage()._impl->Mem, truc_dim * sizeof(cytnx_double));
         if (is_U) {
+          Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+
           int src = 0;
           int dest = 0;
           // copy with strides.
@@ -49,6 +50,7 @@ namespace cytnx {
           U = newU;
         }
         if (is_vT) {
+          Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
           // simply copy a new one dropping the tail.
           memcpy((cytnx_complex128 *)newvT._impl->storage()._impl->Mem,
                  (cytnx_complex128 *)vT._impl->storage()._impl->Mem,
@@ -94,12 +96,13 @@ namespace cytnx {
       }
       if (truc_dim != nums) {
         // perform the manual truncation
-        Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
-        Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+
         Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
         memcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
                (cytnx_double *)S._impl->storage()._impl->Mem, truc_dim * sizeof(cytnx_double));
         if (is_U) {
+          Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+
           int src = 0;
           int dest = 0;
           // copy with strides.
@@ -113,6 +116,7 @@ namespace cytnx {
           U = newU;
         }
         if (is_vT) {
+          Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
           // simply copy a new one dropping the tail.
           memcpy((cytnx_complex64 *)newvT._impl->storage()._impl->Mem,
                  (cytnx_complex64 *)vT._impl->storage()._impl->Mem,
@@ -158,12 +162,13 @@ namespace cytnx {
       }
       if (truc_dim != nums) {
         // perform the manual truncation
-        Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
-        Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+
         Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
         memcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
                (cytnx_double *)S._impl->storage()._impl->Mem, truc_dim * sizeof(cytnx_double));
         if (is_U) {
+          Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+
           int src = 0;
           int dest = 0;
           // copy with strides.
@@ -177,6 +182,7 @@ namespace cytnx {
           U = newU;
         }
         if (is_vT) {
+          Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
           // simply copy a new one dropping the tail.
           memcpy((cytnx_double *)newvT._impl->storage()._impl->Mem,
                  (cytnx_double *)vT._impl->storage()._impl->Mem,
@@ -222,12 +228,13 @@ namespace cytnx {
       }
       if (truc_dim != nums) {
         // perform the manual truncation
-        Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
-        Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
+
         Tensor newS = Tensor({truc_dim}, S.dtype(), S.device());
         memcpy((cytnx_double *)newS._impl->storage()._impl->Mem,
                (cytnx_double *)S._impl->storage()._impl->Mem, truc_dim * sizeof(cytnx_double));
         if (is_U) {
+          Tensor newU = Tensor({U.shape()[0], truc_dim}, U.dtype(), U.device());
+
           int src = 0;
           int dest = 0;
           // copy with strides.
@@ -241,6 +248,7 @@ namespace cytnx {
           U = newU;
         }
         if (is_vT) {
+          Tensor newvT = Tensor({truc_dim, vT.shape()[1]}, vT.dtype(), vT.device());
           // simply copy a new one dropping the tail.
           memcpy((cytnx_float *)newvT._impl->storage()._impl->Mem,
                  (cytnx_float *)vT._impl->storage()._impl->Mem,
