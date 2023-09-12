@@ -90,6 +90,148 @@ TEST_F(linalg_Test, BkUt_expM) {
     }
 }
 
+TEST_F(linalg_Test, DenseUt_Gesvd_truncate) {
+  std::vector<UniTensor> full = linalg::Gesvd_truncate(svd_T_dense, 999, 0, true, true, 999);
+  EXPECT_EQ(full[0].shape()[0], 11);
+
+  EXPECT_EQ(full[1].shape()[0], 11);
+  EXPECT_EQ(full[1].shape()[1], 11);
+
+  EXPECT_EQ(full[2].shape()[0], 11);
+  EXPECT_EQ(full[2].shape()[1], 13);
+
+  std::vector<UniTensor> truc1 = linalg::Gesvd_truncate(svd_T_dense, 5, 0, true, true, 999);
+
+  EXPECT_EQ(truc1[0].shape()[0], 5);
+
+  EXPECT_EQ(truc1[1].shape()[0], 11);
+  EXPECT_EQ(truc1[1].shape()[1], 5);
+
+  EXPECT_EQ(truc1[2].shape()[0], 5);
+  EXPECT_EQ(truc1[2].shape()[1], 13);
+
+  EXPECT_EQ(truc1[3].shape()[0], 6);
+
+  for (size_t i = 0; i < 5; i++) {
+    EXPECT_EQ(full[0].at({i}), truc1[0].at({i}));
+  }
+  for (size_t i = 0; i < 6; i++) {
+    EXPECT_EQ(full[0].at({i + 5}), truc1[3].at({i}));
+  }
+
+  for (size_t i = 0; i < 11; i++) {
+    for (size_t j = 0; j < 5; j++) {
+      EXPECT_EQ(full[1].at({i, j}), truc1[1].at({i, j}));
+    }
+  }
+  for (size_t i = 0; i < 5; i++) {
+    for (size_t j = 0; j < 13; j++) {
+      EXPECT_EQ(full[2].at({i, j}), truc1[2].at({i, j}));
+    }
+  }
+
+  std::vector<UniTensor> truc2 = linalg::Gesvd_truncate(svd_T_dense, 5, 1e-12, true, true, 999);
+
+  EXPECT_EQ(truc2[0].shape()[0], 2);
+
+  EXPECT_EQ(truc2[1].shape()[0], 11);
+  EXPECT_EQ(truc2[1].shape()[1], 2);
+
+  EXPECT_EQ(truc2[2].shape()[0], 2);
+  EXPECT_EQ(truc2[2].shape()[1], 13);
+
+  EXPECT_EQ(truc2[3].shape()[0], 9);
+
+  for (size_t i = 0; i < 2; i++) {
+    EXPECT_EQ(full[0].at({i}), truc2[0].at({i}));
+  }
+  for (size_t i = 0; i < 9; i++) {
+    EXPECT_EQ(full[0].at({i + 2}), truc2[3].at({i}));
+  }
+
+  for (size_t i = 0; i < 11; i++) {
+    for (size_t j = 0; j < 2; j++) {
+      EXPECT_EQ(full[1].at({i, j}), truc2[1].at({i, j}));
+    }
+  }
+  for (size_t i = 0; i < 2; i++) {
+    for (size_t j = 0; j < 13; j++) {
+      EXPECT_EQ(full[2].at({i, j}), truc2[2].at({i, j}));
+    }
+  }
+}
+
+TEST_F(linalg_Test, DenseUt_Svd_truncate) {
+  std::vector<UniTensor> full = linalg::Svd_truncate(svd_T_dense, 999, 0, true, 999);
+  EXPECT_EQ(full[0].shape()[0], 11);
+
+  EXPECT_EQ(full[1].shape()[0], 11);
+  EXPECT_EQ(full[1].shape()[1], 11);
+
+  EXPECT_EQ(full[2].shape()[0], 11);
+  EXPECT_EQ(full[2].shape()[1], 13);
+
+  std::vector<UniTensor> truc1 = linalg::Svd_truncate(svd_T_dense, 5, 0, true, 999);
+
+  EXPECT_EQ(truc1[0].shape()[0], 5);
+
+  EXPECT_EQ(truc1[1].shape()[0], 11);
+  EXPECT_EQ(truc1[1].shape()[1], 5);
+
+  EXPECT_EQ(truc1[2].shape()[0], 5);
+  EXPECT_EQ(truc1[2].shape()[1], 13);
+
+  EXPECT_EQ(truc1[3].shape()[0], 6);
+
+  for (size_t i = 0; i < 5; i++) {
+    EXPECT_EQ(full[0].at({i}), truc1[0].at({i}));
+  }
+  for (size_t i = 0; i < 6; i++) {
+    EXPECT_EQ(full[0].at({i + 5}), truc1[3].at({i}));
+  }
+
+  for (size_t i = 0; i < 11; i++) {
+    for (size_t j = 0; j < 5; j++) {
+      EXPECT_EQ(full[1].at({i, j}), truc1[1].at({i, j}));
+    }
+  }
+  for (size_t i = 0; i < 5; i++) {
+    for (size_t j = 0; j < 13; j++) {
+      EXPECT_EQ(full[2].at({i, j}), truc1[2].at({i, j}));
+    }
+  }
+
+  std::vector<UniTensor> truc2 = linalg::Svd_truncate(svd_T_dense, 5, 1e-12, true, 999);
+
+  EXPECT_EQ(truc2[0].shape()[0], 2);
+
+  EXPECT_EQ(truc2[1].shape()[0], 11);
+  EXPECT_EQ(truc2[1].shape()[1], 2);
+
+  EXPECT_EQ(truc2[2].shape()[0], 2);
+  EXPECT_EQ(truc2[2].shape()[1], 13);
+
+  EXPECT_EQ(truc2[3].shape()[0], 9);
+
+  for (size_t i = 0; i < 2; i++) {
+    EXPECT_EQ(full[0].at({i}), truc2[0].at({i}));
+  }
+  for (size_t i = 0; i < 9; i++) {
+    EXPECT_EQ(full[0].at({i + 2}), truc2[3].at({i}));
+  }
+
+  for (size_t i = 0; i < 11; i++) {
+    for (size_t j = 0; j < 2; j++) {
+      EXPECT_EQ(full[1].at({i, j}), truc2[1].at({i, j}));
+    }
+  }
+  for (size_t i = 0; i < 2; i++) {
+    for (size_t j = 0; j < 13; j++) {
+      EXPECT_EQ(full[2].at({i, j}), truc2[2].at({i, j}));
+    }
+  }
+}
+
 TEST_F(linalg_Test, DenseUt_Pow) {
   UniTensor Ht = UniTensor(A);
   auto res = linalg::Pow(Ht, 3);
