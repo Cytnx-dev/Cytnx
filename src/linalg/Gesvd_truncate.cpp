@@ -25,53 +25,18 @@ namespace cytnx {
 
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
+        Tensor terr({1}, Tin.dtype());
 
-        cytnx_uint64 id = 0;
-        cytnx_uint64 Kdim = keepdim;
+        cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err);
 
-        Storage ts = tmps[0].storage();
+        std::vector<Tensor> outT;
+        outT.push_back(tmps[0]);
+        if (is_U) outT.push_back(tmps[1]);
+        if (is_vT) outT.push_back(tmps[2]);
+        if (return_err) outT.push_back(terr);
 
-        if (ts.size() < keepdim) {
-          Kdim = ts.size();
-        }
-
-        cytnx_uint64 truc_dim = Kdim;
-        for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-          if (ts.at(i) < err) {
-            truc_dim--;
-          } else {
-            break;
-          }
-        }
-
-        if (truc_dim == 0) {
-          truc_dim = 1;
-        }
-        /// std::cout << truc_dim << std::endl;
-        // cytnx_error_msg(tmps[0].shape()[0] < keepdim,"[ERROR] keepdim should be <= the valid # of
-        // singular value, %d!\n",tmps[0].shape()[0]);`
-        Tensor terr({1}, Type.Double);
-
-        if (truc_dim != ts.size()) {
-          if (return_err == 1)
-            terr = tmps[id](truc_dim);
-          else if (return_err)
-            terr = tmps[id].get({ac::tilend(truc_dim)});
-
-          tmps[id] = tmps[id].get({ac::range(0, truc_dim)});
-
-          if (is_U) {
-            id++;
-            tmps[id] = tmps[id].get({ac::all(), ac::range(0, truc_dim)});
-          }
-          if (is_vT) {
-            id++;
-            tmps[id] = tmps[id].get({ac::range(0, truc_dim), ac::all()});
-          }
-        }
-        if (return_err) tmps.push_back(terr);
-
-        return tmps;
+        return outT;
 
       } else {
 #ifdef UNI_GPU

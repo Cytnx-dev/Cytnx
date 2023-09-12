@@ -782,6 +782,14 @@ namespace cytnx {
       Gemm_Batch_ii[Type.Double] = Gemm_Batch_internal_d;
       Gemm_Batch_ii[Type.Float] = Gemm_Batch_internal_f;
 
+      //========Helper function for svd_truncate on cuda========
+      memcpyTruncation_ii = vector<memcpyTruncation_oii>(N_Type);
+
+      memcpyTruncation_ii[Type.ComplexDouble] = memcpyTruncation_cd;
+      memcpyTruncation_ii[Type.ComplexFloat] = memcpyTruncation_cf;
+      memcpyTruncation_ii[Type.Double] = memcpyTruncation_d;
+      memcpyTruncation_ii[Type.Float] = memcpyTruncation_f;
+
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
 
