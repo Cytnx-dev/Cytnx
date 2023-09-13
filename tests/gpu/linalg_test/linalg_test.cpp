@@ -94,6 +94,48 @@ TEST_F(linalg_Test, gpu_BkUt_expM) {
     }
 }
 
+TEST_F(linalg_Test, gpu_DenseUt_Qr) {
+  UniTensor Qr1 = Qr_T_dense;
+  Qr1.set_rowrank_(1);
+  std::vector<UniTensor> res1 = linalg::Qr(Qr1, true);
+  EXPECT_EQ(res1[0].shape()[0], 4);
+  EXPECT_EQ(res1[0].shape()[1], 4);
+
+  EXPECT_EQ(res1[1].shape()[0], 4);
+  EXPECT_EQ(res1[1].shape()[1], 4);
+  EXPECT_EQ(res1[1].shape()[2], 4);
+
+  // recompose
+  UniTensor Qr1_ = Contract(res1[0], res1[1]);
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      for (int k = 0; k < 4; k++) {
+        EXPECT_TRUE(abs(Qr1.at({i, j, k}) - Qr1_.at({i, j, k})) < 1e-13);
+      }
+    }
+  }
+
+  UniTensor Qr2 = Qr_T_dense;
+  Qr2.set_rowrank_(2);
+  std::vector<UniTensor> res2 = linalg::Qr(Qr2, true);
+  EXPECT_EQ(res2[0].shape()[0], 4);
+  EXPECT_EQ(res2[0].shape()[1], 4);
+  EXPECT_EQ(res2[0].shape()[2], 4);
+
+  EXPECT_EQ(res2[1].shape()[0], 4);
+  EXPECT_EQ(res2[1].shape()[1], 4);
+
+  // recompose
+  UniTensor Qr2_ = Contract(res1[0], res1[1]);
+  for (int i = 0; i < 4; i++) {
+    for (int j = 0; j < 4; j++) {
+      for (int k = 0; k < 4; k++) {
+        EXPECT_TRUE(abs(Qr2.at({i, j, k}) - Qr2_.at({i, j, k})) < 1e-13);
+      }
+    }
+  }
+}
+
 TEST_F(linalg_Test, gpu_DenseUt_Gesvd_truncate) {
   std::vector<UniTensor> full = linalg::Gesvd_truncate(svd_T_dense, 999, 0, true, true, 999);
   EXPECT_EQ(full[0].shape()[0], 11);

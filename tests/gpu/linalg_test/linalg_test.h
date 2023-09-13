@@ -37,6 +37,10 @@ class linalg_Test : public ::testing::Test {
   UniTensor svd_T_dense =
     UniTensor(arange(0, 11 * 13, 1).reshape(11, 13)).astype(Type.ComplexDouble).to(Device.cuda);
 
+  UniTensor Qr_T_dense = UniTensor(arange(0, 4 * 4 * 4, 1).reshape({4, 4, 4}))
+                           .astype(Type.ComplexDouble)
+                           .to(Device.cuda);
+
   Tensor svd_Sans;
   //==================== Lanczos_Gnd_Ut ===================
   Tensor A = Tensor::Load(data_dir + "Lanczos_Gnd/lan_block_A.cytn").to(cytnx::Device.cuda);
