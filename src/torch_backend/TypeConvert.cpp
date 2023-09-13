@@ -1,15 +1,17 @@
-#include "TypeConvert.hpp"
+#include "torch_backend/TypeConvert.hpp"
 #include "cytnx_error.hpp"
 
 using namespace std;
-namespace torcyx {
-
+namespace cytnx {
+  /*
   TypeCvrt_class::TypeCvrt_class() {
     //_t2c = vector<Tor2Cy_io>(N_Type);
   }
 
   torch::TensorOptions TypeCvrt_class::Cy2Tor(const unsigned int &dtype, const int &device) {
+
     auto options = torch::TensorOptions();
+
     if (device < 0) {
       options.device(torch::kCPU);
     } else {
@@ -27,6 +29,12 @@ namespace torcyx {
         return options.dtype(torch::kInt32);
       case Type.Int16:
         return options.dtype(torch::kInt16);
+      case Type.ComplexDouble:
+        options.dtype(torch::kComplexDouble);
+        return options;
+      case Type.ComplexFloat:
+        options.dtype(torch::kComplexFloat);
+        return options;
       case Type.Uint16:
         cytnx_error_msg(true, "[ERROR] Torch type does not have Uint16.%s", "\n");
         return options;
@@ -42,13 +50,9 @@ namespace torcyx {
       case Type.Void:
         cytnx_error_msg(true, "[ERROR] Torch type does not have Void.%s", "\n");
         return options;
-      case Type.ComplexDouble:
-        cytnx_error_msg(true, "[ERROR] Torch type does not support Complex64.%s", "\n");
-        return options;
-      case Type.ComplexFloat:
-        cytnx_error_msg(true, "[ERROR] Torch type does not support Complex32.%s", "\n");
-        return options;
     };
+
+    return options;
   }
 
   unsigned int TypeCvrt_class::Tor2Cy(const torch::ScalarType &scalar_type) {
@@ -56,6 +60,10 @@ namespace torcyx {
       return Type.Double;
     } else if (scalar_type == torch::kFloat32) {
       return Type.Float;
+    } else if (scalar_type == torch::kComplexDouble) {
+      return Type.ComplexDouble;
+    } else if (scalar_type == torch::kComplexFloat) {
+      return Type.ComplexFloat;
     } else if (scalar_type == torch::kInt64) {
       return Type.Int64;
     } else if (scalar_type == torch::kInt32) {
@@ -72,6 +80,10 @@ namespace torcyx {
       return torch::kFloat64;
     } else if (dtype_str == "torch.float32") {
       return torch::kFloat32;
+    } else if (dtype_str == "torch.complex128") {
+      return torch::kComplexDouble;
+    } else if (dtype_str == "torch.complex64") {
+      return torch::kComplexFloat;
     } else if (dtype_str == "torch.int64") {
       return torch::kInt64;
     } else if (dtype_str == "torch.int32") {
@@ -92,5 +104,5 @@ namespace torcyx {
   }
 
   TypeCvrt_class type_converter;
-
-}  // namespace torcyx
+  */
+}  // namespace cytnx
