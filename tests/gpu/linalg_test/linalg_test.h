@@ -33,6 +33,10 @@ class linalg_Test : public ::testing::Test {
   UniTensor svd_T = UniTensor({svd_I, svd_J, svd_K, svd_L}, {"a", "b", "c", "d"}, 1, Type.Double,
                               Device.cuda, false)
                       .to(cytnx::Device.cuda);
+
+  UniTensor svd_T_dense =
+    UniTensor(arange(0, 11 * 13, 1).reshape(11, 13)).astype(Type.ComplexDouble).to(Device.cuda);
+
   Tensor svd_Sans;
   //==================== Lanczos_Gnd_Ut ===================
   Tensor A = Tensor::Load(data_dir + "Lanczos_Gnd/lan_block_A.cytn").to(cytnx::Device.cuda);
