@@ -3,13 +3,12 @@
 
 using namespace std;
 namespace cytnx {
-  /*
+
   TypeCvrt_class::TypeCvrt_class() {
     //_t2c = vector<Tor2Cy_io>(N_Type);
   }
 
   torch::TensorOptions TypeCvrt_class::Cy2Tor(const unsigned int &dtype, const int &device) {
-
     auto options = torch::TensorOptions();
 
     if (device < 0) {
@@ -104,5 +103,5 @@ namespace cytnx {
   }
 
   TypeCvrt_class type_converter;
-  */
+
 }  // namespace cytnx

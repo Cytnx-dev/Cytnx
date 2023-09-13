@@ -14,7 +14,6 @@ namespace cytnx {
   // typedef torch::TensorOptions (*Tor2Cy_io)(const unsigned int &dtype, const unsigned int
   // &device);
 
-  /*
   class TypeCvrt_class {
    public:
     // Cast
@@ -26,7 +25,7 @@ namespace cytnx {
     torch::Device tStr2Tor_Dv(const std::string &device_str);
   };
   extern TypeCvrt_class type_converter;
-  */
+
   /// @endcond
 
 }  // namespace cytnx

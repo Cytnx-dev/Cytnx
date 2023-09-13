@@ -217,10 +217,10 @@ namespace cytnx {
 
   extern bool User_debug;
 
+}  // namespace cytnx
+
 #ifdef BACKEND_TORCH
   #include "torch_backend/TypeConvert.hpp"
 #endif
-
-}  // namespace cytnx
 
 #endif
