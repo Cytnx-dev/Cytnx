@@ -595,8 +595,18 @@ namespace cytnx {
     Network tmp;
     std::vector<std::vector<std::string>> lbls;
     std::vector<std::string> names;
+    std::string orderin = order;
 
     if (optimal || (!optimal && order == "")) {
+      if (order != "") {
+        cytnx_warning_msg(
+          true,
+          "[WARNING][Contracts] Setting Optimal = true while specifying the order, will find the "
+          "optimal order instead. To use the desired order please set Optimal = false.%s",
+          "\n");
+        orderin = "";
+      }
+
       for (int i = 0; i < TNs.size(); i++) {
         names.push_back("T" + std::to_string(i));
         lbls.push_back(TNs[i].labels());
@@ -612,9 +622,9 @@ namespace cytnx {
       }
     }
 
-    tmp.construct(names, lbls, std::vector<std::string>(), -1, order, optimal);
+    tmp.construct(names, lbls, std::vector<std::string>(), -1, orderin, optimal);
     tmp.PutUniTensors(names, TNs);
-    tmp.setOrder(optimal, order);
+    tmp.setOrder(optimal, orderin);
     UniTensor out = tmp.Launch();
     return out;
   }

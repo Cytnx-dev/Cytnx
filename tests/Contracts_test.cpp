@@ -18,3 +18,9 @@ TEST_F(ContractsTest, Contracts_denseUt_specified_order) {
     Contracts({utdnA.set_name("A"), utdnB.set_name("B"), utdnC.set_name("C")}, "(C,(A,B))", false);
   EXPECT_TRUE(AreNearlyEqTensor(res.get_block().contiguous(), utdnAns.get_block(), 1e-12));
 }
+
+TEST_F(ContractsTest, Contracts_denseUt_optimal_specified_order) {
+  UniTensor res =
+    Contracts({utdnA.set_name("A"), utdnB.set_name("B"), utdnC.set_name("C")}, "(C,(A,B))", true);
+  EXPECT_TRUE(AreNearlyEqTensor(res.get_block().contiguous(), utdnAns.get_block(), 1e-12));
+}
