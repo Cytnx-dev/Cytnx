@@ -595,28 +595,23 @@ namespace cytnx {
     Network tmp;
     std::vector<std::vector<std::string>> lbls;
     std::vector<std::string> names;
-    if (optimal) {
+
+    if (optimal || (!optimal && order == "")) {
       for (int i = 0; i < TNs.size(); i++) {
         names.push_back("T" + std::to_string(i));
         lbls.push_back(TNs[i].labels());
       }
     } else {
-      if (order == "") {
-        for (int i = 0; i < TNs.size(); i++) {
-          names.push_back("T" + std::to_string(i));
-          lbls.push_back(TNs[i].labels());
-        }
-      } else {
-        for (int i = 0; i < TNs.size(); i++) {
-          cytnx_error_msg(TNs[i].name() == "",
-                          "[ERROR][Contracts] Unable to contract with the specified order, missing "
-                          "tensor name at index %d.\n",
-                          i);
-          names.push_back(TNs[i].name());
-          lbls.push_back(TNs[i].labels());
-        }
+      for (int i = 0; i < TNs.size(); i++) {
+        cytnx_error_msg(TNs[i].name() == "",
+                        "[ERROR][Contracts] Unable to contract with the specified order, missing "
+                        "tensor name at index %d.\n",
+                        i);
+        names.push_back(TNs[i].name());
+        lbls.push_back(TNs[i].labels());
       }
     }
+
     tmp.construct(names, lbls, std::vector<std::string>(), -1, order, optimal);
     tmp.PutUniTensors(names, TNs);
     tmp.setOrder(optimal, order);

@@ -20,9 +20,9 @@ class ContractsTest : public ::testing::Test {
   void SetUp() override {
     // input = getNconParameter("utils/output.txt");
 
-    utdnA = utdnA.set_name("A");
-    utdnB = utdnB.set_name("B");
-    utdnC = utdnC.set_name("C");
+    // utdnA = utdnA.set_name("A");
+    // utdnB = utdnB.set_name("B");
+    // utdnC = utdnC.set_name("C");
 
     utdnA = utdnA.set_labels({"a", "b", "c"});
     utdnB = utdnB.set_labels({"c", "d"});
