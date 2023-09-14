@@ -24,13 +24,24 @@ namespace cytnx {
     }                                                                 \
   } while (0)
 
-    // template <class T>
-    // void GetUpTri(T *out, const T *elem, const cytnx_uint64 &M, const cytnx_uint64 &N) {
-    //   cytnx_uint64 min = M < N ? M : N;
-    //   for (cytnx_uint64 i = 0; i < min; i++) {
-    //     memcpy(out + i * N + i, elem + i * N + i, (N - i) * sizeof(T));
-    //   }
-    // }
+    template <class T>
+    void GetLowerTri(T *out, const T *elem, const cytnx_uint64 &M, const cytnx_uint64 &N) {
+      cytnx_uint64 min = M < N ? M : N;
+      for (cytnx_uint64 i = 0; i < min; i++) {
+        // cudaMemcpy(out + i * N + i, elem + i * N + i, (N - i) * sizeof(T),
+        // cudaMemcpyDeviceToDevice);
+        cudaMemcpy(out + i * N + i, elem + i * N + i, (i + 1) * sizeof(T),
+                   cudaMemcpyDeviceToDevice);
+      }
+    }
+    template <class T>
+    void GetUpTri(T *out, const T *elem, const cytnx_uint64 &M, const cytnx_uint64 &N) {
+      cytnx_uint64 min = M < N ? M : N;
+      for (cytnx_uint64 i = 0; i < min; i++) {
+        cudaMemcpy(out + i * N + i, elem + i * N + i, (N - i) * sizeof(T),
+                   cudaMemcpyDeviceToDevice);
+      }
+    }
 
     // template <class T>
     // void GetDiag(T *out, const T *elem, const cytnx_uint64 &M, const cytnx_uint64 &N,
@@ -85,8 +96,6 @@ namespace cytnx {
       int *d_info = nullptr;
       d_data_type *d_work = nullptr;
 
-      d_data_type *d_R = nullptr;
-
       int lwork_geqrf = 0;
       int lwork_orgqr = 0;
       int lwork = 0;
@@ -96,10 +105,11 @@ namespace cytnx {
       //   cusolverH, params, N, M, /*A*/ d_data_type, pQ, ldA, /*tau*/ d_data_type, ptau,
       //   /*cudaDataType*/ d_data_type, &d_size, &h_size));
 
-      checkCuSolverErrors(cusolverDnZgeqrf_bufferSize(cusolverH, N, M, (d_data_type *)pQ, ldA, &lwork_geqrf));
-
       checkCuSolverErrors(
-       cusolverDnZungqr_bufferSize(cusolverH, N, M, K, (d_data_type *)pQ, ldA, (d_data_type *)ptau, &lwork_orgqr));
+        cusolverDnZgeqrf_bufferSize(cusolverH, N, M, (d_data_type *)pQ, ldA, &lwork_geqrf));
+
+      checkCuSolverErrors(cusolverDnZungqr_bufferSize(cusolverH, N, M, K, (d_data_type *)pQ, ldA,
+                                                      (d_data_type *)ptau, &lwork_orgqr));
       lwork = std::max(lwork_geqrf, lwork_orgqr);
 
       // checkCudaErrors(cudaMalloc(bufferOnDevice, d_size));
@@ -108,16 +118,22 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
 
       // checkCuSolverErrors(cusolverDnZgeqrf(cusolverH, params, N, M, /*A*/ d_data_type, pQ, ldA,
-      //                                      /*tau*/ d_data_type, ptau, /*cudaDataType*/ d_data_type,
-      //                                      bufferOnDevice, d_size, bufferOnHost, h_size, &info));
-      checkCuSolverErrors(cusolverDnZgeqrf(cusolverH, N, M, (d_data_type *)pQ, ldA, (d_data_type *)ptau, d_work, lwork, d_info));
+      //                                      /*tau*/ d_data_type, ptau, /*cudaDataType*/
+      //                                      d_data_type, bufferOnDevice, d_size, bufferOnHost,
+      //                                      h_size, &info));
+      checkCuSolverErrors(cusolverDnZgeqrf(cusolverH, N, M, (d_data_type *)pQ, ldA,
+                                           (d_data_type *)ptau, d_work, lwork, d_info));
 
       cytnx_error_msg(info != 0, "%s %d %s",
                       "Error in cuBlas function 'cusolverDnZgeqrf': cuBlas INFO = ", info,
                       "see cusolver manual for more info.");
 
-      checkCuSolverErrors(
-        cusolverDnZungqr(cusolverH, N, M, K, (d_data_type *)pQ, ldA, (d_data_type *)ptau, d_work, lwork, d_info));
+      // getR:
+      GetUpTri(pR, pQ, M, N);
+      // GetLowerTri(pR, pQ, M, N);
+
+      checkCuSolverErrors(cusolverDnZungqr(cusolverH, M >= N ? N : M, M, K, (d_data_type *)pQ, ldA,
+                                           (d_data_type *)ptau, d_work, lwork, d_info));
 
       cytnx_error_msg(info != 0, "%s %d %s",
                       "Error in cuBlas function 'cusolverDnZorgqr': cuBlas INFO = ", info,
@@ -125,29 +141,23 @@ namespace cytnx {
 
       /////////////////////// cuda
 
-      // // getR:
-      // GetUpTri(pR, pQ, M, N);
-      // // getD:
-      // if (is_d) {
-      //   cytnx_complex128 *pD = (cytnx_complex128 *)D->Mem;
-      //   GetDiag(pD, pR, M, N, N);
-      //   cytnx_uint64 min = M < N ? M : N;
-      //   // normalize:
-      //   for (cytnx_uint64 i = 0; i < min; i++) {
-      //     for (cytnx_uint64 j = 0; j < N - i; j++) {
-      //       pR[i * N + i + j] /= pD[i];
-      //     }
-      //   }
-      // }
-      // getQ:
-      // query lwork & alloc
-      // int64_t col = M;
-      // int64_t row = M >= N ? N : M;
-      // // call linalg:
-      // info = LAPACKE_zunglq(LAPACK_COL_MAJOR, row, col, K, (lapack_complex_double *)pQ, ldA,
-      //                       (lapack_complex_double *)ptau);
-      // cytnx_error_msg(info != 0, "%s %d",
-      //                 "Error in Lapack function 'zunglq': Lapack INFO = ", info);
+      // get R = I - Q**T*Q:
+      // cublasHandle_t cublasH = NULL;
+      // const cuDoubleComplex h_one = make_cuDoubleComplex(1,0);
+      // const cuDoubleComplex h_minus_one = make_cuDoubleComplex(1,0);
+
+      // checkCuBlasErrors(cublasZgemm(cublasH,
+      //                             CUBLAS_OP_T,  // Q**T
+      //                             CUBLAS_OP_N,  // Q
+      //                             M,            // number of rows of R
+      //                             M,            // number of columns of R
+      //                             N,            // number of columns of Q**T
+      //                             &h_minus_one, /* host pointer */
+      //                             (d_data_type*)pQ,          // Q**T
+      //                             ldA,
+      //                             (d_data_type*)pQ,         // Q
+      //                             ldA, &h_one, /* host pointer */
+      //                             (d_data_type*)pR, M));
     }
 
     void cuQR_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
@@ -155,23 +165,19 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base> &R,
                           boost::intrusive_ptr<Storage_base> &D,
                           boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                          const cytnx_int64 &N, const bool &is_d) {
-
-                          }
+                          const cytnx_int64 &N, const bool &is_d) {}
     void cuQR_internal_d(const boost::intrusive_ptr<Storage_base> &in,
-                          boost::intrusive_ptr<Storage_base> &Q,
-                          boost::intrusive_ptr<Storage_base> &R,
-                          boost::intrusive_ptr<Storage_base> &D,
-                          boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                          const cytnx_int64 &N, const bool &is_d) {
-                          }
+                         boost::intrusive_ptr<Storage_base> &Q,
+                         boost::intrusive_ptr<Storage_base> &R,
+                         boost::intrusive_ptr<Storage_base> &D,
+                         boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
+                         const cytnx_int64 &N, const bool &is_d) {}
     void cuQR_internal_f(const boost::intrusive_ptr<Storage_base> &in,
-                          boost::intrusive_ptr<Storage_base> &Q,
-                          boost::intrusive_ptr<Storage_base> &R,
-                          boost::intrusive_ptr<Storage_base> &D,
-                          boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                          const cytnx_int64 &N, const bool &is_d) {
-                          }
+                         boost::intrusive_ptr<Storage_base> &Q,
+                         boost::intrusive_ptr<Storage_base> &R,
+                         boost::intrusive_ptr<Storage_base> &D,
+                         boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
+                         const cytnx_int64 &N, const bool &is_d) {}
 
     // void QR_internal_d(const boost::intrusive_ptr<Storage_base> &in,
     //                    boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base>

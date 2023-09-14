@@ -50,14 +50,41 @@ namespace cytnx {
       } else {
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
-        // cytnx_error_msg(true, "[Qr] error,%s", "Currently QR does not support CUDA.\n");
 
         checkCudaErrors(cudaSetDevice(in.device()));
+        if (is_tau) {
+          Q.Init({Tin.shape()[0], Tin.shape()[1]}, in.dtype(), in.device());
+          Q.storage().set_zeros();
+          cytnx::linalg_internal::lii.cuQR_ii[in.dtype()](
+            in._impl->storage()._impl, Q._impl->storage()._impl, R._impl->storage()._impl,
+            D._impl->storage()._impl, tau._impl->storage()._impl, in.shape()[0], in.shape()[1],
+            false);
+          if (in.shape()[0] < in.shape()[1]) Q = Q[{ac::all(), ac::range(0, in.shape()[0], 1)}];
+        } else {
+          Q.Init({Tin.shape()[0], n_tau}, in.dtype(), in.device());
+          Q.storage().set_zeros();
+          cytnx::linalg_internal::lii.cuQuantumQr_ii[in.dtype()](
+            in._impl->storage()._impl, Q._impl->storage()._impl, R._impl->storage()._impl,
+            D._impl->storage()._impl, tau._impl->storage()._impl, in.shape()[0], in.shape()[1],
+            false);
+        }
 
-        Q.Init({Tin.shape()[0], n_tau}, in.dtype(), in.device());
+        std::vector<Tensor> out;
+        out.push_back(Q);
+        out.push_back(R);
+        if (is_tau) out.push_back(tau);
+
+        // cytnx_error_msg(is_tau, "[QR] Returning tau is currently not supported for cuQuantum
+        // QR.%s",
+        //                 "\n");
+
+        return out;
+  #else
+
+        checkCudaErrors(cudaSetDevice(in.device()));
+        Q.Init({Tin.shape()[0], Tin.shape()[1]}, in.dtype(), in.device());
         Q.storage().set_zeros();
-
-        cytnx::linalg_internal::lii.cuQuantumQr_ii[in.dtype()](
+        cytnx::linalg_internal::lii.cuQR_ii[in.dtype()](
           in._impl->storage()._impl, Q._impl->storage()._impl, R._impl->storage()._impl,
           D._impl->storage()._impl, tau._impl->storage()._impl, in.shape()[0], in.shape()[1],
           false);
@@ -65,15 +92,10 @@ namespace cytnx {
         std::vector<Tensor> out;
         out.push_back(Q);
         out.push_back(R);
-
-        // if (is_tau) out.push_back(tau);
-        cytnx_error_msg(is_tau, "[QR] Returning tau is currently not supported for cuQuantum QR.%s",
-                        "\n");
+        if (is_tau) out.push_back(tau);
 
         return out;
-  #else
-        cytnx_error_msg(true, "[QR] fatal error,%s",
-                        "try to call the cuQuantum section without cuQuantum support.\n");
+
         return std::vector<Tensor>();
   #endif
 #else

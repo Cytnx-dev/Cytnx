@@ -110,7 +110,8 @@ TEST_F(linalg_Test, gpu_DenseUt_Qr) {
   for (int i = 0; i < 4; i++) {
     for (int j = 0; j < 4; j++) {
       for (int k = 0; k < 4; k++) {
-        EXPECT_TRUE(abs(Qr1.at({i, j, k}) - Qr1_.at({i, j, k})) < 1e-13);
+        // EXPECT_TRUE(abs(Qr1.at({i, j, k}) - Qr1_.at({i, j, k})) < 1e-13);
+        EXPECT_EQ(Qr1.at({i, j, k}), Qr1_.at({i, j, k}));
       }
     }
   }
