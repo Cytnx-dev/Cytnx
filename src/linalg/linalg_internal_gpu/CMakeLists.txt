@@ -25,6 +25,7 @@ target_sources_local(cytnx
     cuSub_internal.hpp
     cuGeSvd_internal.hpp
     cuSvd_internal.hpp
+    cuQR_internal.hpp
     cuDet_internal.hpp
     cuSum_internal.hpp
     cuMaxMin_internal.hpp
@@ -58,6 +59,7 @@ target_sources_local(cytnx
     cuSub_internal.cu
     cuGeSvd_internal.cu
     cuSvd_internal.cu
+    cuQR_internal.cu
     cuNorm_internal.cu
     cuMod_internal.cu
     cuDet_internal.cu

@@ -45,6 +45,7 @@
   #include "linalg/linalg_internal_gpu/cuAbs_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuGeSvd_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuQR_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuEigh_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuInvM_inplace_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp"
@@ -258,6 +259,7 @@ namespace cytnx {
       std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
       std::vector<Svdfunc_oii> cuSvd_ii;
       std::vector<Svdfunc_oii> cuGeSvd_ii;
+      std::vector<Qrfunc_oii> cuQR_ii;
       std::vector<InvMinplacefunc_oii> cuInvM_inplace_ii;
       std::vector<Invinplacefunc_oii> cuInv_inplace_ii;
       std::vector<Conjinplacefunc_oii> cuConj_inplace_ii;

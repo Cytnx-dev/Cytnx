@@ -1116,6 +1116,14 @@ namespace cytnx {
       cuGeSvd_ii[Type.Double] = cuGeSvd_internal_d;
       cuGeSvd_ii[Type.Float] = cuGeSvd_internal_f;
 
+      // QR
+      cuQR_ii = vector<Qrfunc_oii>(5);
+
+      cuQR_ii[Type.ComplexDouble] = cuQR_internal_cd;
+      cuQR_ii[Type.ComplexFloat] = cuQR_internal_cf;
+      cuQR_ii[Type.Double] = cuQR_internal_d;
+      cuQR_ii[Type.Float] = cuQR_internal_f;
+
       //=====================
       cuEigh_ii = vector<Eighfunc_oii>(5);
 
