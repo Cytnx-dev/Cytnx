@@ -587,26 +587,45 @@ namespace cytnx {
   }
 
   void _resolve_CT(std::vector<UniTensor> &TNlist){};
-  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order,
-                      const bool &optimal) {
+  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order = "",
+                      const bool &optimal = true) {
     cytnx_error_msg(TNs.size() < 2, "[ERROR][Contracts] should have more than 2 TNs to contract.%s",
                     "\n");
-    // UniTensor out = TNs[0].contract(TNs[1]);
-    // if (TNs.size() > 2) {
-    //   for (int i = 2; i < TNs.size(); i++) {
-    //     out = out.contract(TNs[i]);
-    //   }
-    // }
+
     Network tmp;
     std::vector<std::vector<std::string>> lbls;
     std::vector<std::string> names;
-    for (int i = 0; i < TNs.size(); i++) {
-      names.push_back(TNs[i].name());
-      lbls.push_back(TNs[i].labels());
+    std::string orderin = order;
+
+    if (optimal || (!optimal && order == "")) {
+      if (order != "") {
+        cytnx_warning_msg(
+          true,
+          "[WARNING][Contracts] Setting Optimal = true while specifying the order, will find the "
+          "optimal order instead. To use the desired order please set Optimal = false.%s",
+          "\n");
+        orderin = "";
+      }
+
+      for (int i = 0; i < TNs.size(); i++) {
+        names.push_back("T" + std::to_string(i));
+        lbls.push_back(TNs[i].labels());
+      }
+    } else {
+      for (int i = 0; i < TNs.size(); i++) {
+        cytnx_error_msg(TNs[i].name() == "",
+                        "[ERROR][Contracts] Unable to contract with the specified order, missing "
+                        "tensor name at index %d.\n",
+                        i);
+        names.push_back(TNs[i].name());
+        lbls.push_back(TNs[i].labels());
+      }
     }
-    tmp.construct(names, lbls, std::vector<std::string>(), -1, order, optimal);
+
+    tmp.construct(names, lbls, std::vector<std::string>(), -1, orderin, optimal);
     tmp.PutUniTensors(names, TNs);
-    UniTensor out = tmp.Launch(optimal);
+    tmp.setOrder(optimal, orderin);
+    UniTensor out = tmp.Launch();
     return out;
   }
 
