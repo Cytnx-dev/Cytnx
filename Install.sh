@@ -184,4 +184,4 @@ cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 make install
-# ctest
+ctest -R DenseUt_Qr --output-on-failure
