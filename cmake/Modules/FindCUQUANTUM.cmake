@@ -38,6 +38,7 @@ elseif((${CUDAToolkit_VERSION_MAJOR} GREATER_EQUAL 12))
     set(CUTNLIB_DIR "lib/12")
   else()
     set(CUTNLIB_DIR "lib")
+  endif()
 endif()
 
 set(CUQUANTUM_LIBRARY_DIRS ${CUQUANTUM_ROOT}/${CUTNLIB_DIR})
