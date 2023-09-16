@@ -178,10 +178,10 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF "
 #-----------------------------------
 
 echo ${FLAG}
-# rm -rf build
-# mkdir build
+rm -rf build
+mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 make install
-# ctest
+ctest
