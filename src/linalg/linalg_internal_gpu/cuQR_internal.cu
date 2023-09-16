@@ -84,8 +84,10 @@ namespace cytnx {
 
       // checkCudaErrors(cusolverDnDestroyParams(&params));
 
-      checkCudaErrors(cudaMemcpy(pQ, pin, M * N * sizeof(data_type), cudaMemcpyDeviceToDevice));
+      //checkCudaErrors(cudaMemcpy(pQ, pin, M * N * sizeof(data_type), cudaMemcpyDeviceToDevice));
 
+      // A = Q R
+      // At = Rt Qt
       // size_t d_size;
       // size_t h_size;
       // size_t h_size_org;
@@ -120,7 +122,7 @@ namespace cytnx {
       //                                      /*tau*/ d_data_type, ptau, /*cudaDataType*/
       //                                      d_data_type, bufferOnDevice, d_size, bufferOnHost,
       //                                      h_size, &info));
-      checkCuSolverErrors(cusolverDnZgeqrf(cusolverH, N, M, (d_data_type *)pQ, N,
+      checkCuSolverErrors(cusolverDnZgeqrf(cusolverH, N, M, (d_data_type *)pQ, ldA,
                                            (d_data_type *)ptau, d_work, lwork, d_info));
 
       cytnx_error_msg(info != 0, "%s %d %s",
@@ -136,34 +138,49 @@ namespace cytnx {
 
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&pQt), sizeof(d_data_type) * M * N));
 
+      //C = aOP(A)+bOP(B)
+      //C = aOP(A)+bC
+      checkCuBlasErrors(cublasZgeam(cublasH,  CUBLAS_OP_T, CUBLAS_OP_N, /* A : N */M, /* A : M */N,
+                                  &h_one,
+                                  (d_data_type *)pQ, /*ldA*/N,
+                                  &h_zero,
+                                  (d_data_type *)pQt, /*ldB*/ M,
+                                 (d_data_type *)pQt, /*ldC*/ M));
+      //Alternatively:
+      //  pQt = (d_data_type*) Q->Move_memory({(cytnx_uint64)M, (cytnx_uint64)N}, {1, 0}, {1, 0})->Mem;
+      //  Q->Move_memory_({(cytnx_uint64)M, (cytnx_uint64)N}, {1, 0}, {1, 0})->Mem;
+
       // cudaStream_t stream = NULL;
       // checkCudaErrors(cudaStreamCreateWithFlags(&stream, cudaStreamNonBlocking));
       // checkCuBlasErrors(cublasSetStream(cublasH, stream));
       // checkCudaErrors(cudaStreamSynchronize(stream));
-      checkCuBlasErrors(cublasZgeam(cublasH,  CUBLAS_OP_N, CUBLAS_OP_N, N, M,
-                                &h_one,
-                                (d_data_type *)pQ, N,
-                                &h_zero,
-                                (d_data_type *)pQt, N,
-                                (d_data_type *)pQt, N));
-      // checkCudaErrors(cudaStreamSynchronize(stream));
+
       // getR:
-      GetUpTri(pR, (data_type*) pQt, M, N);
+      GetUpTri(pR, (data_type*)pQt, M, N);
+
       //GetLowerTri(pR, (data_type*) pQt, M, N);
 
-      checkCuSolverErrors(cusolverDnZungqr(cusolverH,  N,  N, K, (d_data_type *)pQ,  M,
+      checkCuSolverErrors(cusolverDnZungqr(cusolverH,  M >= N ? N : M,  M, K, (d_data_type *)pQ,  ldA,
                                            (d_data_type *)ptau, d_work, lwork, d_info));
 
       cytnx_error_msg(info != 0, "%s %d %s",
                       "Error in cuBlas function 'cusolverDnZorgqr': cuBlas INFO = ", info,
                       "see cusolver manual for more info.");
       
+      //C = aOP(A)+bOP(B)
+      //C = aOP(A)+bC
+      checkCuBlasErrors(cublasZgeam(cublasH,  CUBLAS_OP_T, CUBLAS_OP_N, /* A : N */M, /* A : M */N,
+                                  &h_one,
+                                  (d_data_type *)pQ, /*ldA*/N,
+                                  &h_zero,
+                                  (d_data_type *)pQt,/*ldB*/ M,
+                                 (d_data_type *)pQt,/*ldC*/ M));
+
       // check Q**T*Q:
       // cublasHandle_t cublasH = NULL;
       // checkCuBlasErrors(cublasCreate(&cublasH));
       // const cuDoubleComplex h_one = make_cuDoubleComplex(1,0);
       // const cuDoubleComplex h_minus_one = make_cuDoubleComplex(-1,0);
-
       // checkCuBlasErrors(cublasZgemm(cublasH,
       //                             CUBLAS_OP_T,  // Q**T
       //                             CUBLAS_OP_N,  // Q
