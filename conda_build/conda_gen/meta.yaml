@@ -25,8 +25,8 @@ requirements:
     - "python-graphviz"
     - "graphviz"
     - "blas * mkl"
-    - "{{ compiler(\"c\")}}"
-    - "{{ compiler(\"cxx\")}}"
+    - '{{ compiler("c")}}'
+    - '{{ compiler("cxx")}}'
 
   host:
     - "python"
@@ -42,8 +42,8 @@ requirements:
     - "python-graphviz"
     - "graphviz"
     - "blas * mkl"
-    - "{{ compiler(\"c\")}}"
-    - "{{ compiler(\"cxx\")}}"
+    - '{{ compiler("c")}}'
+    - '{{ compiler("cxx")}}'
 
   run:
     - "python"
@@ -61,7 +61,7 @@ requirements:
     - "cmake"
     - "make"
     - "pybind11"
-    - "{{ compiler(\"c\")}}"
-    - "{{ compiler(\"cxx\")}}"
+    - '{{ compiler("c")}}'
+    - '{{ compiler("cxx")}}'
 
 about:
