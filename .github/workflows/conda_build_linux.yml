@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+      - add_cytnx_build
+
   workflow_dispatch:
 
 jobs:
