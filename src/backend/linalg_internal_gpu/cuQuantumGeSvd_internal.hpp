@@ -9,7 +9,8 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
-//#include "../linalg_internal_interface.hpp"
+#include "Tensor.hpp"
+// #include "../linalg_internal_interface.hpp"
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
