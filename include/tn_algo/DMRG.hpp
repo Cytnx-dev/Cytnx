@@ -12,9 +12,12 @@
 #include <vector>
 #include <initializer_list>
 #include <string>
-#include "Scalar.hpp"
 #include "tn_algo/MPS.hpp"
 #include "tn_algo/MPO.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "backend/Scalar.hpp"
 
 namespace cytnx {
   namespace tn_algo {
@@ -93,5 +96,7 @@ namespace cytnx {
 
   }  // namespace tn_algo
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

@@ -4,11 +4,15 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
-#include "Storage.hpp"
 #include "UniTensor.hpp"
-#include "Scalar.hpp"
 #include "LinOp.hpp"
-#include <functional>
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/Storage.hpp"
+  #include "backend/Scalar.hpp"
+  #include <functional>
 
 namespace cytnx {
   int set_mkl_ilp64();
@@ -2520,6 +2524,17 @@ namespace cytnx {
                     const std::vector<Scalar> &beta_array, std::vector<Tensor> &c_tensors,
                     const cytnx_int64 group_count, const std::vector<cytnx_int64> &group_size);
 
+    ///@cond
+    void __Gemm_Batch(const std::vector<char> &transa_array, const std::vector<char> &transb_array,
+                      const std::vector<blas_int> &m_array, const std::vector<blas_int> &n_array,
+                      const std::vector<blas_int> &k_array, const std::vector<Scalar> &alpha_array,
+                      const void **a_array, const void **b_array,
+                      const std::vector<Scalar> &beta_array, void **c_array,
+                      const blas_int group_count, const std::vector<blas_int> &group_size,
+                      const unsigned int dtype, const int device);
+
+    ///@endcond
+
   }  // namespace linalg
 
   // operators:
@@ -2748,5 +2763,7 @@ namespace cytnx {
   Tensor operator==(const Tensor &Lt, const T &rc);
 
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

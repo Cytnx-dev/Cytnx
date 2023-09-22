@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void random_binding(py::module &m) {
   // [Submodule random]
   pybind11::module m_random = m.def_submodule("random", "random related.");
@@ -100,3 +103,4 @@ void random_binding(py::module &m) {
     py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = -1,
     py::arg("seed") = std::random_device()(), py::arg("dtype") = (unsigned int)(Type.Double));
 }
+#endif

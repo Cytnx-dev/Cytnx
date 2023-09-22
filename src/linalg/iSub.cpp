@@ -1,7 +1,11 @@
 #include "linalg.hpp"
-#include "linalg_internal_interface.hpp"
+
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -33,7 +37,7 @@ namespace cytnx {
             nulls._impl, Lt._impl->storage()._impl, R._impl->storage()._impl,
             Lt._impl->storage()._impl->size(), {}, {}, {}, 2);
         } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
           Tensor tmpo;
           if (Lt.dtype() <= Rt.dtype())
@@ -47,10 +51,10 @@ namespace cytnx {
 
           if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
 
-#else
+  #else
           cytnx_error_msg(true, "[Sub] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-#endif
+  #endif
         }
       } else {
         // non-contiguous section
@@ -60,7 +64,7 @@ namespace cytnx {
             Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
             Rt._impl->invmapper(), 2);
         } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(Rt.device()));
           Tensor tmpo;
           if (Lt.dtype() <= Rt.dtype())
@@ -73,13 +77,14 @@ namespace cytnx {
             Rt._impl->invmapper(), 2);
           if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
 
-#else
+  #else
           cytnx_error_msg(true, "[Sub] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");
-#endif
+  #endif
         }
       }
     }
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif

@@ -1,9 +1,12 @@
 #include <typeinfo>
 #include "Network.hpp"
-#include "utils/utils_internal_interface.hpp"
+
 #include "linalg.hpp"
 
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
 
 namespace cytnx {
   void Network_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
@@ -81,4 +84,6 @@ namespace cytnx {
     os << endl;
   }
 
-}  // namespace cytnx
+};  // namespace cytnx
+
+#endif

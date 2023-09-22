@@ -1,14 +1,15 @@
 #include <typeinfo>
 #include "Network.hpp"
-#include "utils/utils_internal_interface.hpp"
 #include "search_tree.hpp"
 #include <stack>
 #include <algorithm>
 #include <iostream>
 #include "Generator.hpp"
-#include "utils/cutensornet.hpp"
-
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+  #include "utils/cutensornet.hpp"
 
 namespace cytnx {
 
@@ -600,11 +601,11 @@ namespace cytnx {
       this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
     }
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
     this->optimizerInfo = nullptr;
+    #endif
   #endif
-#endif
 
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
@@ -852,8 +853,8 @@ namespace cytnx {
         this->order_line = Optim_ORDERline;
         _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
       } else {
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
         if (this->tensors[0].uten_type() != UTenType.Dense) {
           cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] Error,%s",
                           "Sparse or Block type UniTensor network optimization is not support.\n");
@@ -885,16 +886,16 @@ namespace cytnx {
           this->einsum_path = path;
           this->order_line = einsumpath_to_string(path, names);
         }
-  #else
+    #else
         cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
                         "try to call the gpu section for finding optimal contraction order without "
                         "CUQUANTUM support.\n");
-  #endif
+    #endif
 
-#else
+  #else
         cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
-#endif
+  #endif
       }
 
     } else {
@@ -1013,8 +1014,8 @@ namespace cytnx {
 
     } else {
       // gpu workflow
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
       if (this->tensors[0].uten_type() != UTenType.Dense) {
         cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] Error,%s",
                         "Sparse or Block type UniTensor network contraction is not support.\n");
@@ -1056,17 +1057,17 @@ namespace cytnx {
 
         return out;
       }
-  #else
+    #else
       cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] fatal error,%s",
                       "try to call the gpu section for contraction without CUQUANTUM support.\n");
       return UniTensor();
-  #endif
+    #endif
 
-#else
+  #else
       cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] fatal error,%s",
                       "try to call the gpu section without CUDA support.\n");
       return UniTensor();
-#endif
+  #endif
     }
   }
 
@@ -1186,11 +1187,11 @@ namespace cytnx {
       this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
     }
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
     this->optimizerInfo = nullptr;
+    #endif
   #endif
-#endif
 
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
@@ -1206,3 +1207,4 @@ namespace cytnx {
   }  // end construct
 
 }  // namespace cytnx
+#endif

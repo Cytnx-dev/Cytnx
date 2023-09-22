@@ -1,9 +1,12 @@
 #include <typeinfo>
 #include "Network.hpp"
-#include "utils/utils_internal_interface.hpp"
+
 #include "linalg.hpp"
 
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
 
 namespace cytnx {
   std::string NetworkType_class::getname(const int& nwrktype_id) {
@@ -26,3 +29,4 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+#endif

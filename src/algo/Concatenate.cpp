@@ -1,7 +1,13 @@
 #include "algo.hpp"
-#include "algo_internal_interface.hpp"
 #include "Accessor.hpp"
 #include "Generator.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/algo_internal_interface.hpp"
+  #include "backend/Storage.hpp"
+  #include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
     typedef Accessor ac;
@@ -42,3 +48,5 @@ namespace cytnx {
     }
   }  // namespace algo
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

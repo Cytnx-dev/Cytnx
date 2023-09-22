@@ -6,7 +6,7 @@
 
 target_sources_local(cytnx
   PRIVATE
-    Scalar.cpp
+    #Scalar.cpp
     Network_base.cpp
     Network.cpp
     RegularNetwork.cpp
@@ -27,19 +27,7 @@ target_sources_local(cytnx
     LinOp.cpp
     Type.cpp
     Tensor.cpp
-    Storage.cpp
-    Storage_base.cpp
-    ComplexDoubleStorage.cpp
-    ComplexFloatStorage.cpp
-    DoubleStorage.cpp
-    FloatStorage.cpp
-    Uint64Storage.cpp
-    Int64Storage.cpp
-    Uint32Storage.cpp
-    Int32Storage.cpp
-    Uint16Storage.cpp
-    Int16Storage.cpp
-    BoolStorage.cpp
+    #Tensor_impl.cpp
     ncon.cpp
 )
 
@@ -56,3 +44,8 @@ add_subdirectory(stat)
 add_subdirectory(utils)
 add_subdirectory(random)
 add_subdirectory(tn_algo)
+
+if(BACKEND_TORCH)
+else()
+  add_subdirectory(backend)
+endif()

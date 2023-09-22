@@ -1,8 +1,10 @@
 #include "linalg.hpp"
-#include "linalg_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 namespace cytnx {
 
   namespace linalg {
@@ -42,20 +44,21 @@ namespace cytnx {
           L._impl->storage()._impl->size(), is_conj);
         return out;
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuVd_ii[out.dtype()](
           out._impl->storage()._impl, L._impl->storage()._impl, R._impl->storage()._impl,
           L._impl->storage()._impl->size(), is_conj);
 
         return out;
-#else
+  #else
         cytnx_error_msg(true, "[Vectordot] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return Tensor();
-#endif
+  #endif
       }
     }
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

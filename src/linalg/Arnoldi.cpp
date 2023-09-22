@@ -3,9 +3,12 @@
 #include "random.hpp"
 #include "Tensor.hpp"
 #include "LinOp.hpp"
-
 #include <cfloat>
 #include <algorithm>
+
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
@@ -217,3 +220,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

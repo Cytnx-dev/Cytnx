@@ -9,13 +9,15 @@
 #include <fstream>
 
 #include "utils/vec_clone.hpp"
-//#include "utils/dynamic_arg_resolver.hpp"
-//#include "linalg.hpp"
 #include "Accessor.hpp"
 #include <vector>
 #include <initializer_list>
 #include <string>
-#include "Scalar.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/Scalar.hpp"
 
 namespace cytnx {
   namespace tn_algo {
@@ -300,5 +302,7 @@ namespace cytnx {
 
   }  // namespace tn_algo
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

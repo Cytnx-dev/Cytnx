@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void linalg_binding(py::module &m) {
   // [Submodule linalg]
   pybind11::module m_linalg = m.def_submodule("linalg", "linear algebra related.");
@@ -528,3 +531,5 @@ void linalg_binding(py::module &m) {
                });
   */
 }
+
+#endif

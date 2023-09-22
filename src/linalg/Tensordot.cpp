@@ -2,7 +2,10 @@
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#include "linalg_internal_interface.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
 
@@ -89,7 +92,7 @@ namespace cytnx {
       }
     }
 
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
     void _Tensordot_cutn(Tensor &out, const Tensor &Tl, const Tensor &Tr,
                          const std::vector<cytnx_uint64> &idxl,
                          const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
@@ -147,7 +150,7 @@ namespace cytnx {
       checkCudaErrors(cudaSetDevice(_tl.device()));
       cytnx::linalg_internal::lii.cuTensordot_ii[_tl.dtype()](out, _tl, _tr, idxl, idxr);
     }
-#endif
+  #endif
 
     Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
                      const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
@@ -177,15 +180,15 @@ namespace cytnx {
         _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
 
       } else {
-#ifdef UNI_GPU
-  #ifdef UNI_CUTENSOR
+  #ifdef UNI_GPU
+    #ifdef UNI_CUTENSOR
         _Tensordot_cutn(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
-  #else
+    #else
         _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
-  #endif
-#else
+    #endif
+  #else
         cytnx_error_msg(true, "calling GPU version of Tensordot without CUDA support!%s", "\n");
-#endif
+  #endif
       }
 
       return out;
@@ -193,3 +196,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

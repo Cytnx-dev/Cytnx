@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 template <class T>
 void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc) {
   cytnx_error_msg(self.shape().size() == 0, "[ERROR] try to setelem to a empty Tensor%s", "\n");
@@ -978,3 +981,4 @@ void tensor_binding(py::module &m) {
 
     ;  // end of object line
 }
+#endif

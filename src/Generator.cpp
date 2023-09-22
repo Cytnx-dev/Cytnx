@@ -1,10 +1,16 @@
 #include "Generator.hpp"
-#include "Storage.hpp"
+
 #include "utils/utils.hpp"
-#include "utils/utils_internal_interface.hpp"
+
 #include "linalg.hpp"
 #include <cfloat>
 #include <iostream>
+
+#ifdef BACKEND_TORCH
+#else
+  #include "backend/Storage.hpp"
+  #include "backend/utils_internal_interface.hpp"
+
 namespace cytnx {
 
   Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
@@ -60,14 +66,14 @@ namespace cytnx {
     if (device == Device.cpu) {
       utils_internal::uii.SetArange_ii[dtype](out._impl->storage()._impl, start, end, step, Nelem);
     } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(out.device()));
       utils_internal::uii.cuSetArange_ii[dtype](out._impl->storage()._impl, start, end, step,
                                                 Nelem);
-#else
+  #else
       cytnx_error_msg(true, "[ERROR] fatal internal, %s",
                       " [arange] the container is on gpu without CUDA support!%s", "\n")
-#endif
+  #endif
     }
 
     return out;
@@ -95,14 +101,14 @@ namespace cytnx {
     if (device == Device.cpu) {
       utils_internal::uii.SetArange_ii[dtype](out._impl->storage()._impl, start, end, step, Nelem);
     } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(out.device()));
       utils_internal::uii.cuSetArange_ii[dtype](out._impl->storage()._impl, start, end, step,
                                                 Nelem);
-#else
+  #else
       cytnx_error_msg(true, "[ERROR] fatal internal, %s",
                       " [arange] the container is on gpu without CUDA support!%s", "\n")
-#endif
+  #endif
     }
     return out;
   }
@@ -110,3 +116,4 @@ namespace cytnx {
   //--------------
 
 }  // namespace cytnx
+#endif

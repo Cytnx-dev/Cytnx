@@ -1,12 +1,15 @@
 #include <typeinfo>
 #include "Gncon.hpp"
-#include "utils/utils_internal_interface.hpp"
+
 #include "search_tree.hpp"
 #include <stack>
 #include <algorithm>
 #include <iostream>
 
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
 
 namespace cytnx {
   // these three are internal functions:
@@ -739,3 +742,5 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+
+#endif

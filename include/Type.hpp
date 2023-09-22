@@ -10,12 +10,22 @@
 #include <unordered_map>
 #include <typeindex>
 #include "cytnx_error.hpp"
-// #include "boost/container/small_vector.hpp"
-//#ifdef UNI_MKL
+
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
 
-//#endif
+#ifdef BACKEND_TORCH
+typedef int32_t blas_int;
+#else
+
+  #ifdef UNI_MKL
+    #include <mkl.h>
+typedef MKL_INT blas_int;
+  #else
+typedef int32_t blas_int;
+  #endif
+
+#endif
 
 namespace cytnx {
   // // using namespace boost::container;

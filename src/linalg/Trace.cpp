@@ -4,11 +4,13 @@
 #include "UniTensor.hpp"
 //#include "cytnx.hpp"
 
-#include "linalg_internal_interface.hpp"
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
+  #ifdef UNI_OMP
+    #include <omp.h>
+  #endif
 
 using namespace std;
 namespace cytnx {
@@ -66,12 +68,12 @@ namespace cytnx {
       out.storage().set_zeros();
 
       int Nomp = 1;
-#ifdef UNI_OMP
-  #pragma omp parallel
+  #ifdef UNI_OMP
+    #pragma omp parallel
       {
         if (omp_get_thread_num() == 0) Nomp = omp_get_num_threads();
       }
-#endif
+  #endif
 
       if (shape.size() == 0) {
         // 2d
@@ -106,3 +108,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

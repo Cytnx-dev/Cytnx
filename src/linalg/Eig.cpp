@@ -1,8 +1,12 @@
 #include "linalg.hpp"
-#include "linalg_internal_interface.hpp"
+
 #include <iostream>
 #include "Tensor.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+
+  #include "../backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
     std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V, const bool &row_v) {
@@ -59,7 +63,7 @@ namespace cytnx {
         return out;
 
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         /*
         checkCudaErrors(cudaSetDevice(in.device()));
         cytnx::linalg_internal::lii.cuEig_ii[in.dtype()](in._impl->storage()._impl,
@@ -77,13 +81,15 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR]currently Eig for non-symmetric matrix is not supported.%s",
                         "\n");
         return std::vector<Tensor>();
-#else
+  #else
         cytnx_error_msg(true, "[Eig] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-#endif
+  #endif
       }
     }
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

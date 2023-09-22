@@ -5,13 +5,10 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
-#include "linalg_internal_interface.hpp"
+#ifdef BACKEND_TORCH
+#else
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
-    #include "linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
-  #endif
-#endif
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -39,8 +36,11 @@ namespace cytnx {
         return outT;
 
       } else {
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
+        cytnx_error_msg(
+          Tin.shape().size() != 2,
+          "[Gesvd_truncate] error, Gesvd_truncate can only operate on rank-2 Tensor.%s", "\n");
 
         Tensor in = Tin.contiguous();
 
@@ -69,7 +69,7 @@ namespace cytnx {
 
         return outT;
 
-  #else
+    #else
         std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
@@ -83,12 +83,12 @@ namespace cytnx {
         if (return_err) outT.push_back(terr);
 
         return outT;
-  #endif
-#else
+    #endif
+  #else
         cytnx_error_msg(true, "[Gesvd_truncate] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-#endif
+  #endif
       }
     }
   }  // namespace linalg
@@ -373,3 +373,4 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

@@ -3,9 +3,15 @@
 #include <algorithm>
 #include <vector>
 #include <cstring>
-#include "Bond.hpp"
+
 #include "Accessor.hpp"
-#include "Tensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "Bond.hpp"
+  #include "Tensor.hpp"
+#endif
+
 namespace cytnx {
 
   template <class T>
@@ -45,12 +51,17 @@ namespace cytnx {
                                            const std::vector<cytnx_uint64> &);
   template std::vector<std::string> vec_map(const std::vector<std::string> &,
                                             const std::vector<cytnx_uint64> &);
-  template std::vector<Bond> vec_map(const std::vector<Bond> &, const std::vector<cytnx_uint64> &);
+
   template std::vector<Accessor> vec_map(const std::vector<Accessor> &,
                                          const std::vector<cytnx_uint64> &);
 
+#ifdef BACKEND_TORCH
+#else
   template std::vector<Tensor> vec_map(const std::vector<Tensor> &,
                                        const std::vector<cytnx_uint64> &);
+
+  template std::vector<Bond> vec_map(const std::vector<Bond> &, const std::vector<cytnx_uint64> &);
+#endif
 
   template std::vector<std::vector<cytnx_uint64>> vec_map(
     const std::vector<std::vector<cytnx_uint64>> &, const std::vector<cytnx_uint64> &);

@@ -1,7 +1,11 @@
 #include "linalg.hpp"
-#include "linalg_internal_interface.hpp"
+
 #include <iostream>
 #include "Tensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -92,3 +96,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

@@ -1,6 +1,6 @@
 target_sources_local(cytnx
     PRIVATE
-    linalg_internal_interface.hpp
+    #linalg_internal_interface.hpp
     Add.cpp
     Axpy.cpp
     Ger.cpp
@@ -66,10 +66,10 @@ target_sources_local(cytnx
     Lanczos_Gnd.cpp
     Lanczos_Gnd_Ut.cpp
     Lstsq.cpp
-    linalg_internal_interface.cpp
+    #linalg_internal_interface.cpp
 )
 
-add_subdirectory(linalg_internal_cpu)
-if(USE_CUDA)
-  add_subdirectory(linalg_internal_gpu)
-endif()
+#add_subdirectory(linalg_internal_cpu)
+#if(USE_CUDA)
+#  add_subdirectory(linalg_internal_gpu)
+#endif()
