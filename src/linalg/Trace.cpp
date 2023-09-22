@@ -4,7 +4,7 @@
 #include "UniTensor.hpp"
 //#include "cytnx.hpp"
 
-#include "linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 #ifdef UNI_OMP
   #include <omp.h>

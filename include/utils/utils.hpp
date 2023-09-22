@@ -19,8 +19,17 @@
 #include "vec_sort.hpp"
 #include "dynamic_arg_resolver.hpp"
 
+#include "complex_arithmetic.hpp"
+#include "cucomplex_arithmetic.hpp"
+
 /// Helper function to print vector with ODT:
 #include <vector>
 #include <iostream>
 #include <string>
+
+namespace cytnx {
+  bool _fx_compare_vec_inc(const std::vector<cytnx_int64> &v1, const std::vector<cytnx_int64> &v2);
+  bool _fx_compare_vec_dec(const std::vector<cytnx_int64> &v1, const std::vector<cytnx_int64> &v2);
+};  // namespace cytnx
+
 #endif

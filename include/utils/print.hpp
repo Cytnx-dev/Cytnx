@@ -3,12 +3,12 @@
 
 #include "Type.hpp"
 #include "Tensor.hpp"
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 #include "Bond.hpp"
 #include "Symmetry.hpp"
 #include "UniTensor.hpp"
 #include "Network.hpp"
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 #include <iostream>
 
 namespace cytnx {

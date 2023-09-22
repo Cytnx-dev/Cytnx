@@ -3,10 +3,9 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Storage.hpp"
 #include "Device.hpp"
 #include "Tensor.hpp"
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 #include "utils/utils.hpp"
 #include "intrusive_ptr_base.hpp"
 #include <iostream>

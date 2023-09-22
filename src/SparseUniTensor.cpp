@@ -91,7 +91,7 @@ namespace cytnx {
     this->_is_braket_form = this->_update_braket();
 
     // need to maintain the mapper for contiguous for block_form.
-    this->_mapper = utils_internal::range_cpu(this->_bonds.size());
+    this->_mapper = vec_range(this->_bonds.size());
     this->_inv_mapper = this->_mapper;
     this->_contiguous = true;
 

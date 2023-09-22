@@ -1,7 +1,6 @@
 #include "UniTensor.hpp"
 #include "Accessor.hpp"
 #include "utils/utils.hpp"
-#include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
 #include "linalg/Gemm_Batch.cpp"
 #include "Generator.hpp"
@@ -14,7 +13,6 @@
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
-#include "lapack_wrapper.hpp"
 
 using namespace std;
 namespace cytnx {
@@ -818,10 +816,8 @@ namespace cytnx {
       }
 
       // proc meta, labels:
-      std::vector<cytnx_uint64> non_comm_idx1 =
-        vec_erase(utils_internal::range_cpu(this->rank()), comm_idx1);
-      std::vector<cytnx_uint64> non_comm_idx2 =
-        vec_erase(utils_internal::range_cpu(rhs->rank()), comm_idx2);
+      std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(vec_range(this->rank()), comm_idx1);
+      std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(vec_range(rhs->rank()), comm_idx2);
 
       if ((non_comm_idx1.size() == 0) && (non_comm_idx2.size() == 0)) {
         std::vector<cytnx_int64> _shadow_comm_idx1(comm_idx1.size()),

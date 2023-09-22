@@ -1,6 +1,6 @@
 #include <typeinfo>
 #include "Gncon.hpp"
-#include "utils/utils_internal_interface.hpp"
+
 #include "search_tree.hpp"
 #include <stack>
 #include <algorithm>

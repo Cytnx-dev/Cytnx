@@ -12,7 +12,7 @@
 #include <vector>
 #include <initializer_list>
 #include <string>
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 #include "tn_algo/MPS.hpp"
 #include "tn_algo/MPO.hpp"
 

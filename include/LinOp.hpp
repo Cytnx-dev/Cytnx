@@ -4,7 +4,7 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
-#include "Scalar.hpp"
+//#include "Scalar.hpp"
 #include "UniTensor.hpp"
 #include <vector>
 #include <fstream>
