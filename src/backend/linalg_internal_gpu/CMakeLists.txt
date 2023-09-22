@@ -32,6 +32,7 @@ target_sources_local(cytnx
     cuTensordot_internal.hpp
     cuQuantumGeSvd_internal.hpp
     cuQuantumQr_internal.hpp
+    cudaMemcpyTruncation.hpp
 
     cuAbs_internal.cu
     cuAdd_internal.cu
@@ -66,4 +67,5 @@ target_sources_local(cytnx
     cuTensordot_internal.cu
     cuQuantumGeSvd_internal.cu
     cuQuantumQr_internal.cu
+    cudaMemcpyTruncation.cu
 )

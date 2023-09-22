@@ -1225,27 +1225,6 @@ namespace cytnx {
       if (devWork) cudaFree(devWork);
       if (hostWork) free(hostWork);
       // printf("Free resource and exit.\n");
-
-      // Manually truncation
-      cytnx_uint64 Kdim = keepdim;
-      cytnx_uint64 nums = S.storage().size();
-      if (nums < keepdim) {
-        Kdim = nums;
-      }
-      cytnx_uint64 truc_dim = Kdim;
-      for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
-          truc_dim--;
-        } else {
-          break;
-        }
-      }
-      if (truc_dim == 0) {
-        truc_dim = 1;
-      }
-      if (truc_dim != nums) {
-        memcpy_truncation_f(U, vT, S, terr, truc_dim, true, true, return_err);
-      }
     }
 
   #endif
