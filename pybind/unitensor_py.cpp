@@ -1099,6 +1099,6 @@ void unitensor_binding(py::module &m) {
     "Contracts",
     [](const std::vector<UniTensor> &TNs, const std::string &order,
        const bool &optimal) -> UniTensor { return Contracts(TNs, order, optimal); },
-    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = false);
+    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
 }
 #endif

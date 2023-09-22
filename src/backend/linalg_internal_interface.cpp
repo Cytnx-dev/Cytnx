@@ -782,6 +782,14 @@ namespace cytnx {
       Gemm_Batch_ii[Type.Double] = Gemm_Batch_internal_d;
       Gemm_Batch_ii[Type.Float] = Gemm_Batch_internal_f;
 
+      //========Helper function for svd_truncate on cuda========
+      memcpyTruncation_ii = vector<memcpyTruncation_oii>(N_Type);
+
+      memcpyTruncation_ii[Type.ComplexDouble] = memcpyTruncation_cd;
+      memcpyTruncation_ii[Type.ComplexFloat] = memcpyTruncation_cf;
+      memcpyTruncation_ii[Type.Double] = memcpyTruncation_d;
+      memcpyTruncation_ii[Type.Float] = memcpyTruncation_f;
+
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
 
@@ -1366,6 +1374,14 @@ namespace cytnx {
       cuOuter_ii[Type.Bool][Type.Uint16] = cuOuter_internal_btu16;
       cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
       cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
+
+      //========Helper function for svd_truncate on cuda========
+      cudaMemcpyTruncation_ii = vector<cudaMemcpyTruncation_oii>(N_Type);
+
+      cudaMemcpyTruncation_ii[Type.ComplexDouble] = cudaMemcpyTruncation_cd;
+      cudaMemcpyTruncation_ii[Type.ComplexFloat] = cudaMemcpyTruncation_cf;
+      cudaMemcpyTruncation_ii[Type.Double] = cudaMemcpyTruncation_d;
+      cudaMemcpyTruncation_ii[Type.Float] = cudaMemcpyTruncation_f;
 
   #ifdef UNI_CUQUANTUM
       cuQuantumGeSvd_ii = vector<cuQuantumGeSvd_oii>(N_Type);
