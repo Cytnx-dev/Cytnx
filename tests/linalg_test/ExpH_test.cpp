@@ -1,6 +1,7 @@
 #include "ExpH_test.h"
 
-TEST(ExpH, CompareWithScipyExpH) {
+TEST(ExpH, ExpH_test) {
+  // CompareWithScipy
   std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
                                       {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
                                       {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},
@@ -31,7 +32,8 @@ TEST(ExpH, CompareWithScipyExpH) {
   }
 }
 
-TEST(ExpH_UT, UTCompareWithScipyExpH) {
+TEST(ExpH_UT, UTExpH_test) {
+  // CompareWithScipy
   std::complex<double> t_i_e[4][4] = {{{-2.0, 0}, {0, 0}, {0, 0}, {-1, 0}},
                                       {{0, 0}, {0, 0}, {-1, 0}, {0, 0}},
                                       {{0, 0}, {-1, 0}, {0, 0}, {0, 0}},

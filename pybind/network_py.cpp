@@ -65,10 +65,34 @@ void network_binding(py::module &m) {
       [](Network &self, const std::vector<std::string> &names,
          const std::vector<UniTensor> &utensors) { self.PutUniTensors(names, utensors); },
       py::arg("names"), py::arg("utensors"))
-    .def("getOptimalOrder", &Network::getOptimalOrder,
-         py::arg("network_type") = (int)NtType.Regular)
-    .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",
-         py::arg("network_type") = (int)NtType.Regular)
+
+    .def(
+      "RmUniTensor", [](Network &self, const std::string &name) { self.RmUniTensor(name); },
+      py::arg("name"))
+    .def(
+      "RmUniTensor", [](Network &self, const cytnx_uint64 &idx) { self.RmUniTensor(idx); },
+      py::arg("idx"))
+    .def(
+      "RmUniTensors",
+      [](Network &self, const std::vector<std::string> &names) { self.RmUniTensors(names); },
+      py::arg("names"))
+
+    // .def("getOptimalOrder", &Network::getOptimalOrder,
+    //      py::arg("network_type") = (int)NtType.Regular)
+    // .def("Launch", &Network::Launch, py::arg("optimal") = false, py::arg("contract_order") = "",
+    //      py::arg("network_type") = (int)NtType.Regular)
+
+    .def(
+      "setOrder",
+      [](Network &self, const bool &optimal, const std::string &contract_order) {
+        self.setOrder(optimal, contract_order);
+      },
+      py::arg("optimal") = false, py::arg("contract_order") = "")
+
+    .def("getOrder", [](Network &self) { return self.getOrder(); })
+
+    // .def("getOrder", &Network::getOrder)
+    .def("Launch", &Network::Launch, py::arg("network_type") = (int)NtType.Regular)
 
     .def("construct", &Network::construct, py::arg("alias"), py::arg("lbls"),
          py::arg("outlbl") = std::vector<std::string>(), py::arg("outrk"), py::arg("order") = "",

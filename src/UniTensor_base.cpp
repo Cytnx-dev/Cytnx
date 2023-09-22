@@ -54,7 +54,12 @@ namespace cytnx {
                     "\n");
     return std::vector<cytnx_uint64>();
   }
-  void UniTensor_base::set_rowrank(const cytnx_uint64 &new_rowrank) {
+  void UniTensor_base::set_rowrank_(const cytnx_uint64 &new_rowrank) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::set_rowrank(
+    const cytnx_uint64 &new_rowrank) const {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
   }
@@ -271,8 +276,42 @@ namespace cytnx {
     return nullptr;
   }
   void UniTensor_base::relabels_(const std::vector<std::string> &new_labels) {
+    this->set_labels(new_labels);
+  }
+
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabels(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
+    return nullptr;
+  }
+  void UniTensor_base::relabels_(const std::vector<std::string> &old_labels,
+                                 const std::vector<std::string> &new_labels) {
+    cytnx_error_msg(old_labels.size() != new_labels.size(),
+                    "[ERROR] old_labels and new_labels should have the same size.%s", "\n");
+
+    // 1) checking old_labels have no duplicate and are all exists:
+    // 2) getting all the replace locations
+    cytnx_error_msg(vec_unique<std::string>(old_labels).size() != old_labels.size(),
+                    "[ERROR] old_labels cannot have duplicated elements.%s", "\n");
+
+    std::vector<cytnx_int64> loc_inds(old_labels.size());
+    for (cytnx_int64 i = 0; i < loc_inds.size(); i++) {
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), old_labels[i]);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n",
+                      old_labels[i].c_str());
+
+      loc_inds[i] = std::distance(this->_labels.begin(), res);
+    }
+
+    // 3) replace the labels:
+    for (cytnx_int64 i = 0; i < loc_inds.size(); i++) {
+      this->_labels[loc_inds[i]] = new_labels[i];
+    }
+
+    // 4) chk duplicate:
+    cytnx_error_msg(vec_unique<std::string>(this->_labels).size() != this->_labels.size(),
+                    "[ERROR] final output UniTensor have duplicated elements.%s", "\n");
   }
 
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const cytnx_int64 &inx,
@@ -281,20 +320,12 @@ namespace cytnx {
                     "\n");
     return nullptr;
   }
-  void UniTensor_base::relabel_(const cytnx_int64 &inx, const std::string &new_label) {
-    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
-                    "\n");
-  }
 
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const std::string &inx,
                                                                const std::string &new_label) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");
     return nullptr;
-  }
-  void UniTensor_base::relabel_(const std::string &inx, const std::string &new_label) {
-    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
-                    "\n");
   }
 
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::to_dense() {
@@ -556,26 +587,45 @@ namespace cytnx {
   }
 
   void _resolve_CT(std::vector<UniTensor> &TNlist){};
-  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order,
-                      const bool &optimal) {
+  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order = "",
+                      const bool &optimal = true) {
     cytnx_error_msg(TNs.size() < 2, "[ERROR][Contracts] should have more than 2 TNs to contract.%s",
                     "\n");
-    // UniTensor out = TNs[0].contract(TNs[1]);
-    // if (TNs.size() > 2) {
-    //   for (int i = 2; i < TNs.size(); i++) {
-    //     out = out.contract(TNs[i]);
-    //   }
-    // }
+
     Network tmp;
     std::vector<std::vector<std::string>> lbls;
     std::vector<std::string> names;
-    for (int i = 0; i < TNs.size(); i++) {
-      names.push_back(TNs[i].name());
-      lbls.push_back(TNs[i].labels());
+    std::string orderin = order;
+
+    if (optimal || (!optimal && order == "")) {
+      if (order != "") {
+        cytnx_warning_msg(
+          true,
+          "[WARNING][Contracts] Setting Optimal = true while specifying the order, will find the "
+          "optimal order instead. To use the desired order please set Optimal = false.%s",
+          "\n");
+        orderin = "";
+      }
+
+      for (int i = 0; i < TNs.size(); i++) {
+        names.push_back("T" + std::to_string(i));
+        lbls.push_back(TNs[i].labels());
+      }
+    } else {
+      for (int i = 0; i < TNs.size(); i++) {
+        cytnx_error_msg(TNs[i].name() == "",
+                        "[ERROR][Contracts] Unable to contract with the specified order, missing "
+                        "tensor name at index %d.\n",
+                        i);
+        names.push_back(TNs[i].name());
+        lbls.push_back(TNs[i].labels());
+      }
     }
-    tmp.construct(names, lbls, std::vector<std::string>(), -1, order, optimal);
+
+    tmp.construct(names, lbls, std::vector<std::string>(), -1, orderin, optimal);
     tmp.PutUniTensors(names, TNs);
-    UniTensor out = tmp.Launch(optimal);
+    tmp.setOrder(optimal, orderin);
+    UniTensor out = tmp.Launch();
     return out;
   }
 
@@ -646,4 +696,8 @@ namespace cytnx {
                     "\n");
   }
 
+  void UniTensor_base::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+  }
 }  // namespace cytnx

@@ -55,10 +55,9 @@ namespace cytnx {
       double Norm = double(Contract(Tin, Tin.Dagger()).item().real());
       Norm = std::sqrt(Norm);
 
-      // cout<<"Norm: "<<Norm<<endl;
-
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
+
       // UniTensor psi_1 = Tin.clone();
       // psi_1.get_block_()/=Tin.get_block_().Norm();
 
@@ -69,7 +68,6 @@ namespace cytnx {
       // declare variables, A,B should be real if LinOp is hermitian!
       Tensor As = zeros({1}, Hop->dtype() < 3 ? Hop->dtype() + 2 : Hop->dtype(), Tin.device());
       Tensor Bs = As.clone();
-
       Scalar E;
 
       // temporary:
@@ -79,11 +77,6 @@ namespace cytnx {
       //-------------------------------------------------
       new_psi = Hop->matvec(psi_1);
 
-      // cout<<"psi_1, new_psi: "<<endl;
-      // psi_1.print_diagram();
-      // psi_1.print_blocks();
-      // new_psi.print_diagram();
-      // new_psi.print_blocks();
       /*
          checking if the output match input:
       */
@@ -95,14 +88,12 @@ namespace cytnx {
                       "[ERROR] LinOp.matvec(UniTensor) -> UniTensor the output should have same "
                       "labels and shape as input!%s",
                       "\n");
-
       As(0) = Contract(new_psi.Dagger(), psi_1).item().real();
-
       // As(0) =
       // linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true);
 
-      // cout << (new_psi);
       // new_psi -= As(0)*psi_1;
+
       unsafe_Sub_(new_psi, As(0).item(), psi_1);
 
       Bs(0) = new_psi.Norm().item();  // sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
@@ -118,26 +109,12 @@ namespace cytnx {
       E = As(0).item();
       Scalar Ediff;
 
-      // cout<<"psi_0: "<<endl;
-      // psi_0.print_diagram();
-      // psi_0.print_blocks();
-      // cout<<"As(0), Bs(0): "<<As(0)<<" "<<Bs(0)<<endl;
-
       ///---------------------------
 
       // iteration LZ:
       for (unsigned int i = 1; i < Maxiter; i++) {
-        // cout << "iter: " << i << "chck:" << endl;
-        // cout << Contract(psi_1,psi_1.Dagger()).item() << endl;
-
         // new_psi = Hop->matvec(psi_1) - Bs(i-1)*psi_0;
         new_psi = Hop->matvec(psi_1);
-
-        // cout<<"2222222psi_1, new_psi: "<<endl;
-        // psi_1.print_diagram();
-        // psi_1.print_blocks();
-        // new_psi.print_diagram();
-        // new_psi.print_blocks();
 
         As.append(Contract(new_psi.Dagger(), psi_1).item().real());
         // As.append(linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true).item());
@@ -160,15 +137,8 @@ namespace cytnx {
           new_psi.Norm().item();  // sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
         Bs.append(tmpB);
 
-        // cout<<"psi_0: "<<endl;
-        // psi_0.print_diagram();
-        // psi_0.print_blocks();
-        // cout<<"As(1), Bs(1): "<<As(1)<<" "<<Bs(1)<<endl;
-        // cout<<"tmpB: "<< tmpB<<endl;
-
         if (tmpB == 0) {
           cvg_fin = true;
-          // cout<<"TMPB = 0!!!!!!!!!!!!!"<<endl;
           break;
         }
 
@@ -198,7 +168,6 @@ namespace cytnx {
                           "this is intended%s",
                           "\n");
       }
-      // cout << "OK" << endl;
       out.push_back(UniTensor(tmpEsVs[0](0), false, 0));
 
       if (is_V) {

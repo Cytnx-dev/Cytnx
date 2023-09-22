@@ -27,6 +27,15 @@ namespace cytnx {
   void Network_base::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensor] call from uninitialize network.%s", "\n");
   }
+  void Network_base::RmUniTensor(const std::string &name) {
+    cytnx_error_msg(true, "[ERROR][Network][RmUniTensor] call from uninitialize network.%s", "\n");
+  }
+  void Network_base::RmUniTensor(const cytnx_uint64 &idx) {
+    cytnx_error_msg(true, "[ERROR][Network][RmUniTensor] call from uninitialize network.%s", "\n");
+  }
+  void Network_base::RmUniTensors(const std::vector<string> &names) {
+    cytnx_error_msg(true, "[ERROR][Network][RmUniTensors] call from uninitialize network.%s", "\n");
+  }
   void Network_base::PutUniTensors(const std::vector<string> &names,
                                    const std::vector<UniTensor> &utensors) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensors] call from uninitialize network.%s",
@@ -40,7 +49,17 @@ namespace cytnx {
                     "\n");
     return "";
   }
-  UniTensor Network_base::Launch(const bool &optimal, const std::string &contract_order) {
+
+  void Network_base::setOrder(const bool &optimal, const std::string &contract_order) {
+    cytnx_error_msg(true, "[ERROR][Network][setOrder] call from uninitialize network.%s", "\n");
+  }
+
+  std::string Network_base::getOrder() {
+    cytnx_error_msg(true, "[ERROR][Network][getOrder] call from uninitialize network.%s", "\n");
+    return "";
+  }
+
+  UniTensor Network_base::Launch() {
     cytnx_error_msg(true, "[ERROR][Network][Launch] call from uninitialize network.%s", "\n");
     return UniTensor();
   }

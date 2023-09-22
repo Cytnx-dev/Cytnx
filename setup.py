@@ -58,13 +58,13 @@ class CMakeBuild(build_ext):
         ""
         build_temp_dir = os.path.abspath(self.build_temp)
         #print(">>>build_temp_dir",build_temp_dir)
-        
+
         # now, construct the Cpp:
         # 1. lib file (cpp)
-        Cpplib_dir = os.path.join(extdir,"lib") 
+        Cpplib_dir = os.path.join(extdir,"lib")
         if not os.path.exists(Cpplib_dir):
             os.mkdir(Cpplib_dir)
-        
+
         # copy libcytnx.a:
         for fn in os.listdir(build_temp_dir):
             print(fn)
@@ -130,10 +130,10 @@ class CMakeBuild(build_ext):
         self.copy_tree(os.path.join(ext.sourcedir,"include"),Cppinc_dir)
         print("[Relocate Cpp]>> find c++ header:")
         #print(">>>sourcedir",ext.sourcedir)
-        
+
         #print(">>>!!!")
         ""
-    
+
 """
 def get_version():
     f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"version.cmake"),'r')
@@ -141,11 +141,11 @@ def get_version():
     for line in f.readlines():
         if 'set' in line:
             if 'MAJOR' in line:
-                version[0] = line.strip().split(')')[0].split()[-1]           
+                version[0] = line.strip().split(')')[0].split()[-1]
             elif 'MINOR' in line:
-                version[1] = line.strip().split(')')[0].split()[-1]           
+                version[1] = line.strip().split(')')[0].split()[-1]
             elif 'PATCH' in line:
-                version[2] = line.strip().split(')')[0].split()[-1]           
+                version[2] = line.strip().split(')')[0].split()[-1]
 
     f.close()
 

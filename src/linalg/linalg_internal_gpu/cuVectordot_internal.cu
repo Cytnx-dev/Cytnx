@@ -48,7 +48,12 @@ namespace cytnx {
         bias += MAXX;
         cnt += 1;
       }
-      utils_internal::cuReduce_gpu_cd((cytnx_complex128 *)_out, (cytnx_complex128 *)dacres, TotSeg);
+      if (TotSeg == 1) {
+        _out[0] = dacres[0];
+      } else {
+        utils_internal::cuReduce_gpu_cd((cytnx_complex128 *)_out, (cytnx_complex128 *)dacres,
+                                        TotSeg);
+      }
       /*
       cytnx_complex128 *hacres = (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*TotSeg);
       cudaMemcpy((cuDoubleComplex*)hacres,dacres,sizeof(cytnx_complex128)*TotSeg,cudaMemcpyDeviceToHost);
@@ -103,7 +108,11 @@ namespace cytnx {
         bias += MAXX;
         cnt += 1;
       }
-      utils_internal::cuReduce_gpu_cf((cytnx_complex64 *)_out, (cytnx_complex64 *)dacres, TotSeg);
+      if (TotSeg == 1) {
+        _out[0] = dacres[0];
+      } else {
+        utils_internal::cuReduce_gpu_cf((cytnx_complex64 *)_out, (cytnx_complex64 *)dacres, TotSeg);
+      }
       /*
       cytnx_complex64 *hacres = (cytnx_complex64*)malloc(sizeof(cytnx_complex64)*TotSeg);
       cudaMemcpy((cuFloatComplex*)hacres,dacres,sizeof(cytnx_complex64)*TotSeg,cudaMemcpyDeviceToHost);
@@ -157,7 +166,11 @@ namespace cytnx {
         bias += MAXX;
       }
       // sum to out
-      utils_internal::cuReduce_gpu_d(_out, dacres, TotSeg);
+      if (TotSeg == 1) {
+        _out[0] = dacres[0];
+      } else {
+        utils_internal::cuReduce_gpu_d(_out, dacres, TotSeg);
+      }
       // std::cout << "done" << std::endl;
       /*
       cytnx_double *hacres = (cytnx_double*)malloc(sizeof(cytnx_double)*TotSeg);
@@ -208,7 +221,11 @@ namespace cytnx {
         bias += MAXX;
         cnt++;
       }
-      utils_internal::cuReduce_gpu_f(_out, dacres, TotSeg);
+      if (TotSeg == 1) {
+        _out[0] = dacres[0];
+      } else {
+        utils_internal::cuReduce_gpu_f(_out, dacres, TotSeg);
+      }
       /*
       cytnx_float *hacres = (cytnx_float*)malloc(sizeof(cytnx_float)*TotSeg);
       cudaMemcpy((cytnx_float*)hacres,dacres,sizeof(cytnx_float)*TotSeg,cudaMemcpyDeviceToHost);

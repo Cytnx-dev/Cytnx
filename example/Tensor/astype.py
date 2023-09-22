@@ -12,5 +12,3 @@ print(B)
 
 C = A.astype(Type.Double)
 print(C is A)
-
-

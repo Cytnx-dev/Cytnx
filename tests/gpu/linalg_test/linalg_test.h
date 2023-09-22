@@ -33,6 +33,10 @@ class linalg_Test : public ::testing::Test {
   UniTensor svd_T = UniTensor({svd_I, svd_J, svd_K, svd_L}, {"a", "b", "c", "d"}, 1, Type.Double,
                               Device.cuda, false)
                       .to(cytnx::Device.cuda);
+
+  UniTensor svd_T_dense =
+    UniTensor(arange(0, 11 * 13, 1).reshape(11, 13)).astype(Type.ComplexDouble).to(Device.cuda);
+
   Tensor svd_Sans;
   //==================== Lanczos_Gnd_Ut ===================
   Tensor A = Tensor::Load(data_dir + "Lanczos_Gnd/lan_block_A.cytn").to(cytnx::Device.cuda);
@@ -63,7 +67,7 @@ class linalg_Test : public ::testing::Test {
     svd_T = svd_T.Load(data_dir + "Svd_truncate/Svd_truncate1.cytnx").to(cytnx::Device.cuda);
     svd_T.permute_({1, 0, 3, 2});
     svd_T.contiguous_();
-    svd_T.set_rowrank(2);
+    svd_T.set_rowrank_(2);
     svd_Sans = Tensor::Load(data_dir + "Svd_truncate/S_truncate1.cytn").to(cytnx::Device.cuda);
     svd_Sans = algo::Sort(svd_Sans);
     //==================== Lanczos_Gnd_Ut ===================

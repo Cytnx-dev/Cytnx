@@ -5,6 +5,7 @@
 
 namespace cytnx {
   int set_mkl_ilp64() { return cytnx::linalg_internal::lii.set_mkl_ilp64(); }
+  int get_mkl_code() { return cytnx::linalg_internal::lii.get_mkl_code(); }
   namespace linalg {
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
@@ -62,10 +63,10 @@ namespace cytnx {
             Rt._impl->invmapper(), 0);
         } else {
 #ifdef UNI_GPU
-          cytnx_error_msg(true,
-                          "[Add][on GPU/CUDA] error two tensors must be contiguous. Call "
-                          "Contiguous_() or Contiguous() first%s",
-                          "\n");
+          linalg_internal::lii.cuAri_ii[Lt.dtype()][Rt.dtype()](
+            out._impl->storage()._impl, Lt._impl->storage()._impl, Rt._impl->storage()._impl,
+            Lt._impl->storage()._impl->size(), Lt._impl->shape(), Lt._impl->invmapper(),
+            Rt._impl->invmapper(), 0);
 #else
           cytnx_error_msg(true, "[Add] fatal error, the tensor is on GPU without CUDA support.%s",
                           "\n");

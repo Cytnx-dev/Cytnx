@@ -7,8 +7,3 @@ from cytnx import *
 
 def Qs(*args):
     return cytnx._cQs(list(args))
-
-
-
-
-

@@ -11,6 +11,8 @@
 
 #ifdef UNI_GPU
   #include "algo/algo_internal_gpu/cuSort_internal.hpp"
+  #include "algo/algo_internal_gpu/cuConcate_internal.hpp"
+  #include "algo/algo_internal_gpu/cuSplit_internal.hpp"
 #endif
 
 namespace cytnx {

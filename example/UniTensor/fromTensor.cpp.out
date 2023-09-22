@@ -1,16 +1,16 @@
 -----------------------
-tensor Name : 
+tensor Name :
 tensor Rank : 2
 block_form  : false
 is_diag     : False
 on device   : cytnx device: CPU
-            -------------      
-           /             \     
-     0 ____| 4           |        
-           |             |     
-     1 ____| 4           |        
-           \             /     
-            -------------      
+            -------------
+           /             \
+     0 ____| 4           |
+           |             |
+     1 ____| 4           |
+           \             /
+            -------------
 before:
 
 Total elem: 16
@@ -24,8 +24,8 @@ Shape : (4,4)
 
 
 -------- start of print ---------
-Tensor name: 
-Tensor name: 
+Tensor name:
+Tensor name:
 is_diag    : False
 contiguous : True
 
@@ -53,8 +53,8 @@ Shape : (4,4)
 
 
 -------- start of print ---------
-Tensor name: 
-Tensor name: 
+Tensor name:
+Tensor name:
 is_diag    : False
 contiguous : True
 
@@ -83,8 +83,8 @@ Shape : (4,4)
 
 
 -------- start of print ---------
-Tensor name: 
-Tensor name: 
+Tensor name:
+Tensor name:
 is_diag    : False
 contiguous : True
 
@@ -112,8 +112,8 @@ Shape : (4,4)
 
 
 -------- start of print ---------
-Tensor name: 
-Tensor name: 
+Tensor name:
+Tensor name:
 is_diag    : False
 contiguous : True
 
@@ -125,6 +125,3 @@ Shape : (4,4)
  [0.00000e+00 2.34500e+00 0.00000e+00 0.00000e+00 ]
  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
-
-
-

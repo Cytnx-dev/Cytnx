@@ -5,16 +5,28 @@ from .cytnx import *
 if ('numpy' in sys.modules) or ('scipy' in sys.modules):
     raise ValueError("[ERROR] please import cytnx first before import numpy and/or scipy!")
 
-    
+
 
 ## [NOTE!!] These part has to execute first before import numpy!
 #set_mkl_ilp64()
-def init_mkl():
+def _init_mkl():
     a = zeros(2)
     b = zeros(2)
     linalg.Dot(a,b)
     return 0
-init_mkl()
+_init_mkl()
+
+
+def get_mkl_interface():
+    code = get_mkl_code()
+    if code < 0:
+        raise Warning("does not compile with mkl.")
+
+    if(code%2):
+        return "ilp64"
+    else:
+        return "lp64"
+
 
 import numpy
 from .Storage_conti import *
@@ -27,7 +39,7 @@ from .Symmetry_conti import *
 from .Bond_conti import *
 
 if(os.path.exists(os.path.join(os.path.dirname(__file__),"include"))):
-    # this only set if using anaconda install. 
+    # this only set if using anaconda install.
     __cpp_include__=os.path.join(os.path.dirname(__file__),"include")
     __cpp_lib__=os.path.join(os.path.dirname(__file__),"lib")
     if not os.path.isdir(__cpp_lib__):
@@ -54,7 +66,7 @@ def _find_hptt__():
         hptt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"hptt")
     elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"hptt")):
         hptt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"hptt")
-            
+
     return hptt_path
 
 def _find_cutt__():

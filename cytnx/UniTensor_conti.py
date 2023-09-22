@@ -1,6 +1,8 @@
 from .utils import *
 from cytnx import *
 from typing import List
+from functools import singledispatch
+
 ## load the submodule from pybind and inject the methods
 
 class Hclass:
@@ -12,9 +14,9 @@ class Hclass:
         return self.c_cHclass.exists()
 
     def __getattr__(self, name):
-        
+
         if name == "value":
-            
+
             if not self.exists():
                 raise ValueError("[ERROR] trying access an element that is not exists!, using T.if_exists = sth or checking with T.exists() to verify before access element!")
 
@@ -69,7 +71,7 @@ class Hclass:
                     return self.c_cHclass.get_elem_b();
                 else:
                     raise ValueError("[ERROR] invalid type of an element!")
-            else:                    
+            else:
                 return None;
 
         else:
@@ -84,11 +86,11 @@ class Hclass:
                 if not self.exists():
                     raise ValueError("[ERROR] trying access an element that is not exists!, using T.if_exists = sth or checking with T.exists() to verify before access element!")
                 self.c_cHclass.set_elem(value);
-                
+
             elif name == "if_exists":
                 if(self.exists()):
                     self.c_cHclass.set_elem(value);
-                
+
             else:
                 raise AttributeError("invalid member! %s"%(name))
 
@@ -195,11 +197,28 @@ def set_labels(self,new_labels:List[str]):
     return self
 
 
+@add_method(UniTensor)
+def relabel_(self, old_label:str, new_label:str):
+    self.c_relabel_(old_label,new_label);
+    return self
+
+@add_method(UniTensor)
+def relabel_(self, idx:int, new_label:str):
+    self.c_relabel_(idx,new_label);
+    return self
+
 
 
 @add_method(UniTensor)
-def set_rowrank(self,new_rowrank):
-    self.c_set_rowrank(new_rowrank);
+def relabels_(self, new_labels:List[str],old_labels:List[str]=[]):
+    self.c_relabels_(new_labels);
+    return self
+
+
+
+@add_method(UniTensor)
+def set_rowrank_(self,new_rowrank):
+    self.c_set_rowrank_(new_rowrank);
     return self
 
 
@@ -209,3 +228,7 @@ def at(self, locator:List[int]):
     tmp_hclass = self.c_at(locator);
     return Hclass(tmp_hclass);
 
+@add_method(UniTensor)
+def at(self, labels:List[str], locator:List[int]):
+    tmp_hclass = self.c_at(labels,locator);
+    return Hclass(tmp_hclass);

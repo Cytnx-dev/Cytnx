@@ -27,7 +27,7 @@ namespace ArnoldiTest {
     InitVec();
   }
   void MatOp::InitVec() {
-    T_init = zeros(nx(), this->dtype());
+    T_init = zeros(nx(), this->dtype()).to(this->device());
     if (Type.is_float(this->dtype())) {
       random::Make_normal(T_init, 0.0, 1.0, 0);
     }

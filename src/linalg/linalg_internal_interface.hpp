@@ -38,10 +38,13 @@
 #include "linalg/linalg_internal_cpu/Gemm_Batch_internal.hpp"
 #include "linalg/linalg_internal_cpu/Trace_internal.hpp"
 
+#include "linalg/linalg_internal_cpu/memcpyTruncation.hpp"
+
 #ifdef UNI_GPU
   #include "linalg/linalg_internal_gpu/cuArithmetic_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuAbs_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuSvd_internal.hpp"
+  #include "linalg/linalg_internal_gpu/cuGeSvd_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuEigh_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuInvM_inplace_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp"
@@ -62,8 +65,16 @@
   #include "linalg/linalg_internal_gpu/cuSum_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg/linalg_internal_gpu/cuKron_internal.hpp"
+
+  #include "linalg/linalg_internal_gpu/cudaMemcpyTruncation.hpp"
+
   #ifdef UNI_CUTENSOR
     #include "linalg/linalg_internal_gpu/cuTensordot_internal.hpp"
+  #endif
+
+  #ifdef UNI_CUQUANTUM
+    #include "linalg/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
+    #include "linalg/linalg_internal_gpu/cuQuantumQr_internal.hpp"
   #endif
 #endif
 
@@ -179,6 +190,30 @@ namespace cytnx {
                                       const std::vector<cytnx_uint64> &idxl,
                                       const std::vector<cytnx_uint64> &idxr);
 
+    typedef void (*memcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
+                                         const cytnx_uint64 &keepdim, const double &err,
+                                         const bool &is_U, const bool &is_vT,
+                                         const unsigned int &return_err);
+
+#ifdef UNI_GPU
+
+    typedef void (*cudaMemcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
+                                             const cytnx_uint64 &keepdim, const double &err,
+                                             const bool &is_U, const bool &is_vT,
+                                             const unsigned int &return_err);
+
+  #ifdef UNI_CUQUANTUM
+    typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
+                                       const double &err, const unsigned int &return_err, Tensor &U,
+                                       Tensor &S, Tensor &vT, Tensor &terr);
+    typedef void (*cuQuantumQr_oii)(const boost::intrusive_ptr<Storage_base> &in,
+                                    boost::intrusive_ptr<Storage_base> &Q,
+                                    boost::intrusive_ptr<Storage_base> &R,
+                                    boost::intrusive_ptr<Storage_base> &D,
+                                    boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
+                                    const cytnx_int64 &N, const bool &is_d);
+  #endif
+#endif
     class linalg_internal_interface {
      public:
       std::vector<std::vector<Arithmeticfunc_oii>> Ari_ii;
@@ -215,9 +250,14 @@ namespace cytnx {
       std::vector<axpy_oii> axpy_ii;
       std::vector<ger_oii> ger_ii;
 
+      std::vector<memcpyTruncation_oii> memcpyTruncation_ii;
+
+      int mkl_code;
+
 #ifdef UNI_GPU
       std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
       std::vector<Svdfunc_oii> cuSvd_ii;
+      std::vector<Svdfunc_oii> cuGeSvd_ii;
       std::vector<InvMinplacefunc_oii> cuInvM_inplace_ii;
       std::vector<Invinplacefunc_oii> cuInv_inplace_ii;
       std::vector<Conjinplacefunc_oii> cuConj_inplace_ii;
@@ -240,11 +280,19 @@ namespace cytnx {
       std::vector<MaxMinfunc_oii> cuSum_ii;
       std::vector<std::vector<Kronfunc_oii>> cuKron_ii;
       std::vector<Tensordotfunc_oii> cuTensordot_ii;
+
+      std::vector<cudaMemcpyTruncation_oii> cudaMemcpyTruncation_ii;
+
+  #ifdef UNI_CUQUANTUM
+      std::vector<cuQuantumGeSvd_oii> cuQuantumGeSvd_ii;
+      std::vector<cuQuantumQr_oii> cuQuantumQr_ii;
+  #endif
 #endif
 
       linalg_internal_interface();
       ~linalg_internal_interface();
       int set_mkl_ilp64();
+      int get_mkl_code();
     };
     extern linalg_internal_interface lii;
   }  // namespace linalg_internal

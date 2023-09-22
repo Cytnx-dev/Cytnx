@@ -51,6 +51,7 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("User_debug") = cytnx::User_debug;
 
   m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
+  m.def("get_mkl_code", &cytnx::get_mkl_code);
 
   // global vars
   // m.attr("cytnxdevice") = cytnx::cytnxdevice;

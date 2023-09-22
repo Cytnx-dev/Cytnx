@@ -27,8 +27,28 @@ pair<std::string, cytnx_int64> operator>>(const std::string &a, const cytnx_int6
   return make_pair(a, qnidx);
 }
 
+// pair<std::string, cytnx_int64> operator>>(const char* a[], const cytnx_int64 &qnidx) {
+//   return make_pair(std::string(a), qnidx);
+// }
+
 int main(int argc, char *argv[]) {
-  auto ttss = lbl("a") >> 4;
+  Bond bdSp(BD_IN, {Qs(0) >> 1, Qs(1) >> 1});
+
+  auto UTSp_sym = UniTensor({bdSp, bdSp.redirect(), Bond(BD_IN, {Qs(1) >> 1})});
+  auto TSp = zeros({2, 2, 1});
+  TSp[{0, 1, 0}] = 1;
+  auto UTSp = UniTensor(TSp);
+
+  UTSp_sym.from(UTSp);
+  return 0;
+
+  auto ss1 = (2, 3);
+  return 0;
+
+  auto ttss = "a"s >> 4;
+  // auto ttss2 = "a" >> 4
+
+  // auto ttss = lbl("a") >> 4;
   return 0;
 
   int size = 5;
@@ -37,7 +57,7 @@ int main(int argc, char *argv[]) {
   bool is_diag = true;
   auto labels = std::vector<std::string>();
   auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-  random::Make_uniform(T, 0, 10, 0);
+  random::uniform_(T, 0, 10, 0);
   std::cout << T << std::endl;
   std::vector<UniTensor> svds = linalg::Svd(T);
   auto S = svds[0];
@@ -115,7 +135,7 @@ int main(int argc, char *argv[]) {
 
   AY = AY.astype(Type.ComplexDouble);
 
-  random::Make_normal(AY.get_block_(),0,0.2);
+  random::normal_(AY.get_block_(),0,0.2);
 
   print(AY);
 
@@ -140,7 +160,7 @@ int main(int argc, char *argv[]) {
   BUT4 = BUT4.astype(Type.ComplexDouble);
 
   for (int i = 0; i < BUT4.get_blocks_().size(); i++) {
-    random::Make_normal(BUT4.get_blocks_()[i], 0, 0.2);
+    random::normal_(BUT4.get_blocks_()[i], 0, 0.2);
   }
 
   print(BUT4);

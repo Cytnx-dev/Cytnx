@@ -13,17 +13,21 @@ namespace cytnx {
 
     linalg_internal_interface lii;
 
+    int linalg_internal_interface::get_mkl_code() { return this->mkl_code; }
+
     int linalg_internal_interface::set_mkl_ilp64() {
+      int code = 0;
 #ifdef UNI_MKL
-      int code = mkl_set_interface_layer(MKL_INTERFACE_ILP64);
-      std::cout << "MKL interface code: " << code;
-      if (code % 2)
-        std::cout << " >> using [ilp64] interface" << std::endl;
-      else
-        std::cout << " >> using [ lp64] interface" << std::endl;
+      code = mkl_set_interface_layer(MKL_INTERFACE_ILP64);
+      this->mkl_code = code;
+      // std::cout << "MKL interface code: " << code;
+      // if (code % 2)
+      //   std::cout << " >> using [ilp64] interface" << std::endl;
+      // else
+      //   std::cout << " >> using [ lp64] interface" << std::endl;
 
 #endif
-      return 0;
+      return code;
     }
     linalg_internal_interface::~linalg_internal_interface() {
 #ifdef UNI_GPU
@@ -35,6 +39,7 @@ namespace cytnx {
 #endif
     }
     linalg_internal_interface::linalg_internal_interface() {
+      mkl_code = -1;
 #ifdef UNI_MKL
       this->set_mkl_ilp64();
 #endif
@@ -777,6 +782,14 @@ namespace cytnx {
       Gemm_Batch_ii[Type.Double] = Gemm_Batch_internal_d;
       Gemm_Batch_ii[Type.Float] = Gemm_Batch_internal_f;
 
+      //========Helper function for svd_truncate on cuda========
+      memcpyTruncation_ii = vector<memcpyTruncation_oii>(N_Type);
+
+      memcpyTruncation_ii[Type.ComplexDouble] = memcpyTruncation_cd;
+      memcpyTruncation_ii[Type.ComplexFloat] = memcpyTruncation_cf;
+      memcpyTruncation_ii[Type.Double] = memcpyTruncation_d;
+      memcpyTruncation_ii[Type.Float] = memcpyTruncation_f;
+
 #ifdef UNI_GPU
       cuAri_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type));
 
@@ -1095,6 +1108,14 @@ namespace cytnx {
       cuSvd_ii[Type.Double] = cuSvd_internal_d;
       cuSvd_ii[Type.Float] = cuSvd_internal_f;
 
+      // GeSvd
+      cuGeSvd_ii = vector<Svdfunc_oii>(5);
+
+      cuGeSvd_ii[Type.ComplexDouble] = cuGeSvd_internal_cd;
+      cuGeSvd_ii[Type.ComplexFloat] = cuGeSvd_internal_cf;
+      cuGeSvd_ii[Type.Double] = cuGeSvd_internal_d;
+      cuGeSvd_ii[Type.Float] = cuGeSvd_internal_f;
+
       //=====================
       cuEigh_ii = vector<Eighfunc_oii>(5);
 
@@ -1353,6 +1374,28 @@ namespace cytnx {
       cuOuter_ii[Type.Bool][Type.Uint16] = cuOuter_internal_btu16;
       cuOuter_ii[Type.Bool][Type.Int16] = cuOuter_internal_bti16;
       cuOuter_ii[Type.Bool][Type.Bool] = cuOuter_internal_btb;
+
+      //========Helper function for svd_truncate on cuda========
+      cudaMemcpyTruncation_ii = vector<cudaMemcpyTruncation_oii>(N_Type);
+
+      cudaMemcpyTruncation_ii[Type.ComplexDouble] = cudaMemcpyTruncation_cd;
+      cudaMemcpyTruncation_ii[Type.ComplexFloat] = cudaMemcpyTruncation_cf;
+      cudaMemcpyTruncation_ii[Type.Double] = cudaMemcpyTruncation_d;
+      cudaMemcpyTruncation_ii[Type.Float] = cudaMemcpyTruncation_f;
+
+  #ifdef UNI_CUQUANTUM
+      cuQuantumGeSvd_ii = vector<cuQuantumGeSvd_oii>(N_Type);
+      cuQuantumGeSvd_ii[Type.ComplexDouble] = cuQuantumGeSvd_internal_cd;
+      cuQuantumGeSvd_ii[Type.ComplexFloat] = cuQuantumGeSvd_internal_cf;
+      cuQuantumGeSvd_ii[Type.Double] = cuQuantumGeSvd_internal_d;
+      cuQuantumGeSvd_ii[Type.Float] = cuQuantumGeSvd_internal_f;
+
+      cuQuantumQr_ii = vector<cuQuantumQr_oii>(N_Type);
+      cuQuantumQr_ii[Type.ComplexDouble] = cuQuantumQr_internal_cd;
+      cuQuantumQr_ii[Type.ComplexFloat] = cuQuantumQr_internal_cf;
+      cuQuantumQr_ii[Type.Double] = cuQuantumQr_internal_d;
+      cuQuantumQr_ii[Type.Float] = cuQuantumQr_internal_f;
+  #endif
 
   #ifdef UNI_CUTENSOR
       cuTensordot_ii = vector<Tensordotfunc_oii>(N_Type);

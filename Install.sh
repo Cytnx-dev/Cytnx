@@ -1,7 +1,7 @@
 #=========================================================
 ## 1) Custom install destination (DEFAULT /use/local/cytnx)
 #=========================================================
-## [Note] uncomments the following lines and 
+## [Note] uncomments the following lines and
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
 Ins_dest="$HOME/Cytnx_lib"
@@ -13,12 +13,12 @@ FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #=================================================================
 # 2) linalg libs:
 # [Note] we have two choice: OpenBLAS or MKL (choose either one!)
-#        uncomments either a) or b) for the one you wish to use. 
+#        uncomments either a) or b) for the one you wish to use.
 #=================================================================
 
 # 2-a) use OpenBLAS (DEFAULT)
 # [Note] By default it will automatically find openblas installed
-#        In case of cmake cannot find the BLAS, uncomments the following lines 
+#        In case of cmake cannot find the BLAS, uncomments the following lines
 #        and set the BLAS_ROOT:
 #---------------------------
 #BLASROOT=/deps/OpenBLAS
@@ -29,8 +29,8 @@ FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 
 # 2-b) use MKL:
 # [Note] if using mkl, uncomments the following line and
-#        Please follow the guide from official mkl/oneMKL "post-installation" part 
-#        to source the proper setvars.sh and/or vars.sh  
+#        Please follow the guide from official mkl/oneMKL "post-installation" part
+#        to source the proper setvars.sh and/or vars.sh
 #----------------------
 FLAG="${FLAG} -DUSE_MKL=ON"
 #----------------------
@@ -39,7 +39,7 @@ FLAG="${FLAG} -DUSE_MKL=ON"
 #============================================================================
 # 3) use python (DEFAULT =on)
 #============================================================================
-# set to "=on" for building python API, required python and pybind11 installed. 
+# set to "=on" for building python API, required python and pybind11 installed.
 #--------------------------------
 FLAG="${FLAG} -DBUILD_PYTHON=ON"
 #--------------------------------
@@ -50,7 +50,7 @@ FLAG="${FLAG} -DBUILD_PYTHON=ON"
 #=========================================================
 # [Note] by default, it will automatically find system installed boost.
 #        In case boost cannot be found automatically, uncomment the following line,
-#        and set the boost path manually.  
+#        and set the boost path manually.
 #-----------------------------------
 #FLAG="${FLAG}-DBOOSTROOT=/deps/BOOST "
 #-----------------------------------
@@ -84,7 +84,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF "
+FLAG="${FLAG} -DUSE_CUDA=ON "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -98,8 +98,8 @@ FLAG="${FLAG} -DUSE_CUTT=off "
 FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=off "
 #-----------------------------------
 # 6-c) Magma (DEFALT = off)
-# [Note] set to "=off" will make some of the GPU functions unavailable. 
-#        in case MAGMA is not automatically find, please specify MAGMAROOT path 
+# [Note] set to "=off" will make some of the GPU functions unavailable.
+#        in case MAGMA is not automatically find, please specify MAGMAROOT path
 #        where the magma is installed
 # [Remark] You need to install MAGMA with BLA_VENDOR Intel10_64_dyn or Intel10_64ilp
 #-----------------------------------
@@ -113,16 +113,16 @@ FLAG="${FLAG} -DMAGMA_ROOT=${HOME}/MAGMA"
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 CUTENSOR_ROOT=${HOME}/CUTENSOR
-FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
+FLAG="${FLAG} -DUSE_CUTENSOR=ON "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${HOME}/CUTENSOR"
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = off)
-# [Note] set to "=off" will 
+# [Note] set to "=off" will
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUQUANTUM_ROOT=/usr/local/cuqunatum-......
 CUQUANTUM_ROOT=${HOME}/CUQUANTUM
-FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
+FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
 FLAG="${FLAG} -DCUQUANTUM_ROOT=${HOME}/CUQUANTUM"
 
 
@@ -165,9 +165,21 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 #-----------------------------------
 
 
+#=========================================================
+# 10) Use Debug
+#=========================================================
+# [Note] Build using debug mode, uncomment to enable (DEFAULT =off)
+#-----------------------------------
+FLAG="${FLAG} -DUSE_DEBUG=OFF "
+# This is for compile with -fsanitize=address and cuda,
+# if you use DEBUG flag above, you need to export ASAN_OPTIONS=protect_shadow_gap=0
+# export ASAN_OPTIONS=protect_shadow_gap=0
+# Just a note: export ASAN_OPTIONS=protect_shadow_gap=0:replace_intrin=0:detect_leaks=0
+#-----------------------------------
+
 echo ${FLAG}
-rm -rf build
-mkdir build
+# rm -rf build
+# mkdir build
 cd build
 cmake ../ ${FLAG}
 make -j`nproc`

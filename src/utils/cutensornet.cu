@@ -1,38 +1,39 @@
-#ifdef UNI_CUQUANTUM
 #include <stdlib.h>
 #include <stdio.h>
-
 #include <unordered_map>
 #include <vector>
 #include <cassert>
-
-#include <cuda_runtime.h>
-#include <cutensornet.h>
-
 #include <cytnx.hpp>
-#include "utils/cutensornet.hpp"
-
-namespace cytnx {
+#include "cutensornet.hpp"
 
 #ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include <cutensornet.h>
+    #include <cuda_runtime.h>
+  #endif
+#endif
 
-  #define HANDLE_ERROR(x)                                                           \
-    {                                                                               \
-      const auto err = x;                                                           \
-      if (err != CUTENSORNET_STATUS_SUCCESS) {                                      \
-        printf("Error: %s in line %d\n", cutensornetGetErrorString(err), __LINE__); \
-        fflush(stdout);                                                             \
-      }                                                                             \
-    };
+namespace cytnx {
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
 
-  #define HANDLE_CUDA_ERROR(x)                                                    \
-    {                                                                             \
-      const auto err = x;                                                         \
-      if (err != cudaSuccess) {                                                   \
-        printf("CUDA Error: %s in line %d\n", cudaGetErrorString(err), __LINE__); \
-        fflush(stdout);                                                           \
-      }                                                                           \
-    };
+    #define HANDLE_ERROR(x)                                                           \
+      {                                                                               \
+        const auto err = x;                                                           \
+        if (err != CUTENSORNET_STATUS_SUCCESS) {                                      \
+          printf("Error: %s in line %d\n", cutensornetGetErrorString(err), __LINE__); \
+          fflush(stdout);                                                             \
+        }                                                                             \
+      };
+
+    #define HANDLE_CUDA_ERROR(x)                                                    \
+      {                                                                             \
+        const auto err = x;                                                         \
+        if (err != cudaSuccess) {                                                   \
+          printf("CUDA Error: %s in line %d\n", cudaGetErrorString(err), __LINE__); \
+          fflush(stdout);                                                           \
+        }                                                                           \
+      };
 
   struct GPUTimer {
     GPUTimer(cudaStream_t stream) : stream_(stream) {
@@ -60,28 +61,175 @@ namespace cytnx {
     cudaStream_t stream_;
   };
 
-  // Call cutensornet
-  void cuTensornet_(const int32_t numInputs, void* R_d, int32_t nmodeR, int64_t* extentR,
-                    int32_t* modesR, void* rawDataIn_d[], int32_t* modesIn[],
-                    int32_t const numModesIn[], int64_t* extentsIn[], int64_t* stridesIn[],
-                    bool verbose) {
-    static_assert(sizeof(size_t) == sizeof(int64_t),
-                  "Please build this sample on a 64-bit architecture!");
+  cutensornet::cutensornet() {
+    // type_mapper = std::vector<cudaDataType_t>(11);
+    // for(int i = 0; i<11; i++)
+    //   type_mapper[i] = CUDA_C_64F;
+    // type_mapper[Type.ComplexDouble] = CUDA_C_64F;
+    // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
+    // type_mapper[Type.Double] = CUDA_R_64F;
+    // type_mapper[Type.Float] = CUDA_R_32F;
+    // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
+    // extentsIn = std::vector<int64_t *>();
+    // stridesIn = std::vector<int64_t *>();
+    // tns = std::vector<UniTensor>();
+    // rawDataIn_d = std::vector<void *>();
+    // extentR = std::vector<int64_t>();
+    // tmp_modes = std::vector<std::vector<int32_t>>();
+    // tmp_extents = std::vector<std::vector<int64_t>>();
+    // lblmap = std::map<std::string, int32_t>();
+    // modesIn =  std::vector<int32_t *>();
+    // numModesIn = std::vector<int32_t>();
+    // modesR = std::vector<int32_t>();
+    verbose = false;
+  };
 
-    // Check cuTensorNet version
-    const size_t cuTensornetVersion = cutensornetGetVersion();
-    if (verbose) printf("cuTensorNet version: %ld\n", cuTensornetVersion);
+  // cutensornet::~cutensornet() {
+  //   // type_mapper = std::vector<cudaDataType_t>(11);
+  //   // for(int i = 0; i<11; i++)
+  //   //   type_mapper[i] = CUDA_C_64F;
+  //   // type_mapper[Type.ComplexDouble] = CUDA_C_64F;
+  //   // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
+  //   // type_mapper[Type.Double] = CUDA_R_64F;
+  //   // type_mapper[Type.Float] = CUDA_R_32F;
+  //   // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
+  //   extentsIn.clear();
+  //   stridesIn.clear();
+  //   rawDataIn_d.clear();
+  //   extentR.clear();
+  //   numModesIn.clear();
+  //   modesR.clear();
+  //   tns.clear();
+  //   modesIn.clear();
+  //   // // for (size_t i = 0; i < tmp_modes.size(); i++) {
+  //   //   tmp_modes[i].clear();
+  //   //   tmp_extents[i].clear();
+  //   // }
+  //   tmp_modes.clear();
+  //   lblmap.clear();
+  //   tmp_extents.clear();
+  // };
 
-    // Set GPU device
-    int numDevices{0};
+  void cutensornet::parseLabels(std::vector<int64_t> &res_label,
+                                std::vector<std::vector<int64_t>> &labels) {
+    // int64_t lbl_int = 0;
+
+    extentsIn = std::vector<int64_t *>(labels.size());
+    stridesIn = std::vector<int64_t *>(labels.size());
+    tns = std::vector<UniTensor>(labels.size());
+    extentR = std::vector<int64_t>(res_label.size());
+    tmp_modes = std::vector<std::vector<int32_t>>(labels.size());
+    tmp_extents = std::vector<std::vector<int64_t>>(labels.size());
+    lblmap = std::map<std::string, int32_t>();
+    modesIn = std::vector<int32_t *>(labels.size());
+    numModesIn = std::vector<int32_t>(labels.size());
+    modesR = std::vector<int32_t>(labels.size());
+    rawDataIn_d = std::vector<void *>(labels.size());
+
+    for (size_t i = 0; i < labels.size(); i++) {
+      tmp_modes[i] = std::vector<int32_t>(labels[i].size());
+      tmp_extents[i] = std::vector<int64_t>(labels[i].size());
+      for (size_t j = 0; j < labels[i].size(); j++) {
+        tmp_modes[i][j] = (labels[i][labels[i].size() - 1 - j]);
+      }
+      modesIn[i] = tmp_modes[i].data();
+      numModesIn[i] = labels[i].size();
+    }
+    for (size_t i = 0; i < res_label.size(); i++) {
+      modesR[i] = res_label[res_label.size() - 1 - i];
+    }
+    numInputs = labels.size();
+    nmodeR = res_label.size();
+  }
+
+  void cutensornet::set_output_extents(std::vector<cytnx_uint64> &outshape) {
+    extentR = std::vector<int64_t>(outshape.size());
+    // reversed tranversal the labels and extents because cuTensor is column-major by default
+    for (size_t i = 0; i < outshape.size(); i++) extentR[i] = outshape[outshape.size() - 1 - i];
+  }
+
+  void cutensornet::setOutputMem(UniTensor &res) {
+    R_d = (void *)res.get_block_()._impl->storage()._impl->Mem;
+  }
+
+  void cutensornet::setInputMem(std::vector<UniTensor> &uts) {
+    // reversed tranversal the labels and extents because cuTensor is column-major by default
+    rawDataIn_d = std::vector<void *>(uts.size());
+    tns = std::vector<UniTensor>(uts.size());
+    for (int idx = 0; idx < uts.size(); idx++) {
+      if (uts[idx].is_contiguous())
+        rawDataIn_d[idx] = (void *)uts[idx].get_block_()._impl->storage()._impl->Mem;
+      else
+        rawDataIn_d[idx] = (void *)uts[idx].get_block_().contiguous()._impl->storage()._impl->Mem;
+      if (uts[idx].is_contiguous())
+        tns[idx] = uts[idx];
+      else
+        tns[idx] = uts[idx].contiguous();
+      rawDataIn_d[idx] = tns[idx].get_block_()._impl->storage()._impl->Mem;
+    }
+  }
+
+  void cutensornet::set_extents(std::vector<UniTensor> &uts) {
+    // reversed tranversal the labels and extents because cuTensor is column-major by default
+    for (size_t idx = 0; idx < numInputs; idx++) {
+      for (size_t j = 0; j < numModesIn[idx]; j++) {
+        tmp_extents[idx][j] = uts[idx].shape()[numModesIn[idx] - 1 - j];
+      }
+      extentsIn[idx] = tmp_extents[idx].data();
+      stridesIn[idx] = NULL;
+    }
+  }
+
+  void cutensornet::setContractionPath(std::vector<std::pair<int64_t, int64_t>> einsum_path) {
+    // cutensornetContractionOptimizerConfigAttributes_t attr
+    cutensornetContractionPath_t path;
+    path.numContractions = einsum_path.size();
+    path.data = (cutensornetNodePair_t *)malloc(einsum_path.size() * sizeof(cutensornetNodePair_t));
+    for (int i = 0; i < einsum_path.size(); i++) {
+      path.data[i].first = einsum_path[i].first;
+      path.data[i].second = einsum_path[i].second;
+    }
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoSetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
+  }
+
+  std::vector<std::pair<int64_t, int64_t>> cutensornet::getContractionPath() {
+    cutensornetContractionPath_t path;
+    path.numContractions = 0;
+    path.data = (cutensornetNodePair_t *)malloc(numInputs * sizeof(cutensornetNodePair_t));
+
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_PATH, &path, sizeof(path)));
+
+    std::vector<std::pair<int64_t, int64_t>> einsum_path;
+
+    // std::cout << "Number of contractions : " << path.numContractions << std::endl;
+    for (int i = 0; i < path.numContractions; i++) {
+      einsum_path.push_back(
+        std::pair<int64_t, int64_t>((int64_t)path.data[i].first, (int64_t)path.data[i].second));
+      // std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
+    }
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
+      sizeof(numSlices)));  // get numslices
+    assert(numSlices > 0);
+
+    return einsum_path;
+  }
+
+  void cutensornet::checkVersion() {
+    cuTensornetVersion = cutensornetGetVersion();
+    if (verbose) std::cout << "Cutensornet version: " << cuTensornetVersion << std::endl;
+  }
+
+  void cutensornet::setDevice(int id) {
     HANDLE_CUDA_ERROR(cudaGetDeviceCount(&numDevices));
-    const int deviceId = 0;
-    HANDLE_CUDA_ERROR(cudaSetDevice(deviceId));
-    cudaDeviceProp prop;
-    HANDLE_CUDA_ERROR(cudaGetDeviceProperties(&prop, deviceId));
-
+    HANDLE_CUDA_ERROR(cudaSetDevice(id));
+    HANDLE_CUDA_ERROR(cudaGetDeviceProperties(&prop, id));
     if (verbose) {
-      printf("===== device info ======\n");
+      std::cout << "Cutensornet number of available devices =  " << numDevices << std::endl;
+      std::cout << "Cutensornet set device id =  " << deviceId << std::endl;
+      printf("===== Cutensornet device info ======\n");
       printf("GPU-name:%s\n", prop.name);
       printf("GPU-clock:%d\n", prop.clockRate);
       printf("GPU-memoryClock:%d\n", prop.memoryClockRate);
@@ -90,281 +238,200 @@ namespace cytnx {
       printf("GPU-minor:%d\n", prop.minor);
       printf("========================\n");
     }
+  }
 
-    typedef float floatType;
-    cudaDataType_t typeData = CUDA_R_32F;
-    cutensornetComputeType_t typeCompute = CUTENSORNET_COMPUTE_32F;
+  void cutensornet::createStream() { cudaStreamCreate(&stream); }
 
-    if (verbose) printf("Included headers and defined data types\n");
+  void cutensornet::createHandle() { HANDLE_ERROR(cutensornetCreate(&handle)); }
 
-    /**********************
-     * Computing: R_{k,l} = A_{a,b,c,d,e,f} B_{b,g,h,e,i,j} C_{m,a,g,f,i,k} D_{l,c,h,d,j,m}
-     **********************/
-
-    if (verbose) printf("Defined tensor network, modes, and extents\n");
-
-    // Sphinx: #3
-    /**********************
-     * Allocating data
-     **********************/
-
-    // if(verbose)
-    //    printf("Total GPU memory used for tensor storage: %.2f GiB\n",
-    //           (sizeA + sizeB + sizeC + sizeD + sizeR) / 1024. /1024. / 1024);
-
-    if (verbose) printf("Allocated GPU memory for data, and initialize data\n");
-
-    // Sphinx: #4
-    /*************************
-     * cuTensorNet
-     *************************/
-
-    cudaStream_t stream;
-    cudaStreamCreate(&stream);
-
-    cutensornetHandle_t handle;
-    HANDLE_ERROR(cutensornetCreate(&handle));
-
-    /*******************************
-     * Create Network Descriptor
-     *******************************/
-
-    // Set up tensor network
-    cutensornetNetworkDescriptor_t descNet;
+  // cutensornetNetworkDescriptor_t cutensornet::createNetworkDescriptor(std::vector<std::string>
+  // &res_label,
+  //                               std::vector<std::vector<std::string>> &labels,
+  //                               std::vector<UniTensor> &uts) {
+  cutensornetNetworkDescriptor_t cutensornet::createNetworkDescriptor() {
+    if (verbose) {
+      std::cout << "Cutensornet number of input tensors =  " << numInputs << std::endl;
+      for (int i = 0; i < numInputs; i++) {
+        std::cout << "-----------------tensor :" << i << "----------------------" << std::endl;
+        std::cout << " num modes = " << numModesIn[i] << std::endl;
+        std::cout << " label : ";
+        for (int j = 0; j < numModesIn[i]; j++) {
+          std::cout << (modesIn[i][j]) << " ";
+        }
+        std::cout << std::endl;
+        std::cout << " shape : ";
+        for (int j = 0; j < numModesIn[i]; j++) {
+          std::cout << (extentsIn[i][j]) << " ";
+        }
+        std::cout << std::endl;
+      }
+      std::cout << "---------------------- output ----------------------" << std::endl;
+      std::cout << " label : ";
+      for (int j = 0; j < nmodeR; j++) {
+        std::cout << (modesR[j]) << " ";
+      }
+      std::cout << std::endl;
+      std::cout << " shape : ";
+      for (int j = 0; j < nmodeR; j++) {
+        std::cout << (extentR[j]) << " ";
+      }
+      std::cout << std::endl;
+    }
+    typeData = CUDA_C_64F;  // type_mapper[ut.dtype()];
+    typeCompute = CUTENSORNET_COMPUTE_64F;
     HANDLE_ERROR(cutensornetCreateNetworkDescriptor(
-      handle, numInputs, numModesIn, extentsIn, stridesIn, modesIn, NULL, nmodeR, extentR,
-      /*stridesOut = */ NULL, modesR, typeData, typeCompute, &descNet));
-
+      (const cutensornetHandle_t)handle, numInputs, (const int32_t *)numModesIn.data(),
+      (const int64_t **)extentsIn.data(), (const int64_t **)stridesIn.data(),
+      (const int32_t **)modesIn.data(), NULL, nmodeR, (const int64_t *)extentR.data(),
+      /*stridesOut = */ NULL, (const int32_t *)modesR.data(), typeData, typeCompute, &descNet));
     if (verbose)
       printf("Initialized the cuTensorNet library and created a tensor network descriptor\n");
+    return descNet;
+  }
 
-    // Sphinx: #5
-    /*******************************
-     * Choose workspace limit based on available resources.
-     *******************************/
-
-    size_t freeMem, totalMem;
+  void cutensornet::getWorkspacelimit() {
     HANDLE_CUDA_ERROR(cudaMemGetInfo(&freeMem, &totalMem));
-    uint64_t workspaceLimit = (uint64_t)((double)freeMem * 0.9);
+    workspaceLimit = (uint64_t)((double)freeMem * 0.9);
     if (verbose) printf("Workspace limit = %lu\n", workspaceLimit);
+  }
 
-    /*******************************
-     * Find "optimal" contraction order and slicing
-     *******************************/
-
-    cutensornetContractionOptimizerConfig_t optimizerConfig;
+  cutensornetContractionOptimizerInfo_t cutensornet::findOptimalOrder() {
     HANDLE_ERROR(cutensornetCreateContractionOptimizerConfig(handle, &optimizerConfig));
 
-    // Set the desired number of hyper-samples (defaults to 0)
-    int32_t num_hypersamples = 8;
     HANDLE_ERROR(cutensornetContractionOptimizerConfigSetAttribute(
       handle, optimizerConfig, CUTENSORNET_CONTRACTION_OPTIMIZER_CONFIG_HYPER_NUM_SAMPLES,
-      &num_hypersamples, sizeof(num_hypersamples)));
+      &num_hypersamples,
+      sizeof(num_hypersamples)));  // OptimizerConfig means the pathfinder's config.
 
-    // Create contraction optimizer info and find an optimized contraction path
-    cutensornetContractionOptimizerInfo_t optimizerInfo;
-    HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(handle, descNet, &optimizerInfo));
+    HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(
+      handle, descNet,
+      &optimizerInfo));  // OptimizerInfo means the info of optimized path and slices.
 
     HANDLE_ERROR(cutensornetContractionOptimize(handle, descNet, optimizerConfig, workspaceLimit,
                                                 optimizerInfo));
 
-    // Query the number of slices the tensor network execution will be split into
-    int64_t numSlices = 0;
-    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
-      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
-      sizeof(numSlices)));
-    assert(numSlices > 0);
-
     if (verbose) printf("Found an optimized contraction path using cuTensorNet optimizer\n");
 
-    // Sphinx: #6
-    /*******************************
-     * Create workspace descriptor, allocate workspace, and set it.
-     *******************************/
+    HANDLE_ERROR(cutensornetDestroyContractionOptimizerConfig(optimizerConfig));
+    return optimizerInfo;
+  }
 
-    cutensornetWorkspaceDescriptor_t workDesc;
+  cutensornetContractionOptimizerInfo_t cutensornet::createOptimizerInfo() {
+    HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(
+      handle, descNet,
+      &optimizerInfo));  // OptimizerInfo means the info of optimized path and slices.
+    return optimizerInfo;
+  }
+
+  void cutensornet::createWorkspaceDescriptor() {
     HANDLE_ERROR(cutensornetCreateWorkspaceDescriptor(handle, &workDesc));
-
-    int64_t requiredWorkspaceSize = 0;
     HANDLE_ERROR(
       cutensornetWorkspaceComputeContractionSizes(handle, descNet, optimizerInfo, workDesc));
-
     HANDLE_ERROR(cutensornetWorkspaceGetMemorySize(
       handle, workDesc, CUTENSORNET_WORKSIZE_PREF_MIN, CUTENSORNET_MEMSPACE_DEVICE,
       CUTENSORNET_WORKSPACE_SCRATCH, &requiredWorkspaceSize));
-
-    void* work = nullptr;
     HANDLE_CUDA_ERROR(cudaMalloc(&work, requiredWorkspaceSize));
-
     HANDLE_ERROR(cutensornetWorkspaceSetMemory(handle, workDesc, CUTENSORNET_MEMSPACE_DEVICE,
                                                CUTENSORNET_WORKSPACE_SCRATCH, work,
                                                requiredWorkspaceSize));
-
     if (verbose) printf("Allocated and set up the GPU workspace\n");
+  }
 
-    // Sphinx: #7
-    /*******************************
-     * Initialize the pairwise contraction plan (for cuTENSOR).
-     *******************************/
+  void cutensornet::setNetworkDescriptor(cutensornetNetworkDescriptor_t in) { this->descNet = in; }
 
-    cutensornetContractionPlan_t plan;
+  void cutensornet::setOptimizerInfo(cutensornetContractionOptimizerInfo_t in) {
+    this->optimizerInfo = in;
+  }
+
+  // void cutensornet::createContractor(){
+  //   HANDLE_ERROR(cutensornetCreateContractionOptimizerInfo(
+  //     handle, descNet,
+  //     &optimizerInfo));  // OptimizerInfo means the info of optimized path and slices.
+  // }
+
+  void cutensornet::initializePlan() {
     HANDLE_ERROR(cutensornetCreateContractionPlan(handle, descNet, optimizerInfo, workDesc, &plan));
+  }
 
-    /*******************************
-     * Optional: Auto-tune cuTENSOR's cutensorContractionPlan to pick the fastest kernel
-     *           for each pairwise tensor contraction.
-     *******************************/
-    cutensornetContractionAutotunePreference_t autotunePref;
+  void cutensornet::autotune() {
     HANDLE_ERROR(cutensornetCreateContractionAutotunePreference(handle, &autotunePref));
-
-    const int numAutotuningIterations = 5;  // may be 0
     HANDLE_ERROR(cutensornetContractionAutotunePreferenceSetAttribute(
       handle, autotunePref, CUTENSORNET_CONTRACTION_AUTOTUNE_MAX_ITERATIONS,
       &numAutotuningIterations, sizeof(numAutotuningIterations)));
 
     // Modify the plan again to find the best pair-wise contractions
-    HANDLE_ERROR(cutensornetContractionAutotune(handle, plan, rawDataIn_d, R_d, workDesc,
+    HANDLE_ERROR(cutensornetContractionAutotune(handle, plan, rawDataIn_d.data(), R_d, workDesc,
                                                 autotunePref, stream));
 
     HANDLE_ERROR(cutensornetDestroyContractionAutotunePreference(autotunePref));
-
     if (verbose)
       printf("Created a contraction plan for cuTensorNet and optionally auto-tuned it\n");
+  }
 
-    // Sphinx: #8
-    /**********************
-     * Execute the tensor network contraction
-     **********************/
-
-    // Create a cutensornetSliceGroup_t object from a range of slice IDs
-    cutensornetSliceGroup_t sliceGroup{};
+  void cutensornet::executeContraction() {
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,
+      sizeof(numSlices)));
     HANDLE_ERROR(cutensornetCreateSliceGroupFromIDRange(handle, 0, numSlices, 1, &sliceGroup));
 
+    HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
     GPUTimer timer{stream};
     double minTimeCUTENSORNET = 1e100;
-    const int numRuns = 3;  // number of repeats to get stable performance results
-    for (int i = 0; i < numRuns; ++i) {
-      // HANDLE_CUDA_ERROR( cudaMemcpy(R_d, R, sizeR, cudaMemcpyHostToDevice) ); // restore the
-      // output tensor on GPU HANDLE_CUDA_ERROR( cudaDeviceSynchronize() );
+    const int numRuns = 10;  // number of repeats to get stable performance results
 
-      /*
-       * Contract all slices of the tensor network
-       */
-      timer.start();
+    // for (int i = 0; i < numRuns; ++i) {
+    /*
+     * Contract all slices of the tensor network
+     */
+    timer.start();
 
-      int32_t accumulateOutput = 0;  // output tensor data will be overwritten
-      HANDLE_ERROR(cutensornetContractSlices(
-        handle, plan, rawDataIn_d, R_d, accumulateOutput, workDesc,
-        sliceGroup,  // slternatively, NULL can also be used to contract over all slices instead of
-                     // specifying a sliceGroup object
-        stream));
-
-      // Synchronize and measure best timing
-      auto time = timer.seconds();
-      minTimeCUTENSORNET = (time > minTimeCUTENSORNET) ? minTimeCUTENSORNET : time;
-    }
+    int32_t accumulateOutput = 0;  // output tensor data will be overwritten
+    // HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
+    HANDLE_ERROR(cutensornetContractSlices(
+      handle, plan, rawDataIn_d.data(), R_d, accumulateOutput, workDesc,
+      sliceGroup,  // alternatively, NULL can also be used to contract over all
+                   // slices instead of specifying a sliceGroup object
+      stream));
+    HANDLE_CUDA_ERROR(cudaStreamSynchronize(stream));
+    // Synchronize and measure best timing
+    auto time = timer.seconds();
+    minTimeCUTENSORNET = (time > minTimeCUTENSORNET) ? minTimeCUTENSORNET : time;
 
     if (verbose)
       printf("Contracted the tensor network, each slice used the same contraction plan\n");
 
-    // Print the 1-norm of the output tensor (verification)
-    // HANDLE_CUDA_ERROR( cudaStreamSynchronize(stream) );
-    // HANDLE_CUDA_ERROR( cudaMemcpy(R, R_d, sizeR, cudaMemcpyDeviceToHost) ); // restore the output
-    // tensor on Host double norm1 = 0.0; for (int64_t i = 0; i < elementsR; ++i) {
-    //    norm1 += std::abs(R[i]);
-    // }
-    // if(verbose)
-    //    printf("Computed the 1-norm of the output tensor: %e\n", norm1);
-
-    /*************************/
-
-    // Query the total Flop count for the tensor network contraction
-    double flops{0.0};
-    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
-      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_FLOP_COUNT, &flops,
-      sizeof(flops)));
+    // HANDLE_CUDA_ERROR( cudaMemcpy(R, R_d, sizeR, cudaMemcpyDeviceToHost) ); // restore the
+    // output tensor on Host
 
     if (verbose) {
       printf("Number of tensor network slices = %ld\n", numSlices);
       printf("Tensor network contraction time (ms) = %.3f\n", minTimeCUTENSORNET * 1000.f);
     }
-
-    // Free cuTensorNet resources
     HANDLE_ERROR(cutensornetDestroySliceGroup(sliceGroup));
-    HANDLE_ERROR(cutensornetDestroyContractionPlan(plan));
-    HANDLE_ERROR(cutensornetDestroyWorkspaceDescriptor(workDesc));
+    // HANDLE_ERROR(cutensornetDestroyContractionPlan(plan));
+  }
+
+  void cutensornet::QueryFlopCount() {
+    // Query the total Flop count for the tensor network contraction
+    double flops{0.0};
+    HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
+      handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_FLOP_COUNT, &flops,
+      sizeof(flops)));
+  }
+
+  // free resources
+  void cutensornet::freePlan() { HANDLE_ERROR(cutensornetDestroyContractionPlan(plan)); }
+  void cutensornet::freeOptimizer() {
     HANDLE_ERROR(cutensornetDestroyContractionOptimizerInfo(optimizerInfo));
     HANDLE_ERROR(cutensornetDestroyContractionOptimizerConfig(optimizerConfig));
+  }
+  void cutensornet::freeWorkspaceDescriptor() {
+    HANDLE_ERROR(cutensornetDestroyWorkspaceDescriptor(workDesc));
+  }
+  void cutensornet::freeNetworkDescriptor() {
     HANDLE_ERROR(cutensornetDestroyNetworkDescriptor(descNet));
-    HANDLE_ERROR(cutensornetDestroy(handle));
-
-    // Free Host memory resources
-    // if (R) free(R);
-    // if (D) free(D);
-    // if (C) free(C);
-    // if (B) free(B);
-    // if (A) free(A);
-
-    // if (rawDataIn_d[0]) cudaFree(rawDataIn_d[0]);
-    // if (rawDataIn_d[1]) cudaFree(rawDataIn_d[1]);
-    // if (rawDataIn_d[2]) cudaFree(rawDataIn_d[2]);
-    // if (rawDataIn_d[3]) cudaFree(rawDataIn_d[3]);
-
-    // Free GPU memory resources
-
-    if (work) cudaFree(work);
-    if (R_d) cudaFree(R_d);
-    for (size_t i = 0; i < numInputs; i++)
-      if (rawDataIn_d[i]) cudaFree(rawDataIn_d[i]);
-
-    if (verbose) printf("Freed resources and exited\n");
   }
-
-  // Retrive the metas,datas of Unitensors and pass to cutensornet.
-  void callcuTensornet(UniTensor& res, std::vector<UniTensor>& uts, bool& verbose) {
-    static_assert(sizeof(size_t) == sizeof(int64_t),
-                  "Please build this sample on a 64-bit architecture!");
-
-    int32_t numInputs = uts.size();
-
-    std::vector<int32_t*> modesIn;
-    std::vector<int64_t*> extentsIn;
-    std::vector<int32_t> numModesIn;
-    std::vector<int64_t*> stridesIn;
-    std::vector<void*> rawDataIn_d;
-    std::vector<int32_t> modes_res;
-    std::map<std::string, int32_t> lblmap;
-
-    int64_t lbl_int;
-    for (size_t i = 0; i < numInputs; i++) {
-      std::vector<int32_t> tmp_mode;
-      for (size_t j = 0; j < uts[i].labels().size(); j++) {
-        lblmap.insert(std::pair<std::string, int32_t>(uts[i].labels()[j], lbl_int));
-        tmp_mode.push_back(lblmap[uts[i].labels()[j]]);
-      }
-      modesIn.push_back(tmp_mode.data());
-    }
-
-    for (size_t i = 0; i < res.labels().size(); i++) {
-      modes_res.push_back(lblmap[res.labels()[i]]);
-    }
-
-    for (size_t i = 0; i < numInputs; i++) {
-      // modesIn.push_back(uts[i].labels().data());
-      extentsIn.push_back((int64_t*)uts[i].shape().data());
-      numModesIn.push_back(uts[i].labels().size());
-      stridesIn.push_back(NULL);
-      rawDataIn_d.push_back((void*)uts[i].get_block_()._impl->storage()._impl->Mem);
-    }
-
-    void* R_d = (void*)res.get_block_()._impl->storage()._impl->Mem;
-
-    cuTensornet_(numInputs, R_d, res.shape().size(), (int64_t*)res.shape().data(), modes_res.data(),
-                 rawDataIn_d.data(), modesIn.data(), numModesIn.data(), extentsIn.data(),
-                 stridesIn.data(), verbose);
-  }
-
+  void cutensornet::freeHandle() { HANDLE_ERROR(cutensornetDestroy(handle)); }
+  #endif
 #endif
-
 }  // namespace cytnx
-#endif

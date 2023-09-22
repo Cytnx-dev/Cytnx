@@ -11,4 +11,3 @@ print(A)
 
 B = A[0,:,0:2:1]
 print(B)
-

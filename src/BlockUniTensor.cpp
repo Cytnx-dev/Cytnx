@@ -680,8 +680,14 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void BlockUniTensor::relabels_(const std::vector<string> &new_labels) {
-    this->set_labels(new_labels);
+
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->relabels_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
@@ -692,9 +698,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void BlockUniTensor::relabel_(const cytnx_int64 &inx, const string &new_label) {
-    this->set_label(inx, new_label);
-  }
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string &inx,
                                                                const string &new_label) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
@@ -702,9 +706,6 @@ namespace cytnx {
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
-  }
-  void BlockUniTensor::relabel_(const string &inx, const string &new_label) {
-    this->set_label(inx, new_label);
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contract(
@@ -1990,6 +1991,62 @@ namespace cytnx {
       idx_mapper = indicators;
     }
     this->combineBonds(idx_mapper, force);
+  }
+
+  void _BK_from_DN(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
+    if (!force) {
+      // more checking:
+      if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
+        for (int i = 0; i < rhs->bonds().size(); i++) {
+          cytnx_error_msg(ths->bond_(i).type() != rhs->bond_(i).type(),
+                          "[ERROR] conversion DenseUT -> BlockUT cannot be made, because "
+                          "force=false, BOTH have directional Bond, and direction mismatch.%s",
+                          "\n");
+        }
+      }
+    }
+
+    cytnx_uint64 total_elem = rhs->_block.storage().size();
+
+    std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
+    for (int i = (rhs->rank() - 2); i >= 0; i--) {
+      stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
+    }
+
+    // moving element:
+    for (cytnx_uint64 i = 0; i < total_elem; i++) {
+      auto cart = c2cartesian(i, stride_rhs);
+      auto elem = ths->at_for_sparse(cart);
+      if (elem.exists()) {
+        elem = rhs->_block.at(cart);
+      } else {
+        if (!force)
+          if (abs(Scalar(rhs->_block.at(cart))) > 1e-14) {
+            cytnx_error_msg(true,
+                            "[ERROR] force = false, trying to convert DenseUT to BlockUT that "
+                            "violate the symmetry structure.%s",
+                            "\n");
+          }
+      }
+    }
+  }
+
+  void _BK_from_BK(BlockUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
+    cytnx_error_msg(true, "[ERROR] BlockUT-> BlockUT not implemented.%s", "\n");
+  }
+
+  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
+    // checking shape:
+    cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
+
+    if (rhs->uten_type() == UTenType.Dense) {
+      _BK_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
+    } else if (rhs->uten_type() == UTenType.Block) {
+      _BK_from_BK(this, (BlockUniTensor *)(rhs.get()), force);
+    } else {
+      cytnx_error_msg(true, "[ERROR] unsupport conversion of UniTensor from %s => BlockUniTensor\n",
+                      UTenType.getname(rhs->uten_type()).c_str());
+    }
   }
 
 }  // namespace cytnx

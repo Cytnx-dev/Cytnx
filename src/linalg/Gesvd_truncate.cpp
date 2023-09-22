@@ -5,56 +5,91 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 
+#include "linalg_internal_interface.hpp"
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include "linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
+  #endif
+#endif
+
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const bool &is_U, const bool &is_vT,
-                                       const bool &return_err) {
-      std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
+                                       const unsigned int &return_err) {
+      cytnx_error_msg(Tin.shape().size() != 2,
+                      "[Gesvd_truncate] error, Gesvd_truncate can only operate on rank-2 Tensor.%s",
+                      "\n");
 
-      cytnx_uint64 id = 0;
-      cytnx_uint64 Kdim = keepdim;
+      if (Tin.device() == Device.cpu) {
+        std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
+        Tensor terr({1}, Tin.dtype(), Tin.device());
 
-      Storage ts = tmps[0].storage();
+        cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err);
 
-      if (ts.size() < keepdim) {
-        Kdim = ts.size();
+        std::vector<Tensor> outT;
+        outT.push_back(tmps[0]);
+        if (is_U) outT.push_back(tmps[1]);
+        if (is_vT) outT.push_back(tmps[2]);
+        if (return_err) outT.push_back(terr);
+
+        return outT;
+
+      } else {
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+
+        Tensor in = Tin.contiguous();
+
+        // cytnx_uint64 n_singlu = std::min(keepdim, std::min(Tin.shape()[0], Tin.shape()[1]));
+        cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
+        // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
+        // prepare U, S, vT
+        Tensor U, S, vT, terr;
+        S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
+               in.device());  // if type is complex, S should be real
+        U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+        vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+        terr.Init({1}, in.dtype(), in.device());
+
+        cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
+                                                                  S, vT, terr);
+
+        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[in.dtype()](
+          U, vT, S, terr, keepdim, err, is_U, is_vT, return_err);
+
+        std::vector<Tensor> outT;
+        outT.push_back(S);
+        if (is_U) outT.push_back(U);
+        if (is_vT) outT.push_back(vT);
+        if (return_err) outT.push_back(terr);
+
+        return outT;
+
+  #else
+        std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
+        Tensor terr({1}, Tin.dtype(), Tin.device());
+
+        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[Tin.dtype()](
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err);
+
+        std::vector<Tensor> outT;
+        outT.push_back(tmps[0]);
+        if (is_U) outT.push_back(tmps[1]);
+        if (is_vT) outT.push_back(tmps[2]);
+        if (return_err) outT.push_back(terr);
+
+        return outT;
+  #endif
+#else
+        cytnx_error_msg(true, "[Gesvd_truncate] fatal error,%s",
+                        "try to call the gpu section without CUDA support.\n");
+        return std::vector<Tensor>();
+#endif
       }
-
-      cytnx_uint64 truc_dim = Kdim;
-      for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (ts.at(i) < err) {
-          truc_dim--;
-        } else {
-          break;
-        }
-      }
-
-      if (truc_dim == 0) {
-        truc_dim = 1;
-      }
-      /// std::cout << truc_dim << std::endl;
-      // cytnx_error_msg(tmps[0].shape()[0] < keepdim,"[ERROR] keepdim should be <= the valid # of
-      // singular value, %d!\n",tmps[0].shape()[0]);
-      Tensor terr({1}, Type.Double);
-
-      if (truc_dim != ts.size()) {
-        terr = tmps[id](truc_dim);
-        tmps[id] = tmps[id].get({ac::range(0, truc_dim)});
-
-        if (is_U) {
-          id++;
-          tmps[id] = tmps[id].get({ac::all(), ac::range(0, truc_dim)});
-        }
-        if (is_vT) {
-          id++;
-          tmps[id] = tmps[id].get({ac::range(0, truc_dim), ac::all()});
-        }
-      }
-      if (return_err) tmps.push_back(terr);
-
-      return tmps;
     }
   }  // namespace linalg
 }  // namespace cytnx
@@ -66,7 +101,7 @@ namespace cytnx {
 
     void _gesvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                   const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                  const bool &is_vT, const bool &return_err) {
+                                  const bool &is_vT, const unsigned int &return_err) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -169,7 +204,7 @@ namespace cytnx {
 
     void _gesvd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                   const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                  const bool &is_vT, const bool &return_err) {
+                                  const bool &is_vT, const unsigned int &return_err) {
       cytnx_uint64 keep_dim = keepdim;
 
       outCyT = linalg::Gesvd(Tin, is_U, is_vT);
@@ -184,21 +219,26 @@ namespace cytnx {
 
       // 2) get the minimum base on the args input.
       Scalar Smin;
+      cytnx_uint64 smidx;
       if (keep_dim < Sall.shape()[0]) {
-        Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+        smidx = Sall.shape()[0] - keep_dim;
+        Smin = Sall.storage()(smidx);
         while ((Smin < err)) {
           keep_dim -= 1;
           if (keep_dim == 0) break;
-          Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+          smidx = Sall.shape()[0] - keep_dim;
+          Smin = Sall.storage()(smidx);
         }
 
       } else {
         keep_dim = Sall.shape()[0];
         Smin = Sall.storage()(0);
+        smidx = 0;
         while ((Smin < err)) {
           keep_dim -= 1;
           if (keep_dim == 0) break;
-          Smin = Sall.storage()(Sall.shape()[0] - keep_dim);
+          smidx = Sall.shape()[0] - keep_dim;
+          Smin = Sall.storage()(smidx);
         }
       }
 
@@ -302,16 +342,18 @@ namespace cytnx {
       }
 
       // handle return_err!
-      if (return_err) {
+      if (return_err == 1) {
         outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
         outCyT.back().get_block_().storage().at(0) = Smin;
+      } else if (return_err) {
+        outCyT.push_back(UniTensor(Sall.get({ac::tilend(smidx)})));
       }
     }
 
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim, const double &err,
                                                  const bool &is_U, const bool &is_vT,
-                                                 const bool &return_err) {
+                                                 const unsigned int &return_err) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
                       "[Gesvd][ERROR] Gesvd for UniTensor should have rank>1 and rank>rowrank>0%s",
@@ -320,10 +362,8 @@ namespace cytnx {
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
         _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
-
       } else if (Tin.uten_type() == UTenType.Block) {
         _gesvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
-
       } else {
         cytnx_error_msg(true, "[ERROR] only support gesvd for Dense and Block UniTensor.%s", "\n");
       }

@@ -21,6 +21,3 @@ if __name__ == "__main__":
     for t1, t1name in enumerate(DTYPES_FULL):
         for t2, t2name in enumerate(DTYPES_FULL):
             print("%s\t%s\t%s"%(DTYPES_FULL[typeid_promote(t1,t2)],t1name,t2name))
-
-
-

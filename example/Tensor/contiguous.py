@@ -14,4 +14,3 @@ C = B.contiguous()
 print(B.is_contiguous()) #false
 print(C.is_contiguous()) #true
 print(C.shape())
-

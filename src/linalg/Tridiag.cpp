@@ -21,7 +21,6 @@ namespace cytnx {
         "\n");
       cytnx_error_msg(Diag.dtype() <= 2 || Sub_diag.dtype() <= 2,
                       "[Tridiag] error, tri-diagonalize can only accept real vectors%s", "\n");
-
       // check prior type:
       unsigned int cType;
       if (Diag.dtype() < Sub_diag.dtype()) {
@@ -87,6 +86,7 @@ namespace cytnx {
           out.push_back(vT);
           if (!is_row) out.back().permute_(1, 0);
         }
+        return out;
       }
     };
 

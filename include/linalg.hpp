@@ -12,6 +12,7 @@
 
 namespace cytnx {
   int set_mkl_ilp64();
+  int get_mkl_code();
 
   /**
    * @brief The addtion operator between two UniTensor.
@@ -20,6 +21,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the addtion.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -55,6 +57,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the subtraction.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -90,6 +93,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the multiplication.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -125,6 +129,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the division.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Div(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -160,6 +165,7 @@ namespace cytnx {
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
    * @return [UniTensor] The result of the modulo.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mod(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
@@ -198,7 +204,6 @@ namespace cytnx {
   2. If the object is UniTensor, then the result will depend on the UniTensor's
   rowrank.
   */
-
   namespace linalg {
 
     // Add:
@@ -705,14 +710,14 @@ namespace cytnx {
      * do the truncation on the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For more details, please refer to the documentation of the function
      * Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *              const bool &is_UvT, const bool &return_err).
+     *              const bool &is_UvT, const unsigned int &return_err).
      * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *                   const bool &is_UvT, const bool &return_err)
+     *                   const bool &is_UvT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err = 0,
                                                const bool &is_UvT = true,
-                                               const bool &return_err = false);
+                                               const unsigned int &return_err = 0);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
@@ -720,14 +725,14 @@ namespace cytnx {
      * do the truncation on the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For more details, please refer to the documentation of the function
      * Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *              const bool &is_U, const bool &is_vT, const bool &return_err).
+     *              const bool &is_U, const bool &is_vT, const unsigned int &return_err).
      * @see Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-     *                   const bool &is_U, const bool &is_vT, const bool &return_err)
+     *                   const bool &is_U, const bool &is_vT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim, const double &err = 0,
                                                  const bool &is_U = true, const bool &is_vT = true,
-                                                 const bool &return_err = false);
+                                                 const unsigned int &return_err = 0);
 
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
@@ -838,6 +843,21 @@ namespace cytnx {
      * @see Pow(const UniTensor &Tin, const double &p)
      */
     void Pow_(UniTensor &Tin, const double &p);
+
+    /**
+     * @brief Elementwise conjugate of the UniTensor
+     * @param[in] UT The input UniTensor.
+     * @return [UniTensor] The UniTensor with all element being conjugated
+     * @see See UniTensor.Conj() for further details
+     */
+    cytnx::UniTensor Conj(const cytnx::UniTensor &UT);
+
+    /**
+     * @brief Inplace elementwise conjugate of the UniTensor
+     * @param[in] UT The input UniTensor.
+     * @see See UniTensor.Conj_() for further details
+     */
+    void Conj_(cytnx::UniTensor &UT);
 
     //====================================================================================
     //  [Tensor]
@@ -1452,7 +1472,7 @@ namespace cytnx {
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see \ref Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const
-    bool &is_UvT, const bool &return_err) "Svd_truncate"
+    bool &is_UvT, const unsigned int &return_err) "Svd_truncate"
     */
     std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT = true);
 
@@ -1483,7 +1503,7 @@ namespace cytnx {
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see \ref Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-    const bool &is_U, const bool &is_vT, const bool &return_err) "Gesvd_truncate"
+    const bool &is_U, const bool &is_vT, const unsigned int &return_err) "Gesvd_truncate"
     */
     std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
 
@@ -1506,8 +1526,9 @@ namespace cytnx {
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
     @param[in] is_UvT whether need to return a left unitary matrix and a right unitary matrix.
     @param[in] return_err whether need to return the error. If \p return_err is \em true, then
-    the error will be pushed back to the vector. It is the smallest singular value in the
-    singular values matrix \f$ S \f$.
+    largest error will be pushed back to the vector (The smallest singular value in the return
+    singular values matrix \f$ S \f$.) If \p return_err is \em positive int, then it will return the
+    full list of truncated singular values.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1521,7 +1542,7 @@ namespace cytnx {
     */
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err = 0, const bool &is_UvT = true,
-                                     const bool &return_err = false);
+                                     const unsigned int &return_err = 0);
 
     // Gesvd_truncate:
     //==================================================
@@ -1543,8 +1564,9 @@ namespace cytnx {
     @param[in] is_U whether need to return a left unitary matrix.
     @param[in] is_vT whether need to return a right unitary matrix.
     @param[in] return_err whether need to return the error. If \p return_err is \em true, then
-    the error will be pushed back to the vector. It is the smallest singular value in the
-    singular values matrix \f$ S \f$.
+    largest error will be pushed back to the vector (The smallest singular value in the return
+    singular values matrix \f$ S \f$.) If \p return_err is \em positive int, then it will return the
+    full list of truncated singular values.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1559,7 +1581,8 @@ namespace cytnx {
     */
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err = 0, const bool &is_U = true,
-                                       const bool &is_vT = true, const bool &return_err = false);
+                                       const bool &is_vT = true,
+                                       const unsigned int &return_err = 0);
 
     // Hosvd:
     std::vector<Tensor> Hosvd(
@@ -1626,7 +1649,7 @@ namespace cytnx {
     @details This function will perform eigen-value decomposition for Hermitian matrix.
     Given a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
-    M = V^\dagger D V,
+    M = V D V^\dagger,
     \f]
     where \f$ V \f$ is a unitary matrix contains the eigen vectors,
     and \f$ D \f$ is a diagonal matrix contains the eigen values.
@@ -1639,7 +1662,9 @@ namespace cytnx {
     \p is_V = @em true. Furthermore, if \p row_V = @em true, then the eigen vectors will be row
     form. Otherwise, the eigen vectors will be column form.
     @pre the \p Tin should be a Hermitian matrix.
-    @warning If \p Tin is not a Hermitian matrix, the result will be undefined.
+    @warning If \p Tin is not a Hermitian matrix, only the lower triangular matrix will be used.
+    (This is strongly not recommended, please use
+    Eig(const Tensor &Tin, const bool &is_V, const bool &row_v) instead.
     */
     std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
 
@@ -1650,7 +1675,7 @@ namespace cytnx {
     @details This function will perform eigen-value decomposition for generic square matrix.
     Given a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
-    M = V^{-1} D V,
+    M = V D V^{-1},
     \f]
     where \f$ V \f$ is a invertible matrix contains the eigen vectors,
     and \f$ D \f$ is a diagonal matrix contains the eigen values.
@@ -2064,11 +2089,11 @@ namespace cytnx {
     //===========================================
     /**
     @brief perform diagonalization of symmetric tri-diagnoal matrix.
-    @param Diag Tensor #1
-    @param Sub_diag Tensor #2
-    @param is_V: if calculate the eigen value.
-    @param k: Return k lowest eigen vector if is_V=True
-    @param throw_excp: Whether to throw exception when error occurs in Tridiag internal function
+    @param[in] Diag Tensor #1
+    @param[in] Sub_diag Tensor #2
+    @param[in] is_V: if calculate the eigen value.
+    @param[in] k: Return k lowest eigen vector if is_V=True
+    @param[in] throw_excp: Whether to throw exception when error occurs in Tridiag internal function
     @return
         [vector<Tensor>] if is_V = True, the first tensor is the eigen value, and second tensor is
     eigenvector of shape [k,L].
@@ -2089,18 +2114,35 @@ namespace cytnx {
     //===========================================
     /**
     @brief perform matrix exponential for Hermitian matrix
-    @param in input Tensor, should be Hermitian
-    @param a rescale factor
-    @param b bias
+    @details This function perform matrix exponential for Hermitian matrix, That is,
+    \f[
+        O = \exp{(aM + b)}
+    \f]
+    @param[in] in input Tensor, should be Hermitian
+    @param[in] a rescale factor
+    @param[in] b bias
     @return
         [Tensor]
-
-    description:
-        perform matrix exponential with \f$O = \exp{aM + b}\f$.
+    @pre the \p in should be a Hermitian matrix.
+    @warning If \p in is not a Hermitian matrix, only the lower triangular matrix will be used.
+    (This is strongly not recommended, please use ExpM(const Tensor &in, const T &a, const T &b)
+    instead).
 
     */
     template <typename T>
     Tensor ExpH(const Tensor &in, const T &a, const T &b = 0);
+    /**
+     * @brief perform matrix exponential for Hermitian matrix
+     * @details This function perform matrix exponential for Hermitian matrix, That is,
+     * \f[
+     *    O = \exp{M}
+     * \f]
+     *@pre the \p in should be a Hermitian matrix.
+     *@warning If \p in is not a Hermitian matrix, only the lower triangular matrix will be used.
+    (This is strongly not recommended, please use ExpM(const Tensor &in) instead).
+
+     * @see ExpH(const Tensor &in, const T &a, const T &b = 0)
+    */
     Tensor ExpH(const Tensor &in);
 
     // ExpM:
@@ -2109,11 +2151,12 @@ namespace cytnx {
     @brief perform matrix exponential for generic matrix
     @details This function perform matrix exponential for generic matrix, That is,
     \f[
-        O = \exp{aM + b}
+        O = \exp{(aM + b)}
     \f]
     @param[in] in input Tensor, should be a square rank-2.
     @param[in] a rescale factor
     @param[in] b bias
+    @pre the \p in should be a square matrix.
     @return [Tensor]
     */
     template <typename T>
@@ -2127,6 +2170,7 @@ namespace cytnx {
      * \f]
      * @param[in] in input Tensor, should be a square rank-2.
      * @return [Tensor]
+     * @see ExpM(const Tensor &in, const T &a, const T &b = 0)
      */
     Tensor ExpM(const Tensor &in);
 
@@ -2486,6 +2530,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of addition.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator+(const Tensor &Lt, const Tensor &Rt);
@@ -2522,6 +2567,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of subtraction.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator-(const Tensor &Lt, const Tensor &Rt);
@@ -2558,6 +2604,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of multiplication.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator*(const Tensor &Lt, const Tensor &Rt);
@@ -2595,7 +2642,9 @@ namespace cytnx {
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of division.
    * @see linalg::Div(const Tensor &Lt, const Tensor &Rt)
-   * @pre The divisor cannot be zero.
+   * @pre
+   * 1. The divisor cannot be zero.
+   * 2. \p Lt and \p Rt must have the same shape.
    */
   Tensor operator/(const Tensor &Lt, const Tensor &Rt);
 
@@ -2633,6 +2682,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of mode.
+   * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mod(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator%(const Tensor &Lt, const Tensor &Rt);
@@ -2669,7 +2719,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of comparison.
-   * @see linalg::Equal(const Tensor &Lt, const Tensor &Rt)
+   * @see linalg::Cpr(const Tensor &Lt, const Tensor &Rt)
    */
   Tensor operator==(const Tensor &Lt, const Tensor &Rt);
 
@@ -2680,7 +2730,7 @@ namespace cytnx {
    * @param[in] lc Left template type.
    * @param[in] Rt Right Tensor.
    * @return [Tensor] the result of comparison.
-   * @see linalg::Equal(const T &lc, const Tensor &Rt)
+   * @see linalg::Cpr(const T &lc, const Tensor &Rt)
    */
   template <class T>
   Tensor operator==(const T &lc, const Tensor &Rt);
@@ -2692,7 +2742,7 @@ namespace cytnx {
    * @param[in] Lt Left Tensor.
    * @param[in] rc Right template type.
    * @return [Tensor] the result of comparison.
-   * @see linalg::Equal(const Tensor &Lt, const T &rc)
+   * @see linalg::Cpr(const Tensor &Lt, const T &rc)
    */
   template <class T>
   Tensor operator==(const Tensor &Lt, const T &rc);

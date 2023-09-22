@@ -8,16 +8,18 @@ namespace cytnx {
                  const bool check_network /*= false*/, const bool optimize /*= false*/,
                  std::vector<cytnx_int64> cont_order /*= std::vector<cytnx_int64>()*/,
                  const std::vector<std::string> &out_labels /*= std::vector<std::string>()*/) {
-    string net_in = "";
+    vector<string> alias;
+    vector<vector<string>> lbls;
     map<cytnx_int64, vector<cytnx_uint64>> posbond2tensor;
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
-      net_in.append("t"), net_in.append(to_string(i)), net_in.append(": ");
-      vector<cytnx_int64> bds = connect_list_in[i];
-      for (cytnx_uint64 j = 0; j < bds.size(); j++) {
-        net_in.append(to_string(bds[j]));
-        if (j != bds.size() - 1) net_in.append(",");
+      string name = "t" + to_string(i);
+      alias.push_back(name);
+
+      vector<string> lbl;
+      for (cytnx_uint64 j = 0; j < connect_list_in[i].size(); j++) {
+        lbl.push_back(to_string(connect_list_in[i][j]));
       }
-      net_in.append("\n");
+      lbls.push_back(lbl);
     }
     vector<cytnx_int64> positive;
     for (cytnx_uint64 i = 0; i < connect_list_in.size(); i++) {
@@ -33,7 +35,7 @@ namespace cytnx {
       for (cytnx_uint64 j = 0; j < connect_list_in[i].size(); j++) {
         if (connect_list_in[i][j] > 0) {
           cytnx_error_msg(check_network and posbond2tensor[connect_list_in[i][j]].size() != 2,
-                          "[Error][ncon][RegularNetwork] connect list contains not exactly two "
+                          "[Error][ncon] connect list contains not exactly two "
                           "positive same number%s",
                           "\n");
         }
@@ -58,7 +60,8 @@ namespace cytnx {
     string str_order = "";
     if (!st.empty()) str_order.append(st.top()), st.pop();
     string op[2];
-    cytnx_int64 oprcnt = 0, needed_parentheses = tensor_list_in.size() - 1;
+    cytnx_int64 oprcnt = 0;
+    cytnx_int64 needed_parentheses = tensor_list_in.size() - 1;
     while (!st.empty()) {
       string ele = st.top();
       st.pop();
@@ -76,32 +79,18 @@ namespace cytnx {
       }
     }
     str_order = string(needed_parentheses, '(').append(str_order);
-    str_order = "ORDER: " + str_order;
-    vector<cytnx_int64> outlbl2;
-    for (cytnx_uint64 i = 0; i < connect_list_in.size(); i++) {
-      for (cytnx_uint64 j = 0; j < connect_list_in[i].size(); j++) {
-        if (connect_list_in[i][j] <= 0) outlbl2.push_back(-connect_list_in[i][j]);
-      }
-    }
-    sort(outlbl2.begin(), outlbl2.end());
-    string str_tout = "TOUT: ;";  // Only row space labels
-    for (cytnx_uint64 i = 0; i < outlbl2.size(); i++) {
-      str_tout.append("-" + to_string(outlbl2[i]));
-      if (i != outlbl2.size() - 1) str_tout.append(",");
-    }
-    str_tout.append("\n");
+    std::cout << str_order << std::endl;
     UniTensor out;
     Network N;
-    // cout << net_in + str_tout + str_order << '\n';
-    N.FromString(str_split(net_in + str_tout + str_order, true, "\n"));
+    N.construct(alias, lbls, out_labels, 1, str_order, optimize);
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
-      N.PutUniTensor("t" + to_string(i), tensor_list_in[i]);
+      N.PutUniTensor(i, tensor_list_in[i]);
     }
-    // cout << N;
     if (!optimize) {
-      out = N.Launch(false, str_order.substr(7));  // Remove "ORDER: "
+      out = N.Launch();
     } else {
-      out = N.Launch(true);
+      N.setOrder(true, "");
+      out = N.Launch();
     }
     if (!out_labels.empty()) out.set_labels(out_labels);
     return out;

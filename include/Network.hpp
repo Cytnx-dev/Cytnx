@@ -11,6 +11,13 @@
 #include "utils/utils.hpp"
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    #include <cutensornet.h>
+  #endif
+#endif
+
 namespace cytnx {
   /// @cond
   struct __ntwk {
@@ -40,6 +47,10 @@ namespace cytnx {
     // Contraction order.
     ContractionTree CtTree;
     std::vector<std::string> ORDER_tokens;
+    // order line
+    std::string order_line = "";
+    // einsum path representation of order
+    std::vector<std::pair<cytnx_int64, cytnx_int64>> einsum_path;
 
     // labels corr to the tn list.
     std::vector<std::vector<std::string>> label_arr;
@@ -49,6 +60,26 @@ namespace cytnx {
     std::vector<std::string> names;
     std::map<std::string, cytnx_uint64> name2pos;
 
+    // maintan tout leg position : (tesnor id, leg idx) for each open leg.
+    std::vector<std::pair<int, int>> TOUT_pos;
+
+    // pure int version of the contract labels
+    std::vector<std::vector<cytnx_int64>> int_modes;
+    std::vector<cytnx_int64> int_out_mode;
+
+#ifdef UNI_GPU
+  #ifdef UNI_CUQUANTUM
+    // // stream
+    // cudaStream_t stream;
+    // // cutensornet handle
+    // cutensornetHandle_t handle;
+
+    // network descriptor
+    cutensornetNetworkDescriptor_t descNet;
+    // optimizer info
+    cutensornetContractionOptimizerInfo_t optimizerInfo;
+  #endif
+#endif
     friend class FermionNetwork;
     friend class RegularNetwork;
     friend class Network;
@@ -76,6 +107,11 @@ namespace cytnx {
     virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
     virtual void PutUniTensors(const std::vector<std::string> &name,
                                const std::vector<UniTensor> &utensors);
+
+    virtual void RmUniTensor(const cytnx_uint64 &idx);
+    virtual void RmUniTensor(const std::string &name);
+    virtual void RmUniTensors(const std::vector<std::string> &name);
+
     virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                                const std::vector<std::string> &alias,
                                const std::string &contract_order);
@@ -84,7 +120,14 @@ namespace cytnx {
     virtual void FromString(const std::vector<std::string> &content);
     virtual void clear();
     virtual std::string getOptimalOrder();
-    virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    // virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order =
+    // "");
+
+    virtual std::string getOrder();
+    virtual void setOrder(const bool &optimal = false, const std::string &contract_order = "");
+
+    virtual UniTensor Launch();
+
     virtual void construct(const std::vector<std::string> &alias,
                            const std::vector<std::vector<std::string>> &lbls,
                            const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
@@ -105,6 +148,11 @@ namespace cytnx {
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
     void PutUniTensors(const std::vector<std::string> &name,
                        const std::vector<UniTensor> &utensors);
+    // void initialize_CtTree();
+    void RmUniTensor(const cytnx_uint64 &idx);
+    void RmUniTensor(const std::string &name);
+    void RmUniTensors(const std::vector<std::string> &name);
+
     void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                        const std::vector<std::string> &alias = {},
                        const std::string &contract_order = "");
@@ -120,7 +168,12 @@ namespace cytnx {
       this->ORDER_tokens.clear();
     }
     std::string getOptimalOrder();
-    UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    // UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+
+    std::string getOrder();
+    void setOrder(const bool &optimal = false, const std::string &contract_order = "");
+    UniTensor Launch();
+
     void construct(const std::vector<std::string> &alias,
                    const std::vector<std::vector<std::string>> &lbls,
                    const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
@@ -152,6 +205,10 @@ namespace cytnx {
     FermionNetwork() { this->nwrktype_id = NtType.Fermion; };
     void Fromfile(const std::string &fname){};
     void FromString(const std::vector<std::string> &contents){};
+    void RmUniTensor(const cytnx_uint64 &idx){};
+    void RmUniTensor(const std::string &name){};
+    void RmUniTensors(const std::vector<std::string> &name){};
+
     void PutUniTensor(const std::string &name, const UniTensor &utensor){};
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){};
     void PutUniTensors(const std::vector<std::string> &name,
@@ -320,6 +377,9 @@ namespace cytnx {
       this->Fromfile(fname, network_type);
     }
 
+    void RmUniTensor(const std::string &name) { this->_impl->RmUniTensor(name); }
+    void RmUniTensor(const cytnx_uint64 &idx) { this->_impl->RmUniTensor(idx); }
+    void RmUniTensors(const std::vector<std::string> &names) { this->_impl->RmUniTensors(names); }
     void PutUniTensor(const std::string &name, const UniTensor &utensor,
                       const std::vector<std::string> &lbl_order = {}) {
       if (lbl_order.size()) {
@@ -348,10 +408,16 @@ namespace cytnx {
         cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
       }
     }
-    UniTensor Launch(const bool &optimal, const std::string &contract_order = "",
-                     const int &network_type = NtType.Regular) {
+
+    std::string getOrder() { return this->_impl->getOrder(); }
+
+    void setOrder(const bool &optimal, const std::string &contract_order /*default ""*/) {
+      return this->_impl->setOrder(optimal, contract_order);
+    }
+
+    UniTensor Launch(const int &network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
-        return this->_impl->Launch(optimal);
+        return this->_impl->Launch();
       } else {
         cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
       }

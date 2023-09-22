@@ -25,13 +25,16 @@ namespace cytnx {
         }
       } else {
 #ifdef UNI_GPU
-        cytnx_error_msg(Tin.shape().size() != 1,
-                        "[ERROR] the input tensor should be a rank-1 Tensor.%s", "\n");
-        checkCudaErrors(cudaSetDevice(out.device()));
+        // cytnx_error_msg(Tin.shape().size() != 1,
+        //                 "[ERROR] the input tensor should be a rank-1 Tensor.%s", "\n");
         if (Tin.shape().size() == 1) {
+          out = zeros({Tin.shape()[0], Tin.shape()[0]}, Tin.dtype(), Tin.device());
+          checkCudaErrors(cudaSetDevice(out.device()));
           cytnx::linalg_internal::lii.cuDiag_ii[out.dtype()](
             out._impl->storage()._impl, Tin._impl->storage()._impl, Tin.shape()[0], 0);
         } else {
+          out = zeros({Tin.shape()[0]}, Tin.dtype(), Tin.device());
+          checkCudaErrors(cudaSetDevice(out.device()));
           cytnx::linalg_internal::lii.cuDiag_ii[out.dtype()](
             out._impl->storage()._impl, Tin._impl->storage()._impl, Tin.shape()[0], 1);
         }

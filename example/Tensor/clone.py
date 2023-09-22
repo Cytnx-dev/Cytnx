@@ -11,4 +11,3 @@ C = A.clone()
 
 print(B is A)
 print(C is A)
-
