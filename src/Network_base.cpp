@@ -1,6 +1,6 @@
 #include <typeinfo>
 #include "Network.hpp"
-#include "utils/utils_internal_interface.hpp"
+
 #include "linalg.hpp"
 
 using namespace std;

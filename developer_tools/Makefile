@@ -127,7 +127,7 @@ endif
 OBJS = Scalar.o Storage_base.o BoolStorage.o Uint16Storage.o Int16Storage.o Uint32Storage.o Int32Storage.o Uint64Storage.o Int64Storage.o FloatStorage.o DoubleStorage.o ComplexFloatStorage.o ComplexDoubleStorage.o Type.o Device.o
 
 
-OBJS += LinOp.o Storage.o Tensor.o Accessor.o Generator.o Physics.o ncon.o
+OBJS += LinOp.o Storage.o Tensor.o Tensor_impl.o Accessor.o Generator.o Physics.o ncon.o
 OBJS += Network.o Network_base.o RegularNetwork.o FermionNetwork.o UniTensor_base.o DenseUniTensor.o BlockUniTensor.o UniTensor.o Bond.o Symmetry.o contraction_tree.o search_tree.o
 
 ## TN
@@ -266,7 +266,10 @@ endif
 Tensor.o: $(CytnxPATH)/src/Tensor.cpp $(CytnxPATH)/include/Tensor.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Storage.o: $(CytnxPATH)/src/Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Tensor_impl.o: $(CytnxPATH)/src/backend/Tensor_impl.cpp $(CytnxPATH)/include/backend/Tensor_impl.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+Storage.o: $(CytnxPATH)/src/backend/Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 Accessor.o: $(CytnxPATH)/src/Accessor.cpp $(CytnxPATH)/include/Accessor.hpp
@@ -315,32 +318,32 @@ LinOp.o: $(CytnxPATH)/src/LinOp.cpp $(CytnxPATH)/include/LinOp.hpp
 
 ## Storage
 ###########################
-Storage_base.o: $(CytnxPATH)/src/Storage_base.cpp $(CytnxPATH)/include/Storage.hpp
+Storage_base.o: $(CytnxPATH)/src/backend/Storage_base.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-BoolStorage.o: $(CytnxPATH)/src/BoolStorage.cpp $(CytnxPATH)/include/Storage.hpp
+BoolStorage.o: $(CytnxPATH)/src/backend/BoolStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uint16Storage.o: $(CytnxPATH)/src/Uint16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Uint16Storage.o: $(CytnxPATH)/src/backend/Uint16Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Int16Storage.o: $(CytnxPATH)/src/Int16Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Int16Storage.o: $(CytnxPATH)/src/backend/Int16Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uint32Storage.o: $(CytnxPATH)/src/Uint32Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Uint32Storage.o: $(CytnxPATH)/src/backend/Uint32Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Int32Storage.o: $(CytnxPATH)/src/Int32Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Int32Storage.o: $(CytnxPATH)/src/backend/Int32Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uint64Storage.o: $(CytnxPATH)/src/Uint64Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Uint64Storage.o: $(CytnxPATH)/src/backend/Uint64Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Int64Storage.o: $(CytnxPATH)/src/Int64Storage.cpp $(CytnxPATH)/include/Storage.hpp
+Int64Storage.o: $(CytnxPATH)/src/backend/Int64Storage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-FloatStorage.o: $(CytnxPATH)/src/FloatStorage.cpp $(CytnxPATH)/include/Storage.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-DoubleStorage.o: $(CytnxPATH)/src/DoubleStorage.cpp $(CytnxPATH)/include/Storage.hpp
+FloatStorage.o: $(CytnxPATH)/src/backend/FloatStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-ComplexFloatStorage.o: $(CytnxPATH)/src/ComplexFloatStorage.cpp $(CytnxPATH)/include/Storage.hpp
+DoubleStorage.o: $(CytnxPATH)/src/backend/DoubleStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-ComplexDoubleStorage.o: $(CytnxPATH)/src/ComplexDoubleStorage.cpp $(CytnxPATH)/include/Storage.hpp
+ComplexFloatStorage.o: $(CytnxPATH)/src/backend/ComplexFloatStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+ComplexDoubleStorage.o: $(CytnxPATH)/src/backend/ComplexDoubleStorage.cpp $(CytnxPATH)/include/backend/Storage.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 
@@ -399,213 +402,213 @@ DMRG.o: $(CytnxPATH)/src/tn_algo/DMRG.cpp $(CytnxPATH)/include/tn_algo/DMRG.hpp
 
 ## linalg_internal
 ###########################
-linalg_internal_interface.o : $(CytnxPATH)/src/linalg/linalg_internal_interface.cpp $(CytnxPATH)/src/linalg/linalg_internal_interface.hpp
+linalg_internal_interface.o : $(CytnxPATH)/src/backend/linalg_internal_interface.cpp $(CytnxPATH)/src/backend/linalg_internal_interface.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Arithmetic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Arithmetic_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Arithmetic_internal.hpp
+Arithmetic_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Arithmetic_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Arithmetic_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-iArithmetic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/iArithmetic_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/iArithmetic_internal.hpp
+iArithmetic_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/iArithmetic_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/iArithmetic_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Cpr_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Cpr_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Cpr_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-Add_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Add_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Add_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-iAdd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/iAdd_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/iAdd_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Mul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Mul_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Mul_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-iMul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/iMul_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/iMul_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Sub_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Sub_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Sub_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-iSub_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/iSub_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/iSub_internal.hpp
+Cpr_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Cpr_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Cpr_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Mod_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Mod_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Mod_internal.hpp
+Add_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Add_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Add_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+iAdd_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/iAdd_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/iAdd_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Mul_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Mul_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Mul_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+iMul_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/iMul_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/iMul_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Sub_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Sub_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Sub_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+iSub_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/iSub_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/iSub_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Div_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Div_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Div_internal.hpp
+Mod_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Mod_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Mod_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-iDiv_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/iDiv_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/iDiv_internal.hpp
+Div_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Div_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Div_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Gesvd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gesvd_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gesvd_internal.hpp
+iDiv_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/iDiv_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/iDiv_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Sdd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Sdd_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Sdd_internal.hpp
+Gesvd_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Gesvd_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Gesvd_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Eigh_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Eigh_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Eigh_internal.hpp
+Sdd_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Sdd_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Sdd_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Exp_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Exp_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Exp_internal.hpp
+Eigh_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Eigh_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Eigh_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Pow_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Pow_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Pow_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Diag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Diag_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Diag_internal.hpp
+Exp_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Exp_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Exp_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Trace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Trace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Trace_internal.hpp
+Pow_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Pow_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Pow_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Diag_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Diag_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Diag_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-InvM_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/InvM_inplace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/InvM_inplace_internal.hpp
+Trace_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Trace_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Trace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Inv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Inv_inplace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Inv_inplace_internal.hpp
+InvM_inplace_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/InvM_inplace_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/InvM_inplace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Conj_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Conj_inplace_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Conj_inplace_internal.hpp
+Inv_inplace_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Inv_inplace_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Inv_inplace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Matmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Matmul_dg_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_dg_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matmul_dg_internal.hpp
+Conj_inplace_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Conj_inplace_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Conj_inplace_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Axpy_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Axpy_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Axpy_internal.hpp
+Matmul_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Matmul_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Matmul_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+Matmul_dg_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Matmul_dg_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Matmul_dg_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Ger_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Ger_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Ger_internal.hpp
+Axpy_internal.o: $(CytnxPATH)/src/backend/linalg_internal_cpu/Axpy_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Axpy_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Gemm_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_internal.hpp
+Ger_internal.o: $(CytnxPATH)/src/backend/linalg_internal_cpu/Ger_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Ger_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Gemm_Batch_internal.o: $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_Batch_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Gemm_Batch_internal.hpp
+Gemm_internal.o: $(CytnxPATH)/src/backend/linalg_internal_cpu/Gemm_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Gemm_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Matvec_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Matvec_internal.hpp
+Gemm_Batch_internal.o: $(CytnxPATH)/src/backend/linalg_internal_cpu/Gemm_Batch_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Gemm_Batch_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Outer_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Outer_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Outer_internal.hpp
+Matvec_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Matvec_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Matvec_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Kron_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Kron_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Kron_internal.hpp
+Outer_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Outer_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Outer_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Vectordot_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Vectordot_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Vectordot_internal.hpp
+Kron_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Kron_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Kron_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Tridiag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Tridiag_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Tridiag_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Norm_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Norm_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Norm_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Eig_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Eig_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Eig_internal.hpp
+Vectordot_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Vectordot_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Vectordot_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Abs_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Abs_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Abs_internal.hpp
+Tridiag_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Tridiag_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Tridiag_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-QR_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/QR_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/QR_internal.hpp
+Norm_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Norm_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Norm_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-MaxMin_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/MaxMin_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/MaxMin_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
-Sum_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Sum_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Sum_internal.hpp
+Eig_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Eig_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Eig_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Det_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Det_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Det_internal.hpp
+Abs_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Abs_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Abs_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+QR_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/QR_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/QR_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Lstsq_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_cpu/Lstsq_internal.cpp $(CytnxPATH)/src/linalg/linalg_internal_cpu/Lstsq_internal.hpp
+MaxMin_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/MaxMin_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/MaxMin_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+Sum_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Sum_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Sum_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+Det_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Det_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Det_internal.hpp
+	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
+
+Lstsq_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Lstsq_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Lstsq_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 
 ifeq ($(GPU_Enable),1)
 
-cuArithmetic_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuArithmetic_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuArithmetic_internal.hpp
+cuArithmetic_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuArithmetic_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuArithmetic_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuCpr_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuCpr_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuCpr_internal.hpp
+cuCpr_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuCpr_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuCpr_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuAdd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAdd_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAdd_internal.hpp
+cuAdd_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuAdd_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuAdd_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuAbs_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAbs_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuAbs_internal.hpp
+cuAbs_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuAbs_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuAbs_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 
-cuMul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMul_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMul_internal.hpp
+cuMul_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMul_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMul_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuSub_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSub_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSub_internal.hpp
+cuSub_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuSub_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuSub_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuDiv_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDiv_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDiv_internal.hpp
+cuDiv_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuDiv_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuDiv_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuMod_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMod_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMod_internal.hpp
+cuMod_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMod_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMod_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuSvd_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSvd_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSvd_internal.hpp
+cuSvd_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuSvd_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuSvd_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuDet_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDet_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDet_internal.hpp
+cuDet_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuDet_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuDet_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuKron_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuKron_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuKron_internal.hpp
+cuKron_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuKron_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuKron_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuSum_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSum_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuSum_internal.hpp
+cuSum_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuSum_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuSum_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuMaxMin_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMaxMin_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMaxMin_internal.hpp
+cuMaxMin_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMaxMin_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMaxMin_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuEigh_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuEigh_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuEigh_internal.hpp
-	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-
-cuGer_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuGer_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuGer_internal.hpp
+cuEigh_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuEigh_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuEigh_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuExp_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuExp_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuExp_internal.hpp
-	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuPow_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuPow_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuPow_internal.hpp
+cuGer_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuGer_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuGer_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuDiag_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDiag_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuDiag_internal.hpp
+cuExp_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuExp_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuExp_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuPow_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuPow_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuPow_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuInvM_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuInvM_inplace_internal.hpp
-	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuInv_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuInv_inplace_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuInv_inplace_internal.hpp
-	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuConj_inplace_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuConj_inplace_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuConj_inplace_internal.hpp
+cuDiag_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuDiag_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuDiag_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuMatmul_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_internal.hpp
+cuInvM_inplace_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuInvM_inplace_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuInvM_inplace_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuMatmul_dg_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_dg_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatmul_dg_internal.hpp
+cuInv_inplace_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuInv_inplace_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuInv_inplace_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuMatvec_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatvec_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuMatvec_internal.hpp
+cuConj_inplace_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuConj_inplace_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuConj_inplace_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuVectordot_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuVectordot_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuVectordot_internal.hpp
+
+cuMatmul_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuOuter_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuOuter_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuOuter_internal.hpp
+cuMatmul_dg_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_dg_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_dg_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuNorm_internal.o :  $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuNorm_internal.cu $(CytnxPATH)/src/linalg/linalg_internal_gpu/cuNorm_internal.hpp
+cuMatvec_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatvec_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatvec_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuVectordot_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuVectordot_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuVectordot_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuOuter_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuOuter_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuOuter_internal.hpp
+	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
+cuNorm_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuNorm_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuNorm_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 endif
 
 ## random_internal
 ###########################
-random_internal_interface.o : $(CytnxPATH)/src/random/random_internal_interface.cpp $(CytnxPATH)/src/random/random_internal_interface.hpp
+random_internal_interface.o : $(CytnxPATH)/src/backend/random_internal_interface.cpp $(CytnxPATH)/src/backend/random_internal_interface.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Normal_internal.o :  $(CytnxPATH)/src/random/random_internal_cpu/Normal_internal.cpp $(CytnxPATH)/src/random/random_internal_cpu/Normal_internal.hpp
+Normal_internal.o :  $(CytnxPATH)/src/backend/random_internal_cpu/Normal_internal.cpp $(CytnxPATH)/src/backend/random_internal_cpu/Normal_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-Uniform_internal.o :  $(CytnxPATH)/src/random/random_internal_cpu/Uniform_internal.cpp $(CytnxPATH)/src/random/random_internal_cpu/Uniform_internal.hpp
+Uniform_internal.o :  $(CytnxPATH)/src/backend/random_internal_cpu/Uniform_internal.cpp $(CytnxPATH)/src/backend/random_internal_cpu/Uniform_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ifeq ($(GPU_Enable),1)
 
-cuNormal_internal.o :  $(CytnxPATH)/src/random/random_internal_gpu/cuNormal_internal.cu $(CytnxPATH)/src/random/random_internal_gpu/cuNormal_internal.hpp
+cuNormal_internal.o :  $(CytnxPATH)/src/backend/random_internal_gpu/cuNormal_internal.cu $(CytnxPATH)/src/backend/random_internal_gpu/cuNormal_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
-cuUniform_internal.o :  $(CytnxPATH)/src/random/random_internal_gpu/cuUniform_internal.cu $(CytnxPATH)/src/random/random_internal_gpu/cuUniform_internal.hpp
+cuUniform_internal.o :  $(CytnxPATH)/src/backend/random_internal_gpu/cuUniform_internal.cu $(CytnxPATH)/src/backend/random_internal_gpu/cuUniform_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 
 endif
@@ -628,7 +631,7 @@ Type.o : $(CytnxPATH)/src/Type.cpp $(CytnxPATH)/include/Type.hpp
 Device.o: $(CytnxPATH)/src/Device.cpp $(CytnxPATH)/include/Device.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Scalar.o : $(CytnxPATH)/src/Scalar.cpp $(CytnxPATH)/include/Scalar.hpp
+Scalar.o : $(CytnxPATH)/src/backend/Scalar.cpp $(CytnxPATH)/include/backend/Scalar.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
 ## Utils

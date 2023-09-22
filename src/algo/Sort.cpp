@@ -1,6 +1,7 @@
 #include "algo.hpp"
-#include "algo_internal_interface.hpp"
-
+#include "backend/algo_internal_interface.hpp"
+#include "backend/Storage.hpp"
+#include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
     Tensor Sort(const Tensor &Tin) {

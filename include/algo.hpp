@@ -4,8 +4,6 @@
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
-#include "Storage.hpp"
-#include "Scalar.hpp"
 
 namespace cytnx {
   /**

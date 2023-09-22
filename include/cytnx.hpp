@@ -7,7 +7,7 @@
 #include "Device.hpp"
 #include "Type.hpp"
 
-#include "Storage.hpp"
+#include "backend/Storage.hpp"
 #include "Tensor.hpp"
 #include "Generator.hpp"
 #include "Physics.hpp"
@@ -23,7 +23,7 @@
 #include "Symmetry.hpp"
 #include "Network.hpp"
 #include "Bond.hpp"
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 #include "LinOp.hpp"
 #include "utils/is.hpp"
 #include "utils/print.hpp"

@@ -15,7 +15,7 @@
 #include <vector>
 #include <initializer_list>
 #include <string>
-#include "Scalar.hpp"
+#include "backend/Scalar.hpp"
 
 namespace cytnx {
   namespace tn_algo {

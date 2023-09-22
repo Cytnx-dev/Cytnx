@@ -3,7 +3,7 @@
 #endif
 #include "Bond.hpp"
 #include <algorithm>
-#include "utils/utils_internal_interface.hpp"
+//#include "utils/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 using namespace std;
 namespace cytnx {
@@ -303,7 +303,7 @@ namespace cytnx {
 
     } else {
       // old format
-      std::sort(tmp_qnums.begin(), tmp_qnums.end(), utils_internal::_fx_compare_vec_dec);
+      std::sort(tmp_qnums.begin(), tmp_qnums.end(), _fx_compare_vec_dec);
       tmp_qnums.resize(
         std::distance(tmp_qnums.begin(), std::unique(tmp_qnums.begin(), tmp_qnums.end())));
       if (return_counts) {
