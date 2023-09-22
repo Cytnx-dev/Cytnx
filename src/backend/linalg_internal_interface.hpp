@@ -38,7 +38,7 @@
 #include "linalg_internal_cpu/Gemm_Batch_internal.hpp"
 #include "linalg_internal_cpu/Trace_internal.hpp"
 
-#include "linalg/linalg_internal_cpu/memcpyTruncation.hpp"
+#include "linalg_internal_cpu/memcpyTruncation.hpp"
 
 #ifdef UNI_GPU
   #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
