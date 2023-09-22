@@ -65,6 +65,7 @@
   #include "linalg_internal_gpu/cuSum_internal.hpp"
   #include "linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg_internal_gpu/cuKron_internal.hpp"
+  #include "linalg_internal_gpu/cudaMemcpyTruncation.hpp"
   #ifdef UNI_CUTENSOR
     #include "linalg_internal_gpu/cuTensordot_internal.hpp"
   #endif

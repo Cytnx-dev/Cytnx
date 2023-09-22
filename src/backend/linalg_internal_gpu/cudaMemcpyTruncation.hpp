@@ -5,7 +5,7 @@
 #include <vector>
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "linalg/linalg_internal_interface.hpp"
+#include "Tensor.hpp"
 
 namespace cytnx {
   namespace linalg_internal {

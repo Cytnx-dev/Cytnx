@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "memcpyTruncation.hpp"
+#include "Tensor.hpp"
 
 namespace cytnx {
   namespace linalg_internal {

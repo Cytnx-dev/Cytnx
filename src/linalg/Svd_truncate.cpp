@@ -4,7 +4,7 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "linalg_internal_interface.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
