@@ -16,7 +16,7 @@ requirements:
     - "cmake"
     - "make"
     - "pybind11"
-    - "boost"
+    - "boost >=1.82.0"
     # - "libboost"
     - "mkl >=2019"
     - "mkl-include >=2019"
@@ -31,7 +31,7 @@ requirements:
   host:
     - "python"
     - "numpy >=1.18"
-    - "boost"
+    - "boost >=1.82.0"
     # - "libboost"
     - "make"
     - "mkl >=2019"
@@ -48,7 +48,7 @@ requirements:
   run:
     - "python"
     - "numpy >=1.18"
-    - "boost"
+    - "boost >=1.82.0"
     # - "libboost"
     - "mkl >=2019"
     - "mkl-include >=2019"
