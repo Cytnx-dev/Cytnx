@@ -151,6 +151,8 @@ target_include_directories(cytnx
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
+target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
+target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
 target_include_directories(cytnx SYSTEM
     PUBLIC
 				${Boost_INCLUDE_DIRS}
