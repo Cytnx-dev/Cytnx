@@ -153,49 +153,6 @@ if(USE_ICPC)
 endif()
 
 
-#####################################################################
-### Dependency of CUTT
-#####################################################################
-if(USE_CUDA)
-    if(USE_CUTT)
-        ExternalProject_Get_Property(cutt install_dir)
-        include_directories(${install_dir}/include)
-        message(STATUS "cutt install dir: ${install_dir}")
-        add_dependencies(cytnx cutt)
-        set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
-        target_compile_definitions(cytnx PRIVATE UNI_CUTT)
-        target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libcutt.a)
-    endif()
-
-    if(USE_MAGMA)
-       find_package( MAGMA REQUIRED)
-       if(NOT MAGMA_FOUND)
-          message(FATAL_ERROR "MAGMA not found!")
-       endif()
-       message(STATUS "^^^magma root aft: ${MAGMA_ROOT}")
-       message(STATUS "^^^magma inc dr: ${MAGMA_INCLUDE_DIRS}")
-       message(STATUS "^^^magma lib dr: ${MAGMA_LIBRARY_DIRS}")
-       message(STATUS "^^^magma libs: ${MAGMA_LIBRARIES}")
-       #add_dependencies(cytnx magma)
-       target_include_directories(cytnx PRIVATE ${MAGMA_INCLUDE_DIRS})
-       target_compile_definitions(cytnx PRIVATE UNI_MAGMA)
-       target_link_libraries(cytnx PUBLIC ${MAGMA_LIBRARIES})
-    endif()
-
-endif()
-
-#####################################################################
-### Dependency of HPTT
-#####################################################################
-if(USE_HPTT)
-    ExternalProject_Get_Property(hptt install_dir)
-    include_directories(${install_dir}/include)
-    message(STATUS "hptt install dir: ${install_dir}")
-    add_dependencies(cytnx hptt)
-    target_compile_definitions(cytnx PRIVATE UNI_HPTT)
-    target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libhptt.a)
-endif()
-
 
 
 ######################################################################
@@ -270,20 +227,29 @@ if(RUN_TESTS)
 endif()
 
 
-
 ########
 ### Python wrapper
 ########
 IF(BUILD_PYTHON)
-    find_package(PythonInterp REQUIRED)
-    find_package(pybind11 REQUIRED)
+  find_package(PythonInterp REQUIRED)
+  find_package(pybind11 REQUIRED)
 
-    if( NOT pybind11_FOUND)
-        include(FetchContent)
-        FetchContent_Declare(
-          pybind11_sources
-          GIT_REPOSITORY https://github.com/pybind/pybind11.git
-          GIT_TAG v2.11.1
+  if( NOT pybind11_FOUND)
+      include(FetchContent)
+      FetchContent_Declare(
+        pybind11_sources
+        GIT_REPOSITORY https://github.com/pybind/pybind11.git
+        GIT_TAG v2.11.1
+        )
+
+      FetchContent_GetProperties(pybind11_sources)
+
+      if(NOT pybind11_sources_POPULATED)
+        FetchContent_Populate(pybind11_sources)
+
+        add_subdirectory(
+          ${pybind11_sources_SOURCE_DIR}
+          ${pybind11_sources_BINARY_DIR}
           )
       endif()
   endif()
@@ -321,6 +287,7 @@ IF(BUILD_PYTHON)
 ELSE()
   message(STATUS " Build Python Wrapper: NO")
 ENDIF()
+
 
 ######################################################################
 ### INSTALL
