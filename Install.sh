@@ -9,7 +9,7 @@ Ins_dest="$HOME/Cytnx_lib"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
-FLAG="${FLAG} -DBACKEND_TORCH=OFF"
+FLAG="${FLAG} -DBACKEND_TORCH=ON"
 
 #=================================================================
 # 2) linalg libs:
