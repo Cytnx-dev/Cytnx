@@ -1,6 +1,9 @@
+{% set data = load_setup_py_data() %}
+{% set version = data.get('version') %}
+
 package:
   name: cytnx
-  version: "0.9.1"
+  version: {{ version }}
 
 source:
   git_url: https://github.com/kaihsin/Cytnx.git
