@@ -6,6 +6,7 @@
 #include <cstring>
 
 #ifdef BACKEND_TORCH
+  #include "Bond.hpp"
 #else
 
   #include "Bond.hpp"
@@ -89,19 +90,20 @@ namespace cytnx {
 #ifdef BACKEND_TORCH
 #else
 
-  template std::vector<Bond> vec_erase(const std::vector<Bond> &,
-                                       const std::vector<cytnx_uint64> &);
   template std::vector<Tensor> vec_erase(const std::vector<Tensor> &,
                                          const std::vector<cytnx_uint64> &);
+  template void vec_erase_(std::vector<Tensor> &, const std::vector<cytnx_uint64> &);
 
+#endif
+
+  template std::vector<Bond> vec_erase(const std::vector<Bond> &,
+                                       const std::vector<cytnx_uint64> &);
   template void vec_erase_(std::vector<Bond> &, const std::vector<cytnx_uint64> &);
 
-  template void vec_erase_(std::vector<Tensor> &, const std::vector<cytnx_uint64> &);
   template void vec_erase_(std::vector<std::vector<cytnx_uint64>> &,
                            const std::vector<cytnx_uint64> &);
 
   template void vec_erase_(std::vector<std::vector<cytnx_int64>> &,
                            const std::vector<cytnx_uint64> &);
-#endif
 
 }  // namespace cytnx

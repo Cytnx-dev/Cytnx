@@ -24,13 +24,17 @@ using namespace cytnx;
 // ref: https://medium.com/@mgarod/dynamically-add-a-method-to-a-class-in-python-c49204b85bd6
 
 #ifdef BACKEND_TORCH
+void bond_binding(py::module &m);
+void symmetry_binding(py::module &m);
+
 #else
+void bond_binding(py::module &m);
+void symmetry_binding(py::module &m);
 void generator_binding(py::module &m);
 void storage_binding(py::module &m);
 void tensor_binding(py::module &m);
-void bond_binding(py::module &m);
+
 void network_binding(py::module &m);
-void symmetry_binding(py::module &m);
 
 class PyLinOp;
 void linop_binding(py::module &m);
@@ -55,6 +59,10 @@ PYBIND11_MODULE(cytnx, m) {
 
 #ifdef BACKEND_TORCH
   m.attr("__cytnx_backend__") = std::string("torch");
+
+  symmetry_binding(m);
+  bond_binding(m);
+
 #else
   m.attr("__cytnx_backend__") = std::string("cytnx");
 

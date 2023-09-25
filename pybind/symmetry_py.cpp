@@ -11,15 +11,11 @@
 #include <pybind11/functional.h>
 
 #include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
 #include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
-
-#ifdef BACKEND_TORCH
-#else
 
 void symmetry_binding(py::module &m) {
   py::enum_<__sym::__stype>(m, "SymType")
@@ -76,4 +72,3 @@ void symmetry_binding(py::module &m) {
     //.def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
     ;
 }
-#endif
