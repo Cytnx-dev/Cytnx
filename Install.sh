@@ -182,8 +182,8 @@ echo ${FLAG}
 # rm -rf build
 mkdir build
 cd build
-#cmake ../ ${FLAG} -DDEV_MODE=on
-cmake ../ ${FLAG}
+cmake ../ ${FLAG} -DDEV_MODE=on
+# cmake ../ ${FLAG}
 make -j`nproc`
 # make install
 # ctest -j`nproc`

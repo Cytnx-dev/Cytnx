@@ -22,14 +22,12 @@ using namespace cytnx;
 // ref: https://pybind11.readthedocs.io/en/stable/advanced/classes.html
 // ref: https://block.arch.ethz.ch/blog/2016/07/adding-methods-to-python-classes/
 // ref: https://medium.com/@mgarod/dynamically-add-a-method-to-a-class-in-python-c49204b85bd6
+void bond_binding(py::module &m);
+void symmetry_binding(py::module &m);
 
 #ifdef BACKEND_TORCH
-void bond_binding(py::module &m);
-void symmetry_binding(py::module &m);
-
 #else
-void bond_binding(py::module &m);
-void symmetry_binding(py::module &m);
+
 void generator_binding(py::module &m);
 void storage_binding(py::module &m);
 void tensor_binding(py::module &m);
@@ -57,23 +55,8 @@ PYBIND11_MODULE(cytnx, m) {
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 
-#ifdef BACKEND_TORCH
-  m.attr("__cytnx_backend__") = std::string("torch");
-
   symmetry_binding(m);
   bond_binding(m);
-
-#else
-  m.attr("__cytnx_backend__") = std::string("cytnx");
-
-  m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
-  m.def("get_mkl_code", &cytnx::get_mkl_code);
-
-  // global vars
-  // m.attr("cytnxdevice") = cytnx::cytnxdevice;
-  // m.attr("Type")   = py::cast(cytnx::Type);
-  // m.attr("redirect_output") = py::capsule(new py::scoped_ostream_redirect(...),
-  //[](void *sor) { delete static_cast<py::scoped_ostream_redirect *>(sor); });
   py::add_ostream_redirect(m, "ostream_redirect");
 
   py::enum_<cytnx::__type::__pybind_type>(m, "Type")
@@ -91,15 +74,6 @@ PYBIND11_MODULE(cytnx, m) {
     .value("Bool", cytnx::__type::__pybind_type::Bool)
     .export_values();
 
-  // py::enum_<cytnx::__device::__pybind_device>(m,"Device",py::arithmetic())
-  //     .value("cpu", cytnx::__device::__pybind_device::cpu)
-  //	.value("cuda", cytnx::__device::__pybind_device::cuda)
-  //	.export_values();
-
-  // m.attr("Device") = py::module::import("enum").attr("IntEnum")
-  //     ("Device", py::dict("cpu"_a=(cytnx_int64)cytnx::Device.cpu,
-  //     "cuda"_a=(cytnx_int64)cytnx::Device.cuda));
-
   auto mdev = m.def_submodule("Device");
   mdev.attr("cpu") = (cytnx_int64)cytnx::Device.cpu;
   mdev.attr("cuda") = (cytnx_int64)cytnx::Device.cuda;
@@ -109,6 +83,28 @@ PYBIND11_MODULE(cytnx, m) {
   mdev.def("getname",
            [](const int &device_id) -> std::string { return cytnx::Device.getname(device_id); });
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
+#ifdef BACKEND_TORCH
+  m.attr("__cytnx_backend__") = std::string("torch");
+#else
+  m.attr("__cytnx_backend__") = std::string("cytnx");
+
+  m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
+  m.def("get_mkl_code", &cytnx::get_mkl_code);
+
+  // global vars
+  // m.attr("cytnxdevice") = cytnx::cytnxdevice;
+  // m.attr("Type")   = py::cast(cytnx::Type);
+  // m.attr("redirect_output") = py::capsule(new py::scoped_ostream_redirect(...),
+  //[](void *sor) { delete static_cast<py::scoped_ostream_redirect *>(sor); });
+
+  // py::enum_<cytnx::__device::__pybind_device>(m,"Device",py::arithmetic())
+  //     .value("cpu", cytnx::__device::__pybind_device::cpu)
+  //	.value("cuda", cytnx::__device::__pybind_device::cuda)
+  //	.export_values();
+
+  // m.attr("Device") = py::module::import("enum").attr("IntEnum")
+  //     ("Device", py::dict("cpu"_a=(cytnx_int64)cytnx::Device.cpu,
+  //     "cuda"_a=(cytnx_int64)cytnx::Device.cuda));
 
   // m.def(
   //   "ncon",
@@ -131,9 +127,7 @@ PYBIND11_MODULE(cytnx, m) {
   scalar_binding(m);
   storage_binding(m);
   tensor_binding(m);
-  bond_binding(m);
   network_binding(m);
-  symmetry_binding(m);
   linop_binding(m);
   unitensor_binding(m);
   linalg_binding(m);

@@ -100,15 +100,13 @@ add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 
-if(BACKEND_TORCH)
-  target_include_directories(cytnx
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  )
-endif()
+target_include_directories(cytnx
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}/src
+  PUBLIC
+  $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+)
 
 target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
 target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
