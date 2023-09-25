@@ -4,11 +4,16 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "backend/linalg_internal_interface.hpp"
 
 #ifdef BACKEND_TORCH
 #else
 
-  #include "../backend/linalg_internal_interface.hpp"
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
+      #include "backend/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
+    #endif
+  #endif
 
 namespace cytnx {
   namespace linalg {

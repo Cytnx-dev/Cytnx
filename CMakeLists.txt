@@ -113,11 +113,22 @@ target_include_directories(cytnx
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
+target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
+target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
+target_include_directories(cytnx SYSTEM
+    PUBLIC
+				${Boost_INCLUDE_DIRS}
+)
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation -fsanitize=address")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_DISABLE_AVAILABILITY")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION")
 
 target_compile_features(cytnx PUBLIC cxx_std_17)
+# target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
+# target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
+#set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 
 add_subdirectory(src)
 
@@ -140,6 +151,9 @@ include(GNUInstallDirs)
 if(USE_ICPC)
     target_compile_definitions(cytnx PRIVATE UNI_ICPC)
 endif()
+
+
+
 
 ######################################################################
 
@@ -213,7 +227,6 @@ if(RUN_TESTS)
 endif()
 
 
-
 ########
 ### Python wrapper
 ########
@@ -274,6 +287,7 @@ IF(BUILD_PYTHON)
 ELSE()
   message(STATUS " Build Python Wrapper: NO")
 ENDIF()
+
 
 ######################################################################
 ### INSTALL

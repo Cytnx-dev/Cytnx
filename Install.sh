@@ -85,7 +85,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=ON "
+FLAG="${FLAG} -DUSE_CUDA=OFF "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -184,6 +184,6 @@ mkdir build
 cd build
 #cmake ../ ${FLAG} -DDEV_MODE=on
 cmake ../ ${FLAG}
-make -j4
-#make install
+make -j`nproc`
+make install
 # ctest
