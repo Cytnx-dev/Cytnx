@@ -1,16 +1,15 @@
-name: Conda Build For MacOSX (Test build)
+name: Conda Build For Linux (Release)
 
 on:
-  pull_request:
-    branches:
-      - master
+  push:
+    tags:
+     - 'v[0-9]+.[0-9]+.[0-9]+'
 
   workflow_dispatch:
 
-
 jobs:
   BuildAndTest:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     defaults:
       run:
@@ -38,7 +37,6 @@ jobs:
         echo "Config Conda---------------------------------"
         mamba install anaconda-client boa -c conda-forge
 
-
     - name: start building
       working-directory: ${{github.workspace}}
       run: |
@@ -51,11 +49,15 @@ jobs:
         mamba -h
 
         echo "Get Output file names:_________________"
-        OUTPUT_FN=$(conda build conda_build/conda_gen_mac/ --output)
+        OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
 
         echo "Start building---------------------------------"
-        conda mambabuild conda_build/conda_gen_mac/
+        conda mambabuild conda_build/conda_gen/
 
+        echo "Upload build---------------------------------"
+        echo $OUTPUT_FN
+
+        anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
 
       env:
         TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}

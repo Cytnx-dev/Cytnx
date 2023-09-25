@@ -1,10 +1,9 @@
-name: Conda Build For Linux
+name: Conda Build For Linux (Test build)
 
 on:
-  push:
+  pull_request:
     branches:
       - master
-      - add_cytnx_build
 
   workflow_dispatch:
 
@@ -55,10 +54,6 @@ jobs:
         echo "Start building---------------------------------"
         conda mambabuild conda_build/conda_gen/
 
-        echo "Upload build---------------------------------"
-        echo $OUTPUT_FN
-        echo "The upload is commented out, uncomment it if you want to upload the build."
-        # anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
 
       env:
         TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
