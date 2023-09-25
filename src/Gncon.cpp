@@ -2,15 +2,8 @@
 
 using namespace std;
 
-// namespace cytnx {
-//   UniTensor label_ncon(const std::vector<UniTensor> &tensors, const std::vector<std::string>
-//   &tasks, const std::vector<std::string> &relabels) {
-//     for(auto task : tasks){
-
-//         cout << it <<endl;
-
-//     }
-// }  // namespace cytnx
+#ifdef BACKEND_TORCH
+#else
 
 namespace cytnx {
   std::string GnconType_class::getname(const int& nwrktype_id) {
@@ -33,3 +26,4 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+#endif

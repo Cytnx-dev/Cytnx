@@ -9,6 +9,9 @@
 #include "utils/vec_print.hpp"
 using namespace std;
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   namespace tn_algo {
 
@@ -708,3 +711,4 @@ namespace cytnx {
   }  // namespace tn_algo
 
 }  // namespace cytnx
+#endif

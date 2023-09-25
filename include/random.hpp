@@ -3,12 +3,16 @@
 #include "Type.hpp"
 #include "Device.hpp"
 #include "cytnx_error.hpp"
-#include "Tensor.hpp"
-#include "backend/Storage.hpp"
-#include "UniTensor.hpp"
 #include <vector>
 #include <initializer_list>
 #include <random>
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/Storage.hpp"
 
 namespace cytnx {
   /**
@@ -205,5 +209,7 @@ namespace cytnx {
 
   }  // namespace random
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

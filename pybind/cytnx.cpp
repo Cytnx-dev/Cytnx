@@ -23,6 +23,8 @@ using namespace cytnx;
 // ref: https://block.arch.ethz.ch/blog/2016/07/adding-methods-to-python-classes/
 // ref: https://medium.com/@mgarod/dynamically-add-a-method-to-a-class-in-python-c49204b85bd6
 
+#ifdef BACKEND_TORCH
+#else
 void generator_binding(py::module &m);
 void storage_binding(py::module &m);
 void tensor_binding(py::module &m);
@@ -44,11 +46,17 @@ void tnalgo_binding(py::module &m);
 void scalar_binding(py::module &m);
 
 void ncon_binding(py::module &m);
+#endif
 
 PYBIND11_MODULE(cytnx, m) {
   m.attr("__version__") = "0.7";
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
+
+#ifdef BACKEND_TORCH
+  m.attr("__cytnx_backend__") = std::string("torch");
+#else
+  m.attr("__cytnx_backend__") = std::string("cytnx");
 
   m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
   m.def("get_mkl_code", &cytnx::get_mkl_code);
@@ -126,4 +134,5 @@ PYBIND11_MODULE(cytnx, m) {
   random_binding(m);
   tnalgo_binding(m);
   ncon_binding(m);
+#endif
 }

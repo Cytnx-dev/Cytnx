@@ -3,7 +3,6 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "backend/Storage.hpp"
 #include "Device.hpp"
 #include "intrusive_ptr_base.hpp"
 #include <iostream>
@@ -14,10 +13,13 @@
 #include <vector>
 #include <initializer_list>
 #include <string>
-#include "backend/Scalar.hpp"
 
-// move to backend?
-#include "backend/Tensor_impl.hpp"
+#ifdef BACKEND_TORCH
+#else
+
+  #include "backend/Scalar.hpp"
+  #include "backend/Storage.hpp"
+  #include "backend/Tensor_impl.hpp"
 
 namespace cytnx {
 
@@ -1648,5 +1650,7 @@ namespace cytnx {
   ///@endcond
   //{ os << Tensor(in);};
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

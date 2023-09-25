@@ -1,5 +1,9 @@
 #include "random.hpp"
-#include "../backend/random_internal_interface.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "../backend/random_internal_interface.hpp"
 
 namespace cytnx {
   namespace random {
@@ -10,11 +14,11 @@ namespace cytnx {
       if (Sin.device() == Device.cpu) {
         random_internal::rii.Normal[Sin.dtype()](Sin._impl, mean, std, seed);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         random_internal::rii.cuNormal[Sin.dtype()](Sin._impl, mean, std, seed);
-#else
+  #else
         cytnx_error_msg(true, "[ERROR][normal_] Tensor is on GPU without CUDA support.%s", "\n");
-#endif
+  #endif
       }
     }
     void normal_(Tensor &Tin, const double &mean, const double &std, const unsigned int &seed) {
@@ -24,11 +28,11 @@ namespace cytnx {
       if (Tin.device() == Device.cpu) {
         random_internal::rii.Normal[Tin.dtype()](Tin._impl->storage()._impl, mean, std, seed);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         random_internal::rii.cuNormal[Tin.dtype()](Tin._impl->storage()._impl, mean, std, seed);
-#else
+  #else
         cytnx_error_msg(true, "[ERROR][normal_] Tensor is on GPU without CUDA support.%s", "\n");
-#endif
+  #endif
       }
     }
 
@@ -44,3 +48,4 @@ namespace cytnx {
 
   }  // namespace random
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

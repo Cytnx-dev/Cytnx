@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 class PyLinOp : public LinOp {
  public:
   /* inherit constructor */
@@ -90,3 +93,5 @@ void linop_binding(py::module &m) {
 
     ;  // end of object
 }
+
+#endif

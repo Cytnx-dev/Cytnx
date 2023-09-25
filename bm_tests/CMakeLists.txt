@@ -1,3 +1,6 @@
+if(BACKEND_TORCH)
+else()
+
 add_executable(
   bm_test_main
   bm_test_main.cpp
@@ -18,3 +21,5 @@ endif()
 
 target_link_libraries(bm_test_main cytnx)
 target_link_libraries(bm_test_main benchmark::benchmark)
+
+endif()

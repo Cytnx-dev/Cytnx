@@ -6,6 +6,9 @@
 #include "algo.hpp"
 #include "backend/linalg_internal_interface.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
@@ -31,7 +34,7 @@ namespace cytnx {
 
         return outT;
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         std::vector<Tensor> tmps = Svd(Tin, is_UvT);
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
@@ -47,11 +50,11 @@ namespace cytnx {
         if (return_err) outT.push_back(terr);
 
         return outT;
-#else
+  #else
         cytnx_error_msg(true, "[Svd_truncate] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
-#endif
+  #endif
       }
     }
   }  // namespace linalg
@@ -337,3 +340,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

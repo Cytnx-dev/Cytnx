@@ -1,5 +1,9 @@
 #include "random.hpp"
-#include "../backend/random_internal_interface.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "../backend/random_internal_interface.hpp"
 
 namespace cytnx {
   namespace random {
@@ -13,14 +17,14 @@ namespace cytnx {
       if (Sin.device() == Device.cpu) {
         random_internal::rii.Uniform[Sin.dtype()](Sin._impl, low, high, seed);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         cytnx_error_msg(true, "[Developing.]%s", "\n");
         random_internal::rii.cuUniform[Sin.dtype()](Sin._impl, low, high, seed);
-        // Sin = low + Sin*(high-low); // we need Storage arithmetic!
+          // Sin = low + Sin*(high-low); // we need Storage arithmetic!
 
-#else
+  #else
         cytnx_error_msg(true, "[ERROR][uniform_] Tensor is on GPU without CUDA support.%s", "\n");
-#endif
+  #endif
       }
     }
     void uniform_(Tensor &Tin, const double &low, const double &high, const unsigned int &seed) {
@@ -33,13 +37,13 @@ namespace cytnx {
       if (Tin.device() == Device.cpu) {
         random_internal::rii.Uniform[Tin.dtype()](Tin._impl->storage()._impl, low, high, seed);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         // cytnx_error_msg(true, "[Developing]%s", "\n");
         random_internal::rii.cuUniform[Tin.dtype()](Tin._impl->storage()._impl, low, high, seed);
-        // Tin = low + Tin*(high-low);
-#else
+          // Tin = low + Tin*(high-low);
+  #else
         cytnx_error_msg(true, "[ERROR][uniform_] Tensor is on GPU without CUDA support.%s", "\n");
-#endif
+  #endif
       }
     }
 
@@ -55,3 +59,4 @@ namespace cytnx {
 
   }  // namespace random
 }  // namespace cytnx
+#endif

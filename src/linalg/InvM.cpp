@@ -1,6 +1,11 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
+
 #include "Tensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
+
 namespace cytnx {
   namespace linalg {
     Tensor InvM(const Tensor &Tin) {
@@ -27,18 +32,19 @@ namespace cytnx {
         return out;
 
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(out.device()));
         cytnx::linalg_internal::lii.cuInvM_inplace_ii[out.dtype()](out._impl->storage()._impl,
                                                                    out.shape().back());
         return out;
-#else
+  #else
         cytnx_error_msg(true, "[InvM] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
         return Tensor();
-#endif
+  #endif
       }
     }
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

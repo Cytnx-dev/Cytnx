@@ -2,12 +2,15 @@
 #define _H_search_tree_
 
 #include "Type.hpp"
-#include "UniTensor.hpp"
 #include "cytnx_error.hpp"
 #include "utils/utils.hpp"
 #include <vector>
 #include <map>
 #include <string>
+#include "UniTensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
 
 namespace cytnx {
   /// @cond
@@ -96,4 +99,6 @@ namespace cytnx {
   };
   /// @endcond
 }  // namespace cytnx
+#endif
+
 #endif

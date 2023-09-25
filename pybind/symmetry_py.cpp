@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void symmetry_binding(py::module &m) {
   py::enum_<__sym::__stype>(m, "SymType")
     .value("Z", __sym::__stype::Z)
@@ -73,3 +76,4 @@ void symmetry_binding(py::module &m) {
     //.def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
     ;
 }
+#endif

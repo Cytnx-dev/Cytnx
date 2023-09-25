@@ -2,10 +2,14 @@
 #include <string>
 #include <fstream>
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+
+  #ifdef UNI_OMP
+    #include <omp.h>
+  #endif
 
 namespace cytnx {
 
@@ -81,9 +85,9 @@ namespace cytnx {
                                         const std::vector<cytnx_int64> &inL,
                                         const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+  #ifdef UNI_OMP
+    #pragma omp parallel for schedule(dynamic)
+  #endif
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()];
     }
@@ -112,14 +116,14 @@ namespace cytnx {
   }
 
   bool cytnx::ZnSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) {
-#ifdef UNI_OMP
+  #ifdef UNI_OMP
     std::vector<bool> buf(1, true);
-  #pragma omp parallel
+    #pragma omp parallel
     {
       if (omp_get_thread_num() == 0) buf.assign(omp_get_num_threads(), true);
     }
 
-  #pragma omp parallel for schedule(dynamic)
+    #pragma omp parallel for schedule(dynamic)
     for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
       if (buf[omp_get_thread_num()] == false)
         continue;
@@ -131,23 +135,23 @@ namespace cytnx {
       buf[0] = (buf[0] && buf[i]);
     }
     return buf[0];
-#else
+  #else
     bool out = true;
     for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
       out = ((qnums[i] >= 0) && (qnums[i] < this->n));
       if (out == false) break;
     }
     return out;
-#endif
+  #endif
   }
 
   void cytnx::ZnSymmetry::combine_rule_(std::vector<cytnx_int64> &out,
                                         const std::vector<cytnx_int64> &inL,
                                         const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+  #ifdef UNI_OMP
+    #pragma omp parallel for schedule(dynamic)
+  #endif
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n);
     }
@@ -249,3 +253,5 @@ namespace cytnx {
   //++++++++++++++++++++++++
   SymmetryType_class SymType;
 };  // namespace cytnx
+
+#endif

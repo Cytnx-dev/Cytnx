@@ -2,6 +2,9 @@
 
 using namespace std;
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   UniTensor ncon(const std::vector<UniTensor> &tensor_list_in,
                  const std::vector<std::vector<cytnx_int64>> &connect_list_in,
@@ -96,3 +99,4 @@ namespace cytnx {
     return out;
   }
 }  // namespace cytnx
+#endif

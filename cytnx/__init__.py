@@ -1,42 +1,56 @@
 import os,sys
 from .cytnx import *
 
-#1) check if numpy is previous imported, if it is, pop warning:
-if ('numpy' in sys.modules) or ('scipy' in sys.modules):
-    raise ValueError("[ERROR] please import cytnx first before import numpy and/or scipy!")
+if cytnx.__cytnx_backend__ == "torch":
+    import numpy, torch
+
+else:
+
+    #1) check if numpy is previous imported, if it is, pop warning:
+    if ('numpy' in sys.modules) or ('scipy' in sys.modules):
+        raise ValueError("[ERROR] please import cytnx first before import numpy and/or scipy!")
 
 
-
-## [NOTE!!] These part has to execute first before import numpy!
-#set_mkl_ilp64()
-def _init_mkl():
-    a = zeros(2)
-    b = zeros(2)
-    linalg.Dot(a,b)
-    return 0
-_init_mkl()
-
-
-def get_mkl_interface():
-    code = get_mkl_code()
-    if code < 0:
-        raise Warning("does not compile with mkl.")
-
-    if(code%2):
-        return "ilp64"
-    else:
-        return "lp64"
+    ## [NOTE!!] These part has to execute first before import numpy!
+    #set_mkl_ilp64()
+    def _init_mkl():
+        a = zeros(2)
+        b = zeros(2)
+        linalg.Dot(a,b)
+        return 0
+    _init_mkl()
 
 
-import numpy
-from .Storage_conti import *
-from .Tensor_conti import *
-from .linalg_conti import *
-from .UniTensor_conti import *
-from .Network_conti import *
-from .MPS_conti import *
-from .Symmetry_conti import *
-from .Bond_conti import *
+    def get_mkl_interface():
+        code = get_mkl_code()
+        if code < 0:
+            raise Warning("does not compile with mkl.")
+
+        if(code%2):
+            return "ilp64"
+        else:
+            return "lp64"
+
+
+    import numpy
+
+
+    from .Storage_conti import *
+    from .Tensor_conti import *
+    from .linalg_conti import *
+    from .UniTensor_conti import *
+    from .Network_conti import *
+    from .MPS_conti import *
+    from .Symmetry_conti import *
+    from .Bond_conti import *
+
+    def from_numpy(np_arr):
+        tmp = np_arr
+        if np_arr.flags['C_CONTIGUOUS'] == False:
+            tmp = numpy.ascontiguousarray(np_arr)
+        return cytnx._from_numpy(tmp)
+
+
 
 if(os.path.exists(os.path.join(os.path.dirname(__file__),"include"))):
     # this only set if using anaconda install.
@@ -54,11 +68,7 @@ else:
 
 __blasINTsize__ = cytnx.__blasINTsize__
 
-def from_numpy(np_arr):
-    tmp = np_arr
-    if np_arr.flags['C_CONTIGUOUS'] == False:
-        tmp = numpy.ascontiguousarray(np_arr)
-    return cytnx._from_numpy(tmp)
+
 
 def _find_hptt__():
     hptt_path = None

@@ -4,6 +4,9 @@
 
 using namespace std;
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   void ContractionTree::build_default_contraction_tree() {
     this->reset_contraction_order();
@@ -135,3 +138,4 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+#endif
