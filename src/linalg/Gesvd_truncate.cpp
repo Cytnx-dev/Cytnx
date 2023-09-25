@@ -9,7 +9,7 @@
 
 #ifdef UNI_GPU
   #ifdef UNI_CUQUANTUM
-    #include "linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
+    #include "backend/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
   #endif
 #endif
 
