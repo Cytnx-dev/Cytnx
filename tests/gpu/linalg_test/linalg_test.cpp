@@ -26,30 +26,51 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate2) {
 }
 
 TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
-  Bond I = Bond(BD_IN, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
-  Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
-  Bond K = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
-  Bond L = Bond(BD_OUT, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
-  UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cuda, false)
-                    .to(cytnx::Device.cuda);
-  auto cyT2 = UniTensor::Load(data_dir + "Svd_truncate/Svd_truncate2.cytnx").to(cytnx::Device.cuda);
-  std::vector<UniTensor> res = linalg::Svd_truncate(cyT, 30, 0, true);
-  auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
-  auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
+  std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
+  UniTensor densvd_T = UniTensor(zeros(svd_T.shape(), svd_T.dtype(), svd_T.device()));
+  std::vector<UniTensor> denres = linalg::Svd_truncate(densvd_T.from(svd_T), 200, 0, true);
+
+  std::vector<double> vnm_S, denvnm_S;
+  for (size_t i = 0; i < res[0].shape()[0]; i++)
+    vnm_S.push_back((double)(res[0].at({i, i}).real()));
+  for (size_t i = 0; i < denres[0].shape()[0]; i++)
+    denvnm_S.push_back((double)(denres[0].at({i, i}).real()));
+  std::sort(vnm_S.begin(), vnm_S.end());
+  std::sort(denvnm_S.begin(), denvnm_S.end());
+  for (size_t i = 0; i < vnm_S.size(); i++) {
+    EXPECT_DOUBLE_EQ(vnm_S[i], denvnm_S[i]);
+  }
+  // auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
+  // auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }
 
-TEST_F(linalg_Test, gpu_BkUt_Svd_truncate4) {
-  Bond I = Bond(BD_IN, {Qs(-4), Qs(-2), Qs(0), Qs(2), Qs(4)}, {2, 7, 10, 8, 3});
-  Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
-  Bond K = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
-  Bond L = Bond(BD_OUT, {Qs(-4), Qs(-2), Qs(0), Qs(2), Qs(4), Qs(6)}, {1, 5, 10, 9, 4, 1});
-  UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cuda, false)
-                    .to(cytnx::Device.cuda);
-  cyT = UniTensor::Load(data_dir + "Svd_truncate/Svd_truncate3.cytnx").to(cytnx::Device.cuda);
-  std::vector<UniTensor> res = linalg::Svd_truncate(cyT, 30, 0, true);
-  auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
-  auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
-}
+// TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
+//   Bond I = Bond(BD_IN, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
+//   Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
+//   Bond K = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
+//   Bond L = Bond(BD_OUT, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
+//   UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cuda,
+//   false)
+//                     .to(cytnx::Device.cuda);
+//   auto cyT2 = UniTensor::Load(data_dir +
+//   "Svd_truncate/Svd_truncate2.cytnx").to(cytnx::Device.cuda); std::vector<UniTensor> res =
+//   linalg::Svd_truncate(cyT, 30, 0, true); auto con_T1 = Contract(Contract(res[2], res[0]),
+//   res[1]); auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
+// }
+
+// TEST_F(linalg_Test, gpu_BkUt_Svd_truncate4) {
+//   Bond I = Bond(BD_IN, {Qs(-4), Qs(-2), Qs(0), Qs(2), Qs(4)}, {2, 7, 10, 8, 3});
+//   Bond J = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
+//   Bond K = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
+//   Bond L = Bond(BD_OUT, {Qs(-4), Qs(-2), Qs(0), Qs(2), Qs(4), Qs(6)}, {1, 5, 10, 9, 4, 1});
+//   UniTensor cyT = UniTensor({I, J, K, L}, {"a", "b", "c", "d"}, 2, Type.Double, Device.cuda,
+//   false)
+//                     .to(cytnx::Device.cuda);
+//   cyT = UniTensor::Load(data_dir + "Svd_truncate/Svd_truncate3.cytnx").to(cytnx::Device.cuda);
+//   std::vector<UniTensor> res = linalg::Svd_truncate(cyT, 30, 0, true);
+//   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
+//   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
+// }
 
 TEST_F(linalg_Test, gpu_BkUt_Qr1) {
   auto res = linalg::Qr(H);
