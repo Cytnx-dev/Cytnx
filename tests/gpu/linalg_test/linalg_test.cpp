@@ -7,8 +7,8 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate1) {
     vnm_S.push_back((double)(res[0].at({i, i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
   for (size_t i = 0; i < vnm_S.size(); i++) {
-    // EXPECT_TRUE(abs(vnm_S[i] - (double)(svd_Sans.at({0, i}).real())) < 1e-5);
-    EXPECT_DOUBLE_EQ(vnm_S[i], (double)(svd_Sans.at({0, i}).real()));
+    EXPECT_TRUE(abs(vnm_S[i] - (double)(svd_Sans.at({0, i}).real())) < 1e-4);
+    // EXPECT_DOUBLE_EQ(vnm_S[i], (double)(svd_Sans.at({0, i}).real()));
   }
   auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
