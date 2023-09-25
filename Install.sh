@@ -114,7 +114,7 @@ FLAG="${FLAG} -DMAGMA_ROOT=${HOME}/MAGMA"
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUTENSOR_ROOT=/usr/local/libcutensor-1.6.2.3
 CUTENSOR_ROOT=${HOME}/CUTENSOR
-FLAG="${FLAG} -DUSE_CUTENSOR=ON "
+FLAG="${FLAG} -DUSE_CUTENSOR=OFF "
 FLAG="${FLAG} -DCUTENSOR_ROOT=${HOME}/CUTENSOR"
 #-----------------------------------
 # 6-e) CuQuantum (DEFALT = off)
@@ -123,7 +123,7 @@ FLAG="${FLAG} -DCUTENSOR_ROOT=${HOME}/CUTENSOR"
 #        or given in the following line using -DCUTENSOR_ROOT
 # CUQUANTUM_ROOT=/usr/local/cuqunatum-......
 CUQUANTUM_ROOT=${HOME}/CUQUANTUM
-FLAG="${FLAG} -DUSE_CUQUANTUM=ON "
+FLAG="${FLAG} -DUSE_CUQUANTUM=OFF "
 FLAG="${FLAG} -DCUQUANTUM_ROOT=${HOME}/CUQUANTUM"
 
 
@@ -179,7 +179,7 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF "
 #-----------------------------------
 
 echo ${FLAG}
-rm -rf build
+# rm -rf build
 mkdir build
 cd build
 #cmake ../ ${FLAG} -DDEV_MODE=on

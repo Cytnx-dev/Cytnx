@@ -172,7 +172,7 @@ namespace cytnx {
                                 const int &return_err) {
       cytnx_uint64 keep_dim = keepdim;
 
-      outCyT = linalg::Svd(Tin, is_UvT);
+      outCyT = linalg::Gesvd(Tin, is_UvT, is_UvT);
 
       // process truncate:
       // 1) concate all s vals from all blk
