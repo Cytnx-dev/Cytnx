@@ -8,7 +8,7 @@ namespace cytnx {
   //====================================================
   std::string UniTensorType_class::getname(const int &ut_type) {
     if (ut_type == this->Void) {
-      return std::string("Void (un-initialize UniTensor");
+      return std::string("Void (un-initialize UniTensor)");
     } else if (ut_type == this->Dense) {
       return std::string("Dense");
     } else if (ut_type == this->Sparse) {
