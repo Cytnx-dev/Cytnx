@@ -48,10 +48,12 @@ jobs:
         conda config --set anaconda_upload no
 
         # these are infos used to check environ
-        mamba info -a
+        mamba init
+        #mamba info -a
         mamba list
         mamba -h
         mamba install anaconda-client boa -c conda-forge
+
         mamba activate base
         which anaconda
 

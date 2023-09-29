@@ -49,6 +49,7 @@ jobs:
         conda config --set anaconda_upload no
 
         # these are infos used to check environ
+        mamba init
         mamba info -a
         mamba list
         mamba -h
