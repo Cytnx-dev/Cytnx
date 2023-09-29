@@ -1,10 +1,6 @@
 name: Conda Build For MacOSX (Release)
 
 on:
-  pull_request:
-    branch:
-      relese_CIs
-
   push:
     tags:
      - 'v[0-9]+.[0-9]+.[0-9]+'

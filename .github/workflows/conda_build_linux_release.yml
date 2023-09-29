@@ -52,10 +52,10 @@ jobs:
         #mamba info -a
         mamba list
         #mamba -h
-        mamba install anaconda-client
+        #mamba install anaconda-client
 
         #conda activate base
-        which anaconda
+        $CONDA_PREFIX/anaconda -h
 
         #echo "Get Output file names:_________________"
         #OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
