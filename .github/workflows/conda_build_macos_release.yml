@@ -1,6 +1,10 @@
 name: Conda Build For MacOSX (Release)
 
 on:
+  pull_request:
+    branch:
+      relese_CIs
+
   push:
     tags:
      - 'v[0-9]+.[0-9]+.[0-9]+'
@@ -48,6 +52,9 @@ jobs:
         mamba info -a
         mamba list
         mamba -h
+        mamba install anaconda-client boa -c conda-forge
+        mamba activate base
+        which anaconda
 
         echo "Get Output file names:_________________"
         OUTPUT_FN=$(conda build conda_build/conda_gen_mac/ --output)
