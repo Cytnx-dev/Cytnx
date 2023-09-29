@@ -51,8 +51,8 @@ jobs:
         #mamba init
         #mamba info -a
         mamba list
-        mamba -h
-        mamba install anaconda-client boa -c conda-forge
+        #mamba -h
+        mamba install anaconda-client
 
         #conda activate base
         which anaconda
