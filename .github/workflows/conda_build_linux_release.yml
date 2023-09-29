@@ -3,7 +3,7 @@ name: Conda Build For Linux (Release)
 on:
   pull_request:
     branch:
-      khwu/visualize
+      relese_CIs
 
   push:
     tags:
