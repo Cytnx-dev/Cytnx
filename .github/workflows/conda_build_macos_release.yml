@@ -1,10 +1,6 @@
 name: Conda Build For MacOSX (Release)
 
 on:
-  pull_request:
-    branch:
-      relese_CIs
-
   push:
     tags:
      - 'v[0-9]+.[0-9]+.[0-9]+'
@@ -54,18 +50,18 @@ jobs:
         #mamba init
         mamba list
 
-        anaconda -h
+        #anaconda -h
 
-        #echo "Get Output file names:_________________"
-        #OUTPUT_FN=$(conda build conda_build/conda_gen_mac/ --output)
+        echo "Get Output file names:_________________"
+        OUTPUT_FN=$(conda build conda_build/conda_gen_mac/ --output)
 
-        #echo "Start building---------------------------------"
-        #conda mambabuild conda_build/conda_gen_mac/
+        echo "Start building---------------------------------"
+        conda mambabuild conda_build/conda_gen_mac/
 
-        #echo "Upload build---------------------------------"
-        #echo $OUTPUT_FN
+        echo "Upload build---------------------------------"
+        echo $OUTPUT_FN
 
-        #anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
+        anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
 
       env:
         TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
