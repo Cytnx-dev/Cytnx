@@ -1,9 +1,9 @@
 name: Conda Build For Linux (Release)
 
 on:
-  push:
+  pull_request:
     branch:
-      relese_CIs
+      khwu/visualize
 
   push:
     tags:
