@@ -1,10 +1,6 @@
 name: Conda Build For Linux (Release)
 
 on:
-  pull_request:
-    branch:
-      relese_CIs
-
   push:
     tags:
      - 'v[0-9]+.[0-9]+.[0-9]+'
@@ -50,25 +46,19 @@ jobs:
         conda config --set anaconda_upload no
 
         # these are infos used to check environ
-        #mamba init
-        #mamba info -a
         mamba list
-        #mamba -h
-        #mamba install anaconda-client
 
-        #conda activate base
-        anaconda -h
 
-        #echo "Get Output file names:_________________"
-        #OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
+        echo "Get Output file names:_________________"
+        OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
 
-        #echo "Start building---------------------------------"
-        #conda mambabuild conda_build/conda_gen/
+        echo "Start building---------------------------------"
+        conda mambabuild conda_build/conda_gen/
 
-        #echo "Upload build---------------------------------"
-        #echo $OUTPUT_FN
+        echo "Upload build---------------------------------"
+        echo $OUTPUT_FN
 
-        #anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
+        anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
 
       env:
         TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
