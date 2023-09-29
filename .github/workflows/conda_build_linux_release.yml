@@ -55,7 +55,7 @@ jobs:
         #mamba install anaconda-client
 
         #conda activate base
-        $CONDA_PREFIX/anaconda -h
+        anaconda -h
 
         #echo "Get Output file names:_________________"
         #OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
