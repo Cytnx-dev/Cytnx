@@ -33,6 +33,7 @@ jobs:
 
     - name: Config Conda
       working-directory: ${{github.workspace}}
+      shell: bash -l {0}
       run: |
         echo "Config Conda---------------------------------"
         mamba install anaconda-client boa -c conda-forge
@@ -40,14 +41,16 @@ jobs:
 
     - name: start building
       working-directory: ${{github.workspace}}
+      shell: bash -l {0}
       run: |
         echo "Building begin---------------------------------"
         conda config --set anaconda_upload no
 
         # these are infos used to check environ
-        mamba info -a
+        #mamba init
         mamba list
-        mamba -h
+
+        #anaconda -h
 
         echo "Get Output file names:_________________"
         OUTPUT_FN=$(conda build conda_build/conda_gen_mac/ --output)
