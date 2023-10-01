@@ -52,13 +52,16 @@ jobs:
         echo "Get Output file names:_________________"
         OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
 
+        echo $OUTPUT_FN
+        #echo $TOKEN
+
         echo "Start building---------------------------------"
         conda mambabuild conda_build/conda_gen/
 
         echo "Upload build---------------------------------"
-        echo $OUTPUT_FN
+        #echo $OUTPUT_FN
 
-        anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
+        anaconda -t $TOKEN upload -u kaihsinwu $OUTPUT_FN --force
 
       env:
         TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
