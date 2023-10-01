@@ -18,7 +18,11 @@ See The following user guide for install and using of cytnx:
 
 
 ## Current dev Version:
-    v0.9.3
+    v0.9.6
+
+    v0.9.3-v0.9.5
+    1. [New] Add cuQuantum, cuTensor support
+    2. [New] enhance GPU support
 
     v0.9.2
     1. [Change] Remove all deprecated APIs and old SparseUniTensor data structure
@@ -56,7 +60,7 @@ See The following user guide for install and using of cytnx:
 
 ## API Documentation:
 
-[https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
+[https://kaihsinwu.gitlab.io/cytnx_api/](https://kaihsinwu.gitlab.io/cytnx_api/)
 
 ## User Guide [under construction!]:
 
