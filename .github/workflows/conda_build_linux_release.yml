@@ -57,7 +57,7 @@ jobs:
         OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
 
         echo $OUTPUT_FN
-        #echo $TOKEN
+        echo $TOKEN
 
         #echo "Start building---------------------------------"
         #conda mambabuild conda_build/conda_gen/
@@ -65,7 +65,7 @@ jobs:
         #echo "Upload build---------------------------------"
         #echo $OUTPUT_FN
 
-        #anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
+        anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
 
       env:
         TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
