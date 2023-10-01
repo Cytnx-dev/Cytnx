@@ -8,17 +8,13 @@ To save a Storage to file, simply call **Storage.Save(filepath)**.
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_5_io_Save.py
+    :language: python
     :linenos:
-    
-    A = cytnx.Storage(4)
-    A.fill(6)
-    A.Save("S1")
-
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_5_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_5_io_Save.cpp
     :language: c++
     :linenos:
 
@@ -31,22 +27,21 @@ Now, let's load the Storage from the file.
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_5_io_Load.py
+    :language: python
     :linenos:
-    
-    A = cytnx.Storage.Load("S1.cyst")
-    print(A)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_5_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_5_io_Load.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_5_2_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_5_io_Load.out
     :language: text
+
 
 Save & load from/to binary
 **************************
@@ -54,37 +49,24 @@ We can also save all the elements in a binary file without any additional header
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_5_io_from_to_file.py
+    :language: python
     :linenos:
 
-    # read
-    A = cytnx.Storage(10);
-    A.fill(10);
-    print(A);
+* In C++:
 
-    A.Tofile("S1");
-
-    #load
-    B = cytnx.Storage.Fromfile("S1",cytnx.Type.Double);
-    print(B);
-
-* In C++
-
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_5_3_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_5_io_from_to_file.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_5_3_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_5_io_from_to_file.out
     :language: text
 
 .. Note:: 
 
     You can also choose to load a part of the file with an additional argument *count* when using **Fromfile**
-
-
-
 
 
 .. toctree::

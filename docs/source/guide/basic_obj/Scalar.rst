@@ -45,25 +45,24 @@ Consider the example where we want to create a Scalar with *double* type. The co
 
 * 1. Convert from a C++ variable
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/5_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Scalar_from_c_var.cpp
     :language: c++
     :linenos:
 
-Output:
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/5_1_ex1.out
+.. literalinclude:: ../../../code/cplusplus/outputs/guide_basic_obj_Scalar_from_c_var.out
     :language: text
 
 * 2. Create directly:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/5_1_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Scalar_create.cpp
     :language: c++
     :linenos:
 
-
 Output:
 
-.. literalinclude:: ../../../code/cplusplus/outputs/5_1_ex2.out
+.. literalinclude:: ../../../code/cplusplus/outputs/guide_basic_obj_Scalar_create.out
     :language: text
 
 
@@ -77,14 +76,13 @@ Output:
 
     Converting to a C++ data type works just like other type castings in C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/5_1_ex3.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Scalar_to_c_var.cpp
     :language: c++
     :linenos:
 
-
 Output:
 
-.. literalinclude:: ../../../code/cplusplus/outputs/5_1_ex3.out
+.. literalinclude:: ../../../code/cplusplus/outputs/guide_basic_obj_Scalar_to_c_var.out
     :language: text
 
 
@@ -97,13 +95,13 @@ Change data type
 ******************
     To change the data type of a Scalar, use **.astype()**. 
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/5_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Scalar_astype.cpp
     :language: c++
     :linenos:
 
 Output:
 
-.. literalinclude:: ../../../code/cplusplus/outputs/5_2_ex1.out
+.. literalinclude:: ../../../code/cplusplus/outputs/guide_basic_obj_Scalar_astype.out
     :language: text
 
 
@@ -113,13 +111,13 @@ The Scalar type allows for many possibilities in C++ that are otherwise hard to 
 
 * 1. If we want to have a list (vector) with elements having different data types, we can use *tuple* objects in C++. However, that requires the number of elements and data types to be known and fixed a priori. Using Scalar, we can also create a vector with a variable number of elements and variable data types:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/5_3_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Scalar_application.cpp
     :language: c++
     :linenos:
 
 Output:
 
-.. literalinclude:: ../../../code/cplusplus/outputs/5_3_ex1.out
+.. literalinclude:: ../../../code/cplusplus/outputs/guide_basic_obj_Scalar_application.out
     :language: text
 
 

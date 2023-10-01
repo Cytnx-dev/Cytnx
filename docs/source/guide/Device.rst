@@ -10,15 +10,15 @@ To check how many threads can be used in your current program by Cytnx, you can 
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../code/python/doc_codes/guide_Device_Ncpus.py
+    :language: python
+    :linenos:
 
-    print(cytnx.Device.Ncpus)
+* In C++:
 
-* In C++
-
-.. literalinclude:: ../../code/cplusplus/guide_codes/2_1_ex1.cpp
+.. literalinclude:: ../../code/cplusplus/doc_codes/guide_Device_Ncpus.cpp
     :language: c++
-
+    :linenos:
 
 If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always return 1.
 
@@ -48,15 +48,15 @@ To check how many GPUs can be used in your current program by Cytnx, you can use
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../code/python/doc_codes/guide_Device_Ngpus.py
+    :language: python
+    :linenos:
 
-    print(cytnx.Device.Ngpus)
+* In C++:
 
-
-* In C++
-
-.. literalinclude:: ../../code/cplusplus/guide_codes/2_2_ex1.cpp
+.. literalinclude:: ../../code/cplusplus/doc_codes/guide_Device_Ngpus.cpp
     :language: c++
+    :linenos:
 
 If Cytnx is not compiled with CUDA available, the Device.Ngpus will always return 0.
 
@@ -70,11 +70,8 @@ GPU status
 *********************
 For systems with multi-gpu, Cytnx utilizes the peer-access feature to transfer data between GPUs when they are available. The **Device.Print_Property()** will list the availability of GPUs.
 
-
-.. code-block:: python 
-
-    cytnx.Device.Print_Property();
-
+.. literalinclude:: ../../code/python/doc_codes/guide_Device_property.py
+    :language: python
 
 Output example>>
 
@@ -102,9 +99,5 @@ Output example>>
 Initializing tensors on GPU
 ******************************
 How a tensor is created on the GPU is explained in :ref:`Tensor with different dtype and device`. A tensor can also be moved between devices, see :ref:`Transfer between devices`.
-
-
-
-
 
 

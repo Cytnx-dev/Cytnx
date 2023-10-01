@@ -31,29 +31,19 @@ For example:
 
 * In Python:
 
-.. code-block:: python 
-    :linenos:        
-
-    A = cytnx.ones([3,4])
-    print(A)
-
-    B = A + 4 
-    print(B)
-
-    C = A - 7j # type promotion
-    print(C)
-
-        
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_4_arithmetic_tensor_scalar.py
+    :language: python
+    :linenos:
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_4_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_4_arithmetic_tensor_scalar.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/3_4_2_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_4_arithmetic_tensor_scalar.out
     :language: text
 
 
@@ -64,29 +54,19 @@ For example:
 
 * In Python:
 
-.. code-block:: python 
-    :linenos:        
-
-    A = cytnx.arange(12).reshape(3,4)
-    print(A)
-
-    B = cytnx.ones([3,4])*4 
-    print(B)
-
-    C = A * B
-    print(C)
-
-        
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_4_arithmetic_tensor_tensor.py
+    :language: python
+    :linenos:
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_4_3_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_4_arithmetic_tensor_tensor.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/3_4_3_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_4_arithmetic_tensor_tensor.out
     :language: text
 
 .. Note::
@@ -101,7 +81,7 @@ For example, there are two different ways to perform the + operation: **Tensor.A
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_4_4_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_4_arithmetic_Add.cpp
     :language: c++
     :linenos:
 

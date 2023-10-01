@@ -8,16 +8,13 @@ To save a Tensor to a file, simply call **Tensor.Save(filepath)**.
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_7_io_Save.py
+    :language: python
     :linenos:
-    
-    A = cytnx.arange(12).reshape(3,4)
-    A.Save("T1")
-
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_7_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_7_io_Save.cpp
     :language: c++
     :linenos:
 
@@ -30,21 +27,21 @@ Now, let's load the Tensor from the file.
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_7_io_Load.py
+    :language: python
     :linenos:
-    
-    A = cytnx.Tensor.Load("T1.cytn")
-    print(A)
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_7_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_7_io_Load.cpp
     :language: c++
     :linenos:
 
-Output>>
+Output >>
+
 
 .. literalinclude:: ../../../code/cplusplus/outputs/3_7_2_ex1.out
     :language: text
+
 
 .. toctree::

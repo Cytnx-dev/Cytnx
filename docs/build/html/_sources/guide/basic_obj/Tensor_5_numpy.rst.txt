@@ -6,63 +6,27 @@ Cytnx also provides conversion from and to numpy.array in the Python API.
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_5_numpy_cytnx2numpy.py
+    :language: python
     :linenos:
-        
-    A = cytnx.ones([3,4])
-    B = A.numpy()
-    print(A)
-    print(type(B))
-    print(B)
 
-Output>>
+Output >>
 
-.. code-block:: text
-
-    Total elem: 12
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
-
-
-    <class 'numpy.ndarray'>
-    [[1. 1. 1. 1.]
-     [1. 1. 1. 1.]
-     [1. 1. 1. 1.]]
-
-
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_5_numpy_cytnx2numpy.out
+    :language: text
 
 * To convert from numpy array to Cytnx Tensor, use **cytnx.from_numpy()**
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_5_numpy_numpy2cytnx.py
+    :language: python
     :linenos:
 
-    import numpy as np
-    B = np.ones([3,4])
-    A = cytnx.from_numpy(B)
-    print(B)
-    print(A)
+Output >>
 
-Output>>
-
-.. code-block:: text
-
-    [[1. 1. 1. 1.]
-     [1. 1. 1. 1.]
-     [1. 1. 1. 1.]]
-
-    Total elem: 12
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (3,4)
-    [[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-     [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_5_numpy_numpy2cytnx.out
+    :language: text
 
 
 .. toctree::

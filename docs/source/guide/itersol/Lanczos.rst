@@ -23,76 +23,22 @@ For this, you can pass a **LinOp** or any of its child classes to **linalg.Lancz
 
 For example, we consider a simple example where we wrap a (4x4) matrix inside a custom operator. We can easily generalize the **matvec** to be any custom sparse structure. 
 
-
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_itersol_Lanczos_Lanczos.py
+    :language: python
     :linenos:
-    
-    class MyOp(cytnx.LinOp):
-        def __init__(self):
-            cytnx.LinOp.__init__(self,"mv",4)
-
-        def matvec(self,v):
-            A = cytnx.arange(16).reshape(4,4)
-            A += A.permute(1,0)
-            return cytnx.linalg.Dot(A,v)
-
-
-    op = MyOp()
-
-    v0 = cytnx.arange(4) # trial state
-    ev = cytnx.linalg.Lanczos_ER(op,k=1,Tin=v0)
-
-    print(ev[0]) #eigenval
-    print(ev[1]) #eigenvec
-
 
 * In C++:
 
-.. code-block:: c++
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_itersol_Lanczos_Lanczos.cpp
+    :language: c++
     :linenos:
-
-    using namespace cytnx;
-    class MyOp: public LinOp{
-        public:
-        MyOp(): LinOp("mv",4){}
-
-        private:
-        Tensor matvec(const Tensor &v) override{
-            auto A = arange(16).reshape(4,4);
-            A += A.permute(1,0);
-            return linalg::Dot(A,v);
-        }
-
-    };
-
-    auto op = MyOp();
-
-    auto v0 = arange(4); // trial state
-    auto ev = linalg::Lanczos_ER(&op, 1, true, 10000, 1.0e-14, false, v0, 3);
-
-    cout << ev[0] << endl; //eigenval
-    cout << ev[1] << endl; //eigenvec
 
 Output >>
 
-.. code-block:: text
-
-
-    Total elem: 1
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1)
-    [-7.43416e+00 ]
-
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (4)
-    [-7.98784e-01 -3.77788e-01 8.64166e-02 4.64205e-01 ]
-
+.. literalinclude:: ../../../code/python/outputs/guide_itersol_Lanczos_Lanczos.out
+    :language: text
 
 
 .. Note::

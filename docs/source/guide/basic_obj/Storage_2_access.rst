@@ -5,29 +5,21 @@ To access the elements in Storage, different APIs are used in Python and C++ due
 
 Get/Set elements
 ****************
-* In Python, simply use the **operator[]**:
+* In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Storage_2_access_access.py
+    :language: python
     :linenos:
 
-    A = cytnx.Storage(6)
-    A.set_zeros()
-    print(A)
+* In C++:
 
-    A[4] = 4
-    print(A)
-
-
-
-* In C++, use **at<>()**:
-
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_2_access_access.cpp
     :language: c++
     :linenos:
 
 Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_2_1_ex1.out
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_2_access_access.out
     :language: text
 
 .. Note::
@@ -37,13 +29,13 @@ Output >>
 
 * [New][v0.6.6+] The introduction of the Scalar class allows to get elements using **at()**  without type specialization (C++ only):
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_1_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_2_access_at.cpp
     :language: c++
     :linenos:
    
 Output >>
 
-.. literalinclude:: ../../../code/cplusplus/outputs/4_2_1_ex2.out
+.. literalinclude:: ../../../code/cplusplus/outputs/guide_basic_obj_Storage_2_access_at.out
     :language: text
 
 
@@ -56,7 +48,7 @@ In some cases the user might want to get the raw-pointer to the Storage. Cytnx p
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_2_access_ptr_T.cpp
     :language: c++
     :linenos:
     
@@ -65,7 +57,7 @@ In some cases the user might want to get the raw-pointer to the Storage. Cytnx p
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/4_2_2_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Storage_2_access_ptr_void.cpp
     :language: c++
     :linenos:
 
@@ -77,7 +69,6 @@ In some cases the user might want to get the raw-pointer to the Storage. Cytnx p
 .. Warning::
 
     The return pointer is shared with the Storage instance. Thus its life time will be limited by that of the Storage instance. If the instance is destroyed first, the memory will be freed, and the pointer will be invalid as well. Please use with caution!  
-
 
 
 .. toctree::

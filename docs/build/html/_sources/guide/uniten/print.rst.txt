@@ -7,18 +7,9 @@ For demonstration purposes, we create three tensors in the following.
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_print_init.py
+    :language: python
     :linenos:
-
-    uT=cytnx.UniTensor(cytnx.ones([2,3,4]), name="untagged tensor").relabels_(["a","b","c"])
-    bond_d = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_e = cytnx.Bond(cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],[cytnx.Symmetry.U1()])
-    bond_f = cytnx.Bond(cytnx.BD_OUT,\
-                        [cytnx.Qs(2)>>1, cytnx.Qs(0)>>2, cytnx.Qs(-2)>>1],[cytnx.Symmetry.U1()])
-    bond_g = cytnx.Bond(2,cytnx.BD_OUT)
-    bond_h = cytnx.Bond(2,cytnx.BD_IN)
-    Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f], name="symm. tensor").relabels_(["d","e","f"])
-    Tdiag= cytnx.UniTensor([bond_g, bond_h], is_diag=True, name="diag tensor").relabels_(["g","h"])
 
 We will discuss how a UniTensor is created in :ref:`Creating a UniTensor` and the details about Symmetry, Bonds etc. in the following subchapters. Here, we want to focus on the output of **print_diagram()** and **print**, so no need to understand the lines above in detail.
 
@@ -34,59 +25,14 @@ We can use **print_diagram()** to visualize the basic properties of a UniTensor
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_print_print_diagram.py
+    :language: python
     :linenos:
 
-    uT.print_diagram()
-    Tsymm.print_diagram()
-    Tdiag.print_diagram()
+Output >>
 
-Output >> 
-
-.. code-block:: text
-    
-    -----------------------
-    tensor Name : untagged tensor
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-              ---------     
-             /         \    
-       a ____| 2     3 |____ b
-             |         |    
-             |       4 |____ c
-             \         /    
-              ---------     
-    -----------------------
-    tensor Name : symm. tensor
-    tensor Rank : 3
-    contiguous  : True
-    valid blocks : 4
-    is diag   : False
-    on device   : cytnx device: CPU
-          row           col 
-             -----------    
-             |         |    
-       d  -->| 2     4 |-->  f
-             |         |    
-       e  -->| 2       |        
-             |         |    
-             -----------    
-    
-    -----------------------
-    tensor Name : diag tensor
-    tensor Rank : 2
-    block_form  : False
-    is_diag     : True
-    on device   : cytnx device: CPU
-    braket_form : False
-          row           col 
-             -----------    
-             |         |    
-       g *<--| 2     2 |<--* h
-             |         |    
-             -----------    
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_print_print_diagram.out
+    :language: text
     
 
 The information provided by the output is explained in the following:
@@ -127,31 +73,15 @@ The information provided by the output is explained in the following:
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_print_set_name.py
+    :language: python
     :linenos:
 
-    uT.set_name("tensor uT")
-    uT.print_diagram()
-
-
 Output >>
- 
-.. code-block:: text
-    :emphasize-lines: 2
 
-    -----------------------
-    tensor Name : tensor uT
-    tensor Rank : 3
-    block_form  : False
-    is_diag     : False
-    on device   : cytnx device: CPU
-              ---------     
-             /         \    
-       a ____| 2     3 |____ b
-             |         |    
-             |       4 |____ c
-             \         /    
-              ---------    
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_print_set_name.out
+    :emphasize-lines: 2
+    :language: text
 
 
 .. tip::
@@ -192,44 +122,14 @@ Further information and the actual data is printed with **UniTensor.print_blocks
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_print_print_block.py
+    :language: python
     :linenos:
 
-    uT.print_blocks()
-    print(Tdiag)
+Output >>
 
-Output >> 
-
-.. code-block:: text
-    
-    -------- start of print ---------
-    Tensor name: untagged tensor
-    is_diag    : False
-    contiguous : True
-
-    Total elem: 24
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,3,4)
-    [[[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-      [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-      [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]
-     [[1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-      [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]
-      [1.00000e+00 1.00000e+00 1.00000e+00 1.00000e+00 ]]]
-
-
-    -------- start of print ---------
-    Tensor name: diag tensor
-    braket_form : False
-    is_diag    : True
-    contiguous : True
-    
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2)
-    [0.00000e+00 0.00000e+00 ]
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_print_print_block.out
+    :language: text
     
 Similarly to *print_diagram()*, the properties *name*, *is_diag* and *cytnx device* are provided. Additionally, one can see the **shape** and **total number of elements**, as well as the **data type**. Furthermore, the **contiguous** status is displayed, see :ref:`Contiguous` for details.
 
@@ -239,91 +139,14 @@ For a UniTensor in blockform, all blocks are printed separately:
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_print_sym_print.py
+    :language: python
     :linenos:
 
-    print(Tsymm)
+Output >>
 
-Output >> 
-
-.. code-block:: text
-    
-    -------- start of print ---------
-    Tensor name: symm. tensor
-    braket_form : True
-    is_diag    : False
-    [OVERALL] contiguous : True
-    ========================
-    BLOCK [#0]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                     -----------
-                     |         |
-       [0] U1(1)  -->| 1     1 |-->  [0] U1(2)
-                     |         |
-       [0] U1(1)  -->| 1       |
-                     |         |
-                     -----------
-
-    Total elem: 1
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,1)
-    [[[0.00000e+00 ]]]
-
-    ========================
-    BLOCK [#1]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                      -----------
-                      |         |
-       [0] U1(1)   -->| 1     2 |-->  [1] U1(0)
-                      |         |
-       [1] U1(-1)  -->| 1       |
-                      |         |
-                      -----------
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
-    ========================
-    BLOCK [#2]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                      -----------
-                      |         |
-       [1] U1(-1)  -->| 1     2 |-->  [1] U1(0)
-                      |         |
-       [0] U1(1)   -->| 1       |
-                      |         |
-                      -----------
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
-
-    ========================
-    BLOCK [#3]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                      -----------
-                      |         |
-       [1] U1(-1)  -->| 1     1 |-->  [2] U1(-2)
-                      |         |
-       [1] U1(-1)  -->| 1       |
-                      |         |
-                      -----------
-
-    Total elem: 1
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,1)
-    [[[0.00000e+00 ]]]
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_print_sym_print.out
+    :language: text
 
 A UniTensor with Symmetries has Bonds carrying quantum numbers. In our example, the quantum numbers are printed as *U1(-2)*, *U1(-1)*, ..., *U1(2)*.The different quantum numbers are ordered by Qnum indices. Each quantum number can have a degeneracy.
 
@@ -335,30 +158,12 @@ To print a single block of a UniTensor in block form, one can use **UniTensor.pr
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_print_sym_print_block.py
+    :language: python
     :linenos:
 
-    Tsymm.print_block(2)
+Output >>
 
-Output >> 
-
-.. code-block:: text
-    
-    ========================
-    BLOCK [#2]
-     |- []   : Qn index 
-     |- Sym(): Qnum of correspond symmetry
-                      -----------
-                      |         |
-       [1] U1(-1)  -->| 1     2 |-->  [1] U1(0)
-                      |         |
-       [0] U1(1)   -->| 1       |
-                      |         |
-                      -----------
-
-    Total elem: 2
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (1,1,2)
-    [[[0.00000e+00 0.00000e+00 ]]]
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_print_sym_print_block.out
+    :language: text
 

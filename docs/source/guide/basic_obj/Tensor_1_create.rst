@@ -10,15 +10,13 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_zeros.py
+    :language: python
     :linenos:
-
-    A = cytnx.zeros([3,4,5]);
-        
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_1_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_1_create_zeros.cpp
     :language: c++
     :linenos:
 
@@ -29,33 +27,19 @@ For example, suppose we want to define a rank-3 tensor with shape (3,4,5), and i
     2. The conversion between Python and C++ is pretty straight forward, one simply replaces [] in Python with {}, and you are all set!
 
 
-
 Tensors can also be created and initialized with **arange()** (similar as np.arange), **ones** (similar as np.ones) or **eye** (identity matrix):
 
-* In Python : 
+* In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_diff_ways.py
+    :language: python
     :linenos:
-
-    A = cytnx.arange(10);     #rank-1 Tensor from [0,10) with step 1
-    B = cytnx.arange(0,10,2); #rank-1 Tensor from [0,10) with step 2
-    C = cytnx.ones([3,4,5]);  #Tensor of shape (3,4,5) with all elements set to one.
-    D = cytnx.eye(3);         #Tensor of shape (3,3) with diagonal elements set to one, all other entries are zero.
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_1_ex2.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_1_create_diff_ways.cpp
     :language: c++
     :linenos:
-
-.. code-block:: c++
-    :linenos:
-
-    auto A = cytnx::arange(10);     //rank-1 Tensor from [0,10) with step 1
-    auto B = cytnx::arange(0,10,2); //rank-1 Tensor from [0,10) with step 2
-    auto C = cytnx::ones({3,4,5});  //Tensor of shape (3,4,5) with all elements set to one.
-    auto D = cytnx::eye(3);          //Tensor of shape (3,3) with diagonal elements set to one, all other entries are zero.
-
 
 :Tips: In C++, you can make use of *auto* to simplify your code! 
 
@@ -63,23 +47,17 @@ Random Tensor
 ************************
 Often, Tensors shall be initialized with random values. This can be achieved with **random.normal** (normal or Gaussian distribution) and **random.uniform** (uniform distribution):
 
-* In Python : 
+* In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_rand.py
+    :language: python
     :linenos:
-
-    A = cytnx.random.normal([3,4,5], mean=0., std=1.)   #Tensor of shape (3,4,5) with all elements distributed according
-                                                        #to a normal distribution around 0 with standard deviation 1
-    B = cytnx.random.uniform([3,4,5], low=-1., high=1.) #Tensor of shape (3,4,5) with all elements distributed uniformly
-                                                        #between -1 and 1
-    
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_2_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_1_create_rand.cpp
     :language: c++
     :linenos:
-
 
 Tensor with different dtype and device 
 *******************************************
@@ -89,14 +67,15 @@ You can create a Tensor with a different data type, and/or on different devices 
 
 * In Python:
 
-.. code-block:: python
-
-    A = cytnx.zeros([3,4,5],dtype=cytnx.Type.Int64,device=cytnx.Device.cuda)
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_zeros_cuda.py
+    :language: python
+    :linenos:
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_3_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_1_create_zeros_cuda.cpp
     :language: c++
+    :linenos:
 
 .. Note:: 
     
@@ -156,6 +135,15 @@ Concerning devices, Cytnx currently supports
 | CUDA-enabled GPU | Device.cuda+x        |
 +------------------+----------------------+
 
+Tensors can also be initialized randomly as in :ref:`Random Tensor` with different **dtype**. For example, complex tensors can be created with:
+
+* In Python :
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_rand_dtype.py
+    :language: python
+    :linenos:
+
+
 Type conversion 
 **********************
 It is possible to convert a Tensor to a different data type. To convert the data type, simply use **Tensor.astype()**.
@@ -164,28 +152,20 @@ For example, consider a Tensor *A* with **dtype=Type.Int64**, which shall be con
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_astype.py
+    :language: python
     :linenos:
-    
-    A = cytnx.ones([3,4],dtype=cytnx.Type.Int64)
-    B = A.astype(cytnx.Type.Double)
-    print(A.dtype_str())
-    print(B.dtype_str())
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_4_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_1_create_astype.cpp
     :language: c++
     :linenos:
 
 >> Output:
 
-.. code-block:: text
-    
-    Int64
-    Double (Float64)
-
-
+.. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Tensor_1_create_astype.out
+    :language: text
 
 .. Note::
     
@@ -201,24 +181,15 @@ For example, let's create a Tensor in the memory accessible by the CPU and trans
 
 * In Python:
 
-.. code-block:: python 
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_to.py
+    :language: python
     :linenos:
-
-    A = cytnx.ones([2,2]) #on CPU
-    B = A.to(cytnx.Device.cuda+0)
-    print(A) # on CPU
-    print(B) # on GPU
-
-    A.to_(cytnx.Device.cuda) 
-    print(A) # on GPU
-
 
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_5_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_1_create_to.cpp
     :language: c++
     :linenos:
-
 
 >> Output:
 
@@ -247,7 +218,6 @@ For example, let's create a Tensor in the memory accessible by the CPU and trans
     [[1.00000e+00 1.00000e+00 ]
      [1.00000e+00 1.00000e+00 ]]
 
-
 .. Note::
     
     1. You can use **Tensor.device()** to get the current device-id (cpu = -1), whereas **Tensor.device_str()** returns the device name. 
@@ -263,20 +233,13 @@ Tensor from Storage [v0.6.6+]
 
 * In Python:
 
-.. code-block:: python
+.. literalinclude:: ../../../code/python/doc_codes/guide_basic_obj_Tensor_1_create_from_storage.py
+    :language: python
     :linenos:
 
-    ## A & B share same memory
-    A = cytnx.Storage(10);
-    B = cytnx.Tensor.from_storage(A);
-
-    ## A & C have different memory
-    C = cytnx.Tensor.from_storage(A.clone());
-
-    
 * In C++:
 
-.. literalinclude:: ../../../code/cplusplus/guide_codes/3_1_6_ex1.cpp
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Tensor_1_create_from_storage.cpp
     :language: c++
     :linenos:
 
