@@ -5,6 +5,17 @@ using namespace std;
 using namespace cytnx;
 
 int main(int argc, char* argv[]) {
+  std::vector<long> v = {2, 3};
+  Storage sd = Storage::from_vector(v);
+
+  cout << sd.dtype() << endl;
+
+  auto fille = float(10);
+  sd.fill(fille);
+
+  std::cout << sd << std::endl;
+  return 0;
+
   static std::vector<unsigned int> dtype_list = {
     // Type.Void,
     Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float, Type.Int64,
