@@ -4,6 +4,9 @@ from .cytnx import *
 if cytnx.__cytnx_backend__ == "torch":
     import numpy, torch
 
+    from .Symmetry_conti import *
+    from .Bond_conti import *
+
 else:
 
     #1) check if numpy is previous imported, if it is, pop warning:

@@ -12,8 +12,6 @@
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 
-#ifdef BACKEND_TORCH
-#else
 namespace cytnx {
 
   /**
@@ -863,6 +861,5 @@ namespace cytnx {
   std::ostream &operator<<(std::ostream &os, const Bond &bin);
   ///@endcond
 }  // namespace cytnx
-#endif  // BACKEND_TORCH
 
 #endif
