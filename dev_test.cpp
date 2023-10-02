@@ -42,7 +42,6 @@ void foo(vector<vector<A>>& in);
 foo(vector<vector<B>>);
 
 int main(int argc, char* argv[]) {
-
   std::vector<long> v = {2, 3};
   Storage sd = Storage::from_vector(v);
 
