@@ -180,14 +180,20 @@ def set_name(self,name):
 
 
 @add_method(UniTensor)
-def set_label(self, old_label:str, new_label:str):
+def set_label(self, old_label=None, new_label:str="", idx:int = None):
     self.c_set_label(old_label,new_label);
+    if old_label == None and idx != None:
+        self.c_set_label(idx,new_label);
+    elif old_label != None and idx == None:
+        self.c_set_label(old_label,new_label);
+    else:
+        raise ValueError("[ERROR] invalid input for set_label")
     return self
 
-@add_method(UniTensor)
-def set_label(self, idx:int, new_label:str):
-    self.c_set_label(idx,new_label);
-    return self
+# @add_method(UniTensor)
+# def set_label(self, idx:int, new_label:str):
+#     self.c_set_label(idx,new_label);
+#     return self
 
 
 
@@ -198,20 +204,32 @@ def set_labels(self,new_labels:List[str]):
 
 
 @add_method(UniTensor)
-def relabel_(self, old_label:str, new_label:str):
-    self.c_relabel_(old_label,new_label);
+def relabel_(self, old_label=None, new_label:str="", idx:int = None):
+    if old_label == None and idx != None:
+        self.c_relabel_(idx,new_label);
+    elif old_label != None and idx == None:
+        self.c_relabel_(old_label,new_label);
+    else:
+        raise ValueError("[ERROR] invalid input for relabel_")
     return self
 
-@add_method(UniTensor)
-def relabel_(self, idx:int, new_label:str):
-    self.c_relabel_(idx,new_label);
-    return self
+# @add_method(UniTensor)
+# def relabel_(self, idx:int, new_label:str):
+#     self.c_relabel_(idx,new_label);
+#     return self
 
 
 
 @add_method(UniTensor)
-def relabels_(self, new_labels:List[str],old_labels:List[str]=[]):
-    self.c_relabels_(new_labels);
+def relabels_(self, old_labels:List[str]=[],new_labels:List[str]=[]):
+    if len(old_labels) != 0 and len(new_labels) != 0:
+        self.c_relabels_(old_labels,new_labels);
+    elif len(old_labels) == 0 and len(new_labels) != 0:
+        self.c_relabels_(new_labels);
+    elif len(old_labels) != 0 and len(new_labels) == 0:
+        self.c_relabels_(old_labels);
+    else:
+        self.c_relabels_(old_labels);
     return self
 
 
@@ -223,12 +241,19 @@ def set_rowrank_(self,new_rowrank):
 
 
 
-@add_method(UniTensor)
-def at(self, locator:List[int]):
-    tmp_hclass = self.c_at(locator);
-    return Hclass(tmp_hclass);
+# @add_method(UniTensor)
+# def at(self, locator:List[int]):
+#     tmp_hclass = self.c_at(locator);
+#     return Hclass(tmp_hclass);
 
 @add_method(UniTensor)
-def at(self, labels:List[str], locator:List[int]):
-    tmp_hclass = self.c_at(labels,locator);
+def at(self, labels:List = [], locator:List = []):
+    if len(locator) == 0 and len(labels) == 0:
+        tmp_hclass = self.c_at(locator);
+    elif len(locator) != 0 and len(labels) != 0:
+        tmp_hclass = self.c_at(labels, locator);
+    elif len(locator) == 0 and len(labels) != 0:
+        tmp_hclass = self.c_at(labels);
+    elif len(locator) != 0 and len(labels) == 0:
+        tmp_hclass = self.c_at(locator);
     return Hclass(tmp_hclass);
