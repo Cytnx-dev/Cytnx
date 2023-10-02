@@ -9,7 +9,7 @@ Ins_dest="$HOME/Cytnx_lib"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
-FLAG="${FLAG} -DBACKEND_TORCH=OFF"
+FLAG="${FLAG} -DBACKEND_TORCH=ON"
 
 #=================================================================
 # 2) linalg libs:
@@ -182,7 +182,6 @@ echo ${FLAG}
 #rm -rf build
 mkdir build
 cd build
-#cmake ../ ${FLAG} -DDEV_MODE=on
 cmake ../ ${FLAG} -DDEV_MODE=on
 make -j`nproc`
 make install

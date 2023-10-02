@@ -1,23 +1,23 @@
 #ifndef _H_Storage_
 #define _H_Storage_
+#ifndef BACKEND_TORCH
+  #include <iostream>
+  #include <fstream>
+  #include <cstdlib>
+  #include <cstdio>
+  #include <cstring>
+  #include <initializer_list>
+  #include <typeinfo>
+  #include <vector>
+  #include <complex>
 
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <cstdio>
-#include <cstring>
-#include <initializer_list>
-#include <typeinfo>
-#include <vector>
-#include <complex>
+  #include "Type.hpp"
+  #include "Device.hpp"
+  #include "intrusive_ptr_base.hpp"
+  #include "cytnx_error.hpp"
+  #include "backend/Scalar.hpp"
 
-#include "Type.hpp"
-#include "Device.hpp"
-#include "intrusive_ptr_base.hpp"
-#include "cytnx_error.hpp"
-#include "backend/Scalar.hpp"
-
-#define STORAGE_DEFT_SZ 2
+  #define STORAGE_DEFT_SZ 2
 
 namespace cytnx {
 
@@ -1631,4 +1631,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
+#endif
 #endif
