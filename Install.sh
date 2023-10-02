@@ -186,4 +186,5 @@ cd build
 cmake ../ ${FLAG}
 make -j`nproc`
 make install
-# ctest
+ctest
+gcovr -r ../ . --html-details cov.html
