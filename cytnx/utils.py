@@ -1,6 +1,7 @@
 from functools import wraps
 import inspect
 from inspect import Signature
+from beartype.door import is_bearable
 
 
 class Overload_methods:
@@ -14,7 +15,7 @@ class Overload_methods:
                 arguments = sig.bind(*args, **kwargs).arguments
 
                 if all(
-                    param.annotation is param.empty or param.annotation(arguments[name])
+                    param.annotation is param.empty or is_bearable(arguments[name],param.annotation)
                     for name, param in sig.parameters.items()
                     if name in arguments
                 ):
