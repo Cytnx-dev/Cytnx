@@ -111,13 +111,13 @@ namespace cytnx {
     /**
      * @brief Get the index of an desired label string
      *
-     * @param lbl Label you want to find
+     * @param label Label you want to find
      * @return The index of the label. If not found, return -1
      */
-    cytnx_int64 get_index(std::string lbl) const {
+    cytnx_int64 get_index(std::string label) const {
       std::vector<std::string> lbls = this->_labels;
       for (cytnx_uint64 i = 0; i < lbls.size(); i++) {
-        if (lbls[i] == lbl) return i;
+        if (lbls[i] == label) return i;
       }
       return -1;
     }
@@ -130,9 +130,9 @@ namespace cytnx {
       return this->_bonds[idx];
     }
 
-    Bond &bond_(const std::string &lbl) {
-      auto res = std::find(this->_labels.begin(), this->_labels.end(), lbl);
-      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", lbl.c_str());
+    Bond &bond_(const std::string &label) {
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), label);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", label.c_str());
       cytnx_uint64 idx = std::distance(this->_labels.begin(), res);
 
       return this->bond_(idx);
@@ -145,17 +145,17 @@ namespace cytnx {
     /**
      * @brief Set the label object
      * @details Replace the old label by new label.
-     * @param[in] oldlbl The old label you want to replace.
-     * @param[in] new_lable The label you want to replace with.
+     * @param[in] old_label The old label you want to replace.
+     * @param[in] new_label The label you want to replace with.
      * @pre
-     * 1. \p oldlbl should be exist in this UniTensor.
+     * 1. \p old_label should be exist in this UniTensor.
      * 2. The new label \p new_label cannot set as others exit labels (cannot be duplicated.)
      * @see set_label(const cytnx_int64 &inx, const std::string &new_label)
      */
-    void set_label(const std::string &oldlbl, const std::string &new_label) {
+    void set_label(const std::string &old_label, const std::string &new_label) {
       cytnx_int64 idx;
-      auto res = std::find(this->_labels.begin(), this->_labels.end(), oldlbl);
-      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", oldlbl.c_str());
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), old_label);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", old_label.c_str());
       idx = std::distance(this->_labels.begin(), res);
 
       cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
@@ -309,7 +309,7 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
 
-    virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::string &inx,
+    virtual boost::intrusive_ptr<UniTensor_base> relabel(const std::string &old_label,
                                                          const std::string &new_label);
 
     virtual boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
@@ -1974,8 +1974,8 @@ namespace cytnx {
     }
 
     /*
-    UniTensor& change_label(const cytnx_int64 &old_lbl, const cytnx_int64 &new_label){
-        this->_impl->change_label(old_lbl,new_label);
+    UniTensor& change_label(const cytnx_int64 &old_label, const cytnx_int64 &new_label){
+        this->_impl->change_label(old_label,new_label);
         return *this;
     }
     */
@@ -2155,10 +2155,10 @@ namespace cytnx {
     /**
      * @brief Get the index of an desired label string
      *
-     * @param lbl Label you want to find
+     * @param label Label you want to find
      * @return The index of the label. If not found, return -1
      */
-    cytnx_int64 get_index(std::string lbl) const { return this->_impl->get_index(lbl); }
+    cytnx_int64 get_index(std::string label) const { return this->_impl->get_index(label); }
 
     /**
     @brief Get the bonds of the UniTensor.
@@ -2174,11 +2174,11 @@ namespace cytnx {
     const Bond &bond_(const cytnx_uint64 &idx) const { return this->_impl->bond_(idx); }
     Bond &bond_(const cytnx_uint64 &idx) { return this->_impl->bond_(idx); }
 
-    const Bond &bond_(const std::string &lbl) const { return this->_impl->bond_(lbl); }
-    Bond &bond_(const std::string &lbl) { return this->_impl->bond_(lbl); }
+    const Bond &bond_(const std::string &label) const { return this->_impl->bond_(label); }
+    Bond &bond_(const std::string &label) { return this->_impl->bond_(label); }
 
     Bond bond(const cytnx_uint64 &idx) const { return this->_impl->bond_(idx).clone(); }
-    Bond bond(const std::string &lbl) const { return this->_impl->bond_(lbl).clone(); }
+    Bond bond(const std::string &label) const { return this->_impl->bond_(label).clone(); }
 
     /**
     @brief Get the shape of the UniTensor.
@@ -2260,10 +2260,10 @@ namespace cytnx {
     /**
     @see relabels(const std::vector<std::string> &new_labels) const
      */
-    UniTensor relabels(const std::initializer_list<char *> &new_lbls) const {
-      std::vector<char *> new_labels(new_lbls);
-      std::vector<std::string> vs(new_labels.size());
-      transform(new_labels.begin(), new_labels.end(), vs.begin(),
+    UniTensor relabels(const std::initializer_list<char *> &new_labels) const {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
                 [](char *x) -> std::string { return std::string(x); });
 
       UniTensor out;
@@ -2273,10 +2273,10 @@ namespace cytnx {
     /**
     @see relabels_(const std::vector<std::string> &new_labels)
      */
-    UniTensor &relabels_(const std::initializer_list<char *> &new_lbls) {
-      std::vector<char *> new_labels(new_lbls);
-      std::vector<std::string> vs(new_labels.size());
-      transform(new_labels.begin(), new_labels.end(), vs.begin(),
+    UniTensor &relabels_(const std::initializer_list<char *> &new_labels) {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
                 [](char *x) -> std::string { return std::string(x); });
 
       this->_impl->relabels_(vs);
@@ -2322,16 +2322,16 @@ namespace cytnx {
     @see relabels(const std::vector<std::string> &old_labels, const std::vector<std::string>
     &new_labels) const
      */
-    UniTensor relabels(const std::initializer_list<char *> &old_lbls,
-                       const std::initializer_list<char *> &new_lbls) const {
-      std::vector<char *> new_labels(new_lbls);
-      std::vector<std::string> vs(new_labels.size());
-      transform(new_labels.begin(), new_labels.end(), vs.begin(),
+    UniTensor relabels(const std::initializer_list<char *> &old_labels,
+                       const std::initializer_list<char *> &new_labels) const {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
                 [](char *x) -> std::string { return std::string(x); });
 
-      std::vector<char *> old_labels(old_lbls);
-      std::vector<std::string> vs_old(old_labels.size());
-      transform(old_labels.begin(), old_labels.end(), vs_old.begin(),
+      std::vector<char *> old_lbls(old_labels);
+      std::vector<std::string> vs_old(old_lbls.size());
+      transform(old_lbls.begin(), old_lbls.end(), vs_old.begin(),
                 [](char *x) -> std::string { return std::string(x); });
 
       return this->relabels(vs_old, vs);
@@ -2341,16 +2341,16 @@ namespace cytnx {
     @see relabels_(const std::vector<std::string> &old_labels, const std::vector<std::string>
     &new_labels)
      */
-    UniTensor &relabels_(const std::initializer_list<char *> &old_lbls,
-                         const std::initializer_list<char *> &new_lbls) {
-      std::vector<char *> new_labels(new_lbls);
-      std::vector<std::string> vs(new_labels.size());
-      transform(new_labels.begin(), new_labels.end(), vs.begin(),
+    UniTensor &relabels_(const std::initializer_list<char *> &old_labels,
+                         const std::initializer_list<char *> &new_labels) {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
                 [](char *x) -> std::string { return std::string(x); });
 
-      std::vector<char *> old_labels(old_lbls);
-      std::vector<std::string> vs_old(old_labels.size());
-      transform(old_labels.begin(), old_labels.end(), vs_old.begin(),
+      std::vector<char *> old_lbls(old_labels);
+      std::vector<std::string> vs_old(old_lbls.size());
+      transform(old_lbls.begin(), old_lbls.end(), vs_old.begin(),
                 [](char *x) -> std::string { return std::string(x); });
 
       this->relabels_(vs_old, vs);
@@ -2618,41 +2618,41 @@ namespace cytnx {
     }
 
     template <class T>
-    const T &at(const std::vector<std::string> &lbls,
+    const T &at(const std::vector<std::string> &labels,
                 const std::vector<cytnx_uint64> &locator) const {
       // giving label <-> locator one to one corresponding, return the element:
-      cytnx_error_msg(locator.size() != lbls.size(),
+      cytnx_error_msg(locator.size() != labels.size(),
                       "[ERROR][at] length of list should be the same for label and locator.%s",
                       "\n");
       cytnx_error_msg(
-        lbls.size() != this->rank(),
+        labels.size() != this->rank(),
         "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
       std::vector<cytnx_uint64> new_locator(this->rank());
       cytnx_uint64 new_loc;
-      for (int i = 0; i < lbls.size(); i++) {
-        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+      for (int i = 0; i < labels.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
       return this->at<T>(new_locator);
     }
     template <class T>
-    T &at(const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &locator) {
+    T &at(const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &locator) {
       // giving label <-> locator one to one corresponding, return the element:
-      cytnx_error_msg(locator.size() != lbls.size(),
+      cytnx_error_msg(locator.size() != labels.size(),
                       "[ERROR][at] length of list should be the same for label and locator.%s",
                       "\n");
       cytnx_error_msg(
-        lbls.size() != this->rank(),
+        labels.size() != this->rank(),
         "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
       std::vector<cytnx_uint64> new_locator(this->rank());
       cytnx_uint64 new_loc;
-      for (int i = 0; i < lbls.size(); i++) {
-        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+      for (int i = 0; i < labels.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
@@ -2697,42 +2697,42 @@ namespace cytnx {
       }
     }
 
-    Scalar::Sproxy at(const std::vector<std::string> &lbls,
+    Scalar::Sproxy at(const std::vector<std::string> &labels,
                       const std::vector<cytnx_uint64> &locator) {
       // giving label <-> locator one to one corresponding, return the element:
-      cytnx_error_msg(locator.size() != lbls.size(),
+      cytnx_error_msg(locator.size() != labels.size(),
                       "[ERROR][at] length of list should be the same for label and locator.%s",
                       "\n");
       cytnx_error_msg(
-        lbls.size() != this->rank(),
+        labels.size() != this->rank(),
         "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
       std::vector<cytnx_uint64> new_locator(this->rank());
       cytnx_uint64 new_loc;
-      for (int i = 0; i < lbls.size(); i++) {
-        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+      for (int i = 0; i < labels.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
       return this->at(new_locator);
     }
 
-    const Scalar::Sproxy at(const std::vector<std::string> &lbls,
+    const Scalar::Sproxy at(const std::vector<std::string> &labels,
                             const std::vector<cytnx_uint64> &locator) const {
       // giving label <-> locator one to one corresponding, return the element:
-      cytnx_error_msg(locator.size() != lbls.size(),
+      cytnx_error_msg(locator.size() != labels.size(),
                       "[ERROR][at] length of list should be the same for label and locator.%s",
                       "\n");
       cytnx_error_msg(
-        lbls.size() != this->rank(),
+        labels.size() != this->rank(),
         "[ERROR][at] length of lists must be the same as UniTensor.rank (# of legs)%s", "\n");
       std::vector<cytnx_uint64> new_locator(this->rank());
       cytnx_uint64 new_loc;
-      for (int i = 0; i < lbls.size(); i++) {
-        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+      for (int i = 0; i < labels.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] lbl:%s does not exist in current UniTensor.\n", lbls[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
@@ -2760,12 +2760,12 @@ namespace cytnx {
       return this->_impl->get_block(qidx, force);
     }
 
-    Tensor get_block(const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qidx,
+    Tensor get_block(const std::vector<std::string> &labels, const std::vector<cytnx_int64> &qidx,
                      const bool &force = false) const {
       cytnx_error_msg(
-        lbls.size() != qidx.size(),
+        labels.size() != qidx.size(),
         "[ERROR][get_block] length of lists must be the same for both lables and qnidices%s", "\n");
-      cytnx_error_msg(lbls.size() != this->rank(),
+      cytnx_error_msg(labels.size() != this->rank(),
                       "[ERROR][get_block] length of lists must be the rank (# of legs)%s", "\n");
 
       std::vector<cytnx_int64> loc_id(this->rank());
@@ -2773,11 +2773,11 @@ namespace cytnx {
 
       cytnx_uint64 new_loc;
       std::vector<cytnx_uint64> new_order(this->rank());
-      for (int i = 0; i < lbls.size(); i++) {
-        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+      for (int i = 0; i < labels.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
                         "[ERROR][get_block] label:%s does not exists in current Tensor.\n",
-                        lbls[i].c_str());
+                        labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_qidx[new_loc] = qidx[i];
         new_order[i] = new_loc;
@@ -2806,10 +2806,10 @@ namespace cytnx {
       return this->_impl->get_block(iqnum, force);
     }
 
-    Tensor get_block(const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &qidx,
+    Tensor get_block(const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &qidx,
                      const bool &force = false) const {
       std::vector<cytnx_int64> iqnum(qidx.begin(), qidx.end());
-      return this->get_block(lbls, iqnum, force);
+      return this->get_block(labels, iqnum, force);
     }
 
     /**
@@ -2841,25 +2841,25 @@ namespace cytnx {
 
     /**
     @brief Get the shared (data) view of block for the given quantum indices on given labels
-        @param[in] lbls the labels of the bonds.
+        @param[in] labels the labels of the bonds.
         @param[in] qidx input the quantum indices you want to get the corresponding block.
         @param[in] force If force is true, it will return the tensor anyway (Even the
             corresponding block is empty, it will return void type tensor if \p force is
                 set as true. Otherwise, it will trow the exception.)
         @return Tensor&
 
-        @note lbls and qidx forming one to one pairs. e.g. it means get `qidx[i]` qnum at Bond
-    `lbls[i]`. Also note that the return Tensor will have axes in the same order specified by lbls.
+        @note labels and qidx forming one to one pairs. e.g. it means get `qidx[i]` qnum at Bond
+    `labels[i]`. Also note that the return Tensor will have axes in the same order specified by labels.
 
     */
     // developer note: Tensor is not the same object (Thus Tensor instead of Tensor& ),
     //                 since we permute! but they have shared data memory.
-    Tensor get_block_(const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qidx,
+    Tensor get_block_(const std::vector<std::string> &labels, const std::vector<cytnx_int64> &qidx,
                       const bool &force = false) {
       cytnx_error_msg(
-        lbls.size() != qidx.size(),
+        labels.size() != qidx.size(),
         "[ERROR][get_block] length of lists must be the same for both lables and qnidices%s", "\n");
-      cytnx_error_msg(lbls.size() != this->rank(),
+      cytnx_error_msg(labels.size() != this->rank(),
                       "[ERROR][get_block] length of lists must be the rank (# of legs)%s", "\n");
 
       std::vector<cytnx_int64> loc_id(this->rank());
@@ -2867,11 +2867,11 @@ namespace cytnx {
 
       cytnx_uint64 new_loc;
       std::vector<cytnx_uint64> new_order(this->rank());
-      for (int i = 0; i < lbls.size(); i++) {
-        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), lbls[i]);
+      for (int i = 0; i < labels.size(); i++) {
+        auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
                         "[ERROR][get_block] label:%s does not exists in current Tensor.\n",
-                        lbls[i].c_str());
+                        labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_qidx[new_loc] = qidx[i];
         new_order[i] = new_loc;
@@ -2899,10 +2899,10 @@ namespace cytnx {
       return get_block_(iqidx, force);
     }
 
-    Tensor get_block_(const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &qidx,
+    Tensor get_block_(const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &qidx,
                       const bool &force = false) {
       std::vector<cytnx_int64> iqidx(qidx.begin(), qidx.end());
-      return get_block_(lbls, iqidx, force);
+      return get_block_(labels, iqidx, force);
     }
     //================================
 
