@@ -1,7 +1,7 @@
 #include <iostream>
 #include "cytnx.hpp"
 
-#include <torch/torch.h>
+//#include <torch/torch.h>
 
 using namespace std;
 using namespace cytnx;

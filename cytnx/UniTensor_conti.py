@@ -179,12 +179,12 @@ def set_name(self,name):
 
 
 
-@add_method(UniTensor)
+@add_ovld_method(UniTensor)
 def set_label(self, old_label:str, new_label:str):
     self.c_set_label(old_label,new_label);
     return self
 
-@add_method(UniTensor)
+@add_ovld_method(UniTensor)
 def set_label(self, idx:int, new_label:str):
     self.c_set_label(idx,new_label);
     return self
@@ -197,12 +197,12 @@ def set_labels(self,new_labels:List[str]):
     return self
 
 
-@add_method(UniTensor)
+@add_ovld_method(UniTensor)
 def relabel_(self, old_label:str, new_label:str):
     self.c_relabel_(old_label,new_label);
     return self
 
-@add_method(UniTensor)
+@add_ovld_method(UniTensor)
 def relabel_(self, idx:int, new_label:str):
     self.c_relabel_(idx,new_label);
     return self
@@ -210,8 +210,8 @@ def relabel_(self, idx:int, new_label:str):
 
 
 @add_method(UniTensor)
-def relabels_(self, new_labels:List[str],old_labels:List[str]=[]):
-    self.c_relabels_(new_labels);
+def relabels_(self, old_labels:List[str],new_labels:List[str]=[]):
+    self.c_relabels_(old_labels,new_labels);
     return self
 
 
@@ -223,12 +223,12 @@ def set_rowrank_(self,new_rowrank):
 
 
 
-@add_method(UniTensor)
+@add_ovld_method(UniTensor)
 def at(self, locator:List[int]):
     tmp_hclass = self.c_at(locator);
     return Hclass(tmp_hclass);
 
-@add_method(UniTensor)
+@add_ovld_method(UniTensor)
 def at(self, labels:List[str], locator:List[int]):
     tmp_hclass = self.c_at(labels,locator);
     return Hclass(tmp_hclass);
