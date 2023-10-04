@@ -5,8 +5,12 @@ from beartype.door import is_bearable
 
 
 class Overload_methods:
-    name: str = None
-    reged_sigs: dict[Signature] = {}
+    #name: str = None
+    #reged_sigs: dict[Signature] = {}
+
+    def __init__(self):
+        self.name = None
+        self.reged_sigs = {}
 
 
     def __call__(self,*args,**kwargs):
@@ -81,11 +85,11 @@ def add_ovld_method(cls):
                 return "ok"
     """
     def decorator(func):
-        cls_member = inspect.getmembers(cls)
+        cls_member = dict(inspect.getmembers(cls))
 
         if func.__name__ in cls_member:
             # exists:
-            obj = cls_member["_" + func.__name__]
+            obj = cls_member.get("_" + func.__name__)
             if not isinstance(obj,Overload_methods):
                 raise TypeError(f"method <{func.__name__}> already exists\n"+
                                 f"(either defined before or injected with add_method).\n"
@@ -97,7 +101,6 @@ def add_ovld_method(cls):
             obj = Overload_methods()
             obj._add_func(func)
             setattr(cls,"_" + func.__name__,obj)
-
             def wrapper(self, *args, **kwargs):
                 # get name:
                 mem = dict(inspect.getmembers(self))
