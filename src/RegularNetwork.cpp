@@ -39,9 +39,13 @@ namespace cytnx {
   void _parse_TOUT_line_(vector<string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
                          const cytnx_uint64 &line_num) {
     lbls.clear();
+
     vector<string> tmp = str_split(line, false, ";");
-    cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                    "Invalid TOUT line");
+    // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+    //                 "Invalid TOUT line");
+    if (tmp.size() != 2) {
+      tmp.push_back("");
+    }
 
     // handle col-space lbl
     vector<string> ket_lbls = str_split(tmp[0], false, ",");
