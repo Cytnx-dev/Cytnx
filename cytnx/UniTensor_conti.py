@@ -2,7 +2,7 @@ from .utils import *
 from cytnx import *
 # from typing import List
 # Use beartype to check the type of arguments
-from beartype.typing import Dict, FrozenSet, List, Set, Tuple, Type
+from beartype.typing import List
 from functools import singledispatch
 
 ## load the submodule from pybind and inject the methods

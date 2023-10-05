@@ -3,7 +3,7 @@ from cytnx import *
 from .Symmetry_conti import Qs
 # from typing import List
 # Use beartype to check the type of arguments
-from beartype.typing import Dict, FrozenSet, List, Set, Tuple, Type
+from beartype.typing import List
 
 @add_method(Bond)
 def redirect_(self):
