@@ -70,5 +70,5 @@ TEST_F(NetworkTest, Network_dense_TOUT_no_colon) {
   net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
   auto res = net.Launch();
   EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
-  EXPECT_EQ(res.rowrank(), 3);
+  EXPECT_EQ(res.rowrank(), 0);
 }

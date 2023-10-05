@@ -44,7 +44,8 @@ namespace cytnx {
     // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                 "Invalid TOUT line");
     if (tmp.size() != 2) {
-      tmp.push_back("");
+      // tmp.push_back("");
+      tmp.insert(tmp.begin(), "");
     }
 
     // handle col-space lbl
