@@ -184,6 +184,6 @@ mkdir build
 cd build
 # cmake ../ ${FLAG} -DDEV_MODE=on
 cmake ../ ${FLAG}
-make -j`nproc`
+# make -j`nproc`
 # make install
 # ctest -j`nproc`

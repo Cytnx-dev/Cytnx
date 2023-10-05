@@ -1031,7 +1031,44 @@ namespace cytnx {
      */
     Scalar sqrt() const {
       Scalar out = *this;
-      out._impl->isqrt();
+      switch (_dtype) {
+        case Type.ComplexDouble:
+          out = Scalar(std::sqrt(toComplexDouble()));
+          break;
+        case Type.ComplexFloat:
+          out = Scalar(std::sqrt(toComplexFloat()));
+          break;
+        case Type.Double:
+          out = Scalar(std::sqrt(toDouble()));
+          break;
+        case Type.Float:
+          out = Scalar(std::sqrt(toFloat()));
+          break;
+        case Type.Int64:
+          out = Scalar(std::sqrt(toLong()));
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          out = Scalar(std::sqrt(toInt()));
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          out = Scalar(std::sqrt(toShort()));
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          out = Scalar(std::sqrt(toBool()));
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
+      }
       return out;
     }
 
@@ -1048,9 +1085,46 @@ namespace cytnx {
       int rid = Type.cy_typeid(rc);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
-        return tmp._impl->less(rc);
       } else {
-        return this->_impl->less(rc);
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() < rc;
+          break;
+        case Type.Float:
+          return tmp.toFloat() < rc;
+          break;
+        case Type.Int64:
+          return tmp.toLong() < rc;
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() < rc;
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() < rc;
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() < rc;
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
@@ -1064,16 +1138,54 @@ namespace cytnx {
       Scalar tmp;
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
-        return tmp._impl->less(rhs._impl);
       } else {
-        return this->_impl->less(rhs._impl);
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() < rhs.toDouble();
+          break;
+        case Type.Float:
+          return tmp.toFloat() < rhs.toFloat();
+          break;
+        case Type.Int64:
+          return tmp.toLong() < rhs.toLong();
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() < rhs.toInt();
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() < rhs.toShort();
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() < rhs.toBool();
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
     // comparison <=
 
     /**
-     * @brief Return whether the current Scalar is less than or equal to a given template number \p
+     * @brief Return whether the current Scalar is less than or equal to a given template number
+     \p
      * rc.
      * @details That is, whether \f$ s \leq r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given number \p rc.
@@ -1085,9 +1197,46 @@ namespace cytnx {
       int rid = Type.cy_typeid(rc);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
-        return !(tmp._impl->greater(rc));
       } else {
-        return !(this->_impl->greater(rc));
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() <= rc;
+          break;
+        case Type.Float:
+          return tmp.toFloat() <= rc;
+          break;
+        case Type.Int64:
+          return tmp.toLong() <= rc;
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() <= rc;
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() <= rc;
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() <= rc;
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
@@ -1101,9 +1250,46 @@ namespace cytnx {
       Scalar tmp;
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
-        return !(tmp._impl->greater(rhs._impl));
       } else {
-        return !(this->_impl->greater(rhs._impl));
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() <= rhs.toDouble();
+          break;
+        case Type.Float:
+          return tmp.toFloat() <= rhs.toFloat();
+          break;
+        case Type.Int64:
+          return tmp.toLong() <= rhs.toLong();
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() <= rhs.toInt();
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() <= rhs.toShort();
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() <= rhs.toBool();
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
@@ -1120,9 +1306,46 @@ namespace cytnx {
       int rid = Type.cy_typeid(rc);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
-        return tmp._impl->greater(rc);
       } else {
-        return this->_impl->greater(rc);
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() > rc;
+          break;
+        case Type.Float:
+          return tmp.toFloat() > rc;
+          break;
+        case Type.Int64:
+          return tmp.toLong() > rc;
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() > rc;
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() > rc;
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() > rc;
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
@@ -1136,16 +1359,54 @@ namespace cytnx {
       Scalar tmp;
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
-        return tmp._impl->greater(rhs._impl);
       } else {
-        return this->_impl->greater(rhs._impl);
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() > rhs.toDouble();
+          break;
+        case Type.Float:
+          return tmp.toFloat() > rhs.toFloat();
+          break;
+        case Type.Int64:
+          return tmp.toLong() > rhs.toLong();
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() > rhs.toInt();
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() > rhs.toShort();
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() > rhs.toBool();
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
     // comparison >=
 
     /**
-     * @brief Return whether the current Scalar is greater than or equal to a given template number
+     * @brief Return whether the current Scalar is greater than or equal to a given template
+     number
      * \p rc.
      * @details That is, whether \f$ s \geq r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given number \p rc.
@@ -1157,14 +1418,52 @@ namespace cytnx {
       int rid = Type.cy_typeid(rc);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
-        return !(tmp._impl->less(rc));
       } else {
-        return !(this->_impl->less(rc));
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() >= rc;
+          break;
+        case Type.Float:
+          return tmp.toFloat() >= rc;
+          break;
+        case Type.Int64:
+          return tmp.toLong() >= rc;
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() >= rc;
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() >= rc;
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() >= rc;
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
     /**
-     * @brief Return whether the current Scalar is greater than or equal to a given Scalar \p rhs.
+     * @brief Return whether the current Scalar is greater than or equal to a given Scalar \p
+     rhs.
      * @details That is, whether \f$ s \geq r \f$, where \f$ s \f$ is the current Scalar
      * itself and \f$ r \f$ is the given Scalar \p rhs.
      * @see operator>=(const Scalar &lhs, const Scalar &rhs)
@@ -1173,9 +1472,46 @@ namespace cytnx {
       Scalar tmp;
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
-        return !(tmp._impl->less(rhs._impl));
       } else {
-        return !(this->_impl->less(rhs._impl));
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() >= rhs.toDouble();
+          break;
+        case Type.Float:
+          return tmp.toFloat() >= rhs.toFloat();
+          break;
+        case Type.Int64:
+          return tmp.toLong() >= rhs.toLong();
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() >= rhs.toInt();
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() >= rhs.toShort();
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() >= rhs.toBool();
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
 
@@ -1193,9 +1529,46 @@ namespace cytnx {
       int rid = Type.cy_typeid(rc);
       if (rid < this->dtype()) {
         tmp = this->astype(rid);
-        return tmp._impl->eq(rc);
       } else {
-        return this->_impl->eq(rc);
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() == rc;
+          break;
+        case Type.Float:
+          return tmp.toFloat() == rc;
+          break;
+        case Type.Int64:
+          return tmp.toLong() == rc;
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() == rc;
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() == rc;
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() == rc;
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
     // /**
@@ -1227,9 +1600,46 @@ namespace cytnx {
       Scalar tmp;
       if (rhs.dtype() < this->dtype()) {
         tmp = this->astype(rhs.dtype());
-        return tmp._impl->eq(rhs._impl);
       } else {
-        return this->_impl->eq(rhs._impl);
+        tmp = *this;
+      }
+      switch (tmp.dtype()) {
+        case Type.ComplexDouble:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.ComplexFloat:
+          cytnx_error_msg(true, "[ERROR] comparison not supported for complex type%s", "\n");
+          break;
+        case Type.Double:
+          return tmp.toDouble() == rhs.toDouble();
+          break;
+        case Type.Float:
+          return tmp.toFloat() == rhs.toFloat();
+          break;
+        case Type.Int64:
+          return tmp.toLong() == rhs.toLong();
+          break;
+        case Type.Uint64:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int32:
+          return tmp.toInt() == rhs.toInt();
+          break;
+        case Type.Uint32:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Int16:
+          return tmp.toShort() == rhs.toShort();
+          break;
+        case Type.Uint16:
+          cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+          break;
+        case Type.Bool:
+          return tmp.toBool() == rhs.toBool();
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+          break;
       }
     }
     // /**
@@ -1262,7 +1672,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
-      out._impl->iadd(rc);
+      out += rc;
       return out;
     }
 
@@ -1277,7 +1687,7 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
-      out._impl->iadd(rhs._impl);
+      out += rhs;
       return out;
     }
 
@@ -1296,7 +1706,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
-      out._impl->imul(rc);
+      out *= rc;
       return out;
     }
 
@@ -1311,7 +1721,7 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
-      out._impl->imul(rhs._impl);
+      out *= rhs;
       return out;
     }
 
@@ -1330,7 +1740,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
-      out._impl->isub(rc);
+      out -= rc;
       return out;
     }
 
@@ -1345,7 +1755,7 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
-      out._impl->isub(rhs._impl);
+      out -= rhs;
       return out;
     }
 
@@ -1364,7 +1774,7 @@ namespace cytnx {
       } else {
         out = this->astype(rid);
       }
-      out._impl->idiv(rc);
+      out /= rc;
       return out;
     }
 
@@ -1379,7 +1789,7 @@ namespace cytnx {
       } else {
         out = this->astype(rhs.dtype());
       }
-      out._impl->idiv(rhs._impl);
+      out /= rhs;
       return out;
     }
 
@@ -1412,7 +1822,6 @@ namespace cytnx {
         return this->greater(rc);
     }
 
-
     template<class T>
     bool operator<=(const T &rc){
         return this->leq(rc);
@@ -1424,7 +1833,6 @@ namespace cytnx {
     }
     */
   };
-};
-}  // namespace cytnx
+};  // namespace cytnx
 #endif
 #endif
