@@ -179,11 +179,11 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF "
 #-----------------------------------
 
 echo ${FLAG}
-# rm -rf build
+rm -rf build
 mkdir build
 cd build
 # cmake ../ ${FLAG} -DDEV_MODE=on
 cmake ../ ${FLAG}
-# make -j`nproc`
+make -j`nproc`
 # make install
 # ctest -j`nproc`
