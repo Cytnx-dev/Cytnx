@@ -2,6 +2,7 @@ from functools import wraps
 import inspect
 from inspect import Signature
 from beartype.door import is_bearable
+from beartype.typing import Dict, FrozenSet, List, Set, Tuple, Type
 
 
 class Overload_methods:

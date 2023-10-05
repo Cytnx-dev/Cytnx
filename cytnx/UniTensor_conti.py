@@ -1,6 +1,8 @@
 from .utils import *
 from cytnx import *
-from typing import List
+# from typing import List
+# Use beartype to check the type of arguments
+from beartype.typing import Dict, FrozenSet, List, Set, Tuple, Type
 from functools import singledispatch
 
 ## load the submodule from pybind and inject the methods
@@ -209,9 +211,14 @@ def relabel_(self, idx:int, new_label:str):
 
 
 
-@add_method(UniTensor)
-def relabels_(self, old_labels:List[str],new_labels:List[str]=[]):
+@add_ovld_method(UniTensor)
+def relabels_(self, old_labels:List[str],new_labels:List[str]):
     self.c_relabels_(old_labels,new_labels);
+    return self
+
+@add_ovld_method
+def relabels_(self, new_labels:List[str]):
+    self.c_relabels_(new_labels);
     return self
 
 
