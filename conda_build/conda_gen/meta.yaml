@@ -28,6 +28,7 @@ requirements:
     - "python-graphviz"
     - "graphviz"
     - "blas * mkl"
+    - "beartype"
     - '{{ compiler("c")}}'
     - '{{ compiler("cxx")}}'
 
@@ -45,6 +46,7 @@ requirements:
     - "python-graphviz"
     - "graphviz"
     - "blas * mkl"
+    - "beartype"
     - '{{ compiler("c")}}'
     - '{{ compiler("cxx")}}'
 
@@ -61,6 +63,7 @@ requirements:
     - "python-graphviz"
     - "graphviz"
     - "blas * mkl"
+    - "beartype"
     - "cmake"
     - "make"
     - "pybind11"
