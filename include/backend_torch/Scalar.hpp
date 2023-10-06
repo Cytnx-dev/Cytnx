@@ -535,49 +535,57 @@ namespace cytnx {
      */
     int dtype() const { return this->_dtype; }
 
-    // print()
-    /**
-     * @brief Print the Scalar to the standard output.
+    /// @cond
+    /*
+     * @brief On the pytorch-side only. Not documented.
      */
-    void print() const {
+    void print_elem(std::ostream &os) const {
       switch (_dtype) {
         case Type.ComplexDouble:
-          std::cout << "< " << toComplexDouble() << " >";
+          os << "< " << toComplexDouble() << " >";
           break;
         case Type.ComplexFloat:
-          std::cout << "< " << toComplexFloat() << " >";
+          os << "< " << toComplexFloat() << " >";
           break;
         case Type.Double:
-          std::cout << "< " << toDouble() << " >";
+          os << "< " << toDouble() << " >";
           break;
         case Type.Float:
-          std::cout << "< " << toFloat() << " >";
+          os << "< " << toFloat() << " >";
           break;
         case Type.Int64:
-          std::cout << "< " << toLong() << " >";
+          os << "< " << toLong() << " >";
           break;
         case Type.Uint64:
           cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
           break;
         case Type.Int32:
-          std::cout << "< " << toInt() << " >";
+          os << "< " << toInt() << " >";
           break;
         case Type.Uint32:
           cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
           break;
         case Type.Int16:
-          std::cout << "< " << toShort() << " >";
+          os << "< " << toShort() << " >";
           break;
         case Type.Uint16:
           cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
           break;
         case Type.Bool:
-          std::cout << "< " << toBool() << " >";
+          os << "< " << toBool() << " >";
           break;
         default:
           cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
           break;
       }
+    }
+    /// @endcond
+
+    /**
+     * @brief Print the Scalar to the standard output.
+     */
+    void print() const {
+      print_elem(std::cout);
       std::cout << std::string(" Scalar dtype: [") << Type.getname(this->_dtype) << std::string("]")
                 << std::endl;
     }
