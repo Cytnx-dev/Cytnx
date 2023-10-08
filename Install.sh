@@ -183,7 +183,7 @@ rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
-make -j`nproc`
+make -j4
 make install
 ctest
 gcovr -r ../ . --html-details cov.html

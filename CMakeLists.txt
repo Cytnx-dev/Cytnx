@@ -140,7 +140,7 @@ if(RUN_TESTS)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
   target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
   add_subdirectory(tests)
-  add_subdirectory(bm_tests)
+  #add_subdirectory(bm_tests)
 endif()
 
 include(GNUInstallDirs)
@@ -196,24 +196,28 @@ endif() # Backend torch
 # ## Get Gtest & benchmark
 # #####################################################################
 if(RUN_TESTS)
-  include(FetchContent)
-  FetchContent_Declare(
-    googletest
-    URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-  )
+  find_package(GTest REQUIRED)
+  #find_package(benchmark REQUIRED)
+
+
+  #include(FetchContent)
+  #FetchContent_Declare(
+  #  googletest
+  #  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+  #)
 
   # For Windows: Prevent overriding the parent project's compiler/linker settings
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-  FetchContent_Declare(
-    googlebenchmark
-    GIT_REPOSITORY https://github.com/google/benchmark.git
-    GIT_TAG v1.7.1) # need master for benchmark::benchmark
-  set(BENCHMARK_ENABLE_TESTING off) # to suppress benchmark internal tests
+  #FetchContent_Declare(
+  #  googlebenchmark
+  #  GIT_REPOSITORY https://github.com/google/benchmark.git
+  #  GIT_TAG v1.7.1) # need master for benchmark::benchmark
+  #set(BENCHMARK_ENABLE_TESTING off) # to suppress benchmark internal tests
 
-  FetchContent_MakeAvailable(
-    googletest
-    googlebenchmark)
+  #FetchContent_MakeAvailable(
+  #  googletest
+  #  googlebenchmark)
 endif()
 
 # #######
