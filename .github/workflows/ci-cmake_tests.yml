@@ -35,7 +35,7 @@ jobs:
       shell: bash -l {0}
       run: |
         mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
-        mamba install gcovr
+        mamba install gcovr gtest
 
 
     - name: Configure CMake
