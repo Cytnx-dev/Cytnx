@@ -22,7 +22,7 @@ jobs:
       with:
         # Specify python version your environment will have. Remember to quote this, or
         # YAML will think you want python 3.1 not 3.10
-        python-version: "3.10"
+        python-version: "3.11"
         # This uses *miniforge*, rather than *minicond*. The primary difference is that
         # the defaults channel is not enabled at all
         miniforge-version: latest
@@ -35,7 +35,7 @@ jobs:
       shell: bash -l {0}
       run: |
         mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
-        mamba install gcovr
+        mamba install gcovr gtest
 
 
     - name: Configure CMake
