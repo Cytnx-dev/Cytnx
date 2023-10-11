@@ -17,11 +17,18 @@ int main(int argc, char* argv[]) {
   auto dst_ut1 = ut_diag.reshape(dst_shape, 1);
   auto dst_ut2 = ut_diag.clone();
 
-  // print(dst_ut2.is_diag());
-  print(dst_ut2.shape());
-  dst_ut2.reshape_(dst_shape, 1);
+  auto ut_tr = dst_ut2.Trace(0, 1);
 
-  print(dst_ut2.shape());
+  auto ut_dense = dst_ut2.to_dense();
+  auto ans = ut_dense.Trace(0, 1);
+
+  print(ut_tr);
+  print(ans);
+  // print(dst_ut2.is_diag());
+  // print(dst_ut2.shape());
+  // dst_ut2.reshape_(dst_shape, 1);
+
+  // print(dst_ut2.shape());
 
   return 0;
 

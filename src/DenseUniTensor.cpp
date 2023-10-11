@@ -1090,7 +1090,8 @@ namespace cytnx {
 
     // trace the block:
     if (this->_is_diag) {
-      cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      this->_block = linalg::Sum(this->_block);
     } else {
       this->_block = this->_block.Trace(ida, idb);
     }
@@ -1138,7 +1139,8 @@ namespace cytnx {
 
     // trace the block:
     if (this->_is_diag) {
-      cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      this->_block = linalg::Sum(this->_block);
     } else {
       this->_block = this->_block.Trace(ida, idb);
     }
