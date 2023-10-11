@@ -1,9 +1,13 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
+
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include "backend/Scalar.hpp"
 #include "Generator.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
 
@@ -50,15 +54,15 @@ namespace cytnx {
         linalg_internal::lii.ger_ii[fin_dtype](out.storage()._impl, px.storage()._impl,
                                                py.storage()._impl, alph);
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(px.device()));
         linalg_internal::lii.cuGer_ii[fin_dtype](out.storage()._impl, px.storage()._impl,
                                                  py.storage()._impl, alph);
-#else
+  #else
         cytnx_error_msg(true, "[Ger] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
 
-#endif
+  #endif
         // cytnx_error_msg(true,"[Developing ger.gpu]%s","\n");
       }
 
@@ -67,3 +71,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

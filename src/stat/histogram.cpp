@@ -1,6 +1,9 @@
 #include "stat.hpp"
 #include "Type.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   namespace stat {
 
@@ -99,3 +102,4 @@ namespace cytnx {
 
   }  // namespace stat
 }  // namespace cytnx
+#endif

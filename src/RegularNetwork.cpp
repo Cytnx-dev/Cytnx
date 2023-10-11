@@ -1,14 +1,15 @@
 #include <typeinfo>
 #include "Network.hpp"
-
 #include "search_tree.hpp"
 #include <stack>
 #include <algorithm>
 #include <iostream>
 #include "Generator.hpp"
-#include "utils/cutensornet.hpp"
-
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+  #include "utils/cutensornet.hpp"
 
 namespace cytnx {
 
@@ -38,9 +39,14 @@ namespace cytnx {
   void _parse_TOUT_line_(vector<string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
                          const cytnx_uint64 &line_num) {
     lbls.clear();
+
     vector<string> tmp = str_split(line, false, ";");
-    cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                    "Invalid TOUT line");
+    // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+    //                 "Invalid TOUT line");
+    if (tmp.size() != 2) {
+      // tmp.push_back("");
+      tmp.insert(tmp.begin(), "");
+    }
 
     // handle col-space lbl
     vector<string> ket_lbls = str_split(tmp[0], false, ",");
@@ -600,11 +606,11 @@ namespace cytnx {
       this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
     }
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
     this->optimizerInfo = nullptr;
+    #endif
   #endif
-#endif
 
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
@@ -852,8 +858,8 @@ namespace cytnx {
         this->order_line = Optim_ORDERline;
         _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
       } else {
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
         if (this->tensors[0].uten_type() != UTenType.Dense) {
           cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] Error,%s",
                           "Sparse or Block type UniTensor network optimization is not support.\n");
@@ -885,16 +891,19 @@ namespace cytnx {
           this->einsum_path = path;
           this->order_line = einsumpath_to_string(path, names);
         }
+    #else
+        // cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
+        //                 "try to call the gpu section for finding optimal contraction order
+        //                 without " "CUQUANTUM support.\n");
+        string Optim_ORDERline = this->getOptimalOrder();
+        this->order_line = Optim_ORDERline;
+        _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+    #endif
+
   #else
         cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
-                        "try to call the gpu section for finding optimal contraction order without "
-                        "CUQUANTUM support.\n");
-  #endif
-
-#else
-        cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
-#endif
+  #endif
       }
 
     } else {
@@ -1013,8 +1022,8 @@ namespace cytnx {
 
     } else {
       // gpu workflow
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
       if (this->tensors[0].uten_type() != UTenType.Dense) {
         cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] Error,%s",
                         "Sparse or Block type UniTensor network contraction is not support.\n");
@@ -1056,17 +1065,70 @@ namespace cytnx {
 
         return out;
       }
-  #else
-      cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] fatal error,%s",
-                      "try to call the gpu section for contraction without CUQUANTUM support.\n");
-      return UniTensor();
-  #endif
+    #else
+      // 1.5 contraction order:
+      if (ORDER_tokens.size() != 0) {
+        // *set by user or optimally found
+        CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+      } else {
+        CtTree.build_default_contraction_tree();
+      }
+      // 2. contract using postorder traversal:
+      // cout << this->CtTree.nodes_container.size() << endl;
+      stack<Node *> stk;
+      Node *root = &(this->CtTree.nodes_container.back());
+      int ly = 0;
+      bool ict;
 
-#else
+      do {
+        // move the lmost
+        while ((root != nullptr)) {
+          if (root->right != nullptr) stk.push(root->right);
+          stk.push(root);
+          root = root->left;
+        }
+
+        root = stk.top();
+        stk.pop();
+        // cytnx_error_msg(stk.size()==0,"[eRROR]","\n");
+        ict = true;
+        if ((root->right != nullptr) && !stk.empty()) {
+          if (stk.top() == root->right) {
+            stk.pop();
+            stk.push(root);
+            root = root->right;
+            ict = false;
+          }
+        }
+        if (ict) {
+          // process!
+
+          // cout << "OK" << endl;
+          if ((root->right != nullptr) && (root->left != nullptr)) {
+            root->utensor = Contract(root->left->utensor, root->right->utensor);
+            root->left->clear_utensor();  // remove intermediate unitensor to save heap space
+            root->right->clear_utensor();  // remove intermediate unitensor to save heap space
+            root->is_assigned = true;
+          }
+          root = nullptr;
+        }
+      } while (!stk.empty());
+      // 3. get result:
+      UniTensor out = this->CtTree.nodes_container.back().utensor;
+      // 4. reset nodes:
+      this->CtTree.reset_nodes();
+      // 6. permute accroding to pre-set labels:
+      if (TOUT_labels.size()) {
+        out.permute_(TOUT_labels, TOUT_iBondNum);
+      }
+      return out;
+    #endif
+
+  #else
       cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] fatal error,%s",
                       "try to call the gpu section without CUDA support.\n");
       return UniTensor();
-#endif
+  #endif
     }
   }
 
@@ -1186,11 +1248,11 @@ namespace cytnx {
       this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
     }
 
-#ifdef UNI_GPU
-  #ifdef UNI_CUQUANTUM
+  #ifdef UNI_GPU
+    #ifdef UNI_CUQUANTUM
     this->optimizerInfo = nullptr;
+    #endif
   #endif
-#endif
 
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
@@ -1206,3 +1268,4 @@ namespace cytnx {
   }  // end construct
 
 }  // namespace cytnx
+#endif

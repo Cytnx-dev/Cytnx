@@ -2,8 +2,8 @@
 #define _H_Bond_
 
 #include "Type.hpp"
-#include "Symmetry.hpp"
 #include "cytnx_error.hpp"
+#include "Symmetry.hpp"
 #include <initializer_list>
 #include <vector>
 #include <fstream>
@@ -11,6 +11,7 @@
 #include <algorithm>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
+
 namespace cytnx {
 
   /**

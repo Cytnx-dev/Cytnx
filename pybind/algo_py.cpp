@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void algo_binding(py::module &m) {
   // [Submodule algo]
   pybind11::module m_algo = m.def_submodule("algo", "algorithm related.");
@@ -28,3 +31,4 @@ void algo_binding(py::module &m) {
   m_algo.def("Vsplit", &cytnx::algo::Vsplit, py::arg("Tin"), py::arg("dims"));
   m_algo.def("Hsplit", &cytnx::algo::Hsplit, py::arg("Tin"), py::arg("dims"));
 }
+#endif  // BACKEND_TORCH

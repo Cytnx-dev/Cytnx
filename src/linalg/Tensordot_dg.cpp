@@ -3,6 +3,9 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
 
   namespace linalg {
@@ -117,3 +120,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif

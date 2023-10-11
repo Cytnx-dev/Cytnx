@@ -1,16 +1,16 @@
 #ifndef _H_Scalar_
 #define _H_Scalar_
-
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include "intrusive_ptr_base.hpp"
-#include <vector>
-#include <initializer_list>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <type_traits>
-#include <limits>
+#ifndef BACKEND_TORCH
+  #include "Type.hpp"
+  #include "cytnx_error.hpp"
+  #include "intrusive_ptr_base.hpp"
+  #include <vector>
+  #include <initializer_list>
+  #include <string>
+  #include <iostream>
+  #include <cmath>
+  #include <type_traits>
+  #include <limits>
 namespace cytnx {
 
   ///@cond
@@ -3459,4 +3459,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
+#endif
 #endif

@@ -9,6 +9,7 @@ Ins_dest="$HOME/Cytnx_lib"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
+FLAG="${FLAG} -DBACKEND_TORCH=OFF"
 
 #=================================================================
 # 2) linalg libs:
@@ -84,7 +85,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=ON "
+FLAG="${FLAG} -DUSE_CUDA=OFF "
 #-----------------------------------
 # 6-a) CUTT (DEFAULT =off)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -178,10 +179,11 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF "
 #-----------------------------------
 
 echo ${FLAG}
-#rm -rf build
+rm -rf build
 mkdir build
 cd build
-cmake ../ ${FLAG}
+cmake ../ ${FLAG} #-DDEV_MODE=on
 make -j4
 make install
-# ctest
+ctest
+gcovr -r ../ . --html-details cov.html

@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 void storage_binding(py::module &m) {
   py::class_<cytnx::Storage>(m, "Storage")
     .def("numpy",
@@ -283,3 +286,4 @@ void storage_binding(py::module &m) {
 
     ;  // end of object line
 }
+#endif

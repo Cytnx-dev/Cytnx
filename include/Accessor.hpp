@@ -3,13 +3,14 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-//#include "Tensor.hpp"
 #include <vector>
 #include <cstring>
 #include <string>
 #include <iostream>
 #include <initializer_list>
+
 namespace cytnx {
+
   /**
    * @brief object that mimic the python slice to access elements in C++ [this is for c++ API only].
    */

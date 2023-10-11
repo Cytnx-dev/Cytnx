@@ -3,6 +3,10 @@
 #include <cmath>
 #include <algorithm>
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
   namespace tn_algo {
     std::ostream &iMPS::Print(std::ostream &os) {
@@ -85,3 +89,4 @@ namespace cytnx {
   }  // namespace tn_algo
 
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

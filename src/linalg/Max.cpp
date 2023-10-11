@@ -1,6 +1,10 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
 #include "Tensor.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+  #include "../backend/linalg_internal_interface.hpp"
+
 namespace cytnx {
   namespace linalg {
     Tensor Max(const Tensor &Tin) {
@@ -12,19 +16,21 @@ namespace cytnx {
                                                        Tin._impl->storage()._impl,
                                                        Tin._impl->storage()._impl->size(), 'x');
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(out.device()));
         cytnx::linalg_internal::lii.cuMM_ii[out.dtype()](out._impl->storage()._impl,
                                                          Tin._impl->storage()._impl,
                                                          Tin._impl->storage()._impl->size(), 'x');
-        // cytnx_error_msg(true, "[Max] Developing.%s", "\n");
-#else
+          // cytnx_error_msg(true, "[Max] Developing.%s", "\n");
+  #else
         cytnx_error_msg(true, "[Max] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");
-#endif
+  #endif
       }
 
       return out;
     }
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

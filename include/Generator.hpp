@@ -6,6 +6,9 @@
 #include "Tensor.hpp"
 #include <vector>
 #include <initializer_list>
+
+#ifdef BACKEND_TORCH
+#else
 namespace cytnx {
 
   //@{
@@ -140,5 +143,7 @@ namespace cytnx {
   // Tensor normal(const cytnx_double &mean, cytnx_double &std);
 
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

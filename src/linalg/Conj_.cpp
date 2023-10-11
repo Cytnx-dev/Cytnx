@@ -1,8 +1,12 @@
 #include "linalg.hpp"
-#include "backend/linalg_internal_interface.hpp"
 #include "Tensor.hpp"
-
 #include <iostream>
+
+#ifdef BACKEND_TORCH
+
+#else
+
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -20,16 +24,16 @@ namespace cytnx {
                                                                    Tin._impl->storage().size());
 
       } else {
-#ifdef UNI_GPU
+  #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
         if (Tin.dtype() < 3)
           cytnx::linalg_internal::lii.cuConj_inplace_ii[Tin.dtype()](Tin._impl->storage()._impl,
                                                                      Tin._impl->storage().size());
 
-#else
+  #else
         cytnx_error_msg(true, "[Inv] fatal error,%s",
                         "try to call the gpu section withTin CUDA support.\n");
-#endif
+  #endif
       }
     }
 
@@ -37,3 +41,5 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

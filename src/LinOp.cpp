@@ -1,9 +1,13 @@
 #include "LinOp.hpp"
 #include "Tensor.hpp"
 #include "utils/vec_print.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
+
+#ifdef BACKEND_TORCH
+#else
+
+  #ifdef UNI_OMP
+    #include <omp.h>
+  #endif
 
 namespace cytnx {
 
@@ -27,7 +31,7 @@ namespace cytnx {
 
     Tensor out(Tin.shape(), Tin.dtype(), Tin.device());
 
-#ifdef UNI_OMP
+  #ifdef UNI_OMP
 
     //#pragma omp parallel for
     for (cytnx_uint64 x = 0; x < this->_elems.size(); x++) {
@@ -45,7 +49,7 @@ namespace cytnx {
       // std::cout << out << std::endl;
     }
 
-#else
+  #else
 
     // traversal all the rows:
     for (auto it = this->_elems.begin(); it != this->_elems.end(); it++) {
@@ -56,7 +60,7 @@ namespace cytnx {
       }
     }
 
-#endif
+  #endif
 
     return out;
   }
@@ -88,3 +92,4 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+#endif

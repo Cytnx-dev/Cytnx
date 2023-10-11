@@ -3,6 +3,9 @@
 
 using namespace std;
 
+#ifdef BACKEND_TORCH
+#else
+
 namespace cytnx {
 
   cytnx_float get_cost(const PsudoUniTensor &t1, const PsudoUniTensor &t2) {
@@ -112,3 +115,4 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+#endif

@@ -2,7 +2,6 @@
 #include "Accessor.hpp"
 #include "utils/utils.hpp"
 #include "linalg.hpp"
-#include "linalg/Gemm_Batch.cpp"
 #include "Generator.hpp"
 #include <vector>
 #include "utils/vec_print.hpp"
@@ -10,11 +9,14 @@
 #include <map>
 #include <boost/unordered_map.hpp>
 #include <stack>
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+
+  #ifdef UNI_OMP
+    #include <omp.h>
+  #endif
 namespace cytnx {
   typedef Accessor ac;
   void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
@@ -907,7 +909,7 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++)
           if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
 
-#ifdef UNI_MKL
+  #ifdef UNI_MKL
         // Initialize!!
         if ((this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
               (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
@@ -917,9 +919,9 @@ namespace cytnx {
         } else {
           tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, true);
         }
-#else
+  #else
         tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, false);
-#endif
+  #endif
 
         // now, build the itoi table:
         std::vector<std::vector<cytnx_uint64>> itoiL_common(this->_blocks.size()),
@@ -1026,7 +1028,7 @@ namespace cytnx {
               all_sub_tensor_same_device,
               "[ERROR] cannot perform contraction on sub-Tensors with different device.%s", "\n");
           }
-#ifdef UNI_MKL
+  #ifdef UNI_MKL
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
           if (this->dtype() != Rtn->dtype()) {
             BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
@@ -1127,7 +1129,7 @@ namespace cytnx {
             delete tmp_Rtn;
           }
         }
-#else
+  #else
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
@@ -1183,7 +1185,7 @@ namespace cytnx {
           //   }
           // }
         }
-#endif
+  #endif
 
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
@@ -2046,3 +2048,5 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH

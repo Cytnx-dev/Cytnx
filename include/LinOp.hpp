@@ -3,9 +3,6 @@
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Tensor.hpp"
-//#include "Scalar.hpp"
-#include "UniTensor.hpp"
 #include <vector>
 #include <fstream>
 #include <functional>
@@ -13,8 +10,12 @@
 #include <utility>
 #include <algorithm>
 #include "intrusive_ptr_base.hpp"
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
 #include "utils/vec_clone.hpp"
 
+#ifdef BACKEND_TORCH
+#else
 namespace cytnx {
 
   class LinOp {
@@ -176,5 +177,7 @@ namespace cytnx {
   };
 
 }  // namespace cytnx
+
+#endif  // BACKEND_TORCH
 
 #endif

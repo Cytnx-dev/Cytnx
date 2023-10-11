@@ -1,9 +1,16 @@
 #include "utils/vec_clone.hpp"
-#include "Tensor.hpp"
-#include "backend/Storage.hpp"
-#include "UniTensor.hpp"
+
 #include "Symmetry.hpp"
 #include "Bond.hpp"
+
+#ifdef BACKEND_TORCH
+#else
+
+  #include "Tensor.hpp"
+  #include "backend/Storage.hpp"
+  #include "UniTensor.hpp"
+
+#endif  // BACKEND_TORCH
 
 namespace cytnx {
 
@@ -519,6 +526,9 @@ namespace cytnx {
   }
   //================================
 
+#ifdef BACKEND_TORCH
+#else
+
   template std::vector<Tensor> vec_clone<Tensor>(const std::vector<Tensor> &);
   template std::vector<Storage> vec_clone<Storage>(const std::vector<Storage> &);
   template std::vector<UniTensor> vec_clone<UniTensor>(const std::vector<UniTensor> &);
@@ -542,6 +552,7 @@ namespace cytnx {
                                                    const cytnx_uint64 &, const cytnx_uint64 &);
   template std::vector<UniTensor> vec_clone<UniTensor>(const std::vector<UniTensor> &,
                                                        const cytnx_uint64 &, const cytnx_uint64 &);
+#endif
 
   template std::vector<Bond> vec_clone<Bond>(const std::vector<Bond> &);
   template std::vector<Symmetry> vec_clone<Symmetry>(const std::vector<Symmetry> &);

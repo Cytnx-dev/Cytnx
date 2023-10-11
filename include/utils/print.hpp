@@ -3,13 +3,18 @@
 
 #include "Type.hpp"
 #include "Tensor.hpp"
-#include "backend/Storage.hpp"
+
 #include "Bond.hpp"
 #include "Symmetry.hpp"
 #include "UniTensor.hpp"
 #include "Network.hpp"
-#include "backend/Scalar.hpp"
 #include <iostream>
+
+#ifdef BACKEND_TORCH
+#else
+  #include "backend/Storage.hpp"
+  #include "backend/Scalar.hpp"
+#endif  // BACKEND_TORCH
 
 namespace cytnx {
 

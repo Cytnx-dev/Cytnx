@@ -2,13 +2,15 @@
 #define _H_contraction_tree_
 
 #include "Type.hpp"
-#include "UniTensor.hpp"
 #include "cytnx_error.hpp"
+#include "UniTensor.hpp"
 #include "utils/utils.hpp"
 #include <vector>
 #include <map>
 #include <string>
 
+#ifdef BACKEND_TORCH
+#else
 namespace cytnx {
   /// @cond
   class Node {
@@ -100,4 +102,6 @@ namespace cytnx {
   };
   /// @endcond
 }  // namespace cytnx
+#endif  // BACKEND_TORCH
+
 #endif

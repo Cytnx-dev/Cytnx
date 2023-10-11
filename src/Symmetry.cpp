@@ -2,10 +2,11 @@
 #include <string>
 #include <fstream>
 
+using namespace std;
+
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
-using namespace std;
 
 namespace cytnx {
 

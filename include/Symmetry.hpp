@@ -9,6 +9,7 @@
 #include <iostream>
 #include <ostream>
 #include "utils/vec_clone.hpp"
+
 namespace cytnx {
   ///@cond
   struct __sym {
@@ -424,4 +425,5 @@ namespace cytnx {
   /// @endcond
 
 }  // namespace cytnx
+
 #endif

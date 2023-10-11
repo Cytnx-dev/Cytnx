@@ -7,3 +7,6 @@ __pycache__
 .cache/
 .vscode/
 Testing/
+*.swp
+*.swo
+dev_test

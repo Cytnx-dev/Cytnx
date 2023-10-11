@@ -18,6 +18,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
+#ifdef BACKEND_TORCH
+#else
+
 class cHclass {
  public:
   Scalar::Sproxy proxy;
@@ -1098,3 +1101,4 @@ void unitensor_binding(py::module &m) {
        const bool &optimal) -> UniTensor { return Contracts(TNs, order, optimal); },
     py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
 }
+#endif

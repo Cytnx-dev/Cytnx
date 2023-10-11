@@ -3,11 +3,16 @@
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 #include <numeric>
 using namespace std;
+
+#ifdef BACKEND_TORCH
+#else
+
+  #ifdef UNI_OMP
+    #include <omp.h>
+  #endif
+
 namespace cytnx {
   namespace linalg {
     cytnx::Tensor Directsum(const cytnx::Tensor &T1, const cytnx::Tensor &T2,
@@ -78,3 +83,4 @@ namespace cytnx {
 
   }  // namespace linalg
 }  // namespace cytnx
+#endif  // BACKEND_TORCH

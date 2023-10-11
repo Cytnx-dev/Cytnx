@@ -1,3 +1,7 @@
+
+if(BACKEND_TORCH)
+else()
+
 add_executable(
   test_main
   test_tools.cpp
@@ -12,6 +16,7 @@ add_executable(
   DenseUniTensor_test.cpp
   Accessor_test.cpp
   Tensor_test.cpp
+  Storage_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
@@ -58,3 +63,5 @@ file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/utils/answer.txt"
       DESTINATION ${CMAKE_BINARY_DIR})
+
+endif()
