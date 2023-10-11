@@ -81,7 +81,6 @@ TEST_F(BlockUniTensorTest, dtype_str) {
   EXPECT_EQ(Spcd.dtype_str(), "Complex Double (Complex Float64)");
 }
 
-
 TEST_F(BlockUniTensorTest, device_str) { EXPECT_EQ(Spf.device_str(), "cytnx device: CPU"); }
 
 TEST_F(BlockUniTensorTest, syms) {
@@ -361,7 +360,6 @@ TEST_F(BlockUniTensorTest, get_block_byqnum) {
   // EXPECT_ANY_THROW(UT_pB_ans.get_block({0,0,3}));
 }
 
-
 TEST_F(BlockUniTensorTest, get_blocks) {
   auto bks = UT_pB_ans.get_blocks();
   EXPECT_EQ(AreNearlyEqTensor(bks[0], t0), true);
@@ -433,8 +431,6 @@ TEST_F(BlockUniTensorTest, put_block__byidx) {
   EXPECT_EQ(UT_pB.get_block(2).same_data(t1b), false);
   EXPECT_EQ(UT_pB.get_block(3).same_data(t2), false);
 }
-
-
 
 TEST_F(BlockUniTensorTest, put_block_byqnum) {
   UT_pB.put_block(t0, {0, 0, 0}, true);
@@ -658,7 +654,6 @@ TEST_F(BlockUniTensorTest, Sub) {
                              double(BUTsT2.at({i - 1, j - 1, k - 1, l - 1}).imag()));
           }
 }
-
 
 TEST_F(BlockUniTensorTest, Div) {
   auto out = BUT4.Div(9);
@@ -926,13 +921,6 @@ TEST_F(BlockUniTensorTest, elem_exist) {
   EXPECT_THROW(BUT4.elem_exists({}), std::logic_error);
 }
 
-
-
-
-
-
-
-
 TEST_F(BlockUniTensorTest, truncate) {
   auto tmp = BUT5.truncate(0, 1);
   EXPECT_EQ(tmp.bonds()[0].qnums(),
@@ -958,19 +946,6 @@ TEST_F(BlockUniTensorTest, truncate) {
   EXPECT_THROW(BUT5.truncate_(0, 4), std::logic_error);
   EXPECT_THROW(BUT5.truncate_(2, 0), std::logic_error);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 TEST_F(BlockUniTensorTest, get_qindices) {
   auto out = BUT6.get_qindices(0);
@@ -1008,4 +983,3 @@ TEST_F(BlockUniTensorTest, get_itoi) {
   EXPECT_EQ(out[3], std::vector<cytnx_uint64>({2, 1}));
   EXPECT_EQ(out[4], std::vector<cytnx_uint64>({2, 2}));
 }
-

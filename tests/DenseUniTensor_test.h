@@ -54,7 +54,8 @@ class DenseUniTensorTest : public ::testing::Test {
     utarcomplex3456 = UniTensor(arange(3 * 4 * 5 * 6)).astype(Type.ComplexDouble);
     for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) utarcomplex3456.at({i}) = cytnx_complex128(i, i);
     utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
-	ut_complex_diag =  UniTensor({phy, phy.redirect()}, {"1", "2"}, 1, Type.ComplexDouble, Device.cpu, true);
+    ut_complex_diag =
+      UniTensor({phy, phy.redirect()}, {"1", "2"}, 1, Type.ComplexDouble, Device.cpu, true);
 
     ut1 = ut1.Load(data_dir + "denseutensor1.cytnx").astype(Type.ComplexDouble);
     ut2 = ut2.Load(data_dir + "denseutensor2.cytnx").astype(Type.ComplexDouble);
