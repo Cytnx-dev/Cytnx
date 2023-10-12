@@ -6,42 +6,32 @@
 using namespace std;
 using namespace cytnx;
 
-/*
-namespace torch {
-  class Scalar {
-   public:
-    int tmp;
-  };
-
-}  // namespace A
-
-namespace cytnx {
-
-  using Scalar = torch::Scalar;
-
-  void func(Scalar& in) { std::cout << in.tmp << std::endl; }
-
-}  // namespace B
-*/
-class A {
-  int tmp;
-};
-class C {};
-
-C convertAtoC(const A& in) {
-  //... do something;
-  return c;
-}
-
-class B : public A {
-  void func();
-  void funcb();
-};
-
-void foo(vector<vector<A>>& in);
-foo(vector<vector<B>>);
-
 int main(int argc, char* argv[]) {
+  auto row_rank = 1u;
+  std::vector<std::string> labels = {"1", "2"};
+  bool is_diag = true;
+  auto ut_diag = UniTensor({Bond(4), Bond(4)}, labels, row_rank, Type.Double, Device.cpu, is_diag);
+  int seed = 0;
+  random::uniform_(ut_diag, -100.0, 100.0, seed);
+  std::vector<cytnx_int64> dst_shape = {4, 4};
+  auto dst_ut1 = ut_diag.reshape(dst_shape, 1);
+  auto dst_ut2 = ut_diag.clone();
+
+  auto ut_tr = dst_ut2.Trace(0, 1);
+
+  auto ut_dense = dst_ut2.to_dense();
+  auto ans = ut_dense.Trace(0, 1);
+
+  print(ut_tr);
+  print(ans);
+  // print(dst_ut2.is_diag());
+  // print(dst_ut2.shape());
+  // dst_ut2.reshape_(dst_shape, 1);
+
+  // print(dst_ut2.shape());
+
+  return 0;
+
   std::vector<long> v = {2, 3};
   Storage sd = Storage::from_vector(v);
 
