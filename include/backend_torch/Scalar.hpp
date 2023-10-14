@@ -4,22 +4,23 @@
 #include "Type.hpp"
 #ifdef BACKEND_TORCH
   #include <torch/torch.h>
-
 namespace cytnx {
   class Scalar : public c10::Scalar {
    public:
     int _dtype = Type.Void;
     ///@cond
     struct Sproxy {
-      c10::intrusive_ptr_target *_insimpl;
+      c10::intrusive_ptr<c10::StorageImpl> _insimpl;
       cytnx_uint64 _loc;
+      int _dtype = Type.Void;
       Sproxy() {}
-      Sproxy(c10::intrusive_ptr_target *_ptr, const cytnx_uint64 &idx)
-          : _insimpl(_ptr), _loc(idx) {}
+      Sproxy(c10::intrusive_ptr<c10::StorageImpl> _ptr, const cytnx_uint64 &idx)
+          : _insimpl(_ptr), _loc(idx), _dtype(Type.Void) {}
 
       Sproxy(const Sproxy &rhs) {
         this->_insimpl = rhs._insimpl;
         this->_loc = rhs._loc;
+        this->_dtype = rhs._dtype;
       }
 
       // When used to set elems:

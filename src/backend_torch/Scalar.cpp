@@ -49,90 +49,188 @@ namespace cytnx {
 
   Scalar sqrt(const Scalar& c) { return c.sqrt(); };
 
+  at::Tensor StorageImpl2Tensor(const c10::intrusive_ptr<c10::StorageImpl>& impl, int dtype) {
+    c10::Storage sto = c10::Storage(impl);
+
+    if (dtype == Type.Bool) {
+      at::TensorImpl tnimpl =
+        at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL, caffe2::TypeMeta::Make<bool>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.ComplexDouble) {
+      at::TensorImpl tnimpl = at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL,
+                                             caffe2::TypeMeta::Make<c10::complex<double>>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.ComplexFloat) {
+      at::TensorImpl tnimpl = at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL,
+                                             caffe2::TypeMeta::Make<c10::complex<float>>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.Int64) {
+      at::TensorImpl tnimpl = at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL,
+                                             caffe2::TypeMeta::Make<int64_t>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.Int32) {
+      at::TensorImpl tnimpl = at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL,
+                                             caffe2::TypeMeta::Make<int32_t>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.Int16) {
+      at::TensorImpl tnimpl = at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL,
+                                             caffe2::TypeMeta::Make<int16_t>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.Double) {
+      at::TensorImpl tnimpl =
+        at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL, caffe2::TypeMeta::Make<double>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.Float) {
+      at::TensorImpl tnimpl =
+        at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL, caffe2::TypeMeta::Make<float>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    } else if (dtype == Type.Float) {
+      at::TensorImpl tnimpl =
+        at::TensorImpl(std::move(sto), c10::DispatchKeySet::FULL, caffe2::TypeMeta::Make<float>());
+      return at::Tensor(
+        c10::intrusive_ptr<c10::TensorImpl, c10::UndefinedTensorImpl>::reclaim(&tnimpl));
+    }
+    cytnx_error_msg(true, "[ERROR] StorageImpl2Tensor: unsupported dtype%s", "\n");
+    return at::Tensor();
+  }
+
   // Scalar proxy:
   // Sproxy
   Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar::Sproxy& rc) {
-    // std::cout << "entry !!" << std::endl;
     if (this->_insimpl.get() == 0) {
-      // std::cout << "entry cpcon, not init!!" << std::endl;
-      // std::cout << std::flush;
-      //  not init:
       this->_insimpl = rc._insimpl;
       this->_loc = rc._loc;
       return *this;
     } else {
       if ((rc._insimpl == this->_insimpl) && (rc._loc == this->_loc)) {
-        // std::cout << "entry same!!" << std::endl;
-        std::cout << std::flush;
         return *this;
       } else {
-        // std::cout << "entry wrn !!" << std::endl;
-        std::cout << std::flush;
-        Scalar tmp = rc._insimpl->get_item(rc._loc);
-        this->_insimpl->set_item(this->_loc, tmp);
+        at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+        at::Tensor tnrc = StorageImpl2Tensor(rc._insimpl, rc._dtype);
+        tnthis[this->_loc] = tnrc[rc._loc];
         return *this;
       }
     }
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const Scalar& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = rc;
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex128& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = c10::complex<double>(rc);
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_complex64& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = c10::complex<float>(rc);
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_double& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = rc;
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_float& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = rc;
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint64& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    cytnx_error_msg(true,
+                    "[ERROR] invalid dtype for scalar operator=, pytorch backend doesn't support "
+                    "unsigned type %s",
+                    "\n");
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int64& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = rc;
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint32& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    cytnx_error_msg(true,
+                    "[ERROR] invalid dtype for scalar operator=, pytorch backend doesn't support "
+                    "unsigned type %s",
+                    "\n");
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int32& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = rc;
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_uint16& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    cytnx_error_msg(true,
+                    "[ERROR] invalid dtype for scalar operator=, pytorch backend doesn't support "
+                    "unsigned type %s",
+                    "\n");
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_int16& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = rc;
     return *this;
   }
   Scalar::Sproxy& Scalar::Sproxy::operator=(const cytnx_bool& rc) {
-    this->_insimpl->set_item(this->_loc, rc);
+    at::Tensor tnthis = StorageImpl2Tensor(this->_insimpl, this->_dtype);
+    tnthis[this->_loc] = rc;
     return *this;
   }
 
-  bool Scalar::Sproxy::exists() const { return this->_insimpl->dtype != Type.Void; };
+  bool Scalar::Sproxy::exists() const { return this->_dtype != Type.Void; };
 
   Scalar Scalar::Sproxy::real() { return Scalar(*this).real(); }
   Scalar Scalar::Sproxy::imag() { return Scalar(*this).imag(); }
 
-  Scalar::Scalar(const Sproxy& prox) : _impl(new Scalar_base()) {
-    if (this->_impl != nullptr) {
-      delete this->_impl;
+  Scalar::Scalar(const Sproxy& prox) {
+    switch (prox._dtype) {
+      case Type.ComplexDouble:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.ComplexFloat:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.Double:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.Float:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.Int64:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.Uint64:
+        cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+        break;
+      case Type.Int32:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.Uint32:
+        cytnx_error_msg(true, "[ERROR] no support for unsigned dtype for torch backend %s", "\n");
+        break;
+      case Type.Int16:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.Uint16:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      case Type.Bool:
+        *this = StorageImpl2Tensor(prox._insimpl, prox._dtype)[prox._loc].item();
+        break;
+      default:
+        cytnx_error_msg(true, "[ERROR] invalid dtype for torch backend %s", "\n");
+        break;
     }
-    this->_impl = prox._insimpl->get_item(prox._loc)._impl->copy();
   }
 
   //   // Storage Init interface.
