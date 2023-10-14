@@ -100,6 +100,37 @@ add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)
 
+if(BACKEND_TORCH)
+  message(STATUS "backend = pytorch")
+  target_compile_definitions(cytnx PUBLIC BACKEND_TORCH)
+
+  # let torch python expose where pytorch.cmake is installed
+  execute_process(
+    COMMAND bash -c "python -c 'import torch;print(torch.utils.cmake_prefix_path)'"
+    OUTPUT_VARIABLE TORCH_CMAKE_PATH_C
+  )
+  string(REGEX REPLACE "\n$" "" TORCH_CMAKE_PATH_C "${TORCH_CMAKE_PATH_C}")
+  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_CMAKE_PATH_C})
+  message(STATUS ${CMAKE_PREFIX_PATH})
+
+  find_package(Torch REQUIRED)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
+  message(STATUS "pytorch: ${TORCH_INSTALL_PREFIX}")
+  message(STATUS "pytorch libs: ${TORCH_LIBRARIES}")
+
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.dylib)
+  else()
+    target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
+    target_link_libraries(cytnx PRIVATE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
+    target_link_libraries(cytnx INTERFACE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
+  endif()
+
+else()
+  message(STATUS "backend = cytnx")
+  include(CytnxBKNDCMakeLists.cmake)
+endif() # Backend torch
+
 target_include_directories(cytnx
   PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -159,38 +190,6 @@ target_include_directories(cytnx SYSTEM
 )
 target_link_libraries(cytnx PUBLIC Boost::boost ${LAPACK_LIBRARIES})
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${Boost_INCLUDE_DIRS}\n" "")
-
-# ###
-if(BACKEND_TORCH)
-  message(STATUS "backend = pytorch")
-  target_compile_definitions(cytnx PUBLIC BACKEND_TORCH)
-
-  # let torch python expose where pytorch.cmake is installed
-  execute_process(
-    COMMAND bash -c "python -c 'import torch;print(torch.utils.cmake_prefix_path)'"
-    OUTPUT_VARIABLE TORCH_CMAKE_PATH_C
-  )
-  string(REGEX REPLACE "\n$" "" TORCH_CMAKE_PATH_C "${TORCH_CMAKE_PATH_C}")
-  set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${TORCH_CMAKE_PATH_C})
-  message(STATUS ${CMAKE_PREFIX_PATH})
-
-  find_package(Torch REQUIRED)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
-  message(STATUS "pytorch: ${TORCH_INSTALL_PREFIX}")
-  message(STATUS "pytorch libs: ${TORCH_LIBRARIES}")
-
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.dylib)
-  else()
-    target_link_libraries(cytnx PUBLIC ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
-    target_link_libraries(cytnx PRIVATE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
-    target_link_libraries(cytnx INTERFACE ${TORCH_LIBRARIES} ${TORCH_INSTALL_PREFIX}/lib/libtorch_python.so)
-  endif()
-
-else()
-  message(STATUS "backend = cytnx")
-  include(CytnxBKNDCMakeLists.cmake)
-endif() # Backend torch
 
 # #####################################################################
 # ## Get Gtest & benchmark
