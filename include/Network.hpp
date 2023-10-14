@@ -132,8 +132,8 @@ namespace cytnx {
     virtual UniTensor Launch();
 
     virtual void construct(const std::vector<std::string> &alias,
-                           const std::vector<std::vector<std::string>> &lbls,
-                           const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
+                           const std::vector<std::vector<std::string>> &labels,
+                           const std::vector<std::string> &outlabel, const cytnx_int64 &outrk,
                            const std::string &order, const bool optim);
     virtual void PrintNet(std::ostream &os);
     virtual boost::intrusive_ptr<Network_base> clone();
@@ -178,8 +178,8 @@ namespace cytnx {
     UniTensor Launch();
 
     void construct(const std::vector<std::string> &alias,
-                   const std::vector<std::vector<std::string>> &lbls,
-                   const std::vector<std::string> &outlbl, const cytnx_int64 &outrk,
+                   const std::vector<std::vector<std::string>> &labels,
+                   const std::vector<std::string> &outlabel, const cytnx_int64 &outrk,
                    const std::string &order, const bool optim);
     boost::intrusive_ptr<Network_base> clone() {
       RegularNetwork *tmp = new RegularNetwork();
@@ -384,17 +384,17 @@ namespace cytnx {
     void RmUniTensor(const cytnx_uint64 &idx) { this->_impl->RmUniTensor(idx); }
     void RmUniTensors(const std::vector<std::string> &names) { this->_impl->RmUniTensors(names); }
     void PutUniTensor(const std::string &name, const UniTensor &utensor,
-                      const std::vector<std::string> &lbl_order = {}) {
-      if (lbl_order.size()) {
-        auto tmpu = utensor.permute(lbl_order);
+                      const std::vector<std::string> &label_order = {}) {
+      if (label_order.size()) {
+        auto tmpu = utensor.permute(label_order);
         this->_impl->PutUniTensor(name, tmpu);
       } else
         this->_impl->PutUniTensor(name, utensor);
     }
     void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor,
-                      const std::vector<std::string> &lbl_order = {}) {
-      if (lbl_order.size()) {
-        auto tmpu = utensor.permute(lbl_order);
+                      const std::vector<std::string> &label_order = {}) {
+      if (label_order.size()) {
+        auto tmpu = utensor.permute(label_order);
         this->_impl->PutUniTensor(idx, tmpu);
       } else
         this->_impl->PutUniTensor(idx, utensor);
@@ -427,8 +427,8 @@ namespace cytnx {
     }
 
     void construct(const std::vector<std::string> &alias,
-                   const std::vector<std::vector<std::string>> &lbls,
-                   const std::vector<std::string> &outlbl = std::vector<std::string>(),
+                   const std::vector<std::vector<std::string>> &labels,
+                   const std::vector<std::string> &outlabel = std::vector<std::string>(),
                    const cytnx_int64 &outrk = 0, const std::string &order = "",
                    const bool optim = false, const int &network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
@@ -437,7 +437,7 @@ namespace cytnx {
       } else {
         cytnx_error_msg(true, "[Developing] currently only support regular type network.%s", "\n");
       }
-      this->_impl->construct(alias, lbls, outlbl, outrk, order, optim);
+      this->_impl->construct(alias, labels, outlabel, outrk, order, optim);
     }
 
     void clear() {
