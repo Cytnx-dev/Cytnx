@@ -155,7 +155,8 @@ namespace cytnx {
     void set_label(const std::string &oldlabel, const std::string &new_label) {
       cytnx_int64 idx;
       auto res = std::find(this->_labels.begin(), this->_labels.end(), oldlabel);
-      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n", oldlabel.c_str());
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n",
+                      oldlabel.c_str());
       idx = std::distance(this->_labels.begin(), res);
 
       cytnx_error_msg(idx >= this->_labels.size(), "[ERROR] index exceed the rank of UniTensor%s",
@@ -2632,7 +2633,8 @@ namespace cytnx {
       for (int i = 0; i < labels.size(); i++) {
         auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n",
+                        labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
@@ -2652,7 +2654,8 @@ namespace cytnx {
       for (int i = 0; i < labels.size(); i++) {
         auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n",
+                        labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
@@ -2711,7 +2714,8 @@ namespace cytnx {
       for (int i = 0; i < labels.size(); i++) {
         auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n",
+                        labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
@@ -2732,7 +2736,8 @@ namespace cytnx {
       for (int i = 0; i < labels.size(); i++) {
         auto res = std::find(this->_impl->_labels.begin(), this->_impl->_labels.end(), labels[i]);
         cytnx_error_msg(res == this->_impl->_labels.end(),
-                        "[ERROR] label:%s does not exist in current UniTensor.\n", labels[i].c_str());
+                        "[ERROR] label:%s does not exist in current UniTensor.\n",
+                        labels[i].c_str());
         new_loc = std::distance(this->_impl->_labels.begin(), res);
         new_locator[new_loc] = locator[i];
       }
@@ -2849,7 +2854,8 @@ namespace cytnx {
         @return Tensor&
 
         @note labels and qidx forming one to one pairs. e.g. it means get `qidx[i]` qnum at Bond
-    `labels[i]`. Also note that the return Tensor will have axes in the same order specified by labels.
+    `labels[i]`. Also note that the return Tensor will have axes in the same order specified by
+    labels.
 
     */
     // developer note: Tensor is not the same object (Thus Tensor instead of Tensor& ),

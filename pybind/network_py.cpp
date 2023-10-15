@@ -61,7 +61,9 @@ void network_binding(py::module &m) {
     .def(
       "PutUniTensor",
       [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor,
-         const std::vector<std::string> &label_order) { self.PutUniTensor(idx, utensor, label_order); },
+         const std::vector<std::string> &label_order) {
+        self.PutUniTensor(idx, utensor, label_order);
+      },
       py::arg("idx"), py::arg("utensor"), py::arg("label_order") = std::vector<std::string>())
     .def(
       "PutUniTensors",
