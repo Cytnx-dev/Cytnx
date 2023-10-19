@@ -389,7 +389,14 @@ void linalg_binding(py::module &m) {
                py::arg("is_conj") = false);
   m_linalg.def("Tridiag", &cytnx::linalg::Tridiag, py::arg("A"), py::arg("B"),
                py::arg("is_V") = true, py::arg("is_row") = false, py::arg("throw_excp") = false);
-  m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1"));
+
+  // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::Tensor());
+  // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::UniTensor());
+  m_linalg.def(
+    "Norm", [](cytnx::UniTensor &T1) { return cytnx::linalg::Norm(T1); }, py::arg("T1"));
+  m_linalg.def(
+    "Norm", [](cytnx::Tensor &T1) { return cytnx::linalg::Norm(T1); }, py::arg("T1"));
+
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"));
   m_linalg.def(
     "Axpy", [](const Scalar &a, const Tensor &x) { return cytnx::linalg::Axpy(a, x); },

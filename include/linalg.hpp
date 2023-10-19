@@ -1439,6 +1439,19 @@ namespace cytnx {
     */
     Tensor Norm(const Tensor &Tl);
 
+    // Norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of an UniTensor.
+    @details This function will calculate the norm of an UniTensor. If the input UniTensor is
+    rank-1, then the frobenius norm will be calculated. If the input UniTensor is rank-N with N>=2,
+    then the blocks will be flatten (see @ref Tensor::flatten() const "flatten()") to 1d first, and
+    then calculate the frobenius norm.
+    @param[in] uTl input UniTensor
+    @return Tensor
+    */
+    Tensor Norm(const UniTensor &uTl);
+
     // Det:
     //=================================================
     /**

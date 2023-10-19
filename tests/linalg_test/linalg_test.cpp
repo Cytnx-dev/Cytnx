@@ -309,6 +309,54 @@ TEST_F(linalg_Test, Tensor_Gemm_) {
     }
 }
 
+TEST_F(linalg_Test, Tensor_Norm) {
+  cytnx_double ans = 0;
+  for (int i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans = sqrt(ans);
+  EXPECT_EQ(linalg::Norm(arange3x3cd).item(), ans);
+}
+
+TEST_F(linalg_Test, DenseUt_Norm) {
+  cytnx_double ans = 0;
+  for (int i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans = sqrt(ans);
+  EXPECT_EQ(linalg::Norm(arange3x3cd_ut).item(), ans);
+}
+
+// TEST_F(linalg_Test, BkUt_Norm) {
+//   cytnx_double ans=0;
+//   for(int i = 0; i<9;i++){
+//     ans+=i*i*2;
+//   }
+//   ans+=9;
+//   ans = sqrt(ans);
+//   Bond I = Bond(BD_IN, {Qs(-1), Qs(1)}, {3, 3});
+//   Bond J = Bond(BD_OUT, {Qs(-1), Qs(1)}, {3, 3});
+//   UniTensor in = UniTensor({I, J});
+//   in.put_block_(arange3x3cd, 0);
+//   in.put_block_(ones3x3cd, 1);
+//   EXPECT_EQ(linalg::Norm(in).item(), ans);
+// }
+
+TEST_F(linalg_Test, Tensor_Eig) { EXPECT_TRUE(false); }
+
+TEST_F(linalg_Test, Tensor_Eigh) { EXPECT_TRUE(false); }
+
+TEST_F(linalg_Test, DenseUt_Eig) { EXPECT_TRUE(false); }
+
+TEST_F(linalg_Test, DenseUt_Eigh) { EXPECT_TRUE(false); }
+
+TEST_F(linalg_Test, Tensor_Inv) { EXPECT_TRUE(false); }
+
+TEST_F(linalg_Test, Tensor_Inv_) { EXPECT_TRUE(false); }
+
+TEST_F(linalg_Test, DenseUt_Inv) { EXPECT_TRUE(false); }
+
+TEST_F(linalg_Test, DenseUt_Inv_) { EXPECT_TRUE(false); }
 // TEST_F(linalg_Test, DenseUt_Mod_UtUt){
 //     UniTensor At = UniTensor(A);
 //     UniTensor Bt = UniTensor(B);

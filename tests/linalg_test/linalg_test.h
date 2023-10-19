@@ -21,6 +21,9 @@ class linalg_Test : public ::testing::Test {
   Tensor eye3x3cd = eye(3, Type.ComplexDouble);
   Tensor zeros3x3cd = zeros(9, Type.ComplexDouble).reshape(3, 3);
 
+  UniTensor arange3x3cd_ut = UniTensor(arange3x3cd, false, -1);
+  UniTensor ones3x3cd_ut = UniTensor(ones3x3cd, false, -1);
+
   std::string data_dir = "../../tests/test_data_base/linalg/";
   // ==================== svd_truncate ===================
   Bond svd_I = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
