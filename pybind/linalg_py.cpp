@@ -383,7 +383,14 @@ void linalg_binding(py::module &m) {
     py::arg("Tio"), py::arg("is_tau") = false);
 
   m_linalg.def("InvM", &cytnx::linalg::InvM, py::arg("Tin"));
-  m_linalg.def("InvM_", &cytnx::linalg::InvM_, py::arg("Tio"));
+
+  // m_linalg.def("InvM_", &cytnx::linalg::InvM_, py::arg("Tio"));
+
+  m_linalg.def(
+    "InvM_", [](cytnx::UniTensor &Tin) { cytnx::linalg::InvM_(Tin); }, py::arg("Tin"));
+  m_linalg.def(
+    "InvM_", [](cytnx::Tensor &Tin) { cytnx::linalg::InvM_(Tin); }, py::arg("Tin"));
+
   m_linalg.def("Inv_", &cytnx::linalg::Inv_, py::arg("Tio"), py::arg("clip"));
   m_linalg.def("Inv", &cytnx::linalg::Inv, py::arg("Tio"), py::arg("clip"));
 
