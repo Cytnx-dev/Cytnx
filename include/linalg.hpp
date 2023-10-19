@@ -1685,6 +1685,9 @@ namespace cytnx {
     */
     std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
 
+    std::vector<UniTensor> Eigh(const UniTensor &Tin, const bool &is_V = true,
+                                const bool &row_v = false);
+
     // Eig:
     //==================================================
     /**
@@ -1707,6 +1710,9 @@ namespace cytnx {
     @pre the \p Tin should be a square matrix.
     */
     std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
+
+    std::vector<UniTensor> Eig(const UniTensor &Tin, const bool &is_V = true,
+                               const bool &row_v = false);
 
     // Trace:
     //==================================================

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "Tensor.hpp"
+using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -88,6 +89,109 @@ namespace cytnx {
   #endif
       }
     }
+
+  }  // namespace linalg
+}  // namespace cytnx
+
+namespace cytnx {
+  namespace linalg {
+
+    // actual impls:
+    void _Eig_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
+                       const bool &is_V, const bool &row_v) {
+      //[Note] outCyT must be empty!
+
+      // DenseUniTensor:
+      // cout << "entry Dense UT" << endl;
+
+      Tensor tmp;
+      if (Tin.is_contiguous())
+        tmp = Tin.get_block_();
+      else {
+        tmp = Tin.get_block();
+        tmp.contiguous_();
+      }
+
+      vector<cytnx_uint64> tmps = tmp.shape();
+      vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+      tmps.clear();
+      vector<string> oldlabel = Tin.labels();
+
+      // collapse as Matrix:
+      cytnx_int64 rowdim = 1;
+      for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
+      tmp.reshape_({rowdim, -1});
+
+      vector<Tensor> outT = cytnx::linalg::Eig(tmp, is_V, row_v);
+      if (Tin.is_contiguous()) tmp.reshape_(oldshape);
+
+      int t = 0;
+      outCyT.resize(outT.size());
+
+      // s
+      cytnx::UniTensor &Cy_S = outCyT[t];
+      cytnx::Bond newBond(outT[t].shape()[0]);
+
+      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
+                Device.cpu, true);  // it is just reference so no hurt to alias ^^
+
+      // cout << "[AFTER INIT]" << endl;
+      Cy_S.put_block_(outT[t]);
+      t++;
+
+      if (is_V) {
+        cytnx::UniTensor &Cy_U = outCyT[t];
+        vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
+        shapeU.push_back(-1);
+        outT[t].reshape_(shapeU);
+        Cy_U.Init(outT[t], false, Tin.rowrank());
+        vector<string> labelU = vec_clone(oldlabel, Tin.rowrank());
+        labelU.push_back(Cy_S.labels()[0]);
+        Cy_U.set_labels(labelU);
+        t++;  // U
+      }
+      // if tag, then update  the tagging informations
+      if (Tin.is_tag()) {
+        Cy_S.tag();
+        t = 1;
+        if (is_V) {
+          cytnx::UniTensor &Cy_U = outCyT[t];
+          Cy_U._impl->_is_tag = true;
+          for (int i = 0; i < Cy_U.rowrank(); i++) {
+            Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
+          }
+          Cy_U.bonds().back().set_type(cytnx::BD_BRA);
+          Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
+          t++;
+        }
+      }  // if tag
+    }
+
+    std::vector<cytnx::UniTensor> Eig(const UniTensor &Tin, const bool &is_V, const bool &row_v) {
+      // using rowrank to split the bond to form a matrix.
+      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
+                      "[Eig][ERROR] Eig for UniTensor should have rank>1 and rowrank>0%s", "\n");
+
+      cytnx_error_msg(Tin.is_diag(),
+                      "[Eig][ERROR] Eig for diagonal UniTensor is trivial and currently not "
+                      "support. Use other manipulation.%s",
+                      "\n");
+
+      std::vector<UniTensor> outCyT;
+      if (Tin.uten_type() == UTenType.Dense) {
+        _Eig_Dense_UT(outCyT, Tin, is_V, row_v);
+
+      } else {
+        cytnx_error_msg(true,
+                        "[ERROR] Eig, unsupported type of UniTensor only support (Dense). "
+                        "something wrong internal%s",
+                        "\n");
+
+      }  // is block form ?
+
+      return outCyT;
+
+    };  // Eig
 
   }  // namespace linalg
 }  // namespace cytnx

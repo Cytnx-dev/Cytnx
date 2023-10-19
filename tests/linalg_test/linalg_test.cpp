@@ -342,13 +342,51 @@ TEST_F(linalg_Test, DenseUt_Norm) {
 //   EXPECT_EQ(linalg::Norm(in).item(), ans);
 // }
 
-TEST_F(linalg_Test, Tensor_Eig) { EXPECT_TRUE(false); }
+TEST_F(linalg_Test, Tensor_Eig) {
+  auto res = linalg::Eig(arange3x3cd);
+  auto e = UniTensor(res[0], true);
+  e.set_labels({"a", "b"});
+  auto v = UniTensor(res[1]);
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
 
-TEST_F(linalg_Test, Tensor_Eigh) { EXPECT_TRUE(false); }
+TEST_F(linalg_Test, Tensor_Eigh) {
+  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
+  auto res = linalg::Eigh(her);
+  auto e = UniTensor(res[0], true);
+  e.set_labels({"a", "b"});
+  auto v = UniTensor(res[1]);
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
 
-TEST_F(linalg_Test, DenseUt_Eig) { EXPECT_TRUE(false); }
+TEST_F(linalg_Test, DenseUt_Eig) {
+  auto res = linalg::Eig(arange3x3cd_ut);
+  auto e = res[0];
+  e.set_labels({"a", "b"});
+  auto v = res[1];
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
 
-TEST_F(linalg_Test, DenseUt_Eigh) { EXPECT_TRUE(false); }
+TEST_F(linalg_Test, DenseUt_Eigh) {
+  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
+  auto res = linalg::Eigh(UniTensor(her));
+  auto e = res[0];
+  e.set_labels({"a", "b"});
+  auto v = res[1];
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
 
 TEST_F(linalg_Test, Tensor_Inv) { EXPECT_TRUE(false); }
 
