@@ -1799,7 +1799,6 @@ namespace cytnx {
     @pre the Tin should be a rank-2 Tensor.
     */
     void InvM_(Tensor &Tin);
-    void InvM_(UniTensor &Tin);
 
     // Inv:
     //==================================================
