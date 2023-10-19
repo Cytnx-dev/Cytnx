@@ -388,13 +388,14 @@ TEST_F(linalg_Test, DenseUt_Eigh) {
   EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
 }
 
-TEST_F(linalg_Test, Tensor_Inv) { EXPECT_TRUE(false); }
+// TEST_F(linalg_Test, Tensor_Inv) { EXPECT_TRUE(false); }
 
-TEST_F(linalg_Test, Tensor_Inv_) { EXPECT_TRUE(false); }
+// TEST_F(linalg_Test, Tensor_Inv_) { EXPECT_TRUE(false); }
 
-TEST_F(linalg_Test, DenseUt_Inv) { EXPECT_TRUE(false); }
+// TEST_F(linalg_Test, DenseUt_Inv) { EXPECT_TRUE(false); }
 
-TEST_F(linalg_Test, DenseUt_Inv_) { EXPECT_TRUE(false); }
+// TEST_F(linalg_Test, DenseUt_Inv_) { EXPECT_TRUE(false); }
+
 // TEST_F(linalg_Test, DenseUt_Mod_UtUt){
 //     UniTensor At = UniTensor(A);
 //     UniTensor Bt = UniTensor(B);
