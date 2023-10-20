@@ -54,15 +54,17 @@ void network_binding(py::module &m) {
     .def(
       "PutUniTensor",
       [](Network &self, const std::string &name, const UniTensor &utensor,
-         const std::vector<std::string> &lbl_order) {
-        self.PutUniTensor(name, utensor, lbl_order);
+         const std::vector<std::string> &label_order) {
+        self.PutUniTensor(name, utensor, label_order);
       },
-      py::arg("name"), py::arg("utensor"), py::arg("lbl_order") = std::vector<std::string>())
+      py::arg("name"), py::arg("utensor"), py::arg("label_order") = std::vector<std::string>())
     .def(
       "PutUniTensor",
       [](Network &self, const cytnx_uint64 &idx, const UniTensor &utensor,
-         const std::vector<std::string> &lbl_order) { self.PutUniTensor(idx, utensor, lbl_order); },
-      py::arg("idx"), py::arg("utensor"), py::arg("lbl_order") = std::vector<std::string>())
+         const std::vector<std::string> &label_order) {
+        self.PutUniTensor(idx, utensor, label_order);
+      },
+      py::arg("idx"), py::arg("utensor"), py::arg("label_order") = std::vector<std::string>())
     .def(
       "PutUniTensors",
       [](Network &self, const std::vector<std::string> &names,
@@ -97,8 +99,8 @@ void network_binding(py::module &m) {
     // .def("getOrder", &Network::getOrder)
     .def("Launch", &Network::Launch, py::arg("network_type") = (int)NtType.Regular)
 
-    .def("construct", &Network::construct, py::arg("alias"), py::arg("lbls"),
-         py::arg("outlbl") = std::vector<std::string>(), py::arg("outrk"), py::arg("order") = "",
+    .def("construct", &Network::construct, py::arg("alias"), py::arg("labels"),
+         py::arg("outlabel") = std::vector<std::string>(), py::arg("outrk"), py::arg("order") = "",
          py::arg("optim") = false, py::arg("network_type") = (int)NtType.Regular)
 
     .def("clear", &Network::clear)
