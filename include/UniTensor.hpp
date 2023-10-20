@@ -16,6 +16,7 @@
 #include <algorithm>
 #include "Symmetry.hpp"
 #include "Bond.hpp"
+#include "Generator.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -3925,6 +3926,54 @@ namespace cytnx {
     UniTensor &from(const UniTensor &rhs, const bool &force = false) {
       this->_impl->from_(rhs._impl, force);
       return *this;
+    }
+
+    // Generators:
+    static UniTensor zeros(const cytnx_uint64 &Nelem,
+                           const std::vector<std::string> &in_labels = {},
+                           const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                           const std::string &name = "") {
+      return UniTensor(cytnx::zeros(Nelem, dtype, device), false, -1, in_labels, name);
+    }
+    static UniTensor zeros(const std::vector<cytnx_uint64> &Nelem,
+                           const std::vector<std::string> &in_labels = {},
+                           const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                           const std::string &name = "") {
+      return UniTensor(cytnx::zeros(Nelem, dtype, device), false, -1, in_labels, name);
+    }
+
+    static UniTensor ones(const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels = {},
+                          const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                          const std::string &name = "") {
+      return UniTensor(cytnx::ones(Nelem, dtype, device), false, -1, in_labels, name);
+    }
+    static UniTensor ones(const std::vector<cytnx_uint64> &Nelem,
+                          const std::vector<std::string> &in_labels = {},
+                          const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                          const std::string &name = "") {
+      return UniTensor(cytnx::ones(Nelem, dtype, device), false, -1, in_labels, name);
+    }
+
+    static UniTensor arange(const cytnx_int64 &Nelem,
+                            const std::vector<std::string> &in_labels = {},
+                            const std::string &name = "") {
+      return UniTensor(cytnx::arange(Nelem), false, -1, in_labels, name);
+    }
+    static UniTensor arange(const cytnx_double &start, const cytnx_double &end,
+                            const cytnx_double &step = 1,
+                            const std::vector<std::string> &in_labels = {},
+                            const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                            const std::string &name = "") {
+      return UniTensor(cytnx::arange(start, end, step, dtype, device), false, -1, in_labels, name);
+    }
+
+    static UniTensor linspace(const cytnx_double &start, const cytnx_double &end,
+                              const cytnx_uint64 &Nelem, const bool &endpoint = true,
+                              const std::vector<std::string> &in_labels = {},
+                              const unsigned int &dtype = Type.Double,
+                              const int &device = Device.cpu, const std::string &name = "") {
+      return UniTensor(cytnx::linspace(start, end, Nelem, endpoint, dtype, device), false, -1,
+                       in_labels, name);
     }
 
   };  // class UniTensor

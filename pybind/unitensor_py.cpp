@@ -1091,6 +1091,22 @@ void unitensor_binding(py::module &m) {
                         return self.truncate(label, dim);
                     },
                     py::arg("label"), py::arg("dim"))
+
+    //[Generator]
+    .def_static("ones", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
+                  const unsigned int &dtype,
+                  const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::ones(Nelem, in_labels,dtype,device,name);
+                }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = Type.Double,
+                   py::arg("device") = Device.cpu,
+                   py::arg("name") = std::string(""))
+
+
+
+
+
   ;//end of object line
 
   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
