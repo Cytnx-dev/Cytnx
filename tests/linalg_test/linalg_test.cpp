@@ -311,7 +311,7 @@ TEST_F(linalg_Test, Tensor_Gemm_) {
 
 TEST_F(linalg_Test, Tensor_Norm) {
   cytnx_double ans = 0;
-  for (int i = 0; i < 9; i++) {
+  for (cytnx_uint64 i = 0; i < 9; i++) {
     ans += i * i * 2;
   }
   ans = sqrt(ans);
@@ -320,7 +320,7 @@ TEST_F(linalg_Test, Tensor_Norm) {
 
 TEST_F(linalg_Test, DenseUt_Norm) {
   cytnx_double ans = 0;
-  for (int i = 0; i < 9; i++) {
+  for (cytnx_uint64 i = 0; i < 9; i++) {
     ans += i * i * 2;
   }
   ans = sqrt(ans);
@@ -329,7 +329,7 @@ TEST_F(linalg_Test, DenseUt_Norm) {
 
 // TEST_F(linalg_Test, BkUt_Norm) {
 //   cytnx_double ans=0;
-//   for(int i = 0; i<9;i++){
+//   for(cytnx_uint64 i = 0; i<9;i++){
 //     ans+=i*i*2;
 //   }
 //   ans+=9;
