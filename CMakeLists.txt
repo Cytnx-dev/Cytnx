@@ -117,7 +117,10 @@ target_include_directories(cytnx SYSTEM
 
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation -fsanitize=address")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation")
+
+target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation -diag-disable=10441")
 
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_DISABLE_AVAILABILITY")
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION")
@@ -146,7 +149,11 @@ endif()
 include(GNUInstallDirs)
 
 if(USE_ICPC)
-  target_compile_definitions(cytnx PRIVATE UNI_ICPC)
+  target_compile_definitions(cytnx PUBLIC UNI_ICPC)
+  # This option is to disable the warning of icpc
+  target_compile_options(cytnx PUBLIC -diag-disable=10441)
+  # This option is to maintain consistency of the floating point operation, also try to improve the performance
+  target_compile_options(cytnx PUBLIC -fp-model consistent -fimf-use-svml)
 endif()
 
 # #####################################################################
