@@ -592,6 +592,11 @@ void unitensor_binding(py::module &m) {
       [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
          const bool &force) { self.put_block(in, qnum, force); },
       py::arg("in"), py::arg("qnum"), py::arg("force") = false)
+     .def(
+      "put_block",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
+         const bool &force) { self.put_block(in, lbls, qnum, force); },
+      py::arg("in"), py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
     .def(
       "put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const cytnx_uint64 &idx) { self.put_block_(in, idx); },
@@ -602,6 +607,11 @@ void unitensor_binding(py::module &m) {
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
          const bool &force) { self.put_block_(in, qnum, force); },
       py::arg("in"), py::arg("qnum"), py::arg("force") = false)
+     .def(
+      "put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
+         const bool &force) { self.put_block_(in, lbls, qnum, force); },
+      py::arg("in"), py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
     .def(
       "__repr__",
       [](UniTensor &self) -> std::string {
