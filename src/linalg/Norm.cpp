@@ -55,18 +55,17 @@ namespace cytnx {
     }
 
     Tensor Norm(const UniTensor& uTl) {
-      // cytnx_error_msg(uTl.uten_type() != UTenType.Dense,
-      //                 "[Error][Norm] Can only use Norm on DenseUniTensor or Tensor%s", "\n");
-      // return Norm(uTl.get_block_());
       if (uTl.uten_type() == UTenType.Dense) {
         return Norm(uTl.get_block_());
       } else {
         std::vector<Tensor> bks = uTl.get_blocks_();
-        Tensor res = Norm(bks[0]).Pow(2);
-        for (int i = 1; i < bks.size(); i++) {
-          res += Norm(bks[i]).Pow(2);
+        Tensor res = zeros(1);
+        for (int i = 0; i < bks.size(); i++) {
+          Tensor tmp = Norm(bks[i]);
+          res.at({0}) = res.at({0}) + tmp.at({0}) * tmp.at({0});
         }
-        return res.Pow(0.5);
+        res.at({0}) = sqrt(res.at({0}));
+        return res;
       }
     }
 

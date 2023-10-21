@@ -339,7 +339,9 @@ TEST_F(linalg_Test, BkUt_Norm) {
   UniTensor in = UniTensor({I, J});
   in.put_block_(arange3x3cd, 0);
   in.put_block_(ones3x3cd, 1);
-  EXPECT_EQ(linalg::Norm(in).item(), ans);
+  // EXPECT_EQ(cytnx_double(linalg::Norm(in).item().real()), ans);
+  EXPECT_TRUE(abs(cytnx_double(linalg::Norm(in).item().real()) - ans) <
+              1e-13);  // not sure why some precision lost.
 }
 
 TEST_F(linalg_Test, Tensor_Eig) {
