@@ -327,20 +327,20 @@ TEST_F(linalg_Test, DenseUt_Norm) {
   EXPECT_EQ(linalg::Norm(arange3x3cd_ut).item(), ans);
 }
 
-// TEST_F(linalg_Test, BkUt_Norm) {
-//   cytnx_double ans=0;
-//   for(cytnx_uint64 i = 0; i<9;i++){
-//     ans+=i*i*2;
-//   }
-//   ans+=9;
-//   ans = sqrt(ans);
-//   Bond I = Bond(BD_IN, {Qs(-1), Qs(1)}, {3, 3});
-//   Bond J = Bond(BD_OUT, {Qs(-1), Qs(1)}, {3, 3});
-//   UniTensor in = UniTensor({I, J});
-//   in.put_block_(arange3x3cd, 0);
-//   in.put_block_(ones3x3cd, 1);
-//   EXPECT_EQ(linalg::Norm(in).item(), ans);
-// }
+TEST_F(linalg_Test, BkUt_Norm) {
+  cytnx_double ans = 0;
+  for (cytnx_uint64 i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans += 9;
+  ans = sqrt(ans);
+  Bond I = Bond(BD_IN, {Qs(-1), Qs(1)}, {3, 3});
+  Bond J = Bond(BD_OUT, {Qs(-1), Qs(1)}, {3, 3});
+  UniTensor in = UniTensor({I, J});
+  in.put_block_(arange3x3cd, 0);
+  in.put_block_(ones3x3cd, 1);
+  EXPECT_EQ(linalg::Norm(in).item(), ans);
+}
 
 TEST_F(linalg_Test, Tensor_Eig) {
   auto res = linalg::Eig(arange3x3cd);
