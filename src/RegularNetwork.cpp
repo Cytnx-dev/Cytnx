@@ -686,8 +686,6 @@ namespace cytnx {
                     this->names[idx].c_str());
 
     this->tensors[idx] = utensor;
-    this->CtTree.base_nodes[idx].utensor = utensor.relabels(this->label_arr[idx]);  // this conflict
-    this->CtTree.base_nodes[idx].is_assigned = true;
   }
 
   void RegularNetwork::RmUniTensor(const cytnx_uint64 &idx) {
@@ -923,8 +921,8 @@ namespace cytnx {
     SearchTree Stree;
     Stree.base_nodes.resize(this->tensors.size());
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
-      // Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
-      Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
+      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create psudotensors from base tensors
+      // Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
@@ -939,6 +937,11 @@ namespace cytnx {
     if (tn_device == -1) {
       // cpu workflow
 
+      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
+        this->CtTree.base_nodes[idx].utensor =
+          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+        this->CtTree.base_nodes[idx].is_assigned = true;
+      }
       // 1.5 contraction order:
       if (ORDER_tokens.size() != 0) {
         // *set by user or optimally found
