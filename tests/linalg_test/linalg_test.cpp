@@ -399,26 +399,23 @@ TEST_F(linalg_Test, DenseUt_Eigh) {
 // TEST_F(linalg_Test, DenseUt_Inv_) { EXPECT_TRUE(false); }
 
 TEST_F(linalg_Test, Tensor_InvM) {
-  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
-  auto inv = linalg::InvM(her);
-  // std::cout<< (linalg::Tensordot(arange3x3cd, inv, {1},{0})- eye3x3cd).Norm().item();
-  EXPECT_TRUE((linalg::Tensordot(her, inv, {1}, {0}) - eye3x3cd).Norm().item() < 1e-13);
+  auto inv = linalg::InvM(invertable3x3cd);
+  EXPECT_TRUE((linalg::Tensordot(invertable3x3cd, inv, {1}, {0}) - eye3x3cd).Norm().item() < 1e-13);
 }
 
 TEST_F(linalg_Test, Tensor_InvM_) {
-  auto inv = arange3x3cd.clone();
+  auto inv = invertable3x3cd.clone();
   linalg::InvM_(inv);
-  // std::cout<< (linalg::Tensordot(arange3x3cd, inv, {1},{0})- eye3x3cd).Norm().item();
-  EXPECT_TRUE((linalg::Tensordot(arange3x3cd, inv, {1}, {0}) - eye3x3cd).Norm().item() < 1e-13);
+  EXPECT_TRUE((linalg::Tensordot(invertable3x3cd, inv, {1}, {0}) - eye3x3cd).Norm().item() < 1e-13);
 }
 
 TEST_F(linalg_Test, DenseUt_InvM) {}
 
 TEST_F(linalg_Test, DenseUt_InvM_) {
-  auto inv = arange3x3cd_ut.clone();
-  inv.set_labels({"2", "3"});
+  auto inv = invertable3x3cd_ut.clone();
+  inv.set_labels({"1", "2"});  // invertable3x3cd_ut is labeled "0","1".
   linalg::InvM_(inv);
-  EXPECT_TRUE((arange3x3cd_ut.contract(inv) - UniTensor(eye3x3cd)).Norm().item() < 1e-13);
+  EXPECT_TRUE((invertable3x3cd_ut.contract(inv) - UniTensor(eye3x3cd)).Norm().item() < 1e-13);
 }
 
 // TEST_F(linalg_Test, DenseUt_Mod_UtUt){
