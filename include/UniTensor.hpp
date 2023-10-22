@@ -17,6 +17,7 @@
 #include "Symmetry.hpp"
 #include "Bond.hpp"
 #include "Generator.hpp"
+#include <random>
 
 #ifdef BACKEND_TORCH
 #else
@@ -3975,6 +3976,36 @@ namespace cytnx {
       return UniTensor(cytnx::linspace(start, end, Nelem, endpoint, dtype, device), false, -1,
                        in_labels, name);
     }
+
+    // Random Generators:
+    static UniTensor normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
+                            const std::vector<std::string> &in_labels = {},
+                            const unsigned int &seed = std::random_device()(),
+                            const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                            const std::string &name = "");
+    static UniTensor normal(const std::vector<cytnx_uint64> &Nelem, const double &mean,
+                            const double &std, const std::vector<std::string> &in_labels = {},
+                            const unsigned int &seed = std::random_device()(),
+                            const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                            const std::string &name = "");
+
+    static UniTensor uniform(const cytnx_uint64 &Nelem, const double &low, const double &high,
+                             const std::vector<std::string> &in_labels = {},
+                             const unsigned int &seed = std::random_device()(),
+                             const unsigned int &dtype = Type.Double,
+                             const int &device = Device.cpu, const std::string &name = "");
+    static UniTensor uniform(const std::vector<cytnx_uint64> &Nelem, const double &low,
+                             const double &high, const std::vector<std::string> &in_labels = {},
+                             const unsigned int &seed = std::random_device()(),
+                             const unsigned int &dtype = Type.Double,
+                             const int &device = Device.cpu, const std::string &name = "");
+
+    // Inplace Random Generators:
+    void normal_(const double &mean, const double &std,
+                 const unsigned int &seed = std::random_device()());
+
+    void uniform_(const double &low = 0, const double &high = 1,
+                  const unsigned int &seed = std::random_device()());
 
   };  // class UniTensor
 
