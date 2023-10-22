@@ -115,7 +115,7 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp.reshape_({rowdim, -1});
 
-      vector<Tensor> outT = cytnx::linalg::Eig(tmp, is_V, row_v);
+      vector<Tensor> outT = cytnx::linalg::Eigh(tmp, is_V, row_v);
       if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
       int t = 0;
@@ -125,13 +125,14 @@ namespace cytnx {
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
-      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-                Device.cpu, true);  // it is just reference so no hurt to alias ^^
+      Cy_S.Init({newBond, newBond}, {std::string("0"), std::string("1")}, 1, Type.Double,
+                Device.cpu, true);  // it is just reference so no hurt to alias ^^. All eigvals are
+                                    // real for eigh so Type.Double.
 
       // cout << "[AFTER INIT]" << endl;
       Cy_S.put_block_(outT[t]);
+      if (Tin.is_tag()) Cy_S.tag();
       t++;
-
       if (is_V) {
         cytnx::UniTensor &Cy_U = outCyT[t];
         vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
@@ -139,26 +140,21 @@ namespace cytnx {
         outT[t].reshape_(shapeU);
         Cy_U.Init(outT[t], false, Tin.rowrank());
         vector<string> labelU = vec_clone(oldlabel, Tin.rowrank());
-        labelU.push_back(Cy_S.labels()[0]);
-        Cy_U.set_labels(labelU);
-        t++;  // U
-      }
-      // if tag, then update  the tagging informations
-      if (Tin.is_tag()) {
-        Cy_S.tag();
-        t = 1;
-        if (is_V) {
-          cytnx::UniTensor &Cy_U = outCyT[t];
+        // labelU.push_back(Cy_S.labels()[0]);
+        // Cy_U.set_labels(labelU);
+
+        // if tag, then update  the tagging informations
+        if (Tin.is_tag()) {
           Cy_U._impl->_is_tag = true;
           for (int i = 0; i < Cy_U.rowrank(); i++) {
             Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
           }
           Cy_U.bonds().back().set_type(cytnx::BD_BRA);
           Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
-          t++;
-        }
-      }  // if tag
-    }
+          // t++;
+        }  // if tag
+      }  // V
+    }  //_Eigh_Dense_UT
 
     std::vector<cytnx::UniTensor> Eigh(const UniTensor &Tin, const bool &is_V, const bool &row_v) {
       // using rowrank to split the bond to form a matrix.
@@ -176,15 +172,14 @@ namespace cytnx {
 
       } else {
         cytnx_error_msg(true,
-                        "[ERROR] Eig, unsupported type of UniTensor only support (Dense). "
+                        "[ERROR] Eigh, unsupported type of UniTensor only support (Dense). "
                         "something wrong internal%s",
                         "\n");
-
       }  // is block form ?
 
       return outCyT;
 
-    };  // Eig
+    };  // Eigh
 
   }  // namespace linalg
 }  // namespace cytnx

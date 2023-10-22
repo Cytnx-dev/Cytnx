@@ -57,7 +57,7 @@ namespace cytnx {
     Tensor Norm(const UniTensor& uTl) {
       if (uTl.uten_type() == UTenType.Dense) {
         return Norm(uTl.get_block_());
-      } else {
+      } else if (uTl.uten_type() == UTenType.Block) {
         std::vector<Tensor> bks = uTl.get_blocks_();
         Tensor res = zeros(1);
         for (int i = 0; i < bks.size(); i++) {
@@ -66,6 +66,12 @@ namespace cytnx {
         }
         res.at({0}) = sqrt(res.at({0}));
         return res;
+      } else {
+        cytnx_error_msg(
+          true,
+          "[ERROR] Norm, unsupported type of UniTensor, only support Dense and Block. "
+          "something wrong internal%s",
+          "\n");
       }
     }
 
