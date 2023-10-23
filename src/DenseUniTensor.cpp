@@ -1179,11 +1179,11 @@ namespace cytnx {
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
   void DenseUniTensor::_load_dispatch(std::fstream &f) { this->_block._Load(f); }
 
-  void DenseUniTensor::truncate_(const std::string &bond_lbl, const cytnx_uint64 &dim) {
+  void DenseUniTensor::truncate_(const std::string &bond_label, const cytnx_uint64 &dim) {
     // if it is diagonal tensor, truncate will be done on both index!
     cytnx_error_msg(dim < 1, "[ERROR][DenseUniTensor][truncate] dim should be >0.%s", "\n");
     cytnx_uint64 idx;
-    auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_lbl);
+    auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_label);
     cytnx_error_msg(it == this->_labels.end(),
                     "[ERROR][DenseUniTensor][truncate] Error, bond label does not exist in the "
                     "current label list.%s",
