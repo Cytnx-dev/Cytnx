@@ -409,7 +409,11 @@ TEST_F(linalg_Test, Tensor_InvM_) {
   EXPECT_TRUE((linalg::Tensordot(invertable3x3cd, inv, {1}, {0}) - eye3x3cd).Norm().item() < 1e-13);
 }
 
-TEST_F(linalg_Test, DenseUt_InvM) {}
+TEST_F(linalg_Test, DenseUt_InvM) {
+  auto inv = linalg::InvM(invertable3x3cd_ut);
+  inv.set_labels({"1", "2"});  // invertable3x3cd_ut is labeled "0","1".
+  EXPECT_TRUE((invertable3x3cd_ut.contract(inv) - UniTensor(eye3x3cd)).Norm().item() < 1e-13);
+}
 
 TEST_F(linalg_Test, DenseUt_InvM_) {
   auto inv = invertable3x3cd_ut.clone();

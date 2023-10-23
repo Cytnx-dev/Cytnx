@@ -42,14 +42,14 @@ namespace cytnx {
 namespace cytnx {
   namespace linalg {
     void _InvM_inplace_Dense_UT(UniTensor &Tin) {
-      Tensor tmp = Tin.get_block_();
+      Tensor tmp;
 
-      // if (Tin.is_contiguous())
-      //   tmp = Tin.get_block_();
-      // else {
-      //   tmp = Tin.get_block();
-      //   tmp.contiguous_();
-      // }
+      if (Tin.is_contiguous())
+        tmp = Tin.get_block_();
+      else {
+        tmp = Tin.get_block();
+        tmp.contiguous_();
+      }
 
       vector<cytnx_uint64> tmps = tmp.shape();
       vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
@@ -62,7 +62,8 @@ namespace cytnx {
       tmp.reshape_({rowdim, -1});
 
       cytnx::linalg::InvM_(tmp);
-      tmp.reshape_(oldshape);
+
+      if (Tin.is_contiguous()) tmp.reshape_(oldshape);
     }
     void InvM_(UniTensor &Tin) {
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
@@ -78,7 +79,7 @@ namespace cytnx {
 
       } else {
         cytnx_error_msg(true,
-                        "[ERROR] InvM, unsupported type of UniTensor only support (Dense). "
+                        "[ERROR] InvM_, unsupported type of UniTensor only support (Dense). "
                         "something wrong internal%s",
                         "\n");
       }
