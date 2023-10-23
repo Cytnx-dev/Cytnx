@@ -3009,7 +3009,12 @@ namespace cytnx {
     void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
       this->_impl->set(accessors, rhs);
     }
-
+    void set(const std::vector<Accessor> &accessors, const UniTensor &rhs) {
+      cytnx_error_msg(
+        rhs.uten_type() != UTenType.Dense,
+        "[ERROR] cannot set elements from UniTensor with symmetry. Use at() instead.%s", "\n");
+      this->_impl->set(accessors, rhs.get_block());
+    }
     /**
     @brief Reshape the UniTensor.
           @param[in] new_shape the new shape you want to reshape to.
