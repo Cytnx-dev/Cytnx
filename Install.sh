@@ -63,7 +63,7 @@ FLAG="${FLAG} -DBUILD_PYTHON=ON"
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_HPTT=OFF "
+FLAG="${FLAG} -DUSE_HPTT=ON "
 #-----------------------------------
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
@@ -161,10 +161,10 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 #=========================================================
 # [Note] Build using intel icpc compiler, uncomment to enable (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_ICPC=ON " # You should set this to ON if you want to use icpc
+FLAG="${FLAG} -DUSE_ICPC=OFF " # You should set this to ON if you want to use icpc
 # This option is needed if you want to use icpc, to set the compiler
 # Although icc&icpc is deprecated, but since icx&icpx has poor support for conda environment, we still use icpc
-FLAG="${FLAG} -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc"
+#FLAG="${FLAG} -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc"
 # This option is to use the intel compiler's ar and linker, which is optional
 #FLAG = "${FLAG} -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
 #-----------------------------------
@@ -187,7 +187,7 @@ rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
-make -j`nproc`
+make -j4
 make install
 ctest
 gcovr -r ../ . --html-details cov.html

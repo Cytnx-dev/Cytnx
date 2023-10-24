@@ -3,6 +3,7 @@
 #include "linalg.hpp"
 #include "utils/is.hpp"
 #include "Type.hpp"
+#include "UniTensor.hpp"
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -853,6 +854,10 @@ namespace cytnx {
   Tensor Tensor::Trace(const cytnx_uint64 &a, const cytnx_uint64 &b) const {
     Tensor out = linalg::Trace(*this, a, b);
     return out;
+  }
+
+  UniTensor Tensor::unitensor(const std::vector<std::string> &labels, const bool &is_diag) {
+    return UniTensor(*this, is_diag);
   }
 
   bool Tensor::same_data(const Tensor &rhs) const {

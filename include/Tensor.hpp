@@ -24,6 +24,7 @@
 namespace cytnx {
 
   class Tensor;
+  class UniTensor;
 
   ///@cond
   // [Note] these are fwd from linalg.hpp
@@ -1631,6 +1632,8 @@ namespace cytnx {
      * where \p Tin is the current Tensor.
      */
     Tensor Min() const;
+
+    UniTensor unitensor(const std::vector<std::string> &labels, const bool &is_diag = false);
 
   };  // class Tensor
 
