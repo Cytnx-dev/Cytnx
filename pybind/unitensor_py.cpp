@@ -54,8 +54,6 @@ class cHclass {
   }
 };
 
-template <class T>
-
 void f_UniTensor_setelem_scal_d(UniTensor &self, const std::vector<cytnx_uint64> &locator,
                                 const cytnx::cytnx_double &rc) {
   self.set_elem(locator, rc);
@@ -289,8 +287,8 @@ void unitensor_binding(py::module &m) {
                },py::arg("locator"))
 
 
-    .def("c_at",[](UniTensor &self, const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &locator){
-                  Scalar::Sproxy tmp = self.at(lbls,locator);
+    .def("c_at",[](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &locator){
+                  Scalar::Sproxy tmp = self.at(labels,locator);
                   //std::cout << "ok" << std::endl;
                   return cHclass(tmp);
                },py::arg("labels"), py::arg("locator"))
@@ -414,11 +412,9 @@ void unitensor_binding(py::module &m) {
            cytnx_error_msg(self.shape().size() == 0,
                            "[ERROR] try to setelem to a empty UniTensor%s", "\n");
            cytnx_error_msg(
-             self.uten_type() == UTenType.Sparse,
-             "[ERROR] cannot set element using [] from SparseUniTensor. Use at() instead.%s", "\n");
-           cytnx_error_msg(
-             self.uten_type() == UTenType.Block,
-             "[ERROR] cannot set element using [] from BlockUniTensor. Use at() instead.%s", "\n");
+             self.uten_type() != UTenType.Dense,
+             "[ERROR] cannot set element using [] from Blcok/SparseUniTensor. Use at() instead.%s", "\n");
+
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
@@ -465,7 +461,7 @@ void unitensor_binding(py::module &m) {
              }
            }
 
-           self.set(accessors, rhs);
+           self.set(accessors, rhs.get_block());
          })
     .def("get_elem",
          [](UniTensor &self, const std::vector<cytnx_uint64> &locator) {
@@ -493,6 +489,18 @@ void unitensor_binding(py::module &m) {
     .def("set_elem", &f_UniTensor_setelem_scal_u16)
     .def("set_elem", &f_UniTensor_setelem_scal_i16)
     .def("set_elem", &f_UniTensor_setelem_scal_b)
+
+    .def("__setitem__", &f_UniTensor_setelem_scal_cd)
+    .def("__setitem__", &f_UniTensor_setelem_scal_cf)
+    .def("__setitem__", &f_UniTensor_setelem_scal_d)
+    .def("__setitem__", &f_UniTensor_setelem_scal_f)
+    .def("__setitem__", &f_UniTensor_setelem_scal_u64)
+    .def("__setitem__", &f_UniTensor_setelem_scal_i64)
+    .def("__setitem__", &f_UniTensor_setelem_scal_u32)
+    .def("__setitem__", &f_UniTensor_setelem_scal_i32)
+    .def("__setitem__", &f_UniTensor_setelem_scal_u16)
+    .def("__setitem__", &f_UniTensor_setelem_scal_i16)
+    .def("__setitem__", &f_UniTensor_setelem_scal_b)
 
     .def("is_contiguous", &UniTensor::is_contiguous)
     .def("is_diag", &UniTensor::is_diag)
@@ -592,14 +600,14 @@ void unitensor_binding(py::module &m) {
 
     .def(
       "get_block",
-      [](const UniTensor &self, const std::vector<std::string> &lbl, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block(lbl, qnum, force);
+      [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_int64> &qnum, const bool &force) {
+        return self.get_block(label, qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
     .def(
       "get_block",
-      [](const UniTensor &self, const std::vector<std::string> &lbl, const std::vector<cytnx_uint64> &qnum, const bool &force) {
-        return self.get_block(lbl,qnum, force);
+      [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_uint64> &qnum, const bool &force) {
+        return self.get_block(label,qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
     .def(
@@ -617,14 +625,14 @@ void unitensor_binding(py::module &m) {
 
     .def(
       "get_block_",
-      [](UniTensor &self, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum, const bool &force) {
-        return self.get_block_(lbls, qnum, force);
+      [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_int64> &qnum, const bool &force) {
+        return self.get_block_(labels, qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
     .def(
       "get_block_",
-      [](UniTensor &self, const std::vector<std::string> &lbls, const std::vector<cytnx_uint64> &qnum, const bool &force) {
-        return self.get_block_(lbls,qnum, force);
+      [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &qnum, const bool &force) {
+        return self.get_block_(labels,qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
 
