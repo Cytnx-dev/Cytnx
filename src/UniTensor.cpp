@@ -207,14 +207,14 @@ namespace cytnx {
                                const std::vector<std::string> &in_labels, const unsigned int &seed,
                                const unsigned int &dtype, const int &device,
                                const std::string &name) {
-    return UniTensor(cytnx::random::normal(Nelem, low, high, device, seed, dtype), false, -1,
+    return UniTensor(cytnx::random::uniform(Nelem, low, high, device, seed, dtype), false, -1,
                      in_labels, name);
   }
   UniTensor UniTensor::uniform(const std::vector<cytnx_uint64> &Nelem, const double &low,
                                const double &high, const std::vector<std::string> &in_labels,
                                const unsigned int &seed, const unsigned int &dtype,
                                const int &device, const std::string &name) {
-    return UniTensor(cytnx::random::normal(Nelem, low, high, device, seed, dtype), false, -1,
+    return UniTensor(cytnx::random::uniform(Nelem, low, high, device, seed, dtype), false, -1,
                      in_labels, name);
   }
 
