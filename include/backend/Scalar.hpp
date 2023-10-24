@@ -2203,7 +2203,7 @@ namespace cytnx {
     void iadd(const cytnx_int16 &c) { this->_elem += c; }
     void iadd(const cytnx_bool &c) { this->_elem += c; }
 
-    void isub(const Scalar_base *c) { this->_elem += c->to_cytnx_uint16(); }
+    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint16(); }
     void isub(const cytnx_complex128 &c) {
       cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
     }
