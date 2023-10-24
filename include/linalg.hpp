@@ -1791,6 +1791,7 @@ namespace cytnx {
     @pre \p Tin should be a rank-2 Tensor.
     */
     Tensor InvM(const Tensor &Tin);
+    UniTensor InvM(const UniTensor &Tin);
     /**
     @brief inplace matrix inverse.
     @details This function will perform matrix inverse on the input matrix \p Tin, inplacely.
@@ -1799,7 +1800,7 @@ namespace cytnx {
     @pre the Tin should be a rank-2 Tensor.
     */
     void InvM_(Tensor &Tin);
-
+    void InvM_(UniTensor &Tin);
     // Inv:
     //==================================================
     /**
