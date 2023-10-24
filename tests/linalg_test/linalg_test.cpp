@@ -309,6 +309,95 @@ TEST_F(linalg_Test, Tensor_Gemm_) {
     }
 }
 
+TEST_F(linalg_Test, Tensor_Norm) {
+  cytnx_double ans = 0;
+  for (cytnx_uint64 i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans = sqrt(ans);
+  EXPECT_EQ(linalg::Norm(arange3x3cd).item(), ans);
+}
+
+TEST_F(linalg_Test, DenseUt_Norm) {
+  cytnx_double ans = 0;
+  for (cytnx_uint64 i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans = sqrt(ans);
+  EXPECT_EQ(linalg::Norm(arange3x3cd_ut).item(), ans);
+}
+
+TEST_F(linalg_Test, BkUt_Norm) {
+  cytnx_double ans = 0;
+  for (cytnx_uint64 i = 0; i < 9; i++) {
+    ans += i * i * 2;
+  }
+  ans += 9;
+  ans = sqrt(ans);
+  Bond I = Bond(BD_IN, {Qs(-1), Qs(1)}, {3, 3});
+  Bond J = Bond(BD_OUT, {Qs(-1), Qs(1)}, {3, 3});
+  UniTensor in = UniTensor({I, J});
+  in.put_block_(arange3x3cd, 0);
+  in.put_block_(ones3x3cd, 1);
+  // EXPECT_EQ(cytnx_double(linalg::Norm(in).item().real()), ans);
+  EXPECT_TRUE(abs(cytnx_double(linalg::Norm(in).item().real()) - ans) <
+              1e-13);  // not sure why some precision lost.
+}
+
+TEST_F(linalg_Test, Tensor_Eig) {
+  auto res = linalg::Eig(arange3x3cd);
+  auto e = UniTensor(res[0], true);
+  e.set_labels({"a", "b"});
+  auto v = UniTensor(res[1]);
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
+
+TEST_F(linalg_Test, Tensor_Eigh) {
+  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
+  auto res = linalg::Eigh(her);
+  auto e = UniTensor(res[0], true);
+  e.set_labels({"a", "b"});
+  auto v = UniTensor(res[1]);
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
+
+TEST_F(linalg_Test, DenseUt_Eig) {
+  auto res = linalg::Eig(arange3x3cd_ut);
+  auto e = res[0];
+  e.set_labels({"a", "b"});
+  auto v = res[1];
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
+
+TEST_F(linalg_Test, DenseUt_Eigh) {
+  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
+  auto res = linalg::Eigh(UniTensor(her));
+  auto e = res[0];
+  e.set_labels({"a", "b"});
+  auto v = res[1];
+  v.set_labels({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.set_labels({"b", "j"});
+  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
+
+// TEST_F(linalg_Test, Tensor_Inv) { EXPECT_TRUE(false); }
+
+// TEST_F(linalg_Test, Tensor_Inv_) { EXPECT_TRUE(false); }
+
+// TEST_F(linalg_Test, DenseUt_Inv) { EXPECT_TRUE(false); }
+
+// TEST_F(linalg_Test, DenseUt_Inv_) { EXPECT_TRUE(false); }
+
 // TEST_F(linalg_Test, DenseUt_Mod_UtUt){
 //     UniTensor At = UniTensor(A);
 //     UniTensor Bt = UniTensor(B);
