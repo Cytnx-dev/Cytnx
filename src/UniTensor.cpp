@@ -195,11 +195,11 @@ namespace cytnx {
     return UniTensor(cytnx::random::normal(Nelem, mean, std, device, seed, dtype), false, -1,
                      in_labels, name);
   }
-  UniTensor UniTensor::normal(const std::vector<cytnx_uint64> &Nelem, const double &mean,
+  UniTensor UniTensor::normal(const std::vector<cytnx_uint64> &shape, const double &mean,
                               const double &std, const std::vector<std::string> &in_labels,
                               const unsigned int &seed, const unsigned int &dtype,
                               const int &device, const std::string &name) {
-    return UniTensor(cytnx::random::normal(Nelem, mean, std, device, seed, dtype), false, -1,
+    return UniTensor(cytnx::random::normal(shape, mean, std, device, seed, dtype), false, -1,
                      in_labels, name);
   }
 
@@ -210,11 +210,11 @@ namespace cytnx {
     return UniTensor(cytnx::random::uniform(Nelem, low, high, device, seed, dtype), false, -1,
                      in_labels, name);
   }
-  UniTensor UniTensor::uniform(const std::vector<cytnx_uint64> &Nelem, const double &low,
+  UniTensor UniTensor::uniform(const std::vector<cytnx_uint64> &shape, const double &low,
                                const double &high, const std::vector<std::string> &in_labels,
                                const unsigned int &seed, const unsigned int &dtype,
                                const int &device, const std::string &name) {
-    return UniTensor(cytnx::random::uniform(Nelem, low, high, device, seed, dtype), false, -1,
+    return UniTensor(cytnx::random::uniform(shape, low, high, device, seed, dtype), false, -1,
                      in_labels, name);
   }
 

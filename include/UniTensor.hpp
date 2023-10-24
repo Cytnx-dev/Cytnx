@@ -4186,7 +4186,7 @@ namespace cytnx {
       @see random::uniform(const std::vector< cytnx_uint64 > &shape, const double &low, const double
      &high, const int &device, const unsigned int &seed, const unsigned int &dtype)
     */
-    static UniTensor uniform(const std::vector<cytnx_uint64> &Nelem, const double &low,
+    static UniTensor uniform(const std::vector<cytnx_uint64> &shape, const double &low,
                              const double &high, const std::vector<std::string> &in_labels = {},
                              const unsigned int &seed = std::random_device()(),
                              const unsigned int &dtype = Type.Double,
