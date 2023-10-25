@@ -19,11 +19,11 @@ namespace cytnx {
     // out._impl->storage().set_zeros();
     return out;
   }
-  Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
+  Tensor zeros(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
                const int &device) {
     // std::cout << "OK" << std::endl;
     // std::cout << Nelem << std::endl;
-    Tensor out(Nelem, dtype, device, true);
+    Tensor out(shape, dtype, device, true);
     // out._impl->storage().set_zeros();
     return out;
   }
@@ -33,9 +33,9 @@ namespace cytnx {
     out._impl->storage().fill(1);
     return out;
   }
-  Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
+  Tensor ones(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
               const int &device) {
-    Tensor out(Nelem, dtype, device);
+    Tensor out(shape, dtype, device);
     out._impl->storage().fill(1);
     return out;
   }
@@ -78,11 +78,21 @@ namespace cytnx {
 
     return out;
   }
+  Tensor arange(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
+                const cytnx_double &end, const cytnx_double &step = 1,
+                const unsigned int &dtype = Type.Double, const int &device = Device.cpu) {
+    return arange(start, end, step, dtype, device).reshape(shape);
+  }
   Tensor arange(const cytnx_int64 &Nelem) {
     cytnx_error_msg(Nelem <= 0, "[ERROR] arange(Nelem) , %s", "Nelem must be integer > 0");
     return arange(0, Nelem, 1);
   }
-
+  Tensor arange(const std::vector<cytnx_uint64> &shape) {
+    return arange(std::reduce(
+                    shape.begin(), shape.end(), 1,
+                    [](cytnx_uint64 lhs, cytnx_uint64 rhs) -> cytnx_uint64 { return lhs * rhs; }))
+      .reshape(shape);
+  }
   Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
                   const bool &endpoint, const unsigned int &dtype, const int &device) {
     Tensor out;
@@ -111,6 +121,11 @@ namespace cytnx {
   #endif
     }
     return out;
+  }
+  Tensor linspace(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
+                  const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint = true,
+                  const unsigned int &dtype = Type.Double, const int &device = Device.cpu) {
+    return linspace(start, end, Nelem, endpoint, dtype, device).reshape(shape);
   }
 
   //--------------

@@ -4166,6 +4166,26 @@ namespace cytnx {
     }
 
     /**
+    @brief Generate a one-bond UniTensor with all elements are arange from 0 to Nelem-1, then
+    reshape to the given shape. Where Nelem is the product of the given shape.
+    @details Generate a UniTensor with all elements are arange from 0 to Nelem-1 with double data
+    type on cpu device. The step is 1.
+    @param[in] Nelem the number of elements.
+    @param[in] in_labels the labels of the UniTensor.
+    @param[in] name the name of the UniTensor.
+    @return
+        [UniTensor]
+    @see arange(const std::vector<cytnx_uint64> &shape, const cytnx_double &start, const
+    cytnx_double &end, const cytnx_double &step, const unsigned int &dtype, const int &device) \n
+    @see arange(const cytnx_int64 &Nelem)
+    */
+    static UniTensor arange(const std::vector<cytnx_uint64> &shape,
+                            const std::vector<std::string> &in_labels = {},
+                            const std::string &name = "") {
+      return UniTensor(cytnx::arange(shape), false, -1, in_labels, name);
+    }
+
+    /**
     @brief Generate a UniTensor with all elements are arange from \p start to \p end.
     @details Generate a UniTensor with all elements are arange from \p start to \p end , the step is
     \p step .
@@ -4187,6 +4207,32 @@ namespace cytnx {
                             const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
                             const std::string &name = "") {
       return UniTensor(cytnx::arange(start, end, step, dtype, device), false, -1, in_labels, name);
+    }
+
+    /**
+    @brief Generate a UniTensor with all elements are arange from \p start to \p end. Then reshape
+    to the given shape.
+    @details Generate a UniTensor with all elements are arange from \p start to \p end , the step is
+    \p step .
+    @param[in] start the start of the arange.
+    @param[in] end the end of the arange.
+    @param[in] step the step of the arange.
+    @param[in] in_labels the labels of the UniTensor.
+    @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
+    @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
+    @param[in] name the name of the UniTensor.
+    @return
+        [UniTensor]
+    @see arange(const std::vector<cytnx_uint64> &shape, const cytnx_double &start, const
+    cytnx_double &end, const cytnx_double &step, const unsigned int &dtype, const int &device)
+    */
+    static UniTensor arange(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
+                            const cytnx_double &end, const cytnx_double &step = 1,
+                            const std::vector<std::string> &in_labels = {},
+                            const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
+                            const std::string &name = "") {
+      return UniTensor(cytnx::arange(shape, start, end, step, dtype, device), false, -1, in_labels,
+                       name);
     }
 
     /**
@@ -4215,6 +4261,35 @@ namespace cytnx {
                               const int &device = Device.cpu, const std::string &name = "") {
       return UniTensor(cytnx::linspace(start, end, Nelem, endpoint, dtype, device), false, -1,
                        in_labels, name);
+    }
+
+    /**
+    @brief Generate a one-bond UniTensor with all elements are evenly spaced numbers over a
+    specified interval. Then reshape to the given shape.
+    @details Generate a UniTensor with all elements are evenly spaced numbers over a specified
+    interval. The interval is \p [start, end] and the number of elements is \p Nelem.
+    @param[in] start the start of the linspace.
+    @param[in] end the end of the linspace.
+    @param[in] Nelem the number of elements.
+    @param[in] endpoint if \p endpoint is true, the end of linspace is \p end, else the end of
+    linspace is \p end - \p step.
+    @param[in] in_labels the labels of the UniTensor.
+    @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
+    @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
+    @param[in] name the name of the UniTensor.
+    @return
+        [UniTensor]
+    @see linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
+    const bool &endpoint, const unsigned int &dtype, const int &device)
+    */
+    static UniTensor linspace(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
+                              const cytnx_double &end, const cytnx_uint64 &Nelem,
+                              const bool &endpoint = true,
+                              const std::vector<std::string> &in_labels = {},
+                              const unsigned int &dtype = Type.Double,
+                              const int &device = Device.cpu, const std::string &name = "") {
+      return UniTensor(cytnx::linspace(shape, start, end, Nelem, endpoint, dtype, device), false,
+                       -1, in_labels, name);
     }
 
     // Random Generators:
