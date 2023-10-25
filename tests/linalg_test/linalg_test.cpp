@@ -337,10 +337,11 @@ TEST_F(linalg_Test, BkUt_Norm) {
   Bond I = Bond(BD_IN, {Qs(-1), Qs(1)}, {3, 3});
   Bond J = Bond(BD_OUT, {Qs(-1), Qs(1)}, {3, 3});
   UniTensor in = UniTensor({I, J});
-  in.put_block_(arange3x3cd, 0);
-  in.put_block_(ones3x3cd, 1);
+  auto cd_in = in.astype(Type.ComplexDouble);
+  cd_in.put_block_(arange3x3cd, 0);
+  cd_in.put_block_(ones3x3cd, 1);
   // EXPECT_EQ(cytnx_double(linalg::Norm(in).item().real()), ans);
-  EXPECT_TRUE(abs(cytnx_double(linalg::Norm(in).item().real()) - ans) <
+  EXPECT_TRUE(abs(cytnx_double(linalg::Norm(cd_in).item().real()) - ans) <
               1e-13);  // not sure why some precision lost.
 }
 

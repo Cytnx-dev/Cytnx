@@ -7,17 +7,6 @@ using namespace std::complex_literals;
 
 #define FAIL_CASE_OPEN 0
 
-#if FAIL_CASE_OPEN
-TEST_F(DenseUniTensorTest, ScalarUint16Sub_tmp) {
-  // this test case should be integrate to Scalar test.
-  auto s1 = Scalar(cytnx_uint16(3u));
-  auto s2 = Scalar(cytnx_uint16(1u));
-  auto out = s1 - s2;  // the results is 4 ?
-  auto ans = Scalar(cytnx_uint16(2u));
-  EXPECT_EQ(out, ans);
-}
-#endif
-
 TEST_F(DenseUniTensorTest, Init_by_Tensor) {
   // EXPECT_NO_THROW(dut.Init_by_Tensor(tar345, false, -1));
   // EXPECT_TRUE(utar345.same_data());
@@ -1717,7 +1706,6 @@ TEST_F(DenseUniTensorTest, reshape_) {
 /*=====test info=====
 describe:test reshape_ with diagonal UniTensor
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, reshape__diag) {
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
@@ -1730,12 +1718,8 @@ TEST_F(DenseUniTensorTest, reshape__diag) {
   auto dst_ut2 = ut_diag.clone();
   dst_ut2.reshape_(dst_shape, 1);
   EXPECT_TRUE(AreEqUniTensor(dst_ut1, dst_ut2));
-  // dst_ut2.print_diagram();
-  // std::cout << dst_ut2.shape();
-  // issue: the shape of dst_ut2 is [4, 4, 4]. What happen here ?
   EXPECT_EQ(dst_ut2.shape(), std::vector<cytnx_uint64>({4, 4}));
 }
-#endif
 
 /*=====test info=====
 describe:error test for reshape
@@ -2372,7 +2356,6 @@ TEST_F(DenseUniTensorTest, Add_uninit) {
 /*=====test info=====
 describe:test sub two UniTensor for all data type
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Sub_UT_UT) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
@@ -2404,7 +2387,6 @@ TEST_F(DenseUniTensorTest, Sub_UT_UT) {
     }
   }
 }
-#endif
 
 /*=====test info=====
 describe:test sub two UniTensor, the second UniTensor only one element
@@ -2521,7 +2503,6 @@ TEST_F(DenseUniTensorTest, Sub_UT_UT_rank_error) {
 /*=====test info=====
 describe:test sub one UniTensor and one scalar
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Sub_UT_Scalar) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
@@ -2549,7 +2530,6 @@ TEST_F(DenseUniTensorTest, Sub_UT_Scalar) {
     }
   }
 }
-#endif
 
 /*=====test info=====
 describe:test sub one diagonal UniTensor and one scalar
@@ -2576,7 +2556,6 @@ TEST_F(DenseUniTensorTest, Sub_diagUT_Scalar) {
 /*=====test info=====
 describe:test Sub_, two UniTensor for all data type
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Sub__UT_UT) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
@@ -2606,7 +2585,6 @@ TEST_F(DenseUniTensorTest, Sub__UT_UT) {
     }
   }
 }
-#endif
 
 /*=====test info=====
 describe:test Sub_ two UniTensor, the second UniTensor only one element
@@ -2736,7 +2714,6 @@ TEST_F(DenseUniTensorTest, Sub__UT_UT_rank_error) {
 /*=====test info=====
 describe:test sub one UniTensor and one scalar
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Sub__UT_Scalar) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
@@ -2763,7 +2740,6 @@ TEST_F(DenseUniTensorTest, Sub__UT_Scalar) {
     }
   }
 }
-#endif
 
 /*=====test info=====
 describe:test sub one diagonal UniTensor and one scalar
@@ -2984,7 +2960,6 @@ TEST_F(DenseUniTensorTest, Mul_UT_UT_rank_error) {
 /*=====test info=====
 describe:test mul one UniTensor and one scalar
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Mul_UT_Scalar) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
@@ -3013,7 +2988,6 @@ TEST_F(DenseUniTensorTest, Mul_UT_Scalar) {
     }
   }
 }
-#endif
 
 /*=====test info=====
 describe:test mul one diagonal UniTensor and one scalar
@@ -3198,7 +3172,6 @@ TEST_F(DenseUniTensorTest, Mul__UT_UT_rank_error) {
 /*=====test info=====
 describe:test mul one UniTensor and one scalar
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Mul__UT_Scalar) {
   std::vector<Bond> bonds = {Bond(3), Bond(4), Bond(2)};
   int seed = 0;
@@ -3227,7 +3200,6 @@ TEST_F(DenseUniTensorTest, Mul__UT_Scalar) {
     }
   }
 }
-#endif
 
 /*=====test info=====
 describe:test mul one diagonal UniTensor and one scalar
@@ -4688,3 +4660,221 @@ TEST_F(DenseUniTensorTest, get_qindices) {
 describe:test get_ito
 ====================*/
 TEST_F(DenseUniTensorTest, get_itoi) { EXPECT_THROW(utzero345.get_itoi(), std::logic_error); }
+
+/*=====test info=====
+describe:test zeros_1
+====================*/
+TEST_F(DenseUniTensorTest, zeros_1d) {
+  const cytnx_uint64 Nelem = 5;
+  auto ut = UniTensor::zeros(Nelem, {"b"});
+  EXPECT_EQ(ut.shape(), std::vector<cytnx_uint64>({Nelem}));
+  EXPECT_EQ(ut.rank(), 1);
+  EXPECT_EQ(ut.labels(), std::vector<std::string>({"b"}));
+  for (cytnx_uint64 i = 0; i < Nelem; ++i) {
+    EXPECT_EQ(ut.at({i}), 0);
+  }
+}
+
+/*=====test info=====
+describe:test zeros_1 error, labels more than 2
+====================*/
+TEST_F(DenseUniTensorTest, zeros_1d_err) {
+  EXPECT_THROW(UniTensor::zeros(3, {"a", "b"}), std::logic_error);
+}
+
+/*=====test info=====
+describe:test zeros
+====================*/
+TEST_F(DenseUniTensorTest, zeros) {
+  std::vector<cytnx_uint64> shape = {5u, 3u, 4u};
+  auto ut = UniTensor::zeros(shape);
+  EXPECT_EQ(ut.shape(), shape);
+  EXPECT_EQ(ut.rank(), shape.size());
+  for (cytnx_uint64 i = 0; i < shape[0]; ++i) {
+    for (cytnx_uint64 j = 0; j < shape[1]; ++j) {
+      for (cytnx_uint64 k = 0; k < shape[2]; ++k) {
+        EXPECT_EQ(ut.at({i, j, k}), 0);
+      }
+    }
+  }
+}
+
+/*=====test info=====
+describe:test zeros erro, label number not match
+====================*/
+TEST_F(DenseUniTensorTest, zeros_err) {
+  std::vector<cytnx_uint64> shape = {3u, 5u, 4u};
+  std::vector<std::string> labels = {"a", "b"};
+  EXPECT_THROW(UniTensor::zeros(shape, labels), std::logic_error);
+}
+
+/*=====test info=====
+describe:test ones_1
+====================*/
+TEST_F(DenseUniTensorTest, ones_1d) {
+  const cytnx_uint64 Nelem = 5;
+  auto ut = UniTensor::ones(Nelem, {"b"});
+  EXPECT_EQ(ut.shape(), std::vector<cytnx_uint64>({Nelem}));
+  EXPECT_EQ(ut.rank(), 1);
+  EXPECT_EQ(ut.labels(), std::vector<std::string>({"b"}));
+  for (cytnx_uint64 i = 0; i < Nelem; ++i) {
+    EXPECT_EQ(ut.at({i}), 1);
+  }
+}
+
+/*=====test info=====
+describe:test ones_1 error, labels more than 2
+====================*/
+TEST_F(DenseUniTensorTest, ones_1d_err) {
+  EXPECT_THROW(UniTensor::ones(3, {"a", "b"}), std::logic_error);
+}
+
+/*=====test info=====
+describe:test ones
+====================*/
+TEST_F(DenseUniTensorTest, ones) {
+  std::vector<cytnx_uint64> shape = {5u, 3u, 4u};
+  auto ut = UniTensor::ones(shape);
+  EXPECT_EQ(ut.shape(), shape);
+  EXPECT_EQ(ut.rank(), shape.size());
+  for (cytnx_uint64 i = 0; i < shape[0]; ++i) {
+    for (cytnx_uint64 j = 0; j < shape[1]; ++j) {
+      for (cytnx_uint64 k = 0; k < shape[2]; ++k) {
+        EXPECT_EQ(ut.at({i, j, k}), 1);
+      }
+    }
+  }
+}
+
+/*=====test info=====
+describe:test ones erro, label number not match
+====================*/
+TEST_F(DenseUniTensorTest, ones_err) {
+  std::vector<cytnx_uint64> shape = {3u, 5u, 4u};
+  std::vector<std::string> labels = {"a", "b"};
+  EXPECT_THROW(UniTensor::ones(shape, labels), std::logic_error);
+}
+
+/*=====test info=====
+describe:test arange_1
+====================*/
+TEST_F(DenseUniTensorTest, arange_step1) {
+  const cytnx_uint64 Nelem = 5;
+  auto ut = UniTensor::arange(Nelem, {"b"});
+  EXPECT_EQ(ut.shape(), std::vector<cytnx_uint64>({Nelem}));
+  EXPECT_EQ(ut.rank(), 1);
+  EXPECT_EQ(ut.labels(), std::vector<std::string>({"b"}));
+  for (cytnx_uint64 i = 0; i < Nelem; ++i) {
+    EXPECT_EQ(ut.at({i}), static_cast<double>(i));
+  }
+}
+
+/*=====test info=====
+describe:test arange
+====================*/
+TEST_F(DenseUniTensorTest, arange) {
+  const double start = 0.3, end = -0.2, step = -0.11;
+  auto ut = UniTensor::arange(start, end, step);
+  EXPECT_EQ(ut.rank(), 1);
+  double eps = step < 0 ? -1.0e-12 : 1.0e-12;
+  int ans_len = static_cast<int>((end - start + eps) / step) + 1;
+  EXPECT_EQ(ut.shape()[0], ans_len);
+  for (cytnx_uint64 i = 0; i < ans_len; ++i) {
+    double ans = start + step * i;
+    EXPECT_EQ(ut.at({i}), ans);
+  }
+}
+
+/*=====test info=====
+describe:test arange_step_error, start < end but step < 0
+====================*/
+TEST_F(DenseUniTensorTest, arange_step_error) {
+  const double start = 0.1, end = 0.7, step = -0.11;
+  EXPECT_THROW(UniTensor::arange(start, end, step), std::logic_error);
+}
+
+/*=====test info=====
+describe:test linspace
+====================*/
+TEST_F(DenseUniTensorTest, linspace) {
+  const double start = 0.3, end = -0.2;
+  const cytnx_uint64 Nelem = 7;
+  auto ut = UniTensor::linspace(start, end, Nelem);
+  EXPECT_EQ(ut.rank(), 1);
+  EXPECT_EQ(ut.shape()[0], Nelem);
+}
+
+/*=====test info=====
+describe:test uniform_1d
+====================*/
+TEST_F(DenseUniTensorTest, uniform_1d) {
+  const cytnx_uint64 Nelem = 7;
+  double low = -2.0, high = 3.0;
+  auto ut = UniTensor::uniform(Nelem, low, high);
+  EXPECT_EQ(ut.rank(), 1);
+  EXPECT_EQ(ut.shape()[0], Nelem);
+  for (cytnx_uint64 i = 0; i < Nelem; ++i) {
+    EXPECT_TRUE(ut.at({i}) <= high);
+    EXPECT_TRUE(ut.at({i}) >= low);
+  }
+}
+
+/*=====test info=====
+describe:test uniform
+====================*/
+TEST_F(DenseUniTensorTest, uniform) {
+  std::vector<cytnx_uint64> shape = {5u, 3u, 4u};
+  double low = -2.0, high = 3.0;
+  auto ut = UniTensor::uniform(shape, low, high);
+  EXPECT_EQ(ut.shape(), shape);
+  EXPECT_EQ(ut.rank(), shape.size());
+  for (cytnx_uint64 i = 0; i < shape[0]; ++i) {
+    for (cytnx_uint64 j = 0; j < shape[1]; ++j) {
+      for (cytnx_uint64 k = 0; k < shape[2]; ++k) {
+        EXPECT_TRUE(ut.at({i, j, k}) <= high);
+        EXPECT_TRUE(ut.at({i, j, k}) >= low);
+      }
+    }
+  }
+}
+
+/*=====test info=====
+describe:test uniform_error, high < low
+====================*/
+TEST_F(DenseUniTensorTest, uniform_error) {
+  std::vector<cytnx_uint64> shape = {5u, 3u, 4u};
+  double low = 2.0, high = -3.0;
+  EXPECT_THROW(UniTensor::uniform(shape, low, high), std::logic_error);
+}
+
+/*=====test info=====
+describe:test normal_1d
+====================*/
+TEST_F(DenseUniTensorTest, normal_1d) {
+  const cytnx_uint64 Nelem = 100;
+  double mean = 1, std = 0.2;
+  auto ut = UniTensor::normal(Nelem, mean, std);
+  EXPECT_EQ(ut.rank(), 1);
+  EXPECT_EQ(ut.shape()[0], Nelem);
+  // just check min < mean < max
+  auto min = linalg::Min(ut.get_block());
+  auto max = linalg::Max(ut.get_block());
+  EXPECT_TRUE(min.at({0}) < mean);
+  EXPECT_TRUE(max.at({0}) > mean);
+}
+
+/*=====test info=====
+describe:test uniform
+====================*/
+TEST_F(DenseUniTensorTest, normal) {
+  std::vector<cytnx_uint64> shape = {5u, 3u, 4u};
+  double mean = 1, std = 0.2;
+  auto ut = UniTensor::normal(shape, mean, std);
+  EXPECT_EQ(ut.shape(), shape);
+  EXPECT_EQ(ut.rank(), shape.size());
+  // just check min < mean < max
+  auto min = linalg::Min(ut.get_block());
+  auto max = linalg::Max(ut.get_block());
+  EXPECT_TRUE(min.at({0}) < mean);
+  EXPECT_TRUE(max.at({0}) > mean);
+}
