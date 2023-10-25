@@ -276,14 +276,13 @@ void unitensor_binding(py::module &m) {
            if (self.is_diag()){
                if (py::isinstance<py::tuple>(locators)) {
                     cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuples] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
                } else if (py::isinstance<py::slice>(locators)) {
                     py::slice sls = locators.cast<py::slice>();
                     if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
                          throw py::error_already_set();
                     accessors.push_back(cytnx::Accessor::range(start, stop, step));
                } else {
-                    // only int
                     accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
                }
            }else{
@@ -343,50 +342,62 @@ void unitensor_binding(py::module &m) {
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
-           if (py::isinstance<py::tuple>(locators)) {
-             py::tuple Args = locators.cast<py::tuple>();
-             cytnx_uint64 cnt = 0;
-             // mixing of slice and ints
-             for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
-               cnt++;
-               // check type:
-               if (py::isinstance<py::slice>(Args[axis])) {
-                 py::slice sls = Args[axis].cast<py::slice>();
-                 if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
-                   throw py::error_already_set();
-                 // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
-                 // if(slicelength == self.shape()[axis])
-                 // accessors.push_back(cytnx::Accessor::all());
-                 accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
-                                                            cytnx_int64(step)));
+          if (self.is_diag()){
+               if (py::isinstance<py::tuple>(locators)) {
+                    cytnx_error_msg(true,
+                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+               } else if (py::isinstance<py::slice>(locators)) {
+                    py::slice sls = locators.cast<py::slice>();
+                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
                } else {
-                 accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                    accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
                }
-             }
-             while (cnt < self.shape().size()) {
-               cnt++;
-               accessors.push_back(Accessor::all());
-             }
-           } else if (py::isinstance<py::slice>(locators)) {
-             py::slice sls = locators.cast<py::slice>();
-             if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-               throw py::error_already_set();
-             // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-             accessors.push_back(cytnx::Accessor::range(start, stop, step));
-             for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
-               accessors.push_back(Accessor::all());
-             }
-
-           } else {
-             // only int
-             for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
-               if (i == 0)
-                 accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-               else
-                 accessors.push_back(cytnx::Accessor::all());
-             }
+          }else{
+               if (py::isinstance<py::tuple>(locators)) {
+                    py::tuple Args = locators.cast<py::tuple>();
+                    cytnx_uint64 cnt = 0;
+                    // mixing of slice and ints
+                    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+                         cnt++;
+                         // check type:
+                         if (py::isinstance<py::slice>(Args[axis])) {
+                         py::slice sls = Args[axis].cast<py::slice>();
+                         if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                         // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
+                         // if(slicelength == self.shape()[axis])
+                         // accessors.push_back(cytnx::Accessor::all());
+                         accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
+                                                                      cytnx_int64(step)));
+                         } else {
+                         accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                         }
+                    }
+                    while (cnt < self.shape().size()) {
+                         cnt++;
+                         accessors.push_back(Accessor::all());
+                    }
+               } else if (py::isinstance<py::slice>(locators)) {
+                    py::slice sls = locators.cast<py::slice>();
+                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                    // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
+                    for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
+                         accessors.push_back(Accessor::all());
+                    }
+               } else {
+                    // only int
+                    for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
+                         if (i == 0)
+                         accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                         else
+                         accessors.push_back(cytnx::Accessor::all());
+                    }
+               }
            }
-
            self.set(accessors, rhs);
          })
     .def("__setitem__",
@@ -399,48 +410,61 @@ void unitensor_binding(py::module &m) {
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
-           if (py::isinstance<py::tuple>(locators)) {
-             py::tuple Args = locators.cast<py::tuple>();
-             cytnx_uint64 cnt = 0;
-             // mixing of slice and ints
-             for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
-               cnt++;
-               // check type:
-               if (py::isinstance<py::slice>(Args[axis])) {
-                 py::slice sls = Args[axis].cast<py::slice>();
-                 if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
-                   throw py::error_already_set();
-                 // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
-                 // if(slicelength == self.shape()[axis])
-                 // accessors.push_back(cytnx::Accessor::all());
-                 accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
-                                                            cytnx_int64(step)));
+          if (self.is_diag()){
+               if (py::isinstance<py::tuple>(locators)) {
+                    cytnx_error_msg(true,
+                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+               } else if (py::isinstance<py::slice>(locators)) {
+                    py::slice sls = locators.cast<py::slice>();
+                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
                } else {
-                 accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                    accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
                }
-             }
-             while (cnt < self.shape().size()) {
-               cnt++;
-               accessors.push_back(Accessor::all());
-             }
-           } else if (py::isinstance<py::slice>(locators)) {
-             py::slice sls = locators.cast<py::slice>();
-             if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
-               throw py::error_already_set();
-             // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
-             accessors.push_back(cytnx::Accessor::range(start, stop, step));
-             for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
-               accessors.push_back(Accessor::all());
-             }
-
-           } else {
-             // only int
-             for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
-               if (i == 0)
-                 accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
-               else
-                 accessors.push_back(cytnx::Accessor::all());
-             }
+          }else{
+               if (py::isinstance<py::tuple>(locators)) {
+                    py::tuple Args = locators.cast<py::tuple>();
+                    cytnx_uint64 cnt = 0;
+                    // mixing of slice and ints
+                    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+                         cnt++;
+                         // check type:
+                         if (py::isinstance<py::slice>(Args[axis])) {
+                         py::slice sls = Args[axis].cast<py::slice>();
+                         if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                         // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
+                         // if(slicelength == self.shape()[axis])
+                         // accessors.push_back(cytnx::Accessor::all());
+                         accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
+                                                                      cytnx_int64(step)));
+                         } else {
+                         accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                         }
+                    }
+                    while (cnt < self.shape().size()) {
+                         cnt++;
+                         accessors.push_back(Accessor::all());
+                    }
+               } else if (py::isinstance<py::slice>(locators)) {
+                    py::slice sls = locators.cast<py::slice>();
+                    if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                    // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
+                    accessors.push_back(cytnx::Accessor::range(start, stop, step));
+                    for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
+                         accessors.push_back(Accessor::all());
+                    }
+               } else {
+                    // only int
+                    for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
+                         if (i == 0)
+                         accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                         else
+                         accessors.push_back(cytnx::Accessor::all());
+                    }
+               }
            }
 
            self.set(accessors, rhs.get_block());
