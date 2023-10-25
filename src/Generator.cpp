@@ -79,8 +79,8 @@ namespace cytnx {
     return out;
   }
   Tensor arange(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
-                const cytnx_double &end, const cytnx_double &step = 1,
-                const unsigned int &dtype = Type.Double, const int &device = Device.cpu) {
+                const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype,
+                const int &device) {
     return arange(start, end, step, dtype, device).reshape(shape);
   }
   Tensor arange(const cytnx_int64 &Nelem) {
@@ -123,8 +123,8 @@ namespace cytnx {
     return out;
   }
   Tensor linspace(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
-                  const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint = true,
-                  const unsigned int &dtype = Type.Double, const int &device = Device.cpu) {
+                  const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint,
+                  const unsigned int &dtype, const int &device) {
     return linspace(start, end, Nelem, endpoint, dtype, device).reshape(shape);
   }
 
