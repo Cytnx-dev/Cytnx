@@ -65,6 +65,9 @@ void generator_binding(py::module &m) {
   m.def(
     "arange", [](const cytnx_uint64 &Nelem) -> Tensor { return cytnx::arange(Nelem); },
     py::arg("size"));
+  m.def(
+    "arange", [](const std::vector<cytnx_uint64> &shape) -> Tensor { return cytnx::arange(shape); },
+    py::arg("shape"));
 
   m.def(
     "arange",
@@ -74,7 +77,26 @@ void generator_binding(py::module &m) {
     py::arg("start"), py::arg("end"), py::arg("step") = double(1),
     py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
     py::arg("device") = (int)(cytnx::Device.cpu));
+  m.def(
+    "arange",
+    [](const std::vector<cytnx_uint64> &shape, const cytnx_double &start, const cytnx_double &end,
+       const cytnx_double &step, const unsigned int &dtype, const int &device) -> Tensor {
+      return cytnx::arange(shape, start, end, step, dtype, device);
+    },
+    py::arg("shape"), py::arg("start"), py::arg("end"), py::arg("step") = double(1),
+    py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
+    py::arg("device") = (int)(cytnx::Device.cpu));
 
+  m.def(
+    "linspace",
+    [](const std::vector<cytnx_uint64> &shape, const cytnx_double &start, const cytnx_double &end,
+       const cytnx_uint64 &Nelem, const bool &endpoint, const unsigned int &dtype,
+       const int &device) -> Tensor {
+      return cytnx::linspace(shape, start, end, Nelem, endpoint, dtype, device);
+    },
+    py::arg("shape"), py::arg("start"), py::arg("end"), py::arg("Nelem"),
+    py::arg("endpoint") = true, py::arg("dtype") = (unsigned int)(cytnx::Type.Double),
+    py::arg("device") = (int)(cytnx::Device.cpu));
   m.def(
     "linspace",
     [](const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
