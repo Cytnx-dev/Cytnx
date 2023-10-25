@@ -161,10 +161,11 @@ FLAG="${FLAG} -DRUN_TESTS=ON "
 #=========================================================
 # [Note] Build using intel icpc compiler, uncomment to enable (DEFAULT =off)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_ICPC=ON " # You should set this to ON if you want to use icpc
+# FLAG="${FLAG} -DUSE_ICPC=ON " # You should set this to ON if you want to use icpc
 # This option is needed if you want to use icpc, to set the compiler
 # Although icc&icpc is deprecated, but since icx&icpx has poor support for conda environment, we still use icpc
-FLAG="${FLAG} -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc"
+# FLAG="${FLAG} -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc"
+
 # This option is to use the intel compiler's ar and linker, which is optional
 #FLAG = "${FLAG} -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
 #-----------------------------------

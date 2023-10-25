@@ -216,7 +216,7 @@ def relabels_(self, old_labels:List[str],new_labels:List[str]):
     self.c_relabels_(old_labels,new_labels);
     return self
 
-@add_ovld_method
+@add_ovld_method(UniTensor)
 def relabels_(self, new_labels:List[str]):
     self.c_relabels_(new_labels);
     return self
