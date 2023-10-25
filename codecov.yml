@@ -8,3 +8,9 @@ coverage:
       default:
         target: auto
         threshold: 100%
+ignore:
+  - "tests"
+  - "bm_tests"
+  - "pybind"
+  - "cytnx"
+  - "example"

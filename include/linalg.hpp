@@ -1439,6 +1439,19 @@ namespace cytnx {
     */
     Tensor Norm(const Tensor &Tl);
 
+    // Norm:
+    //=================================================
+    /**
+    @brief Calculate the norm of an UniTensor.
+    @details This function will calculate the norm of an UniTensor. If the input UniTensor is
+    rank-1, then the frobenius norm will be calculated. If the input UniTensor is rank-N with N>=2,
+    then the blocks will be flatten (see @ref Tensor::flatten() const "flatten()") to 1d first, and
+    then calculate the frobenius norm.
+    @param[in] uTl input UniTensor
+    @return Tensor
+    */
+    Tensor Norm(const UniTensor &uTl);
+
     // Det:
     //=================================================
     /**
@@ -1672,6 +1685,9 @@ namespace cytnx {
     */
     std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
 
+    std::vector<UniTensor> Eigh(const UniTensor &Tin, const bool &is_V = true,
+                                const bool &row_v = false);
+
     // Eig:
     //==================================================
     /**
@@ -1694,6 +1710,9 @@ namespace cytnx {
     @pre the \p Tin should be a square matrix.
     */
     std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
+
+    std::vector<UniTensor> Eig(const UniTensor &Tin, const bool &is_V = true,
+                               const bool &row_v = false);
 
     // Trace:
     //==================================================
@@ -1772,6 +1791,7 @@ namespace cytnx {
     @pre \p Tin should be a rank-2 Tensor.
     */
     Tensor InvM(const Tensor &Tin);
+    UniTensor InvM(const UniTensor &Tin);
     /**
     @brief inplace matrix inverse.
     @details This function will perform matrix inverse on the input matrix \p Tin, inplacely.
@@ -1780,7 +1800,7 @@ namespace cytnx {
     @pre the Tin should be a rank-2 Tensor.
     */
     void InvM_(Tensor &Tin);
-
+    void InvM_(UniTensor &Tin);
     // Inv:
     //==================================================
     /**

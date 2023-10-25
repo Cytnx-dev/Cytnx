@@ -12,17 +12,17 @@ namespace cytnx {
                  std::vector<cytnx_int64> cont_order /*= std::vector<cytnx_int64>()*/,
                  const std::vector<std::string> &out_labels /*= std::vector<std::string>()*/) {
     vector<string> alias;
-    vector<vector<string>> lbls;
+    vector<vector<string>> labels;
     map<cytnx_int64, vector<cytnx_uint64>> posbond2tensor;
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
       string name = "t" + to_string(i);
       alias.push_back(name);
 
-      vector<string> lbl;
+      vector<string> label;
       for (cytnx_uint64 j = 0; j < connect_list_in[i].size(); j++) {
-        lbl.push_back(to_string(connect_list_in[i][j]));
+        label.push_back(to_string(connect_list_in[i][j]));
       }
-      lbls.push_back(lbl);
+      labels.push_back(label);
     }
     vector<cytnx_int64> positive;
     for (cytnx_uint64 i = 0; i < connect_list_in.size(); i++) {
@@ -82,10 +82,10 @@ namespace cytnx {
       }
     }
     str_order = string(needed_parentheses, '(').append(str_order);
-    std::cout << str_order << std::endl;
+    // std::cout << str_order << std::endl;
     UniTensor out;
     Network N;
-    N.construct(alias, lbls, out_labels, 1, str_order, optimize);
+    N.construct(alias, labels, out_labels, 1, str_order, optimize);
     for (cytnx_uint64 i = 0; i < tensor_list_in.size(); i++) {
       N.PutUniTensor(i, tensor_list_in[i]);
     }

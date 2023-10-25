@@ -1589,12 +1589,12 @@ TEST_F(DenseUniTensorTest, reshape) {
   for (auto dim : dst_shape) tmp.push_back(static_cast<cytnx_uint64>(dim));
   EXPECT_EQ(dst_ut.shape(), tmp);
   EXPECT_EQ(dst_ut.rowrank(), 0);
-  for (int i = 0; i < src_shape[0]; i++) {
-    for (int j = 0; j < src_shape[1]; j++) {
-      for (int k = 0; k < src_shape[2]; k++) {
+  for (cytnx_uint64 i = 0; i < src_shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < src_shape[1]; j++) {
+      for (cytnx_uint64 k = 0; k < src_shape[2]; k++) {
         int idx = i * src_shape[1] * src_shape[2] + j * src_shape[2] + k;
-        int dst_idx0 = idx / dst_shape[1];
-        int dst_idx1 = idx % dst_shape[1];
+        cytnx_uint64 dst_idx0 = idx / dst_shape[1];
+        cytnx_uint64 dst_idx1 = idx % dst_shape[1];
         EXPECT_EQ(src_ut.at({i, j, k}), dst_ut.at({dst_idx0, dst_idx1}));
       }
     }
@@ -1639,11 +1639,11 @@ TEST_F(DenseUniTensorTest, reshape_diag) {
   auto dst_shape = dst_ut.shape();
   EXPECT_EQ(dst_ut.shape(), std::vector<cytnx_uint64>({2, 8}));
   EXPECT_EQ(dst_ut.rowrank(), 0);
-  for (int i = 0; i < src_shape[0]; ++i) {
-    for (int j = 0; j < src_shape[1]; ++j) {
+  for (cytnx_uint64 i = 0; i < src_shape[0]; ++i) {
+    for (cytnx_uint64 j = 0; j < src_shape[1]; ++j) {
       int idx = i * src_shape[1] + j;
-      int dst_idx0 = idx / dst_shape[1];
-      int dst_idx1 = idx % dst_shape[1];
+      cytnx_uint64 dst_idx0 = idx / dst_shape[1];
+      cytnx_uint64 dst_idx1 = idx % dst_shape[1];
       if (i == j) {
         EXPECT_EQ(ut_diag.at({i}), dst_ut.at({dst_idx0, dst_idx1}));
       } else {
@@ -1673,11 +1673,11 @@ TEST_F(DenseUniTensorTest, reshape_diag_not_change) {
   EXPECT_EQ(dst_ut.rowrank(), 1);
   auto src_shape = ut_diag.shape();
   auto dst_shape = dst_ut.shape();
-  for (int i = 0; i < src_shape[0]; ++i) {
-    for (int j = 0; j < src_shape[1]; ++j) {
+  for (cytnx_uint64 i = 0; i < src_shape[0]; ++i) {
+    for (cytnx_uint64 j = 0; j < src_shape[1]; ++j) {
       int idx = i * src_shape[1] + j;
-      int dst_idx0 = idx / dst_shape[1];
-      int dst_idx1 = idx % dst_shape[1];
+      cytnx_uint64 dst_idx0 = idx / dst_shape[1];
+      cytnx_uint64 dst_idx1 = idx % dst_shape[1];
       if (i == j) {
         EXPECT_EQ(ut_diag.at({i}), dst_ut.at({dst_idx0, dst_idx1}));
       } else {
@@ -1768,8 +1768,8 @@ TEST_F(DenseUniTensorTest, to_dense) {
   EXPECT_FALSE(dst_ut.is_diag());
   EXPECT_EQ(dst_ut.rowrank(), row_rank);
   auto src_shape = ut_diag.shape();
-  for (int i = 0; i < src_shape[0]; ++i) {
-    for (int j = 0; j < src_shape[1]; ++j) {
+  for (cytnx_uint64 i = 0; i < src_shape[0]; ++i) {
+    for (cytnx_uint64 j = 0; j < src_shape[1]; ++j) {
       if (i == j) {
         EXPECT_EQ(ut_diag.at({i}), dst_ut.at({i, i}));
       } else {
@@ -2027,7 +2027,7 @@ TEST_F(DenseUniTensorTest, Add_diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   auto out = ut1.Add(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(ut1.at({i}) + ut2.at({i}), out.at({i}));
     EXPECT_EQ(ut1.at({i}), clone.at({i}));
   }
@@ -2221,7 +2221,7 @@ TEST_F(DenseUniTensorTest, Add__diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   ut1.Add_(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(clone.at({i}) + ut2.at({i}), ut1.at({i}));
   }
 }
@@ -2237,8 +2237,8 @@ TEST_F(DenseUniTensorTest, Add__self) {
   auto clone = ut.clone();
   auto shape = ut.shape();
   ut.Add_(ut);
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < shape[1]; j++) {
       EXPECT_EQ(clone.at({i, j}) + clone.at({i, j}), ut.at({i, j}));
     }
   }
@@ -2485,7 +2485,7 @@ TEST_F(DenseUniTensorTest, Sub_diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   auto out = ut1.Sub(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(ut1.at({i}) - ut2.at({i}), out.at({i}));
     EXPECT_EQ(ut1.at({i}), clone.at({i}));
   }
@@ -2679,7 +2679,7 @@ TEST_F(DenseUniTensorTest, Sub__diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   ut1.Sub_(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(clone.at({i}) - ut2.at({i}), ut1.at({i}));
   }
 }
@@ -2695,8 +2695,8 @@ TEST_F(DenseUniTensorTest, Sub__self) {
   auto clone = ut.clone();
   auto shape = ut.shape();
   ut.Sub_(ut);
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < shape[1]; j++) {
       EXPECT_EQ(clone.at({i, j}) - clone.at({i, j}), ut.at({i, j}));
     }
   }
@@ -2942,7 +2942,7 @@ TEST_F(DenseUniTensorTest, Mul_diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   auto out = ut1.Mul(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(ut1.at({i}) * ut2.at({i}), out.at({i}));
     EXPECT_EQ(ut1.at({i}), clone.at({i}));
   }
@@ -3137,7 +3137,7 @@ TEST_F(DenseUniTensorTest, Mul__diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   ut1.Mul_(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(clone.at({i}) * ut2.at({i}), ut1.at({i}));
   }
 }
@@ -3153,8 +3153,8 @@ TEST_F(DenseUniTensorTest, Mul__self) {
   auto clone = ut.clone();
   auto shape = ut.shape();
   ut.Mul_(ut);
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < shape[1]; j++) {
       EXPECT_EQ(clone.at({i, j}) * clone.at({i, j}), ut.at({i, j}));
     }
   }
@@ -3297,7 +3297,7 @@ TEST_F(DenseUniTensorTest, Div_UT_UT) {
     for (size_t i = 0; i < shape[0]; i++) {
       for (size_t j = 0; j < shape[1]; j++) {
         for (size_t k = 0; k < shape[2]; k++) {
-          EXPECT_EQ(ut1.at({i, j, k}) / ut2.at({i, j, k}), out.at({i, j, k}));
+          EXPECT_EQ((ut1.at({i, j, k}) / ut2.at({i, j, k})), out.at({i, j, k}));
           EXPECT_EQ(ut1.at({i, j, k}), clone.at({i, j, k}));  // check source not change
         }
       }
@@ -3402,7 +3402,7 @@ TEST_F(DenseUniTensorTest, Div_diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   auto out = ut1.Div(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(ut1.at({i}) / ut2.at({i}), out.at({i}));
     EXPECT_EQ(ut1.at({i}), clone.at({i}));
   }
@@ -3597,7 +3597,7 @@ TEST_F(DenseUniTensorTest, Div__diag_diag) {
   auto clone = ut1.clone();
   auto shape = ut1.shape();
   ut1.Div_(ut2);
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(clone.at({i}) / ut2.at({i}), ut1.at({i}));
   }
 }
@@ -3613,8 +3613,8 @@ TEST_F(DenseUniTensorTest, Div__self) {
   auto clone = ut.clone();
   auto shape = ut.shape();
   ut.Div_(ut);
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < shape[1]; j++) {
       EXPECT_EQ(clone.at({i, j}) / clone.at({i, j}), ut.at({i, j}));
     }
   }
@@ -3750,8 +3750,8 @@ TEST_F(DenseUniTensorTest, Norm_TypeInt32) {
   ut = ut.astype(Type.Int32);
   auto norm = ut.Norm();
   double ans = 0;
-  for (int i = 0; i < ut.shape()[0]; i++) {
-    for (int j = 0; j < ut.shape()[1]; j++) {
+  for (cytnx_uint64 i = 0; i < ut.shape()[0]; i++) {
+    for (cytnx_uint64 j = 0; j < ut.shape()[1]; j++) {
       ans += static_cast<double>(ut.at<cytnx_int32>({i, j}) * ut.at<cytnx_int32>({i, j}));
     }
   }
@@ -3772,7 +3772,7 @@ TEST_F(DenseUniTensorTest, Norm_diag) {
   random::uniform_(ut_diag, -5.0, 5.0, seed);
   auto norm = ut_diag.Norm();
   double ans = 0;
-  for (int i = 0; i < ut_diag.shape()[0]; i++) {
+  for (cytnx_uint64 i = 0; i < ut_diag.shape()[0]; i++) {
     ans += std::norm(ut_diag.at<complex<double>>({i}));
   }
   ans = std::sqrt(ans);
@@ -3849,7 +3849,7 @@ TEST_F(DenseUniTensorTest, Conj_diag) {
   auto ut_diag = UniTensor(bonds, labels, row_rank, Type.ComplexDouble, Device.cpu, is_diag);
   random::uniform_(ut_diag, -5.0, 5.0, seed);
   auto ut_conj = ut_diag.Conj();
-  for (int i = 0; i < ut_diag.shape()[0]; ++i) {
+  for (cytnx_uint64 i = 0; i < ut_diag.shape()[0]; ++i) {
     EXPECT_DOUBLE_EQ(real(ut_diag.at<complex<double>>({i})),
                      real(ut_conj.at<complex<double>>({i})));
     EXPECT_DOUBLE_EQ(imag(ut_diag.at<complex<double>>({i})),
@@ -3901,9 +3901,9 @@ TEST_F(DenseUniTensorTest, Transpose) {
   EXPECT_EQ(ut.rowrank(), row_rank);
   EXPECT_EQ(ut_t.rowrank(), ut_t.rank() - row_rank);
   auto shape = ut.shape();
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
-      for (int k = 0; k < shape[2]; k++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < shape[1]; j++) {
+      for (cytnx_uint64 k = 0; k < shape[2]; k++) {
         EXPECT_EQ(ut.at({i, j, k}), ut_t.at({k, i, j}));
       }
     }
@@ -3935,7 +3935,7 @@ TEST_F(DenseUniTensorTest, Transpose_diag) {
   EXPECT_EQ(ut_diag.rowrank(), row_rank);
   EXPECT_EQ(ut_t.rowrank(), ut_t.rank() - row_rank);
   auto shape = ut_diag.shape();
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(ut_diag.at({i}), ut_t.at({i}));
   }
   EXPECT_TRUE(AreEqUniTensor(ut_diag, clone));
@@ -4385,7 +4385,7 @@ TEST_F(DenseUniTensorTest, Pow_diag) {
   double p = 0.5;
   auto ut_pow = ut_diag.Pow(p);
   EXPECT_TRUE(ut_pow.is_diag());
-  for (int i = 0; i < ut_diag.shape()[0]; i++) {
+  for (cytnx_uint64 i = 0; i < ut_diag.shape()[0]; i++) {
     EXPECT_EQ(ut_pow.at<complex<double>>({i}), std::pow(ut_diag.at<complex<double>>({i}), p));
   }
 }
@@ -4507,8 +4507,8 @@ TEST_F(DenseUniTensorTest, truncate_label) {
   auto shape = ut_trunc.shape();
   EXPECT_EQ(shape[0], dim);
   EXPECT_EQ(shape[1], src_shape[1]);
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < shape[1]; j++) {
       EXPECT_EQ(ut.at({i, j}), ut_trunc.at({i, j}));
     }
   }
@@ -4532,7 +4532,7 @@ TEST_F(DenseUniTensorTest, truncate_diag) {
   auto shape = ut_trunc.shape();
   EXPECT_EQ(shape[0], dim);
   EXPECT_EQ(shape[1], dim);  // expected ?
-  for (int i = 0; i < shape[0]; i++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     EXPECT_EQ(ut_diag.at({i}), ut_trunc.at({i}));
   }
 }
@@ -4584,8 +4584,8 @@ TEST_F(DenseUniTensorTest, truncate_index) {
   auto shape = ut_trunc.shape();
   EXPECT_EQ(shape[1], dim);
   EXPECT_EQ(shape[0], src_shape[0]);
-  for (int i = 0; i < shape[0]; i++) {
-    for (int j = 0; j < shape[1]; j++) {
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    for (cytnx_uint64 j = 0; j < shape[1]; j++) {
       EXPECT_EQ(ut.at({i, j}), ut_trunc.at({i, j}));
     }
   }

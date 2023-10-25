@@ -80,10 +80,36 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0, py::arg("is_UvT") = true,
     py::arg("return_err") = (unsigned int)(0));
 
-  m_linalg.def("Eigh", &cytnx::linalg::Eigh, py::arg("Tin"), py::arg("is_V") = true,
-               py::arg("row_v") = false);
-  m_linalg.def("Eig", &cytnx::linalg::Eig, py::arg("Tin"), py::arg("is_V") = true,
-               py::arg("row_v") = false);
+  // m_linalg.def("Eigh", &cytnx::linalg::Eigh, py::arg("Tin"), py::arg("is_V") = true,
+  //              py::arg("row_v") = false);
+  //  m_linalg.def("Eig", &cytnx::linalg::Eig, py::arg("Tin"), py::arg("is_V") = true,
+  //                py::arg("row_v") = false);
+  m_linalg.def(
+    "Eigh",
+    [](const Tensor &Tin, const bool &is_V, const bool &row_v) {
+      return cytnx::linalg::Eigh(Tin, is_V, row_v);
+    },
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+  m_linalg.def(
+    "Eigh",
+    [](const UniTensor &Tin, const bool &is_V, const bool &row_v) {
+      return cytnx::linalg::Eigh(Tin, is_V, row_v);
+    },
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+
+  m_linalg.def(
+    "Eig",
+    [](const Tensor &Tin, const bool &is_V, const bool &row_v) {
+      return cytnx::linalg::Eig(Tin, is_V, row_v);
+    },
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+  m_linalg.def(
+    "Eig",
+    [](const UniTensor &Tin, const bool &is_V, const bool &row_v) {
+      return cytnx::linalg::Eig(Tin, is_V, row_v);
+    },
+    py::arg("Tin"), py::arg("is_V") = true, py::arg("row_v") = false);
+
   m_linalg.def("Exp", &cytnx::linalg::Exp, py::arg("Tin"));
   m_linalg.def("Exp_", &cytnx::linalg::Exp_, py::arg("Tio"));
   m_linalg.def("Expf_", &cytnx::linalg::Expf_, py::arg("Tio"));
@@ -356,8 +382,19 @@ void linalg_binding(py::module &m) {
     [](const cytnx::Tensor &Tin, const bool &is_tau) { return cytnx::linalg::Qdr(Tin, is_tau); },
     py::arg("Tio"), py::arg("is_tau") = false);
 
-  m_linalg.def("InvM", &cytnx::linalg::InvM, py::arg("Tin"));
-  m_linalg.def("InvM_", &cytnx::linalg::InvM_, py::arg("Tio"));
+  // m_linalg.def("InvM", &cytnx::linalg::InvM, py::arg("Tin"));
+
+  // m_linalg.def("InvM_", &cytnx::linalg::InvM_, py::arg("Tio"));
+  m_linalg.def(
+    "InvM_", [](cytnx::UniTensor &Tio) { cytnx::linalg::InvM_(Tio); }, py::arg("Tio"));
+  m_linalg.def(
+    "InvM_", [](cytnx::Tensor &Tio) { cytnx::linalg::InvM_(Tio); }, py::arg("Tio"));
+
+  m_linalg.def(
+    "InvM", [](cytnx::UniTensor &Tin) { return cytnx::linalg::InvM(Tin); }, py::arg("Tin"));
+  m_linalg.def(
+    "InvM", [](cytnx::Tensor &Tin) { return cytnx::linalg::InvM(Tin); }, py::arg("Tin"));
+
   m_linalg.def("Inv_", &cytnx::linalg::Inv_, py::arg("Tio"), py::arg("clip"));
   m_linalg.def("Inv", &cytnx::linalg::Inv, py::arg("Tio"), py::arg("clip"));
 
@@ -389,7 +426,14 @@ void linalg_binding(py::module &m) {
                py::arg("is_conj") = false);
   m_linalg.def("Tridiag", &cytnx::linalg::Tridiag, py::arg("A"), py::arg("B"),
                py::arg("is_V") = true, py::arg("is_row") = false, py::arg("throw_excp") = false);
-  m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1"));
+
+  // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::Tensor());
+  // m_linalg.def("Norm", &cytnx::linalg::Norm, py::arg("T1") = cytnx::UniTensor());
+  m_linalg.def(
+    "Norm", [](cytnx::UniTensor &T1) { return cytnx::linalg::Norm(T1); }, py::arg("T1"));
+  m_linalg.def(
+    "Norm", [](cytnx::Tensor &T1) { return cytnx::linalg::Norm(T1); }, py::arg("T1"));
+
   m_linalg.def("Dot", &cytnx::linalg::Dot, py::arg("T1"), py::arg("T2"));
   m_linalg.def(
     "Axpy", [](const Scalar &a, const Tensor &x) { return cytnx::linalg::Axpy(a, x); },
