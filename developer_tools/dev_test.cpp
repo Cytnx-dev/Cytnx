@@ -4,6 +4,9 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  cout << "OK" << endl;
+  auto T = cytnx::random::uniform({3, 4}, -1, 1);
+  cout << T << endl;
+  auto T2 = cytnx::random::uniform({3, 4}, -1, 1);
+  cout << T2 << endl;
   return 0;
 }
