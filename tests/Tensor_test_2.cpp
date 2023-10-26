@@ -363,24 +363,6 @@ namespace MyTensorTest {
     CheckTensStruct(T3, Type.Double, Device.cpu, {1, 2, 3});
     ValuesList V3{0, 2, 4, 6, 8, 10};
     tens3test(T3, V3);
-
-    // arrange with only number of elements
-    Tensor T1 = arange({1, 2, 3});
-    CheckTensStruct(T1, Type.Double, Device.cpu, {1, 2, 3});
-    ValuesList V1{0, 1, 2, 3, 4, 5};
-    tens3test(T1, V1);
-
-    // arrange with number of elements and start value
-    Tensor T2 = arange({1, 2, 3}, 2, 8);  // from 2 to 7
-    CheckTensStruct(T2, Type.Double, Device.cpu, {1, 2, 3});
-    ValuesList V2{2, 3, 4, 5, 6, 7};
-    tens3test(T2, V2);
-
-    // arange with number of element, start values, and step specification
-    Tensor T3 = arange({1, 2, 3}, 0, 12, 2);  // 0 2 4 6 8 10
-    CheckTensStruct(T3, Type.Double, Device.cpu, {1, 2, 3});
-    ValuesList V3{0, 2, 4, 6, 8, 10};
-    tens3test(T3, V3);
   }
 
   TEST(Tensor, storage) {

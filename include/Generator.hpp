@@ -142,26 +142,6 @@ namespace cytnx {
   */
   Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step = 1,
                 const unsigned int &dtype = Type.Double, const int &device = Device.cpu);
-  /**
-    @brief create an rank-1 Tensor with elements defined in range [start,end) with assigned
-    step-size, then reshape to the shape specified by the input shape. Where Nelem is the total
-    number of elements in the input shape.
-    @param shape the shape of the Tensor
-    @param start the start value of the range
-    @param end the end value of the range
-    @param step the step-size of the range
-    @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type
-    cytnx::Type \endlink
-    @param device the device that the Tensor is put on. It can be any device defined in \link
-    cytnx::Device cytnx::Device \endlink
-
-    @return
-        [Tensor]
-
-    */
-  Tensor arange(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
-                const cytnx_double &end, const cytnx_double &step = 1,
-                const unsigned int &dtype = Type.Double, const int &device = Device.cpu);
   //@}
 
   /**
@@ -178,20 +158,6 @@ namespace cytnx {
   Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
                   const bool &endpoint = true, const unsigned int &dtype = Type.Double,
                   const int &device = Device.cpu);
-  /**
-      @brief create an rank-1 Tensor with Nelem elements defined in range [start,end), which is
-     evenly spaced. Then reshape to the shape specified by the input shape.
-      @param start the start value of the range
-      @param end the end value of the range
-      @param Nelem the number of elements
-      @param endpoint if true, the end value is included in the range.
-      @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type \endlink
-      @param device the device that the Tensor is put on. It can be any device defined in \link
-      cytnx::Device \endlink
-    */
-  Tensor linspace(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
-                  const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint = true,
-                  const unsigned int &dtype = Type.Double, const int &device = Device.cpu);
 
   // Tensor rand(const std::vector<cytnx_uint64> &size);
   // Tensor randn(const std::vector<cytnx_uint64> &size);

@@ -78,11 +78,6 @@ namespace cytnx {
 
     return out;
   }
-  Tensor arange(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
-                const cytnx_double &end, const cytnx_double &step, const unsigned int &dtype,
-                const int &device) {
-    return arange(start, end, step, dtype, device).reshape(shape);
-  }
   Tensor arange(const cytnx_int64 &Nelem) {
     cytnx_error_msg(Nelem <= 0, "[ERROR] arange(Nelem) , %s", "Nelem must be integer > 0");
     return arange(0, Nelem, 1);
@@ -121,11 +116,6 @@ namespace cytnx {
   #endif
     }
     return out;
-  }
-  Tensor linspace(const std::vector<cytnx_uint64> &shape, const cytnx_double &start,
-                  const cytnx_double &end, const cytnx_uint64 &Nelem, const bool &endpoint,
-                  const unsigned int &dtype, const int &device) {
-    return linspace(start, end, Nelem, endpoint, dtype, device).reshape(shape);
   }
 
   //--------------

@@ -4811,36 +4811,11 @@ TEST_F(DenseUniTensorTest, arange_with_shape_step1_error) {
 }
 
 /*=====test info=====
-describe:test arange_with_shape
-====================*/
-TEST_F(DenseUniTensorTest, arange_with_shape) {
-  const double start = 0.3, end = -0.2, step = -0.11;
-  auto ut = UniTensor::arange({1, 5}, start, end, step);
-  EXPECT_EQ(ut.rank(), 2);
-  double eps = step < 0 ? -1.0e-12 : 1.0e-12;
-  int ans_len = static_cast<int>((end - start + eps) / step) + 1;
-  EXPECT_EQ(ut.shape()[1], ans_len);
-  for (cytnx_uint64 i = 0; i < ans_len; ++i) {
-    double ans = start + step * i;
-    EXPECT_EQ(ut.at({0, i}), ans);
-  }
-}
-
-/*=====test info=====
 describe:test arange_step_error, start < end but step < 0
 ====================*/
 TEST_F(DenseUniTensorTest, arange_step_error) {
   const double start = 0.1, end = 0.7, step = -0.11;
   EXPECT_THROW(UniTensor::arange(start, end, step), std::logic_error);
-}
-
-/*=====test info=====
-describe:test arange_with_shape_step_error
-====================*/
-TEST_F(DenseUniTensorTest, arange_with_shape_step_error) {
-  const double start = 0.1, end = 0.7, step = -0.11;
-  EXPECT_THROW(UniTensor::arange({1, 7}, start, end, step), std::logic_error);
-  EXPECT_THROW(UniTensor::arange({4, 2}, start, end, 0.11), std::logic_error);
 }
 
 /*=====test info=====
@@ -4852,27 +4827,6 @@ TEST_F(DenseUniTensorTest, linspace) {
   auto ut = UniTensor::linspace(start, end, Nelem);
   EXPECT_EQ(ut.rank(), 1);
   EXPECT_EQ(ut.shape()[0], Nelem);
-}
-
-/*=====test info=====
-describe:test linspace_with_shape
-====================*/
-TEST_F(DenseUniTensorTest, linspace_with_shape) {
-  const double start = 0.3, end = -0.2;
-  const cytnx_uint64 Nelem = 7;
-  auto ut = UniTensor::linspace({1, 7}, start, end, Nelem);
-  EXPECT_EQ(ut.rank(), 2);
-  EXPECT_EQ(ut.shape()[1], Nelem);
-}
-
-/*=====test info=====
-describe:test linspace_with_shape_error
-====================*/
-TEST_F(DenseUniTensorTest, linspace_with_shape_error) {
-  const double start = 0.3, end = -0.2;
-  const cytnx_uint64 Nelem = 7;
-  EXPECT_THROW(UniTensor::linspace({2, 3}, start, end, Nelem), std::logic_error);
-  EXPECT_THROW(UniTensor::linspace({2, 2}, start, end, Nelem), std::logic_error);
 }
 
 /*=====test info=====
