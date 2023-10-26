@@ -64,6 +64,16 @@ TEST_F(NetworkTest, Network_dense_reuse) {
   EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
 }
 
+TEST_F(NetworkTest, Network_dense_reuse2) {
+  auto net = Network();
+  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b;e"});
+  net.PutUniTensors({"A", "B", "C"}, {utdnA, utdnB, utdnC});
+
+  EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
+  EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
+  EXPECT_TRUE(AreNearlyEqTensor(net.Launch().get_block(), utdnAns.get_block(), 1e-12));
+}
+
 TEST_F(NetworkTest, Network_dense_TOUT_no_colon) {
   auto net = Network();
   net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "TOUT: a,b,e"});

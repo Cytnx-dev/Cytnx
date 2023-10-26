@@ -690,7 +690,12 @@ void unitensor_binding(py::module &m) {
       "put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
          const bool &force) { self.put_block(in, qnum, force); },
-      py::arg("in"), py::arg("qnum"), py::arg("force") = false)
+      py::arg("in"), py::arg("qidx"), py::arg("force") = false)
+     .def(
+      "put_block",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
+         const bool &force) { self.put_block(in, lbls, qnum, force); },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force") = false)
     .def(
       "put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const cytnx_uint64 &idx) { self.put_block_(in, idx); },
@@ -700,7 +705,12 @@ void unitensor_binding(py::module &m) {
       "put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
          const bool &force) { self.put_block_(in, qnum, force); },
-      py::arg("in"), py::arg("qnum"), py::arg("force") = false)
+      py::arg("in"), py::arg("qidx"), py::arg("force") = false)
+     .def(
+      "put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
+         const bool &force) { self.put_block_(in, lbls, qnum, force); },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force") = false)
     .def(
       "__repr__",
       [](UniTensor &self) -> std::string {
@@ -1190,6 +1200,123 @@ void unitensor_binding(py::module &m) {
                         return self.truncate(label, dim);
                     },
                     py::arg("label"), py::arg("dim"))
+
+    //[Generator]
+    .def_static("ones", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
+                  const unsigned int &dtype,
+                  const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::ones(Nelem, in_labels,dtype,device,name);
+                }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
+    .def_static("ones", [](const std::vector<cytnx_uint64> &shape, const std::vector<std::string> &in_labels,
+                  const unsigned int &dtype,
+                  const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::ones(shape, in_labels,dtype,device,name);
+                }, py::arg("shape"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
+     .def_static("zeros", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
+                  const unsigned int &dtype,
+                  const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::zeros(Nelem, in_labels,dtype,device,name);
+                }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
+     .def_static("zeros", [](const std::vector<cytnx_uint64> &shape, const std::vector<std::string> &in_labels,
+                  const unsigned int &dtype,
+                  const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::zeros(shape, in_labels,dtype,device,name);
+                }, py::arg("shape"), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
+     .def_static("arange", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
+                  const std::string &name)
+                {
+                  return UniTensor::arange(Nelem, in_labels,name);
+                }, py::arg("Nelem"), py::arg("labels") = std::vector<std::string>(),
+                   py::arg("name") = std::string(""))
+     .def_static("arange", [](const cytnx_double &start,const cytnx_double &end
+     ,const cytnx_double &step, const std::vector<std::string> &in_labels,const unsigned int &dtype, const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::arange(start,end,step, in_labels,dtype,device,name);
+                }, py::arg("start"),py::arg("end"),py::arg("step")=cytnx_double(1), py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
+     .def_static("linspace", [](const cytnx_double &start,const cytnx_double &end
+     ,const cytnx_uint64 &Nelem,const bool &endpoint,const std::vector<std::string> &in_labels,const unsigned int &dtype, const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::linspace(start,end,Nelem, endpoint, in_labels,dtype,device,name);
+                }, py::arg("start"),py::arg("end"),py::arg("Nelem"),py::arg("endpoint")=true,  py::arg("labels") = std::vector<std::string>(), py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
+     .def_static("normal", [](const cytnx_uint64 &Nelem, const double &mean, const double &std,
+                              const std::vector<std::string> &in_labels,
+                              const unsigned int &seed, const unsigned int &dtype,
+							  const int &device, const std::string &name)
+                {
+                  return UniTensor::normal(Nelem, mean, std, in_labels, seed, dtype, device, name);
+                },
+				py::arg("Nelem"), py::arg("mean"), py::arg("std"),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
+                py::arg("name") = std::string(""))
+     .def_static("normal", [](const std::vector<cytnx_uint64> &shape, const double &mean, const double &std,
+                              const std::vector<std::string> &in_labels,
+                              const unsigned int &seed, const unsigned int &dtype,
+							  const int &device, const std::string &name)
+                {
+                  return UniTensor::normal(shape, mean, std, in_labels, seed, dtype, device, name);
+                },
+				py::arg("shape"), py::arg("mean"), py::arg("std"),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
+                py::arg("name") = std::string(""))
+     .def_static("uniform", [](const cytnx_uint64 &Nelem, const double &low, const double &high,
+                              const std::vector<std::string> &in_labels,
+                              const unsigned int &seed, const unsigned int &dtype,
+							  const int &device, const std::string &name)
+                {
+                  return UniTensor::uniform(Nelem, low, high, in_labels, seed, dtype, device, name);
+                },
+				py::arg("Nelem"), py::arg("low"), py::arg("high"),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
+                py::arg("name") = std::string(""))
+     .def_static("uniform", [](const std::vector<cytnx_uint64> &shape, const double &low, const double &high,
+                              const std::vector<std::string> &in_labels,
+                              const unsigned int &seed, const unsigned int &dtype,
+							  const int &device, const std::string &name)
+                {
+                  return UniTensor::uniform(shape, low, high, in_labels, seed, dtype, device, name);
+                },
+				py::arg("shape"), py::arg("low"), py::arg("high"),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
+                py::arg("name") = std::string(""))
+     .def("normal_", [](UniTensor &self, const double &mean, const double &std,
+					    const unsigned int &seed)
+                {
+                  self.normal_(mean, std, seed);
+                },
+				py::arg("mean"), py::arg("std"), py::arg("seed")= std::random_device()())
+     .def("uniform_", [](UniTensor &self, const double &low, const double &high,
+					     const unsigned int &seed)
+                {
+                  self.uniform_(low, high, seed);
+                },
+				py::arg("low"), py::arg("high"), py::arg("seed")= std::random_device()())
+
   ;//end of object line
 
   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,

@@ -3,6 +3,7 @@
 #include "utils/utils.hpp"
 
 #include "linalg.hpp"
+#include "random.hpp"
 
 using namespace std;
 
@@ -185,6 +186,67 @@ namespace cytnx {
     out._Load(f);
     f.close();
     return out;
+  }
+  // Random Generators:
+  UniTensor UniTensor::normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
+                              const std::vector<std::string> &in_labels, const unsigned int &seed,
+                              const unsigned int &dtype, const int &device,
+                              const std::string &name) {
+    return UniTensor(cytnx::random::normal(Nelem, mean, std, device, seed, dtype), false, -1,
+                     in_labels, name);
+  }
+  UniTensor UniTensor::normal(const std::vector<cytnx_uint64> &shape, const double &mean,
+                              const double &std, const std::vector<std::string> &in_labels,
+                              const unsigned int &seed, const unsigned int &dtype,
+                              const int &device, const std::string &name) {
+    return UniTensor(cytnx::random::normal(shape, mean, std, device, seed, dtype), false, -1,
+                     in_labels, name);
+  }
+
+  UniTensor UniTensor::uniform(const cytnx_uint64 &Nelem, const double &low, const double &high,
+                               const std::vector<std::string> &in_labels, const unsigned int &seed,
+                               const unsigned int &dtype, const int &device,
+                               const std::string &name) {
+    return UniTensor(cytnx::random::uniform(Nelem, low, high, device, seed, dtype), false, -1,
+                     in_labels, name);
+  }
+  UniTensor UniTensor::uniform(const std::vector<cytnx_uint64> &shape, const double &low,
+                               const double &high, const std::vector<std::string> &in_labels,
+                               const unsigned int &seed, const unsigned int &dtype,
+                               const int &device, const std::string &name) {
+    return UniTensor(cytnx::random::uniform(shape, low, high, device, seed, dtype), false, -1,
+                     in_labels, name);
+  }
+
+  // Inplace Random Generators:
+  void UniTensor::normal_(const double &mean, const double &std, const unsigned int &seed) {
+    if (this->uten_type() == UTenType.Dense) {
+      cytnx::random::normal_(this->get_block_(), mean, std, seed);
+    } else if (this->uten_type() == UTenType.Block) {
+      for (auto &blk : this->get_blocks_()) {
+        cytnx::random::normal_(blk, mean, std, seed);
+      }
+    } else {
+      cytnx_error_msg(true,
+                      "[ERROR] cannot perform inplace random generation on a UniTensor which is "
+                      "not Dense or Block.%s",
+                      "\n");
+    }
+  }
+
+  void UniTensor::uniform_(const double &low, const double &high, const unsigned int &seed) {
+    if (this->uten_type() == UTenType.Dense) {
+      cytnx::random::uniform_(this->get_block_(), low, high, seed);
+    } else if (this->uten_type() == UTenType.Block) {
+      for (auto &blk : this->get_blocks_()) {
+        cytnx::random::uniform_(blk, low, high, seed);
+      }
+    } else {
+      cytnx_error_msg(true,
+                      "[ERROR] cannot perform inplace random generation on a UniTensor which is "
+                      "not Dense or Block.%s",
+                      "\n");
+    }
   }
 
 }  // namespace cytnx
