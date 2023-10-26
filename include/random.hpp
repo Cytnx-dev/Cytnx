@@ -20,7 +20,8 @@ namespace cytnx {
   @brief The randomization related functions.
   */
   namespace random {
-    static std::random_device __static_random_device;
+    // Actual definition is in uniform_.cpp
+    extern std::random_device __static_random_device;
 
     // [Storage]
     // =============================================================================================================
