@@ -20,6 +20,7 @@ namespace cytnx {
   @brief The randomization related functions.
   */
   namespace random {
+    static std::random_device __static_random_device;
 
     // [Storage]
     // =============================================================================================================
@@ -35,7 +36,7 @@ namespace cytnx {
     @note The Storage sould be real floating type or complex type.
     */
     void normal_(cytnx::Storage &Sin, const double &mean, const double &std,
-                 const unsigned int &seed = std::random_device()());
+                 const unsigned int &seed = __static_random_device());
 
     // uniform_:
     //--------------------------------------------------
@@ -51,7 +52,7 @@ namespace cytnx {
         random number in domain (low,high]; (cuRandv10)
     */
     void uniform_(cytnx::Storage &Sin, const double &low = 0, const double &high = 1,
-                  const unsigned int &seed = std::random_device()());
+                  const unsigned int &seed = __static_random_device());
 
     // [Tensor]
     // =============================================================================================================
@@ -67,7 +68,7 @@ namespace cytnx {
     @note The Tensor sould be real floating type or complex type.
     */
     void normal_(cytnx::Tensor &Tin, const double &mean, const double &std,
-                 const unsigned int &seed = std::random_device()());
+                 const unsigned int &seed = __static_random_device());
 
     // uniform_:
     //--------------------------------------------------
@@ -84,7 +85,7 @@ namespace cytnx {
 
     */
     void uniform_(cytnx::Tensor &Tin, const double &low = 0, const double &high = 1,
-                  const unsigned int &seed = std::random_device()());
+                  const unsigned int &seed = __static_random_device());
 
     // [UniTensor]
     // =============================================================================================================
@@ -100,7 +101,7 @@ namespace cytnx {
     @note The UniTensor sould be real floating type or complex type.
     */
     void normal_(cytnx::UniTensor &Tin, const double &mean, const double &std,
-                 const unsigned int &seed = std::random_device()());
+                 const unsigned int &seed = __static_random_device());
 
     // uniform_:
     //--------------------------------------------------
@@ -116,7 +117,7 @@ namespace cytnx {
         random number in domain (low,high]; (cuRandv10)
     */
     void uniform_(cytnx::UniTensor &Tin, const double &low = 0, const double &high = 1,
-                  const unsigned int &seed = std::random_device()());
+                  const unsigned int &seed = __static_random_device());
 
     // normal:
     //@{
@@ -134,7 +135,8 @@ namespace cytnx {
         [Tensor]
     */
     Tensor normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
-                  const int &device = Device.cpu, const unsigned int &seed = std::random_device()(),
+                  const int &device = Device.cpu,
+                  const unsigned int &seed = __static_random_device(),
                   const unsigned int &dtype = Type.Double);
 
     /**
@@ -150,7 +152,8 @@ namespace cytnx {
         [Tensor]
     */
     Tensor normal(const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std,
-                  const int &device = Device.cpu, const unsigned int &seed = std::random_device()(),
+                  const int &device = Device.cpu,
+                  const unsigned int &seed = __static_random_device(),
                   const unsigned int &dtype = Type.Double);
     //@}
 
@@ -170,7 +173,7 @@ namespace cytnx {
     */
     Tensor uniform(const cytnx_uint64 &Nelem, const double &low, const double &high,
                    const int &device = Device.cpu,
-                   const unsigned int &seed = std::random_device()(),
+                   const unsigned int &seed = __static_random_device(),
                    const unsigned int &dtype = Type.Double);
 
     /**
@@ -188,7 +191,7 @@ namespace cytnx {
     */
     Tensor uniform(const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high,
                    const int &device = Device.cpu,
-                   const unsigned int &seed = std::random_device()(),
+                   const unsigned int &seed = __static_random_device(),
                    const unsigned int &dtype = Type.Double);
     //@}
 
@@ -196,12 +199,12 @@ namespace cytnx {
     // this is going to deprecated:
     template <class T>
     void Make_normal(T &In, const double &mean, const double &std,
-                     const unsigned int &seed = std::random_device()()) {
+                     const unsigned int &seed = __static_random_device()) {
       normal_(In, mean, std, seed);
     }
     template <class T>
     void Make_uniform(T &In, const double &low, const double &high,
-                      const unsigned int &seed = std::random_device()()) {
+                      const unsigned int &seed = __static_random_device()) {
       uniform_(In, low, high, seed);
     }
 
