@@ -3155,6 +3155,10 @@ namespace cytnx {
       cytnx_error_msg(
         rhs.uten_type() != UTenType.Dense,
         "[ERROR] cannot set elements from UniTensor with symmetry. Use at() instead.%s", "\n");
+      cytnx_error_msg(this->is_diag(), "[ERROR] cannot set UniTensor with is_diag=True.%s", "\n");
+      cytnx_error_msg(rhs.is_diag(),
+                      "[ERROR] cannot set UniTensor. incoming UniTensor is_diag=True.%s", "\n");
+
       this->_impl->set(accessors, rhs.get_block());
     }
     /**
