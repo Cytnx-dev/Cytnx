@@ -239,3 +239,9 @@ def at(self, locator:List[int]):
 def at(self, labels:List[str], locator:List[int]):
     tmp_hclass = self.c_at(labels,locator);
     return Hclass(tmp_hclass);
+
+
+@add_method(UniTensor)
+def convert_from(self, Tin, force=False):
+    self.cfrom(Tin,force);
+    return self
