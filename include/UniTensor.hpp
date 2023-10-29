@@ -4074,7 +4074,7 @@ namespace cytnx {
     void _Save(std::fstream &f) const;
     /// @endcond
 
-    UniTensor &from(const UniTensor &rhs, const bool &force = false) {
+    UniTensor &convert_from(const UniTensor &rhs, const bool &force = false) {
       this->_impl->from_(rhs._impl, force);
       return *this;
     }

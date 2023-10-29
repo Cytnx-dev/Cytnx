@@ -63,7 +63,7 @@ FLAG="${FLAG} -DBUILD_PYTHON=ON"
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_HPTT=OFF "
+FLAG="${FLAG} -DUSE_HPTT=ON "
 #-----------------------------------
 # 5-a) HPTT fine tune (DEFAULT =off)
 # [Note] set to "=on" to enable fine tune for the native hardware.
@@ -188,7 +188,7 @@ rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
-make -j`nproc`
+make -j4
 make install
 ctest
 gcovr -r ../ . --html-details cov.html
