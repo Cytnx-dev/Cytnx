@@ -36,42 +36,47 @@ namespace cytnx {
                     line_num, "\n");
   }
 
-  void _parse_TOUT_line_(vector<string> &lbls, cytnx_uint64 &TOUT_iBondNum, const string &line,
+  void _parse_TOUT_line_(vector<string> &labels, cytnx_uint64 &TOUT_iBondNum, const string &line,
                          const cytnx_uint64 &line_num) {
-    lbls.clear();
+    labels.clear();
+
     vector<string> tmp = str_split(line, false, ";");
-    cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                    "Invalid TOUT line");
-
-    // handle col-space lbl
-    vector<string> ket_lbls = str_split(tmp[0], false, ",");
-    if (ket_lbls.size() == 1)
-      if (ket_lbls[0].length() == 0) ket_lbls.clear();
-    for (cytnx_uint64 i = 0; i < ket_lbls.size(); i++) {
-      string tmp = str_strip(ket_lbls[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                      line_num, "\n");
-      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                 "Invalid TOUT line. label contain non integer.");
-      lbls.push_back(tmp);
+    // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+    //                 "Invalid TOUT line");
+    if (tmp.size() != 2) {
+      // tmp.push_back("");
+      tmp.insert(tmp.begin(), "");
     }
-    TOUT_iBondNum = lbls.size();
 
-    // handle row-space lbl
-    vector<string> bra_lbls = str_split(tmp[1], false, ",");
-    if (bra_lbls.size() == 1)
-      if (bra_lbls[0].length() == 0) bra_lbls.clear();
-    for (cytnx_uint64 i = 0; i < bra_lbls.size(); i++) {
-      string tmp = str_strip(bra_lbls[i]);
+    // handle col-space label
+    vector<string> ket_labels = str_split(tmp[0], false, ",");
+    if (ket_labels.size() == 1)
+      if (ket_labels[0].length() == 0) ket_labels.clear();
+    for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
+      string tmp = str_strip(ket_labels[i]);
       cytnx_error_msg(tmp.length() == 0,
                       "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
                       line_num, "\n");
       // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
       //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
       //                 "Invalid TOUT line. label contain non integer.");
-      lbls.push_back(tmp);
+      labels.push_back(tmp);
+    }
+    TOUT_iBondNum = labels.size();
+
+    // handle row-space label
+    vector<string> bra_labels = str_split(tmp[1], false, ",");
+    if (bra_labels.size() == 1)
+      if (bra_labels[0].length() == 0) bra_labels.clear();
+    for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
+      string tmp = str_strip(bra_labels[i]);
+      cytnx_error_msg(tmp.length() == 0,
+                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                      line_num, "\n");
+      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                 "Invalid TOUT line. label contain non integer.");
+      labels.push_back(tmp);
     }
   }
 
@@ -108,21 +113,21 @@ namespace cytnx {
     }
   }
 
-  void _parse_TN_line_(vector<string> &lbls, cytnx_uint64 &TN_iBondNum, const string &line,
+  void _parse_TN_line_(vector<string> &labels, cytnx_uint64 &TN_iBondNum, const string &line,
                        const cytnx_uint64 &line_num) {
-    lbls.clear();
+    labels.clear();
     // vector<string> tmp = str_split(line, false, ";");
     // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                 "Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1>
     //                 "
     //                 "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
 
-    // // handle col-space lbl
-    // vector<string> ket_lbls = str_split(tmp[0], false, ",");
-    // if (ket_lbls.size() == 1)
-    //   if (ket_lbls[0].length() == 0) ket_lbls.clear();
-    // for (cytnx_uint64 i = 0; i < ket_lbls.size(); i++) {
-    //   string tmp = str_strip(ket_lbls[i]);
+    // // handle col-space label
+    // vector<string> ket_labels = str_split(tmp[0], false, ",");
+    // if (ket_labels.size() == 1)
+    //   if (ket_labels[0].length() == 0) ket_labels.clear();
+    // for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
+    //   string tmp = str_strip(ket_labels[i]);
     //   cytnx_error_msg(tmp.length() == 0,
     //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s",
     //                   line_num,
@@ -130,16 +135,16 @@ namespace cytnx {
     //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
     //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                   "Invalid TN line. label contain non integer.");
-    //   lbls.push_back(tmp);
+    //   labels.push_back(tmp);
     // }
-    // TN_iBondNum = lbls.size();
+    // TN_iBondNum = labels.size();
 
-    // // handle row-space lbl
-    // vector<string> bra_lbls = str_split(tmp[1], false, ",");
-    // if (bra_lbls.size() == 1)
-    //   if (bra_lbls[0].length() == 0) bra_lbls.clear();
-    // for (cytnx_uint64 i = 0; i < bra_lbls.size(); i++) {
-    //   string tmp = str_strip(bra_lbls[i]);
+    // // handle row-space label
+    // vector<string> bra_labels = str_split(tmp[1], false, ",");
+    // if (bra_labels.size() == 1)
+    //   if (bra_labels[0].length() == 0) bra_labels.clear();
+    // for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
+    //   string tmp = str_strip(bra_labels[i]);
     //   cytnx_error_msg(tmp.length() == 0,
     //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
     //                   line_num, "\n");
@@ -151,26 +156,26 @@ namespace cytnx {
     //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
     //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                   "Invalid TN line. label contain non integer.");
-    //   lbls.push_back(tmp);
+    //   labels.push_back(tmp);
     // }
 
-    vector<string> alllbls = str_split(line, false, ",");
-    if (alllbls.size() == 1)
-      if (alllbls[0].length() == 0) alllbls.clear();
-    for (cytnx_uint64 i = 0; i < alllbls.size(); i++) {
-      string tmp = str_strip(alllbls[i]);
+    vector<string> alllabels = str_split(line, false, ",");
+    if (alllabels.size() == 1)
+      if (alllabels[0].length() == 0) alllabels.clear();
+    for (cytnx_uint64 i = 0; i < alllabels.size(); i++) {
+      string tmp = str_strip(alllabels[i]);
       cytnx_error_msg(tmp.length() == 0,
                       "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s", line_num,
                       "\n");
       // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
       //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
       //                 "Invalid TN line. label contain non integer.");
-      lbls.push_back(tmp);
+      labels.push_back(tmp);
     }
 
-    TN_iBondNum = lbls.size();
+    TN_iBondNum = labels.size();
 
-    cytnx_error_msg(lbls.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+    cytnx_error_msg(labels.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
                     "Invalid TN line. no label present in this line, which is invalid.%s", "\n");
   }
 
@@ -382,17 +387,17 @@ namespace cytnx {
     }  // check all RN.
 
     // checking label matching:
-    map<string, cytnx_int64> lblcnt;
+    map<string, cytnx_int64> labelcnt;
     for (int i = 0; i < this->names.size(); i++) {
       for (int j = 0; j < this->label_arr[i].size(); j++) {
-        if (lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
-          lblcnt[this->label_arr[i][j]] = 1;
+        if (labelcnt.find(this->label_arr[i][j]) == labelcnt.end())
+          labelcnt[this->label_arr[i][j]] = 1;
         else
-          lblcnt[this->label_arr[i][j]] += 1;
+          labelcnt[this->label_arr[i][j]] += 1;
       }
     }
     vector<string> expected_TOUT;
-    for (map<string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
+    for (map<string, cytnx_int64>::iterator it = labelcnt.begin(); it != labelcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
     bool err = false;
@@ -537,17 +542,17 @@ namespace cytnx {
     }  // check all RN.
 
     // checking label matching:
-    map<string, cytnx_int64> lblcnt;
+    map<string, cytnx_int64> labelcnt;
     for (int i = 0; i < this->names.size(); i++) {
       for (int j = 0; j < this->label_arr[i].size(); j++) {
-        if (lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
-          lblcnt[this->label_arr[i][j]] = 1;
+        if (labelcnt.find(this->label_arr[i][j]) == labelcnt.end())
+          labelcnt[this->label_arr[i][j]] = 1;
         else
-          lblcnt[this->label_arr[i][j]] += 1;
+          labelcnt[this->label_arr[i][j]] += 1;
       }
     }
     vector<string> expected_TOUT;
-    for (map<string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
+    for (map<string, cytnx_int64>::iterator it = labelcnt.begin(); it != labelcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
     bool err = false;
@@ -585,20 +590,20 @@ namespace cytnx {
     }
 
     // get int_label
-    std::map<std::string, cytnx_int64> lblmap = std::map<std::string, cytnx_int64>();
+    std::map<std::string, cytnx_int64> labelmap = std::map<std::string, cytnx_int64>();
     this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
     this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
-    cytnx_int64 lbl_int = 0;
+    cytnx_int64 label_int = 0;
     for (size_t i = 0; i < this->label_arr.size(); i++) {
       this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
       for (size_t j = 0; j < this->label_arr[i].size(); j++) {
-        lblmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], lbl_int));
-        this->int_modes[i][j] = lblmap[this->label_arr[i][j]];
-        lbl_int += 1;
+        labelmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], label_int));
+        this->int_modes[i][j] = labelmap[this->label_arr[i][j]];
+        label_int += 1;
       }
     }
     for (size_t i = 0; i < TOUT_labels.size(); i++) {
-      this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
+      this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
     }
 
   #ifdef UNI_GPU
@@ -681,8 +686,6 @@ namespace cytnx {
                     this->names[idx].c_str());
 
     this->tensors[idx] = utensor;
-    this->CtTree.base_nodes[idx].utensor = utensor.relabels(this->label_arr[idx]);  // this conflict
-    this->CtTree.base_nodes[idx].is_assigned = true;
   }
 
   void RegularNetwork::RmUniTensor(const cytnx_uint64 &idx) {
@@ -918,8 +921,8 @@ namespace cytnx {
     SearchTree Stree;
     Stree.base_nodes.resize(this->tensors.size());
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
-      // Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
-      Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
+      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create psudotensors from base tensors
+      // Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
@@ -934,6 +937,11 @@ namespace cytnx {
     if (tn_device == -1) {
       // cpu workflow
 
+      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
+        this->CtTree.base_nodes[idx].utensor =
+          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+        this->CtTree.base_nodes[idx].is_assigned = true;
+      }
       // 1.5 contraction order:
       if (ORDER_tokens.size() != 0) {
         // *set by user or optimally found
@@ -1127,20 +1135,20 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::construct(const vector<string> &alias, const vector<vector<string>> &lbls,
-                                 const vector<string> &outlbl, const cytnx_int64 &outrk,
+  void RegularNetwork::construct(const vector<string> &alias, const vector<vector<string>> &labels,
+                                 const vector<string> &outlabel, const cytnx_int64 &outrk,
                                  const string &order, const bool optim) {
     this->clear();
     for (int i = 0; i < alias.size(); i++) {
       this->names.push_back(alias[i]);
       this->name2pos[alias[i]] = names.size() - 1;  // register
-      cytnx_uint64 tmp_iBN = lbls[i].size();
+      cytnx_uint64 tmp_iBN = labels[i].size();
       // this is an internal function that is defined in this cpp file.
-      this->label_arr.push_back(lbls[i]);
+      this->label_arr.push_back(labels[i]);
       this->iBondNums.push_back(tmp_iBN);
     }
-    this->TOUT_labels = outlbl;
-    this->TOUT_iBondNum = outlbl.size() - outrk;
+    this->TOUT_labels = outlabel;
+    this->TOUT_iBondNum = outlabel.size() - outrk;
 
     if (order.length()) {
       this->order_line = order;
@@ -1174,18 +1182,18 @@ namespace cytnx {
     this->CtTree.base_nodes.resize(this->names.size());
 
     // checking label matching:
-    map<string, cytnx_int64> lblcnt;
+    map<string, cytnx_int64> labelcnt;
     for (int i = 0; i < this->names.size(); i++) {
       for (int j = 0; j < this->label_arr[i].size(); j++) {
-        if (lblcnt.find(this->label_arr[i][j]) == lblcnt.end())
-          lblcnt[this->label_arr[i][j]] = 1;
+        if (labelcnt.find(this->label_arr[i][j]) == labelcnt.end())
+          labelcnt[this->label_arr[i][j]] = 1;
         else
-          lblcnt[this->label_arr[i][j]] += 1;
+          labelcnt[this->label_arr[i][j]] += 1;
       }
     }
     vector<string> expected_TOUT;
 
-    for (map<string, cytnx_int64>::iterator it = lblcnt.begin(); it != lblcnt.end(); ++it) {
+    for (map<string, cytnx_int64>::iterator it = labelcnt.begin(); it != labelcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
     // cout<<this->TOUT_labels.size();
@@ -1227,20 +1235,20 @@ namespace cytnx {
     }
 
     // get int_label
-    std::map<std::string, cytnx_int64> lblmap = std::map<std::string, cytnx_int64>();
+    std::map<std::string, cytnx_int64> labelmap = std::map<std::string, cytnx_int64>();
     this->int_modes = std::vector<std::vector<cytnx_int64>>(this->label_arr.size());
     this->int_out_mode = std::vector<cytnx_int64>(this->TOUT_labels.size());
-    cytnx_int64 lbl_int = 0;
+    cytnx_int64 label_int = 0;
     for (size_t i = 0; i < this->label_arr.size(); i++) {
       this->int_modes[i] = std::vector<cytnx_int64>(this->label_arr[i].size());
       for (size_t j = 0; j < this->label_arr[i].size(); j++) {
-        lblmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], lbl_int));
-        this->int_modes[i][j] = lblmap[this->label_arr[i][j]];
-        lbl_int += 1;
+        labelmap.insert(std::pair<std::string, cytnx_int64>(this->label_arr[i][j], label_int));
+        this->int_modes[i][j] = labelmap[this->label_arr[i][j]];
+        label_int += 1;
       }
     }
     for (size_t i = 0; i < TOUT_labels.size(); i++) {
-      this->int_out_mode[i] = lblmap[this->TOUT_labels[i]];
+      this->int_out_mode[i] = labelmap[this->TOUT_labels[i]];
     }
 
   #ifdef UNI_GPU

@@ -1,18 +1,18 @@
 #ifndef __LAPACK_WRAPPER_H__
 #define __LAPACK_WRAPPER_H__
+#ifndef BACKEND_TORCH
+  #include <stdint.h>
 
-#include <stdint.h>
+  #include <complex>
+  // #include <complex.h>
+  #include <algorithm>
+  #include "Type.hpp"
 
-#include <complex>
-// #include <complex.h>
-#include <algorithm>
-#include "Type.hpp"
-
-#ifdef UNI_MKL
-  #include <mkl.h>
-#else
-  #include <lapacke.h>
-  #include <cblas.h>
+  #ifdef UNI_MKL
+    #include <mkl.h>
+  #else
+    #include <lapacke.h>
+    #include <cblas.h>
 extern "C" {
 
 // BLAS functions
@@ -91,7 +91,7 @@ double ddot_(const blas_int *n, const double *x, const blas_int *incx, const dou
 float sdot_(const blas_int *n, const float *x, const blas_int *incx, const float *y,
             const blas_int *incy);
 
-  #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
+    #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
 std::complex<double> zdotc_(const blas_int *n, const std::complex<double> *x, const blas_int *incx,
                             const std::complex<double> *y, const blas_int *incy);
 std::complex<double> zdotu_(const blas_int *n, const std::complex<double> *x, const blas_int *incx,
@@ -100,7 +100,7 @@ std::complex<float> cdotc_(const blas_int *n, const std::complex<float> *x, cons
                            const std::complex<float> *y, const blas_int *incy);
 std::complex<float> cdotu_(const blas_int *n, const std::complex<float> *x, const blas_int *incx,
                            const std::complex<float> *y, const blas_int *incy);
-  #else
+    #else
 void zdotc_(std::complex<double> *res, const blas_int *n, const std::complex<double> *x,
             const blas_int *incx, const std::complex<double> *y, const blas_int *incy);
 void zdotu_(std::complex<double> *res, const blas_int *n, const std::complex<double> *x,
@@ -109,7 +109,7 @@ void cdotc_(std::complex<float> *res, const blas_int *n, const std::complex<floa
             const blas_int *incx, const std::complex<float> *y, const blas_int *incy);
 void cdotu_(std::complex<float> *res, const blas_int *n, const std::complex<float> *x,
             const blas_int *incx, const std::complex<float> *y, const blas_int *incy);
-  #endif
+    #endif
 
 // D and Z LAPACK functions
 /*
@@ -498,35 +498,35 @@ inline float sdot(const blas_int *n, const float *x, const blas_int *incx, const
 
 inline void zdotc(std::complex<double> *res, const blas_int *n, const std::complex<double> *x,
                   const blas_int *incx, const std::complex<double> *y, const blas_int *incy) {
-  #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
+    #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
   *res = zdotc_(n, x, incx, y, incy);
-  #else
+    #else
   zdotc_(res, n, x, incx, y, incy);
-  #endif
+    #endif
 }
 inline void zdotu(std::complex<double> *res, const blas_int *n, const std::complex<double> *x,
                   const blas_int *incx, const std::complex<double> *y, const blas_int *incy) {
-  #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
+    #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
   *res = zdotu_(n, x, incx, y, incy);
-  #else
+    #else
   zdotu_(res, n, x, incx, y, incy);
-  #endif
+    #endif
 }
 inline void cdotc(std::complex<float> *res, const blas_int *n, const std::complex<float> *x,
                   const blas_int *incx, const std::complex<float> *y, const blas_int *incy) {
-  #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
+    #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
   *res = cdotc_(n, x, incx, y, incy);
-  #else
+    #else
   cdotc_(res, n, x, incx, y, incy);
-  #endif
+    #endif
 }
 inline void cdotu(std::complex<float> *res, const blas_int *n, const std::complex<float> *x,
                   const blas_int *incx, const std::complex<float> *y, const blas_int *incy) {
-  #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
+    #ifndef FORTRAN_COMPLEX_FUNCTIONS_RETURN_VOID
   *res = cdotu_(n, x, incx, y, incy);
-  #else
+    #else
   cdotu_(res, n, x, incx, y, incy);
-  #endif
+    #endif
 }
 
   /*
@@ -569,8 +569,8 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
   {
     dgetri_(n, a, lda, ipiv, work, lwork, info);
   }
-  inline void sgetri( const blas_int *n, const float *a,  const blas_int *lda, const blas_int *ipiv,
-  const float* work, const blas_int* lwork, blas_int* info )
+  inline void sgetri( const blas_int *n, const float *a,  const blas_int *lda, const blas_int
+  *ipiv, const float* work, const blas_int* lwork, blas_int* info )
   {
     sgetri_(n, a, lda, ipiv, work, lwork, info);
   }
@@ -607,8 +607,8 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
     dgelqf_(m, n, a, lda, tau, work, lwork, info );
   }
   inline void sgelqf( const blas_int* m, const blas_int* n, float* a,
-                      const blas_int* lda, float* tau, float* work, const blas_int* lwork, blas_int*
-  info )
+                      const blas_int* lda, float* tau, float* work, const blas_int* lwork,
+  blas_int* info )
   {
     sgelqf_(m, n, a, lda, tau, work, lwork, info );
   }
@@ -648,8 +648,8 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
     dgeqrf_(m, n, a, lda, tau, work, lwork, info );
   }
   inline void sgeqrf( const blas_int* m, const blas_int* n, float* a,
-                      const blas_int* lda, float* tau, float* work, const blas_int* lwork, blas_int*
-  info )
+                      const blas_int* lda, float* tau, float* work, const blas_int* lwork,
+  blas_int* info )
   {
     sgeqrf_(m, n, a, lda, tau, work, lwork, info );
   }
@@ -697,15 +697,15 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
   {
     cgeqrf_(m, n, a, lda, tau, work, lwork, info );
   }
-  inline void zungqr( const blas_int* m, const blas_int* n, const blas_int* k, std::complex<double>*
-  a, const blas_int* lda, const std::complex<double>* tau, std::complex<double>* work, const
-  blas_int* lwork, blas_int* info )
+  inline void zungqr( const blas_int* m, const blas_int* n, const blas_int* k,
+  std::complex<double>* a, const blas_int* lda, const std::complex<double>* tau,
+  std::complex<double>* work, const blas_int* lwork, blas_int* info )
   {
     zungqr_(m, n, k, a, lda, tau, work, lwork, info );
   }
-  inline void cungqr( const blas_int* m, const blas_int* n, const blas_int* k, std::complex<float>*
-  a, const blas_int* lda, const std::complex<float>* tau, std::complex<float>* work, const blas_int*
-  lwork, blas_int* info )
+  inline void cungqr( const blas_int* m, const blas_int* n, const blas_int* k,
+  std::complex<float>* a, const blas_int* lda, const std::complex<float>* tau,
+  std::complex<float>* work, const blas_int* lwork, blas_int* info )
   {
     cungqr_(m, n, k, a, lda, tau, work, lwork, info );
   }
@@ -717,16 +717,16 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
     zgerqf_(m, n, a, lda, tau, work, lwork, info );
   }
 
-  inline void zungrq( const blas_int* m, const blas_int* n, const blas_int* k, std::complex<double>*
-  a, const blas_int* lda, const std::complex<double>* tau, std::complex<double>* work, const
-  blas_int* lwork, blas_int* info )
+  inline void zungrq( const blas_int* m, const blas_int* n, const blas_int* k,
+  std::complex<double>* a, const blas_int* lda, const std::complex<double>* tau,
+  std::complex<double>* work, const blas_int* lwork, blas_int* info )
   {
     zungrq_(m, n, k, a, lda, tau, work, lwork, info );
   }
 
-  inline void zgeqp3( const blas_int* m, const blas_int* n, std::complex<double>* a, const blas_int*
-  lda, int* jpvt, std::complex<double>* tau, std::complex<double>* work, int* lwork, double* rwork,
-  blas_int* info ){ zgeqp3_(m, n, a, lda, jpvt, tau, work, lwork,rwork, info);
+  inline void zgeqp3( const blas_int* m, const blas_int* n, std::complex<double>* a, const
+  blas_int* lda, int* jpvt, std::complex<double>* tau, std::complex<double>* work, int* lwork,
+  double* rwork, blas_int* info ){ zgeqp3_(m, n, a, lda, jpvt, tau, work, lwork,rwork, info);
   }
 
   //inline void zgeqpf( const blas_int* m, const blas_int* n, std::complex<double>* a, const
@@ -749,15 +749,15 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
     cgelqf_(m, n, a, lda, tau, work, lwork, info );
   }
 
-  inline void zunglq( const blas_int* m, const blas_int* n, const blas_int* k, std::complex<double>*
-  a, const blas_int* lda, const std::complex<double>* tau, std::complex<double>* work, const
-  blas_int* lwork, blas_int* info )
+  inline void zunglq( const blas_int* m, const blas_int* n, const blas_int* k,
+  std::complex<double>* a, const blas_int* lda, const std::complex<double>* tau,
+  std::complex<double>* work, const blas_int* lwork, blas_int* info )
   {
     zunglq_(m, n, k, a, lda, tau, work, lwork, info );
   }
-  inline void cunglq( const blas_int* m, const blas_int* n, const blas_int* k, std::complex<float>*
-  a, const blas_int* lda, const std::complex<float>* tau, std::complex<float>* work, const blas_int*
-  lwork, blas_int* info )
+  inline void cunglq( const blas_int* m, const blas_int* n, const blas_int* k,
+  std::complex<float>* a, const blas_int* lda, const std::complex<float>* tau,
+  std::complex<float>* work, const blas_int* lwork, blas_int* info )
   {
     cunglq_(m, n, k, a, lda, tau, work, lwork, info );
   }
@@ -768,13 +768,14 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
     zgeqlf_(m, n, a, lda, tau, work, lwork, info );
   }
 
-  inline void zungql( const blas_int* m, const blas_int* n, const blas_int* k, std::complex<double>*
-  a, const blas_int* lda, const std::complex<double>* tau, std::complex<double>* work, const
-  blas_int* lwork, blas_int* info )
+  inline void zungql( const blas_int* m, const blas_int* n, const blas_int* k,
+  std::complex<double>* a, const blas_int* lda, const std::complex<double>* tau,
+  std::complex<double>* work, const blas_int* lwork, blas_int* info )
   {
     zungql_(m, n, k, a, lda, tau, work, lwork, info );
   }
   */
-#endif  // UNI_MKL
+  #endif  // UNI_MKL
 
+#endif
 #endif

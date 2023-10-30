@@ -4,11 +4,11 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "backend/linalg_internal_interface.hpp"
 
 #ifdef BACKEND_TORCH
 #else
 
+  #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;

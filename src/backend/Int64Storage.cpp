@@ -411,7 +411,7 @@ namespace cytnx {
   void Int64Storage::fill(const cytnx_float &val) {
     cytnx_int64 tmp = val;
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_i64(this->Mem, (void *)(&val), this->len);
+      utils_internal::Fill_cpu_i64(this->Mem, (void *)(&tmp), this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));

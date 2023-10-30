@@ -18,9 +18,6 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-#ifdef BACKEND_TORCH
-#else
-
 void bond_binding(py::module &m) {
   py::enum_<bondType>(m, "bondType")
     .value("BD_BRA", bondType::BD_BRA)
@@ -166,5 +163,3 @@ void bond_binding(py::module &m) {
 
     ;  // end of object line
 }
-
-#endif

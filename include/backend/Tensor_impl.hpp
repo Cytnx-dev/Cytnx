@@ -1,21 +1,21 @@
 #ifndef _H_Tensor_impl_
 #define _H_Tensor_impl_
-
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include "backend/Storage.hpp"
-#include "Device.hpp"
-#include "intrusive_ptr_base.hpp"
-#include <iostream>
-#include <fstream>
-#include "utils/vec_range.hpp"
-#include "utils/vec_cast.hpp"
-#include "Accessor.hpp"
-#include <utility>
-#include <vector>
-#include <initializer_list>
-#include <string>
-#include "backend/Scalar.hpp"
+#ifndef BACKEND_TORCH
+  #include "Type.hpp"
+  #include "cytnx_error.hpp"
+  #include "backend/Storage.hpp"
+  #include "Device.hpp"
+  #include "intrusive_ptr_base.hpp"
+  #include <iostream>
+  #include <fstream>
+  #include "utils/vec_range.hpp"
+  #include "utils/vec_cast.hpp"
+  #include "Accessor.hpp"
+  #include <utility>
+  #include <vector>
+  #include <initializer_list>
+  #include <string>
+  #include "backend/Scalar.hpp"
 
 namespace cytnx {
 
@@ -327,4 +327,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
+#endif
 #endif

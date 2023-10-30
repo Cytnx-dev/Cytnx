@@ -188,10 +188,12 @@ namespace cytnx {
         this->_is_diag = true;
 
       } else {
+        this->_is_diag = false;
         std::vector<Bond> bds;
         for (cytnx_uint64 i = 0; i < in_tensor.shape().size(); i++) {
           bds.push_back(Bond(in_tensor.shape()[i]));
         }
+        // std::cout << bds.size() << std::endl;
         this->_bonds = bds;
         this->_block = in_tensor;
         std::vector<cytnx_int64> tmp = vec_range<cytnx_int64>(in_tensor.shape().size());
@@ -628,8 +630,10 @@ namespace cytnx {
     if (this->is_diag()) {
       // if(new_shape.size()!=2){
       this->_block = cytnx::linalg::Diag(this->_block);
+      // std::cout << this->_block << std::endl;
       this->_block.reshape_(new_shape);
-      this->Init_by_Tensor(this->_block, false, rowrank);
+      // std::cout << this->_block << std::endl;
+      this->Init_by_Tensor(this->_block, false, rowrank, this->_name);
       //}else{
       //    cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements
       //    does not match.%s","\n"); cytnx_error_msg(rowrank!=1,"[ERROR] UniTensor with
@@ -637,7 +641,7 @@ namespace cytnx {
       //}
     } else {
       this->_block.reshape_(new_shape);
-      this->Init_by_Tensor(this->_block, false, rowrank);
+      this->Init_by_Tensor(this->_block, false, rowrank, this->_name);
     }
   }
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::reshape(
@@ -1086,7 +1090,8 @@ namespace cytnx {
 
     // trace the block:
     if (this->_is_diag) {
-      cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      this->_block = linalg::Sum(this->_block);
     } else {
       this->_block = this->_block.Trace(ida, idb);
     }
@@ -1134,7 +1139,8 @@ namespace cytnx {
 
     // trace the block:
     if (this->_is_diag) {
-      cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      // cytnx_error_msg(true, "[Error] We need linalg.Sum!%s", "\n");
+      this->_block = linalg::Sum(this->_block);
     } else {
       this->_block = this->_block.Trace(ida, idb);
     }
@@ -1173,11 +1179,11 @@ namespace cytnx {
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
   void DenseUniTensor::_load_dispatch(std::fstream &f) { this->_block._Load(f); }
 
-  void DenseUniTensor::truncate_(const std::string &bond_lbl, const cytnx_uint64 &dim) {
+  void DenseUniTensor::truncate_(const std::string &bond_label, const cytnx_uint64 &dim) {
     // if it is diagonal tensor, truncate will be done on both index!
     cytnx_error_msg(dim < 1, "[ERROR][DenseUniTensor][truncate] dim should be >0.%s", "\n");
     cytnx_uint64 idx;
-    auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_lbl);
+    auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_label);
     cytnx_error_msg(it == this->_labels.end(),
                     "[ERROR][DenseUniTensor][truncate] Error, bond label does not exist in the "
                     "current label list.%s",

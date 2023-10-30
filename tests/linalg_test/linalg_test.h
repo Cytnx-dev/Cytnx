@@ -21,6 +21,12 @@ class linalg_Test : public ::testing::Test {
   Tensor eye3x3cd = eye(3, Type.ComplexDouble);
   Tensor zeros3x3cd = zeros(9, Type.ComplexDouble).reshape(3, 3);
 
+  Tensor invertable3x3cd = arange(1, 10, 1, Type.ComplexDouble).reshape(3, 3);
+
+  UniTensor arange3x3cd_ut = UniTensor(arange3x3cd, false, -1);
+  UniTensor ones3x3cd_ut = UniTensor(ones3x3cd, false, -1);
+  UniTensor invertable3x3cd_ut = UniTensor(invertable3x3cd, false, -1);
+
   std::string data_dir = "../../tests/test_data_base/linalg/";
   // ==================== svd_truncate ===================
   Bond svd_I = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
@@ -60,7 +66,6 @@ class linalg_Test : public ::testing::Test {
  protected:
   void SetUp() override {
     //================ svd truncate =======================
-
     svd_T = svd_T.Load(data_dir + "Svd_truncate/Svd_truncate1.cytnx");
     svd_T.permute_({1, 0, 3, 2});
     svd_T.contiguous_();
@@ -72,6 +77,9 @@ class linalg_Test : public ::testing::Test {
     H.put_block(B, 1);
     H.put_block(C, 2);
     H.set_labels({"a", "b"});
+
+    invertable3x3cd.at({0, 0}) = 2;  // just to make it invertable.
+    invertable3x3cd_ut.at({0, 0}) = 2;  // just to make it invertable.
   }
   void TearDown() override {}
 };

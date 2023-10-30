@@ -11,7 +11,7 @@ namespace cytnx {
   //====================================================
   std::string UniTensorType_class::getname(const int &ut_type) {
     if (ut_type == this->Void) {
-      return std::string("Void (un-initialize UniTensor");
+      return std::string("Void (un-initialize UniTensor)");
     } else if (ut_type == this->Dense) {
       return std::string("Dense");
     } else if (ut_type == this->Sparse) {
@@ -324,7 +324,7 @@ namespace cytnx {
     return nullptr;
   }
 
-  boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const std::string &inx,
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(const std::string &old_label,
                                                                const std::string &new_label) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
                     "\n");

@@ -1,16 +1,16 @@
 #ifndef _H_Scalar_
 #define _H_Scalar_
-
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include "intrusive_ptr_base.hpp"
-#include <vector>
-#include <initializer_list>
-#include <string>
-#include <iostream>
-#include <cmath>
-#include <type_traits>
-#include <limits>
+#ifndef BACKEND_TORCH
+  #include "Type.hpp"
+  #include "cytnx_error.hpp"
+  #include "intrusive_ptr_base.hpp"
+  #include <vector>
+  #include <initializer_list>
+  #include <string>
+  #include <iostream>
+  #include <cmath>
+  #include <type_traits>
+  #include <limits>
 namespace cytnx {
 
   ///@cond
@@ -2203,22 +2203,22 @@ namespace cytnx {
     void iadd(const cytnx_int16 &c) { this->_elem += c; }
     void iadd(const cytnx_bool &c) { this->_elem += c; }
 
-    void isub(const Scalar_base *c) { this->_elem += c->to_cytnx_uint16(); }
+    void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint16(); }
     void isub(const cytnx_complex128 &c) {
       cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
       cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
     }
-    void isub(const cytnx_double &c) { this->_elem += c; }
-    void isub(const cytnx_float &c) { this->_elem += c; }
-    void isub(const cytnx_uint64 &c) { this->_elem += c; }
-    void isub(const cytnx_int64 &c) { this->_elem += c; }
-    void isub(const cytnx_uint32 &c) { this->_elem += c; }
-    void isub(const cytnx_int32 &c) { this->_elem += c; }
-    void isub(const cytnx_uint16 &c) { this->_elem += c; }
-    void isub(const cytnx_int16 &c) { this->_elem += c; }
-    void isub(const cytnx_bool &c) { this->_elem += c; }
+    void isub(const cytnx_double &c) { this->_elem -= c; }
+    void isub(const cytnx_float &c) { this->_elem -= c; }
+    void isub(const cytnx_uint64 &c) { this->_elem -= c; }
+    void isub(const cytnx_int64 &c) { this->_elem -= c; }
+    void isub(const cytnx_uint32 &c) { this->_elem -= c; }
+    void isub(const cytnx_int32 &c) { this->_elem -= c; }
+    void isub(const cytnx_uint16 &c) { this->_elem -= c; }
+    void isub(const cytnx_int16 &c) { this->_elem -= c; }
+    void isub(const cytnx_bool &c) { this->_elem -= c; }
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_uint16(); }
     void imul(const cytnx_complex128 &c) {
@@ -3459,4 +3459,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
+#endif
 #endif

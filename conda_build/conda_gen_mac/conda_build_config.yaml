@@ -1,6 +1,7 @@
 python:
-    - 3.7
-    - 3.8
+    - 3.9
+    - 3.10
+    - 3.11
 pin_run_as_build:
     python: x.x
 # Please consult conda-forge/core before doing this
