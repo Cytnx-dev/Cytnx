@@ -34,6 +34,7 @@ jobs:
 
     - name: Config Conda
       working-directory: ${{github.workspace}}
+      shell: bash -l {0}
       run: |
         echo "Config Conda---------------------------------"
         mamba install anaconda-client boa -c conda-forge
@@ -41,6 +42,7 @@ jobs:
 
     - name: start building
       working-directory: ${{github.workspace}}
+      shell: bash -l {0}
       run: |
         echo "Building begin---------------------------------"
         conda config --set anaconda_upload no
