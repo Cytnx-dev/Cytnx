@@ -37,8 +37,7 @@ jobs:
       shell: bash -l {0}
       run: |
         echo "Config Conda---------------------------------"
-        # mamba install anaconda-client boa -c conda-forge
-        mamba install anaconda-client conda-build -c conda-forge
+        mamba install anaconda-client boa -c conda-forge
 
 
     - name: start building
