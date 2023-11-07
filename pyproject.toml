@@ -1,0 +1,45 @@
+[project]
+name = "cytnx"
+dynamic = ["version"]
+description = "Project Cytnx"
+
+authors = [
+    {name = "Kai-Hsin Wu", email = "kaihsinwu@gmail.com"},
+    {name = "Chang-Teng Lin", email = "jeffry1829@gmail.com"},
+    {name = "Hsu Ke", email = "j9263178@gmail.com"}
+]
+dependencies = []
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "GNU LGPL"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[tool.pdm.version]
+source = "call"
+getter = "pdm_build:get_version"
+
+[tool.pdm.build]
+run-setuptools = true
+package-dir = "cytnx"
+
+[tool.pdm.scripts]
+# run with $pdm run <script_name>, will execuate pre_<script_name> and post_<script_name>
+pre_script = "" # execuate before any hook
+post_script = "" # execuate after any hooks
+pre_cmake = ""
+post_cmake = ""
+cmake = ""
+pre_composite = ""
+post_composite = ""
+composite = {composite = ["test"]}
