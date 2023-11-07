@@ -42,7 +42,10 @@ class CMakeBuild(build_ext):
         build_args = ['--config', cfg]
         cmake_args += ['-DBUILD_PYTHON=ON','-DUSE_CUDA=OFF','-DUSE_MKL=ON','-DUSE_HPTT=ON']
         cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
-        build_args += ['--', '-j$(nproc)']
+
+        import multiprocessing
+        nproc = multiprocessing.cpu_count()
+        build_args += ['--', '-j'+str(nproc)]
 
         env = os.environ.copy()
         env['CXXFLAGS'] = '{} -DVERSION_INFO=\\"{}\\"'.format(env.get('CXXFLAGS', ''),
