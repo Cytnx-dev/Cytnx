@@ -51,7 +51,7 @@ jobs:
         mamba -h
 
         echo "Get Output file names:_________________"
-        OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
+        # OUTPUT_FN=$(conda build conda_build/conda_gen/ --output)
 
         echo "Start building---------------------------------"
         conda mambabuild conda_build/conda_gen/
