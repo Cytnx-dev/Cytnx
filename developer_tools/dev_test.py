@@ -18,7 +18,7 @@ import numpy as np
 
 T = cytnx.random.normal([4,4], mean=0., std=1.)
 print(T)
-import time
-time.sleep(2)
+# import time
+# time.sleep(2)
 T2 = cytnx.random.normal([4,4], mean=0., std=1.)
 print(T2)
