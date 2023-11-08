@@ -22,7 +22,7 @@ jobs:
       with:
         # Specify python version your environment will have. Remember to quote this, or
         # YAML will think you want python 3.1 not 3.10
-        python-version: "3.11"
+        python-version: "3.10"
         # This uses *miniforge*, rather than *minicond*. The primary difference is that
         # the defaults channel is not enabled at all
         miniforge-version: latest
@@ -33,6 +33,7 @@ jobs:
 
     - name: Config Conda
       working-directory: ${{github.workspace}}
+      shell: bash -l {0}
       run: |
         echo "Config Conda---------------------------------"
         mamba install anaconda-client boa -c conda-forge
@@ -40,14 +41,16 @@ jobs:
 
     - name: start building
       working-directory: ${{github.workspace}}
+      shell: bash -l {0}
       run: |
         echo "Building begin---------------------------------"
         conda config --set anaconda_upload no
 
         # these are infos used to check environ
-        mamba info -a
+        #mamba init
         mamba list
-        mamba -h
+
+        #anaconda -h
 
         echo "Get Output file names:_________________"
         OUTPUT_FN=$(conda build conda_build/conda_gen_mac/ --output)
@@ -58,7 +61,7 @@ jobs:
         echo "Upload build---------------------------------"
         echo $OUTPUT_FN
 
-        anaconda upload -t $TOKEN -u kaihsinwu $OUTPUT_FN --force
+        anaconda -t $TOKEN upload -u kaihsinwu $OUTPUT_FN --force
 
       env:
         TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}

@@ -17,46 +17,11 @@ See The following user guide for install and using of cytnx:
     Implementation of new data structure for symmetric UniTensor, which different from previous version
 
 
-## Current dev Version:
-    v0.9.3
-
-    v0.9.2
-    1. [Change] Remove all deprecated APIs and old SparseUniTensor data structure
-    2. [Fix] Bugs when batch_matmul when no MKL
-    3. [Update] Update examples to match new APIs
-    4. [New] add labels options when creating UniTensor from Tensor.
-    5. [New] change MKL to mkl_rt instead of fixed interface ilp64/lp64
-
-
-    v0.9.1
-
-    1. [New] Add additional argument share_mem for Tensor.numpy() python API.
-    2. [Fix] UniTensor.at() python API not properly wrapped.
-    3. [Fix] Bug in testing for BlockUniTensor.
-    4. [Fix] Bug in UniTensor print info (duplicate name, is_diag=true BlockUniTensor dimension display)
-    5. [Change] Svd now using gesdd instead of gesvd.
-    6. [New] Add linalg.Gesvd function, along with Gesvd_truncate.
-    7. [Fix] Strict casting rule cause compiling fail when compile with icpc
-    8. [New] Add additional argument for Network.PutUniTensor to match the label.
-    9. [Fix] Network TOUT string lbl bug
-    10. [Fix] #156 storage python wrapper cause not return.
-    11. [Add] linalg.Gemm/Gemm_()
-    12. [Add] UniTensor.normalize()/normalize_()
-
-    v0.9
-
-    1. [New] New Network file format (removing the rowrank requirement
-    2. [New] label can now be string, instead of integer.
-    3. [New] UniTensor with symmetry are now faster.
-
-
-
-
 
 
 ## API Documentation:
 
-[https://kaihsin.github.io/Cytnx/docs/html/index.html](https://kaihsin.github.io/Cytnx/docs/html/index.html)
+[https://kaihsinwu.gitlab.io/cytnx_api/](https://kaihsinwu.gitlab.io/cytnx_api/)
 
 ## User Guide [under construction!]:
 

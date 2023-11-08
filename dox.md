@@ -1,11 +1,5 @@
 # Cytnx
 
-## Current Version:
-    [v0.9.1](https://github.com/kaihsin/Cytnx/tree/v0.9.1)
-
-
-
-
 ## Feature:
 
 ### Python x C++

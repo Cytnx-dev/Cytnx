@@ -11,7 +11,7 @@ else:
 
     #1) check if numpy is previous imported, if it is, pop warning:
     if ('numpy' in sys.modules) or ('scipy' in sys.modules):
-        raise ValueError("[ERROR] please import cytnx first before import numpy and/or scipy!")
+        raise Warning("numpy and/or scipy are imported before cytnx. Please make sure it support ILP64.")
 
 
     ## [NOTE!!] These part has to execute first before import numpy!
