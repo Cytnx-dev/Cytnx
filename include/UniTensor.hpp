@@ -4137,6 +4137,51 @@ namespace cytnx {
     }
 
     /**
+    @brief Generate a identity UniTensor.
+    @param[in] dim the dimension of the diagnal.
+    @param[in] in_labels the labels of the UniTensor.
+    @param[in] is_diag determine if the UniTensor is diagonal or not. Default is false.
+    @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
+    @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
+    @param[in] name the name of the UniTensor.
+    @return
+        [UniTensor]
+    @note 2-bond if not diagonal. 1-bond if diagonal.
+    */
+    static UniTensor identity(const cytnx_uint64 &dim,
+                              const std::vector<std::string> &in_labels = {},
+                              const cytnx_bool &is_diag = false,
+                              const unsigned int &dtype = Type.Double,
+                              const int &device = Device.cpu, const std::string &name = "") {
+      if (is_diag) {
+        return UniTensor(cytnx::ones(dim, dtype, device), is_diag, -1, in_labels, name);
+      } else {
+        return UniTensor(cytnx::identity(dim, dtype, device), is_diag, -1, in_labels, name);
+      }
+    }
+
+    /**
+    @brief Generate a 2-bond identity UniTensor
+    @param[in] dim the dimension of the diagnal.
+    @param[in] in_labels the labels of the UniTensor.
+    @param[in] is_diag determine if the UniTensor is diagonal or not. Default is false.
+    @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
+    @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
+    @param[in] name the name of the UniTensor.
+    @return
+        [UniTensor]
+    @note 2-bond if not diagonal. 1-bond if diagonal.
+    @see identity(Nelem, in_labels, is_diag, dtype, device, name)
+    Note:
+      This function is a alias of cytnx::UniTensor::identity().
+    */
+    static UniTensor eye(const cytnx_uint64 &dim, const std::vector<std::string> &in_labels = {},
+                         const cytnx_bool &is_diag = false, const unsigned int &dtype = Type.Double,
+                         const int &device = Device.cpu, const std::string &name = "") {
+      return identity(dim, in_labels, is_diag, dtype, device, name);
+    }
+
+    /**
     @brief Generate a UniTensor with all elements set to one.
     @param[in] shape the shape of the UniTensor.
     @param[in] in_labels the labels of the UniTensor.

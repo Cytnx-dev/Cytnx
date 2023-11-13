@@ -184,11 +184,11 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF "
 #-----------------------------------
 
 echo ${FLAG}
-rm -rf build
+# rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
-make -j4
+make -j${nproc}
 make install
 ctest
-gcovr -r ../ . --html-details cov.html
+# gcovr -r ../ . --html-details cov.html

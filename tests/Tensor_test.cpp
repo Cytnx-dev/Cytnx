@@ -291,6 +291,67 @@ TEST_F(TensorTest, set) {
           }
 }
 
+TEST_F(TensorTest, identity) {
+  Tensor tn = cytnx::identity(2, Type.Double, Device.cpu);
+  EXPECT_EQ(tn.shape().size(), 2);
+  EXPECT_EQ(tn.shape()[0], 2);
+  EXPECT_EQ(tn.shape()[1], 2);
+  EXPECT_EQ(tn.is_contiguous(), true);
+  EXPECT_EQ(tn.dtype(), Type.Double);
+  EXPECT_EQ(tn.device(), Device.cpu);
+  EXPECT_DOUBLE_EQ((double)tn(0, 0).item().real(), 1);
+  EXPECT_DOUBLE_EQ((double)tn(1, 1).item().real(), 1);
+  EXPECT_DOUBLE_EQ((double)tn(0, 1).item().real(), 0);
+  EXPECT_DOUBLE_EQ((double)tn(1, 0).item().real(), 0);
+
+  tn = cytnx::identity(3, Type.Double, Device.cpu);
+  EXPECT_EQ(tn.shape().size(), 2);
+  EXPECT_EQ(tn.shape()[0], 3);
+  EXPECT_EQ(tn.shape()[1], 3);
+  EXPECT_EQ(tn.is_contiguous(), true);
+  EXPECT_EQ(tn.dtype(), Type.Double);
+  EXPECT_EQ(tn.device(), Device.cpu);
+  EXPECT_DOUBLE_EQ(tn.at<double>({0, 0}), 1);
+  EXPECT_DOUBLE_EQ(tn.at<double>({1, 1}), 1);
+  EXPECT_DOUBLE_EQ(tn.at<double>({0, 1}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({1, 0}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({2, 0}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({2, 1}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({0, 2}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({1, 2}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({2, 2}), 1);
+}
+
+TEST_F(TensorTest, eye) {
+  Tensor tn = cytnx::eye(2, Type.Double, Device.cpu);
+  EXPECT_EQ(tn.shape().size(), 2);
+  EXPECT_EQ(tn.shape()[0], 2);
+  EXPECT_EQ(tn.shape()[1], 2);
+  EXPECT_EQ(tn.is_contiguous(), true);
+  EXPECT_EQ(tn.dtype(), Type.Double);
+  EXPECT_EQ(tn.device(), Device.cpu);
+  EXPECT_DOUBLE_EQ((double)tn(0, 0).item().real(), 1);
+  EXPECT_DOUBLE_EQ((double)tn(1, 1).item().real(), 1);
+  EXPECT_DOUBLE_EQ((double)tn(0, 1).item().real(), 0);
+  EXPECT_DOUBLE_EQ((double)tn(1, 0).item().real(), 0);
+
+  tn = cytnx::eye(3, Type.Double, Device.cpu);
+  EXPECT_EQ(tn.shape().size(), 2);
+  EXPECT_EQ(tn.shape()[0], 3);
+  EXPECT_EQ(tn.shape()[1], 3);
+  EXPECT_EQ(tn.is_contiguous(), true);
+  EXPECT_EQ(tn.dtype(), Type.Double);
+  EXPECT_EQ(tn.device(), Device.cpu);
+  EXPECT_DOUBLE_EQ(tn.at<double>({0, 0}), 1);
+  EXPECT_DOUBLE_EQ(tn.at<double>({1, 1}), 1);
+  EXPECT_DOUBLE_EQ(tn.at<double>({0, 1}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({1, 0}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({2, 0}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({2, 1}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({0, 2}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({1, 2}), 0);
+  EXPECT_DOUBLE_EQ(tn.at<double>({2, 2}), 1);
+}
 // TEST_F(TensorTest, approx_eq) {
 //   cytnx::User_debug = true;
 //   EXPECT_TRUE(tar3456.approx_eq(tar3456));
