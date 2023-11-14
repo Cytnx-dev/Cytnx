@@ -901,6 +901,9 @@ namespace cytnx {
     //===============
     cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt) {
       UniTensor out = Lt.clone();
+      if (Lt.dtype() > Rt.dtype()) {
+        out = out.astype(Rt.dtype());
+      }
       out.set_labels(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
@@ -915,6 +918,9 @@ namespace cytnx {
       // unitensor.%s","\n");
 
       UniTensor out = Rt.clone();
+      if (Scalar(lc).dtype() < Rt.dtype()) {
+        out = out.astype(Scalar(lc).dtype());
+      }
       // out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
       out.set_name("");
 
@@ -943,6 +949,9 @@ namespace cytnx {
       // unitensor.%s","\n");
 
       UniTensor out = Lt.clone();
+      if (Lt.dtype() > Scalar(rc).dtype()) {
+        out = out.astype(Scalar(rc).dtype());
+      }
       // out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
       out.set_name("");
 
