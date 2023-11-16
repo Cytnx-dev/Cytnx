@@ -328,7 +328,7 @@ namespace cytnx {
         _Eig_Block_UT(outCyT, Tin, is_V, row_v);
       } else {
         cytnx_error_msg(true,
-                        "[ERROR] Eig, unsupported type of UniTensor only support (Dense). "
+                        "[ERROR] Eig, unsupported type of UniTensor only support (Dense, Block). "
                         "something wrong internal%s",
                         "\n");
       }  // ut type
