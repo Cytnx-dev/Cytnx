@@ -240,8 +240,8 @@ namespace cytnx {
         // BTen is the big block!!
         cytnx_uint64 Cblk_dim = Tlist.size() / Rblk_dim;
         Tensor BTen = algo::_fx_Matric_combine(Tlist, Rblk_dim, Cblk_dim);
-        std::cout << BTen;
-        // Now we can perform linalg!
+        // std::cout << BTen;
+        //  Now we can perform linalg!
         aux_qnums.push_back(x.first);
         auto out = linalg::Eig(BTen, is_V, row_v);
         aux_degs.push_back(out[0].shape()[0]);
