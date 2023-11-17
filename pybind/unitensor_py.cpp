@@ -1317,11 +1317,12 @@ void unitensor_binding(py::module &m) {
                 },
 				py::arg("low"), py::arg("high"), py::arg("seed")= std::random_device()())
 
-    .def("cfrom", [](UniTensor &self, const UniTensor &in, const bool &force){
-                        self.convert_from(in,force);
-                    },
-                py::arg("Tin"), py::arg("force") = false)
-  ;//end of object line
+     .def("cfrom", [](UniTensor &self, const UniTensor &in, const bool &force){
+                         self.convert_from(in,force);
+                         },
+                    py::arg("Tin"), py::arg("force") = false)
+     .def("get_qindices",  [](UniTensor &self, const cytnx_uint64 &bidx){return self.get_qindices(bidx);});
+  ;  // end of object line
 
   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
         py::arg("cacheR") = false);
