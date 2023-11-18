@@ -1262,60 +1262,84 @@ void unitensor_binding(py::module &m) {
                    py::arg("name") = std::string(""))
      .def_static("normal", [](const cytnx_uint64 &Nelem, const double &mean, const double &std,
                               const std::vector<std::string> &in_labels,
-                              const unsigned int &seed, const unsigned int &dtype,
+                              int64_t &seed, const unsigned int &dtype,
 							  const int &device, const std::string &name)
                 {
+                    if(seed==-1){
+                         // If user doesn't specify seed argument
+                         seed = cytnx::random::__static_random_device();
+                    }
                   return UniTensor::normal(Nelem, mean, std, in_labels, seed, dtype, device, name);
                 },
 				py::arg("Nelem"), py::arg("mean"), py::arg("std"),
-				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= -1,
 				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
                 py::arg("name") = std::string(""))
      .def_static("normal", [](const std::vector<cytnx_uint64> &shape, const double &mean, const double &std,
                               const std::vector<std::string> &in_labels,
-                              const unsigned int &seed, const unsigned int &dtype,
+                              int64_t &seed, const unsigned int &dtype,
 							  const int &device, const std::string &name)
                 {
+                    if(seed==-1){
+                         // If user doesn't specify seed argument
+                         seed = cytnx::random::__static_random_device();
+                    }
                   return UniTensor::normal(shape, mean, std, in_labels, seed, dtype, device, name);
                 },
 				py::arg("shape"), py::arg("mean"), py::arg("std"),
-				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= -1,
 				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
                 py::arg("name") = std::string(""))
      .def_static("uniform", [](const cytnx_uint64 &Nelem, const double &low, const double &high,
                               const std::vector<std::string> &in_labels,
-                              const unsigned int &seed, const unsigned int &dtype,
+                              int64_t &seed, const unsigned int &dtype,
 							  const int &device, const std::string &name)
                 {
+                    if(seed==-1){
+                         // If user doesn't specify seed argument
+                         seed = cytnx::random::__static_random_device();
+                    }
                   return UniTensor::uniform(Nelem, low, high, in_labels, seed, dtype, device, name);
                 },
 				py::arg("Nelem"), py::arg("low"), py::arg("high"),
-				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= -1,
 				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
                 py::arg("name") = std::string(""))
      .def_static("uniform", [](const std::vector<cytnx_uint64> &shape, const double &low, const double &high,
                               const std::vector<std::string> &in_labels,
-                              const unsigned int &seed, const unsigned int &dtype,
+                              int64_t &seed, const unsigned int &dtype,
 							  const int &device, const std::string &name)
                 {
+                    if(seed==-1){
+                         // If user doesn't specify seed argument
+                         seed = cytnx::random::__static_random_device();
+                    }
                   return UniTensor::uniform(shape, low, high, in_labels, seed, dtype, device, name);
                 },
 				py::arg("shape"), py::arg("low"), py::arg("high"),
-				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= std::random_device()(),
+				py::arg("in_labels")=std::vector<std::string>(), py::arg("seed")= -1,
 				py::arg("dtype") = (unsigned int)Type.Double, py::arg("device") = int(Device.cpu),
                 py::arg("name") = std::string(""))
      .def("normal_", [](UniTensor &self, const double &mean, const double &std,
-					    const unsigned int &seed)
+					    int64_t &seed)
                 {
+                    if(seed==-1){
+                         // If user doesn't specify seed argument
+                         seed = cytnx::random::__static_random_device();
+                    }
                   self.normal_(mean, std, seed);
                 },
-				py::arg("mean"), py::arg("std"), py::arg("seed")= std::random_device()())
+				py::arg("mean"), py::arg("std"), py::arg("seed")= -1)
      .def("uniform_", [](UniTensor &self, const double &low, const double &high,
-					     const unsigned int &seed)
+					     int64_t &seed)
                 {
+                    if(seed==-1){
+                         // If user doesn't specify seed argument
+                         seed = cytnx::random::__static_random_device();
+                    }
                   self.uniform_(low, high, seed);
                 },
-				py::arg("low"), py::arg("high"), py::arg("seed")= std::random_device()())
+				py::arg("low"), py::arg("high"), py::arg("seed")= -1)
 
     .def("cfrom", [](UniTensor &self, const UniTensor &in, const bool &force){
                         self.convert_from(in,force);

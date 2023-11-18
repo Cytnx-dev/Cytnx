@@ -955,8 +955,8 @@ namespace cytnx {
         for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
           oldshapeC.push_back(tmp->_blocks[a].shape());
         }
-        std::vector<cytnx_uint64> mapperL, inv_mapperL(this->_blocks[0].shape().size());
-        std::vector<cytnx_uint64> mapperR, inv_mapperR(Rtn->_blocks[0].shape().size());
+        std::vector<cytnx_uint64> mapperL, inv_mapperL(this->rank());
+        std::vector<cytnx_uint64> mapperR, inv_mapperR(rhs->rank());
         vec_concatenate_(mapperL, non_comm_idx1, comm_idx1);
         vec_concatenate_(mapperR, comm_idx2, non_comm_idx2);
         for (int aa = 0; aa < mapperL.size(); aa++) {
