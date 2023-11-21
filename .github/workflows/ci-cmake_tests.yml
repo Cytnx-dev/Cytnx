@@ -53,7 +53,7 @@ jobs:
     - name: Run CTest
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-junit junit.xml
+      run: GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
 
     - name: Run gcovr
       shell: bash -l {0}
