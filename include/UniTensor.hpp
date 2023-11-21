@@ -25,6 +25,10 @@
 
 // namespace cytnx{
 namespace cytnx {
+  namespace random {
+    extern std::random_device __static_random_device;
+  }
+
   using namespace cytnx;
   /// @cond
   class UniTensorType_class {
@@ -4292,7 +4296,7 @@ namespace cytnx {
     */
     static UniTensor normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
                             const std::vector<std::string> &in_labels = {},
-                            const unsigned int &seed = std::random_device()(),
+                            const unsigned int &seed = cytnx::random::__static_random_device(),
                             const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
                             const std::string &name = "");
 
@@ -4316,7 +4320,7 @@ namespace cytnx {
     */
     static UniTensor normal(const std::vector<cytnx_uint64> &shape, const double &mean,
                             const double &std, const std::vector<std::string> &in_labels = {},
-                            const unsigned int &seed = std::random_device()(),
+                            const unsigned int &seed = cytnx::random::__static_random_device(),
                             const unsigned int &dtype = Type.Double, const int &device = Device.cpu,
                             const std::string &name = "");
 
@@ -4340,7 +4344,7 @@ namespace cytnx {
     */
     static UniTensor uniform(const cytnx_uint64 &Nelem, const double &low, const double &high,
                              const std::vector<std::string> &in_labels = {},
-                             const unsigned int &seed = std::random_device()(),
+                             const unsigned int &seed = cytnx::random::__static_random_device(),
                              const unsigned int &dtype = Type.Double,
                              const int &device = Device.cpu, const std::string &name = "");
 
@@ -4383,7 +4387,7 @@ namespace cytnx {
     */
     static UniTensor uniform(const std::vector<cytnx_uint64> &shape, const double &low,
                              const double &high, const std::vector<std::string> &in_labels = {},
-                             const unsigned int &seed = std::random_device()(),
+                             const unsigned int &seed = cytnx::random::__static_random_device(),
                              const unsigned int &dtype = Type.Double,
                              const int &device = Device.cpu, const std::string &name = "");
 
@@ -4401,7 +4405,7 @@ namespace cytnx {
      &seed)
     */
     void normal_(const double &mean, const double &std,
-                 const unsigned int &seed = std::random_device()());
+                 const unsigned int &seed = cytnx::random::__static_random_device());
 
     /**
       @brief Generate a UniTensor with all elements are random numbers sampled from a uniform
@@ -4416,7 +4420,7 @@ namespace cytnx {
       &seed)
      */
     void uniform_(const double &low = 0, const double &high = 1,
-                  const unsigned int &seed = std::random_device()());
+                  const unsigned int &seed = cytnx::random::__static_random_device());
 
   };  // class UniTensor
 
