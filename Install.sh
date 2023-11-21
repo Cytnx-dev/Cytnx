@@ -188,7 +188,7 @@ echo ${FLAG}
 mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
-make -j${nproc}
+make -j4#${nproc}
 make install
 ctest
 # gcovr -r ../ . --html-details cov.html
