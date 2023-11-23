@@ -14,7 +14,7 @@ See The following user guide for install and using of cytnx:
 ## News
     [v0.9.x]
 
-    Implementation of new data structure for symmetric UniTensor, which different from previous version
+    Implementation of new data structure for symmetric UniTensor, which differs from previous versions
 
 
 
@@ -32,29 +32,29 @@ See The following user guide for install and using of cytnx:
 ## Objects:
     * Storage   [binded]
     * Tensor    [binded]
-    * Accessor  [c++ only]
+    * Accessor  [C++ only]
     * Bond      [binded]
     * Symmetry  [binded]
-    * CyTensor [binded]
+    * CyTensor	[binded]
     * Network   [binded]
 
 ## Feature:
 
 ### Python x C++
     Benefit from both side.
-    One can do simple prototype on python side
+    One can do simple prototype on Python side
     and easy transfer to C++ with small effort!
 
 
 ```c++
-    // c++ version:
+    // C++ version:
     #include "cytnx.hpp"
     cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)
 ```
 
 
 ```python
-    # python version:
+    # Python version:
     import cytnx
     A =  cytnx.Tensor((3,4,5),dtype=cytnx.Type.Double,device=cytnx.Device.cpu)
 ```
