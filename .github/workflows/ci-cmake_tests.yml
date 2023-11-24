@@ -34,7 +34,7 @@ jobs:
     - name: Install dependencies
       shell: bash -l {0}
       run: |
-        mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
+        mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl=2023.1.0 mkl-include=2023.1.0 mkl-service=2.4.0 pybind11 libblas=*=*mkl
         mamba install gcovr gtest
 
     - name: CPU info
