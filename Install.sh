@@ -1,10 +1,10 @@
 #=========================================================
-## 1) Custom install destination (DEFAULT /use/local/cytnx)
+## 1) Custom install destination (DEFAULT /usr/local/cytnx)
 #=========================================================
 ## [Note] uncomments the following lines and
 ##        Set the desntination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="$HOME/Cytnx_lib"
+Ins_dest="/usr/local/cytnx"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
