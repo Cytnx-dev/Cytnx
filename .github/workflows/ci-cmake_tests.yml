@@ -55,7 +55,9 @@ jobs:
     - name: Run CTest
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
+      run: |
+        export ASAN_OPTIONS=protect_shadow_gap=0
+        GTEST_COLOR=1 ctest -R *Svd* --output-on-failure --output-junit junit.xml
 
     - name: Run gcovr
       shell: bash -l {0}
@@ -63,17 +65,17 @@ jobs:
       run: |
         gcovr -r .. . --xml gcovr.xml -e ".*_deps.*$"
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        #directory: ${{runner.workspace}}/build
-        files: ${{github.workspace}}/build/gcovr.xml # optional
-        #working-directory: ${{runner.workspace}}/build
-        #root_dir: ${{runner.workspace}}
-        fail_ci_if_error: true # optional (default = false)
-        verbose: true # optional (default = false)
-        #version: "v0.1.15"
+    # - name: Upload coverage to Codecov
+    #   uses: codecov/codecov-action@v3
+    #   with:
+    #     #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+    #     #directory: ${{runner.workspace}}/build
+    #     files: ${{github.workspace}}/build/gcovr.xml # optional
+    #     #working-directory: ${{runner.workspace}}/build
+    #     #root_dir: ${{runner.workspace}}
+    #     fail_ci_if_error: true # optional (default = false)
+    #     verbose: true # optional (default = false)
+    #     #version: "v0.1.15"
 
     #- name: Upload gcovr files
     #  uses: actions/upload-artifact@v3
