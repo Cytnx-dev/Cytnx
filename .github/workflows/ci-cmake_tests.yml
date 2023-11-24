@@ -57,7 +57,7 @@ jobs:
       working-directory: ${{github.workspace}}/build
       run: |
         export ASAN_OPTIONS=protect_shadow_gap=0
-        GTEST_COLOR=1 ctest -R *Svd* --output-on-failure --output-junit junit.xml
+        GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
 
     - name: Run gcovr
       shell: bash -l {0}
