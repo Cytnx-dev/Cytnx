@@ -971,6 +971,7 @@ namespace cytnx {
             cytnx_int64 comm_dim = 1;
             itoiR_idx = mp[itoiL_common[a]];
             for (cytnx_uint64 b : itoiR_idx) {
+              cout << "In here" << endl;
               Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
               for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
                 Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];

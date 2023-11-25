@@ -78,9 +78,11 @@ namespace cytnx {
       blas_int blsMl = Ml, blsNr = Nr;
       blas_int blsONE = 1;
       if (diag_L) {
+        std::cout << "diag_L" << std::endl;
         for (cytnx_int64 i = 0; i < Ml; i++)
           daxpy(&blsNr, &_inl[i], &_inr[i * Nr], &blsONE, &_out[i * Nr], &blsONE);
       } else {
+        std::cout << "diag_R" << std::endl;
         Matmul_dg_diagR_driver(_out, _inl, _inr, Ml, Comm, Nr);
       }
     }
