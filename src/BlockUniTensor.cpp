@@ -982,6 +982,7 @@ namespace cytnx {
                   Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
               }
               cytnx_int64 targ_b = mpC[Lgbuffer];
+              cout << "before Tensordot_dg" << endl;
               tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
                                                            comm_idx1, comm_idx2, this->is_diag());
             }

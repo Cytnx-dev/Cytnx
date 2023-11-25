@@ -31,6 +31,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> mapperL, mapperR, non_contract_l, non_contract_r;
       std::vector<cytnx_uint64> Tlshape, Trshape;
       if (diag_L) {
+        std::cout << "in Tensordot_dg diag_L 1" << std::endl;
         cytnx_error_msg(Tl.shape().size() != 1,
                         "[ERROR] diag_L=true requires Tl to be rank-1 tensor.%s", "\n");
         if (idxl.size() != 1) {
@@ -44,6 +45,7 @@ namespace cytnx {
         Trshape = Tr.shape();
 
       } else {
+        std::cout << "in Tensordot_dg diag_R 1" << std::endl;
         cytnx_error_msg(Tr.shape().size() != 1,
                         "[ERROR] diag_L=false requires Tr to be rank-1 tensor.%s", "\n");
         if (idxr.size() != 1) {
@@ -87,6 +89,7 @@ namespace cytnx {
       if (diag_L) {
         // Both bonds of Diag will be contracted.
         if (idxl.size() == 2) {
+          std::cout << "in Tensordot_dg diag_L 2 idxlsize==2" << std::endl;
           tmpL = Tl;
           tmpR = Tr.permute(mapperR).reshape({static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
           tmpout = Matmul_dg(tmpL, tmpR);
@@ -94,12 +97,14 @@ namespace cytnx {
                            static_cast<cytnx_int64>(Tlshape[idxl[1]]), -1});
           out = Trace(tmpout, 0, 1);
         } else {
+          std::cout << "in Tensordot_dg diag_L 2 idxlsize!=2" << std::endl;
           tmpL = Tl;
           tmpR = Tr.permute(mapperR).reshape({comm_dim, -1});
           out = Matmul_dg(tmpL, tmpR);
         }
       } else {
         if (idxr.size() == 2) {
+          std::cout << "in Tensordot_dg diag_R 2 idxlsize==2" << std::endl;
           tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
           tmpR = Tr;
           tmpout = Matmul_dg(tmpL, tmpR);
@@ -107,6 +112,7 @@ namespace cytnx {
                            static_cast<cytnx_int64>(Tlshape[idxl[0]])});
           out = Trace(tmpout, 1, 2);
         } else {
+          std::cout << "in Tensordot_dg diag_R 2 idxlsize!=2" << std::endl;
           tmpL = Tl.permute(mapperL).reshape({-1, comm_dim});
           tmpR = Tr;
           out = Matmul_dg(tmpL, tmpR);

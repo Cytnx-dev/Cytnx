@@ -35,6 +35,7 @@ namespace cytnx {
       else
         diag_L = 0;
 
+      std::cout << "inside Matmul_dg" << std::endl;
       // check type:
       Tensor _tl = Tl.contiguous(), _tr = Tr.contiguous();
       Tensor out;
@@ -53,6 +54,7 @@ namespace cytnx {
       // out.storage().set_zeros();
 
       if (Tl.device() == Device.cpu) {
+        std::cout << "before Matmul_dg internal call" << std::endl;
         cytnx::linalg_internal::lii.Matmul_dg_ii[_tl.dtype()](
           out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
           _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
