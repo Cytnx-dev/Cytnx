@@ -987,6 +987,7 @@ namespace cytnx {
                                                            comm_idx1, comm_idx2, this->is_diag());
             }
           }
+          cout << "After ALL Tensordot_dg" << endl;
         } else {
           std::vector<char> transs(Rtn->_blocks.size(), 'N');
           std::vector<blas_int> ms(Rtn->_blocks.size(), 0), ns(Rtn->_blocks.size(), 0),
@@ -1188,8 +1189,9 @@ namespace cytnx {
           // }
         }
   #endif
-
+        cout << "Before out(tmp)" << endl;
         boost::intrusive_ptr<UniTensor_base> out(tmp);
+        cout << "After out(tmp)" << endl;
         return out;
 
       }  // does it contract all the bond?
