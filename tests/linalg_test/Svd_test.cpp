@@ -306,14 +306,18 @@ namespace SvdTest {
     const UniTensor& S = Tout[0];
     const UniTensor& U = Tout[1];
     const UniTensor& V = Tout[2];
+    std::cout << "Before recompose" << std::endl;
     UniTensor ReCompose = Contract(U, S);
     ReCompose = Contract(ReCompose, V);
+    std::cout << "After recompose" << std::endl;
     const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
     auto T_float = Tin.clone();
     if (Tin.dtype() > Type.Float) {
       T_float = Tin.astype(Type.Double);
     }
+    std::cout << "Before AreNearlyEqUniTensor" << std::endl;
     bool is_eq = AreNearlyEqUniTensor(T_float, ReCompose, tol);
+    std::cout << "After AreNearlyEqUniTensor" << std::endl;
     return is_eq;
   }
 
