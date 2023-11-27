@@ -711,6 +711,7 @@ namespace cytnx {
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contract(
     const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
     const bool &mv_elem_rhs) {
+    cout << "inside contract" << endl;
     // checking type
     cytnx_error_msg(
       rhs->uten_type() != UTenType.Block,
@@ -726,6 +727,7 @@ namespace cytnx {
     vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
 
     if (comm_idx1.size() == 0) {
+      cout << "inside comm_idx1.size() == 0" << endl;
       // output instance;
       BlockUniTensor *tmp = new BlockUniTensor();
       BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
@@ -799,6 +801,7 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(tmp);
       return out;
     } else {
+      cout << "inside comm_idx1.size() != 0" << endl;
       // first, get common index!
 
       // check qnums & type:
@@ -822,6 +825,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(vec_range(rhs->rank()), comm_idx2);
 
       if ((non_comm_idx1.size() == 0) && (non_comm_idx2.size() == 0)) {
+        cout << "inside (non_comm_idx1.size() == 0) && (non_comm_idx2.size() == 0)" << endl;
         std::vector<cytnx_int64> _shadow_comm_idx1(comm_idx1.size()),
           _shadow_comm_idx2(comm_idx2.size());
         memcpy(_shadow_comm_idx1.data(), comm_idx1.data(), sizeof(cytnx_int64) * comm_idx1.size());
@@ -888,11 +892,19 @@ namespace cytnx {
         return out;
 
       } else {
+        cout << "inside ELSE (non_comm_idx1.size() == 0) && (non_comm_idx2.size() == 0)" << endl;
         BlockUniTensor *tmp = new BlockUniTensor();
         BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
         std::vector<string> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
+        cout << "this->labels(), rhs->labels()" << endl;
+        vec_print(cout, this->labels());
+        vec_print(cout, rhs->labels());
+        cout << "out_labels, out_bonds, out_rowrank" << endl;
+        vec_print(cout, out_labels);
+        vec_print(cout, out_bonds);
+        cout << out_rowrank << endl;
 
         // these two cannot omp parallel, due to intrusive_ptr
         for (cytnx_uint64 i = 0; i < non_comm_idx1.size(); i++)
@@ -909,6 +921,7 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++)
           if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
 
+        cout << "before Initialize" << endl;
   #ifdef UNI_MKL
         // Initialize!!
         if ((this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
@@ -923,6 +936,7 @@ namespace cytnx {
         tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, false);
   #endif
 
+        cout << "after Initialize" << endl;
         // now, build the itoi table:
         std::vector<std::vector<cytnx_uint64>> itoiL_common(this->_blocks.size()),
           itoiR_common(Rtn->_blocks.size());
@@ -931,6 +945,7 @@ namespace cytnx {
           itoiL_common[a] = vec_clone(this->_inner_to_outer_idx[a], comm_idx1);
         }
 
+        cout << "before mp, mpC" << endl;
         boost::unordered_map<std::vector<cytnx_uint64>, std::vector<cytnx_uint64>> mp;
         boost::unordered_map<std::vector<cytnx_uint64>, cytnx_uint64> mpC;
 
@@ -945,6 +960,9 @@ namespace cytnx {
           mpC[tmp->_inner_to_outer_idx[b]] = b;
         }
 
+        cout << "after mp, mpC" << endl;
+
+        cout << "before some pre-" << endl;
         std::vector<cytnx_uint64> Lgbuffer;
         std::vector<cytnx_uint64> itoiR_idx;
         std::vector<cytnx_uint64> oldshapeL;
@@ -966,12 +984,13 @@ namespace cytnx {
           inv_mapperR[mapperR[aa]] = aa;
         }
 
+        cout << "after some pre-" << endl;
         if (this->is_diag() != Rtn->is_diag()) {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
             itoiR_idx = mp[itoiL_common[a]];
             for (cytnx_uint64 b : itoiR_idx) {
-              cout << "In here" << endl;
+              cout << "In this->is_diag() != Rtn->is_diag()" << endl;
               Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
               for (cytnx_uint64 cc = 0; cc < non_comm_idx1.size(); cc++) {
                 Lgbuffer[cc] = this->_inner_to_outer_idx[a][non_comm_idx1[cc]];
@@ -985,10 +1004,16 @@ namespace cytnx {
               cout << "before Tensordot_dg" << endl;
               tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
                                                            comm_idx1, comm_idx2, this->is_diag());
+              cout << "after Tensordot_dg" << endl;
             }
           }
           cout << "After ALL Tensordot_dg" << endl;
+          cout << "tmp = " << tmp << endl;
+          cout << "tmp->_blocks.size() = " << tmp->_blocks.size() << endl;
+          cout << "tmp->_blocks[0].shape() = " << tmp->_blocks[0].shape() << endl;
+          cout << "tmp.rank()" << tmp->rank() << endl;
         } else {
+          cout << "inside ELSE this->is_diag() != Rtn->is_diag()" << endl;
           std::vector<char> transs(Rtn->_blocks.size(), 'N');
           std::vector<blas_int> ms(Rtn->_blocks.size(), 0), ns(Rtn->_blocks.size(), 0),
             ks(Rtn->_blocks.size(), 0);
