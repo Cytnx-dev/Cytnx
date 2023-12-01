@@ -151,23 +151,18 @@ namespace cytnx {
 #endif
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n);
-      if (out[i] < 0) out[i] += this->n;
     }
   }
   void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
                                         const cytnx_int64 &inR, const bool &is_reverse) {
-    out = (inL + inR) % (this->n);
-
-    if (is_reverse) {
+    if (is_reverse)
       this->reverse_rule_(out, (inL + inR) % (this->n));
-    } else {
+    else
       out = (inL + inR) % (this->n);
-      if (out < 0) out += this->n;
-    }
   }
   void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
     // out = -in<0?-in+this->n:-in;
-    out = in * -1;
+    out = -in + this->n;
   }
 
   void cytnx::ZnSymmetry::print_info() const {
