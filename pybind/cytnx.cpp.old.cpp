@@ -3424,21 +3424,24 @@ PYBIND11_MODULE(cytnx, m) {
     [](cytnx::Tensor &Tin, const double &mean, const double &std, const long long &seed) {
       cytnx::random::Make_normal(Tin, mean, std, seed);
     },
-    py::arg("Tin"), py::arg("mean"), py::arg("std"), py::arg("seed") = std::random_device()());
+    py::arg("Tin"), py::arg("mean"), py::arg("std"),
+    py::arg("seed") = cytnx::random::__static_random_device());
 
   m_random.def(
     "Make_normal",
     [](cytnx::Storage &Sin, const double &mean, const double &std, const long long &seed) {
       cytnx::random::Make_normal(Sin, mean, std, seed);
     },
-    py::arg("Sin"), py::arg("mean"), py::arg("std"), py::arg("seed") = std::random_device()());
+    py::arg("Sin"), py::arg("mean"), py::arg("std"),
+    py::arg("seed") = cytnx::random::__static_random_device());
 
   m_random.def(
     "Make_normal",
     [](cytnx::UniTensor &Tin, const double &mean, const double &std, const long long &seed) {
       cytnx::random::Make_normal(Tin, mean, std, seed);
     },
-    py::arg("Tin"), py::arg("mean"), py::arg("std"), py::arg("seed") = std::random_device()());
+    py::arg("Tin"), py::arg("mean"), py::arg("std"),
+    py::arg("seed") = cytnx::random::__static_random_device());
 
   m_random.def(
     "Make_uniform",
@@ -3446,7 +3449,7 @@ PYBIND11_MODULE(cytnx, m) {
       cytnx::random::Make_uniform(Tin, low, high, seed);
     },
     py::arg("Tin"), py::arg("low") = double(0), py::arg("high") = double(1.0),
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = cytnx::random::__static_random_device());
 
   m_random.def(
     "Make_uniform",
@@ -3454,7 +3457,7 @@ PYBIND11_MODULE(cytnx, m) {
       cytnx::random::Make_uniform(Sin, low, high, seed);
     },
     py::arg("Sin"), py::arg("low") = double(0), py::arg("high") = double(1.0),
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = cytnx::random::__static_random_device());
 
   m_random.def(
     "Make_uniform",
@@ -3462,34 +3465,34 @@ PYBIND11_MODULE(cytnx, m) {
       cytnx::random::Make_uniform(Tin, low, high, seed);
     },
     py::arg("Tin"), py::arg("low") = double(0), py::arg("high") = double(1.0),
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = cytnx::random::__static_random_device());
 
   m_random.def(
     "normal",
     [](const cytnx_uint64 &Nelem, const double &mean, const double &std, const int &device,
        const unsigned int &seed) { return cytnx::random::normal(Nelem, mean, std, device, seed); },
     py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = cytnx::random::__static_random_device());
   m_random.def(
     "normal",
     [](const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std,
        const int &device,
        const unsigned int &seed) { return cytnx::random::normal(Nelem, mean, std, device, seed); },
     py::arg("Nelem"), py::arg("mean"), py::arg("std"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = cytnx::random::__static_random_device());
   m_random.def(
     "uniform",
     [](const cytnx_uint64 &Nelem, const double &low, const double &high, const int &device,
        const unsigned int &seed) { return cytnx::random::uniform(Nelem, low, high, device, seed); },
     py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = cytnx::random::__static_random_device());
   m_random.def(
     "uniform",
     [](const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high,
        const int &device,
        const unsigned int &seed) { return cytnx::random::uniform(Nelem, low, high, device, seed); },
     py::arg("Nelem"), py::arg("low"), py::arg("high"), py::arg("device") = -1,
-    py::arg("seed") = std::random_device()());
+    py::arg("seed") = cytnx::random::__static_random_device());
 
   //====================
   // [Submodule tn_algo]

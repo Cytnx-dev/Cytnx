@@ -7,6 +7,8 @@
 
 namespace cytnx {
   namespace random {
+    std::random_device __static_random_device;
+
     void uniform_(Storage &Sin, const double &low, const double &high, const unsigned int &seed) {
       cytnx_error_msg(
         (Sin.dtype() < 1) || (Sin.dtype() > 4),
