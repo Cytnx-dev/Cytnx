@@ -911,7 +911,8 @@ namespace cytnx {
 
   #ifdef UNI_MKL
         // Initialize!!
-        if ((this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
+        if (true or
+            (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
               (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
             this->is_diag() or Rtn->is_diag()) {
           tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false,
@@ -1079,7 +1080,7 @@ namespace cytnx {
                 betas[binx] = 0.0;
               }
               // prepare to call gemm_batch
-              if ((tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
+              if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
                   (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
                    tmp_Rtn->dtype() != Type.Void)) {
                 ms[binx] = this->_blocks[a].shape()[0];
@@ -1096,7 +1097,7 @@ namespace cytnx {
             // mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
             blas_int group_count = itoiR_idx.size();
-            if ((tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
+            if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
                 (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
                  tmp_Rtn->dtype() != Type.Void)) {
               group_size.resize(group_count, 1);
