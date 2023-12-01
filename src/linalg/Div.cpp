@@ -917,14 +917,17 @@ namespace cytnx {
       // cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
-      UniTensor out = Rt.clone();
+      UniTensor out;
       if (Scalar(lc).dtype() < Rt.dtype()) {
-        out = out.astype(Scalar(lc).dtype());
+        out = Rt.astype(Scalar(lc).dtype());
+        out.lDiv_(lc);
+      } else {
+        out = Rt.clone();
+        out.lDiv_(lc);
       }
       // out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
       out.set_name("");
 
-      out._impl->lDiv_(lc);
       return out;
     }
 
@@ -948,14 +951,17 @@ namespace cytnx {
       // cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
-      UniTensor out = Lt.clone();
+      UniTensor out;
       if (Lt.dtype() > Scalar(rc).dtype()) {
-        out = out.astype(Scalar(rc).dtype());
+        out = Lt.astype(Scalar(rc).dtype());
+        out.Div_(rc);
+      } else {
+        out = Lt.clone();
+        out.Div_(rc);
       }
       // out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
       out.set_name("");
 
-      out.Div_(rc);
       return out;
     }
 
