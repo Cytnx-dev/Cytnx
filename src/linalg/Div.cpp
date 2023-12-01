@@ -920,10 +920,10 @@ namespace cytnx {
       UniTensor out;
       if (Scalar(lc).dtype() < Rt.dtype()) {
         out = Rt.astype(Scalar(lc).dtype());
-        out.lDiv_(lc);
+        out._impl->lDiv_(lc);
       } else {
         out = Rt.clone();
-        out.lDiv_(lc);
+        out._impl->lDiv_(lc);
       }
       // out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
       out.set_name("");
