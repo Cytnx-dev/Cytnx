@@ -194,7 +194,7 @@ echo ${FLAG}
 mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
-make -j`nproc`
+make -j${nproc}
 make install
 #if DRUN_TESTS=ON, run tests
 shopt -s nocasematch

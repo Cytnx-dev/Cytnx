@@ -48,7 +48,9 @@ jobs:
     - name: Build
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
-      run: cmake --build . -j `nproc`
+      run: |
+        cmake --version
+        cmake --build . -j `nproc`
 
     - name: Run CTest
       shell: bash -l {0}
