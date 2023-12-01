@@ -150,7 +150,7 @@ namespace cytnx {
   #pragma omp parallel for schedule(dynamic)
 #endif
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
-      out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n);
+      out[i] = abs((inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n));
     }
   }
   void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
@@ -160,11 +160,11 @@ namespace cytnx {
     if (is_reverse)
       this->reverse_rule_(out, (inL + inR) % (this->n));
     else
-      out = (inL + inR) % (this->n);
+      out = abs((inL + inR) % (this->n));
   }
   void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
     // out = -in<0?-in+this->n:-in;
-    out = in;
+    out = in * -1;
   }
 
   void cytnx::ZnSymmetry::print_info() const {
