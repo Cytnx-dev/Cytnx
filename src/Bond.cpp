@@ -678,13 +678,13 @@ namespace cytnx {
 
   std::ostream &operator<<(std::ostream &os, const Bond &bin) {
     char *buffer = (char *)malloc(sizeof(char) * 256);
-    os << "Dim = " << bin.dim() << " |";
+    os << "Dim = " << bin.dim() << " | ";
     if (bin.type() == bondType::BD_REG) {
       os << "type: REGULAR " << std::endl;
     } else if (bin.type() == bondType::BD_BRA) {
-      os << "type: < OUT (BRA)    " << std::endl;
+      os << "type: <OUT (BRA)| " << std::endl;
     } else if (bin.type() == bondType::BD_KET) {
-      os << "type: |IN (KET)>     " << std::endl;
+      os << "type: | IN (KET)> " << std::endl;
     } else {
       cytnx_error_msg(1, "%s", "[ERROR] internal error.");
     }

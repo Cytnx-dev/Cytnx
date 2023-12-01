@@ -1,4 +1,4 @@
-import os,sys
+import os,sys,warnings
 from .cytnx import *
 
 if cytnx.__cytnx_backend__ == "torch":
@@ -11,7 +11,7 @@ else:
 
     #1) check if numpy is previous imported, if it is, pop warning:
     if ('numpy' in sys.modules) or ('scipy' in sys.modules):
-        raise Warning("numpy and/or scipy are imported before cytnx. Please make sure it support ILP64.")
+        warnings.warn("numpy and/or scipy are imported before cytnx. Please make sure it support ILP64.")
 
 
     ## [NOTE!!] These part has to execute first before import numpy!
