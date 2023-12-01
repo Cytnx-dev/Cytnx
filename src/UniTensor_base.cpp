@@ -264,7 +264,7 @@ namespace cytnx {
   void UniTensor_base::set_labels(const std::vector<std::string> &new_labels) {
     cytnx_error_msg(new_labels.size() != this->_labels.size(),
                     "[ERROR][set_labels][UniTensor] %s\n",
-                    "the len(new_labels) does not match the rank of the UniTenosr");
+                    "the len(new_labels) does not match the rank of the UniTensor");
     // check duplicate:
     std::vector<std::string> tmp = vec_unique<std::string>(new_labels);
     cytnx_error_msg(tmp.size() != new_labels.size(), "[ERROR][set_labels][UniTensor] %s\n",
