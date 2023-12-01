@@ -43,20 +43,20 @@ jobs:
 
     - name: Configure CMake
       shell: bash -l {0}
-      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=off -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on # -DUSE_DEBUG=ON
+      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=off -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on -DUSE_DEBUG=ON
 
     - name: Build
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
       run: |
-        # export ASAN_OPTIONS=protect_shadow_gap=0
+        export ASAN_OPTIONS=protect_shadow_gap=0
         cmake --build . -j `nproc`
 
     - name: Run CTest
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
       run: |
-        # export ASAN_OPTIONS=protect_shadow_gap=0
+        export ASAN_OPTIONS=protect_shadow_gap=0
         GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
 
     - name: Run gcovr

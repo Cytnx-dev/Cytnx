@@ -303,9 +303,9 @@ namespace SvdTest {
     if (dtype == Type.Float || dtype == Type.ComplexFloat) {
       is_double_float_acc = false;
     }
-    const UniTensor& S = Tout[0];
-    const UniTensor& U = Tout[1];
-    const UniTensor& V = Tout[2];
+    const UniTensor S = Tout[0];
+    const UniTensor U = Tout[1];
+    const UniTensor V = Tout[2];
     std::cout << "Before recompose" << std::endl;
     UniTensor ReCompose = Contract(U, S);
     ReCompose = Contract(ReCompose, V);
@@ -373,8 +373,8 @@ namespace SvdTest {
 
   // no use
   void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
-    const UniTensor& U = Tout[1];
-    const UniTensor& V = Tout[2];
+    const UniTensor U = Tout[1];
+    const UniTensor V = Tout[2];
     auto UD = U.Dagger();
     UD.set_labels({"0", "1", "9"});
     UD.permute_({2, 0, 1}, 1);
