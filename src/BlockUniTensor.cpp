@@ -1108,7 +1108,7 @@ namespace cytnx {
                 betas[binx] = 0.0;
               }
               // prepare to call gemm_batch
-              if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
+              if ((tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
                   (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
                    tmp_Rtn->dtype() != Type.Void)) {
                 ms[binx] = this->_blocks[a].shape()[0];
@@ -1125,7 +1125,7 @@ namespace cytnx {
             // mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
             blas_int group_count = itoiR_idx.size();
-            if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
+            if ((tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
                 (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
                  tmp_Rtn->dtype() != Type.Void)) {
               group_size.resize(group_count, 1);
