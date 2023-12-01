@@ -1202,6 +1202,30 @@ void unitensor_binding(py::module &m) {
                     py::arg("label"), py::arg("dim"))
 
     //[Generator]
+    .def_static("identity", [](const cytnx_uint64 &dim, const std::vector<std::string> &in_labels,
+                  const cytnx_bool &is_diag,
+                  const unsigned int &dtype,
+                  const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::identity(dim, in_labels, is_diag, dtype, device, name);
+                }, py::arg("dim"), py::arg("labels") = std::vector<std::string>(),
+                   py::arg("is_diag") = false,
+                   py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
+     .def_static("eye", [](const cytnx_uint64 &dim, const std::vector<std::string> &in_labels,
+                  const cytnx_bool &is_diag,
+                  const unsigned int &dtype,
+                  const int &device,
+                  const std::string &name)
+                {
+                  return UniTensor::eye(dim, in_labels, is_diag, dtype, device, name);
+                }, py::arg("dim"), py::arg("labels") = std::vector<std::string>(),
+                   py::arg("is_diag") = false,
+                   py::arg("dtype") = (unsigned int)Type.Double,
+                   py::arg("device") = int(Device.cpu),
+                   py::arg("name") = std::string(""))
     .def_static("ones", [](const cytnx_uint64 &Nelem, const std::vector<std::string> &in_labels,
                   const unsigned int &dtype,
                   const int &device,

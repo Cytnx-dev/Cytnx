@@ -4878,3 +4878,137 @@ TEST_F(DenseUniTensorTest, normal) {
   EXPECT_TRUE(min.at({0}) < mean);
   EXPECT_TRUE(max.at({0}) > mean);
 }
+
+TEST_F(DenseUniTensorTest, identity) {
+  UniTensor ut = UniTensor::identity(2, {"row", "col"}, false, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 2);
+  EXPECT_EQ(ut.shape()[1], 2);
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), false);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
+
+  ut = UniTensor::identity(2, {"row", "col"}, true, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 2);
+  EXPECT_EQ(ut.shape()[1], 2);
+  vec_print(cout, ut.labels());
+  vec_print(cout, ut.shape());
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), true);
+  std::cout << ut << std::endl;
+  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
+
+  ut = UniTensor::identity(3, {"row", "col"}, false, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 3);
+  EXPECT_EQ(ut.shape()[1], 3);
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), false);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2, 0}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2, 1}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 2}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 2}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2, 2}), 1);
+
+  ut = UniTensor::identity(3, {"row", "col"}, true, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 3);
+  EXPECT_EQ(ut.shape()[1], 3);
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), true);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2}), 1);
+}
+
+TEST_F(DenseUniTensorTest, eye) {
+  UniTensor ut = UniTensor::eye(2, {"row", "col"}, false, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 2);
+  EXPECT_EQ(ut.shape()[1], 2);
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), false);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
+
+  ut = UniTensor::eye(2, {"row", "col"}, true, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 2);
+  EXPECT_EQ(ut.shape()[1], 2);
+  vec_print(cout, ut.labels());
+  vec_print(cout, ut.shape());
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), true);
+  std::cout << ut << std::endl;
+  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
+
+  ut = UniTensor::eye(3, {"row", "col"}, false, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 3);
+  EXPECT_EQ(ut.shape()[1], 3);
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), false);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2, 0}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2, 1}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0, 2}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1, 2}), 0);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2, 2}), 1);
+
+  ut = UniTensor::eye(3, {"row", "col"}, true, Type.Double, Device.cpu);
+  EXPECT_EQ(ut.shape().size(), 2);
+  EXPECT_EQ(ut.shape()[0], 3);
+  EXPECT_EQ(ut.shape()[1], 3);
+  EXPECT_EQ(ut.is_contiguous(), true);
+  EXPECT_EQ(ut.labels()[0], "row");
+  EXPECT_EQ(ut.labels()[1], "col");
+  EXPECT_EQ(ut.dtype(), Type.Double);
+  EXPECT_EQ(ut.device(), Device.cpu);
+  EXPECT_EQ(ut.is_diag(), true);
+  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
+  EXPECT_DOUBLE_EQ(ut.at<double>({2}), 1);
+}
