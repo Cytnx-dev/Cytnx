@@ -412,7 +412,7 @@ namespace cytnx {
                       "support. Use other manipulation.%s",
                       "\n");
 
-      std::vector<UniTensor> outCyT(3);
+      std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
         _Gesvd_Dense_UT(outCyT, Tin, is_U, is_vT);
 
