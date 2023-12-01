@@ -322,10 +322,10 @@ namespace SvdTest {
   }
 
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
-    const std::vector<std::string>& in_labels = Tin.labels();
-    const std::vector<std::string>& s_labels = Tout[0].labels();
-    const std::vector<std::string>& u_labels = Tout[1].labels();
-    const std::vector<std::string>& v_labels = Tout[2].labels();
+    const std::vector<std::string> in_labels = Tin.labels();
+    const std::vector<std::string> s_labels = Tout[0].labels();
+    const std::vector<std::string> u_labels = Tout[1].labels();
+    const std::vector<std::string> v_labels = Tout[2].labels();
     // check S
     if (s_labels[0] != "_aux_L") {
       fail_msg.AppendMsg("The label of the left leg in 'S' is wrong. ", __func__, __LINE__);
