@@ -661,11 +661,16 @@ namespace cytnx {
     //============================================
 
     UniTensor Mul(const UniTensor &Lt, const UniTensor &Rt) {
-      UniTensor out = Lt.clone();
+      UniTensor out;
+      if (Lt.dtype() > Rt.dtype()) {
+        out = Rt.clone();
+        out.Mul_(Lt);
+      } else {
+        out = Lt.clone();
+        out.Mul_(Rt);
+      }
       out.set_labels(vec_range<std::string>(Lt.rank()));
       out.set_name("");
-
-      out.Mul_(Rt);
 
       return out;
     }
@@ -677,11 +682,17 @@ namespace cytnx {
       // cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
-      UniTensor out = Rt.clone();
+      UniTensor out;
+      if (Scalar(lc).dtype() < Rt.dtype()) {
+        out = Rt.astype(Scalar(lc).dtype());
+        out.Mul_(lc);
+      } else {
+        out = Rt.clone();
+        out.Mul_(lc);
+      }
       // out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
       out.set_name("");
 
-      out.Mul_(lc);
       return out;
     }
 

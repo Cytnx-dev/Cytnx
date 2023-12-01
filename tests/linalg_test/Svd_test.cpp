@@ -70,6 +70,7 @@ namespace SvdTest {
   TEST(Svd, U1_sym_test) {
     std::vector<std::string> case_list = {"sym_UT_U1_C128", "sym_UT_U1_F64"};
     for (const auto& case_name : case_list) {
+      std::cout << case_name << std::endl;
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
       EXPECT_TRUE(CheckResult(case_name)) << fail_msg.TraceFailMsgs();

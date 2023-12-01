@@ -28,7 +28,7 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate2) {
 TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
   UniTensor densvd_T = UniTensor(zeros(svd_T.shape(), svd_T.dtype(), svd_T.device()));
-  std::vector<UniTensor> denres = linalg::Svd_truncate(densvd_T.from(svd_T), 200, 0, true);
+  std::vector<UniTensor> denres = linalg::Svd_truncate(densvd_T.convert_from(svd_T), 200, 0, true);
 
   std::vector<double> vnm_S, denvnm_S;
   for (size_t i = 0; i < res[0].shape()[0]; i++)

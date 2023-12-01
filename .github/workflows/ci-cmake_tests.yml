@@ -37,20 +37,25 @@ jobs:
         mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
         mamba install gcovr gtest
 
+    - name: CPU info
+      shell: bash -l {0}
+      run: lscpu
 
     - name: Configure CMake
       shell: bash -l {0}
-      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=on -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
+      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=off -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
 
     - name: Build
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
-      run: cmake --build . -j `nproc`
+      run: |
+        cmake --version
+        cmake --build . -j `nproc`
 
     - name: Run CTest
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-junit junit.xml
+      run: GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
 
     - name: Run gcovr
       shell: bash -l {0}
