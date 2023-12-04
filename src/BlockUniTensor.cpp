@@ -988,7 +988,8 @@ namespace cytnx {
         if (this->is_diag() != Rtn->is_diag()) {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
-            itoiR_idx = mp[itoiL_common[a]];
+            // itoiR_idx = mp[itoiL_common[a]];
+            itoiR_idx = mp.at(itoiL_common[a]);
             for (cytnx_uint64 b : itoiR_idx) {
               cout << "In this->is_diag() != Rtn->is_diag()" << endl;
               Lgbuffer.resize(non_comm_idx1.size() + non_comm_idx2.size());
@@ -1000,7 +1001,7 @@ namespace cytnx {
                 Lgbuffer[cc] =
                   Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
               }
-              cytnx_int64 targ_b = mpC[Lgbuffer];
+              cytnx_int64 targ_b = mpC(Lgbuffer);
               cout << "before Tensordot_dg" << endl;
               tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
                                                            comm_idx1, comm_idx2, this->is_diag());
@@ -1026,7 +1027,7 @@ namespace cytnx {
           BlockUniTensor *tmp_Rtn = Rtn;
 
           // check if all sub-tensor are same dtype and device
-          if (User_debug) {
+          if (true or User_debug) {
             bool all_sub_tensor_same_dtype = true;
             bool all_sub_tensor_same_device = true;
             for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -1070,7 +1071,7 @@ namespace cytnx {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
             // get the indices of right blocks that *can* contract with this->_blocks[a]
-            itoiR_idx = mp[itoiL_common[a]];
+            itoiR_idx = mp(itoiL_common[a]);
             for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
               comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
             }
@@ -1097,7 +1098,7 @@ namespace cytnx {
                   tmp_Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
               }
               // target block index
-              cytnx_int64 targ_b = mpC[Lgbuffer];
+              cytnx_int64 targ_b = mpC.at(Lgbuffer);
               betas[binx] = 1.0;
               // if the target block is not initialized, call to gemm with beta=0
               if (!reshaped[targ_b]) {
@@ -1162,7 +1163,7 @@ namespace cytnx {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
             // get the indices of right blocks that *can* contract with this->_blocks[a]
-            itoiR_idx = mp[itoiL_common[a]];
+            itoiR_idx = mp(itoiL_common[a]);
             for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
               comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
             }
@@ -1189,7 +1190,7 @@ namespace cytnx {
                   Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
               }
               // target block index
-              cytnx_int64 targ_b = mpC[Lgbuffer];
+              cytnx_int64 targ_b = mpC.at(Lgbuffer);
               tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
                                         .reshape(tmp->_blocks[targ_b].shape());
             }
