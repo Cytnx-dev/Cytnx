@@ -1001,7 +1001,7 @@ namespace cytnx {
                 Lgbuffer[cc] =
                   Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
               }
-              cytnx_int64 targ_b = mpC(Lgbuffer);
+              cytnx_int64 targ_b = mpC.at(Lgbuffer);
               cout << "before Tensordot_dg" << endl;
               tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
                                                            comm_idx1, comm_idx2, this->is_diag());
@@ -1071,7 +1071,7 @@ namespace cytnx {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
             // get the indices of right blocks that *can* contract with this->_blocks[a]
-            itoiR_idx = mp(itoiL_common[a]);
+            itoiR_idx = mp.at(itoiL_common[a]);
             for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
               comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
             }
@@ -1163,7 +1163,7 @@ namespace cytnx {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
             cytnx_int64 comm_dim = 1;
             // get the indices of right blocks that *can* contract with this->_blocks[a]
-            itoiR_idx = mp(itoiL_common[a]);
+            itoiR_idx = mp.at(itoiL_common[a]);
             for (cytnx_uint64 aa = 0; aa < comm_idx1.size(); aa++) {
               comm_dim *= this->_blocks[a].shape()[comm_idx1[aa]];
             }
