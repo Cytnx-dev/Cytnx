@@ -34,7 +34,7 @@ jobs:
     - name: Install dependencies
       shell: bash -l {0}
       run: |
-        mamba install -c intel mkl=2024.0.0 mkl-include mkl-service
+        mamba install -c intel mkl=2024.0.0
         mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy pybind11 libblas=*=*mkl
         mamba install gcovr gtest
 
