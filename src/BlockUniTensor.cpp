@@ -924,8 +924,7 @@ namespace cytnx {
         cout << "before Initialize" << endl;
   #ifdef UNI_MKL
         // Initialize!!
-        if (true or
-            (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
+        if ((this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
               (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
             this->is_diag() or Rtn->is_diag()) {
           tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false,
