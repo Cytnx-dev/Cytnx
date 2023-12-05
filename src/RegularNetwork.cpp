@@ -43,7 +43,6 @@ namespace cytnx {
     vector<string> tmp = str_split(line, false, ";");
     // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                 "Invalid TOUT line");
-    std::cout << tmp;
     if (tmp.size() == 1) {
       // no ; provided
       vector<string> tout_lbls = str_split(line, false, ",");
