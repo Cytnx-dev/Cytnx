@@ -43,40 +43,56 @@ namespace cytnx {
     vector<string> tmp = str_split(line, false, ";");
     // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                 "Invalid TOUT line");
-    if (tmp.size() != 2) {
-      // tmp.push_back("");
-      tmp.insert(tmp.begin(), "");
-    }
-
-    // handle col-space label
-    vector<string> ket_labels = str_split(tmp[0], false, ",");
-    if (ket_labels.size() == 1)
-      if (ket_labels[0].length() == 0) ket_labels.clear();
-    for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
-      string tmp = str_strip(ket_labels[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                      line_num, "\n");
-      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                 "Invalid TOUT line. label contain non integer.");
-      labels.push_back(tmp);
-    }
-    TOUT_iBondNum = labels.size();
-
-    // handle row-space label
-    vector<string> bra_labels = str_split(tmp[1], false, ",");
-    if (bra_labels.size() == 1)
-      if (bra_labels[0].length() == 0) bra_labels.clear();
-    for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
-      string tmp = str_strip(bra_labels[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                      line_num, "\n");
-      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                 "Invalid TOUT line. label contain non integer.");
-      labels.push_back(tmp);
+    std::cout << tmp;
+    if (tmp.size() == 1) {
+      // no ; provided
+      vector<string> tout_lbls = str_split(line, false, ",");
+      cytnx_uint64 default_rowrank = tout_lbls.size() / 2;
+      // handle col-space label
+      for (cytnx_uint64 i = 0; i < default_rowrank; i++) {
+        string tmp_ = str_strip(tout_lbls[i]);
+        cytnx_error_msg(tmp_.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp_);
+      }
+      TOUT_iBondNum = labels.size();
+      // handle row-space label
+      for (cytnx_uint64 i = default_rowrank; i < tout_lbls.size(); i++) {
+        string tmp_ = str_strip(tout_lbls[i]);
+        cytnx_error_msg(tmp_.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp_);
+      }
+    } else if (tmp.size() == 2) {
+      // one ;
+      // handle col-space label
+      vector<string> ket_labels = str_split(tmp[0], false, ",");
+      if (ket_labels.size() == 1)
+        if (ket_labels[0].length() == 0) ket_labels.clear();
+      for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
+        string tmp = str_strip(ket_labels[i]);
+        cytnx_error_msg(tmp.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp);
+      }
+      TOUT_iBondNum = labels.size();
+      // handle row-space label
+      vector<string> bra_labels = str_split(tmp[1], false, ",");
+      if (bra_labels.size() == 1)
+        if (bra_labels[0].length() == 0) bra_labels.clear();
+      for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
+        string tmp = str_strip(bra_labels[i]);
+        cytnx_error_msg(tmp.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp);
+      }
+    } else if (tmp.size() > 2) {
+      // more than one ;
+      cytnx_error_msg(true, "[ERROR][Network] line:%d Invalid TOUT line.%s", line_num, "\n");
     }
   }
 
