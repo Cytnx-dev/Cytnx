@@ -10,5 +10,5 @@ Here, we provide some examples of commonly seen Quantum simulation methods.
     example/iTEBD.rst
     example/DMRG.rst
     example/iDMRG.rst
-    example/HOTRG.rst
+..    example/HOTRG.rst
 

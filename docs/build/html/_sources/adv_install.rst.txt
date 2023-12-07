@@ -46,6 +46,7 @@ In addition, you might want to install the following optional dependencies if yo
 * python-graphviz 
 * graphviz
 * numpy 
+* beartype
 
 There are two methods how you can set-up all the dependencies before starting the build process: 
 
@@ -63,7 +64,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
 
 
-**Option A. Using anaconda/conda to install dependencies:**
+**Option A. Using anaconda/conda to install dependencies**
 
 1. Install anaconda/miniconda, setting the virtual environments
 
@@ -96,22 +97,46 @@ There are two methods how you can set-up all the dependencies before starting th
 
 .. code-block:: shell
 
-    $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl
+    $conda install cmake make boost libboost git compilers numpy openblas pybind11 beartype
 
 
 .. Note:: 
 
-    This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compilers on system side is not required. 
+    1. This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compilers on system side is not required.
+    2. Some packages may not be required, or additional packages need to be installed, depending on the compiling options. See below for further information. If mkl shall be used instead of openblas, use the following dpenedencies:
+    
+        .. code-block:: shell
+
+            $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl beartype
+    
+    3. After the installation, an automated test based on gtest can be run. This option needs to be activated in the install script. In this case, gtest needs to be installed as well:
+    
+        .. code-block:: shell
+
+            $conda install gtest
+
 
 .. Hint::
 
     Trouble shooting:
 
-        1. Make sure **conda-forge** channel has the top priority
-        2. Make sure libblas=mkl (you can check using *conda list | grep libblas*) 
+        1. Make sure **conda-forge** channel has the top priority. This should be assured by running
+
+            .. code-block:: shell
+                
+                $conda config --add channels conda-forge.
+
+        2. Make sure that the conda channel priority is **flexible** or **strict**. This can be achieved by
+            
+            .. code-block:: shell
+            
+                $conda config --set channel_priority strict
+                
+            or changing *~/.condarc* accordingly. You can check if the packages are correctly installed from *conda-forge* by running *$conda list* and checking the **Channels** row.
+        3. Make sure libblas=mkl (you can check using *$conda list | grep libblas*) 
 
 
-4. In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:
+1. In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:
 
 .. .. code-block:: shell
 
@@ -119,7 +144,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
 .. code-block:: shell
 
-    $conda conda install -c nvidia cuda
+    $conda install -c nvidia cuda
 
 
 **Option B. Install dependencies via system package manager**
@@ -141,14 +166,16 @@ Compiling process
 -------------------
 Once you installed all the dependencies, it is time to start building the Cytnx source code. 
 
-Starting from v0.7.6a, Cytnx provides a shell script **Install.sh**, which contains all the cmake arguments check list. To install, un-comment and put custom parameters on the corresponding lines, and simply execute this script:
+**Option A. Compiling with script**
+
+Starting from v0.7.6a, Cytnx provides a shell script **Install.sh**, which contains all the cmake arguments as a check list. To install, edit the script, un-comment and modify custom parameters in the corresponding lines. Then, simply execute this script:
 
 .. code-block:: shell
 
     $sh Install.sh
 
 
-**Arguments/options for cmake install**
+**Option B. Using cmake install**
 
 Please see the following steps for the standard cmake compiling process and all the compiling options:
 
@@ -260,6 +287,21 @@ In the case that Cytnx is installed locally from binary build, not from anaconda
     CYTNX_ROOT is the path where Cytnx is installed from binary build. 
 
 
+Generate API documentation
+*************************************
+An API documentation can be generated from the source code of Cytnx by using doxygen. The documentation is accessible online at <https://kaihsinwu.gitlab.io/cytnx_api/>. To create it locally, make sure that doxygen is installed:
+
+.. code-block:: shell
+
+    $conda install doxygen
+
+Then, use doxygen in the Cytnx source code folder to generate the API documentation:
+
+.. code-block:: shell
+
+    $doxygen docs.doxygen
+
+The documentation is created in the folder **docs/**. You can open **docs/html/index.html** in your browser to access it.
 
 .. toctree::
 

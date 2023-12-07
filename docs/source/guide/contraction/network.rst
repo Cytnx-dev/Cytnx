@@ -26,13 +26,51 @@ Note that:
 
 1. The labels above correspond to the diagram you draw, not the label attribute of UniTensor objects. Both label conventions can, but do not have to be the same.
    
-2. Labels should be separated by ' , '. In TOUT, a ' ; ' separates the labels in rowspace and colspace.
+2. Labels should be separated by ' , '.
    
-3. TOUT specifies the output configuration, in this case we leave it blank since the result will be a scalar.
+3. In TOUT, a ' ; ' separates the labels in rowspace and colspace, note that it is optional, if there is no ' ; ' specified, all label will be put in colspace.
    
-4. ORDER is optional and used to specify the contraction order manually.
+4. TOUT specifies the output configuration, in this case we leave it blank since the result will be a scalar.
+   
+5. ORDER is optional and used to specify the contraction order manually.
 
-Put UniTensors and Launch
+
+Launch
+--------------------------
+
+To perform the contraction and get the outcome, we use the **.Launch()**:
+
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_launch.py
+    :language: python
+    :linenos:
+
+* In C++:
+
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_contraction_network_launch.cpp
+    :language: c++
+    :linenos:
+
+
+
+Network from string
+--------------------------
+Alternatively, we can implement the contraction directly in the program with FromString(): 
+
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_FromString.py
+    :language: python
+    :linenos:
+
+This approach can be convenient if you do not want to maintain the .net files.
+
+
+.. toctree::
+
+
+Put UniTensors
 --------------------------
 We use the .net file to create a Network. Then, we can load instances of UniTensors:
 
@@ -53,40 +91,8 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_contraction_network_PutUniTensor.out
     :language: text
 
-
-To perform the contraction and get the outcome, we use the .Launch():
-
-* In Python:
-
-.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_launch.py
-    :language: python
-    :linenos:
-
-* In C++:
-
-.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_contraction_network_launch.cpp
-    :language: c++
-    :linenos:
-
-Here if the argument **optimal = True**, the contraction order is always auto-optimized.
-If **optimal = False**, the specified ORDER in the .net file will be used. If ORDER is not specified, the order of the tensor definitions in the .net file is used.
-
-
 .. Note::
-    1. The auto-optimized contraction order obtained by calling **.Launch(optimal = True)** is saved in the Network object. If there is no need to re-optimize the order (i.e. the bond dimensions of the input tensors remain (approximately) the same.), we can put new tensors and call **.Launch()** again with **optimal = False**. In this case, the optimized order is reused, which avoids the overhead of recalculating the optimal order.
-    2. The indices of the UniTensors to be put into the Network need to be ordered according to the indices in the .net file. Otherwise, the index order can be defined in PutTensor explicitly, see :ref:`PutUniTensor according to label ordering` below.
-
-Network from string
---------------------------
-Alternatively, we can implement the contraction directly in the program with FromString(): 
-
-* In Python:
-
-.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_FromString.py
-    :language: python
-    :linenos:
-
-This approach can be convenient if you do not want to maintain the .net files.
+        The indices of the UniTensors to be put into the Network need to be ordered according to the indices in the .net file. Otherwise, the index order can be defined in PutTensor explicitly, see :ref:`PutUniTensor according to label ordering` below.
 
 PutUniTensor according to label ordering
 ------------------------------------------
@@ -129,5 +135,65 @@ So when we do the PutUniTensor() we add the third argument which is a labels ord
 
 So when calling `PutUniTensor()` we add the third argument which is a labels ordering. This will permute the tensor legs according to the given label ordering before putting them into the Network.
 
-.. toctree::
+
+Set the contraction order
+--------------------------
+
+To set or find the optimal contraction order of our tensor network, we provide **.setOrder(optimal, contract_order)** function, by passing true for the first argument, the Network will find an optimal contraction order for us and store it: 
+
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_Optimal.py
+    :language: python
+    :linenos:
+
+* In C++:
+
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_contraction_network_Optimal.cpp
+    :language: c++
+    :linenos:
+
+.. Note::
+    
+    Although Network does cache the optimal contraction order once it is found, the optimal order finding rountine will still be executed everytime we call the .setOrder(optimal= true), it is suggested that one store the optimal order and specify it manually in some situaitions to prevent the overhead of re-finding optimal order.
+
+
+We can also pass the string specifying our desired contraction order in the second arguement:
+
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_setOrder.py
+    :language: python
+    :linenos:
+
+* In C++:
+
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_contraction_network_setOrder.cpp
+    :language: c++
+    :linenos:
+
+.. Note::
+    
+    By default the **optimal = False** , so for python case we can ignore the optimal argument and just pass the order. Note that if one pass **optimal = True** while specifying the order at the same time, Network will find and use the optimal order.
+
+
+To inspect the current contraction order stored in the Network, we can use **.getOrder()** which returns a contraction order string:
+
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_network_getOrder.py
+    :language: python
+    :linenos:
+
+* In C++:
+
+.. literalinclude:: ../../../code/cplusplus/doc_codes/guide_contraction_network_getOrder.cpp
+    :language: c++
+    :linenos:
+
+Output >>
+
+.. literalinclude:: ../../../code/python/outputs/guide_contraction_network_getOrder.out
+    :language: text
+
 

@@ -50,7 +50,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -63,9 +63,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../adv_install.html#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -246,9 +247,11 @@
 <li class="toctree-l2"><a class="reference internal" href="contraction.html">8. Contraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="contraction/network.html">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="contraction/contract.html">8.2. Contract(s)</a><ul>
@@ -276,7 +279,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -338,7 +344,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../CommApp.html">Common usage</a><ul>
@@ -353,7 +358,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -370,7 +375,7 @@
               
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../%23.html">v0.9.5</a></li>
+              <a  class="nav-link" href="../index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -396,7 +401,7 @@
                   
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../%23.html">v0.9.5</a></li>
+                  <a  class="nav-link" href="../index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -451,7 +456,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -464,9 +469,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../adv_install.html#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -647,9 +653,11 @@
 <li class="toctree-l2"><a class="reference internal" href="contraction.html">8. Contraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="contraction/network.html">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="contraction/network.html#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="contraction/contract.html">8.2. Contract(s)</a><ul>
@@ -677,7 +685,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -739,7 +750,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../CommApp.html">Common usage</a><ul>
@@ -754,7 +764,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -809,7 +819,7 @@
 <td><p>Tn</p></td>
 <td><p>CyTn (xlinalg)</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#ac61bd0f99306496fae81f8601fa4070c">Add</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#ac61bd0f99306496fae81f8601fa4070c">Add</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -817,7 +827,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a9918295b0d2d78fa475390e91ccbf57b">Sub</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a9918295b0d2d78fa475390e91ccbf57b">Sub</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -825,7 +835,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a8705f85e347439577708173ab963f909">Mul</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a8705f85e347439577708173ab963f909">Mul</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -833,7 +843,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#affc6138760ac67505ae194edf14525e8">Div</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#affc6138760ac67505ae194edf14525e8">Div</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -841,7 +851,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#aea125f2928934007725809426bb77e38">Cpr</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#aea125f2928934007725809426bb77e38">Cpr</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -849,7 +859,7 @@
 <td><p>Y</p></td>
 <td><p>x</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a56d73db3d0cdd3a2ca5ed5f88f0738ff">Mod</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a56d73db3d0cdd3a2ca5ed5f88f0738ff">Mod</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -857,7 +867,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx.html#ad1f97cdff6a9825441592b906d8ae330">+,+=[tn]</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx.html#ad1f97cdff6a9825441592b906d8ae330">+,+=[tn]</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -865,7 +875,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx.html#a64cab629757608840015fd955f53f961">-,-=[tn]</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx.html#a64cab629757608840015fd955f53f961">-,-=[tn]</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -873,7 +883,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx.html#a0b23c5c933bf53cc25b8e94bf0e8cd80">*,*=[tn]</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx.html#a0b23c5c933bf53cc25b8e94bf0e8cd80">*,*=[tn]</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -881,7 +891,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx.html#adf098bf65b5c3fb990065f0df05d087c">/,/=[tn]</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx.html#adf098bf65b5c3fb990065f0df05d087c">/,/=[tn]</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -889,7 +899,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx.html#a6d2f2c308c9fbe7a791d981aa48ec5b6">==[tn]</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx.html#a6d2f2c308c9fbe7a791d981aa48ec5b6">==[tn]</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -897,7 +907,7 @@
 <td><p>Y</p></td>
 <td><p>x</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a49a33a99468fba6213383b2f83ee7716">Svd</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a49a33a99468fba6213383b2f83ee7716">Svd</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -905,7 +915,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a0d98109dac0a642fe635d19db262a12b">(*)Svd_truncate</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a0d98109dac0a642fe635d19db262a12b">(*)Svd_truncate</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -913,7 +923,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#af819d2fc4522d2a6287aa16dfbe3f787">InvM</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#af819d2fc4522d2a6287aa16dfbe3f787">InvM</a></p></td>
 <td><p>InvM_</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -921,7 +931,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a8680f6a91b7110d68c1d9e9a4da700d6">Inv</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a8680f6a91b7110d68c1d9e9a4da700d6">Inv</a></p></td>
 <td><p>Inv_</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -929,7 +939,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a470d0886432554a35ecaf961451c0806">Conj</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a470d0886432554a35ecaf961451c0806">Conj</a></p></td>
 <td><p>Conj_</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -937,7 +947,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471">Exp</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#aac38382cbc0e8202411c96a0ff636471">Exp</a></p></td>
 <td><p>Exp_</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -945,7 +955,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77">Expf</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a5831918722e5d18f4eaf37834b8fbf77">Expf</a></p></td>
 <td><p>Expf_</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -953,7 +963,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a63fb9c9751ff27d22f84a52a876cc6fc">Eigh</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a63fb9c9751ff27d22f84a52a876cc6fc">Eigh</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -961,7 +971,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#ae394378db613a244ad518504047669c0">ExpH</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#ae394378db613a244ad518504047669c0">ExpH</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -969,7 +979,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#ad5c478aa9da366c15ec7a2351dc99d93">ExpM</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#ad5c478aa9da366c15ec7a2351dc99d93">ExpM</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -977,7 +987,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f">Matmul</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a53feb441b4b1bd263714ed33e093728f">Matmul</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -985,7 +995,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a5913f0bdd6cc130aeb927f42a874a149">Diag</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a5913f0bdd6cc130aeb927f42a874a149">Diag</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -993,7 +1003,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a242f1b9c1ee7938ba050121773ab4b55">(*)Tensordot</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a242f1b9c1ee7938ba050121773ab4b55">(*)Tensordot</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -1001,7 +1011,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a3e8edc89fdabb9c0f9b342198a31798b">Outer</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a3e8edc89fdabb9c0f9b342198a31798b">Outer</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -1009,7 +1019,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#aa69a91a5651fce55380cf800c6030d73">Vectordot</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#aa69a91a5651fce55380cf800c6030d73">Vectordot</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -1017,7 +1027,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a5a502c7d0a6a46f0e695f211a42ab9dc">Tridiag</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a5a502c7d0a6a46f0e695f211a42ab9dc">Tridiag</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1025,7 +1035,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#abc22428de7f69d2afc9a27fca76bfe15">Kron</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#abc22428de7f69d2afc9a27fca76bfe15">Kron</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1033,7 +1043,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680">Norm</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a9cd2be179860bb4742ebe320fa063680">Norm</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -1041,7 +1051,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca">(*)Dot</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a215dbfd2aa7ef898450de7afff726bca">(*)Dot</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -1049,7 +1059,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a243ceac5dc7d4a8c983b0e7693b97489">Eig</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a243ceac5dc7d4a8c983b0e7693b97489">Eig</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1057,7 +1067,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#af2e15ace1ea23939174fdea1829430fd">Pow</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#af2e15ace1ea23939174fdea1829430fd">Pow</a></p></td>
 <td><p>Pow_</p></td>
 <td><p>Y</p></td>
 <td><p>Y</p></td>
@@ -1065,7 +1075,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611">Abs</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a3ded6435c7b47eb348d03783bfe72611">Abs</a></p></td>
 <td><p>Abs_</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1073,7 +1083,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a194461432b34c60984a02569a4d9c903">QR</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a194461432b34c60984a02569a4d9c903">Qr</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1081,7 +1091,7 @@
 <td><p>Y</p></td>
 <td><p>Y</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a5fd73573057cda064a77f69c927a45dc">Det</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a5fd73573057cda064a77f69c927a45dc">Det</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1089,7 +1099,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a25b5f2fdfb550aabc9cc41daa963e1fb">Min</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a25b5f2fdfb550aabc9cc41daa963e1fb">Min</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1097,7 +1107,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#a93ef263824e2dcdab4832ea628959d19">Max</a></p></td>
+<tr class="row-even"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#a93ef263824e2dcdab4832ea628959d19">Max</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>
@@ -1105,7 +1115,7 @@
 <td><p>Y</p></td>
 <td><p>N</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.5/namespacecytnx_1_1linalg.html#ad5acb5c8d20b164b52affdd2e747e46b">(*Trace)</a></p></td>
+<tr class="row-odd"><td><p><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/v0.9.7/namespacecytnx_1_1linalg.html#ad5acb5c8d20b164b52affdd2e747e46b">(*Trace)</a></p></td>
 <td><p>x</p></td>
 <td><p>Y</p></td>
 <td><p>N</p></td>

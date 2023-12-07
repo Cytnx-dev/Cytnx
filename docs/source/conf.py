@@ -29,7 +29,7 @@ html_theme_path = [sphinxbootstrap4theme.get_path()]
 project = 'Cytnx'
 copyright = '2019-, Kai-Hsin Wu'
 author = 'Kai-Hsin Wu'
-_version = 'v0.9.5'
+_version = 'v0.9.7'
 #version = 'v0.5.5a'
 
 # -- General configuration ---------------------------------------------------
@@ -46,6 +46,7 @@ bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.itebd.bib",\
                    "example/ref.idmrg.bib",\
                    "guide/contraction/ref.ncon.bib",\
+                   "guide/ref.xlinalg.bib",\
                   ]
 extensions.append('sphinx.ext.extlinks')
 #extensions.append('sphinx.ext.imgmath')
@@ -111,7 +112,7 @@ html_theme_options = {
     'navbar_links' : [
          ('API Doc', 'https://kaihsinwu.gitlab.io/cytnx_api', True),
          ("Github", "https://github.com/Cytnx-dev/Cytnx", True),
-         ("%s"%(_version), "#", False)
+         ("%s"%(_version), "index", False)
     ],
 
     # Total width(%) of the document and the sidebar.

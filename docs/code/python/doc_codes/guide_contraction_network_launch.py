@@ -1,1 +1,1 @@
-Res = net.Launch(optimal = True)
+Res = net.Launch()

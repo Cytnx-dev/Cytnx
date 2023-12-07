@@ -1,6 +1,6 @@
 iTEBD
 ------------
-**By : Hsu Ke, Kai-Hsin Wu**
+**By : Ke Hsu, Kai-Hsin Wu**
 
 Time evolution block decimation is one of the most simple and sucessful Tensor network method :cite:`itebd-vidal`. The core concept of this algorithm is to use the imaginary time evolution to find the best variational ansatz, usually in terms of Matrix product state (MPS). 
 
@@ -32,16 +32,17 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
     import cytnx
 
     chi = 10
-    A = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(2),cytnx.Bond(chi)],labels=['a','0','b']); 
-    B = cytnx.UniTensor(A.bonds(),rowrank=1,labels=['c','1','d']);                                
-    cytnx.random.Make_normal(B.get_block_(),0,0.2); 
-    cytnx.random.Make_normal(A.get_block_(),0,0.2); 
+    A = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(2),cytnx.Bond(chi)],labels=["a","0","b"]);
+    B = cytnx.UniTensor(A.bonds(),rowrank=1,labels=["c","1","d"]);
+    cytnx.random.normal_(B.get_block_(),0,0.2);
+    cytnx.random.normal_(A.get_block_(),0,0.2);
     A.print_diagram()
     B.print_diagram()
     #print(A)
     #print(B)
-    la = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=['b','c'],is_diag=True)
-    lb = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=['d','e'],is_diag=True)
+    
+    la = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=["b","c"],is_diag=True)
+    lb = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=["d","e"],is_diag=True)
     la.put_block(cytnx.ones(chi));
     lb.put_block(cytnx.ones(chi));
     la.print_diagram()
@@ -129,7 +130,7 @@ Output >>
 
 
 
-Here, we use **random::Make_normal** to initialize the elements of UniTensor *A* and *B* with normal distribution as initial MPS wavefuncion. 
+Here, we use **random::normal_** to initialize the elements of UniTensor *A* and *B* with normal distribution as initial MPS wavefuncion. 
 The *la*, *lb* are the weight matrix (schmit coefficients), hence only diagonal elements contains non-zero values. Thus, we set **is_diag=True** to only store diagonal entries. 
 We then initialize the elements to be all one for this weight matrices. 
 
@@ -164,30 +165,35 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
 .. code-block:: python 
     :linenos:
 
-    J = -1.0
+    J  = -1.0
     Hx = -0.3
+    CvgCrit = 1.0e-10
     dt = 0.1
-
-    ## Create single site operator
+    
+    ## Create onsite-Op
     Sz = cytnx.physics.pauli("z").real()
     Sx = cytnx.physics.pauli("x").real()
     I = cytnx.eye(2)
-    print(Sz)
-    print(Sx)
-
-
-    ## Construct the local Hamiltonian
+    
+    ## Build Evolution Operator
     TFterm = cytnx.linalg.Kron(Sx,I) + cytnx.linalg.Kron(I,Sx)
     ZZterm = cytnx.linalg.Kron(Sz,Sz)
+    
     H = Hx*TFterm + J*ZZterm
+    del TFterm, ZZterm
     print(H)
-
-
-    ## Build Evolution Operator
+    
     eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
     eH.reshape_(2,2,2,2)
-    U = UniTensor(eH, rowrank = 2)
-    U.print_diagram()
+    print(eH)
+    H.reshape_(2,2,2,2)
+    
+    eH = cytnx.UniTensor(eH)
+    eH.print_diagram()
+    print(eH)
+    
+    H = cytnx.UniTensor(H)
+    H.print_diagram()
 
 
 .. * In C++
@@ -200,8 +206,8 @@ Here, let's construct this imaginary time evolution operator with parameter :mat
 ..     double dt = 0.1;
 
 ..     // Create single site operator
-..     auto Sz = physics::pauli('z').real();
-..     auto Sx = physics::pauli('x').real();
+..     auto Sz = physics::pauli("z").real();
+..     auto Sx = physics::pauli("x").real();
 ..     auto I  = eye(2);
 ..     cout << Sz << endl;
 ..     cout << Sx << endl;
@@ -298,22 +304,22 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 .. code-block:: python 
     :linenos:
 
-    A.relabels_(["a","0","b"]);
-    B.relabels_(["c","1","d"]);
-    la.relabels_(["b","c"]);
-    lb.relabels_(["d","e"]);
+    A.relabels_(["a","0","b"])
+    B.relabels_(["c","1","d"])
+    la.relabels_(["b","c"])
+    lb.relabels_(["d","e"])
 
 
     ## contract all
     X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-    lb_l = lb.relabel(old_label=lb.get_index('e'), new_label=X.labels()[0])
+    lb_l = lb.relabel("e","a")
     X = cytnx.Contract(lb_l,X)
 
 
     ## X =
     #           (0)  (1)
-    #            |    |     
-    #  (d) --lb-A-la-B-lb-- (e) 
+    #            |    |
+    #  (d) --lb-A-la-B-lb-- (e)
     #
     # X.print_diagram()
     Xt = X.clone()
@@ -323,11 +329,10 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
     # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
     XNorm = cytnx.Contract(X,Xt).item()
     XH = cytnx.Contract(X,H)
-    XH.relabels_(["d","e","0","1"]) ;
-    
-    
-    XHX = cytnx.Contract(Xt,XH)
-    XHX = XHX.item() ## rank-0
+    XH.relabels_(["d","e","0","1"])
+
+
+    XHX = cytnx.Contract(Xt,XH).item() ## rank-0
     E = XHX/XNorm
 
     # print(E)
@@ -389,10 +394,9 @@ we also performed SVD for the XeH here, this put the MPS into mixed canonical fo
     ## Time evolution the MPS
     XeH = cytnx.Contract(X,eH)
     XeH.permute_(["d","2","3","e"])
-    XeH.set_rowrank(2)
+    XeH.set_rowrank_(2)
     la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
-    Norm = cytnx.linalg.Norm(la.get_block_()).item()
-    la *= 1./Norm
+    la.normalize_()
 
 .. * In C++
 
@@ -434,14 +438,10 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
 .. code-block:: python 
     :linenos:
 
-
     lb_inv = 1./lb
-
-    lb_inv.relabels_([B.labels()[2],A.labels()[0]]);
-   
+    lb_inv.relabels_(["e","d"])
     A = cytnx.Contract(lb_inv,A)
     B = cytnx.Contract(B,lb_inv)
-
     # translation symmetry, exchange A and B site
     A,B = B,A
     la,lb = lb,la
@@ -472,57 +472,54 @@ Let's put everything together in a loop for iteration:
     :linenos:
 
     for i in range(10000):
-
-        A.relabels_(["a","0","b"]);
-        B.relabels_(["c","1","d"]);
-        la.relabels_(["b","c"]);
-        lb.relabels_(["d","e"]);
-
+    
+        A.relabels_(["a","0","b"])
+        B.relabels_(["c","1","d"])
+        la.relabels_(["b","c"])
+        lb.relabels_(["d","e"])
+    
         ## contract all
         X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
-        lb_l = lb.relabel(old_label=lb.get_index('e'), new_label=X.labels()[0])
+        lb_l = lb.relabel("e","a")
         X = cytnx.Contract(lb_l,X)
-
         Xt = X.clone()
-
+    
         ## calculate norm and energy for this step
         # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
         XNorm = cytnx.Contract(X,Xt).item()
         XH = cytnx.Contract(X,H)
-        XH.relabels_(["d","e","0","1"]);
-        
-        
-        XHX = cytnx.Contract(Xt,XH)
-        XHX = XHX.item() ## rank-0
+        XH.relabels_(["d","e","0","1"])
+    
+        XHX = cytnx.Contract(Xt,XH).item() ## rank-0
         E = XHX/XNorm
-
+    
+        # print(E)
         ## check if converged.
         if(np.abs(E-Elast) < CvgCrit):
             print("[Converged!]")
             break
         print("Step: %d Enr: %5.8f"%(i,Elast))
         Elast = E
-
+    
+    
         ## Time evolution the MPS
         XeH = cytnx.Contract(X,eH)
         XeH.permute_(["d","2","3","e"])
-
+    
         ## Do Svd + truncate
-        XeH.set_rowrank(2)
+        XeH.set_rowrank_(2)
         la,A,B = cytnx.linalg.Svd_truncate(XeH,chi)
-
-        Norm = cytnx.linalg.Norm(la.get_block_()).item()
-        la *= 1./Norm
+        la.normalize_()
 
         lb_inv = 1./lb
-        lb_inv.relabels_([B.labels()[2],A.labels()[0]]);
-    
+        lb_inv.relabels_(["e","d"])
+
         A = cytnx.Contract(lb_inv,A)
         B = cytnx.Contract(B,lb_inv)
+    
         # translation symmetry, exchange A and B site
         A,B = B,A
         la,lb = lb,la
-
 
 
 .. * In C++

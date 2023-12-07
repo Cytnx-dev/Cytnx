@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="1. Set same value for all blocks in UniTensor with Symmetry" href="common_app/SymUT_fill.html" />
-    <link rel="prev" title="5. HOTRG" href="example/HOTRG.html" /> 
+    <link rel="prev" title="4. iDMRG" href="example/iDMRG.html" /> 
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -50,7 +50,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -63,9 +63,10 @@
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="adv_install.html#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -246,9 +247,11 @@
 <li class="toctree-l2"><a class="reference internal" href="guide/contraction.html">8. Contraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/network.html">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/contract.html">8.2. Contract(s)</a><ul>
@@ -276,7 +279,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -338,7 +344,6 @@
 <li class="toctree-l3"><a class="reference internal" href="example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Common usage</a><ul>
@@ -353,7 +358,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -370,7 +375,7 @@
               
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="%23.html">v0.9.5</a></li>
+              <a  class="nav-link" href="index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -396,7 +401,7 @@
                   
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="%23.html">v0.9.5</a></li>
+                  <a  class="nav-link" href="index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -418,8 +423,8 @@
         </ol>
        <div>
           <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-               <a href="example/HOTRG.html" title="Previous Chapter: 5. HOTRG" class="btn btn-primary" role="botton" accesskey="P">
-                   &laquo; 5. HOTRG
+               <a href="example/iDMRG.html" title="Previous Chapter: 4. iDMRG" class="btn btn-primary" role="botton" accesskey="P">
+                   &laquo; 4. iDMRG
                </a>
                <a href="common_app/SymUT_fill.html" title="Next Chapter: 1. Set same value for all blocks in UniTensor with Symmetry" class="btn btn-primary" role="botton" accesskey="N">
                    1. Set same v... &raquo;
@@ -446,7 +451,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -459,9 +464,10 @@
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="adv_install.html#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -642,9 +648,11 @@
 <li class="toctree-l2"><a class="reference internal" href="guide/contraction.html">8. Contraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/network.html">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/contract.html">8.2. Contract(s)</a><ul>
@@ -672,7 +680,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -734,7 +745,6 @@
 <li class="toctree-l3"><a class="reference internal" href="example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Common usage</a><ul>
@@ -749,7 +759,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -762,8 +772,8 @@
           
   <div>
     <h4>Previous topic</h4>
-    <p class="topless"><a href="example/HOTRG.html"
-                          title="previous chapter"><span class="section-number">5. </span>HOTRG</a></p>
+    <p class="topless"><a href="example/iDMRG.html"
+                          title="previous chapter"><span class="section-number">4. </span>iDMRG</a></p>
   </div>
   <div>
     <h4>Next topic</h4>

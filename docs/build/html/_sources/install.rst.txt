@@ -1,7 +1,7 @@
 Install & Usage of Cytnx
 ============================
 To install Cytnx, we recommend user to use anaconda/miniconda to install. However, advanced users can also build from source if necessary. 
-Note that both python API and C++ API will be installed together regardless of which method you use. 
+Note that both Python API and C++ API will be installed together regardless of which method you use. 
 
 
 Conda install
@@ -67,7 +67,7 @@ In the following we show how to install Cytnx with conda.
 Once it is installed, we are all set, and ready to start using Cytnx. 
 
 
-Using python API after Conda install
+Using Python API after Conda install
 ---------------------------------------
 After installing Cytnx, using the Python API is very straight forward, simply import cytnx via:
 

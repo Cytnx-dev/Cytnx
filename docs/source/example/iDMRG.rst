@@ -51,8 +51,8 @@ The initailzation of MPO is much the same as we did in the previous DMRG example
     Hx = 1.0
     
     d = 2
-    sx = cytnx.physics.pauli('x').real()
-    sz = cytnx.physics.pauli('z').real()
+    sx = cytnx.physics.pauli("x").real()
+    sz = cytnx.physics.pauli("z").real()
     eye = cytnx.eye(d)
     M = cytnx.zeros([3, 3, d, d])
     M[0,0] = M[2,2] = eye
@@ -84,24 +84,23 @@ Let's implement the function solving eigenvalue problem using in-built Lanczos m
     :linenos:
 
     class Projector(cytnx.LinOp):
-       
-        
+    
     
         def __init__(self,L,M1,M2,R,psi_dim,psi_dtype,psi_device):
             cytnx.LinOp.__init__(self,"mv",psi_dim,psi_dtype,psi_device)
-            
+    
             self.anet = cytnx.Network("projector.net")
             self.anet.PutUniTensor("M2",M2)
             self.anet.PutUniTensors(["L","M1","R"],[L,M1,R])
-            self.psi_shape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]      
-      
+            self.psi_shape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]
+    
         def matvec(self,psi):
-            
+    
             psi_p = cytnx.UniTensor(psi.clone(),rowrank=0)  ## clone here
             psi_p.reshape_(*self.psi_shape)
     
             self.anet.PutUniTensor("psi",psi_p)
-            H_psi = self.anet.Launch(optimal=True).get_block_() # get_block_ without copy
+            H_psi = self.anet.Launch().get_block_() # get_block_ without copy
     
             H_psi.flatten_()
             return H_psi
@@ -114,7 +113,7 @@ Let's implement the function solving eigenvalue problem using in-built Lanczos m
         #print(eig_Lanczos)
     
         Hop = Projector(*functArgs,psivec.shape()[0],psivec.dtype(),psivec.device())
-        gs_energy ,psivec = cytnx.linalg.Lanczos(Hop,Tin=psivec,method='Gnd',CvgCrit=Cvgcrit,Maxiter=maxit)
+        gs_energy ,psivec = cytnx.linalg.Lanczos(Hop,Tin=psivec,method="Gnd",CvgCrit=Cvgcrit,Maxiter=maxit)
     
         return psivec, gs_energy.item()
 
@@ -152,10 +151,10 @@ we performed SVD and use the left and right basis to update the environment for 
 
     anet = cytnx.Network("L_AMAH.net")
     anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
-    L = anet.Launch(optimal=True)
+    L = anet.Launch()
     anet = cytnx.Network("R_AMAH.net")
     anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M]);
-    R = anet.Launch(optimal=True)
+    R = anet.Launch()
 
 we then solve the eigenvalue problem again and do SVD for the new effective hamitonian, note that we initialized a new random trial state here.
 
@@ -188,10 +187,10 @@ followed by another environment update:
     # absorb A[1], B[1] to left & right enviroment.
     anet = cytnx.Network("L_AMAH.net")
     anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
-    L = anet.Launch(optimal=True)
+    L = anet.Launch()
     anet = cytnx.Network("R_AMAH.net")
     anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M]);
-    R = anet.Launch(optimal=True)
+    R = anet.Launch()
 
 The next few steps involve "rotate" the center of our state to the left and right: 
 
@@ -206,29 +205,12 @@ which is done by the straightforward contraction and re-SVD:
 .. code-block:: python
     :linenos:
     
-    ## rotate left
-    A.set_rowrank(1)
+    A.set_rowrank_(1)
     # set the label '_aux_R' to another to avoid Svd error
-    cytnx.Contract(A, s1).relabel_(2, '-2');
-    sR,_,A = cytnx.linalg.Svd(cytnx.Contract(A, s1))
-
-    ## rotate right
-    B.set_rowrank(2)
+    sR,_,A = cytnx.linalg.Svd(cytnx.Contract(A, s1).relabel_(2, "-2"))
+    B.set_rowrank_(2)
     # set the label '_aux_L' to another to avoid Svd error
-    cytnx.Contract(s1, B).relabel_(0, '-1');
-    sL,B,_ = cytnx.linalg.Svd(cytnx.Contract(s1, B))
-
-    ## now, we change it just to be consistent with the notation in the paper
-    #
-    #  before:
-    #    env-- B'--sL    sR--A' --env
-    #          |             |    
-    #
-    #  after change name:
-    #
-    #    env-- A--sL     sR--B  --env
-    #          |             |
-    # 
+    sL,B,_ = cytnx.linalg.Svd(cytnx.Contract(s1, B).relabel_(0, "-1"))
     A,B = B,A
 
 Note that we have discarded U for the rotate left case and Vt for the right, and now in this scheme we construct our trial state
@@ -267,20 +249,19 @@ The construction of trial state and optimization is done as follows:
 .. code-block:: python
     :linenos:
 
-    sR.relabel_(0,'1');
-    sL.relabel_(1,'0');
+    sR.relabel_(0,"1")
+    sL.relabel_(1,"0")
     s0 = 1./s0
-    s0.relabels_(['0','1']);
+    s0.relabels_(["0","1"])
     s2 = cytnx.Contract(cytnx.Contract(sL,s0),sR)
 
-    s2.relabels_(['-10','-11']);
-    A.relabel_(2,'-10');
-    B.relabel_(0,'-11');
+    s2.relabels_(["-10","-11"])
+    A.relabel_(2,"-10")
+    B.relabel_(0,"-11")
     psi = cytnx.Contract(cytnx.Contract(A,s2),B)
 
     ## optimize wave function:
-    #  again use Lanczos to get the (local) ground state.
-
+    #  again use Lanczos to get the (local) ground state, the projector is in shape
     shp = psi.shape()
     psi_T = psi.get_block_(); psi_T.flatten_() ## flatten to 1d
     psi_T, Entemp = eig_Lanczos(psi_T, (L,M,M,R), maxit=maxit);
@@ -302,7 +283,7 @@ then we check the convergence by comparing the singular values to the one we obt
     else:
         ss = abs(cytnx.linalg.Dot(s2.get_block_(),s1.get_block_()).item())
         print("step:%d, diff:%11.11f"%(i,1-ss))
-    if(1-ss<1.0e-10): 
+    if(1-ss<1.0e-10):
         print("[converge!!]")
         break;
 
@@ -315,11 +296,11 @@ also rememeber to update the environment using the SVD result.
     
     anet = cytnx.Network("L_AMAH.net")
     anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
-    L = anet.Launch(optimal=True)
+    L = anet.Launch()
 
     anet = cytnx.Network("R_AMAH.net")
     anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M]);
-    R = anet.Launch(optimal=True)
+    R = anet.Launch()
 
     s0 = s1
     s1 = s2
@@ -341,11 +322,9 @@ After reaching the fixed point, let's consider a local measurement of energy for
     # use the converged state to get the local energy:
     anet = cytnx.Network("Measure.net")
     anet.PutUniTensors(["psi","psi_conj","M"],[psi,psi,H])
-    E = anet.Launch(optimal=True).item()
+    E = anet.Launch().item()
     print("ground state E",E)
 
-
-You can get the source code at the link: https://github.com/kaihsin/Cytnx/blob/master/example/iDMRG/idmrg_optim.py
 
 .. bibliography:: ref.idmrg.bib
     :cited:
