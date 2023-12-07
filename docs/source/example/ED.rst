@@ -65,7 +65,7 @@ Implementation
     import cytnx as cy
 
     class Hising(cy.LinOp):
-        
+
         def __init__(self,L,J,Hx):
             cy.LinOp.__init__(self,"mv",2**L,cy.Type.Double,cy.Device.cpu)
             ## custom members:
@@ -168,7 +168,7 @@ The class constructor takes three arguments: **L**, the size of ising chain; **J
     Hx = 0.3
     H = Hising(L,J,Hx)
     v = cy.ones(16)
-    print(cy.linalg.Lanczos_ER(H,3))
+    print(cy.linalg.Lanczos(H,Tin=v,method='ER',k=3,max_krydim=2))
 
 
 * In C++:

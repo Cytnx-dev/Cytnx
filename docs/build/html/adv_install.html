@@ -50,7 +50,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -63,9 +63,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -246,9 +247,11 @@
 <li class="toctree-l2"><a class="reference internal" href="guide/contraction.html">8. Contraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/network.html">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/contract.html">8.2. Contract(s)</a><ul>
@@ -276,7 +279,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -338,7 +344,6 @@
 <li class="toctree-l3"><a class="reference internal" href="example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="CommApp.html">Common usage</a><ul>
@@ -353,7 +358,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -370,7 +375,7 @@
               
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="%23.html">v0.9.5</a></li>
+              <a  class="nav-link" href="index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -396,7 +401,7 @@
                   
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="%23.html">v0.9.5</a></li>
+                  <a  class="nav-link" href="index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -446,7 +451,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -459,9 +464,10 @@
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -642,9 +648,11 @@
 <li class="toctree-l2"><a class="reference internal" href="guide/contraction.html">8. Contraction</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/network.html">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/contraction/network.html#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide/contraction/contract.html">8.2. Contract(s)</a><ul>
@@ -672,7 +680,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="guide/xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="guide/xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide/xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -734,7 +745,6 @@
 <li class="toctree-l3"><a class="reference internal" href="example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="CommApp.html">Common usage</a><ul>
@@ -749,7 +759,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -834,6 +844,7 @@
 <li><p>python-graphviz</p></li>
 <li><p>graphviz</p></li>
 <li><p>numpy</p></li>
+<li><p>beartype</p></li>
 </ul>
 <p>There are two methods how you can set-up all the dependencies before starting the build process:</p>
 <ol class="arabic simple">
@@ -849,7 +860,7 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <div><p>&gt;&gt; The conda-forge channel includes not only the Python package but also other pre-compiled libraries/compilers.</p>
 </div></blockquote>
 </div>
-<p><strong>Option A. Using anaconda/conda to install dependencies:</strong></p>
+<p><strong>Option A. Using anaconda/conda to install dependencies</strong></p>
 <ol class="arabic simple">
 <li><p>Install anaconda/miniconda, setting the virtual environments</p></li>
 </ol>
@@ -881,27 +892,57 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <ol class="arabic simple" start="2">
 <li><p>Install the following dependencies:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>make<span class="w"> </span>boost<span class="w"> </span>libboost<span class="w"> </span>git<span class="w"> </span>compilers<span class="w"> </span>numpy<span class="w"> </span>mkl<span class="w"> </span>mkl-include<span class="w"> </span>mkl-service<span class="w"> </span>pybind11<span class="w"> </span><span class="nv">libblas</span><span class="o">=</span>*<span class="o">=</span>*mkl
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>make<span class="w"> </span>boost<span class="w"> </span>libboost<span class="w"> </span>git<span class="w"> </span>compilers<span class="w"> </span>numpy<span class="w"> </span>openblas<span class="w"> </span>pybind11<span class="w"> </span>beartype
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compilers on system side is not required.</p>
+<ol class="arabic">
+<li><p>This installation includes the compilers/linalg libraries provided by conda-forge, so the installation of compilers on system side is not required.</p></li>
+<li><p>Some packages may not be required, or additional packages need to be installed, depending on the compiling options. See below for further information. If mkl shall be used instead of openblas, use the following dpenedencies:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>cmake<span class="w"> </span>make<span class="w"> </span>boost<span class="w"> </span>libboost<span class="w"> </span>git<span class="w"> </span>compilers<span class="w"> </span>numpy<span class="w"> </span>mkl<span class="w"> </span>mkl-include<span class="w"> </span>mkl-service<span class="w"> </span>pybind11<span class="w"> </span><span class="nv">libblas</span><span class="o">=</span>*<span class="o">=</span>*mkl<span class="w"> </span>beartype
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>After the installation, an automated test based on gtest can be run. This option needs to be activated in the install script. In this case, gtest needs to be installed as well:</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>gtest
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ol>
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <p>Trouble shooting:</p>
 <blockquote>
-<div><ol class="arabic simple">
-<li><p>Make sure <strong>conda-forge</strong> channel has the top priority</p></li>
-<li><p>Make sure libblas=mkl (you can check using <em>conda list | grep libblas</em>)</p></li>
+<div><ol class="arabic">
+<li><p>Make sure <strong>conda-forge</strong> channel has the top priority. This should be assured by running</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--add<span class="w"> </span>channels<span class="w"> </span>conda-forge.
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p>Make sure that the conda channel priority is <strong>flexible</strong> or <strong>strict</strong>. This can be achieved by</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>channel_priority<span class="w"> </span>strict
+</pre></div>
+</div>
+<p>or changing <em>~/.condarc</em> accordingly. You can check if the packages are correctly installed from <em>conda-forge</em> by running <em>$conda list</em> and checking the <strong>Channels</strong> row.</p>
+</div></blockquote>
+</li>
+<li><p>Make sure libblas=mkl (you can check using <em>$conda list | grep libblas</em>)</p></li>
 </ol>
 </div></blockquote>
 </div>
-<ol class="arabic simple" start="4">
+<ol class="arabic simple">
 <li><p>In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:</p></li>
 </ol>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda
 </pre></div>
 </div>
 <p><strong>Option B. Install dependencies via system package manager</strong></p>
@@ -916,11 +957,12 @@ This is the simplest way as conda automatically resolves the whole path of each 
 <section id="compiling-process">
 <h3>Compiling process<a class="headerlink" href="#compiling-process" title="Permalink to this heading">¶</a></h3>
 <p>Once you installed all the dependencies, it is time to start building the Cytnx source code.</p>
-<p>Starting from v0.7.6a, Cytnx provides a shell script <strong>Install.sh</strong>, which contains all the cmake arguments check list. To install, un-comment and put custom parameters on the corresponding lines, and simply execute this script:</p>
+<p><strong>Option A. Compiling with script</strong></p>
+<p>Starting from v0.7.6a, Cytnx provides a shell script <strong>Install.sh</strong>, which contains all the cmake arguments as a check list. To install, edit the script, un-comment and modify custom parameters in the corresponding lines. Then, simply execute this script:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$sh</span><span class="w"> </span>Install.sh
 </pre></div>
 </div>
-<p><strong>Arguments/options for cmake install</strong></p>
+<p><strong>Option B. Using cmake install</strong></p>
 <p>Please see the following steps for the standard cmake compiling process and all the compiling options:</p>
 <ol class="arabic simple">
 <li><p>Create a build directory:</p></li>
@@ -1051,9 +1093,21 @@ CYTNX_CXXFLAGS<span class="w"> </span>:<span class="o">=</span><span class="w"> 
 <p class="admonition-title">Note</p>
 <p>CYTNX_ROOT is the path where Cytnx is installed from binary build.</p>
 </div>
+</section>
+</section>
+<section id="generate-api-documentation">
+<h2>Generate API documentation<a class="headerlink" href="#generate-api-documentation" title="Permalink to this heading">¶</a></h2>
+<p>An API documentation can be generated from the source code of Cytnx by using doxygen. The documentation is accessible online at &lt;<a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">https://kaihsinwu.gitlab.io/cytnx_api/</a>&gt;. To create it locally, make sure that doxygen is installed:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$conda</span><span class="w"> </span>install<span class="w"> </span>doxygen
+</pre></div>
+</div>
+<p>Then, use doxygen in the Cytnx source code folder to generate the API documentation:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nv">$doxygen</span><span class="w"> </span>docs.doxygen
+</pre></div>
+</div>
+<p>The documentation is created in the folder <strong>docs/</strong>. You can open <strong>docs/html/index.html</strong> in your browser to access it.</p>
 <div class="toctree-wrapper compound">
 </div>
-</section>
 </section>
 </section>
 

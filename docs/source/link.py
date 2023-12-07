@@ -1,5 +1,5 @@
 from conf import _version
-## Add links to following, remember %s is neeeded for url!
+## Add links to following, remember %s is needed for url!
 extlinks = {'splo':("https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html%s",None),\
             'torch-tn':("https://pytorch.org/docs/stable/tensors.html%s",None),\
             'numpy-arr':("https://numpy.org/doc/1.18/reference/generated/numpy.array.html%s",None),\

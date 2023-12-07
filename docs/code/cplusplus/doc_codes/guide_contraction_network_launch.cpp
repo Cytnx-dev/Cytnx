@@ -1,1 +1,1 @@
-UniTensor Res = net.Launch(true);
+UniTensor Res = net.Launch();

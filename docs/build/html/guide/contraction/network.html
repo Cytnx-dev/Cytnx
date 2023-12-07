@@ -50,7 +50,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -63,9 +63,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -246,9 +247,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../contraction.html">8. Contraction</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="contract.html">8.2. Contract(s)</a><ul>
@@ -276,7 +279,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -338,7 +344,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
@@ -353,7 +358,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -370,7 +375,7 @@
               
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
-              <a  class="nav-link" href="../../%23.html">v0.9.5</a></li>
+              <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
              
@@ -396,7 +401,7 @@
                   
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
-                  <a  class="nav-link" href="../../%23.html">v0.9.5</a></li>
+                  <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
@@ -453,7 +458,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../install.html#conda-install">Conda install</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using python API after Conda install</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../install.html#using-python-api-after-conda-install">Using Python API after Conda install</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../install.html#using-c-api-after-conda-install">Using C++ API after Conda install</a><ul class="simple">
 </ul>
 </li>
@@ -466,9 +471,10 @@
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#dependencies">Dependencies</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#compiling-process">Compiling process</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-python-api-after-self-build-install">Using Python API after self-build install</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../../adv_install.html#using-c-api-after-self-build-install">Using C++ API after self-build install</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../../adv_install.html#generate-api-documentation">Generate API documentation</a><ul class="simple">
 </ul>
 </li>
 </ul>
@@ -649,9 +655,11 @@
 <li class="toctree-l2 current"><a class="reference internal" href="../contraction.html">8. Contraction</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">8.1. Network</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#network-from-net-file">8.1.1. Network from .net file</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#put-unitensors-and-launch">8.1.2. Put UniTensors and Launch</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#launch">8.1.2. Launch</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#network-from-string">8.1.3. Network from string</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#putunitensor-according-to-label-ordering">8.1.4. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#put-unitensors">8.1.4. Put UniTensors</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#putunitensor-according-to-label-ordering">8.1.5. PutUniTensor according to label ordering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-the-contraction-order">8.1.6. Set the contraction order</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="contract.html">8.2. Contract(s)</a><ul>
@@ -679,7 +687,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul class="simple">
+<li class="toctree-l3"><a class="reference internal" href="../xlinalg.html#tensor-decomposition">11.1. Tensor decomposition</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../xlinalg.html#singular-value-decomposition">11.1.1. Singular value decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../xlinalg.html#eigenvalue-decomposition">11.1.2. Eigenvalue decomposition</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../xlinalg.html#qr-decomposition">11.1.3. QR decomposition</a></li>
 </ul>
 </li>
 </ul>
@@ -741,7 +752,6 @@
 <li class="toctree-l3"><a class="reference internal" href="../../example/iDMRG.html#update-procedure">4.2. Update procedure</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../../example/HOTRG.html">5. HOTRG</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../CommApp.html">Common usage</a><ul>
@@ -756,7 +766,7 @@
 </li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentations</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
 <li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
 </ul>
@@ -826,13 +836,54 @@ ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 <p>Note that:</p>
 <ol class="arabic simple">
 <li><p>The labels above correspond to the diagram you draw, not the label attribute of UniTensor objects. Both label conventions can, but do not have to be the same.</p></li>
-<li><p>Labels should be separated by ‘ , ‘. In TOUT, a ‘ ; ‘ separates the labels in rowspace and colspace.</p></li>
+<li><p>Labels should be separated by ‘ , ‘.</p></li>
+<li><p>In TOUT, a ‘ ; ‘ separates the labels in rowspace and colspace, note that it is optional, if there is no ‘ ; ‘ specified, all label will be put in colspace.</p></li>
 <li><p>TOUT specifies the output configuration, in this case we leave it blank since the result will be a scalar.</p></li>
 <li><p>ORDER is optional and used to specify the contraction order manually.</p></li>
 </ol>
 </section>
-<section id="put-unitensors-and-launch">
-<h2><span class="section-number">8.1.2. </span>Put UniTensors and Launch<a class="headerlink" href="#put-unitensors-and-launch" title="Permalink to this heading">¶</a></h2>
+<section id="launch">
+<h2><span class="section-number">8.1.2. </span>Launch<a class="headerlink" href="#launch" title="Permalink to this heading">¶</a></h2>
+<p>To perform the contraction and get the outcome, we use the <strong>.Launch()</strong>:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Res</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">Res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net</span><span class="p">.</span><span class="n">Launch</span><span class="p">();</span>
+</pre></div>
+</div>
+</section>
+<section id="network-from-string">
+<h2><span class="section-number">8.1.3. </span>Network from string<a class="headerlink" href="#network-from-string" title="Permalink to this heading">¶</a></h2>
+<p>Alternatively, we can implement the contraction directly in the program with FromString():</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">net</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
+<span class="linenos"> 2</span><span class="n">net</span><span class="o">.</span><span class="n">FromString</span><span class="p">([</span><span class="s2">&quot;c0: t0-c0, t3-c0&quot;</span><span class="p">,</span>\
+<span class="linenos"> 3</span>                <span class="s2">&quot;c1: t1-c1, t0-c1&quot;</span><span class="p">,</span>\
+<span class="linenos"> 4</span>                <span class="s2">&quot;c2: t2-c2, t1-c2&quot;</span><span class="p">,</span>\
+<span class="linenos"> 5</span>                <span class="s2">&quot;c3: t3-c3, t2-c3&quot;</span><span class="p">,</span>\
+<span class="linenos"> 6</span>                <span class="s2">&quot;t0: t0-c1, w-t0, t0-c0&quot;</span><span class="p">,</span>\
+<span class="linenos"> 7</span>                <span class="s2">&quot;t1: t1-c2, w-t1, t1-c1&quot;</span><span class="p">,</span>\
+<span class="linenos"> 8</span>                <span class="s2">&quot;t2: t2-c3, w-t2, t2-c2&quot;</span><span class="p">,</span>\
+<span class="linenos"> 9</span>                <span class="s2">&quot;t3: t3-c0, w-t3, t3-c3&quot;</span><span class="p">,</span>\
+<span class="linenos">10</span>                <span class="s2">&quot;w: w-t0, w-t1, w-t2, w-t3&quot;</span><span class="p">,</span>\
+<span class="linenos">11</span>                <span class="s2">&quot;TOUT:&quot;</span><span class="p">,</span>\
+<span class="linenos">12</span>                <span class="s2">&quot;ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>This approach can be convenient if you do not want to maintain the .net files.</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="put-unitensors">
+<h2><span class="section-number">8.1.4. </span>Put UniTensors<a class="headerlink" href="#put-unitensors" title="Permalink to this heading">¶</a></h2>
 <p>We use the .net file to create a Network. Then, we can load instances of UniTensors:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
@@ -912,53 +963,13 @@ ORDER : ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
 =================
 </pre></div>
 </div>
-<p>To perform the contraction and get the outcome, we use the .Launch():</p>
-<ul class="simple">
-<li><p>In Python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">Res</span> <span class="o">=</span> <span class="n">net</span><span class="o">.</span><span class="n">Launch</span><span class="p">(</span><span class="n">optimal</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li><p>In C++:</p></li>
-</ul>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">UniTensor</span><span class="w"> </span><span class="n">Res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net</span><span class="p">.</span><span class="n">Launch</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
-</pre></div>
-</div>
-<p>Here if the argument <strong>optimal = True</strong>, the contraction order is always auto-optimized.
-If <strong>optimal = False</strong>, the specified ORDER in the .net file will be used. If ORDER is not specified, the order of the tensor definitions in the .net file is used.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<ol class="arabic simple">
-<li><p>The auto-optimized contraction order obtained by calling <strong>.Launch(optimal = True)</strong> is saved in the Network object. If there is no need to re-optimize the order (i.e. the bond dimensions of the input tensors remain (approximately) the same.), we can put new tensors and call <strong>.Launch()</strong> again with <strong>optimal = False</strong>. In this case, the optimized order is reused, which avoids the overhead of recalculating the optimal order.</p></li>
-<li><p>The indices of the UniTensors to be put into the Network need to be ordered according to the indices in the .net file. Otherwise, the index order can be defined in PutTensor explicitly, see <a class="reference internal" href="#putunitensor-according-to-label-ordering"><span class="std std-ref">PutUniTensor according to label ordering</span></a> below.</p></li>
-</ol>
+<p>The indices of the UniTensors to be put into the Network need to be ordered according to the indices in the .net file. Otherwise, the index order can be defined in PutTensor explicitly, see <a class="reference internal" href="#putunitensor-according-to-label-ordering"><span class="std std-ref">PutUniTensor according to label ordering</span></a> below.</p>
 </div>
-</section>
-<section id="network-from-string">
-<h2><span class="section-number">8.1.3. </span>Network from string<a class="headerlink" href="#network-from-string" title="Permalink to this heading">¶</a></h2>
-<p>Alternatively, we can implement the contraction directly in the program with FromString():</p>
-<ul class="simple">
-<li><p>In Python:</p></li>
-</ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">net</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">()</span>
-<span class="linenos"> 2</span><span class="n">net</span><span class="o">.</span><span class="n">FromString</span><span class="p">([</span><span class="s2">&quot;c0: t0-c0, t3-c0&quot;</span><span class="p">,</span>\
-<span class="linenos"> 3</span>                <span class="s2">&quot;c1: t1-c1, t0-c1&quot;</span><span class="p">,</span>\
-<span class="linenos"> 4</span>                <span class="s2">&quot;c2: t2-c2, t1-c2&quot;</span><span class="p">,</span>\
-<span class="linenos"> 5</span>                <span class="s2">&quot;c3: t3-c3, t2-c3&quot;</span><span class="p">,</span>\
-<span class="linenos"> 6</span>                <span class="s2">&quot;t0: t0-c1, w-t0, t0-c0&quot;</span><span class="p">,</span>\
-<span class="linenos"> 7</span>                <span class="s2">&quot;t1: t1-c2, w-t1, t1-c1&quot;</span><span class="p">,</span>\
-<span class="linenos"> 8</span>                <span class="s2">&quot;t2: t2-c3, w-t2, t2-c2&quot;</span><span class="p">,</span>\
-<span class="linenos"> 9</span>                <span class="s2">&quot;t3: t3-c0, w-t3, t3-c3&quot;</span><span class="p">,</span>\
-<span class="linenos">10</span>                <span class="s2">&quot;w: w-t0, w-t1, w-t2, w-t3&quot;</span><span class="p">,</span>\
-<span class="linenos">11</span>                <span class="s2">&quot;TOUT:&quot;</span><span class="p">,</span>\
-<span class="linenos">12</span>                <span class="s2">&quot;ORDER: ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)&quot;</span><span class="p">])</span>
-</pre></div>
-</div>
-<p>This approach can be convenient if you do not want to maintain the .net files.</p>
 </section>
 <section id="putunitensor-according-to-label-ordering">
-<h2><span class="section-number">8.1.4. </span>PutUniTensor according to label ordering<a class="headerlink" href="#putunitensor-according-to-label-ordering" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">8.1.5. </span>PutUniTensor according to label ordering<a class="headerlink" href="#putunitensor-according-to-label-ordering" title="Permalink to this heading">¶</a></h2>
 <p>When we put a UniTensor into a Network, we can also specify its leg order according to a label ordering, this interface turns out to be convinient since users don’t need to memorize look up the index of s desired leg. To be more specific, consider a example, we grab two three leg tensors <strong>A1</strong> and <strong>A2</strong>, they both have one leg that spans the physical space and the other two legs describe the virtual space (such tensors are often appearing as the building block tensors of matrix product state), we create the tensors and set the corresponding lebels as following:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
@@ -1013,7 +1024,59 @@ on device   : cytnx device: CPU
 </div>
 <p>So when we do the PutUniTensor() we add the third argument which is a labels ordering, what this function will do is nothing but permute the tensor legs according to this label ordering before putting them into the Network.</p>
 <p>So when calling <cite>PutUniTensor()</cite> we add the third argument which is a labels ordering. This will permute the tensor legs according to the given label ordering before putting them into the Network.</p>
-<div class="toctree-wrapper compound">
+</section>
+<section id="set-the-contraction-order">
+<h2><span class="section-number">8.1.6. </span>Set the contraction order<a class="headerlink" href="#set-the-contraction-order" title="Permalink to this heading">¶</a></h2>
+<p>To set or find the optimal contraction order of our tensor network, we provide <strong>.setOrder(optimal, contract_order)</strong> function, by passing true for the first argument, the Network will find an optimal contraction order for us and store it:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="o">.</span><span class="n">setOrder</span><span class="p">(</span><span class="n">optimal</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="p">.</span><span class="n">setOrder</span><span class="p">(</span><span class="cm">/*optimal*/</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although Network does cache the optimal contraction order once it is found, the optimal order finding rountine will still be executed everytime we call the .setOrder(optimal= true), it is suggested that one store the optimal order and specify it manually in some situaitions to prevent the overhead of re-finding optimal order.</p>
+</div>
+<p>We can also pass the string specifying our desired contraction order in the second arguement:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="o">.</span><span class="n">setOrder</span><span class="p">(</span><span class="n">contraction_order</span> <span class="o">=</span> <span class="s2">&quot;((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">net</span><span class="p">.</span><span class="n">setOrder</span><span class="p">(</span><span class="cm">/*optimal*/</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="cm">/*contract_order*/</span><span class="w"> </span><span class="s">&quot;((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default the <strong>optimal = False</strong> , so for python case we can ignore the optimal argument and just pass the order. Note that if one pass <strong>optimal = True</strong> while specifying the order at the same time, Network will find and use the optimal order.</p>
+</div>
+<p>To inspect the current contraction order stored in the Network, we can use <strong>.getOrder()</strong> which returns a contraction order string:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nb">print</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">getOrder</span><span class="p">())</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>In C++:</p></li>
+</ul>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="n">net</span><span class="p">.</span><span class="n">getOrder</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
+</pre></div>
 </div>
 </section>
 </section>

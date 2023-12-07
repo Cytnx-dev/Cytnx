@@ -1,5 +1,5 @@
 # Cytnx_doc
-The webpage of Cytnx
+The documentation of the Cytnx tensor network library
 
 
 # Compilation instructions
