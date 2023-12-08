@@ -21,10 +21,10 @@ namespace cytnx {
       for (size_t i = 0; i < alpha_array.size(); i++) alphas[i] = complex128(alpha_array[i]);
       for (size_t i = 0; i < beta_array.size(); i++) betas[i] = complex128(beta_array[i]);
 #ifdef UNI_MKL
-      zgemm_batch(transa_array, transb_array, m_array, n_array, k_array, alphas,
-                  (const cytnx_complex128 **)a_array, lda_array, (const cytnx_complex128 **)b_array,
-                  ldb_array, betas, (cytnx_complex128 **)c_array, ldc_array, &group_count,
-                  group_size);
+      zgemm3m_batch(transa_array, transb_array, m_array, n_array, k_array, alphas,
+                    (const cytnx_complex128 **)a_array, lda_array,
+                    (const cytnx_complex128 **)b_array, ldb_array, betas,
+                    (cytnx_complex128 **)c_array, ldc_array, &group_count, group_size);
 #else
       cytnx_error_msg(true, "[Gemm_Batch_internal] fatal error, Gemm_Batch required MKL.%s", "\n");
 #endif
@@ -42,10 +42,10 @@ namespace cytnx {
       for (size_t i = 0; i < alpha_array.size(); i++) alphas[i] = complex64(alpha_array[i]);
       for (size_t i = 0; i < beta_array.size(); i++) betas[i] = complex64(beta_array[i]);
 #ifdef UNI_MKL
-      cgemm_batch(transa_array, transb_array, m_array, n_array, k_array, alphas,
-                  (const cytnx_complex64 **)a_array, lda_array, (const cytnx_complex64 **)b_array,
-                  ldb_array, betas, (cytnx_complex64 **)c_array, ldc_array, &group_count,
-                  group_size);
+      cgemm3m_batch(transa_array, transb_array, m_array, n_array, k_array, alphas,
+                    (const cytnx_complex64 **)a_array, lda_array, (const cytnx_complex64 **)b_array,
+                    ldb_array, betas, (cytnx_complex64 **)c_array, ldc_array, &group_count,
+                    group_size);
 #else
       cytnx_error_msg(true, "[Gemm_Batch_internal] fatal error, Gemm_Batch required MKL.%s", "\n");
 #endif

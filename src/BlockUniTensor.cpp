@@ -1006,6 +1006,7 @@ namespace cytnx {
               tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
                                                            comm_idx1, comm_idx2, this->is_diag());
               cout << "after Tensordot_dg" << endl;
+              cout << "tmp->_blocks[targ_b].dtype() " << tmp->_blocks[targ_b].dtype() << endl;
             }
           }
           cout << "After ALL Tensordot_dg" << endl;
@@ -1037,10 +1038,10 @@ namespace cytnx {
                 all_sub_tensor_same_device = false;
             }
             cytnx_error_msg(
-              all_sub_tensor_same_dtype,
+              !all_sub_tensor_same_dtype,
               "[ERROR] cannot perform contraction on sub-Tensors with different dtype.%s", "\n");
             cytnx_error_msg(
-              all_sub_tensor_same_device,
+              !all_sub_tensor_same_device,
               "[ERROR] cannot perform contraction on sub-Tensors with different device.%s", "\n");
             all_sub_tensor_same_dtype = true;
             all_sub_tensor_same_device = true;
@@ -1051,10 +1052,10 @@ namespace cytnx {
                 all_sub_tensor_same_device = false;
             }
             cytnx_error_msg(
-              all_sub_tensor_same_dtype,
+              !all_sub_tensor_same_dtype,
               "[ERROR] cannot perform contraction on sub-Tensors with different dtype.%s", "\n");
             cytnx_error_msg(
-              all_sub_tensor_same_device,
+              !all_sub_tensor_same_device,
               "[ERROR] cannot perform contraction on sub-Tensors with different device.%s", "\n");
           }
   #ifdef UNI_MKL
