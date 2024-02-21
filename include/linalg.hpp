@@ -2390,7 +2390,7 @@ namespace cytnx {
                                           const bool &verbose = false,
                                           const unsigned int &Maxiter = 100000);
 
-    // Lanczos_Exp_Ut:
+    // Lanczos_Exp:
     //===============================================
     /**
     @brief Perform the Lanczos-like algorithm for hermitian positive semi-definite linear operator
@@ -2421,8 +2421,8 @@ namespace cytnx {
     semi-definite(PSD), and that the norm of \p v is 1. Ohterwise, the function will return the
     wrong results without any warning.
     */
-    UniTensor Lanczos_Exp_Ut(LinOp *Hop, const UniTensor &v, const double &CvgCrit = 1.0e-14,
-                             const unsigned int &Maxiter = 100000, const bool &verbose = false);
+    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &v, const double &CvgCrit = 1.0e-14,
+                          const unsigned int &Maxiter = 100000, const bool &verbose = false);
 
     // Lstsq:
     //===========================================

@@ -178,22 +178,22 @@ namespace cytnx {
       out.set_rowrank_(v0.rowrank());
     }
 
-    // Lanczos_Exp_Ut
-    UniTensor Lanczos_Exp_Ut(LinOp *Hop, const UniTensor &Tin, const double &CvgCrit,
-                             const unsigned int &Maxiter, const bool &verbose) {
+    // Lanczos_Exp
+    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &Tin, const double &CvgCrit,
+                          const unsigned int &Maxiter, const bool &verbose) {
       // check type:
       cytnx_error_msg(!Type.is_float(Hop->dtype()),
-                      "[ERROR][Lanczos_Exp_Ut] Lanczos_Exp_Ut can only accept operator with "
+                      "[ERROR][Lanczos_Exp] Lanczos_Exp can only accept operator with "
                       "floating types (complex/real)%s",
                       "\n");
 
       cytnx_error_msg(Tin.uten_type() != UTenType.Dense,
-                      "[ERROR][Lanczos_Exp_Ut] The Block UniTensor type is still not supported.%s",
+                      "[ERROR][Lanczos_Exp] The Block UniTensor type is still not supported.%s",
                       "\n");
 
       // check criteria and maxiter:
-      cytnx_error_msg(CvgCrit <= 0, "[ERROR][Lanczos_Exp_Ut] converge criteria must >0%s", "\n");
-      cytnx_error_msg(Maxiter < 2, "[ERROR][Lanczos_Exp_Ut] Maxiter must >1%s", "\n");
+      cytnx_error_msg(CvgCrit <= 0, "[ERROR][Lanczos_Exp] converge criteria must >0%s", "\n");
+      cytnx_error_msg(Maxiter < 2, "[ERROR][Lanczos_Exp] Maxiter must >1%s", "\n");
 
       // check Tin should be rank-1:
 
@@ -207,10 +207,11 @@ namespace cytnx {
       if (Hop->dtype() == Type.Float || Hop->dtype() == Type.ComplexFloat) {
         if (_cvgcrit < 1.0e-7) {
           _cvgcrit = 1.0e-7;
-          cytnx_warning_msg(_cvgcrit < 1.0e-7,
-                            "[WARNING][CvgCrit] for float precision type, CvgCrit cannot exceed "
-                            "it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s",
-                            "\n");
+          cytnx_warning_msg(
+            _cvgcrit < 1.0e-7,
+            "[WARNING][Lanczos_Exp] for float precision type, CvgCrit cannot exceed "
+            "it's own type precision limit 1e-7, and it's auto capped to 1.0e-7.%s",
+            "\n");
         }
       }
 
