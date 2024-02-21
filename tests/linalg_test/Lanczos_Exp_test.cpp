@@ -49,7 +49,7 @@ namespace Lanczos_Exp_Ut_Test {
     auto op = OneSiteOp(d, D);
     auto Tin = CreateA(d, D);
     const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp_Ut(&op, Tin, crit);
+    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
     auto ans = GetAns(op.EffH, Tin);
     auto err = static_cast<double>((x - ans).Norm().item().real());
     EXPECT_TRUE(err <= crit);
@@ -61,7 +61,7 @@ namespace Lanczos_Exp_Ut_Test {
     auto op = OneSiteOp(d, D, Type.ComplexDouble);
     auto Tin = CreateA(d, D, Type.ComplexDouble);
     const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp_Ut(&op, Tin, crit);
+    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
     auto ans = GetAns(op.EffH, Tin);
     auto err = static_cast<double>((x - ans).Norm().item().real());
     EXPECT_TRUE(err <= crit);
@@ -75,7 +75,7 @@ namespace Lanczos_Exp_Ut_Test {
     op.EffH.uniform_(low, high, 0);
     auto Tin = CreateA(d, D);
     const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp_Ut(&op, Tin, crit);
+    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
   }
 
   // describe:input |v| != 1, answer not correct but will not crash
@@ -84,7 +84,7 @@ namespace Lanczos_Exp_Ut_Test {
     auto op = OneSiteOp(d, D);
     auto Tin = CreateA(d, D) * 1.1;
     const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp_Ut(&op, Tin, crit);
+    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
     auto ans = GetAns(op.EffH, Tin);
   }
 
@@ -94,7 +94,7 @@ namespace Lanczos_Exp_Ut_Test {
     auto op = OneSiteOp(d, D, Type.Int64);
     auto Tin = CreateA(d, D, Type.Int64);
     const double crit = 1.0e-3;
-    EXPECT_THROW({ linalg::Lanczos_Exp_Ut(&op, Tin, crit); }, std::logic_error);
+    EXPECT_THROW({ linalg::Lanczos_Exp(&op, Tin, crit); }, std::logic_error);
   }
 
   // describe:test not supported UniTensor Type
