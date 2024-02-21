@@ -547,6 +547,15 @@ void linalg_binding(py::module &m) {
     py::arg("max_krydim") = 0, py::arg("verbose") = false);
 
   m_linalg.def(
+    "Lanczos_Exp_Ut",
+    [](LinOp *Hop, const UniTensor &v, const double &CvgCrit, const unsigned int &Maxiter,
+       const bool &verbose) {
+      return cytnx::linalg::Lanczos_Exp_Ut(Hop, v, CvgCrit, Maxiter, verbose);
+    },
+    py::arg("Hop"), py::arg("v"), py::arg("CvgCrit") = 1.0e-14, py::arg("Maxiter") = 10000,
+    py::arg("verbose") = false);
+
+  m_linalg.def(
     "Lstsq",
     [](const Tensor &A, const Tensor &b, const float &rcond) {
       return cytnx::linalg::Lstsq(A, b, rcond);
