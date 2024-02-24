@@ -12,6 +12,10 @@
 namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
+    // <A|B>
+    static Scalar Dot(const UniTensor &A, const UniTensor &B) {
+      return Contract(A.Dagger(), B).item();
+    }
 
     // resize the matrix (2-rank tensor)
     static Tensor ResizeMat(const Tensor &src, const cytnx_uint64 r, const cytnx_uint64 c) {
@@ -85,7 +89,18 @@ namespace cytnx {
       return true;
     }
 
-    std::vector<Tensor> GetEigTens(const std::vector<Tensor> qs, Tensor eigvec_in_kryv,
+    bool IsResiduleSmallEnough(LinOp *Hop, const std::vector<UniTensor> &eigvecs,
+                               const std::vector<Scalar> &eigvals, const double cvg_crit) {
+      for (cytnx_int32 i = 0; i < eigvals.size(); ++i) {
+        auto eigvec = eigvecs[i];
+        auto eigval = eigvals[i];
+        auto resi = (Hop->matvec(eigvec) - eigval * eigvec).Norm().item();
+        if (resi >= cvg_crit) return false;
+      }
+      return true;
+    }
+
+    std::vector<Tensor> GetEigTens(const std::vector<Tensor> &qs, Tensor eigvec_in_kryv,
                                    std::vector<cytnx_int32> max_indices) {
       auto k = max_indices.size();
       cytnx_int64 krydim = eigvec_in_kryv.shape()[0];
@@ -96,6 +111,24 @@ namespace cytnx {
         auto eigTens = zeros(qs[0].shape(), Type.ComplexDouble);
         for (cytnx_int64 i = 0; i < krydim; ++i) {
           eigTens += P_inv[{i, maxIdx}] * qs[i];
+        }
+        eigTens /= eigTens.Norm().item();
+        eigTens_s[ik] = eigTens;
+      }
+      return eigTens_s;
+    }
+
+    std::vector<UniTensor> GetEigTens(const std::vector<UniTensor> &qs, Tensor eigvec_in_kryv,
+                                      std::vector<cytnx_int32> max_indices) {
+      auto k = max_indices.size();
+      cytnx_int64 krydim = eigvec_in_kryv.shape()[0];
+      auto P_inv = InvM(eigvec_in_kryv).Conj();
+      auto eigTens_s = std::vector<UniTensor>(k, UniTensor());
+      for (cytnx_int32 ik = 0; ik < k; ++ik) {
+        auto maxIdx = max_indices[ik];
+        auto eigTens = P_inv.at({0, maxIdx}) * qs[0];
+        for (cytnx_int64 i = 1; i < krydim; ++i) {
+          eigTens += P_inv.at({i, maxIdx}) * qs[i];
         }
         eigTens /= eigTens.Norm().item();
         eigTens_s[ik] = eigTens;
@@ -172,9 +205,80 @@ namespace cytnx {
       }
     }
 
+    void _Arnoldi(std::vector<UniTensor> &out, LinOp *Hop, const UniTensor &UT_init,
+                  const std::string which, const cytnx_uint64 &maxiter, const double &CvgCrit,
+                  const cytnx_uint64 &k, const bool &is_V, const bool &verbose) {
+      int dim = 1;
+      auto UT_init_shape = UT_init.shape();
+      for (int i = 0; i < UT_init.rank(); ++i) {
+        dim *= UT_init_shape[i];
+      }
+      const cytnx_uint64 imp_maxiter = std::min(maxiter, Hop->nx() + 1);
+      const cytnx_complex128 unit_complex = 1.0;
+      auto eigvals = std::vector<Scalar>(k, Scalar());
+      std::vector<UniTensor> eigTens_s;
+      Tensor kry_mat_buffer =
+        cytnx::zeros({imp_maxiter + 1, imp_maxiter + 1}, Hop->dtype(), Hop->device());
+      bool is_cvg = false;
+      auto eigvals_old = std::vector<Scalar>(k, Scalar::maxval(Type.Double));
+      std::vector<UniTensor> buffer;
+      buffer.push_back(UT_init);
+      buffer[0] = buffer[0] / buffer[0].Norm().item();  // normalized q1
+
+      // start arnoldi iteration
+      for (auto i = 1; i < imp_maxiter; i++) {
+        cytnx_uint64 krydim = i;
+        auto nextTens = Hop->matvec(buffer[i - 1]).astype(Hop->dtype());
+        buffer.push_back(nextTens);
+        for (cytnx_uint32 j = 0; j < krydim; j++) {
+          auto h = Dot(buffer[i], buffer[j]).conj();
+          kry_mat_buffer[{i - 1, j}] = h;
+          buffer[i] -= h * buffer[j];
+        }
+        auto h = std::sqrt(static_cast<double>(Dot(buffer[i], buffer[i]).real()));
+        kry_mat_buffer[{i - 1, i}] = h;
+        buffer[i] /= h;
+        Tensor kry_mat = ResizeMat(kry_mat_buffer, krydim, krydim);
+
+        // call Eig to get eigenvalues
+        auto eigs = Eig(kry_mat, true, true);
+        // get first few order of eigenvlues
+        std::vector<cytnx_int32> maxIndices = GetFstFewOrderElemIdices(eigs[0], which, k);
+        for (cytnx_int32 ik = 0; ik < k; ++ik) {
+          auto maxIdx = maxIndices[ik];
+          eigvals[ik] = eigs[0].storage().at(maxIdx);
+        }
+
+        // check converged
+        bool is_eigval_cvg = IsEigvalCvg(eigvals, eigvals_old, CvgCrit);
+        if (is_eigval_cvg || i == imp_maxiter - 1) {
+          eigTens_s = GetEigTens(buffer, eigs[1], maxIndices);
+          bool is_res_small_enough = IsResiduleSmallEnough(Hop, eigTens_s, eigvals, CvgCrit);
+          if (is_res_small_enough) {
+            is_cvg = true;
+            break;
+          }
+        }
+        eigvals_old = eigvals;
+      }  // Arnoldi iteration
+      buffer.clear();
+
+      // set output
+      auto eigvals_tens = zeros({k}, Type.ComplexDouble);  // initialize
+      for (cytnx_int32 ik = 0; ik < k; ++ik) eigvals_tens[{ac(ik)}] = eigvals[ik];
+      out.push_back(UniTensor(eigvals_tens));
+      if (is_V)  // if need output eigentensors
+      {
+        out.insert(out.end(), eigTens_s.begin(), eigTens_s.end());
+      }
+    }
+
     std::vector<Tensor> Arnoldi(LinOp *Hop, const Tensor &T_init, const std::string which,
                                 const cytnx_uint64 &maxiter, const double &cvg_crit,
                                 const cytnx_uint64 &k, const bool &is_V, const bool &verbose) {
+      // check device:
+      cytnx_error_msg(Hop->device() != Device.cpu,
+                      "[ERROR][Arnoldi] Arnoldi still not sopprot cuda devices.%s", "\n");
       // check type:
       cytnx_error_msg(
         !Type.is_float(Hop->dtype()),
@@ -215,6 +319,67 @@ namespace cytnx {
       cytnx_uint64 output_size = is_V ? 2 : 1;
       auto out = std::vector<Tensor>(output_size, Tensor());
       _Arnoldi(out, Hop, T_init, which, maxiter, cvg_crit, k, is_V, verbose);
+      return out;
+    }
+
+    std::vector<UniTensor> Arnoldi(LinOp *Hop, const UniTensor &UT_init, const std::string which,
+                                   const cytnx_uint64 &maxiter, const double &cvg_crit,
+                                   const cytnx_uint64 &k, const bool &is_V, const bool &verbose) {
+      // check device:
+      cytnx_error_msg(Hop->device() != Device.cpu,
+                      "[ERROR][Arnoldi] Arnoldi still not sopprot cuda devices.%s", "\n");
+      // check type:
+
+      cytnx_error_msg(UT_init.uten_type() == UTenType.Block,
+                      "[ERROR][Arnoldi] The Block UniTensor type is still not supported.%s", "\n");
+      // check type:
+      cytnx_error_msg(
+        !Type.is_float(Hop->dtype()),
+        "[ERROR][Arnoldi] Arnoldi can only accept operator with floating types (complex/real)%s",
+        "\n");
+
+      // check which
+      std::vector<std::string> accept_which = {"LM", "LR", "LI", "SM", "SR", "SI"};
+      if (std::find(accept_which.begin(), accept_which.end(), which) == accept_which.end()) {
+        cytnx_error_msg(true,
+                        "[ERROR][Arnoldi] 'which' should be 'LM', 'LR, 'LI'"
+                        ", 'SR, 'SI'",
+                        "\n");
+      }
+      //'SM' is not support for UniTensor since for sparce operator, the eigenvalue results will be
+      // 0.
+      if (which == "SM") {
+        cytnx_error_msg(true,
+                        "[ERROR][Arnoldi] 'which' cannot be 'SM', this function not support to ",
+                        "simulate the smallest magnitude. \n");
+      }
+
+      /// check k
+      cytnx_error_msg(k < 1, "[ERROR][Arnoldi] k should be >0%s", "\n");
+      cytnx_error_msg(k > Hop->nx(),
+                      "[ERROR][Arnoldi] k can only be up to total dimension of input vector D%s",
+                      "\n");
+
+      // check Tin should be rank-1:
+      auto _UT_init = UT_init.clone();
+      if (UT_init.dtype() == Type.Void) {
+        cytnx_error_msg(k < 1, "[ERROR][Arnoldi] The initial UniTensor sould be defined.%s", "\n");
+      } else {
+        auto init_shape = UT_init.shape();
+        int dim = 1;
+        for (auto &x : init_shape) {
+          dim *= x;
+        }
+        cytnx_error_msg(dim != Hop->nx(),
+                        "[ERROR][Arnoldi] Tin should have dimension consistent with Hop: [%d] %s",
+                        Hop->nx(), "\n");
+        _UT_init = UT_init.astype(Hop->dtype());
+      }
+
+      cytnx_error_msg(cvg_crit <= 0, "[ERROR][Arnoldi] cvg_crit should be > 0%s", "\n");
+      double _cvgcrit = cvg_crit;
+      auto out = std::vector<UniTensor>();
+      _Arnoldi(out, Hop, UT_init, which, maxiter, cvg_crit, k, is_V, verbose);
       return out;
     }
 
