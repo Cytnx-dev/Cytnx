@@ -181,6 +181,9 @@ namespace cytnx {
     // Lanczos_Exp
     UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &Tin, const double &CvgCrit,
                           const unsigned int &Maxiter, const bool &verbose) {
+      // check device:
+      cytnx_error_msg(Hop->device() != Device.cpu,
+                      "[ERROR][Lanczos_Exp] Lanczos_Exp still not sopprot cuda devices.%s", "\n");
       // check type:
       cytnx_error_msg(!Type.is_float(Hop->dtype()),
                       "[ERROR][Lanczos_Exp] Lanczos_Exp can only accept operator with "
