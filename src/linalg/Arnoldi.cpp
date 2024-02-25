@@ -13,12 +13,12 @@ namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
     // <A|B>
-    static Scalar Dot(const UniTensor &A, const UniTensor &B) {
+    static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
       return Contract(A.Dagger(), B).item();
     }
 
     // resize the matrix (2-rank tensor)
-    static Tensor ResizeMat(const Tensor &src, const cytnx_uint64 r, const cytnx_uint64 c) {
+    static Tensor _resize_mat(const Tensor &src, const cytnx_uint64 r, const cytnx_uint64 c) {
       const auto min_r = std::min(r, src.shape()[0]);
       const auto min_c = std::min(c, src.shape()[1]);
       // Tensor dst = src[{ac::range(0,min_r),ac::range(0,min_c)}];
@@ -36,8 +36,9 @@ namespace cytnx {
     }
 
     // Get the indices of the first few order element
-    std::vector<cytnx_int32> GetFstFewOrderElemIdices(const Tensor &tens, const std::string &which,
-                                                      const cytnx_int64 k) {
+    std::vector<cytnx_int32> _get_fst_few_order_elem_indices(const Tensor &tens,
+                                                             const std::string &which,
+                                                             const cytnx_int64 k) {
       char large_or_small = which[0];  //'S' or 'L'
       char metric_type = which[1];  //'M', 'R' or 'I'
 
@@ -68,8 +69,8 @@ namespace cytnx {
       return indices;
     }
 
-    bool IsEigvalCvg(const std::vector<Scalar> &eigvals, const std::vector<Scalar> &eigvals_old,
-                     const double cvg_crit) {
+    bool _is_eigval_cvg(const std::vector<Scalar> &eigvals, const std::vector<Scalar> &eigvals_old,
+                        const double cvg_crit) {
       for (cytnx_int32 i = 0; i < eigvals.size(); ++i) {
         auto err = abs(eigvals[i] - eigvals_old[i]);
         if (err >= cvg_crit) return false;
@@ -78,8 +79,8 @@ namespace cytnx {
     }
 
     // check the residule |Mv - ev| is converged.
-    bool IsResiduleSmallEnough(LinOp *Hop, const std::vector<Tensor> &eigvecs,
-                               const std::vector<Scalar> &eigvals, const double cvg_crit) {
+    bool _is_residule_small_enough(LinOp *Hop, const std::vector<Tensor> &eigvecs,
+                                   const std::vector<Scalar> &eigvals, const double cvg_crit) {
       for (cytnx_int32 i = 0; i < eigvals.size(); ++i) {
         auto eigvec = eigvecs[i];
         auto eigval = eigvals[i];
@@ -89,8 +90,8 @@ namespace cytnx {
       return true;
     }
 
-    bool IsResiduleSmallEnough(LinOp *Hop, const std::vector<UniTensor> &eigvecs,
-                               const std::vector<Scalar> &eigvals, const double cvg_crit) {
+    bool _is_residule_small_enough(LinOp *Hop, const std::vector<UniTensor> &eigvecs,
+                                   const std::vector<Scalar> &eigvals, const double cvg_crit) {
       for (cytnx_int32 i = 0; i < eigvals.size(); ++i) {
         auto eigvec = eigvecs[i];
         auto eigval = eigvals[i];
@@ -100,8 +101,8 @@ namespace cytnx {
       return true;
     }
 
-    std::vector<Tensor> GetEigTens(const std::vector<Tensor> &qs, Tensor eigvec_in_kryv,
-                                   std::vector<cytnx_int32> max_indices) {
+    std::vector<Tensor> _get_eig_tens(const std::vector<Tensor> &qs, Tensor eigvec_in_kryv,
+                                      std::vector<cytnx_int32> max_indices) {
       auto k = max_indices.size();
       cytnx_int64 krydim = eigvec_in_kryv.shape()[0];
       auto P_inv = InvM(eigvec_in_kryv).Conj();
@@ -118,8 +119,8 @@ namespace cytnx {
       return eigTens_s;
     }
 
-    std::vector<UniTensor> GetEigTens(const std::vector<UniTensor> &qs, Tensor eigvec_in_kryv,
-                                      std::vector<cytnx_int32> max_indices) {
+    std::vector<UniTensor> _get_eig_tens(const std::vector<UniTensor> &qs, Tensor eigvec_in_kryv,
+                                         std::vector<cytnx_int32> max_indices) {
       auto k = max_indices.size();
       cytnx_int64 krydim = eigvec_in_kryv.shape()[0];
       auto P_inv = InvM(eigvec_in_kryv).Conj();
@@ -167,22 +168,22 @@ namespace cytnx {
         auto h = buffer[i].Norm().item();
         kry_mat_buffer[{i - 1, i}] = h;
         buffer[i] /= h;
-        Tensor kry_mat = ResizeMat(kry_mat_buffer, krydim, krydim);
+        Tensor kry_mat = _resize_mat(kry_mat_buffer, krydim, krydim);
 
         // call Eig to get eigenvalues
         auto eigs = Eig(kry_mat, true, true);
         // get first few order of eigenvlues
-        std::vector<cytnx_int32> maxIndices = GetFstFewOrderElemIdices(eigs[0], which, k);
+        std::vector<cytnx_int32> maxIndices = _get_fst_few_order_elem_indices(eigs[0], which, k);
         for (cytnx_int32 ik = 0; ik < k; ++ik) {
           auto maxIdx = maxIndices[ik];
           eigvals[ik] = eigs[0].storage().at(maxIdx);
         }
 
         // check converged
-        bool is_eigval_cvg = IsEigvalCvg(eigvals, eigvals_old, CvgCrit);
+        bool is_eigval_cvg = _is_eigval_cvg(eigvals, eigvals_old, CvgCrit);
         if (is_eigval_cvg || i == imp_maxiter - 1) {
-          eigTens_s = GetEigTens(buffer, eigs[1], maxIndices);
-          bool is_res_small_enough = IsResiduleSmallEnough(Hop, eigTens_s, eigvals, CvgCrit);
+          eigTens_s = _get_eig_tens(buffer, eigs[1], maxIndices);
+          bool is_res_small_enough = _is_residule_small_enough(Hop, eigTens_s, eigvals, CvgCrit);
           if (is_res_small_enough) {
             is_cvg = true;
             break;
@@ -231,29 +232,29 @@ namespace cytnx {
         auto nextTens = Hop->matvec(buffer[i - 1]).astype(Hop->dtype());
         buffer.push_back(nextTens);
         for (cytnx_uint32 j = 0; j < krydim; j++) {
-          auto h = Dot(buffer[i], buffer[j]).conj();
+          auto h = _Dot(buffer[i], buffer[j]).conj();
           kry_mat_buffer[{i - 1, j}] = h;
           buffer[i] -= h * buffer[j];
         }
-        auto h = std::sqrt(static_cast<double>(Dot(buffer[i], buffer[i]).real()));
+        auto h = std::sqrt(static_cast<double>(_Dot(buffer[i], buffer[i]).real()));
         kry_mat_buffer[{i - 1, i}] = h;
         buffer[i] /= h;
-        Tensor kry_mat = ResizeMat(kry_mat_buffer, krydim, krydim);
+        Tensor kry_mat = _resize_mat(kry_mat_buffer, krydim, krydim);
 
         // call Eig to get eigenvalues
         auto eigs = Eig(kry_mat, true, true);
         // get first few order of eigenvlues
-        std::vector<cytnx_int32> maxIndices = GetFstFewOrderElemIdices(eigs[0], which, k);
+        std::vector<cytnx_int32> maxIndices = _get_fst_few_order_elem_indices(eigs[0], which, k);
         for (cytnx_int32 ik = 0; ik < k; ++ik) {
           auto maxIdx = maxIndices[ik];
           eigvals[ik] = eigs[0].storage().at(maxIdx);
         }
 
         // check converged
-        bool is_eigval_cvg = IsEigvalCvg(eigvals, eigvals_old, CvgCrit);
+        bool is_eigval_cvg = _is_eigval_cvg(eigvals, eigvals_old, CvgCrit);
         if (is_eigval_cvg || i == imp_maxiter - 1) {
-          eigTens_s = GetEigTens(buffer, eigs[1], maxIndices);
-          bool is_res_small_enough = IsResiduleSmallEnough(Hop, eigTens_s, eigvals, CvgCrit);
+          eigTens_s = _get_eig_tens(buffer, eigs[1], maxIndices);
+          bool is_res_small_enough = _is_residule_small_enough(Hop, eigTens_s, eigvals, CvgCrit);
           if (is_res_small_enough) {
             is_cvg = true;
             break;

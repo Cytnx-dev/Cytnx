@@ -20,22 +20,22 @@ namespace cytnx {
     using namespace std;
 
     // <A|B>
-    static Scalar Dot(const UniTensor &A, const UniTensor &B) {
+    static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
       return Contract(A.Dagger(), B).item();
     }
 
     // BiCGSTAB method to solve the linear equation
     // ref: https://en.wikipedia.org/wiki/Biconjugate_gradient_stabilized_method
-    UniTensor Invert_BiCGSTAB(LinOp *Hop, const UniTensor &b, const UniTensor &Tin, const int &k,
-                              const double &CvgCrit = 1.0e-12,
-                              const unsigned int &Maxiter = 10000) {
+    UniTensor _invert_biCGSTAB(LinOp *Hop, const UniTensor &b, const UniTensor &Tin, const int &k,
+                               const double &CvgCrit = 1.0e-12,
+                               const unsigned int &Maxiter = 10000) {
       auto I_plus_A_Op = [&](UniTensor A) {
         return ((Hop->matvec(A)) / k + A).relabels_(b.labels());
       };
       auto r = (b - I_plus_A_Op(Tin)).relabels_(b.labels());
       auto r0 = r;
       auto x = Tin;
-      auto p = Dot(r0, r);
+      auto p = _Dot(r0, r);
       auto pv = r;
       auto p_old = p;
       auto pv_old = pv;
@@ -43,21 +43,21 @@ namespace cytnx {
       auto r_old = r;
       for (int i = 1; i < Maxiter; ++i) {
         auto v = I_plus_A_Op(pv_old);
-        auto a = p_old / Dot(r0, v);
+        auto a = p_old / _Dot(r0, v);
         auto h = (x_old + a * pv_old).relabels_(b.labels());
         auto s = (r_old - a * v).relabels_(b.labels());
-        if (abs(Dot(s, s)) < CvgCrit) {
+        if (abs(_Dot(s, s)) < CvgCrit) {
           x = h;
           break;
         }
         auto t = I_plus_A_Op(s);
-        auto w = Dot(t, s) / Dot(t, t);
+        auto w = _Dot(t, s) / _Dot(t, t);
         x = (h + w * s).relabels_(b.labels());
         r = (s - w * t).relabels_(b.labels());
-        if (abs(Dot(r, r)) < CvgCrit) {
+        if (abs(_Dot(r, r)) < CvgCrit) {
           break;
         }
-        auto p = Dot(r0, r);
+        auto p = _Dot(r0, r);
         auto beta = (p / p_old) * (a / w);
         pv = (r + beta * (pv_old - w * v)).relabels_(b.labels());
         pv_old = pv;
@@ -95,13 +95,13 @@ namespace cytnx {
         // Call the procedure Invert_A (v[i], k, eps1). The procedure returns a vector w[i], such
         // that,
         // |(I + A / k )^(−1) v[i] − w[i]| ≤ eps1 |v[i]| .
-        auto w = Invert_BiCGSTAB(Hop, v, v, k, eps1);
+        auto w = _invert_biCGSTAB(Hop, v, v, k, eps1);
         // auto resi = ((Hop->matvec(w))/k + w).relabels_(v.labels()) - v;
 
         // For j = 0 to i
         for (int j = 0; j <= i; ++j) {
           // Let a[j,i] = <v[j], w[i]>
-          as.at({j, i}) = Dot(Vs.at(j), w);
+          as.at({j, i}) = _Dot(Vs.at(j), w);
         }
         // Define wp[i] = w[i] - \sum_{j=0}^{j=i} {a[j,i]v[j]}
         auto wp = w;
@@ -109,7 +109,7 @@ namespace cytnx {
           wp -= as.at({j, i}) * Vs.at(j);
         }
         // Let a[i+1, i] = |wp[i]|, v[i+1]=wp[i] / a[i+1, i]
-        auto b = std::sqrt(double(Dot(wp, wp).real()));
+        auto b = std::sqrt(double(_Dot(wp, wp).real()));
         if (i < k) {
           as.at({i + 1, i}) = b;
           v = wp / b;
@@ -222,7 +222,7 @@ namespace cytnx {
 
       return out;
 
-    }  // Lanczos_Gnd entry point
+    }  // Lanczos_Exp entry point
 
   }  // namespace linalg
 }  // namespace cytnx
