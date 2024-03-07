@@ -155,8 +155,6 @@ namespace cytnx {
   }
   void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
                                         const cytnx_int64 &inR, const bool &is_reverse) {
-    out = (inL + inR) % (this->n);
-
     if (is_reverse)
       this->reverse_rule_(out, (inL + inR) % (this->n));
     else
@@ -164,7 +162,7 @@ namespace cytnx {
   }
   void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
     // out = -in<0?-in+this->n:-in;
-    out = in * -1;
+    out = -in + this->n;
   }
 
   void cytnx::ZnSymmetry::print_info() const {

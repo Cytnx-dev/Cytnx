@@ -48,7 +48,7 @@ namespace cytnx {
     vector<bool> vis(tensor_list_in.size(), 0);
     for (cytnx_uint64 i = 0; i < cont_order.size(); i++) {
       cytnx_int64 ta = posbond2tensor[cont_order[i]][0], tb = posbond2tensor[cont_order[i]][1];
-      st.push("*");
+      if (!vis[ta] or !vis[tb]) st.push("*");
       if (!vis[ta]) st.push("t" + to_string(ta));
       if (!vis[tb]) st.push("t" + to_string(tb));
       vis[ta] = vis[tb] = 1;
