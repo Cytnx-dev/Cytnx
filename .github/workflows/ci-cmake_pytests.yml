@@ -51,7 +51,6 @@ jobs:
         cmake --version
         cmake --build . -j `nproc`
 
-    - uses: actions/checkout@v4
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -65,7 +64,7 @@ jobs:
         pip install pytest pytest-cov
         pytest pytests/tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
 
-        # - name: Run CTest
+    # - name: Run CTest
     #   shell: bash -l {0}
     #   working-directory: ${{github.workspace}}/build
     #   run: GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
