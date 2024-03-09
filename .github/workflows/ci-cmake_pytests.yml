@@ -51,6 +51,12 @@ jobs:
         cmake --version
         cmake --build . -j `nproc`
 
+    - name: Install
+      shell: bash -l {0}
+      working-directory: ${{github.workspace}}/build
+      run: |
+        make install
+
     # - name: Set up Python
     #   uses: actions/setup-python@v4
     #   with:
