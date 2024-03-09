@@ -55,4 +55,4 @@ if __name__ == '__main__':
     H = Hising(L,J,Hx)
     H.pre_construct()
     v = cy.ones(16)
-    print(cy.linalg.Lanczos_ER(H,3))
+    print(cy.linalg.Lanczos(Hop = H, Tin = v, method = "ER", max_krydim = 2))
