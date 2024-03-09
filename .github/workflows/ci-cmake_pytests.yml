@@ -1,9 +1,6 @@
 name: Tests and Codecov
 
 on:
-  push:
-    # branches:
-    #   - pytest
   workflow_dispatch:
 
 jobs:
