@@ -4,7 +4,7 @@
 # [Note] Set the destination path for installation in Ins_dest
 #----------------------------------------------
 # Ins_dest="/usr/local/cytnx"
-Ins_dest="~/Cytnx_lib2"
+Ins_dest="~/Cytnx_lib"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 

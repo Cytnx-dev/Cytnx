@@ -57,19 +57,15 @@ jobs:
       run: |
         make install
 
-    # - name: Set up Python
-    #   uses: actions/setup-python@v4
-    #   with:
-    #     python-version: '3.x'
-    # - name: Install dependencies
-    #   run: |
-    #     python -m pip install --upgrade pip
-    #     pip install -r requirements.txt
+    - name: Set python path
+      run: |
+        echo "PYTHONPATH=/home/runner/work/Cytnx_lib" >> $GITHUB_ENV
+
     - name: Test with pytest
       shell: bash -l {0}
       run: |
         pip install pytest pytest-cov
-        pytest pytests/tests.py --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+        pytest pytests/ --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
 
     # - name: Run CTest
     #   shell: bash -l {0}
