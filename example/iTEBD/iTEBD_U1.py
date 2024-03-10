@@ -16,7 +16,7 @@ import numpy as np
 ## iTEBD
 ##-------------------------------------
 
-def itebd_heisenberg(chi = 40, J  = 1.0, dt = 0.1, CvgCrit = 1.0e-12):
+def itebd_heisenberg(chi = 32, J  = 1.0, dt = 0.1, CvgCrit = 1.0e-12):
 
 
     ## Create Si Sj local H with symmetry:
