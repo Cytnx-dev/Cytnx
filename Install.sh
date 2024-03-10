@@ -3,7 +3,7 @@
 #=========================================================
 # [Note] Set the destination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="/usr/local/cytnx"
+Ins_dest="${HOME}/Cytnx_lib"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
@@ -18,7 +18,7 @@ FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #        Please follow the guide from official mkl/oneMKL "post-installation" part
 #        to source the proper setvars.sh and/or vars.sh
 #---------------------------
-FLAG="${FLAG} -DUSE_MKL=OFF"
+FLAG="${FLAG} -DUSE_MKL=ON"
 #---------------------------
 # 2-b) use OpenBLAS (DEFAULT = on (by settung DUSE_MKL=OFF above))
 # [Note] By default it will automatically find openblas installed
@@ -91,7 +91,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=OFF"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF"
+FLAG="${FLAG} -DUSE_CUDA=ON"
 #-----------------------------------
 # 7-a) CUTT (DEFAULT = OFF)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -154,7 +154,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF"
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT = OFF)
 #-----------------------------------
-DRUN_TESTS=OFF
+DRUN_TESTS=ON
 FLAG="${FLAG} -DRUN_TESTS=${DRUN_TESTS}"
 #-----------------------------------
 
