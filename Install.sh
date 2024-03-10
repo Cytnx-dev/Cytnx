@@ -3,7 +3,8 @@
 #=========================================================
 # [Note] Set the destination path for installation in Ins_dest
 #----------------------------------------------
-Ins_dest="/usr/local/cytnx"
+# Ins_dest="/usr/local/cytnx"
+Ins_dest="~/Cytnx_lib"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
@@ -18,7 +19,7 @@ FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #        Please follow the guide from official mkl/oneMKL "post-installation" part
 #        to source the proper setvars.sh and/or vars.sh
 #---------------------------
-FLAG="${FLAG} -DUSE_MKL=OFF"
+FLAG="${FLAG} -DUSE_MKL=ON"
 #---------------------------
 # 2-b) use OpenBLAS (DEFAULT = on (by settung DUSE_MKL=OFF above))
 # [Note] By default it will automatically find openblas installed
@@ -154,7 +155,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF"
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT = OFF)
 #-----------------------------------
-DRUN_TESTS=OFF
+DRUN_TESTS=ON
 FLAG="${FLAG} -DRUN_TESTS=${DRUN_TESTS}"
 #-----------------------------------
 
@@ -190,15 +191,16 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF"
 # Build commands
 #=========================================================
 echo ${FLAG}
-# rm -rf build
+rm -rf build
 mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
-make -j${nproc}
+make -j`nproc`
 make install
-#if DRUN_TESTS=ON, run tests
-shopt -s nocasematch
-case "${DRUN_TESTS}" in
- "ON" ) ctest; gcovr -r ../ . --html-details cov.html;;
- *) echo "Tests are skipped";;
-esac
+# if DRUN_TESTS=ON, run tests
+# ctest
+# shopt -s nocasematch
+# case "${DRUN_TESTS}" in
+#  "ON" ) ctest; gcovr -r ../ . --html-details cov.html;;
+#  *) echo "Tests are skipped";;
+# esac

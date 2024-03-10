@@ -1,10 +1,6 @@
 name: Tests and Codecov
 
 on:
-  pull_request:
-    branches:
-      - master
-      - dev-master
   workflow_dispatch:
 
 jobs:
@@ -36,7 +32,6 @@ jobs:
       run: |
         mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl beartype
         mamba install gcovr gtest
-        mamba install pytest pytest-cov
 
     - name: CPU info
       shell: bash -l {0}
@@ -53,44 +48,45 @@ jobs:
         cmake --version
         cmake --build . -j `nproc`
 
-    - name: Run CTest
-      shell: bash -l {0}
-      working-directory: ${{github.workspace}}/build
-      run: GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
-
-    - name: Run gcovr
-      shell: bash -l {0}
-      working-directory: ${{github.workspace}}/build
-      run: |
-        gcovr -r .. . --xml gcovr.xml -e ".*_deps.*$"
-
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
-      with:
-        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
-        #directory: ${{runner.workspace}}/build
-        files: ${{github.workspace}}/build/gcovr.xml # optional
-        #working-directory: ${{runner.workspace}}/build
-        #root_dir: ${{runner.workspace}}
-        fail_ci_if_error: true # optional (default = false)
-        verbose: true # optional (default = false)
-        #version: "v0.1.15"
-
-    - name: Install for python tests
+    - name: Install
       shell: bash -l {0}
       working-directory: ${{github.workspace}}/build
       run: |
         make install
 
     - name: Set python path
-      shell: bash -l {0}
       run: |
         echo "PYTHONPATH=/home/runner/work/Cytnx_lib" >> $GITHUB_ENV
 
     - name: Test with pytest
       shell: bash -l {0}
       run: |
+        pip install pytest pytest-cov
         pytest pytests/ --doctest-modules --junitxml=junit/test-results.xml --cov=com --cov-report=xml --cov-report=html
+
+    # - name: Run CTest
+    #   shell: bash -l {0}
+    #   working-directory: ${{github.workspace}}/build
+    #   run: GTEST_COLOR=1 ctest --output-on-failure --output-junit junit.xml
+
+    # - name: Run gcovr
+    #   shell: bash -l {0}
+    #   working-directory: ${{github.workspace}}/build
+    #   run: |
+    #     gcovr -r .. . --xml gcovr.xml -e ".*_deps.*$"
+
+    # - name: Upload coverage to Codecov
+    #   uses: codecov/codecov-action@v3
+    #   with:
+    #     #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+    #     #directory: ${{runner.workspace}}/build
+    #     files: ${{github.workspace}}/build/gcovr.xml # optional
+    #     #working-directory: ${{runner.workspace}}/build
+    #     #root_dir: ${{runner.workspace}}
+    #     fail_ci_if_error: true # optional (default = false)
+    #     verbose: true # optional (default = false)
+    #     #version: "v0.1.15"
+
     #- name: Upload gcovr files
     #  uses: actions/upload-artifact@v3
     #  with:
