@@ -1,12 +1,26 @@
 from .utils import *
 from cytnx import *
 
-import imp
-try:
-    imp.find_module('graphviz')
-    from .NetGraph import *
-except ImportError:
+# import imp
+# try:
+#     imp.find_module('graphviz')
+#     from .NetGraph import *
+# except ImportError:
+#     from .NetGraph_empty import *
+
+import importlib
+spec = importlib.util.find_spec("graphviz")
+if spec is None:
+    # print("Can't find the graphviz module.")
     from .NetGraph_empty import *
+else:
+    # If you chose to perform the actual import ...
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    # Adding the module to sys.modules is optional.
+    #sys.modules["graphviz"] = module
+    from .NetGraph import *
 
 import numpy as np
 
