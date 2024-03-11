@@ -419,3 +419,8 @@ if(BUILD_PACKAGES)
   include("Package.cmake")
   include(CPack)
 endif()
+
+if(RUN_TESTS)
+  include(CTest)
+endif()
+  
