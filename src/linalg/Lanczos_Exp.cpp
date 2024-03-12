@@ -29,18 +29,27 @@ namespace cytnx {
     UniTensor _invert_biCGSTAB(LinOp *Hop, const UniTensor &b, const UniTensor &Tin, const int &k,
                                const double &CvgCrit = 1.0e-12,
                                const unsigned int &Maxiter = 10000) {
+	  //the operation (I + Hop/k) on A
       auto I_plus_A_Op = [&](UniTensor A) {
         return ((Hop->matvec(A)) / k + A).relabels_(b.labels());
       };
+	  //the residuals of (b - (I + Hop/k)x)
       auto r = (b - I_plus_A_Op(Tin)).relabels_(b.labels());
+	  //choose r0_hat = r
       auto r0 = r;
       auto x = Tin;
+	  //choose p = (r0_hat, r)
       auto p = _Dot(r0, r);
+	  //choose pv = r
       auto pv = r;
+
+	  //to reduce the variables used, replace p[i]->p, p[i-1]->p_old, etc.
       auto p_old = p;
       auto pv_old = pv;
       auto x_old = x;
       auto r_old = r;
+
+	  //all of logic here is same as:https://en.wikipedia.org/wiki/Biconjugate_gradient_stabilized_method
       for (int i = 1; i < Maxiter; ++i) {
         auto v = I_plus_A_Op(pv_old);
         auto a = p_old / _Dot(r0, v);
@@ -60,6 +69,8 @@ namespace cytnx {
         auto p = _Dot(r0, r);
         auto beta = (p / p_old) * (a / w);
         pv = (r + beta * (pv_old - w * v)).relabels_(b.labels());
+
+		//update
         pv_old = pv;
         p_old = p;
         x_old = x;
