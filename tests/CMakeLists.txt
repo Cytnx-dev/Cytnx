@@ -23,8 +23,10 @@ add_executable(
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
+  linalg_test/Lanczos_Exp_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Arnoldi_test.cpp
+  linalg_test/Arnoldi_Ut_test.cpp
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
   linalg_test/linalg_test.cpp

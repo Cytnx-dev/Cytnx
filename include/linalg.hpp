@@ -2234,6 +2234,46 @@ namespace cytnx {
                                 const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
                                 const bool &is_V = true, const bool &verbose = false);
 
+    // Arnoldi:
+    //===========================================
+    /**
+    @brief perform Arnoldi for matrices or linear function.
+    @details This function calculate the eigen value problem using Arnoldi algorithm.
+    @param[in] Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
+    @param[in] Tin the initial UniTensor.
+    @param[in] which
+    @parblock
+    which order eigenvlues and corresponding eigenvectors should be find, the supported
+    options are:
+
+    <b>'LM'</b> : largest magnitude
+    <b>'LR'</b> : largest real part
+    <b>'LI'</b> : largest imaginary part
+    <b>'SR'</b> : smallest real part
+    <b>'SI'</b> : smallest imaginary part
+
+    @endparblock
+    @param[in] maxiter the maximum interation steps for each k.
+    @param[in] cvg_crit the convergence criterion of the energy.
+    @param[in] k the number of lowest k eigen values.
+    @param[in] is_V if set to true, the eigen vectors will be returned.
+    @param[in] verbose print out iteration info.
+    @return
+        [eigvals (UniTensor), eigvec_1, eivec_2, ..., eigvec_k].
+                The first UniTensor contains eigenvalues.
+    @note
+        To use, define a linear operator with LinOp class either by assign a custom function or
+    create a class that inherit LinOp (see LinOp for further details)
+
+        @pre
+        1. The initial UniTensor cannot be empty.
+        2. The UniTensor version of the Arnoldi not support \p which = 'SM'.
+    */
+    std::vector<UniTensor> Arnoldi(LinOp *Hop, const UniTensor &Tin, const std::string which = "LM",
+                                   const cytnx_uint64 &maxiter = 10000,
+                                   const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
+                                   const bool &is_V = true, const bool &verbose = false);
+
     // Lanczos:
     //===========================================
     /**
@@ -2389,6 +2429,40 @@ namespace cytnx {
                                           const double &CvgCrit = 1.0e-14, const bool &is_V = true,
                                           const bool &verbose = false,
                                           const unsigned int &Maxiter = 100000);
+
+    // Lanczos_Exp:
+    //===============================================
+    /**
+    @brief Perform the Lanczos-like algorithm for hermitian positive semi-definite linear operator
+    \f$H\f$ to approximate \f$e^{-H}v\f$.
+    @details
+        This function perform the Lanczos-like algorithm for hermitian positive semi-definite (PSD)
+                linear operator \f$H\f$ to approximate
+                \f[
+                e^{-H}v
+                \f] and return the state \f$w\f$ such that
+                \f[
+                |\exp(-H)v - w| < \delta.
+                \f]
+                Here \f$v\f$ is a given normalized vector or state, namely \f$|v|=1\f$
+    @param[in] Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp). The
+    operation method \f$Hv\f$ need to be defined in it.
+    @param[in] v The input vector (or state). The norm \f$|v|\f$ should be equal to 1.
+    @param[in] CvgCrit \f$\delta\f$, the convergence criterion.
+    @param[in] Maxiter the maximum interation steps for each k.
+    @param[in] verbose print out iteration info.
+    @return
+        UniTensor \f$w\f$
+    @note
+        To use, define a linear operator with LinOp class either by assign a custom function or
+    create a class that inherit LinOp (see LinOp for further details)
+        @warning
+                User need to guarantee that the input operator \f$H\f$ is positive
+    semi-definite(PSD), and that the norm of \p v is 1. Ohterwise, the function will return the
+    wrong results without any warning.
+    */
+    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &v, const double &CvgCrit = 1.0e-14,
+                          const unsigned int &Maxiter = 100000, const bool &verbose = false);
 
     // Lstsq:
     //===========================================
