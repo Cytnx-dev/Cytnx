@@ -3,7 +3,7 @@
 #include "utils/complex_arithmetic.hpp"
 #include "../utils_internal_interface.hpp"
 #include <algorithm>
-//#include "backend/lapack_wrapper.hpp"
+// #include "backend/lapack_wrapper.hpp"
 #ifdef UNI_OMP
   #include <omp.h>
 #endif
