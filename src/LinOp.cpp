@@ -33,7 +33,7 @@ namespace cytnx {
 
   #ifdef UNI_OMP
 
-    //#pragma omp parallel for
+    // #pragma omp parallel for
     for (cytnx_uint64 x = 0; x < this->_elems.size(); x++) {
       auto it = this->_elems.begin();
       advance(it, x);

@@ -4,7 +4,7 @@
 #include <functional>
 #include <type_traits>
 #include "hptt.h"
-//#include "cutt.h"
+// #include "cutt.h"
 using namespace std;
 using namespace cytnx;
 
@@ -199,8 +199,8 @@ int main(int argc, char *argv[]) {
   auto Tc = zeros({4, 1, 1});
   Tc.Conj_();
 
-  auto L0 = UniTensor(zeros({4, 1, 1}), 0);  //#Left boundary
-  auto R0 = UniTensor(zeros({4, 1, 1}), 0);  //#Right boundary
+  auto L0 = UniTensor(zeros({4, 1, 1}), 0);  // #Left boundary
+  auto R0 = UniTensor(zeros({4, 1, 1}), 0);  // #Right boundary
   L0.get_block_()(0, 0, 0) = 1.;
   R0.get_block_()(3, 0, 0) = 1.;
 

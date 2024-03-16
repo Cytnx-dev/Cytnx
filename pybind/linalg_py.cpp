@@ -1,14 +1,14 @@
-#include <vector>
-#include <map>
-#include <random>
-
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
+#include <map>
+#include <random>
+#include <vector>
 
 #include "cytnx.hpp"
 // #include "../include/cytnx_error.hpp"
@@ -49,36 +49,36 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Gesvd_truncate",
     [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U,
-       const bool &is_vT, const unsigned int &return_err) {
-      return cytnx::linalg::Gesvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err);
+       const bool &is_vT, const unsigned int &return_err, const unsigned int &mindim) {
+      return cytnx::linalg::Gesvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
-    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0));
+    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 0);
   m_linalg.def(
     "Gesvd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U,
-       const bool &is_vT, const unsigned int &return_err) {
-      return cytnx::linalg::Gesvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err);
+       const bool &is_vT, const unsigned int &return_err, const unsigned int &mindim) {
+      return cytnx::linalg::Gesvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0, py::arg("is_U") = true,
-    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0));
+    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 0);
 
   m_linalg.def(
     "Svd_truncate",
     [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_UvT,
-       const unsigned int &return_err) {
-      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err);
+       const unsigned int &return_err, const unsigned int &mindim) {
+      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_UvT") = true,
-    py::arg("return_err") = (unsigned int)(0));
+    py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 0);
   m_linalg.def(
     "Svd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err,
-       const bool &is_UvT, const unsigned int &return_err) {
-      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err);
+       const bool &is_UvT, const unsigned int &return_err, const unsigned int &mindim) {
+      return cytnx::linalg::Svd_truncate(Tin, keepdim, err, is_UvT, return_err, mindim);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = 0, py::arg("is_UvT") = true,
-    py::arg("return_err") = (unsigned int)(0));
+    py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 0);
 
   // m_linalg.def("Eigh", &cytnx::linalg::Eigh, py::arg("Tin"), py::arg("is_V") = true,
   //              py::arg("row_v") = false);
