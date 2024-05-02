@@ -2,7 +2,7 @@
 #include "test_tools.h"
 
 TEST_F(TensorTest, Constructor) {
-  //just test
+  // just test
   Tensor A;
   EXPECT_EQ(A.dtype(), Type.Void);
   EXPECT_EQ(A.device(), Device.cpu);
