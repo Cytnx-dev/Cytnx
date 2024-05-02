@@ -150,7 +150,6 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
     for k in range(1, time_step+1):
         print('time:', k)
-        get_energy(A, M)
         E = get_energy(A, M)
         Es.append(E)
 
