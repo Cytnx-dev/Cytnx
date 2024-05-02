@@ -567,12 +567,12 @@ void linalg_binding(py::module &m) {
 
   m_linalg.def(
     "Lanczos_Exp",
-    [](LinOp *Hop, const UniTensor &v, const double &CvgCrit, const unsigned int &Maxiter,
-       const bool &verbose) {
-      return cytnx::linalg::Lanczos_Exp(Hop, v, CvgCrit, Maxiter, verbose);
+    [](LinOp *Hop, const UniTensor &v, const Scalar &tau, const double &CvgCrit,
+       const unsigned int &Maxiter, const bool &verbose) {
+      return cytnx::linalg::Lanczos_Exp(Hop, v, tau, CvgCrit, Maxiter, verbose);
     },
-    py::arg("Hop"), py::arg("v"), py::arg("CvgCrit") = 1.0e-14, py::arg("Maxiter") = 10000,
-    py::arg("verbose") = false);
+    py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-14,
+    py::arg("Maxiter") = 10000, py::arg("verbose") = false);
 
   m_linalg.def(
     "Lstsq",

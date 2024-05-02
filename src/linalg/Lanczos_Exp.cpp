@@ -24,6 +24,41 @@ namespace cytnx {
       return Contract(A.Dagger(), B).item();
     }
 
+    // project v to u
+    static UniTensor _Gram_Schimidt_proj(const UniTensor &v, const UniTensor &u) {
+      auto nu = _Dot(u, v);
+      auto de = _Dot(u, u);
+      auto coe = nu / de;
+      return coe * u;
+    }
+
+    static UniTensor _Gram_Schimidt(const std::vector<UniTensor> &vs) {
+      auto u = vs.at(0).clone();
+      double low = -1.0, high = 1.0;
+      random::uniform_(u, low, high);
+      for (auto &v : vs) {
+        u -= _Gram_Schimidt_proj(u, v);
+      }
+      return u;
+    }
+
+    static Tensor _resize_mat(const Tensor &src, const cytnx_uint64 r, const cytnx_uint64 c) {
+      const auto min_r = std::min(r, src.shape()[0]);
+      const auto min_c = std::min(c, src.shape()[1]);
+      // Tensor dst = src[{ac::range(0,min_r),ac::range(0,min_c)}];
+
+      Tensor dst = Tensor({min_r, min_c}, src.dtype(), src.device(), false);
+      char *tgt = (char *)dst.storage().data();
+      char *csc = (char *)src.storage().data();
+      unsigned long long Offset_csc = Type.typeSize(src.dtype()) * src.shape()[1];
+      unsigned long long Offset_tgt = Type.typeSize(src.dtype()) * min_c;
+      for (auto i = 0; i < min_r; ++i) {
+        memcpy(tgt + Offset_tgt * i, csc + Offset_csc * i, Type.typeSize(src.dtype()) * min_c);
+      }
+
+      return dst;
+    }
+
     // BiCGSTAB method to solve the linear equation
     // ref: https://en.wikipedia.org/wiki/Biconjugate_gradient_stabilized_method
     UniTensor _invert_biCGSTAB(LinOp *Hop, const UniTensor &b, const UniTensor &Tin, const int &k,
@@ -81,8 +116,9 @@ namespace cytnx {
     }
 
     // ref:  https://doi.org/10.48550/arXiv.1111.1491
-    void _Lanczos_Exp_Ut(UniTensor &out, LinOp *Hop, const UniTensor &Tin, const double &CvgCrit,
-                         const unsigned int &Maxiter, const bool &verbose) {
+    void _Lanczos_Exp_Ut_positive(UniTensor &out, LinOp *Hop, const UniTensor &Tin,
+                                  const double &CvgCrit, const unsigned int &Maxiter,
+                                  const bool &verbose) {
       double delta = CvgCrit;
       int k = static_cast<int>(std::log(1.0 / delta));
       k = k < Maxiter ? k : Maxiter;
@@ -190,9 +226,137 @@ namespace cytnx {
       out.set_rowrank_(v0.rowrank());
     }
 
+    void _Lanczos_Exp_Ut(UniTensor &out, LinOp *Hop, const UniTensor &T, Scalar tau,
+                         const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose) {
+      const double beta_tol = 1.0e-6;
+      std::vector<UniTensor> vs;
+      cytnx_uint32 vec_len = Hop->nx();
+      cytnx_uint32 imp_maxiter = std::min(Maxiter, vec_len + 1);
+      Tensor Hp = zeros({imp_maxiter, imp_maxiter}, Hop->dtype(), Hop->device());
+
+      Tensor B_mat;
+      // prepare initial tensor and normalize
+      auto v = T.clone();
+      auto v_nrm = std::sqrt(double(_Dot(v, v).real()));
+      v = v / v_nrm;
+
+      // first iteration
+      auto wp = (Hop->matvec(v)).relabels_(v.labels());
+      auto alpha = _Dot(wp, v);
+      Hp.at({0, 0}) = alpha;
+      auto w = (wp - alpha * v).relabels_(v.labels());
+
+      // prepare U
+      auto Vk_shape = v.shape();
+      Vk_shape.insert(Vk_shape.begin(), 1);
+      auto Vk = v.get_block().reshape(Vk_shape);
+      std::vector<UniTensor> Vs;
+      Vs.push_back(v);
+      UniTensor v_old;
+      Tensor Hp_sub;
+
+      for (int i = 1; i < imp_maxiter; ++i) {
+        if (verbose) {
+          std::cout << "Lancos iteration:" << i << std::endl;
+        }
+        auto beta = std::sqrt(double(_Dot(w, w).real()));
+        v_old = v.clone();
+        if (beta > beta_tol) {
+          v = (w / beta).relabels_(v.labels());
+        } else {  // beta too small -> the norm of new vector too small. This vector cannot span the
+                  // new dimension
+          if (verbose) {
+            std::cout << "beta too small, pick another vector." << i << std::endl;
+          }
+          // pick a new vector perpendicular to all vector in Vs
+          v = _Gram_Schimidt(Vs).relabels_(v.labels());
+          auto v_norm = _Dot(v, v);
+          // if the picked vector also too small, break and construct expH
+          if (abs(v_norm) <= beta_tol) {
+            if (verbose) {
+              std::cout << "All vector form the space. Break." << i << std::endl;
+            }
+            break;
+          }
+          v = v / v_norm;
+        }
+        Vk.append(v.get_block_().contiguous());
+        Vs.push_back(v);
+        Hp.at({i, i - 1}) = Hp.at({i - 1, i}) = beta;
+        wp = (Hop->matvec(v)).relabels_(v.labels());
+        alpha = _Dot(wp, v);
+        Hp.at({i, i}) = alpha;
+        w = (wp - alpha * v - beta * v_old).relabels_(v.labels());
+
+        // Converge check
+        Hp_sub = _resize_mat(Hp, i + 1, i + 1);
+        // We use ExpM since H*tau may not be Hermitian if tau is complex.
+        B_mat = linalg::ExpM(Hp_sub * tau);
+        // Set the error as the element of bottom left of the exp(H_sub*tau)
+        auto error = abs(B_mat.at({i, 0}));
+        if (error < CvgCrit || i == imp_maxiter - 1) {
+          if (i == imp_maxiter - 1 && error > CvgCrit) {
+            cytnx_warning_msg(
+              true,
+              "[WARNING][Lanczos_Exp] Fail to converge at eigv [%d], try increasing "
+              "maxiter?\n Note:: ignore if this is intended.%s",
+              imp_maxiter, "\n");
+          }
+          break;
+        }
+      }
+      // std::cout << B_mat;
+
+      // Let V_k be the n × (k + 1) matrix whose columns are v[0],...,v[k] respectively.
+      UniTensor Vk_ut(Vk);
+      Vk_ut.set_rowrank_(1);
+      auto VkDag_ut = Vk_ut.Dagger();
+      /*
+       *    |||
+       *  |-----|
+       *  | out |        =
+       *  |_____|
+       *
+       *
+       *    |||
+       *  |-----|
+       *  | V_k |
+       *  |_____|
+       *     |    kl:(k+1) * (k + 1)
+       *     |
+       *  |-----|
+       *  |  B  |
+       *  |_____|
+       *     |    kr:(k+1) * (k + 1)
+       *     |
+       *  |------------|
+       *  | V_k^Dagger |
+       *  |____________|
+       *    |||
+       *  |-----|
+       *  |  v0 |
+       *  |_____|
+       *
+       */
+
+      auto B = UniTensor(B_mat, false, 1, {"cytnx_internal_label_kl", "cytnx_internal_label_kr"});
+      auto label_kl = B.labels()[0];
+      auto label_kr = B.labels()[1];
+      auto Vk_labels = v.labels();
+      Vk_labels.insert(Vk_labels.begin(), label_kl);
+      Vk_ut.relabels_(Vk_labels);
+      auto VkDag_labels = v.labels();
+      VkDag_labels.push_back(label_kr);
+      VkDag_ut.relabels_(VkDag_labels);
+
+      out = Contracts({T, VkDag_ut, B}, "", true);
+      out = Contract(out, Vk_ut);
+      out.set_rowrank_(v.rowrank());
+    }
+
     // Lanczos_Exp
-    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &Tin, const double &CvgCrit,
-                          const unsigned int &Maxiter, const bool &verbose) {
+    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &Tin, const Scalar &tau,
+                          const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose) {
       // check device:
       cytnx_error_msg(Hop->device() != Device.cpu,
                       "[ERROR][Lanczos_Exp] Lanczos_Exp still not sopprot cuda devices.%s", "\n");
@@ -230,7 +394,8 @@ namespace cytnx {
         }
       }
 
-      _Lanczos_Exp_Ut(out, Hop, v0, _cvgcrit, Maxiter, verbose);
+      //_Lanczos_Exp_Ut_positive(out, Hop, v0, _cvgcrit, Maxiter, verbose);
+      _Lanczos_Exp_Ut(out, Hop, v0, tau, _cvgcrit, Maxiter, verbose);
 
       return out;
 

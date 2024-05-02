@@ -2433,21 +2433,22 @@ namespace cytnx {
     // Lanczos_Exp:
     //===============================================
     /**
-    @brief Perform the Lanczos-like algorithm for hermitian positive semi-definite linear operator
-    \f$H\f$ to approximate \f$e^{-H}v\f$.
+    @brief Perform the Lanczos algorithm for hermitian operator
+    \f$H\f$ to approximate \f$e^{H\tau}v\f$.
     @details
-        This function perform the Lanczos-like algorithm for hermitian positive semi-definite (PSD)
+        This function perform the Lanczos-like algorithm for hermitian
                 linear operator \f$H\f$ to approximate
                 \f[
-                e^{-H}v
+                e^{H\tau}v
                 \f] and return the state \f$w\f$ such that
                 \f[
-                |\exp(-H)v - w| < \delta.
+                |\exp(H\tau)v - w| < \delta.
                 \f]
-                Here \f$v\f$ is a given normalized vector or state, namely \f$|v|=1\f$
+                Here \f$v\f$ is a given vector or a state.
     @param[in] Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp). The
     operation method \f$Hv\f$ need to be defined in it.
     @param[in] v The input vector (or state). The norm \f$|v|\f$ should be equal to 1.
+    @param[in] tau A scalar, it can be complex number.
     @param[in] CvgCrit \f$\delta\f$, the convergence criterion.
     @param[in] Maxiter the maximum interation steps for each k.
     @param[in] verbose print out iteration info.
@@ -2457,12 +2458,13 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
         @warning
-                User need to guarantee that the input operator \f$H\f$ is positive
-    semi-definite(PSD), and that the norm of \p v is 1. Ohterwise, the function will return the
+                User need to guarantee that the input operator \f$H\f$ is Hermitian
+    , and the exponetiate \f$e^{-H\tau}\f$ will converged. Ohterwise, the function will return the
     wrong results without any warning.
     */
-    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &v, const double &CvgCrit = 1.0e-14,
-                          const unsigned int &Maxiter = 100000, const bool &verbose = false);
+    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &v, const Scalar &tau,
+                          const double &CvgCrit = 1.0e-10, const unsigned int &Maxiter = 100000,
+                          const bool &verbose = false);
 
     // Lstsq:
     //===========================================

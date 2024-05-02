@@ -12,13 +12,13 @@ namespace Lanczos_Exp_Ut_Test {
                                 const int device = Device.cpu);
   UniTensor CreateA(const int d, const int D, const unsigned int dtype = Type.Double,
                     const int device = Device.cpu);
-  UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin);
+  UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin, const Scalar& tau);
   Scalar Dot(const UniTensor& A, const UniTensor& B) { return Contract(A.Dagger(), B).item(); }
   class OneSiteOp : public LinOp {
    public:
     OneSiteOp(const int d, const int D, const unsigned int dtype = Type.Double,
               const int& device = Device.cpu)
-        : LinOp("mv", d * D, dtype, device) {
+        : LinOp("mv", D * D, dtype, device) {
       EffH = CreateOneSiteEffHam(d, D, dtype, device);
     }
     UniTensor EffH;
@@ -45,24 +45,26 @@ namespace Lanczos_Exp_Ut_Test {
 
   // describe:Real type test
   TEST(Lanczos_Exp_Ut, RealTypeTest) {
-    int d = 2, D = 10;
+    int d = 2, D = 5;
     auto op = OneSiteOp(d, D);
     auto Tin = CreateA(d, D);
-    const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
-    auto ans = GetAns(op.EffH, Tin);
+    const double crit = 1.0e-10;
+    double tau = 0.1;
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
+    auto ans = GetAns(op.EffH, Tin, tau);
     auto err = static_cast<double>((x - ans).Norm().item().real());
     EXPECT_TRUE(err <= crit);
   }
 
   // describe:Complex type test
   TEST(Lanczos_Exp_Ut, ComplexTypeTest) {
-    int d = 2, D = 10;
+    int d = 2, D = 5;
     auto op = OneSiteOp(d, D, Type.ComplexDouble);
     auto Tin = CreateA(d, D, Type.ComplexDouble);
-    const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
-    auto ans = GetAns(op.EffH, Tin);
+    const double crit = 1.0e-9;
+    std::complex<double> tau = std::complex<double>(0, 1) * 0.1;
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
+    auto ans = GetAns(op.EffH, Tin, tau);
     auto err = static_cast<double>((x - ans).Norm().item().real());
     EXPECT_TRUE(err <= crit);
   }
@@ -75,17 +77,21 @@ namespace Lanczos_Exp_Ut_Test {
     op.EffH.uniform_(low, high, 0);
     auto Tin = CreateA(d, D);
     const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
+    double tau = 0.1;
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
   }
 
-  // describe:input |v| != 1, answer not correct but will not crash
+  // describe:input |v| != 1
   TEST(Lanczos_Exp_Ut, normVNot1) {
     int d = 2, D = 5;
     auto op = OneSiteOp(d, D);
     auto Tin = CreateA(d, D) * 1.1;
-    const double crit = 1.0e-3;
-    auto x = linalg::Lanczos_Exp(&op, Tin, crit);
-    auto ans = GetAns(op.EffH, Tin);
+    const double crit = 1.0e-7;
+    double tau = 0.1;
+    auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit);
+    auto ans = GetAns(op.EffH, Tin, tau);
+    auto err = static_cast<double>((x - ans).Norm().item().real());
+    EXPECT_TRUE(err <= crit);
   }
 
   // describe:test incorrect data type
@@ -94,7 +100,8 @@ namespace Lanczos_Exp_Ut_Test {
     auto op = OneSiteOp(d, D, Type.Int64);
     auto Tin = CreateA(d, D, Type.Int64);
     const double crit = 1.0e-3;
-    EXPECT_THROW({ linalg::Lanczos_Exp(&op, Tin, crit); }, std::logic_error);
+    double tau = 0.1;
+    EXPECT_THROW({ linalg::Lanczos_Exp(&op, Tin, crit, tau); }, std::logic_error);
   }
 
   // describe:test not supported UniTensor Type
@@ -113,7 +120,7 @@ namespace Lanczos_Exp_Ut_Test {
     if (Type.is_float(A.dtype())) {
       random::uniform_(A, low, high, 0);
     }
-    A = A / std::sqrt(double((Dot(A, A).real())));
+    // A = A / std::sqrt(double((Dot(A, A).real())));
     return A;
   }
 
@@ -145,13 +152,24 @@ namespace Lanczos_Exp_Ut_Test {
     auto HEff_mat = HEff.get_block();
     HEff_mat.reshape_({in_dim, out_dim});
     HEff_mat = HEff_mat + HEff_mat.permute({1, 0});  // symmtrize
-    HEff_mat = linalg::Matmul(HEff_mat, HEff_mat.permute({1, 0}).Conj());  // positive definete
+
+    // Let H can be converge in ExpM
+    auto eigs = HEff_mat.Eigh();
+    auto e = UniTensor(eigs[0], true) * 0.01;
+    e.set_labels({"a", "b"});
+    auto v = UniTensor(eigs[1]);
+    v.set_labels({"i", "a"});
+    auto vt = UniTensor(linalg::InvM(v.get_block()));
+    vt.set_labels({"b", "j"});
+    HEff_mat = Contract(Contract(e, v), vt).get_block();
+
+    // HEff_mat = linalg::Matmul(HEff_mat, HEff_mat.permute({1, 0}).Conj());  // positive definete
     HEff_mat.reshape_(HEff_shape);
     HEff.put_block(HEff_mat);
     return HEff;
   }
 
-  UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin) {
+  UniTensor GetAns(const UniTensor& HEff, const UniTensor& Tin, const Scalar& tau) {
     auto expH = HEff.clone();
     auto HEff_shape = HEff.shape();
     auto in_dim = 1;
@@ -159,11 +177,13 @@ namespace Lanczos_Exp_Ut_Test {
       in_dim *= HEff_shape[i];
     }
     auto out_dim = in_dim;
+    // we use ExpM since tau*H will not be Hermitian if tau is complex number even H is Hermitian
     expH.put_block(
-      linalg::ExpH(expH.get_block().reshape(in_dim, out_dim), -1.0).reshape(HEff_shape));
+      linalg::ExpM((tau * expH.get_block()).reshape(in_dim, out_dim)).reshape(HEff_shape));
     auto ans = Contract(expH, Tin);
     ans.permute_({"vil", "pi", "vir"}, 1);
     ans.relabels_(Tin.labels());
+    ans = Contract(expH, Tin);
     return ans;
   }
 
