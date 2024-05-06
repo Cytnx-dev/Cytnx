@@ -231,7 +231,9 @@ endif()
 # ## Python wrapper
 # #######
 IF(BUILD_PYTHON)
-  find_package(PythonInterp REQUIRED)
+  # PythonInterp is removed in newer version of cmake
+  # find_package(PythonInterp REQUIRED)
+  find_package (Python COMPONENTS Interpreter Development)
   find_package(pybind11 REQUIRED)
 
   if(NOT pybind11_FOUND)

@@ -1,0 +1,12 @@
+Dim = 10 |type: REGULAR
+
+Dim = 10 |type: KET>
+
+Dim = 4 |type: KET>
+ U1::   +0  +2  -1  +3
+Deg>>    1   1   1   1
+
+Dim = 4 |type: <BRA
+ U1::   +0  +2  -1  +3
+ Z2::   +0  +1  +1  +0
+Deg>>    1   1   1   1
