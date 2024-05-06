@@ -65,9 +65,9 @@ jobs:
         gcovr -r .. . --xml gcovr.xml -e ".*_deps.*$"
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
-        #token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
         #directory: ${{runner.workspace}}/build
         files: ${{github.workspace}}/build/gcovr.xml # optional
         #working-directory: ${{runner.workspace}}/build
