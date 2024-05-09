@@ -524,6 +524,25 @@ void linalg_binding(py::module &m) {
     py::arg("truncate_dim") = std::vector<cytnx_int64>());
 
   m_linalg.def(
+    "Arnoldi",
+    [](LinOp *Hop, const Tensor &Tin, const std::string which, const cytnx_uint64 &Maxiter,
+       const double &CvgCrit, const cytnx_uint64 &k, const bool &is_V, const bool &verbose) {
+      return cytnx::linalg::Arnoldi(Hop, Tin, which, Maxiter, CvgCrit, k, is_V, verbose);
+    },
+    py::arg("Hop"), py::arg("Tin"), py::arg("which") = "LM", py::arg("Maxiter") = 10000,
+    py::arg("CvgCrit") = 1.0e-9, py::arg("k") = 1, py::arg("is_V") = true,
+    py::arg("verbose") = false);
+  m_linalg.def(
+    "Arnoldi",
+    [](LinOp *Hop, const UniTensor &Tin, const std::string which, const cytnx_uint64 &Maxiter,
+       const double &CvgCrit, const cytnx_uint64 &k, const bool &is_V, const bool &verbose) {
+      return cytnx::linalg::Arnoldi(Hop, Tin, which, Maxiter, CvgCrit, k, is_V, verbose);
+    },
+    py::arg("Hop"), py::arg("Tin"), py::arg("which") = "LM", py::arg("Maxiter") = 10000,
+    py::arg("CvgCrit") = 1.0e-9, py::arg("k") = 1, py::arg("is_V") = true,
+    py::arg("verbose") = false);
+
+  m_linalg.def(
     "Lanczos",
     [](LinOp *Hop, const Tensor &Tin, const std::string method, const double &CvgCrit,
        const unsigned int &Maxiter, const cytnx_uint64 &k, const bool &is_V, const bool &is_row,
@@ -545,6 +564,15 @@ void linalg_binding(py::module &m) {
     py::arg("Hop"), py::arg("Tin"), py::arg("method"), py::arg("CvgCrit") = 1.0e-14,
     py::arg("Maxiter") = 10000, py::arg("k") = 1, py::arg("is_V") = true, py::arg("is_row") = false,
     py::arg("max_krydim") = 0, py::arg("verbose") = false);
+
+  m_linalg.def(
+    "Lanczos_Exp",
+    [](LinOp *Hop, const UniTensor &v, const Scalar &tau, const double &CvgCrit,
+       const unsigned int &Maxiter, const bool &verbose) {
+      return cytnx::linalg::Lanczos_Exp(Hop, v, tau, CvgCrit, Maxiter, verbose);
+    },
+    py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-14,
+    py::arg("Maxiter") = 10000, py::arg("verbose") = false);
 
   m_linalg.def(
     "Lstsq",
