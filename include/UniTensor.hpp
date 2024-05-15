@@ -4455,6 +4455,22 @@ namespace cytnx {
   See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
 
   */
+  UniTensor Contract(const std::vector<UniTensor> &TNs, const std::string &order,
+                      const bool &optimal);
+
+  /**
+  @deprecated
+  @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
+  operation.
+  @param[in] TNs the Tensors.
+  @param[in] order desired contraction order.
+  @param[in] optimal wheather to find the optimal contraction order automatically.
+  @return
+      [UniTensor]
+
+  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+
+  */
   UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order,
                       const bool &optimal);
 
@@ -4468,6 +4484,26 @@ namespace cytnx {
   /// @endcond
 
   /**
+  @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
+  operation.
+  @param in the Tensors.
+  @param args the Tensors.
+  @return
+      [UniTensor]
+
+  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+
+  */
+  template <class... T>
+  UniTensor Contract(const UniTensor &in, const T &...args, const std::string &order,
+                      const bool &optimal) {
+    std::vector<UniTensor> TNlist;
+    _resolve_CT(TNlist, in, args...);
+    return Contract(TNlist, order, optimal);
+  }
+
+  /**
+  @deprecated
   @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
   operation.
   @param in the Tensors.

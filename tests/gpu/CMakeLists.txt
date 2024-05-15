@@ -6,7 +6,7 @@ add_executable(
   Network_test.cpp
   UniTensor_base_test.cpp
   ncon_test.cpp
-  Contracts_test.cpp
+  Contract_test.cpp
   BlockUniTensor_test.cpp
   DenseUniTensor_test.cpp
   Accessor_test.cpp
