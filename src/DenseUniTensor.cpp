@@ -214,6 +214,24 @@ namespace cytnx {
     }
   }
 
+  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
+    const std::vector<std::string> &new_labels) {
+    DenseUniTensor *out_raw = this->clone_meta();
+    out_raw->_block = this->_block;
+    out_raw->set_labels(new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(out_raw);
+    return out;
+  }
+
+  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    DenseUniTensor *tmp = this->clone_meta();
+    tmp->_block = this->_block;
+    tmp->relabel_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<std::string> &new_labels) {
     DenseUniTensor *out_raw = this->clone_meta();
