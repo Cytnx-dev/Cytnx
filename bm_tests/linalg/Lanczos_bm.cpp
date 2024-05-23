@@ -107,17 +107,17 @@ namespace BMTest_Lanczos {
     auto op = OneSiteOp(d, D);
     auto Tin = CreateA(d, D);
     const double crit = 1.0e+8;
-	const int maxiter = 2;
-	bool is_V = true;
-	int k = 1;
-	bool is_row = false;
-	int max_krydim = 0;
+    const int maxiter = 2;
+    bool is_V = true;
+    int k = 1;
+    bool is_row = false;
+    int max_krydim = 0;
     // start test here
     for (auto _ : state) {
-	  auto x = linalg::Lanczos(&op, Tin, "Gnd", crit, maxiter, k, is_V, is_row, max_krydim);
+      auto x = linalg::Lanczos(&op, Tin, "Gnd", crit, maxiter, k, is_V, is_row, max_krydim);
     }
   }
-BENCHMARK(BM_Lanczos_Gnd_F64)->Args({10})->Args({30})->Unit(benchmark::kMillisecond);
+  BENCHMARK(BM_Lanczos_Gnd_F64)->Args({10})->Args({30})->Unit(benchmark::kMillisecond);
 
   static void BM_Lanczos_Exp_F64(benchmark::State& state) {
     // prepare data
@@ -127,12 +127,12 @@ BENCHMARK(BM_Lanczos_Gnd_F64)->Args({10})->Args({30})->Unit(benchmark::kMillisec
     auto Tin = CreateA(d, D);
     const double crit = 1.0e+8;
     double tau = 0.1;
-	const int maxiter = 2;
+    const int maxiter = 2;
     // start test here
     for (auto _ : state) {
       auto x = linalg::Lanczos_Exp(&op, Tin, tau, crit, maxiter);
     }
   }
-BENCHMARK(BM_Lanczos_Exp_F64)->Args({10})->Args({30})->Unit(benchmark::kMillisecond);
+  BENCHMARK(BM_Lanczos_Exp_F64)->Args({10})->Args({30})->Unit(benchmark::kMillisecond);
 
 }  // namespace BMTest_Lanczos
