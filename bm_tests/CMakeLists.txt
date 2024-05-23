@@ -13,6 +13,7 @@ add_executable(
   linalg/Directsum_bm.cpp
   linalg/Svd_bm.cpp
   linalg/Svd_truncate_bm.cpp
+  linalg/Lanczos_bm.cpp
 
 )
 if(USE_CUDA)
