@@ -25,7 +25,6 @@ TEST_F(ContractTest, gpu_Contract_denseUt_optimal_specified_order) {
   EXPECT_TRUE(AreNearlyEqTensor(res.get_block().contiguous(), utdnAns.get_block(), 1e-12));
 }
 
-
 // Deprecated Contracts
 TEST_F(ContractTest, gpu_Contracts_denseUt_optimal_order) {
   UniTensor res = Contracts({utdnA, utdnB, utdnC}, "", true);

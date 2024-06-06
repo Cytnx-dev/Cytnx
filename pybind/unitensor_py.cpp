@@ -1372,14 +1372,13 @@ void unitensor_binding(py::module &m) {
      .def("get_qindices",  [](UniTensor &self, const cytnx_uint64 &bidx){return self.get_qindices(bidx);});
   ;  // end of object line
 
-//   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
-//         py::arg("cacheR") = false);
-  m.def("Contract",
-     [](const UniTensor &inL, const UniTensor &inR, const bool &cacheL,
-                     const bool &cacheR)->UniTensor{
-            return Contract(inL, inR, cacheL, cacheR);
-                     }, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
-        py::arg("cacheR") = false);
+  //   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
+  //         py::arg("cacheR") = false);
+  m.def(
+    "Contract",
+    [](const UniTensor &inL, const UniTensor &inR, const bool &cacheL,
+       const bool &cacheR) -> UniTensor { return Contract(inL, inR, cacheL, cacheR); },
+    py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false, py::arg("cacheR") = false);
   m.def(
     "Contract",
     [](const std::vector<UniTensor> &TNs, const std::string &order,

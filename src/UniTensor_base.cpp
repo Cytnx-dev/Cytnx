@@ -591,7 +591,9 @@ namespace cytnx {
 
   void _resolve_CT(std::vector<UniTensor> &TNlist){};
   UniTensor Contract(const std::vector<UniTensor> &TNs, const std::string &order = "",
-                      const bool &optimal = true) {return Contracts(TNs, order, optimal);}
+                     const bool &optimal = true) {
+    return Contracts(TNs, order, optimal);
+  }
   UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order = "",
                       const bool &optimal = true) {
     cytnx_error_msg(TNs.size() < 2, "[ERROR][Contracts] should have more than 2 TNs to contract.%s",

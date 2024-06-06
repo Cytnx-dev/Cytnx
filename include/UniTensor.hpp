@@ -4456,7 +4456,7 @@ namespace cytnx {
 
   */
   UniTensor Contract(const std::vector<UniTensor> &TNs, const std::string &order,
-                      const bool &optimal);
+                     const bool &optimal);
 
   /**
   @deprecated
@@ -4496,7 +4496,7 @@ namespace cytnx {
   */
   template <class... T>
   UniTensor Contract(const UniTensor &in, const T &...args, const std::string &order,
-                      const bool &optimal) {
+                     const bool &optimal) {
     std::vector<UniTensor> TNlist;
     _resolve_CT(TNlist, in, args...);
     return Contract(TNlist, order, optimal);
