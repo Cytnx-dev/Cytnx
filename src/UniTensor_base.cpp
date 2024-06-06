@@ -288,7 +288,7 @@ namespace cytnx {
     return nullptr;
   }
   void UniTensor_base::relabel_(const std::vector<std::string> &old_labels,
-                                 const std::vector<std::string> &new_labels) {
+                                const std::vector<std::string> &new_labels) {
     cytnx_error_msg(old_labels.size() != new_labels.size(),
                     "[ERROR] old_labels and new_labels should have the same size.%s", "\n");
 

@@ -143,7 +143,7 @@ TEST_F(BlockUniTensorTest, gpu_relabel_) {
   EXPECT_THROW(BUT1.relabels_({"a"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels_({"1", "2"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
-  
+
   BUT1 = tmp;
   BUT1.relabel_("0", "a");
   BUT1.relabel_("1", "b");

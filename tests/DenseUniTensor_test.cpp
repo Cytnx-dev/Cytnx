@@ -653,7 +653,7 @@ TEST_F(DenseUniTensorTest, relabel_) {
   EXPECT_THROW(ut.relabels_({"1", "2"}), std::logic_error);
   EXPECT_THROW(ut.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
   EXPECT_THROW(ut_uninit.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
-  
+
   utzero3456 = tmp;
   // UniTensor ut;
   ut = utzero3456.relabel_("0", "a");

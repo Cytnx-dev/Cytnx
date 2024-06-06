@@ -689,7 +689,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
     const std::vector<string> &new_labels) {
     BlockUniTensor *tmp = this->clone_meta(true, true);

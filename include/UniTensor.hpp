@@ -202,7 +202,7 @@ namespace cytnx {
     void relabel_(const std::vector<std::string> &new_labels);  // implemented
     void relabels_(const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::vector<std::string> &old_labels,
-                   const std::vector<std::string> &new_labels);  // implemented
+                  const std::vector<std::string> &new_labels);  // implemented
     void relabels_(const std::vector<std::string> &old_labels,
                    const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::string &old_label, const std::string &new_label) {
@@ -543,7 +543,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
 
     boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &old_labels,
-                                                  const std::vector<std::string> &new_labels);
+                                                 const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels,
                                                   const std::vector<std::string> &new_labels);
 
@@ -1379,7 +1379,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
 
     boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &old_labels,
-                                                  const std::vector<std::string> &new_labels);
+                                                 const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels,
                                                   const std::vector<std::string> &new_labels);
 
@@ -2440,7 +2440,7 @@ namespace cytnx {
         1. the final output UniTensor cannot have duplicate labels.
     */
     UniTensor relabel(const std::vector<std::string> &old_labels,
-                       const std::vector<std::string> &new_labels) const {
+                      const std::vector<std::string> &new_labels) const {
       UniTensor out;
       out._impl = this->_impl->relabel(old_labels, new_labels);
       return out;
@@ -2476,7 +2476,7 @@ namespace cytnx {
     different, but the internal data is still shared.
      */
     UniTensor &relabel_(const std::vector<std::string> &old_labels,
-                         const std::vector<std::string> &new_labels) {
+                        const std::vector<std::string> &new_labels) {
       this->_impl->relabel_(old_labels, new_labels);
       return *this;
     }
@@ -2507,7 +2507,7 @@ namespace cytnx {
     &new_labels) const
      */
     UniTensor relabel(const std::initializer_list<char *> &old_labels,
-                       const std::initializer_list<char *> &new_labels) const {
+                      const std::initializer_list<char *> &new_labels) const {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
@@ -2546,7 +2546,7 @@ namespace cytnx {
     &new_labels)
      */
     UniTensor &relabel_(const std::initializer_list<char *> &old_labels,
-                         const std::initializer_list<char *> &new_labels) {
+                        const std::initializer_list<char *> &new_labels) {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
