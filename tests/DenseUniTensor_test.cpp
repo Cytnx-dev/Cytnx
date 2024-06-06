@@ -15,7 +15,7 @@ TEST_F(DenseUniTensorTest, Init_by_Tensor) {
 TEST_F(DenseUniTensorTest, Init_tagged) {
   // different types
   EXPECT_NO_THROW(
-      dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu, false, false));
+    dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu, false, false));
   EXPECT_NO_THROW(dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Double, Device.cpu,
                            false, false));
   EXPECT_NO_THROW(dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.ComplexFloat,
@@ -27,23 +27,23 @@ TEST_F(DenseUniTensorTest, Init_tagged) {
   EXPECT_ANY_THROW(dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 99, Type.Float, Device.cpu,
                             false, false));
   EXPECT_NO_THROW(
-      dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 2, Type.Float, Device.cpu, false, false));
+    dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 2, Type.Float, Device.cpu, false, false));
   EXPECT_NO_THROW(
-      dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu, false, false));
+    dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu, false, false));
   EXPECT_NO_THROW(dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, -1, Type.Float, Device.cpu,
                            false, false));
   EXPECT_ANY_THROW(dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, -2, Type.Float, Device.cpu,
                             false, false));
   EXPECT_NO_THROW(
-      dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 0, Type.Float, Device.cpu, false, false));
+    dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 0, Type.Float, Device.cpu, false, false));
 
   // is_diag = true, but rank>2
   EXPECT_ANY_THROW(
-      dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu, true, false));
+    dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cpu, true, false));
 
   // is_diag = true, but rowrank!=1
   EXPECT_ANY_THROW(
-      dut.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cpu, true, false));
+    dut.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cpu, true, false));
 
   // is_diag = true, but no outward bond
   // cout << phy << endl;
@@ -700,14 +700,14 @@ TEST_F(DenseUniTensorTest, astype) {
   ut_dst = ut_src.astype(Type.ComplexFloat);
   EXPECT_EQ(ut_dst.dtype(), Type.ComplexFloat);
   EXPECT_THROW(ut_src.astype(Type.Double), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Float), std::logic_error);   // error test
-  EXPECT_THROW(ut_src.astype(Type.Int64), std::logic_error);   // error test
+  EXPECT_THROW(ut_src.astype(Type.Float), std::logic_error);  // error test
+  EXPECT_THROW(ut_src.astype(Type.Int64), std::logic_error);  // error test
   EXPECT_THROW(ut_src.astype(Type.Uint64), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Int32), std::logic_error);   // error test
+  EXPECT_THROW(ut_src.astype(Type.Int32), std::logic_error);  // error test
   EXPECT_THROW(ut_src.astype(Type.Uint32), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Int16), std::logic_error);   // error test
+  EXPECT_THROW(ut_src.astype(Type.Int16), std::logic_error);  // error test
   EXPECT_THROW(ut_src.astype(Type.Uint16), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Bool), std::logic_error);    // error test
+  EXPECT_THROW(ut_src.astype(Type.Bool), std::logic_error);  // error test
 
   // from complex float
   ut_src = UniTensor(bonds, labels, row_rank, Type.ComplexFloat);
@@ -716,14 +716,14 @@ TEST_F(DenseUniTensorTest, astype) {
   ut_dst = ut_src.astype(Type.ComplexFloat);
   EXPECT_EQ(ut_dst.dtype(), Type.ComplexFloat);
   EXPECT_THROW(ut_src.astype(Type.Double), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Float), std::logic_error);   // error test
-  EXPECT_THROW(ut_src.astype(Type.Int64), std::logic_error);   // error test
+  EXPECT_THROW(ut_src.astype(Type.Float), std::logic_error);  // error test
+  EXPECT_THROW(ut_src.astype(Type.Int64), std::logic_error);  // error test
   EXPECT_THROW(ut_src.astype(Type.Uint64), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Int32), std::logic_error);   // error test
+  EXPECT_THROW(ut_src.astype(Type.Int32), std::logic_error);  // error test
   EXPECT_THROW(ut_src.astype(Type.Uint32), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Int16), std::logic_error);   // error test
+  EXPECT_THROW(ut_src.astype(Type.Int16), std::logic_error);  // error test
   EXPECT_THROW(ut_src.astype(Type.Uint16), std::logic_error);  // error test
-  EXPECT_THROW(ut_src.astype(Type.Bool), std::logic_error);    // error test
+  EXPECT_THROW(ut_src.astype(Type.Bool), std::logic_error);  // error test
 
   // from double
   ut_src = UniTensor(bonds, labels, row_rank, Type.Double);

@@ -274,11 +274,11 @@ TEST_F(DenseUniTensorTest, gpu_Init_tagged) {
 
   // is_diag = true, but rank>2
   EXPECT_ANY_THROW(
-      dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cuda, true, false));
+    dut.Init({phy, phy.redirect(), aux}, {"a", "b", "c"}, 1, Type.Float, Device.cuda, true, false));
 
   // is_diag = true, but rowrank!=1
   EXPECT_ANY_THROW(
-      dut.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cuda, true, false));
+    dut.Init({phy, phy.redirect()}, {"a", "b"}, 2, Type.Float, Device.cuda, true, false));
 
   // is_diag = true, but no outward bond
   // cout << phy << endl;
