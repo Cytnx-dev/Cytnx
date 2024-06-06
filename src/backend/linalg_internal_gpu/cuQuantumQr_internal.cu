@@ -89,7 +89,7 @@ namespace cytnx {
        ***********************************************/
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_C_64F;
+      cudaDataType typeData = CUDA_C_64F;
 
       std::vector<int32_t> modesT{'j', 'i'};  // input
       std::vector<int32_t> modesQ{'s', 'i'};
@@ -227,7 +227,7 @@ namespace cytnx {
        ***********************************************/
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_C_32F;
+      cudaDataType typeData = CUDA_C_32F;
 
       std::vector<int32_t> modesT{'j', 'i'};  // input
       std::vector<int32_t> modesQ{'s', 'i'};
@@ -364,7 +364,7 @@ namespace cytnx {
        ***********************************************/
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_R_64F;
+      cudaDataType typeData = CUDA_R_64F;
 
       std::vector<int32_t> modesT{'j', 'i'};  // input
       std::vector<int32_t> modesQ{'s', 'i'};
@@ -501,7 +501,7 @@ namespace cytnx {
        ***********************************************/
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_R_32F;
+      cudaDataType typeData = CUDA_R_32F;
 
       std::vector<int32_t> modesT{'j', 'i'};  // input
       std::vector<int32_t> modesQ{'s', 'i'};

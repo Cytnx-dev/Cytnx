@@ -298,7 +298,7 @@ namespace cytnx {
       // printf("========================\n");
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_C_64F;
+      cudaDataType typeData = CUDA_C_64F;
       /******************
        * cuTensorNet
        *******************/
@@ -541,7 +541,7 @@ namespace cytnx {
       // printf("========================\n");
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_C_32F;
+      cudaDataType typeData = CUDA_C_32F;
       /******************
        * cuTensorNet
        *******************/
@@ -784,7 +784,7 @@ namespace cytnx {
       // printf("========================\n");
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_R_64F;
+      cudaDataType typeData = CUDA_R_64F;
       /******************
        * cuTensorNet
        *******************/
@@ -1027,7 +1027,7 @@ namespace cytnx {
       // printf("========================\n");
 
       typedef float floatType;
-      cudaDataType_t typeData = CUDA_R_32F;
+      cudaDataType typeData = CUDA_R_32F;
       /******************
        * cuTensorNet
        *******************/

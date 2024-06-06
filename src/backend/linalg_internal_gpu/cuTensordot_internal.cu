@@ -20,8 +20,10 @@ namespace cytnx {
 
     inline void _cuTensordot_internal(Tensor &out, const Tensor &Lin, const Tensor &Rin,
                                       const std::vector<cytnx_uint64> &idxl,
-                                      const std::vector<cytnx_uint64> &idxr, cudaDataType_t type,
-                                      cutensorComputeType_t typeCompute, void *alpha, void *beta) {
+                                      const std::vector<cytnx_uint64> &idxr,
+                                      cutensorDataType_t type,
+                                      cutensorComputeDescriptor_t typeCompute, void *alpha,
+                                      void *beta) {
       // hostType alpha = (hostType){1.f, 0.f};
       // hostType beta = (hostType){0.f, 0.f};
 
@@ -90,7 +92,7 @@ namespace cytnx {
        * cuTENSOR
        *************************/
 
-      cutensorHandle_t *handle;
+      cutensorHandle_t handle;
       HANDLE_ERROR(cutensorCreate(&handle));
 
       /**********************
@@ -98,58 +100,61 @@ namespace cytnx {
        **********************/
 
       cutensorTensorDescriptor_t descL;
-      HANDLE_ERROR(cutensorInitTensorDescriptor(handle, &descL, nlabelL, extentL.data(),
-                                                NULL, /*stride*/
-                                                type, CUTENSOR_OP_IDENTITY));
+      HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descL, nlabelL, extentL.data(),
+                                                  NULL, /*stride*/
+                                                  type, CUTENSOR_OP_IDENTITY));
 
       cutensorTensorDescriptor_t descR;
-      HANDLE_ERROR(cutensorInitTensorDescriptor(handle, &descR, nlabelR, extentR.data(),
-                                                NULL, /*stride*/
-                                                type, CUTENSOR_OP_IDENTITY));
+      HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descR, nlabelR, extentR.data(),
+                                                  NULL, /*stride*/
+                                                  type, CUTENSOR_OP_IDENTITY));
 
       cutensorTensorDescriptor_t descOut;
-      HANDLE_ERROR(cutensorInitTensorDescriptor(handle, &descOut, nlabelOut, extentOut.data(),
-                                                NULL, /*stride*/
-                                                type, CUTENSOR_OP_IDENTITY));
+      HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descOut, nlabelOut, extentOut.data(),
+                                                  NULL, /*stride*/
+                                                  type, CUTENSOR_OP_IDENTITY));
 
       /**********************************************
        * Retrieve the memory alignment for each tensor
        **********************************************/
 
-      uint32_t alignmentRequirementL;
-      HANDLE_ERROR(cutensorGetAlignmentRequirement(handle, lPtr, &descL, &alignmentRequirementL));
+      // uint32_t alignmentRequirementL;
+      // HANDLE_ERROR(cutensorGetAlignmentRequirement(handle, lPtr, &descL,
+      // &alignmentRequirementL));
 
-      uint32_t alignmentRequirementR;
-      HANDLE_ERROR(cutensorGetAlignmentRequirement(handle, rPtr, &descR, &alignmentRequirementR));
+      // uint32_t alignmentRequirementR;
+      // HANDLE_ERROR(cutensorGetAlignmentRequirement(handle, rPtr, &descR,
+      // &alignmentRequirementR));
 
-      uint32_t alignmentRequirementOut;
-      HANDLE_ERROR(
-        cutensorGetAlignmentRequirement(handle, outPtr, &descOut, &alignmentRequirementOut));
+      // uint32_t alignmentRequirementOut;
+      // HANDLE_ERROR(
+      //   cutensorGetAlignmentRequirement(handle, outPtr, &descOut, &alignmentRequirementOut));
 
       /*******************************
        * Create Contraction Descriptor
        *******************************/
 
-      cutensorContractionDescriptor_t desc;
-      HANDLE_ERROR(cutensorInitContractionDescriptor(
-        handle, &desc, &descL, labelL.data(), alignmentRequirementL, &descR, labelR.data(),
-        alignmentRequirementR, &descOut, labelOut.data(), alignmentRequirementOut, &descOut,
-        labelOut.data(), alignmentRequirementOut, typeCompute));
+      cutensorOperationDescriptor_t desc;
+      HANDLE_ERROR(
+        cutensorCreateContraction(handle, &desc, descL, labelL.data(), CUTENSOR_OP_IDENTITY, descR,
+                                  labelR.data(), CUTENSOR_OP_IDENTITY, descOut, labelOut.data(),
+                                  CUTENSOR_OP_IDENTITY, descOut, labelOut.data(), typeCompute));
 
       /**************************
        * Set the algorithm to use
        ***************************/
 
-      cutensorContractionFind_t find;
-      HANDLE_ERROR(cutensorInitContractionFind(handle, &find, CUTENSOR_ALGO_DEFAULT));
+      cutensorPlanPreference_t planPref;
+      HANDLE_ERROR(cutensorCreatePlanPreference(handle, &planPref, CUTENSOR_ALGO_DEFAULT,
+                                                CUTENSOR_JIT_MODE_NONE));
 
       /**********************
        * Query workspace
        **********************/
 
       uint64_t worksize = 0;
-      HANDLE_ERROR(cutensorContractionGetWorkspaceSize(handle, &desc, &find,
-                                                       CUTENSOR_WORKSPACE_RECOMMENDED, &worksize));
+      HANDLE_ERROR(cutensorEstimateWorkspaceSize(handle, desc, planPref, CUTENSOR_WORKSPACE_DEFAULT,
+                                                 &worksize));
 
       void *work = nullptr;
       if (worksize > 0) {
@@ -163,15 +168,15 @@ namespace cytnx {
        * Create Contraction Plan
        **************************/
 
-      cutensorContractionPlan_t plan;
-      HANDLE_ERROR(cutensorInitContractionPlan(handle, &plan, &desc, &find, worksize));
+      cutensorPlan_t plan;
+      HANDLE_ERROR(cutensorCreatePlan(handle, &plan, desc, planPref, worksize));
 
       /**********************
        * Run
        **********************/
 
-      HANDLE_ERROR(cutensorContraction(handle, &plan, alpha, lPtr, rPtr, beta, outPtr, outPtr, work,
-                                       worksize, 0 /* stream */));
+      HANDLE_ERROR(cutensorContract(handle, plan, alpha, lPtr, rPtr, beta, outPtr, outPtr, work,
+                                    worksize, 0 /* stream */));
 
       /*************************/
 
@@ -185,8 +190,8 @@ namespace cytnx {
                                  const std::vector<cytnx_uint64> &idxl,
                                  const std::vector<cytnx_uint64> &idxr) {
       typedef cuDoubleComplex hostType;
-      cudaDataType_t type = CUDA_C_64F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_64F;
+      cutensorDataType_t type = CUTENSOR_C_64F;
+      cutensorComputeDescriptor_t typeCompute = CUTENSOR_COMPUTE_DESC_64F;
 
       hostType alpha = {1., 0.};
       hostType beta = {0., 0.};
@@ -198,8 +203,8 @@ namespace cytnx {
                                  const std::vector<cytnx_uint64> &idxl,
                                  const std::vector<cytnx_uint64> &idxr) {
       typedef cuFloatComplex hostType;
-      cudaDataType_t type = CUDA_C_32F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32F;
+      cutensorDataType_t type = CUTENSOR_C_32F;
+      cutensorComputeDescriptor_t typeCompute = CUTENSOR_COMPUTE_DESC_32F;
 
       hostType alpha = {1.f, 0.f};
       hostType beta = {0.f, 0.f};
@@ -211,8 +216,8 @@ namespace cytnx {
                                 const std::vector<cytnx_uint64> &idxl,
                                 const std::vector<cytnx_uint64> &idxr) {
       typedef double hostType;
-      cudaDataType_t type = CUDA_R_64F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_64F;
+      cutensorDataType_t type = CUTENSOR_R_64F;
+      cutensorComputeDescriptor_t typeCompute = CUTENSOR_COMPUTE_DESC_64F;
 
       hostType alpha = 1.f;
       hostType beta = 0.f;
@@ -224,8 +229,8 @@ namespace cytnx {
                                 const std::vector<cytnx_uint64> &idxl,
                                 const std::vector<cytnx_uint64> &idxr) {
       typedef float hostType;
-      cudaDataType_t type = CUDA_R_32F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32F;
+      cutensorDataType_t type = CUTENSOR_R_32F;
+      cutensorComputeDescriptor_t typeCompute = CUTENSOR_COMPUTE_DESC_32F;
 
       hostType alpha = 1.f;
       hostType beta = 0.f;
@@ -237,9 +242,9 @@ namespace cytnx {
                                   const std::vector<cytnx_uint64> &idxl,
                                   const std::vector<cytnx_uint64> &idxr) {
       typedef cytnx_uint32 hostType;
-      cudaDataType_t type = CUDA_R_32U;
+      cutensorDataType_t type = CUTENSOR_R_32U;
 
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32U;
+      cutensorComputeDescriptor_t typeCompute = CUTENSOR_COMPUTE_DESC_32F;
 
       hostType alpha = 1;
       hostType beta = 0;
@@ -251,9 +256,9 @@ namespace cytnx {
                                   const std::vector<cytnx_uint64> &idxl,
                                   const std::vector<cytnx_uint64> &idxr) {
       typedef cytnx_int32 hostType;
-      cudaDataType_t type = CUDA_R_32I;
+      cutensorDataType_t type = CUTENSOR_R_32I;
 
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32I;
+      cutensorComputeDescriptor_t typeCompute = CUTENSOR_COMPUTE_DESC_32F;
 
       hostType alpha = 1;
       hostType beta = 0;

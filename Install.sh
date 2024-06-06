@@ -70,12 +70,12 @@ FLAG="${FLAG} -DBACKEND_TORCH=OFF"
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_HPTT=OFF"
+FLAG="${FLAG} -DUSE_HPTT=ON"
 #-----------------------------------
 # 6-a) HPTT fine tune (DEFAULT = OFF)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=OFF"
+FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=ON"
 #-----------------------------------
 # 6-b) HPTT variant options (DEFAULT = no option)
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
@@ -92,7 +92,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=OFF"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF"
+FLAG="${FLAG} -DUSE_CUDA=ON"
 #-----------------------------------
 # 7-a) CUTT (DEFAULT = OFF)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -119,16 +119,16 @@ FLAG="${FLAG} -DUSE_MAGMA=OFF"
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-FLAG="${FLAG} -DUSE_CUTENSOR=OFF"
-#CUTENSOR_ROOT=/usr/local/libcutensor-...
-#FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT}"
+FLAG="${FLAG} -DUSE_CUTENSOR=ON"
+CUTENSOR_ROOT=/home/j9263178/libcutensor-linux-x86_64-2.0.1.2-archive
+FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT}"
 #-----------------------------------
 # 7-e) CuQuantum (DEFAULT = OFF)
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-FLAG="${FLAG} -DUSE_CUQUANTUM=OFF"
-# CUQUANTUM_ROOT=/usr/local/cuqunatum-......
-#FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT}"
+FLAG="${FLAG} -DUSE_CUQUANTUM=ON"
+CUQUANTUM_ROOT=/home/j9263178/cuquantum-linux-x86_64-24.03.0.4_cuda12-archive
+FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT}"
 #-----------------------------------
 
 
@@ -191,8 +191,8 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF"
 # Build commands
 #=========================================================
 echo ${FLAG}
-rm -rf build
-mkdir build
+# rm -rf build
+# mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
 make -j`nproc`
