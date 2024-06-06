@@ -140,7 +140,7 @@ namespace cytnx {
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[0].shape()[0]);
       Cy_S.Init({newBond, newBond}, {string("_aux_L"), string("_aux_R")}, 1, Type.Double,
-                Device.cpu,
+                Tin.device(),
                 true);  // it is just reference so no hurt to alias ^^
       Cy_S.put_block_(outT[t]);
       t++;

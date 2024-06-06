@@ -317,10 +317,10 @@ namespace cytnx {
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
-      cytnx_warning_msg(
-        h_err_sigma > 1e-12,
-        "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n",
-        h_err_sigma);
+      // cytnx_warning_msg(
+      //   h_err_sigma > 1e-12,
+      //   "Warning: Singular values approach zero, SVD may not be accurate, err_sigma = %E\n",
+      //   h_err_sigma);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 

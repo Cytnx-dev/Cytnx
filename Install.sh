@@ -4,7 +4,7 @@
 # [Note] Set the destination path for installation in Ins_dest
 #----------------------------------------------
 # Ins_dest="/usr/local/cytnx"
-Ins_dest="~/Cytnx_lib"
+Ins_dest="~/Cytnx_ctmrg"
 FLAG="${FLAG} -DCMAKE_INSTALL_PREFIX=${Ins_dest}"
 #-----------------------------------------------
 
@@ -70,18 +70,18 @@ FLAG="${FLAG} -DBACKEND_TORCH=OFF"
 # [Note] set to "=on" for using hptt library to accelrate tensor transpose.
 #        for "=off" case one can skip 5-a) and  5-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_HPTT=OFF"
+FLAG="${FLAG} -DUSE_HPTT=ON"
 #-----------------------------------
 # 6-a) HPTT fine tune (DEFAULT = OFF)
 # [Note] set to "=on" to enable fine tune for the native hardware.
 #-----------------------------------
-FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=OFF"
+FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=ON"
 #-----------------------------------
 # 6-b) HPTT variant options (DEFAULT = no option)
 # [Note] uncomment one of the desired options below 1: AVX 2: IBM 3: ARM.
 #-----------------------------------
-#FLAG="${FLAG} -DHPTT_ENABLE_ARM=ON"
-#FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
+# FLAG="${FLAG} -DHPTT_ENABLE_ARM=ON"
+FLAG="${FLAG} -DHPTT_ENABLE_AVX=ON"
 #FLAG="${FLAG} -DHPTT_ENABLE_IBM=ON"
 #-----------------------------------
 
@@ -92,7 +92,7 @@ FLAG="${FLAG} -DHPTT_ENABLE_FINE_TUNE=OFF"
 # [Note] set to "=on" to build with with GPU (CUDA) support.
 #        for "=off" case one can skip 6-a) and  6-b)
 #-----------------------------------
-FLAG="${FLAG} -DUSE_CUDA=OFF"
+FLAG="${FLAG} -DUSE_CUDA=ON"
 #-----------------------------------
 # 7-a) CUTT (DEFAULT = OFF)
 # [Note] set to "=on" for using CUTT library to accelrate tensor transpose.
@@ -119,16 +119,16 @@ FLAG="${FLAG} -DUSE_MAGMA=OFF"
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-FLAG="${FLAG} -DUSE_CUTENSOR=OFF"
-#CUTENSOR_ROOT=/usr/local/libcutensor-...
-#FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT}"
+FLAG="${FLAG} -DUSE_CUTENSOR=ON"
+CUTENSOR_ROOT=~/libcutensor-linux-x86_64-1.7.0.1-archive
+FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT}"
 #-----------------------------------
 # 7-e) CuQuantum (DEFAULT = OFF)
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
-FLAG="${FLAG} -DUSE_CUQUANTUM=OFF"
-# CUQUANTUM_ROOT=/usr/local/cuqunatum-......
-#FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT}"
+FLAG="${FLAG} -DUSE_CUQUANTUM=ON"
+CUQUANTUM_ROOT=~/cuquantum-linux-x86_64-23.06.1.8_cuda11-archive
+FLAG="${FLAG} -DCUQUANTUM_ROOT=${CUQUANTUM_ROOT}"
 #-----------------------------------
 
 
@@ -165,10 +165,10 @@ FLAG="${FLAG} -DRUN_TESTS=${DRUN_TESTS}"
 #=========================================================
 # [Note] Build using intel icpc compiler, uncomment to enable (DEFAULT = OFF (commented out))
 #-----------------------------------
-#FLAG="${FLAG} -DUSE_ICPC=ON " # You should set this to ON if you want to use icpc
+# FLAG="${FLAG} -DUSE_ICPC=ON " # You should set this to ON if you want to use icpc
 # This option is needed if you want to use icpc, to set the compiler
 # Although icc&icpc is deprecated, but since icx&icpx has poor support for conda environment, we still use icpc
-#FLAG="${FLAG} -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc"
+# FLAG="${FLAG} -DCMAKE_C_COMPILER=icc -DCMAKE_CXX_COMPILER=icpc"
 # This option is to use the intel compiler's ar and linker, which is optional
 #FLAG = "${FLAG} -DCMAKE_AR=xiar -DCMAKE_LINKER=xild"
 #-----------------------------------
@@ -191,14 +191,17 @@ FLAG="${FLAG} -DUSE_DEBUG=OFF"
 # Build commands
 #=========================================================
 echo ${FLAG}
-rm -rf build
-mkdir build
+# rm -rf build
+# mkdir build
 cd build
 cmake ../ ${FLAG} #-DDEV_MODE=on
 make -j`nproc`
 make install
 # if DRUN_TESTS=ON, run tests
-# ctest
+
+# cd build
+ctest -R "Gesvd" --rerun-failed --output-on-failure
+
 # shopt -s nocasematch
 # case "${DRUN_TESTS}" in
 #  "ON" ) ctest; gcovr -r ../ . --html-details cov.html;;
