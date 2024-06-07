@@ -272,6 +272,50 @@ namespace cytnx {
     this->_labels = new_labels;
   }
 
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(
+    const std::vector<std::string> &new_labels) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+    return nullptr;
+  }
+  void UniTensor_base::relabel_(const std::vector<std::string> &new_labels) {
+    this->set_labels(new_labels);
+  }
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabel(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
+    return nullptr;
+  }
+  void UniTensor_base::relabel_(const std::vector<std::string> &old_labels,
+                                const std::vector<std::string> &new_labels) {
+    cytnx_error_msg(old_labels.size() != new_labels.size(),
+                    "[ERROR] old_labels and new_labels should have the same size.%s", "\n");
+
+    // 1) checking old_labels have no duplicate and are all exists:
+    // 2) getting all the replace locations
+    cytnx_error_msg(vec_unique<std::string>(old_labels).size() != old_labels.size(),
+                    "[ERROR] old_labels cannot have duplicated elements.%s", "\n");
+
+    std::vector<cytnx_int64> loc_inds(old_labels.size());
+    for (cytnx_int64 i = 0; i < loc_inds.size(); i++) {
+      auto res = std::find(this->_labels.begin(), this->_labels.end(), old_labels[i]);
+      cytnx_error_msg(res == this->_labels.end(), "[ERROR] label %s not exists.\n",
+                      old_labels[i].c_str());
+
+      loc_inds[i] = std::distance(this->_labels.begin(), res);
+    }
+
+    // 3) replace the labels:
+    for (cytnx_int64 i = 0; i < loc_inds.size(); i++) {
+      this->_labels[loc_inds[i]] = new_labels[i];
+    }
+
+    // 4) chk duplicate:
+    cytnx_error_msg(vec_unique<std::string>(this->_labels).size() != this->_labels.size(),
+                    "[ERROR] final output UniTensor have duplicated elements.%s", "\n");
+  }
+
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::relabels(
     const std::vector<std::string> &new_labels) {
     cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",

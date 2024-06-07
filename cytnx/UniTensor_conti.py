@@ -212,6 +212,16 @@ def relabel_(self, idx:int, new_label:str):
 
 
 @add_ovld_method(UniTensor)
+def relabel_(self, old_labels:List[str],new_labels:List[str]):
+    self.c_relabel_(old_labels,new_labels);
+    return self
+
+@add_ovld_method(UniTensor)
+def relabel_(self, new_labels:List[str]):
+    self.c_relabel_(new_labels);
+    return self
+
+@add_ovld_method(UniTensor)
 def relabels_(self, old_labels:List[str],new_labels:List[str]):
     self.c_relabels_(old_labels,new_labels);
     return self

@@ -672,6 +672,24 @@ namespace cytnx {
     this->permute_(mapper_i64, rowrank);
   }
 
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
+    const std::vector<string> &new_labels) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_labels(new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    BlockUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->relabel_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
     const std::vector<string> &new_labels) {
     BlockUniTensor *tmp = this->clone_meta(true, true);
