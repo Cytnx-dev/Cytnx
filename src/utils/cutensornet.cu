@@ -62,7 +62,7 @@ namespace cytnx {
   };
 
   cutensornet::cutensornet() {
-    // type_mapper = std::vector<cudaDataType_t>(11);
+    // type_mapper = std::vector<cutensorDataType_t >(11);
     // for(int i = 0; i<11; i++)
     //   type_mapper[i] = CUDA_C_64F;
     // type_mapper[Type.ComplexDouble] = CUDA_C_64F;
@@ -85,7 +85,7 @@ namespace cytnx {
   };
 
   // cutensornet::~cutensornet() {
-  //   // type_mapper = std::vector<cudaDataType_t>(11);
+  //   // type_mapper = std::vector<cutensorDataType_t >(11);
   //   // for(int i = 0; i<11; i++)
   //   //   type_mapper[i] = CUDA_C_64F;
   //   // type_mapper[Type.ComplexDouble] = CUDA_C_64F;

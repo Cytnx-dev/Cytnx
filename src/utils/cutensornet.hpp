@@ -20,7 +20,7 @@ namespace cytnx {
 
   class cutensornet {
    private:
-    // std::vector<cudaDataType_t> type_mapper;
+    // std::vector<cutensorDataType_t > type_mapper;
 
     // cuTensorNet version
     size_t cuTensornetVersion;
@@ -32,7 +32,7 @@ namespace cytnx {
     cudaDeviceProp prop;
 
     // data types
-    cudaDataType_t typeData;  // CUDA_R_32F;
+    cudaDataType typeData;  // CUDA_R_32F;
     cutensornetComputeType_t typeCompute;  // CUTENSORNET_COMPUTE_32F;
 
     // stream
