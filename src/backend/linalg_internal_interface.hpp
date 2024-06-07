@@ -4,67 +4,66 @@
 #include <vector>
 
 #include "Type.hpp"
-#include "backend/Storage.hpp"
 #include "backend/Scalar.hpp"
+#include "backend/Storage.hpp"
+#include "linalg_internal_cpu/Abs_internal.hpp"
 #include "linalg_internal_cpu/Arithmetic_internal.hpp"
-#include "linalg_internal_cpu/iArithmetic_internal.hpp"
-#include "linalg_internal_cpu/Sdd_internal.hpp"
-#include "linalg_internal_cpu/Gesvd_internal.hpp"
-#include "linalg_internal_cpu/Eigh_internal.hpp"
+#include "linalg_internal_cpu/Axpy_internal.hpp"
+#include "linalg_internal_cpu/Conj_inplace_internal.hpp"
+#include "linalg_internal_cpu/Det_internal.hpp"
+#include "linalg_internal_cpu/Diag_internal.hpp"
 #include "linalg_internal_cpu/Eig_internal.hpp"
+#include "linalg_internal_cpu/Eigh_internal.hpp"
+#include "linalg_internal_cpu/Exp_internal.hpp"
+#include "linalg_internal_cpu/Gemm_Batch_internal.hpp"
+#include "linalg_internal_cpu/Gemm_internal.hpp"
+#include "linalg_internal_cpu/Ger_internal.hpp"
+#include "linalg_internal_cpu/Gesvd_internal.hpp"
 #include "linalg_internal_cpu/InvM_inplace_internal.hpp"
 #include "linalg_internal_cpu/Inv_inplace_internal.hpp"
-#include "linalg_internal_cpu/Conj_inplace_internal.hpp"
-#include "linalg_internal_cpu/Exp_internal.hpp"
-#include "linalg_internal_cpu/Matmul_internal.hpp"
-#include "linalg_internal_cpu/Matmul_dg_internal.hpp"
-#include "linalg_internal_cpu/Diag_internal.hpp"
-#include "linalg_internal_cpu/Outer_internal.hpp"
 #include "linalg_internal_cpu/Kron_internal.hpp"
-#include "linalg_internal_cpu/Vectordot_internal.hpp"
-#include "linalg_internal_cpu/Tridiag_internal.hpp"
-#include "linalg_internal_cpu/Norm_internal.hpp"
-#include "linalg_internal_cpu/Matvec_internal.hpp"
-#include "linalg_internal_cpu/Pow_internal.hpp"
-#include "linalg_internal_cpu/Abs_internal.hpp"
-#include "linalg_internal_cpu/QR_internal.hpp"
-#include "linalg_internal_cpu/MaxMin_internal.hpp"
-#include "linalg_internal_cpu/Sum_internal.hpp"
-#include "linalg_internal_cpu/Det_internal.hpp"
 #include "linalg_internal_cpu/Lstsq_internal.hpp"
-#include "linalg_internal_cpu/Axpy_internal.hpp"
-#include "linalg_internal_cpu/Ger_internal.hpp"
-#include "linalg_internal_cpu/Gemm_internal.hpp"
-#include "linalg_internal_cpu/Gemm_Batch_internal.hpp"
+#include "linalg_internal_cpu/Matmul_dg_internal.hpp"
+#include "linalg_internal_cpu/Matmul_internal.hpp"
+#include "linalg_internal_cpu/Matvec_internal.hpp"
+#include "linalg_internal_cpu/MaxMin_internal.hpp"
+#include "linalg_internal_cpu/Norm_internal.hpp"
+#include "linalg_internal_cpu/Outer_internal.hpp"
+#include "linalg_internal_cpu/Pow_internal.hpp"
+#include "linalg_internal_cpu/QR_internal.hpp"
+#include "linalg_internal_cpu/Sdd_internal.hpp"
+#include "linalg_internal_cpu/Sum_internal.hpp"
 #include "linalg_internal_cpu/Trace_internal.hpp"
-
+#include "linalg_internal_cpu/Tridiag_internal.hpp"
+#include "linalg_internal_cpu/Vectordot_internal.hpp"
+#include "linalg_internal_cpu/iArithmetic_internal.hpp"
 #include "linalg_internal_cpu/memcpyTruncation.hpp"
 
 #ifdef UNI_GPU
-  #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
   #include "linalg_internal_gpu/cuAbs_internal.hpp"
-  #include "linalg_internal_gpu/cuSvd_internal.hpp"
-  #include "linalg_internal_gpu/cuGeSvd_internal.hpp"
+  #include "linalg_internal_gpu/cuArithmetic_internal.hpp"
+  #include "linalg_internal_gpu/cuConj_inplace_internal.hpp"
+  #include "linalg_internal_gpu/cuDet_internal.hpp"
+  #include "linalg_internal_gpu/cuDiag_internal.hpp"
   #include "linalg_internal_gpu/cuEigh_internal.hpp"
+  #include "linalg_internal_gpu/cuExp_internal.hpp"
+  #include "linalg_internal_gpu/cuGeSvd_internal.hpp"
+  #include "linalg_internal_gpu/cuGemm_Batch_internal.hpp"
+  #include "linalg_internal_gpu/cuGemm_internal.hpp"
+  #include "linalg_internal_gpu/cuGer_internal.hpp"
   #include "linalg_internal_gpu/cuInvM_inplace_internal.hpp"
   #include "linalg_internal_gpu/cuInv_inplace_internal.hpp"
-  #include "linalg_internal_gpu/cuConj_inplace_internal.hpp"
-  #include "linalg_internal_gpu/cuExp_internal.hpp"
-  #include "linalg_internal_gpu/cuGemm_internal.hpp"
-  #include "linalg_internal_gpu/cuGemm_Batch_internal.hpp"
-  #include "linalg_internal_gpu/cuMatmul_internal.hpp"
-  #include "linalg_internal_gpu/cuMatmul_dg_internal.hpp"
-  #include "linalg_internal_gpu/cuDiag_internal.hpp"
-  #include "linalg_internal_gpu/cuOuter_internal.hpp"
-  #include "linalg_internal_gpu/cuNorm_internal.hpp"
-  #include "linalg_internal_gpu/cuMatvec_internal.hpp"
-  #include "linalg_internal_gpu/cuVectordot_internal.hpp"
-  #include "linalg_internal_gpu/cuPow_internal.hpp"
-  #include "linalg_internal_gpu/cuGer_internal.hpp"
-  #include "linalg_internal_gpu/cuDet_internal.hpp"
-  #include "linalg_internal_gpu/cuSum_internal.hpp"
-  #include "linalg_internal_gpu/cuMaxMin_internal.hpp"
   #include "linalg_internal_gpu/cuKron_internal.hpp"
+  #include "linalg_internal_gpu/cuMatmul_dg_internal.hpp"
+  #include "linalg_internal_gpu/cuMatmul_internal.hpp"
+  #include "linalg_internal_gpu/cuMatvec_internal.hpp"
+  #include "linalg_internal_gpu/cuMaxMin_internal.hpp"
+  #include "linalg_internal_gpu/cuNorm_internal.hpp"
+  #include "linalg_internal_gpu/cuOuter_internal.hpp"
+  #include "linalg_internal_gpu/cuPow_internal.hpp"
+  #include "linalg_internal_gpu/cuSum_internal.hpp"
+  #include "linalg_internal_gpu/cuSvd_internal.hpp"
+  #include "linalg_internal_gpu/cuVectordot_internal.hpp"
   #include "linalg_internal_gpu/cudaMemcpyTruncation.hpp"
   #ifdef UNI_CUTENSOR
     #include "linalg_internal_gpu/cuTensordot_internal.hpp"
@@ -191,14 +190,16 @@ namespace cytnx {
     typedef void (*memcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                                          const cytnx_uint64 &keepdim, const double &err,
                                          const bool &is_U, const bool &is_vT,
-                                         const unsigned int &return_err);
+                                         const unsigned int &return_err,
+                                         const unsigned int &mindim);
 
 #ifdef UNI_GPU
 
     typedef void (*cudaMemcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                                              const cytnx_uint64 &keepdim, const double &err,
                                              const bool &is_U, const bool &is_vT,
-                                             const unsigned int &return_err);
+                                             const unsigned int &return_err,
+                                             const unsigned int &mindim);
 
   #ifdef UNI_CUQUANTUM
     typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,

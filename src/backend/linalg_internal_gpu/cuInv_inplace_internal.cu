@@ -1,9 +1,9 @@
 #include "cuInv_inplace_internal.hpp"
 #include "../utils_internal_interface.hpp"
 
-//#ifdef UNI_OMP
-//    #include <omp.h>
-//#endif
+// #ifdef UNI_OMP
+//     #include <omp.h>
+// #endif
 
 namespace cytnx {
 
