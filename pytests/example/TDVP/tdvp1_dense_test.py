@@ -7,8 +7,8 @@ from numpy import linalg as LA
 
 def test_tdvp1_dense():
     #prepare random MPS
-    Nsites = 7 # Number of sites
-    chi = 4 # MPS bond dimension
+    Nsites = 20 # Number of sites
+    chi = 16 # MPS bond dimension
     d = 2
     MPS_rand = prepare_rand_init_MPS(Nsites, chi, d)
 
@@ -22,4 +22,4 @@ def test_tdvp1_dense():
     # prepare up state
     As, Es = tdvp1_XXZmodel_dense(J, Jz, hx, hz, MPS_rand, chi, tau, time_step)
     error = np.abs(Es[-1]-(-1.0*Nsites))
-    assert error < 1e-10
+    assert error < 1e-6

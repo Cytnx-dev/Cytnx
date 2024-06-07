@@ -15,10 +15,11 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
             D1 = L.shape()[2]
             D2 = R.shape()[2]
             cytnx.LinOp.__init__(self, "mv", D1*D2*d, L.dtype(), R.device())
-            self.anet.FromString(["L: -4,-1,0",\
+            self.anet.FromString([\
+                        "psi: -1,-2,-3",\
+                        "L: -4,-1,0",\
                         "R: -6,-3,2",\
                         "M: -4,-6,-2,1",\
-                        "psi: -1,-2,-3",\
                         "TOUT: 0,1;2"])
             self.anet.PutUniTensors(["L","M","R"],[L,M,R])
         def matvec(self, v):
@@ -34,9 +35,10 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
             D1 = L.shape()[2]
             D2 = R.shape()[2]
             cytnx.LinOp.__init__(self, "mv", D1*D2, L.dtype(), R.device())
-            self.anet.FromString(["L: -3,-1,0",\
-                        "R: -3,-2,1",\
+            self.anet.FromString([\
                         "C: -1,-2",\
+                        "L: -3,-1,0",\
+                        "R: -3,-2,1",\
                         "TOUT: 0;1"])
             self.anet.PutUniTensors(["L","R"],[L,R])
         def matvec(self, v):
