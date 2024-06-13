@@ -165,6 +165,13 @@ TEST(Bond, CombindBondSymm_v2) {
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
 }
 
+TEST(Bond, Clear_type) {
+  Bond bd_sym = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+
+  EXPECT_THROW(bd_sym.clear_type(), std::logic_error);
+  EXPECT_THROW(bd_sym.set_type(BD_REG), std::logic_error);
+}
+
 // TEST(Bond, ConstructorTypeQnums){
 //   // Bond(bondType tp, const std::vector<Qnum>& qnums);
 //

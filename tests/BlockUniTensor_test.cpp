@@ -1020,3 +1020,17 @@ TEST_F(BlockUniTensorTest, get_itoi) {
   EXPECT_EQ(out[3], std::vector<cytnx_uint64>({2, 1}));
   EXPECT_EQ(out[4], std::vector<cytnx_uint64>({2, 2}));
 }
+
+TEST_F(BlockUniTensorTest, get_bond_ref) {
+  /*
+  Bond B1g = Bond(BD_IN, {Qs(1), Qs(0), Qs(0)}, {1, 1, 1});
+  Bond B2g = Bond(BD_OUT, {Qs(1), Qs(0), Qs(0)}, {1, 1, 1});
+  UniTensor BUT6 = UniTensor({B1g, B2g});
+  */
+  auto bd1 = BUT6.bond_(0);
+  auto bd2 = BUT6.bond_("1");
+  auto ut1 = UniTensor({bd1, bd2});
+  EXPECT_EQ(ut1.bonds().size(), 2);
+  EXPECT_EQ(ut1.bonds()[0].qnums(), std::vector<std::vector<cytnx_int64>>({{1}, {0}, {0}}));
+  EXPECT_EQ(ut1.bonds()[1].qnums(), std::vector<std::vector<cytnx_int64>>({{1}, {0}, {0}}));
+}
