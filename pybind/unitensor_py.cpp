@@ -143,11 +143,16 @@ void unitensor_binding(py::module &m) {
     .def("c_set_rowrank_", &UniTensor::set_rowrank_, py::arg("new_rowrank"))
 
     .def("set_rowrank", &UniTensor::set_rowrank, py::arg("new_rowrank"))
-
+    .def("relabel",[](UniTensor &self, const std::vector<std::string> &new_labels){
+                        return self.relabel(new_labels);
+                    }, py::arg("new_labels"))
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         return self.relabels(new_labels);
                     }, py::arg("new_labels"))
 
+     .def("c_relabel_",[](UniTensor &self, const std::vector<std::string> &new_labels){
+                        self.relabel_(new_labels);
+                    }, py::arg("new_labels"))
      .def("c_relabels_",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         self.relabels_(new_labels);
                     }, py::arg("new_labels"))
@@ -168,6 +173,14 @@ void unitensor_binding(py::module &m) {
                             self.relabel_(old_label,new_label);
                         },py::arg("old_label"), py::arg("new_label"))
 
+
+    .def("relabel",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
+                        return self.relabel(old_labels,new_labels);
+                    } ,py::arg("old_labels"), py::arg("new_labels"))
+
+    .def("c_relabel_",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
+                        self.relabel_(old_labels,new_labels);
+                    } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
                         return self.relabels(old_labels,new_labels);
@@ -1372,8 +1385,18 @@ void unitensor_binding(py::module &m) {
      .def("get_qindices",  [](UniTensor &self, const cytnx_uint64 &bidx){return self.get_qindices(bidx);});
   ;  // end of object line
 
-  m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
-        py::arg("cacheR") = false);
+  //   m.def("Contract", Contract, py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false,
+  //         py::arg("cacheR") = false);
+  m.def(
+    "Contract",
+    [](const UniTensor &inL, const UniTensor &inR, const bool &cacheL,
+       const bool &cacheR) -> UniTensor { return Contract(inL, inR, cacheL, cacheR); },
+    py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false, py::arg("cacheR") = false);
+  m.def(
+    "Contract",
+    [](const std::vector<UniTensor> &TNs, const std::string &order,
+       const bool &optimal) -> UniTensor { return Contract(TNs, order, optimal); },
+    py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
   m.def(
     "Contracts",
     [](const std::vector<UniTensor> &TNs, const std::string &order,
