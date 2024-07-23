@@ -133,11 +133,9 @@ namespace cytnx {
 
       if (cvg_fin == false) {
         cytnx_warning_msg(true,
-                          "[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore
-                            if " " this is intended %
-                            s
-                            ",
-                            "\n");
+                          "[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if "
+                          " this is intended %s",
+                          "\n");
       }
       out.push_back(UniTensor(tmpEsVs[0](0), false, 0));
 
