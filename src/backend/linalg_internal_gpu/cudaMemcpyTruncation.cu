@@ -31,7 +31,8 @@ namespace cytnx {
 #ifdef UNI_GPU
     void cudaMemcpyTruncation_cd(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                 const bool &is_vT, const unsigned int &return_err) {
+                                 const bool &is_vT, const unsigned int &return_err,
+                                 const unsigned int &mindim) {
       // determine the truc_dim
       cytnx_uint64 Kdim = keepdim;
       cytnx_uint64 nums = S.storage().size();
@@ -40,7 +41,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
           truc_dim--;
         } else {
           break;
@@ -101,7 +102,8 @@ namespace cytnx {
 
     void cudaMemcpyTruncation_cf(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                 const bool &is_vT, const unsigned int &return_err) {
+                                 const bool &is_vT, const unsigned int &return_err,
+                                 const unsigned int &mindim) {
       // determine the truc_dim
       cytnx_uint64 Kdim = keepdim;
       cytnx_uint64 nums = S.storage().size();
@@ -110,7 +112,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
           truc_dim--;
         } else {
           break;
@@ -171,7 +173,8 @@ namespace cytnx {
 
     void cudaMemcpyTruncation_d(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                const bool &is_vT, const unsigned int &return_err) {
+                                const bool &is_vT, const unsigned int &return_err,
+                                const unsigned int &mindim) {
       // determine the truc_dim
       cytnx_uint64 Kdim = keepdim;
       cytnx_uint64 nums = S.storage().size();
@@ -180,7 +183,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
           truc_dim--;
         } else {
           break;
@@ -241,7 +244,8 @@ namespace cytnx {
 
     void cudaMemcpyTruncation_f(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                const bool &is_vT, const unsigned int &return_err) {
+                                const bool &is_vT, const unsigned int &return_err,
+                                const unsigned int &mindim) {
       // determine the truc_dim
       cytnx_uint64 Kdim = keepdim;
       cytnx_uint64 nums = S.storage().size();
@@ -250,7 +254,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
           truc_dim--;
         } else {
           break;
