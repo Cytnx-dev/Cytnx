@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,24 +8,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    
+
     <title>3.4. Tensor arithmetic &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=2a422f08" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=fb9458d3" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script src="../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=b3ba4146"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="3.5. To/From numpy.array" href="Tensor_5_numpy.html" />
-    <link rel="prev" title="3.3. Accessing elements" href="Tensor_3_access.html" /> 
+    <link rel="prev" title="3.3. Accessing elements" href="Tensor_3_access.html" />
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -36,7 +36,7 @@
                   Cytnx
           </a>
           <ul class="navbar-nav mr-auto">
-          
+
               <li class="nav-item dropdown d-none d-sm-block" id="navbar-pages">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
@@ -369,16 +369,16 @@
                   </ul>
               </li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
               <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
-             
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -395,17 +395,17 @@
               </div>
               <ul class="nav navbar-nav">
                   <li>
-                  
+
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
-                  
+
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
                   <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
-              
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -422,7 +422,7 @@
                 <li class="breadcrumb-item"><a href="../../Guide.html"
                        >User Guide</a></li>
                 <li class="breadcrumb-item"><a href="Tensor.html"
-                       
+
                          accesskey="U"
                          class="active"
                        ><span class="section-number">3. </span>Tensor</a></li>
@@ -441,12 +441,12 @@
     </div>
 
   <div class="main container-fluid">
-    <div class="row"> 
+    <div class="row">
       <div class="sphinxsidebar d-none d-md-block">
-        <div class="sphinxsidebarwrapper">          
+        <div class="sphinxsidebarwrapper">
             <h4>Table Of Contents</h4>
-            
-            
+
+
               <div class="sidebartoctree">
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
@@ -775,8 +775,8 @@
 </ul>
 
               </div>
-            
-          
+
+
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="Tensor_3_access.html"
@@ -801,18 +801,18 @@
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
-      </div> 
+      </div>
 
       <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body">
-            
+
   <section id="tensor-arithmetic">
-<h1><span class="section-number">3.4. </span>Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">3.4. </span>Tensor arithmetic<a class="headerlink" href="#tensor-arithmetic" title="Link to this heading">¶</a></h1>
 <p>In Cytnx, arithmetic operations such as <strong>+, -, *, /, +=, -=, *=, /=</strong> can be performed between a Tensor and either another Tensor or a scalar, just like the standard way it is done in Python. See also <a class="reference internal" href="../linalg.html#linear-algebra"><span class="std std-ref">Linear algebra</span></a> for a list of arithmetic operations and further linear algebra functions.</p>
 <section id="type-promotion">
-<h2><span class="section-number">3.4.1. </span>Type promotion<a class="headerlink" href="#type-promotion" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.4.1. </span>Type promotion<a class="headerlink" href="#type-promotion" title="Link to this heading">¶</a></h2>
 <p>Arithmetic operations in Cytnx follow a similar pattern of type promotion as standard C++/Python.
 When an arithmetic operation between a Tensor and another Tensor or scalar is performed, the output Tensor will have the same dtype as the input with the stronger type.</p>
 <p>The Type order from strong to weak is:</p>
@@ -833,7 +833,7 @@ When an arithmetic operation between a Tensor and another Tensor or scalar is pe
 </div></blockquote>
 </section>
 <section id="tensor-scalar-arithmetic">
-<h2><span class="section-number">3.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.4.2. </span>Tensor-scalar arithmetic<a class="headerlink" href="#tensor-scalar-arithmetic" title="Link to this heading">¶</a></h2>
 <p>Several arithmetic operations between a Tensor and a scalar are possible.
 For example:</p>
 <ul class="simple">
@@ -896,7 +896,7 @@ Shape : (3,4)
 </div>
 </section>
 <section id="tensor-tensor-arithmetic">
-<h2><span class="section-number">3.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.4.3. </span>Tensor-Tensor arithmetic<a class="headerlink" href="#tensor-tensor-arithmetic" title="Link to this heading">¶</a></h2>
 <p>Arithmetic operations between two Tensors of the same shape are possible.
 For example:</p>
 <ul class="simple">
@@ -963,7 +963,7 @@ Shape : (3,4)
 </div>
 </section>
 <section id="equivalent-apis-c-only">
-<h2><span class="section-number">3.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">3.4.4. </span>Equivalent APIs (C++ only)<a class="headerlink" href="#equivalent-apis-c-only" title="Link to this heading">¶</a></h2>
 <p>Cytnx also provides some equivalent APIs for users who are familiar with/coming from pytorch and similar libraries.
 For example, there are two different ways to perform the + operation: <strong>Tensor.Add()/Tensor.Add_()</strong> and <strong>linalg.Add()</strong></p>
 <ul class="simple">
@@ -1010,7 +1010,7 @@ For example, there are two different ways to perform the + operation: <strong>Te
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.1.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

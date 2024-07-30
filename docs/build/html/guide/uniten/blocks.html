@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,24 +8,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    
+
     <title>7.7. Accessing the block(s) &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=2a422f08" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=fb9458d3" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script src="../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=b3ba4146"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="7.8. Get/set UniTensor element" href="elements.html" />
-    <link rel="prev" title="7.6. UniTensor with Symmetries" href="symmetric.html" /> 
+    <link rel="prev" title="7.6. UniTensor with Symmetries" href="symmetric.html" />
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -36,7 +36,7 @@
                   Cytnx
           </a>
           <ul class="navbar-nav mr-auto">
-          
+
               <li class="nav-item dropdown d-none d-sm-block" id="navbar-pages">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
@@ -369,16 +369,16 @@
                   </ul>
               </li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
               <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
-             
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -395,17 +395,17 @@
               </div>
               <ul class="nav navbar-nav">
                   <li>
-                  
+
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
-                  
+
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
                   <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
-              
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -422,7 +422,7 @@
                 <li class="breadcrumb-item"><a href="../../Guide.html"
                        >User Guide</a></li>
                 <li class="breadcrumb-item"><a href="../uniten.html"
-                       
+
                          accesskey="U"
                          class="active"
                        ><span class="section-number">7. </span>UniTensor</a></li>
@@ -441,12 +441,12 @@
     </div>
 
   <div class="main container-fluid">
-    <div class="row"> 
+    <div class="row">
       <div class="sphinxsidebar d-none d-md-block">
-        <div class="sphinxsidebarwrapper">          
+        <div class="sphinxsidebarwrapper">
             <h4>Table Of Contents</h4>
-            
-            
+
+
               <div class="sidebartoctree">
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
@@ -775,8 +775,8 @@
 </ul>
 
               </div>
-            
-          
+
+
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="symmetric.html"
@@ -801,18 +801,18 @@
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
-      </div> 
+      </div>
 
       <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body">
-            
+
   <section id="accessing-the-block-s">
-<h1><span class="section-number">7.7. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">7.7. </span>Accessing the block(s)<a class="headerlink" href="#accessing-the-block-s" title="Link to this heading">¶</a></h1>
 <p>The data in a UniTensor is stored in blocks. We introduce how to access and manipulate these. This way, the data of a UniTensor can be accessed and manipulated. Each block is a <strong>Tensor</strong>.</p>
 <section id="unitensor-without-symmetries">
-<h2><span class="section-number">7.7.1. </span>UniTensor without symmetries<a class="headerlink" href="#unitensor-without-symmetries" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.7.1. </span>UniTensor without symmetries<a class="headerlink" href="#unitensor-without-symmetries" title="Link to this heading">¶</a></h2>
 <p>A UniTensor without symmetries is simply a Tensor with labeled bonds. In this case, the methods <strong>.get_block()</strong>  and <strong>.get_block_()</strong> return the Tensor object of the UniTensor for us to manipulate.</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
@@ -838,30 +838,31 @@ Shape : (3,3)
 </div>
 </section>
 <section id="unitensor-with-symmetries">
-<h2><span class="section-number">7.7.2. </span>UniTensor with symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.7.2. </span>UniTensor with symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Link to this heading">¶</a></h2>
 <p>Let’s use the same example of a UniTensor with <em>U1</em> symmetry that we introduced in the previous section <a class="reference internal" href="symmetric.html#unitensor-with-symmetries"><span class="std std-ref">UniTensor with Symmetries</span></a> to demonstrate how to get block(s) from a block structured UniTensor:</p>
-<a class="reference internal image-reference" href="../../_images/u1_tdex.png"><img alt="../../_images/u1_tdex.png" class="align-center" src="../../_images/u1_tdex.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../_images/u1_tdex.png"><img alt="../../_images/u1_tdex.png" class="align-center" src="../../_images/u1_tdex.png" style="width: 500px;" />
+</a>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">bond_d</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span>
-<span class="linenos"> 2</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> 
+<span class="linenos"> 2</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span>
 <span class="linenos"> 3</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],</span>
 <span class="linenos"> 4</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos"> 5</span>
 <span class="linenos"> 6</span><span class="n">bond_e</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span>
-<span class="linenos"> 7</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span> 
+<span class="linenos"> 7</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_IN</span><span class="p">,</span>
 <span class="linenos"> 8</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],</span>
 <span class="linenos"> 9</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos">10</span>
 <span class="linenos">11</span><span class="n">bond_f</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span>
 <span class="linenos">12</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span>
-<span class="linenos">13</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span> 
+<span class="linenos">13</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span>
 <span class="linenos">14</span>     <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],</span>
 <span class="linenos">15</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos">16</span>
-<span class="linenos">17</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">],</span> 
-<span class="linenos">18</span>                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">,</span> 
+<span class="linenos">17</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">],</span>
+<span class="linenos">18</span>                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">,</span>
 <span class="linenos">19</span>                        <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="s2">&quot;f&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -869,7 +870,7 @@ Shape : (3,3)
 <p><strong>1. Getting a block by its quantum number indices</strong></p>
 <dl class="py function">
 <dt class="sig sig-object py" id="UniTensor.get_block">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.get_block" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.get_block" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>qindices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – list of integers specifying the indices of the quantum numbers on each bond</p>
@@ -905,7 +906,7 @@ Shape : (1,1,2)
 <p><strong>2. Getting a block by its block index</strong></p>
 <dl class="py function">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blockindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">get_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blockindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>blockindex</strong> (<em>[</em><em>int</em><em>]</em>) – the index of the block in the UniTensor</p>
@@ -953,7 +954,7 @@ Shape : (1,1,1)
 [[[0.00000e+00 ]]]
 
 
- 
+
 Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
@@ -961,7 +962,7 @@ Shape : (1,1,2)
 [[[0.00000e+00 0.00000e+00 ]]]
 
 
- 
+
 Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
@@ -969,7 +970,7 @@ Shape : (1,1,2)
 [[[0.00000e+00 0.00000e+00 ]]]
 
 
- 
+
 Total elem: 1
 type  : Double (Float64)
 cytnx device: CPU
@@ -983,12 +984,12 @@ Shape : (1,1,1)
 </div>
 </section>
 <section id="putting-a-block">
-<h2><span class="section-number">7.7.3. </span>Putting a block<a class="headerlink" href="#putting-a-block" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.7.3. </span>Putting a block<a class="headerlink" href="#putting-a-block" title="Link to this heading">¶</a></h2>
 <p>We might want to do some manipulations to an individual block that we got from <em>.get_block(s)</em>. Then, the new block can be put back to the UniTensor with <em>put_block()</em>.</p>
 <p><strong>1. Putting a block into a location assigned by their quantum number indices</strong></p>
 <dl class="py function">
 <dt class="sig sig-object py" id="UniTensor.put_block">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.put_block" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor.put_block" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>qindices</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – list of integers specifying the indices of quantum numbers on each bond</p>
@@ -1029,7 +1030,7 @@ Shape : (1,1,2)
 <p><strong>2. Putting a block by its block index</strong></p>
 <dl class="py function">
 <dt class="sig sig-object py" id="id1">
-<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blockindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">UniTensor.</span></span><span class="sig-name descname"><span class="pre">put_block</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Tn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blockindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>blockindex</strong> (<em>[</em><em>int</em><em>]</em>) – the index of the blocks in the UniTensor</p>
@@ -1079,7 +1080,7 @@ Shape : (1,1,2)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.1.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

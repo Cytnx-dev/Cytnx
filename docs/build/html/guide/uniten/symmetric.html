@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,24 +8,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    
+
     <title>7.6. UniTensor with Symmetries &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=2a422f08" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=fb9458d3" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script src="../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=b3ba4146"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="7.7. Accessing the block(s)" href="blocks.html" />
-    <link rel="prev" title="7.5. Tagged UniTensor" href="tagged.html" /> 
+    <link rel="prev" title="7.5. Tagged UniTensor" href="tagged.html" />
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -36,7 +36,7 @@
                   Cytnx
           </a>
           <ul class="navbar-nav mr-auto">
-          
+
               <li class="nav-item dropdown d-none d-sm-block" id="navbar-pages">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
@@ -369,16 +369,16 @@
                   </ul>
               </li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
               <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
-             
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -395,17 +395,17 @@
               </div>
               <ul class="nav navbar-nav">
                   <li>
-                  
+
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
-                  
+
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
                   <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
-              
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -422,7 +422,7 @@
                 <li class="breadcrumb-item"><a href="../../Guide.html"
                        >User Guide</a></li>
                 <li class="breadcrumb-item"><a href="../uniten.html"
-                       
+
                          accesskey="U"
                          class="active"
                        ><span class="section-number">7. </span>UniTensor</a></li>
@@ -441,12 +441,12 @@
     </div>
 
   <div class="main container-fluid">
-    <div class="row"> 
+    <div class="row">
       <div class="sphinxsidebar d-none d-md-block">
-        <div class="sphinxsidebarwrapper">          
+        <div class="sphinxsidebarwrapper">
             <h4>Table Of Contents</h4>
-            
-            
+
+
               <div class="sidebartoctree">
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
@@ -775,8 +775,8 @@
 </ul>
 
               </div>
-            
-          
+
+
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="tagged.html"
@@ -801,28 +801,31 @@
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
-      </div> 
+      </div>
 
       <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body">
-            
+
   <section id="unitensor-with-symmetries">
-<h1><span class="section-number">7.6. </span>UniTensor with Symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">7.6. </span>UniTensor with Symmetries<a class="headerlink" href="#unitensor-with-symmetries" title="Link to this heading">¶</a></h1>
 <p>Physical systems are often symmetric under certain transformations. Exploiting such symmetries can be advantageous in many cases. Cytnx allows to incorporate the symmetries on the level of the tensors directly.</p>
 <p>In a system with a symmetry, charge is conserved. Therefore, the Hamiltonian can be block-diagonalized into symmetry sectors of defined charge (quantum numbers) – the charge sectors do not mix. When the symmetric structure is imposed on the level of the tensors, they become block-diagonal as well. This substantially reduces the memory costs and the number of parameters in variational algorithms. Thus, larger system sizes or bond dimensions are accessible with the same computational costs. Moreover, numerical errors due to contributions that do not conserve symmetry and are therefore unphysical can be avoided. Finally, simulations can be restricted to certain symmetry sectors if desired.</p>
 <p>A quantum number conserving tensor can be understood in a simple way. Each bond (leg) of the Tensor carries quantum numbers and is directional, as shown in the following figure:</p>
-<a class="reference internal image-reference" href="../../_images/ut_bd.png"><img alt="../../_images/ut_bd.png" class="align-center" src="../../_images/ut_bd.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../../_images/ut_bd.png"><img alt="../../_images/ut_bd.png" class="align-center" src="../../_images/ut_bd.png" style="width: 600px;" />
+</a>
 <p>The conservation of charge (quantum numbers) is ensured by restricting the tensors to only have elements with <strong>zero flux</strong>. For these elements, the total quantum number flowing into the tensor has to be equal to the total quantum number flowing out. The combination of quantum numbers in incoming and outgoing links to a total quantum number is defined by the combine rule of the symmetry considered. All other elements, that do not conserve the charge, belong to an invalid block and therefore have to be zero. We do not store these invalid blocks explicitly in a UniTensor.</p>
-<a class="reference internal image-reference" href="../../_images/ut_blocks.png"><img alt="../../_images/ut_blocks.png" class="align-center" src="../../_images/ut_blocks.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../../_images/ut_blocks.png"><img alt="../../_images/ut_blocks.png" class="align-center" src="../../_images/ut_blocks.png" style="width: 600px;" />
+</a>
 <p>To impose a symmetry on the tensors, there are only two steps we need to do:</p>
 <ol class="arabic simple">
 <li><p>Identify the symmetries in the system (for example, <em>U(1)</em> symmetry)</p></li>
 <li><p>Create <strong>directional</strong> Bonds that carry quantum numbers associated to these symmetries</p></li>
 </ol>
 <p>As a simple example, lets create a 3-rank tensor with <em>U(1)</em> symmetry:</p>
-<a class="reference internal image-reference" href="../../_images/u1_tdex.png"><img alt="../../_images/u1_tdex.png" class="align-center" src="../../_images/u1_tdex.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="../../_images/u1_tdex.png"><img alt="../../_images/u1_tdex.png" class="align-center" src="../../_images/u1_tdex.png" style="width: 500px;" />
+</a>
 <p>Here, we use the notation <em>{Qnum}&gt;&gt;dimension</em>. First, three bonds  <strong>bond_c</strong> (in), <strong>bond_d</strong> (in) and <strong>bond_e</strong> (out) are created with corresponding quantum numbers. See <a class="reference internal" href="bond.html#bond"><span class="std std-ref">Bond</span></a> for further information related to the bonds and their creation with quantum numbers. We then initialize a UniTensor <strong>Td</strong> using these three bonds:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
@@ -836,12 +839,12 @@
 <span class="linenos"> 7</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos"> 8</span>
 <span class="linenos"> 9</span><span class="n">bond_f</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span>
-<span class="linenos">10</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span> 
+<span class="linenos">10</span>    <span class="n">cytnx</span><span class="o">.</span><span class="n">BD_OUT</span><span class="p">,</span>
 <span class="linenos">11</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">2</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Qs</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;&gt;</span><span class="mi">1</span><span class="p">],</span>
 <span class="linenos">12</span>    <span class="p">[</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Symmetry</span><span class="o">.</span><span class="n">U1</span><span class="p">()])</span>
 <span class="linenos">13</span>
-<span class="linenos">14</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">],</span> 
-<span class="linenos">15</span>                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">,</span> 
+<span class="linenos">14</span><span class="n">Tsymm</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">bond_d</span><span class="p">,</span> <span class="n">bond_e</span><span class="p">,</span> <span class="n">bond_f</span><span class="p">],</span>
+<span class="linenos">15</span>                        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;symm. tensor&quot;</span><span class="p">,</span>
 <span class="linenos">16</span>                        <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">,</span><span class="s2">&quot;e&quot;</span><span class="p">,</span><span class="s2">&quot;f&quot;</span><span class="p">])</span>
 <span class="linenos">17</span>
 <span class="linenos">18</span><span class="n">Tsymm</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
@@ -855,14 +858,14 @@ contiguous  : True
 valid blocks : 4
 is diag   : False
 on device   : cytnx device: CPU
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    d  --&gt;| 2     4 |--&gt;  f
-         |         |    
-   e  --&gt;| 2       |        
-         |         |    
-         -----------    
+         |         |
+   e  --&gt;| 2       |
+         |         |
+         -----------
 </pre></div>
 </div>
 <p>As shown in the previous figure, this UniTensor has only <strong>4</strong> valid blocks which carry zero-flux. We can print the blocks explicitly:</p>
@@ -880,7 +883,7 @@ is_diag    : False
 [OVERALL] contiguous : True
 ========================
 BLOCK [#0]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                  -----------
                  |         |
@@ -898,7 +901,7 @@ Shape : (1,1,1)
 
 ========================
 BLOCK [#1]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                   -----------
                   |         |
@@ -916,7 +919,7 @@ Shape : (1,1,2)
 
 ========================
 BLOCK [#2]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                   -----------
                   |         |
@@ -934,7 +937,7 @@ Shape : (1,1,2)
 
 ========================
 BLOCK [#3]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                   -----------
                   |         |
@@ -970,7 +973,7 @@ Shape : (1,1,1)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.1.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,24 +8,24 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    
+
     <title>7.2. Creating a UniTensor &#8212; Cytnx  documentation</title>
 
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
-    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=2a422f08" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=fb9458d3" />
     <link rel="stylesheet" href="../../_static/bootstrap-4.3.1-dist/css/bootstrap.min.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/sphinxbootstrap4.css" type="text/css" />
     <script src="../../_static/jquery.js?v=5d32c60e"></script>
     <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=b3ba4146"></script>
-    <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
     <script src="../../_static/sphinxbootstrap4.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="7.3. Changing labels" href="labels.html" />
-    <link rel="prev" title="7.1. Print and display" href="print.html" /> 
+    <link rel="prev" title="7.1. Print and display" href="print.html" />
   </head><body>
   <nav class="navbar navbar-expand-md  fixed-top navbar-dark bg-dark flex-wrap">
     <button class="navbar-toggler ml-auto py-2" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar2">
@@ -36,7 +36,7 @@
                   Cytnx
           </a>
           <ul class="navbar-nav mr-auto">
-          
+
               <li class="nav-item dropdown d-none d-sm-block" id="navbar-pages">
                   <a class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                   <ul class="dropdown-menu">
@@ -369,16 +369,16 @@
                   </ul>
               </li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
               <li class="nav-item">
-              
+
                   <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
               <li class="nav-item">
               <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
           </ul>
           <div class="dropdown-divider d-block d-sm-none mb-4"></div>
-             
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -395,17 +395,17 @@
               </div>
               <ul class="nav navbar-nav">
                   <li>
-                  
+
                       <a  class="nav-link" href="https://kaihsinwu.gitlab.io/cytnx_api">API Doc</a></li>
                   <li>
-                  
+
                       <a  class="nav-link" href="https://github.com/Cytnx-dev/Cytnx">Github</a></li>
                   <li>
                   <a  class="nav-link" href="../../index.html">v0.9.7</a></li>
               </ul>
               <div class="dropdown-divider"></div>
               <div class="navbar-text">search<div>
-              
+
 <form class="form-inline" action="../../search.html" method="get">
   <input type="text" name="q" class="form-control" placeholder="Search" />
   <input type="hidden" name="check_keywords" value="yes" />
@@ -422,7 +422,7 @@
                 <li class="breadcrumb-item"><a href="../../Guide.html"
                        >User Guide</a></li>
                 <li class="breadcrumb-item"><a href="../uniten.html"
-                       
+
                          accesskey="U"
                          class="active"
                        ><span class="section-number">7. </span>UniTensor</a></li>
@@ -441,12 +441,12 @@
     </div>
 
   <div class="main container-fluid">
-    <div class="row"> 
+    <div class="row">
       <div class="sphinxsidebar d-none d-md-block">
-        <div class="sphinxsidebarwrapper">          
+        <div class="sphinxsidebarwrapper">
             <h4>Table Of Contents</h4>
-            
-            
+
+
               <div class="sidebartoctree">
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a><ul>
@@ -775,8 +775,8 @@
 </ul>
 
               </div>
-            
-          
+
+
   <div>
     <h4>Previous topic</h4>
     <p class="topless"><a href="print.html"
@@ -801,17 +801,18 @@
            rel="nofollow">Show Source</a></li>
   </ul>
         </div>
-      </div> 
+      </div>
 
       <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
           <div class="body">
-            
+
   <section id="creating-a-unitensor">
-<h1><span class="section-number">7.2. </span>Creating a UniTensor<a class="headerlink" href="#creating-a-unitensor" title="Permalink to this heading">¶</a></h1>
+<h1><span class="section-number">7.2. </span>Creating a UniTensor<a class="headerlink" href="#creating-a-unitensor" title="Link to this heading">¶</a></h1>
 <p>As mentioned in the introduction, a <strong>UniTensor</strong> consists of Block(s), Bond(s) and label(s). The Block(s) contain the data, while Bond(s) and label(s) are the meta data that describe the properties of the UniTensor.</p>
-<a class="reference internal image-reference" href="../../_images/utcomp.png"><img alt="../../_images/utcomp.png" class="align-center" src="../../_images/utcomp.png" style="width: 600px;" /></a>
+<a class="reference internal image-reference" href="../../_images/utcomp.png"><img alt="../../_images/utcomp.png" class="align-center" src="../../_images/utcomp.png" style="width: 600px;" />
+</a>
 <p>Generally, there are two types of UniTensor types: <strong>un-tagged</strong> and <strong>tagged</strong>, depending on whether the Bonds have a <em>direction</em>. In more advanced applications, a UniTensor may have block diagonal or other more complicated structure when symmetries are involved. Therefore, UniTensors can further be categorized into <strong>non-symmetric</strong> and <strong>symmetric (block form)</strong>:</p>
 <table class="docutils align-default">
 <tbody>
@@ -831,10 +832,11 @@
 </table>
 <p>In the following, we will explain how to construct a UniTensor.</p>
 <section id="constructing-from-tensor">
-<h2><span class="section-number">7.2.1. </span>Constructing from Tensor<a class="headerlink" href="#constructing-from-tensor" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.2.1. </span>Constructing from Tensor<a class="headerlink" href="#constructing-from-tensor" title="Link to this heading">¶</a></h2>
 <p>Before going into more complicated UniTensor structures, let’s start with the most simple example. For this, we convert a <strong>cytnx.Tensor</strong> into a UniTensor. This gives us the first type of a UniTensor: an <strong>untagged</strong> UniTensor.</p>
 <p>In the following, we consider a simple rank-3 tensor as an example. The tensor diagram looks like:</p>
-<a class="reference internal image-reference" href="../../_images/untag.png"><img alt="../../_images/untag.png" class="align-center" src="../../_images/untag.png" style="width: 200px;" /></a>
+<a class="reference internal image-reference" href="../../_images/untag.png"><img alt="../../_images/untag.png" class="align-center" src="../../_images/untag.png" style="width: 200px;" />
+</a>
 <p>We can convert such a Tensor to a UniTensor:</p>
 <ul class="simple">
 <li><p>In Python:</p></li>
@@ -867,28 +869,28 @@ If we want to create a UniTensor with different dtype, for example, a complex Un
 </div>
 <p>Output &gt;&gt;</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
-tensor Name : 
+tensor Name :
 tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
+          ---------
+         /         \
    0 ____| 2     3 |____ 1
-         |         |    
+         |         |
          |       4 |____ 2
-         \         /    
-          ---------     
+         \         /
+          ---------
 </pre></div>
 </div>
 <p>The information provided by this output is explained in detail in <a class="reference internal" href="print.html#print-diagram"><span class="std std-ref">print_diagram()</span></a>. We see that a UniTensor with the same shape as <em>T</em> was created. The bond labels are set to the default values “0”, “1” and “2”.</p>
 </section>
 <section id="from-scratch">
-<h2><span class="section-number">7.2.2. </span>From scratch<a class="headerlink" href="#from-scratch" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.2.2. </span>From scratch<a class="headerlink" href="#from-scratch" title="Link to this heading">¶</a></h2>
 <p>Next, let’s introduce the complete API for constructing a UniTensor from scratch:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="UniTensor">
-<span class="sig-name descname"><span class="pre">UniTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowrank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_diag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">UniTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowrank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_diag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Link to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -911,7 +913,8 @@ on device   : cytnx device: CPU
 </ol>
 <p>For more details, see <a class="reference internal" href="bond.html#bond"><span class="std std-ref">Bond</span></a>. Here, for simplicity, we will use only the dimension property of a Bond.</p>
 <p>Now let’s construct the rank-3 UniTensor with the same shape as in the above example. We assign the three bonds with labels (“a”, “b”, “c”) and also set name to be “uT2 scratch”.</p>
-<a class="reference internal image-reference" href="../../_images/ut2.png"><img alt="../../_images/ut2.png" class="align-center" src="../../_images/ut2.png" style="width: 300px;" /></a>
+<a class="reference internal image-reference" href="../../_images/ut2.png"><img alt="../../_images/ut2.png" class="align-center" src="../../_images/ut2.png" style="width: 300px;" />
+</a>
 <ul class="simple">
 <li><p>In Python:</p></li>
 </ul>
@@ -928,13 +931,13 @@ tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
+          ---------
+         /         \
    a ____| 2     3 |____ b
-         |         |    
+         |         |
          |       4 |____ c
-         \         /    
-          ---------     
+         \         /
+          ---------
 -------- start of print ---------
 Tensor name: uT2 scratch
 is_diag    : False
@@ -958,7 +961,7 @@ Shape : (2,3,4)
 </div>
 </section>
 <section id="type-conversion">
-<h2><span class="section-number">7.2.3. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.2.3. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Link to this heading">¶</a></h2>
 <p>It is possible to convert a UniTensor to a different data type. To convert the data type, simply use <strong>UniTensor.astype()</strong>.</p>
 <p>For example, consider a UniTensor <em>A</em> with <strong>dtype=Type.Int64</strong>, which shall be converted to <strong>Type.Double</strong>:</p>
 <ul class="simple">
@@ -981,7 +984,7 @@ Double (Float64)
 </div>
 </section>
 <section id="transfer-between-devices">
-<h2><span class="section-number">7.2.4. </span>Transfer between devices<a class="headerlink" href="#transfer-between-devices" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.2.4. </span>Transfer between devices<a class="headerlink" href="#transfer-between-devices" title="Link to this heading">¶</a></h2>
 <p>Moving a UniTensor between different devices is very easy. We can use <strong>UniTensor.to()</strong> to move the UniTensor to a different device.</p>
 <p>For example, let’s create a UniTensor in the memory accessible by the CPU and transfer it to the GPU with gpu-id=0.</p>
 <ul class="simple">
@@ -1049,7 +1052,7 @@ Shape : (2,2)
 </div>
 </section>
 <section id="tagged-unitensors-and-unitensors-with-symmetries">
-<h2><span class="section-number">7.2.5. </span>Tagged UniTensors and UniTensors with Symmetries<a class="headerlink" href="#tagged-unitensors-and-unitensors-with-symmetries" title="Permalink to this heading">¶</a></h2>
+<h2><span class="section-number">7.2.5. </span>Tagged UniTensors and UniTensors with Symmetries<a class="headerlink" href="#tagged-unitensors-and-unitensors-with-symmetries" title="Link to this heading">¶</a></h2>
 <p>The creation of tagged, non-symmetric UniTensors will be explained in <a class="reference internal" href="tagged.html#tagged-unitensor"><span class="std std-ref">Tagged UniTensor</span></a>. Symmetric UniTensors are discussed in <a class="reference internal" href="symmetric.html#unitensor-with-symmetries"><span class="std std-ref">UniTensor with Symmetries</span></a>.</p>
 </section>
 </section>
@@ -1065,7 +1068,7 @@ Shape : (2,2)
 <footer class="footer d-flex justify-content-between flex-wrap">
     <div class="copyright">
         <div>&copy; Copyright 2019-, Kai-Hsin Wu.</div>
-      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 7.1.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
+      <div>Generated by <a href="http://sphinx.pocoo.org/">Sphinx</a> 8.0.2 using <a href="https://github.com/myyasuda/sphinxbootstrap4theme">sphinxbootstrap4theme</a> 0.6.0.</div>
     </div>
     <div>
         <a href="#" class="btn btn-primary btn-sm" role="botton">Back to top</a>
