@@ -33,12 +33,7 @@ namespace cytnx {
   /// @cond
   class UniTensorType_class {
    public:
-    enum : int {
-      Void = -99,
-      Dense = 0,
-      Sparse = 1,
-      Block = 2,
-    };
+    enum : int { Void = -99, Dense = 0, Sparse = 1, Block = 2, BlockFermionic = 3 };
     std::string getname(const int &ut_type);
   };
   /// @endcond
@@ -47,12 +42,13 @@ namespace cytnx {
    * @details It is about the type of the UniTensor.\n
    *     The supported enumerations are as following:
    *
-   *  enumeration  |  description
-   * --------------|--------------------
-   *  Void         |  -1, void UniTensor
-   *  Dense        |  0, dense UniTensor
-   *  Sparse       |  1, sparse UniTensor (deprecated)
-   *  Block        |  2, block UniTensor
+   *  enumeration    |  description
+   * ----------------|--------------------
+   *  Void           |  -1, void UniTensor
+   *  Dense          |  0, dense UniTensor
+   *  Sparse         |  1, sparse UniTensor (deprecated)
+   *  Block          |  2, block UniTensor
+   *  BlockFermionic |  3, fermionic UniTensor (block form)
    *
    *  @warning the type \em Sparse is deprecated. Use \em Block instead.
    *  @see UniTensor::uten_type(), UniTensor::uten_type_str()
@@ -96,6 +92,7 @@ namespace cytnx {
     friend class DenseUniTensor;
     // friend class SparseUniTensor;
     friend class BlockUniTensor;
+    friend class BlockFermionicUniTensor;
 
     UniTensor_base()
         : _is_tag(false),
@@ -1741,6 +1738,106 @@ namespace cytnx {
     vec2d<cytnx_uint64> &get_itoi() { return this->_inner_to_outer_idx; }
   };
   /// @endcond
+
+  //======================================================================
+  /// @cond
+  class BlockFermionicUniTensor : public BlockUniTensor {
+   protected:
+   public:
+    // std::vector<bool> _signs;
+    friend class UniTensor;
+    BlockFermionicUniTensor() {
+      this->uten_type_id = UTenType.BlockFermionic;
+      this->_is_tag = true;
+    }
+
+    // void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+    //           const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+    //           const int &device = Device.cpu, const bool &is_diag = false,
+    //           const bool &no_alloc = false, const std::string &name = "");
+
+    // boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+    //                                              const cytnx_int64 &rowrank = -1);
+    // boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
+    //                                              const cytnx_int64 &rowrank = -1);
+
+    // void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    // void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
+    // boost::intrusive_ptr<UniTensor_base> contiguous_() {
+    //   for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
+    //   return boost::intrusive_ptr<UniTensor_base>(this);
+    // }
+
+    // boost::intrusive_ptr<UniTensor_base> contiguous();
+
+    void print_diagram(const bool &bond_info = false);
+    // void print_blocks(const bool &full_info = true) const;
+    // void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+
+    // boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base>
+    // &rhs,
+    //                                               const bool &mv_elem_self = false,
+    //                                               const bool &mv_elem_rhs = false);
+
+    // void Conj_() {
+    //   for (int i = 0; i < this->_blocks.size(); i++) {
+    //     this->_blocks[i].Conj_();
+    //   }
+    // };
+
+    // void Transpose_();
+    // boost::intrusive_ptr<UniTensor_base> Transpose() {
+    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
+    //   out->Transpose_();
+    //   return out;
+    // }
+
+    // void normalize_();
+    // boost::intrusive_ptr<UniTensor_base> normalize() {
+    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
+    //   out->normalize_();
+    //   return out;
+    // }
+
+    // boost::intrusive_ptr<UniTensor_base> Dagger() {
+    //   boost::intrusive_ptr<UniTensor_base> out = this->Conj();
+    //   out->Transpose_();
+    //   return out;
+    // }
+    // void Dagger_() {
+    //   this->Conj_();
+    //   this->Transpose_();
+    // }
+
+    // void Trace_(const std::string &a, const std::string &b);
+    // void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+
+    // boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
+    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
+    //   out->Trace_(a, b);
+    //   if (out->rank() == 0) {
+    //     DenseUniTensor *tmp = new DenseUniTensor();
+    //     tmp->_block = ((BlockUniTensor *)out.get())->_blocks[0];
+    //     out = boost::intrusive_ptr<UniTensor_base>(tmp);
+    //   }
+    //   return out;
+    // }
+    // boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
+    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
+    //   out->Trace_(a, b);
+    //   if (out->rank() == 0) {
+    //     DenseUniTensor *tmp = new DenseUniTensor();
+    //     tmp->_block = ((BlockUniTensor *)out.get())->_blocks[0];
+    //     out = boost::intrusive_ptr<UniTensor_base>(tmp);
+    //   }
+    //   return out;
+    // }
+    // void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    // void Mul_(const Scalar &rhs);
+  };
+  /// @endcond
+
   //======================================================================
 
   /// @cond
@@ -1941,6 +2038,7 @@ namespace cytnx {
       // checking type:
       bool is_sym = false;
       int sym_fver = -1;
+      bool fermionic = false;
 
       for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
         // check
@@ -1952,9 +2050,15 @@ namespace cytnx {
             // std::cout << sym_fver << " " <<
             // bonds[i]._impl->_degs.size() << std::endl;
             cytnx_error_msg((bool(sym_fver) ^ bool(bonds[i]._impl->_degs.size())),
-                            "[ERROR] All the Bond when init a UniTensor with symmetric must be in "
-                            "the same format!%s",
+                            "[ERROR] When initializing a UniTensor with symmetries, all Bonds must "
+                            "be in the same format!%s",
                             "\n");
+          }
+          if (!fermionic) {
+            std::vector<Symmetry> symms = bonds[i].syms();
+            for (cytnx_uint64 i = 0; i < symms.size(); i++) {
+              if (symms[i].is_fermionic()) fermionic = true;
+            }
           }
         } else
           cytnx_error_msg(
@@ -1981,8 +2085,13 @@ namespace cytnx {
                           "properly determined!%s",
                           "\n");
         } else {
-          boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
-          this->_impl = out;
+          if (fermionic) {
+            boost::intrusive_ptr<UniTensor_base> out(new BlockFermionicUniTensor());
+            this->_impl = out;
+          } else {
+            boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
+            this->_impl = out;
+          }
         }
       } else {
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());

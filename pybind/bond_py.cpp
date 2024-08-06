@@ -140,6 +140,8 @@ void bond_binding(py::module &m) {
       },
       py::arg("qnum"), py::arg("indices"))
 
+    .def("get_fparity", &Bond::get_fparity, py::arg("qnum"))
+
     .def("group_duplicates_", &Bond::group_duplicates)
     .def(
       "c_group_duplicates_refarg",

@@ -147,6 +147,8 @@ namespace cytnx {
     std::vector<cytnx_uint64> &getDegeneracies() { return this->_degs; };
     const std::vector<cytnx_uint64> &getDegeneracies() const { return this->_degs; };
 
+    fparity get_fparity(const std::vector<cytnx_int64> &qnum);
+
     std::vector<cytnx_uint64> group_duplicates_();
 
     boost::intrusive_ptr<Bond_impl> group_duplicates(std::vector<cytnx_uint64> &mapper) const {
@@ -168,7 +170,7 @@ namespace cytnx {
    *       bondType.BD_REG defaultly. And you can set the bond type as bondType.BD_KET or
    *       bondType.BD_BRA if you want to describe the it as ket or bra basis.
    *       For non-symmetric case, you cannot input the quantum numbers and Symmetry object.
-   *     2. For symmteric UniTensor (cytnx::UTenType.Block, see cytnx::UTenType), the
+   *     2. For symmetric UniTensor (cytnx::UTenType.Block, see cytnx::UTenType), the
    *       bond type need to be set as bondType.BD_KET or bondType.BD_BRA depend on
    *       what physical system you describe. And you should input the quantum numbers
    *       and Symmetry objects.
@@ -695,6 +697,15 @@ namespace cytnx {
     */
     const std::vector<cytnx_uint64> &getDegeneracies() const {
       return this->_impl->getDegeneracies();
+    }
+
+    /**
+    @brief return fermionic parity for a given quantum number
+    @param[in] in_qnum quantum number
+    @return parity of the quantum number; EVEN for bosonic degree of freedom, ODD for fermionic
+    */
+    fparity get_fparity(const std::vector<cytnx_int64> &qnum) {
+      return this->_impl->get_fparity(qnum);
     }
 
     /**
