@@ -19,212 +19,204 @@ using namespace std;
   #endif
 namespace cytnx {
   typedef Accessor ac;
-  // void BlockFermionicUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string>
-  // &in_labels,
-  //                           const cytnx_int64 &rowrank, const unsigned int &dtype,
-  //                           const int &device, const bool &is_diag, const bool &no_alloc,
-  //                           const std::string &name) {
-  //   this->_name = name;
-  //   // the entering is already check all the bonds have symmetry.
-  //   //  need to check:
-  //   //  1. the # of symmetry and their type across all bonds
-  //   //  2. check if all bonds are non regular:
+  void BlockFermionicUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
+                            const cytnx_int64 &rowrank, const unsigned int &dtype,
+                            const int &device, const bool &is_diag, const bool &no_alloc,
+                            const std::string &name) {
+    // This part is a copy from BlockUniTensor
+    this->_name = name;
+    // the entering is already check all the bonds have symmetry.
+    //  need to check:
+    //  1. the # of symmetry and their type across all bonds
+    //  2. check if all bonds are non regular:
 
-  //   // check Symmetry for all bonds
-  //   cytnx_uint32 N_symmetry = bonds[0].Nsym();
-  //   vector<Symmetry> tmpSyms = bonds[0].syms();
+    // check Symmetry for all bonds
+    cytnx_uint32 N_symmetry = bonds[0].Nsym();
+    vector<Symmetry> tmpSyms = bonds[0].syms();
 
-  //   cytnx_uint32 N_ket = 0;
-  //   for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
-  //     // check
-  //     cytnx_error_msg(
-  //       bonds[i].type() == BD_REG,
-  //       "[ERROR][BlockFermionicUniTensor] All bonds must be tagged for UniTensor with
-  //       symmetries.%s", "\n");
+    cytnx_uint32 N_ket = 0;
+    for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
+      // check
+      cytnx_error_msg(
+        bonds[i].type() == BD_REG,
+        "[ERROR][BlockFermionicUniTensor] All bonds must be tagged for UniTensor with symmetries.%s", "\n");
 
-  //     cytnx_error_msg(
-  //       bonds[i]._impl->_degs.size() == 0,
-  //       "[ERROR][BlockFermionicUniTensor] All bonds must be in new format for
-  //       BlockFermionicUniTensor!.%s", "\n");
+      cytnx_error_msg(
+        bonds[i]._impl->_degs.size() == 0,
+        "[ERROR][BlockFermionicUniTensor] All bonds must be in new format for BlockFermionicUniTensor!.%s", "\n");
 
-  //     // check rank-0 bond:
-  //     cytnx_error_msg(bonds[i].dim() == 0,
-  //                     "[ERROR][BlockFermionicUniTensor] All bonds must have dimension >=1%s",
-  //                     "\n");
-  //     // check symmetry and type:
-  //     cytnx_error_msg(bonds[i].Nsym() != N_symmetry,
-  //                     "[ERROR][BlockFermionicUniTensor] inconsistant # of symmetry at bond: %d. #
-  //                     of " "symmetry should be %d\n", i, N_symmetry);
-  //     for (cytnx_uint32 n = 0; n < N_symmetry; n++) {
-  //       cytnx_error_msg(bonds[i].syms()[n] != tmpSyms[n],
-  //                       "[ERROR][BlockFermionicUniTensor] symmetry mismatch at bond: %d, %s !=
-  //                       %s\n", n, bonds[i].syms()[n].stype_str().c_str(),
-  //                       tmpSyms[n].stype_str().c_str());
-  //     }
-  //     N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
-  //   }
+      // check rank-0 bond:
+      cytnx_error_msg(bonds[i].dim() == 0,
+                      "[ERROR][BlockFermionicUniTensor] All bonds must have dimension >=1%s", "\n");
+      // check symmetry and type:
+      cytnx_error_msg(bonds[i].Nsym() != N_symmetry,
+                      "[ERROR][BlockFermionicUniTensor] inconsistant # of symmetry at bond: %d. # of "
+                      "symmetry should be %d\n",
+                      i, N_symmetry);
+      for (cytnx_uint32 n = 0; n < N_symmetry; n++) {
+        cytnx_error_msg(bonds[i].syms()[n] != tmpSyms[n],
+                        "[ERROR][BlockFermionicUniTensor] symmetry mismatch at bond: %d, %s != %s\n", n,
+                        bonds[i].syms()[n].stype_str().c_str(), tmpSyms[n].stype_str().c_str());
+      }
+      N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
+    }
 
-  //   // check rowrank:
-  //   cytnx_error_msg((N_ket < 1) || (N_ket > bonds.size() - 1),
-  //                   "[ERROR][BlockFermionicUniTensor] must have at least one ket-bond and one
-  //                   bra-bond.%s",
-  //                   "\n");
+    // check rowrank:
+    cytnx_error_msg((N_ket < 1) || (N_ket > bonds.size() - 1),
+                    "[ERROR][BlockFermionicUniTensor] must have at least one ket-bond and one bra-bond.%s",
+                    "\n");
 
-  //   if (rowrank == -1) {
-  //     this->_rowrank = N_ket;
-  //     // this->_inner_rowrank = N_ket;
-  //   } else {
-  //     if (is_diag) {
-  //       cytnx_error_msg(rowrank != 1,
-  //                       "[ERROR][BlockFermionicUniTensor] rowrank must be = 1 when is_diag =
-  //                       true.%s", "\n");
-  //     } else {
-  //       cytnx_error_msg((rowrank < 0) || (rowrank > bonds.size()),
-  //                       "[ERROR][BlockFermionicUniTensor] rowrank must be >=0 and <=rank.%s",
-  //                       "\n");
-  //     }
-  //     this->_rowrank = rowrank;
-  //     // this->_inner_rowrank = rowrank;
-  //     //  update braket_form >>>
-  //   }
+    if (rowrank == -1) {
+      this->_rowrank = N_ket;
+      // this->_inner_rowrank = N_ket;
+    } else {
+      if (is_diag) {
+        cytnx_error_msg(rowrank != 1,
+                        "[ERROR][BlockFermionicUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+      } else {
+        cytnx_error_msg((rowrank < 0) || (rowrank > bonds.size()),
+                        "[ERROR][BlockFermionicUniTensor] rowrank must be >=0 and <=rank.%s", "\n");
+      }
+      this->_rowrank = rowrank;
+      // this->_inner_rowrank = rowrank;
+      //  update braket_form >>>
+    }
 
-  //   // check labels:
-  //   if (in_labels.size() == 0) {
-  //     for (cytnx_int64 i = 0; i < bonds.size(); i++) this->_labels.push_back(to_string(i));
+    // check labels:
+    if (in_labels.size() == 0) {
+      for (cytnx_int64 i = 0; i < bonds.size(); i++) this->_labels.push_back(to_string(i));
 
-  //   } else {
-  //     // check bonds & labels dim
-  //     cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
-  //                     "[ERROR] labels must have same lenth as # of bonds.");
+    } else {
+      // check bonds & labels dim
+      cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
+                      "[ERROR] labels must have same lenth as # of bonds.");
 
-  //     std::vector<string> tmp = vec_unique(in_labels);
-  //     cytnx_error_msg(tmp.size() != in_labels.size(),
-  //                     "[ERROR] labels cannot contain duplicated elements.%s", "\n");
-  //     this->_labels = in_labels;
-  //   }
+      std::vector<string> tmp = vec_unique(in_labels);
+      cytnx_error_msg(tmp.size() != in_labels.size(),
+                      "[ERROR] labels cannot contain duplicated elements.%s", "\n");
+      this->_labels = in_labels;
+    }
 
-  //   // cytnx_error_msg(is_diag,"[ERROR][BlockFermionicUniTensor] Cannot set is_diag=true when the
-  //   UniTensor
-  //   // is with symmetry.%s","\n");
-  //   if (is_diag) {
-  //     cytnx_error_msg(bonds.size() != 2,
-  //                     "[ERROR][BlockFermionicUniTensor] is_diag = true must be rank-2 with one
-  //                     in-bond and " "one out-bond.%s",
-  //                     "\n");
-  //     cytnx_error_msg(
-  //       bonds[0].type() == bonds[1].type(),
-  //       "[ERROR][BlockFermionicUniTensor] is_diag=true must have one in-bond and oue
-  //       out-bond.%s", "\n");
-  //     if (rowrank != 1, "[ERROR][BlockFermionicUniTensor] is_diag = true must have rowrank=1.%s",
-  //     "\n")
-  //       ;
+    // cytnx_error_msg(is_diag,"[ERROR][BlockFermionicUniTensor] Cannot set is_diag=true when the UniTensor
+    // is with symmetry.%s","\n");
+    if (is_diag) {
+      cytnx_error_msg(bonds.size() != 2,
+                      "[ERROR][BlockFermionicUniTensor] is_diag = true must be rank-2 with one in-bond and "
+                      "one out-bond.%s",
+                      "\n");
+      cytnx_error_msg(
+        bonds[0].type() == bonds[1].type(),
+        "[ERROR][BlockFermionicUniTensor] is_diag=true must have one in-bond and oue out-bond.%s", "\n");
+      if (rowrank != 1, "[ERROR][BlockFermionicUniTensor] is_diag = true must have rowrank=1.%s", "\n")
+        ;
 
-  //     // checking basis!
-  //     cytnx_error_msg(
-  //       bonds[0].redirect() != bonds[1],
-  //       "[ERROR][BlockFermionicUniTensor] is_diag=true the in-bond and out-bond basis must
-  //       match!%s", "\n");
-  //   }
-  //   this->_is_diag = is_diag;
+      // checking basis!
+      cytnx_error_msg(
+        bonds[0].redirect() != bonds[1],
+        "[ERROR][BlockFermionicUniTensor] is_diag=true the in-bond and out-bond basis must match!%s", "\n");
+    }
+    this->_is_diag = is_diag;
 
-  //   // copy bonds, otherwise it will share objects:
-  //   this->_bonds = vec_clone(bonds);
-  //   this->_is_braket_form = this->_update_braket();
+    // copy bonds, otherwise it will share objects:
+    this->_bonds = vec_clone(bonds);
+    this->_is_braket_form = this->_update_braket();
 
-  //   // vector<cytnx_uint64> blocklens;
-  //   // vector<vector<cytnx_uint64>> blocksizes;
-  //   // cytnx_uint64 totblocksize = 0;
+    // vector<cytnx_uint64> blocklens;
+    // vector<vector<cytnx_uint64>> blocksizes;
+    // cytnx_uint64 totblocksize = 0;
 
-  //   if (this->_is_diag) {
-  //     for (int b = 0; b < this->_bonds[0].qnums().size(); b++) {
-  //       this->_inner_to_outer_idx.push_back({(cytnx_uint64)b, (cytnx_uint64)b});
-  //       if (!no_alloc) {
-  //         this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b], dtype, device));
-  //       } else {
-  //         this->_blocks.push_back(Tensor({this->_bonds[0]._impl->_degs[b]}, dtype, device,
-  //         false));
-  //       }
-  //     }
+    if (this->_is_diag) {
+      for (int b = 0; b < this->_bonds[0].qnums().size(); b++) {
+        this->_inner_to_outer_idx.push_back({(cytnx_uint64)b, (cytnx_uint64)b});
+        if (!no_alloc) {
+          this->_blocks.push_back(zeros(this->_bonds[0]._impl->_degs[b], dtype, device));
+        } else {
+          this->_blocks.push_back(Tensor({this->_bonds[0]._impl->_degs[b]}, dtype, device, false));
+        }
+      }
 
-  //   } else {
-  //     // checking how many blocks are there, and the size:
-  //     std::vector<cytnx_uint64> Loc(this->_bonds.size(), 0);
-  //     std::vector<cytnx_int64> tot_qns(
-  //       this->_bonds[0].Nsym());  // use first bond to determine symmetry size
-  //     std::vector<cytnx_uint64> size(this->_bonds.size());
-  //     bool fin = false;
-  //     while (1) {
-  //       // get elem
-  //       // cout << "start!" << endl;
-  //       // cytnx::vec_print_simple(std::cout , Loc);
-  //       this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(), tot_qns);
+    } else {
+      // checking how many blocks are there, and the size:
+      std::vector<cytnx_uint64> Loc(this->_bonds.size(), 0);
+      std::vector<cytnx_int64> tot_qns(
+        this->_bonds[0].Nsym());  // use first bond to determine symmetry size
+      std::vector<cytnx_uint64> size(this->_bonds.size());
+      bool fin = false;
+      while (1) {
+        // get elem
+        // cout << "start!" << endl;
+        // cytnx::vec_print_simple(std::cout , Loc);
+        this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(), tot_qns);
 
-  //       // std::cout << "Loc: ";
-  //       // cytnx::vec_print_simple(std::cout, Loc);
-  //       // std::cout << "tot_flx: ";
-  //       // cytnx::vec_print_simple(std::cout, tot_qns);
+        // std::cout << "Loc: ";
+        // cytnx::vec_print_simple(std::cout, Loc);
+        // std::cout << "tot_flx: ";
+        // cytnx::vec_print_simple(std::cout, tot_qns);
 
-  //       // if exists:
-  //       if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
-  //         // get size & init block!
-  //         if (!no_alloc) {
-  //           // cytnx_uint64 blockNelem = 1;
-  //           for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-  //             size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-  //             // blockNelem *= size[i];
-  //           }
-  //           this->_blocks.push_back(zeros(size, dtype, device));
-  //           // blocklens.push_back(blockNelem);
-  //           // blocksizes.push_back(size);
-  //           // totblocksize += blockNelem;
-  //         } else {
-  //           for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-  //             size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-  //           }
-  //           this->_blocks.push_back(Tensor(size, dtype, device, false));
-  //         }
-  //         // push its loc
-  //         this->_inner_to_outer_idx.push_back(Loc);
-  //       }
+        // if exists:
+        if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
+          // get size & init block!
+          if (!no_alloc) {
+            // cytnx_uint64 blockNelem = 1;
+            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
+              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+              // blockNelem *= size[i];
+            }
+            this->_blocks.push_back(zeros(size, dtype, device));
+            // blocklens.push_back(blockNelem);
+            // blocksizes.push_back(size);
+            // totblocksize += blockNelem;
+          } else {
+            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
+              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+            }
+            this->_blocks.push_back(Tensor(size, dtype, device, false));
+          }
+          // push its loc
+          this->_inner_to_outer_idx.push_back(Loc);
+        }
 
-  //       while (Loc.size() != 0) {
-  //         if (Loc.back() == this->_bonds[Loc.size() - 1]._impl->_qnums.size() - 1) {
-  //           Loc.pop_back();
-  //           continue;
-  //         } else {
-  //           Loc.back() += 1;
-  //           // cout << "+1 at loc:" << Loc.size()-1 <<endl;
-  //           while (Loc.size() != this->_bonds.size()) {
-  //             Loc.push_back(0);
-  //           }
-  //           break;
-  //         }
-  //       }
+        while (Loc.size() != 0) {
+          if (Loc.back() == this->_bonds[Loc.size() - 1]._impl->_qnums.size() - 1) {
+            Loc.pop_back();
+            continue;
+          } else {
+            Loc.back() += 1;
+            // cout << "+1 at loc:" << Loc.size()-1 <<endl;
+            while (Loc.size() != this->_bonds.size()) {
+              Loc.push_back(0);
+            }
+            break;
+          }
+        }
 
-  //       if (Loc.size() == 0) break;
-  //     }
+        if (Loc.size() == 0) break;
+      }
 
-  //     // if(!no_alloc){
-  //     //   cytnx_uint64 offset=0;
+      // if(!no_alloc){
+      //   cytnx_uint64 offset=0;
 
-  //     //   char* ptr = (char*)utils_internal::Calloc_cpu(
-  //     //     totblocksize+blocklens.size()*STORAGE_DEFT_SZ,
-  //     //     Type.typeSize(dtype));
-  //     //   for(cytnx_int64 k=0;k<blocklens.size();k++){
-  //     //     cytnx_uint64 cap=0;
-  //     //     if (blocklens[k] % STORAGE_DEFT_SZ) {
-  //     //       cap = ((unsigned long long)((blocklens[k]) / STORAGE_DEFT_SZ) + 1) *
-  //     STORAGE_DEFT_SZ;
-  //     //     } else {
-  //     //       cap = blocklens[k];
-  //     //     }
-  //     //     this->_blocks.push_back(Tensor(Storage(ptr+(offset*Type.typeSize(dtype)),
-  //     //         blocklens[k],dtype,device,true,cap),blocksizes[k],dtype,device));
-  //     //     offset+=cap;
-  //     //   }
-  //     // }
-  //   }  // is_diag?
-  // }
+      //   char* ptr = (char*)utils_internal::Calloc_cpu(
+      //     totblocksize+blocklens.size()*STORAGE_DEFT_SZ,
+      //     Type.typeSize(dtype));
+      //   for(cytnx_int64 k=0;k<blocklens.size();k++){
+      //     cytnx_uint64 cap=0;
+      //     if (blocklens[k] % STORAGE_DEFT_SZ) {
+      //       cap = ((unsigned long long)((blocklens[k]) / STORAGE_DEFT_SZ) + 1) * STORAGE_DEFT_SZ;
+      //     } else {
+      //       cap = blocklens[k];
+      //     }
+      //     this->_blocks.push_back(Tensor(Storage(ptr+(offset*Type.typeSize(dtype)),
+      //         blocklens[k],dtype,device,true,cap),blocksizes[k],dtype,device));
+      //     offset+=cap;
+      //   }
+      // }
+    }  // is_diag?
+
+    // fermionic part: set signflips to false
+    std::vector<bool> signflip(_blocks.size(), false);
+    this-> _signflip = signflip;
+  }
 
   // void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
   //                         const std::vector<cytnx_uint64> &qn_indices,
@@ -417,6 +409,8 @@ namespace cytnx {
   // }
 
   void BlockFermionicUniTensor::print_diagram(const bool &bond_info) {
+    // This is a copy from BlockUniTensor; only the f symbols in the corners of the
+    // diagram are different, and the sign structure is shown.
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
@@ -430,11 +424,17 @@ namespace cytnx {
     // std::cout << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
     std::cout << std::string(buffer);
-    sprintf(buffer, "valid blocks : %d\n", this->_blocks.size());
+    sprintf(buffer, "valid blocks: %d\n", this->_blocks.size());
     std::cout << std::string(buffer);
-    sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
+    sprintf(buffer, "is diag     : %s\n", this->is_diag() ? "True" : "False");
     std::cout << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
+    std::cout << std::string(buffer);
+    sprintf(buffer, "fermion sign:");
+    for (int i = 0; i < this->_signflip.size(); i++){
+      sprintf(buffer + strlen(buffer), this->_signflip[i] ? " -1" : " +1");
+    }
+    sprintf(buffer + strlen(buffer), "\n");
     std::cout << std::string(buffer);
 
     cytnx_uint64 Nin = this->_rowrank;

@@ -1744,17 +1744,17 @@ namespace cytnx {
   class BlockFermionicUniTensor : public BlockUniTensor {
    protected:
    public:
-    // std::vector<bool> _signs;
+    std::vector<bool> _signflip; // if true, the sign of the corresponding block needs to be flipped
     friend class UniTensor;
     BlockFermionicUniTensor() {
       this->uten_type_id = UTenType.BlockFermionic;
       this->_is_tag = true;
     }
 
-    // void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
-    //           const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-    //           const int &device = Device.cpu, const bool &is_diag = false,
-    //           const bool &no_alloc = false, const std::string &name = "");
+    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false,
+              const bool &no_alloc = false, const std::string &name = "");
 
     // boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
     //                                              const cytnx_int64 &rowrank = -1);
