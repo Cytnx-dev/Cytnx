@@ -1038,7 +1038,8 @@ namespace cytnx {
   class BlockUniTensor : public UniTensor_base {
    protected:
    public:
-    std::vector<std::vector<cytnx_uint64>> _inner_to_outer_idx;
+    std::vector<std::vector<cytnx_uint64>>
+      _inner_to_outer_idx;  // stores the qindices for each block
     std::vector<Tensor> _blocks;
     Tensor NullRefTensor;  // this returns when access block is not exists!
 
@@ -1744,7 +1745,34 @@ namespace cytnx {
   class BlockFermionicUniTensor : public BlockUniTensor {
    protected:
    public:
-    std::vector<bool> _signflip; // if true, the sign of the corresponding block needs to be flipped
+    std::vector<bool>
+      _signflip;  // if true, the sign of the corresponding block needs to be flipped
+
+    // void set_meta(BlockFermionicUniTensor *tmp, const bool &inner, const bool &outer) const {
+    //   // outer meta
+    //   if (outer) {
+    //     tmp->_bonds = vec_clone(this->_bonds);
+    //     tmp->_labels = this->_labels;
+    //     tmp->_is_braket_form = this->_is_braket_form;
+    //     tmp->_rowrank = this->_rowrank;
+    //     tmp->_name = this->_name;
+    //     tmp->_signflip = this->_signflip;
+    //   }
+
+    //   tmp->_is_diag = this->_is_diag;
+
+    //   // inner meta
+    //   if (inner) {
+    //     tmp->_inner_to_outer_idx = this->_inner_to_outer_idx;
+    //   }
+    // }
+
+    // BlockFermionicUniTensor *clone_meta(const bool &inner, const bool &outer) const {
+    //   BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
+    //   this->set_meta(tmp, inner, outer);
+    //   return tmp;
+    // };
+
     friend class UniTensor;
     BlockFermionicUniTensor() {
       this->uten_type_id = UTenType.BlockFermionic;
@@ -1761,8 +1789,11 @@ namespace cytnx {
     // boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
     //                                              const cytnx_int64 &rowrank = -1);
 
-    // void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
-    // void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
+    // Helper function; implements the sign flips when permuting indices
+    std::vector<bool> _swapsigns_(const std::vector<cytnx_int64> &mapper) const;
 
     // boost::intrusive_ptr<UniTensor_base> contiguous_() {
     //   for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();

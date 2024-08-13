@@ -122,7 +122,7 @@ namespace cytnx {
       return out;
     }
 
-    // [NOTE] for UniTensor iinternal, we might need to return the QNpool (unordered map for further
+    // [NOTE] for UniTensor internal, we might need to return the QNpool (unordered map for further
     // info on block arrangement!)
     void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp = true);
 
