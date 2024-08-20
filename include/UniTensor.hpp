@@ -224,6 +224,7 @@ namespace cytnx {
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
+    virtual std::vector<bool> signflip() const;
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -1797,6 +1798,8 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false, const std::string &name = "");
 
+    std::vector<bool> signflip() const { return this->_signflip; };
+
     boost::intrusive_ptr<UniTensor_base> clone() const {
       BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
       tmp->_blocks = vec_clone(this->_blocks);
@@ -1835,6 +1838,9 @@ namespace cytnx {
     std::vector<bool> _swapsigns_(const std::vector<cytnx_int64> &mapper) const;
     std::vector<bool> _lhssigns_(const std::vector<cytnx_int64> &mapper,
                                  const cytnx_int64 contrno) const;
+    std::vector<bool> _swapsigns_(const std::vector<cytnx_uint64> &mapper) const;
+    std::vector<bool> _lhssigns_(const std::vector<cytnx_uint64> &mapper,
+                                 const cytnx_uint64 contrno) const;
 
     // boost::intrusive_ptr<UniTensor_base> contiguous_() {
     //   for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
@@ -2456,6 +2462,14 @@ namespace cytnx {
     @return std::vector<cytnx_uint64>
     */
     std::vector<cytnx_uint64> shape() const { return this->_impl->shape(); }
+
+    /**
+     * @brief Get the sign information of a fermionic UniTensor.
+     * @details Length is the number of blocks in the UniTensor. If the return is true, the sign of
+     * the elements of the corresponding block needs to be flipped.
+     * @return std::vector<bool>
+     */
+    std::vector<bool> signflip() const { return this->_impl->signflip(); }
 
     /**
      * @brief Check whether the UniTensor is in block form.

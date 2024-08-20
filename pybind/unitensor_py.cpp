@@ -558,6 +558,7 @@ void unitensor_binding(py::module &m) {
     .def("bond", [](UniTensor &self, const cytnx_uint64 &idx){return self.bond(idx);} ,py::arg("idx"))
     .def("bond", [](UniTensor &self, const std::string &label){return self.bond(label);} ,py::arg("label"))
     .def("shape", &UniTensor::shape)
+    .def("signflip", &UniTensor::signflip)
     .def("to_", &UniTensor::to_)
     .def(
       "to_different_device",

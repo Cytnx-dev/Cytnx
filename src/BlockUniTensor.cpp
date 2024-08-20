@@ -61,9 +61,10 @@ namespace cytnx {
     }
 
     // check rowrank:
-    cytnx_error_msg((N_ket < 1) || (N_ket > bonds.size() - 1),
-                    "[ERROR][BlockUniTensor] must have at least one ket-bond and one bra-bond.%s",
-                    "\n");
+    // cytnx_error_msg((N_ket < 1) || (N_ket > bonds.size() - 1),
+    //                 "[ERROR][BlockUniTensor] must have at least one ket-bond and one
+    //                 bra-bond.%s",
+    //                 "\n");
 
     if (rowrank == -1) {
       this->_rowrank = N_ket;
