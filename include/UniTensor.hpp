@@ -246,6 +246,15 @@ namespace cytnx {
     virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     virtual void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
 
+    virtual boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    virtual boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    virtual void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                                     const cytnx_int64 &rowrank = -1);
+    virtual void permute_nosignflip_(const std::vector<std::string> &mapper,
+                                     const cytnx_int64 &rowrank = -1);
+
     // virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank =
     // -1);
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
@@ -1745,33 +1754,34 @@ namespace cytnx {
   class BlockFermionicUniTensor : public BlockUniTensor {
    protected:
    public:
-    std::vector<bool>
+    std::vector<cytnx_bool>
       _signflip;  // if true, the sign of the corresponding block needs to be flipped
 
-    // void set_meta(BlockFermionicUniTensor *tmp, const bool &inner, const bool &outer) const {
-    //   // outer meta
-    //   if (outer) {
-    //     tmp->_bonds = vec_clone(this->_bonds);
-    //     tmp->_labels = this->_labels;
-    //     tmp->_is_braket_form = this->_is_braket_form;
-    //     tmp->_rowrank = this->_rowrank;
-    //     tmp->_name = this->_name;
-    //     tmp->_signflip = this->_signflip;
-    //   }
+    void set_meta(BlockFermionicUniTensor *tmp, const bool &inner, const bool &outer) const {
+      // outer meta
+      if (outer) {
+        tmp->_bonds = vec_clone(this->_bonds);
+        tmp->_labels = this->_labels;
+        tmp->_is_braket_form = this->_is_braket_form;
+        tmp->_rowrank = this->_rowrank;
+        tmp->_name = this->_name;
+        // tmp->_signflip = vec_clone(this->_signflip);
+        tmp->_signflip = this->_signflip;
+      }
 
-    //   tmp->_is_diag = this->_is_diag;
+      tmp->_is_diag = this->_is_diag;
 
-    //   // inner meta
-    //   if (inner) {
-    //     tmp->_inner_to_outer_idx = this->_inner_to_outer_idx;
-    //   }
-    // }
+      // inner meta
+      if (inner) {
+        tmp->_inner_to_outer_idx = this->_inner_to_outer_idx;
+      }
+    }
 
-    // BlockFermionicUniTensor *clone_meta(const bool &inner, const bool &outer) const {
-    //   BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
-    //   this->set_meta(tmp, inner, outer);
-    //   return tmp;
-    // };
+    BlockFermionicUniTensor *clone_meta(const bool &inner, const bool &outer) const {
+      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
+      this->set_meta(tmp, inner, outer);
+      return tmp;
+    };
 
     friend class UniTensor;
     BlockFermionicUniTensor() {
@@ -1784,13 +1794,22 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false, const std::string &name = "");
 
-    // boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
-    //                                              const cytnx_int64 &rowrank = -1);
-    // boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
-    //                                              const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
 
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<cytnx_int64> &mapper,
+                                                            const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<std::string> &mapper,
+                                                            const cytnx_int64 &rowrank = -1);
+    void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                             const cytnx_int64 &rowrank = -1);
+    void permute_nosignflip_(const std::vector<std::string> &mapper,
+                             const cytnx_int64 &rowrank = -1);
 
     // Helper function; implements the sign flips when permuting indices
     std::vector<bool> _swapsigns_(const std::vector<cytnx_int64> &mapper) const;
@@ -2722,8 +2741,8 @@ namespace cytnx {
     }
 
     /**
-    @brief rebable the lags in the UniTensor by given index.
-    @details This function will relabel the lags in the UniTensor by a given index.
+    @brief rebable the legs in the UniTensor by given index.
+    @details This function will relabel the legs in the UniTensor by a given index.
     This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor (that is if you use same_data() to check,
     it will return true). Compare to set_label(), this function will return a new
@@ -2741,8 +2760,8 @@ namespace cytnx {
       return out;
     }
     /**
-    @brief rebable the lags in the UniTensor by given index.
-    @details This function will relabel the lags in the UniTensor by a given index.
+    @brief rebable the legs in the UniTensor by given index.
+    @details This function will relabel the legs in the UniTensor by a given index.
     This function will alter the label of the UniTensor directly.
         @param[in] inx a given index
         @param[in] new_label the new label of the UniTensor in the index \p inx
@@ -2754,8 +2773,8 @@ namespace cytnx {
     }
 
     /**
-    @brief relabel the lags in the UniTensor by a given label.
-    @details This function will relabel the lags in the UniTensor by a given label.
+    @brief relabel the legs in the UniTensor by a given label.
+    @details This function will relabel the legs in the UniTensor by a given label.
     This function will alter the label of the UniTensor directly.
           @param[in] old_label original label you want to replace
           @param[in] new_label the new label
@@ -2767,8 +2786,8 @@ namespace cytnx {
     }
 
     /**
-    @brief relabel the lags in the UniTensor by a given label.
-    @details This function will relabel the lags in the UniTensor by a given label.
+    @brief relabel the legs in the UniTensor by a given label.
+    @details This function will relabel the legs in the UniTensor by a given label.
     This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor (that is if you use same_data() to check,
     it will return true). Compare to set_label(), this function will return a new
@@ -2803,7 +2822,7 @@ namespace cytnx {
     }
 
     /**
-     * @brief permute the lags of the UniTensor
+     * @brief permute the legs of the UniTensor
      * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
      *    \p by_label is false, otherwise it is mapped by bond label.
      * @param[in] rowrank the new rowrank after the permutation
@@ -2818,7 +2837,7 @@ namespace cytnx {
     }
 
     /**
-     * @brief permute the lags of the UniTensor by labels
+     * @brief permute the legs of the UniTensor by labels
      * @param[in] mapper the mapper by babels
      * @param[in] rowrank the row rank
      * @return UniTensor
@@ -2844,7 +2863,7 @@ namespace cytnx {
     }
 
     /**
-    @brief permute the lags of the UniTensor, inplacely.
+    @brief permute the legs of the UniTensor, inplacely.
     @deprecated It is recommended to use \ref
       permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     @param[in] mapper the mapper by labels
@@ -2856,13 +2875,91 @@ namespace cytnx {
     }
 
     /**
-    @brief permute the lags of the UniTensor, inplacely.
+    @brief permute the legs of the UniTensor, inplacely.
     @param[in] mapper the mapper by labels
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
+    }
+
+    /**
+     * @brief permute the legs of the UniTensor without sign flips
+     * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+     * usually not intended, since fermionic permutations create sign flips! This should typically
+     * only be used to compare tensors in different sign conventions with each other.
+     * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
+     *    \p by_label is false, otherwise it is mapped by bond label.
+     * @param[in] rowrank the new rowrank after the permutation
+     * @return UniTensor
+     * @warning \p by_label will be deprecated!
+     */
+    UniTensor permute_nosignflip(const std::vector<cytnx_int64> &mapper,
+                                 const cytnx_int64 &rowrank = -1) const {
+      UniTensor out;
+      out._impl = this->_impl->permute_nosignflip(mapper, rowrank);
+      return out;
+    }
+
+    /**
+     * @brief permute the legs of the UniTensor by labels without sign flips
+     * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+     * usually not intended, since fermionic permutations create sign flips! This should typically
+     * only be used to compare tensors in different sign conventions with each other.
+     * @param[in] mapper the mapper by babels
+     * @param[in] rowrank the row rank
+     * @return UniTensor
+     */
+    UniTensor permute_nosignflip(const std::vector<std::string> &mapper,
+                                 const cytnx_int64 &rowrank = -1) const {
+      UniTensor out;
+      out._impl = this->_impl->permute_nosignflip(mapper, rowrank);
+      return out;
+    }
+
+    /**
+        @see permute_nosignflip(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank
+       = -1)
+        */
+    UniTensor permute_nosignflip(const std::initializer_list<char *> &mapper,
+                                 const cytnx_int64 &rowrank = -1) const {
+      std::vector<char *> mprs = mapper;
+      std::vector<std::string> vs(mprs.size());
+      transform(mprs.begin(), mprs.end(), vs.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      return this->permute_nosignflip(vs, rowrank);
+    }
+
+    /**
+    @brief permute the legs of the UniTensor without fermionic sign flips, inplacely.
+    @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+    usually not intended, since fermionic permutations create sign flips! This should typically only
+    be used to compare tensors in different sign conventions with each other.
+    @deprecated It is recommended to use \ref
+      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+    @param[in] mapper the mapper by labels
+    @param[in] rowrank the row rank after the permutation
+          @warning \p by_label will be deprecated!
+    */
+    void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                             const cytnx_int64 &rowrank = -1) {
+      this->_impl->permute_nosignflip_(mapper, rowrank);
+    }
+
+    /**
+    @brief permute the legs of the UniTensor without fermionic sign flips, inplacely.
+    @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+    usually not intended, since fermionic permutations create sign flips! This should typically only
+    be used to compare tensors in different sign conventions with each other.
+    @param[in] mapper the mapper by labels
+    @param[in] rowrank the row rank after the permutation
+        @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+    */
+    void permute_nosignflip_(const std::vector<std::string> &mapper,
+                             const cytnx_int64 &rowrank = -1) {
+      this->_impl->permute_nosignflip_(mapper, rowrank);
     }
 
     // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
@@ -3509,7 +3606,7 @@ namespace cytnx {
 
     /**
     @brief Combine the sevral bonds of the UniTensor.
-        @param[in] indicators the labels of the lags you want to combine.
+        @param[in] indicators the labels of the legs you want to combine.
         @param[in] force If force is true, it will combine the bonds anyway even the direction
       of the bonds are same. After combining, the direction of the bonds will be set as
       same as the first bond.
@@ -3532,7 +3629,7 @@ namespace cytnx {
 
     /**
     @brief Contract the UniTensor with common labels.
-          @details This function contract the UniTensor lags with common labels.
+          @details This function contract the UniTensor legs with common labels.
           @param[in] inR The UniTensor you want to contract with.
           @param[in] mv_elem_self Whether the self UniTensor need to do contiguous()
         after the contraction.

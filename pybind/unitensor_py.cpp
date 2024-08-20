@@ -591,9 +591,7 @@ void unitensor_binding(py::module &m) {
 
     // [Deprecated by_label!]
     .def("permute_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
-
                         self.permute_(mapper,rowrank);
-
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
@@ -601,13 +599,26 @@ void unitensor_binding(py::module &m) {
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
-
                         return self.permute(mapper,rowrank);
-
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
                         return self.permute(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+     .def("permute_nosignflip", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
+                        return self.permute_nosignflip(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+    .def("permute_nosignflip", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
+                        return self.permute_nosignflip(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+     .def("permute_nosignflip_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
+                        self.permute_nosignflip_(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+    .def("permute_nosignflip_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
+                        self.permute_nosignflip_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
 
