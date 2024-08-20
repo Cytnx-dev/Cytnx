@@ -1757,6 +1757,9 @@ namespace cytnx {
     std::vector<cytnx_bool>
       _signflip;  // if true, the sign of the corresponding block needs to be flipped
 
+    // void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
+    //                      const std::vector<cytnx_uint64> &locator) const;
+
     void set_meta(BlockFermionicUniTensor *tmp, const bool &inner, const bool &outer) const {
       // outer meta
       if (outer) {
@@ -1794,6 +1797,23 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false, const std::string &name = "");
 
+    boost::intrusive_ptr<UniTensor_base> clone() const {
+      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks = vec_clone(this->_blocks);
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
+    };
+
+    bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const {
+      if (rhs->uten_type() != UTenType.BlockFermionic) return false;
+      if (rhs->get_blocks_(1).size() != this->get_blocks_(1).size()) return false;
+
+      for (int i = 0; i < rhs->get_blocks_(1).size(); i++)
+        if (this->get_blocks_(1)[i].same_data(rhs->get_blocks_(1)[i]) == false) return false;
+
+      return true;
+    }
+
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
                                                  const cytnx_int64 &rowrank = -1);
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
@@ -1813,6 +1833,8 @@ namespace cytnx {
 
     // Helper function; implements the sign flips when permuting indices
     std::vector<bool> _swapsigns_(const std::vector<cytnx_int64> &mapper) const;
+    std::vector<bool> _lhssigns_(const std::vector<cytnx_int64> &mapper,
+                                 const cytnx_int64 contrno) const;
 
     // boost::intrusive_ptr<UniTensor_base> contiguous_() {
     //   for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
@@ -1825,10 +1847,9 @@ namespace cytnx {
     // void print_blocks(const bool &full_info = true) const;
     // void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
 
-    // boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base>
-    // &rhs,
-    //                                               const bool &mv_elem_self = false,
-    //                                               const bool &mv_elem_rhs = false);
+    boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
+                                                  const bool &mv_elem_self = false,
+                                                  const bool &mv_elem_rhs = false);
 
     // void Conj_() {
     //   for (int i = 0; i < this->_blocks.size(); i++) {
@@ -3034,7 +3055,7 @@ namespace cytnx {
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator) {
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
@@ -3060,7 +3081,7 @@ namespace cytnx {
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
@@ -3127,7 +3148,7 @@ namespace cytnx {
     @details see more information at user guide 6.3.5.
     */
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
       } else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
@@ -3146,7 +3167,7 @@ namespace cytnx {
     @details see more information at user guide 6.3.5.
     */
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
       } else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
@@ -4214,7 +4235,7 @@ namespace cytnx {
         */
     UniTensor &Trace_(const std::string &a, const std::string &b) {
       this->_impl->Trace_(a, b);
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // handle if no leg left case for BlockUniTensor.
         if (this->rank() == 0) {
           DenseUniTensor *tmp = new DenseUniTensor();
@@ -4236,7 +4257,7 @@ namespace cytnx {
         */
     UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
       this->_impl->Trace_(a, b);
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // handle if no leg left case for BlockUniTensor.
         if (this->rank() == 0) {
           DenseUniTensor *tmp = new DenseUniTensor();

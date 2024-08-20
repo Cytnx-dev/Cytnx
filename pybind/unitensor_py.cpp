@@ -766,7 +766,7 @@ void unitensor_binding(py::module &m) {
 
 
 
-    .def("contract", &UniTensor::contract)
+    .def("contract", &UniTensor::contract, py::arg("inR"), py::arg("mv_elem_self")=false, py::arg("mv_elem_rhs")=false)
 
     .def("getTotalQnums", &UniTensor::getTotalQnums, py::arg("physical")=false)
 
