@@ -34,7 +34,7 @@ namespace cytnx {
   class UniTensorType_class {
    public:
     enum : int { Void = -99, Dense = 0, Sparse = 1, Block = 2, BlockFermionic = 3 };
-    std::string getname(const int &ut_type);
+    std::string getname(const int &ut_type) const;
   };
   /// @endcond
   /**
@@ -210,7 +210,7 @@ namespace cytnx {
     }
 
     int uten_type() { return this->uten_type_id; }
-    std::string uten_type_str() { return UTenType.getname(this->uten_type_id); }
+    std::string uten_type_str() const { return UTenType.getname(this->uten_type_id); }
 
     /// VIRTUAL FUNCTIONS:
 
@@ -1852,6 +1852,19 @@ namespace cytnx {
     void print_diagram(const bool &bond_info = false);
     // void print_blocks(const bool &full_info = true) const;
     // void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &new_labels);
+    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
+
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &old_labels,
+                                                 const std::vector<std::string> &new_labels);
+    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels,
+                                                  const std::vector<std::string> &new_labels);
+
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &old_label,
+                                                 const std::string &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                 const std::string &new_label);
 
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,

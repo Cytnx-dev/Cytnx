@@ -360,6 +360,8 @@ namespace cytnx {
     char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
+    sprintf(buffer, "Tensor type: %s\n", this->uten_type_str().c_str());
+    os << std::string(buffer);
     if (this->_is_tag)
       sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
     os << std::string(buffer);
@@ -561,9 +563,7 @@ namespace cytnx {
     BlockUniTensor *out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
-    std::vector<cytnx_uint64> mapper_u64;
-
-    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
     // checking:
     for (int i = 0; i < mapper_u64.size(); i++) {
       cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",

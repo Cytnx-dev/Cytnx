@@ -615,9 +615,8 @@ namespace cytnx {
 
       if (rowrank >= 0) {
         cytnx_error_msg(
-          (rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
-          "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of UniTensor-1, "
-          "and should be >=1.%s",
+          (rowrank > out_raw->_bonds.size()),
+          "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
           "\n");
         out_raw->_rowrank = rowrank;
       }
@@ -642,8 +641,8 @@ namespace cytnx {
                       "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
       mapper_i64.push_back(std::distance(out_raw->_labels.begin(), it));
     }
-    cout << "Mapper: " << mapper_i64 << endl;
-    cout << "labels: " << _labels << endl;
+    // cout << "Mapper: " << mapper_i64 << endl;
+    // cout << "labels: " << _labels << endl;
 
     return this->permute(mapper_i64, rowrank);
   }
@@ -678,9 +677,9 @@ namespace cytnx {
       }
 
       if (rowrank >= 0) {
-        cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank < 1),
+        cytnx_error_msg((rowrank > this->_bonds.size()),
                         "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of "
-                        "UniTensor-1, and should be >=1.%s",
+                        "UniTensor.%s",
                         "\n");
         this->_rowrank = rowrank;
       }
@@ -738,9 +737,8 @@ namespace cytnx {
 
       if (rowrank >= 0) {
         cytnx_error_msg(
-          (rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
-          "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of UniTensor-1, "
-          "and should be >=1.%s",
+          (rowrank > out_raw->_bonds.size()),
+          "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
           "\n");
         out_raw->_rowrank = rowrank;
       }
@@ -802,9 +800,9 @@ namespace cytnx {
       }
 
       if (rowrank >= 0) {
-        cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank < 1),
+        cytnx_error_msg((rowrank > this->_bonds.size()),
                         "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of "
-                        "UniTensor-1, and should be >=1.%s",
+                        "UniTensor.%s",
                         "\n");
         this->_rowrank = rowrank;
       }
@@ -1134,59 +1132,59 @@ namespace cytnx {
     return signs;
   }
 
-  // boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
-  //   const std::vector<string> &new_labels) {
-  //   BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
-  //   tmp->_blocks = this->_blocks;
-  //   tmp->set_labels(new_labels);
-  //   boost::intrusive_ptr<UniTensor_base> out(tmp);
-  //   return out;
-  // }
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
+    const std::vector<string> &new_labels) {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_labels(new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
 
-  // boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
-  //   const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-  //   BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
-  //   tmp->_blocks = this->_blocks;
-  //   tmp->relabel_(old_labels, new_labels);
-  //   boost::intrusive_ptr<UniTensor_base> out(tmp);
-  //   return out;
-  // }
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->relabel_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
 
-  // boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
-  //   const std::vector<string> &new_labels) {
-  //   BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
-  //   tmp->_blocks = this->_blocks;
-  //   tmp->set_labels(new_labels);
-  //   boost::intrusive_ptr<UniTensor_base> out(tmp);
-  //   return out;
-  // }
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
+    const std::vector<string> &new_labels) {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_labels(new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
 
-  // boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
-  //   const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-  //   BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
-  //   tmp->_blocks = this->_blocks;
-  //   tmp->relabels_(old_labels, new_labels);
-  //   boost::intrusive_ptr<UniTensor_base> out(tmp);
-  //   return out;
-  // }
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->relabels_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
 
-  // boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(const cytnx_int64 &inx,
-  //                                                              const string &new_label) {
-  //   BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
-  //   tmp->_blocks = this->_blocks;
-  //   tmp->set_label(inx, new_label);
-  //   boost::intrusive_ptr<UniTensor_base> out(tmp);
-  //   return out;
-  // }
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(const cytnx_int64 &inx,
+                                                               const string &new_label) {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
 
-  // boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(const string &inx,
-  //                                                              const string &new_label) {
-  //   BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
-  //   tmp->_blocks = this->_blocks;
-  //   tmp->set_label(inx, new_label);
-  //   boost::intrusive_ptr<UniTensor_base> out(tmp);
-  //   return out;
-  // }
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(const string &inx,
+                                                               const string &new_label) {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks = this->_blocks;
+    tmp->set_label(inx, new_label);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
 
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::contract(
     const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
@@ -1875,7 +1873,7 @@ namespace cytnx {
 
   //   for (int i = 0; i < this->_bonds.size(); i++) {
   //     cytnx_error_msg(locator[i] >= this->_bonds[i].dim(),
-  //                     "[ERROR][BlockUniTensor][elem_exists] locator @index: %d out of range.\n",
+  //                     "[ERROR][BlockFermionicUniTensor][elem_exists] locator @index: %d out of range.\n",
   //                     i);
   //   }
 

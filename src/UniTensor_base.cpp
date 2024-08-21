@@ -9,15 +9,17 @@
 
 namespace cytnx {
   //====================================================
-  std::string UniTensorType_class::getname(const int &ut_type) {
+  std::string UniTensorType_class::getname(const int &ut_type) const {
     if (ut_type == this->Void) {
       return std::string("Void (un-initialize UniTensor)");
     } else if (ut_type == this->Dense) {
       return std::string("Dense");
     } else if (ut_type == this->Sparse) {
-      return std::string("Sparse ");
+      return std::string("Sparse");
     } else if (ut_type == this->Block) {
-      return std::string("Block ");
+      return std::string("Block");
+    } else if (ut_type == this->BlockFermionic) {
+      return std::string("Block Fermionic");
     } else {
       cytnx_error_msg(true, "%s\n", "[ERROR] invalid ut_type");
       return std::string("");
