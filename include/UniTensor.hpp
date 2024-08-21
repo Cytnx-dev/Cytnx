@@ -1752,16 +1752,53 @@ namespace cytnx {
 
   //======================================================================
   /// @cond
-  class BlockFermionicUniTensor : public BlockUniTensor {
-   protected:
+  class BlockFermionicUniTensor : public UniTensor_base {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally sign flips are stored as
+    //_signflip and taken care of in all the methods
    public:
+    std::vector<std::vector<cytnx_uint64>>
+      _inner_to_outer_idx;  // stores the qindices for each block
+    std::vector<Tensor> _blocks;
+    Tensor NullRefTensor;  // this returns when accessed block does not exists!
+    // additional informaiton for fermions:
     std::vector<cytnx_bool>
       _signflip;  // if true, the sign of the corresponding block needs to be flipped
 
-    // void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
-    //                      const std::vector<cytnx_uint64> &locator) const;
+    // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums
+    // calculated from Symm object! this assume 1. symmetry are the same for each bond!
+    //             2. total_qns are feeded with size len(symmetry)
+    void _fx_get_total_fluxs(std::vector<cytnx_uint64> &loc, const std::vector<Symmetry> &syms,
+                             std::vector<cytnx_int64> &total_qns) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      memset(&total_qns[0], 0, sizeof(cytnx_int64) * total_qns.size());
+
+      for (cytnx_int32 i = 0; i < syms.size(); i++) {
+        if (this->_bonds[0].type() == BD_BRA)
+          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+        else
+          total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
+
+        for (auto j = 1; j < loc.size(); j++) {
+          if (this->_bonds[j].type() == BD_BRA)
+            total_qns[i] = syms[i].combine_rule(
+              total_qns[i], syms[i].reverse_rule(this->_bonds[j]._impl->_qnums[loc[j]][i]));
+          else {
+            total_qns[i] =
+              syms[i].combine_rule(total_qns[i], this->_bonds[j]._impl->_qnums[loc[j]][i]);
+          }
+        }
+      }
+    }
+
+    void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
+                         const std::vector<cytnx_uint64> &locator) const;
+
+    // internal function, grouping all duplicate qnums in all bonds
+    void _fx_group_duplicates(const std::vector<cytnx_uint64> &dup_bond_idxs,
+                              const std::vector<std::vector<cytnx_uint64>> &idx_mappers);
 
     void set_meta(BlockFermionicUniTensor *tmp, const bool &inner, const bool &outer) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, _signflip is set
       // outer meta
       if (outer) {
         tmp->_bonds = vec_clone(this->_bonds);
@@ -1782,6 +1819,7 @@ namespace cytnx {
     }
 
     BlockFermionicUniTensor *clone_meta(const bool &inner, const bool &outer) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
       BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
       this->set_meta(tmp, inner, outer);
       return tmp;
@@ -1789,6 +1827,7 @@ namespace cytnx {
 
     friend class UniTensor;
     BlockFermionicUniTensor() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
       this->uten_type_id = UTenType.BlockFermionic;
       this->_is_tag = true;
     }
@@ -1798,16 +1837,250 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const bool &no_alloc = false, const std::string &name = "");
 
+    void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
+                        const cytnx_int64 &rowrank = -1, const std::string &name = "") {
+      cytnx_error_msg(true,
+                      "[ERROR][BlockFermionicUniTensor] cannot use Init_by_tensor() on a "
+                      "BlockFermionicUniTensor.%s",
+                      "\n");
+    }
+
+    std::vector<cytnx_uint64> shape() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      std::vector<cytnx_uint64> out(this->_bonds.size());
+      for (cytnx_uint64 i = 0; i < out.size(); i++) {
+        out[i] = this->_bonds[i].dim();
+      }
+      return out;
+    }
+
+    bool is_blockform() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return true;
+    }
+
+    bool is_contiguous() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      bool out = true;
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        out &= this->_blocks[i].is_contiguous();
+      }
+      return out;
+    };
+
+    cytnx_uint64 Nblocks() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_blocks.size();
+    };
+
     std::vector<bool> signflip() const { return this->_signflip; };
 
+    void to_(const int &device) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].to_(device);
+      }
+    };
+
+    boost::intrusive_ptr<UniTensor_base> to(const int &device) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      if (this->device() == device) {
+        return this;
+      } else {
+        boost::intrusive_ptr<UniTensor_base> out = this->clone();
+        out->to_(device);
+        return out;
+      }
+    };
+
     boost::intrusive_ptr<UniTensor_base> clone() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; changed to BlockFermionicUniTensor as
+      // output
       BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
       tmp->_blocks = vec_clone(this->_blocks);
       boost::intrusive_ptr<UniTensor_base> out(tmp);
       return out;
     };
 
+    unsigned int dtype() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks[0].dtype();
+    };
+    int device() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks[0].device();
+    };
+    std::string dtype_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks[0].dtype_str();
+    };
+    std::string device_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks[0].device_str();
+    };
+
+    Tensor get_block(const cytnx_uint64 &idx = 0) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      return this->_blocks[idx].clone();
+    };
+
+    // this one for Block will return the indicies!!
+    Tensor get_block(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (force_return) {
+          return NullRefTensor;
+        } else {
+          cytnx_error_msg(true,
+                          "[ERROR][get_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "force_return=false, so "
+                          "error throws. \n    If you want to return an empty block without "
+                          "error when block is "
+                          "not avaliable, set force_return=True.%s",
+                          "\n");
+        }
+      } else {
+        return this->_blocks[b].clone();
+      }
+    }
+
+    const Tensor &get_block_(const cytnx_uint64 &idx = 0) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      return this->_blocks[idx];
+    };
+
+    Tensor &get_block_(const cytnx_uint64 &idx = 0) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      return this->_blocks[idx];
+    };
+
+    const Tensor &get_block_(const std::vector<cytnx_int64> &indices,
+                             const bool &force_return) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (force_return) {
+          return this->NullRefTensor;
+        } else {
+          cytnx_error_msg(true,
+                          "[ERROR][get_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "force_return=false, so "
+                          "error throws. \n    If you want to return an empty block without "
+                          "error when block is "
+                          "not avaliable, set force_return=True.%s",
+                          "\n");
+        }
+      } else {
+        return this->_blocks[b];
+      }
+    }
+
+    Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (force_return) {
+          return this->NullRefTensor;
+        } else {
+          cytnx_error_msg(true,
+                          "[ERROR][get_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "force_return=false, so "
+                          "error throws. \n    If you want to return an empty block without "
+                          "error when block is "
+                          "not avaliable, set force_return=True.%s",
+                          "\n");
+        }
+      } else {
+        return this->_blocks[b];
+      }
+    }
+
+    std::vector<Tensor> get_blocks() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return vec_clone(this->_blocks);
+    }
+    const std::vector<Tensor> &get_blocks_(const bool &) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_blocks;
+    }
+    std::vector<Tensor> &get_blocks_(const bool &) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_blocks;
+    }
+
     bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; changed to BlockFermionic UTenType
       if (rhs->uten_type() != UTenType.BlockFermionic) return false;
       if (rhs->get_blocks_(1).size() != this->get_blocks_(1).size()) return false;
 
@@ -1815,6 +2088,30 @@ namespace cytnx {
         if (this->get_blocks_(1)[i].same_data(rhs->get_blocks_(1)[i]) == false) return false;
 
       return true;
+    }
+
+    void set_rowrank_(const cytnx_uint64 &new_rowrank) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        new_rowrank > this->rank(),
+        "[ERROR][BlockFermionicUniTensor] rowrank should be [>=0] and [<=UniTensor.rank].%s", "\n");
+      if (this->is_diag()) {
+        cytnx_error_msg(
+          new_rowrank != 1,
+          "[ERROR][BlockFermionicUniTensor] rowrank should be [==1] when is_diag =true!.%s", "\n");
+      }
+      this->_rowrank = new_rowrank;
+      this->_is_braket_form = this->_update_braket();
+    }
+
+    boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; output type changed to
+      // BlockFermionicUniTensor
+      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks = this->_blocks;
+      tmp->set_rowrank_(new_rowrank);
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
     }
 
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
@@ -1842,16 +2139,21 @@ namespace cytnx {
     std::vector<bool> _lhssigns_(const std::vector<cytnx_uint64> &mapper,
                                  const cytnx_uint64 contrno) const;
 
-    // boost::intrusive_ptr<UniTensor_base> contiguous_() {
-    //   for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
-    //   return boost::intrusive_ptr<UniTensor_base>(this);
-    // }
+    boost::intrusive_ptr<UniTensor_base> contiguous_() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
+      return boost::intrusive_ptr<UniTensor_base>(this);
+    }
 
-    // boost::intrusive_ptr<UniTensor_base> contiguous();
+    boost::intrusive_ptr<UniTensor_base> contiguous();
 
     void print_diagram(const bool &bond_info = false);
-    // void print_blocks(const bool &full_info = true) const;
-    // void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    void print_blocks(const bool &full_info = true) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+
+    boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
+                                                  const bool &mv_elem_self = false,
+                                                  const bool &mv_elem_rhs = false);
 
     boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
@@ -1865,66 +2167,397 @@ namespace cytnx {
                                                  const std::string &new_label);
     boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
                                                  const std::string &new_label);
+    std::vector<Symmetry> syms() const;
 
-    boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
-                                                  const bool &mv_elem_self = false,
-                                                  const bool &mv_elem_rhs = false);
+    void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
+      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+    }
+    boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
+                                                 const cytnx_uint64 &rowrank = 0) {
+      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+      return nullptr;
+    }
 
-    // void Conj_() {
-    //   for (int i = 0; i < this->_blocks.size(); i++) {
-    //     this->_blocks[i].Conj_();
-    //   }
-    // };
+    boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
+      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks.resize(this->_blocks.size());
+      for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
+        tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
+      }
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
+    };
 
-    // void Transpose_();
-    // boost::intrusive_ptr<UniTensor_base> Transpose() {
-    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
-    //   out->Transpose_();
-    //   return out;
-    // }
+    // this will only work on non-symm tensor (DenseUniTensor)
+    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
+      cytnx_error_msg(
+        true,
+        "[ERROR][BlockFermionicUniTensor][get] cannot use get on a UniTensor with "
+        "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+        "\n");
+      return nullptr;
+    }
 
-    // void normalize_();
-    // boost::intrusive_ptr<UniTensor_base> normalize() {
-    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
-    //   out->normalize_();
-    //   return out;
-    // }
+    // this will only work on non-symm tensor (DenseUniTensor)
+    void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        true,
+        "[ERROR][BlockFermionicUniTensor][get] cannot use get on a UniTensor with "
+        "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+        "\n");
+    }
 
-    // boost::intrusive_ptr<UniTensor_base> Dagger() {
-    //   boost::intrusive_ptr<UniTensor_base> out = this->Conj();
-    //   out->Transpose_();
-    //   return out;
-    // }
-    // void Dagger_() {
-    //   this->Conj_();
-    //   this->Transpose_();
-    // }
+    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      cytnx_error_msg(
+        in.shape() != this->_blocks[idx].shape(),
+        "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+        "of block @ idx=%d\n",
+        idx);
 
-    // void Trace_(const std::string &a, const std::string &b);
-    // void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+      this->_blocks[idx] = in.clone();
+    }
+    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      cytnx_error_msg(
+        in.shape() != this->_blocks[idx].shape(),
+        "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+        "of block @ idx=%d\n",
+        idx);
 
-    // boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
-    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
-    //   out->Trace_(a, b);
-    //   if (out->rank() == 0) {
-    //     DenseUniTensor *tmp = new DenseUniTensor();
-    //     tmp->_block = ((BlockUniTensor *)out.get())->_blocks[0];
-    //     out = boost::intrusive_ptr<UniTensor_base>(tmp);
-    //   }
-    //   return out;
-    // }
-    // boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
-    //   boost::intrusive_ptr<UniTensor_base> out = this->clone();
-    //   out->Trace_(a, b);
-    //   if (out->rank() == 0) {
-    //     DenseUniTensor *tmp = new DenseUniTensor();
-    //     tmp->_block = ((BlockUniTensor *)out.get())->_blocks[0];
-    //     out = boost::intrusive_ptr<UniTensor_base>(tmp);
-    //   }
-    //   return out;
-    // }
-    // void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
-    // void Mul_(const Scalar &rhs);
+      this->_blocks[idx] = in;
+    }
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][put_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (check) {
+          cytnx_error_msg(true,
+                          "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "check=true, so error throws. \n    If you want without error when block "
+                          "is not avaliable, set check=false.%s",
+                          "\n");
+        }
+      } else {
+        cytnx_error_msg(
+          in.shape() != this->_blocks[b].shape(),
+          "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+          "of block @ idx=%d\n",
+          b);
+
+        this->_blocks[b] = in.clone();
+      }
+    }
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][put_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (check) {
+          cytnx_error_msg(true,
+                          "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "check=true, so error throws. \n    If you want without error when block "
+                          "is not avaliable, set check=false.%s",
+                          "\n");
+        }
+      } else {
+        cytnx_error_msg(
+          in.shape() != this->_blocks[b].shape(),
+          "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+          "of block @ idx=%d\n",
+          b);
+        this->_blocks[b] = in;
+      }
+    }
+
+    void tag() {
+      // no-use!
+    }
+
+    boost::intrusive_ptr<UniTensor_base> Conj() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Conj_();
+      return out;
+    }
+
+    void Conj_() {
+      // TODO: implement Conj_
+      cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Conj_] not implemented yet.%s", "\n");
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].Conj_();
+      }
+    };
+
+    void Transpose_();
+    boost::intrusive_ptr<UniTensor_base> Transpose() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Transpose_();
+      return out;
+    }
+
+    void normalize_();
+    boost::intrusive_ptr<UniTensor_base> normalize() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->normalize_();
+      return out;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> Dagger() {
+      // TODO: implement Dagger
+      cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Dagger] not implemented yet.%s",
+                      "\n");
+      boost::intrusive_ptr<UniTensor_base> out = this->Conj();
+      out->Transpose_();
+      return out;
+    }
+    void Dagger_() {
+      // TODO: implement Dagger_
+      cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Dagger_] not implemented yet.%s",
+                      "\n");
+      this->Conj_();
+      this->Transpose_();
+    }
+
+    void Trace_(const std::string &a, const std::string &b);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+
+    boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      if (out->rank() == 0) {
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockFermionicUniTensor *)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
+      return out;
+    }
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      if (out->rank() == 0) {
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockFermionicUniTensor *)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
+      return out;
+    }
+
+    Tensor Norm() const;
+
+    bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
+
+    const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
+    const cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                          const cytnx_complex128 &aux) const;
+    const cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                         const cytnx_complex64 &aux) const;
+    const cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_double &aux) const;
+    const cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_float &aux) const;
+    const cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint64 &aux) const;
+    const cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int64 &aux) const;
+    const cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint32 &aux) const;
+    const cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int32 &aux) const;
+    const cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint16 &aux) const;
+    const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int16 &aux) const;
+
+    Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator);
+    cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                    const cytnx_complex128 &aux);
+    cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                   const cytnx_complex64 &aux);
+    cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
+    cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+    cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
+    cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
+    cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
+    cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
+    cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
+    cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
+
+    void _save_dispatch(std::fstream &f) const;
+    void _load_dispatch(std::fstream &f);
+
+    // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
+    void truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index);
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index);
+
+    void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    void Add_(const Scalar &rhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+
+    void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    void Mul_(const Scalar &rhs);
+
+    void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    void Sub_(const Scalar &rhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+    void lSub_(const Scalar &lhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+
+    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+    void Div_(const Scalar &rhs);
+    void lDiv_(const Scalar &lhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
+
+    void group_basis_();
+
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
+                      const bool &by_label);
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = false);
+
+    const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        bidx >= this->Nblocks(),
+        "[ERROR][BlockFermionicUniTensor] bidx out of bound! only %d blocks in current UTen.\n",
+        this->Nblocks());
+      return this->_inner_to_outer_idx[bidx];
+    }
+    std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        bidx >= this->Nblocks(),
+        "[ERROR][BlockFermionicUniTensor] bidx out of bound! only %d blocks in current UTen.\n",
+        this->Nblocks());
+      return this->_inner_to_outer_idx[bidx];
+    }
+
+    const vec2d<cytnx_uint64> &get_itoi() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_inner_to_outer_idx;
+    }
+    vec2d<cytnx_uint64> &get_itoi() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_inner_to_outer_idx;
+    }
+
+    void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
+                            const std::vector<cytnx_uint64> &qn_indices,
+                            const std::vector<Bond> &bonds, const Tensor &block) const;
   };
   /// @endcond
 

@@ -589,9 +589,8 @@ namespace cytnx {
       }
 
       if (rowrank >= 0) {
-        cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
-                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, "
-                        "and should be >=1.%s",
+        cytnx_error_msg((rowrank > out_raw->_bonds.size()),
+                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
                         "\n");
         out_raw->_rowrank = rowrank;
       }
@@ -648,9 +647,8 @@ namespace cytnx {
       }
 
       if (rowrank >= 0) {
-        cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank < 1),
-                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, "
-                        "and should be >=1.%s",
+        cytnx_error_msg((rowrank > this->_bonds.size()),
+                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
                         "\n");
         this->_rowrank = rowrank;
       }
