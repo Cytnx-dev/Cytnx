@@ -427,6 +427,22 @@ namespace TestTools {
           return false;
         }
       }
+    } else if (Ut1.uten_type() == UTenType.BlockFermionic) {
+      const std::vector<Tensor>& blocks1 = Ut1.get_blocks_();
+      const std::vector<Tensor>& blocks2 = Ut2.get_blocks_();
+      if (blocks1.size() != blocks2.size()) {
+        std::cout << "# of blocks are not the same btwn two UTs. " << std::endl;
+        return false;
+      }
+      auto blocks_num = blocks1.size();
+      for (size_t i = 0; i < blocks_num; ++i) {
+        if (!AreNearlyEqTensor(blocks1[i], blocks2[i], tol)) {
+          std::cout << "on " << i << " blk, the tensor does not mtach!" << std::endl;
+          std::cout << blocks1[i] << std::endl;
+          std::cout << blocks2[i] << std::endl;
+          return false;
+        }
+      }
     } else {  // void
       return false;
     }
