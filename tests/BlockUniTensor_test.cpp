@@ -1020,3 +1020,9 @@ TEST_F(BlockUniTensorTest, get_itoi) {
   EXPECT_EQ(out[3], std::vector<cytnx_uint64>({2, 1}));
   EXPECT_EQ(out[4], std::vector<cytnx_uint64>({2, 2}));
 }
+
+// TEST_F(BlockUniTensorTest, fparity_boson) {
+//   bool par;
+
+//   EXPECT_EQ(par, false);
+// }

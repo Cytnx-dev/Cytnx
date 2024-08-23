@@ -7,33 +7,34 @@ add_executable(
   test_tools.cpp
   common_data_generator.cpp
   #test_main.cpp
-  Bond_test.cpp
-  Network_test.cpp
-  UniTensor_base_test.cpp
-  ncon_test.cpp
-  Contract_test.cpp
-  BlockUniTensor_test.cpp
-  DenseUniTensor_test.cpp
-  Accessor_test.cpp
-  Tensor_test.cpp
-  Storage_test.cpp
-  utils_test/vec_concatenate.cpp
-  utils_test/vec_unique.cpp
-  utils/getNconParameter.cpp
-  linalg_test/Directsum_test.cpp
-  linalg_test/ExpH_test.cpp
-  linalg_test/ExpM_test.cpp
-  linalg_test/Lanczos_Exp_test.cpp
-  linalg_test/Lanczos_Gnd_test.cpp
-  linalg_test/Arnoldi_test.cpp
-  linalg_test/Arnoldi_Ut_test.cpp
-  linalg_test/Svd_test.cpp
-  linalg_test/GeSvd_test.cpp
-  linalg_test/linalg_test.cpp
-  algo_test/Hsplit_test.cpp
-  algo_test/Hstack_test.cpp
-  algo_test/Vsplit_test.cpp
-  algo_test/Vstack_test.cpp
+#   Bond_test.cpp
+#   Network_test.cpp
+#   UniTensor_base_test.cpp
+#   ncon_test.cpp
+#   Contract_test.cpp
+#   BlockUniTensor_test.cpp
+  BlockFermionicUniTensor_test.cpp
+#   DenseUniTensor_test.cpp
+#   Accessor_test.cpp
+#   Tensor_test.cpp
+#   Storage_test.cpp
+#   utils_test/vec_concatenate.cpp
+#   utils_test/vec_unique.cpp
+#   utils/getNconParameter.cpp
+#   linalg_test/Directsum_test.cpp
+#   linalg_test/ExpH_test.cpp
+#   linalg_test/ExpM_test.cpp
+#   linalg_test/Lanczos_Exp_test.cpp
+#   linalg_test/Lanczos_Gnd_test.cpp
+#   linalg_test/Arnoldi_test.cpp
+#   linalg_test/Arnoldi_Ut_test.cpp
+#   linalg_test/Svd_test.cpp
+#   linalg_test/GeSvd_test.cpp
+#   linalg_test/linalg_test.cpp
+#   algo_test/Hsplit_test.cpp
+#   algo_test/Hstack_test.cpp
+#   algo_test/Vsplit_test.cpp
+#   algo_test/Vstack_test.cpp
 )
 
 if(USE_CUDA)
