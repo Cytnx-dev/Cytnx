@@ -2062,7 +2062,7 @@ namespace cytnx {
     @brief perform directsum of two Tensor.
     @details
         The function assume two tensor has the same rank, and axes indicated in <shared_axes> are
-    the same for both T1 and T2. The out put tensors will have same rank as T1 and T2, with the
+    the same for both T1 and T2. The output tensors will have same rank as T1 and T2, with the
     dimension of rest of the axes being the sum of dimensions of T1 and T2. e.g., the out put shape
     = (i1+i2,j1+j2, share_axis_1, k1+k2, share_axis_2, ...); where T1.shape =
     (i1,j1,share_axis_1,k1,share_axis_2 ...) and T2.shape = (i2,j2,share_axis_1,k2,share_axis_2 ...)

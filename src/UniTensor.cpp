@@ -107,6 +107,10 @@ namespace cytnx {
       this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
       // } else if (utentype == UTenType.BlockFermionic) {
       //   this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
+    } else if (utentype == UTenType.BlockFermionic) {
+      this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
+      // } else if (utentype == UTenType.BlockFermionic) {
+      //   this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
     } else {
       cytnx_error_msg(true, "[ERROR] Unknown UniTensor type!%s", "\n");
     }
@@ -240,7 +244,8 @@ namespace cytnx {
   void UniTensor::uniform_(const double &low, const double &high, const unsigned int &seed) {
     if (this->uten_type() == UTenType.Dense) {
       cytnx::random::uniform_(this->get_block_(), low, high, seed);
-    } else if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.Block) {
+    } else if (this->uten_type() == UTenType.Block ||
+               this->uten_type() == UTenType.BlockFermionic) {
       for (auto &blk : this->get_blocks_()) {
         cytnx::random::uniform_(blk, low, high, seed);
       }

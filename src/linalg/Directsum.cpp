@@ -26,7 +26,7 @@ namespace cytnx {
       cytnx_error_msg(T1.device() != T2.device(), "[ERROR] Two tensors must be on same devices.%s",
                       "\n");
 
-      // checking dulipcation in shared_axes:
+      // checking duplication in shared_axes:
       auto tmp = vec_unique(shared_axes);
       cytnx_error_msg(tmp.size() != shared_axes.size(),
                       "[ERROR] shared_axes cannot contain duplicate elements!%s", "\n");
