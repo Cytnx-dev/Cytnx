@@ -105,12 +105,8 @@ namespace cytnx {
                       "\n");
     } else if (utentype == UTenType.Block) {
       this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
-      // } else if (utentype == UTenType.BlockFermionic) {
-      //   this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
     } else if (utentype == UTenType.BlockFermionic) {
       this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
-      // } else if (utentype == UTenType.BlockFermionic) {
-      //   this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
     } else {
       cytnx_error_msg(true, "[ERROR] Unknown UniTensor type!%s", "\n");
     }

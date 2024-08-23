@@ -2246,7 +2246,6 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::_save_dispatch(std::fstream &f) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; saves signs as well
-    cytnx_bool tmp;
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -2254,20 +2253,21 @@ namespace cytnx {
     for (unsigned int b = 0; b < Nblocks; b++) {
       f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
     }
+
     for (unsigned int b = 0; b < Nblocks; b++) {
       this->_blocks[b]._Save(f);
     }
-    cout << "[DEGUB] Saving signs." << endl;
+
+    // Saving signs; each sign is saved as a char
+    char tmp;
     for (unsigned int b = 0; b < Nblocks; b++) {
-      tmp = this->_signflip[b];
-      f.write((char *)&tmp, sizeof(cytnx_bool));
+      tmp = this->_signflip[b] ? 1 : 0;
+      f.write((char *)&tmp, sizeof(char));
     }
-    cout << "[DEGUB] Signs saved." << endl;
   }
 
   void BlockFermionicUniTensor::_load_dispatch(std::fstream &f) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; reads signs as well
-    cytnx_bool tmp;
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -2277,17 +2277,19 @@ namespace cytnx {
     for (unsigned int b = 0; b < Nblocks; b++) {
       f.read((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
     }
-    this->_blocks.resize(Nblocks);
 
+    this->_blocks.resize(Nblocks);
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i]._Load(f);
     }
-    cout << "[DEGUB] Loading signs." << endl;
+
+    // Loading signs; each sign is assumed to be saved as a char, with 0 being false
+    char tmp = 2;
+    this->_signflip = std::vector<cytnx_bool>(Nblocks);
     for (unsigned int b = 0; b < Nblocks; b++) {
-      f.read((char *)&tmp, sizeof(cytnx_bool));
-      this->_signflip[b] = tmp;
+      f.read((char *)&tmp, sizeof(char));
+      this->_signflip[b] = (tmp == 0 ? false : true);
     }
-    cout << "[DEGUB] Signs loaded." << endl;
   }
 
   void BlockFermionicUniTensor::truncate_(const cytnx_int64 &bond_idx,
