@@ -233,34 +233,6 @@ namespace cytnx {
       _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
     }
 
-    void cuTensordot_internal_u32(Tensor &out, const Tensor &Lin, const Tensor &Rin,
-                                  const std::vector<cytnx_uint64> &idxl,
-                                  const std::vector<cytnx_uint64> &idxr) {
-      typedef cytnx_uint32 hostType;
-      cudaDataType_t type = CUDA_R_32U;
-
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32U;
-
-      hostType alpha = 1;
-      hostType beta = 0;
-
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
-    }
-
-    void cuTensordot_internal_i32(Tensor &out, const Tensor &Lin, const Tensor &Rin,
-                                  const std::vector<cytnx_uint64> &idxl,
-                                  const std::vector<cytnx_uint64> &idxr) {
-      typedef cytnx_int32 hostType;
-      cudaDataType_t type = CUDA_R_32I;
-
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32I;
-
-      hostType alpha = 1;
-      hostType beta = 0;
-
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
-    }
-
   }  // namespace linalg_internal
 
 }  // namespace cytnx

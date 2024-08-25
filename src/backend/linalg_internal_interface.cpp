@@ -1403,8 +1403,6 @@ namespace cytnx {
       cuTensordot_ii[Type.ComplexFloat] = cuTensordot_internal_cf;
       cuTensordot_ii[Type.Double] = cuTensordot_internal_d;
       cuTensordot_ii[Type.Float] = cuTensordot_internal_f;
-      cuTensordot_ii[Type.Int32] = cuTensordot_internal_i32;
-      cuTensordot_ii[Type.Uint32] = cuTensordot_internal_u32;
   #endif
 #endif
     }
