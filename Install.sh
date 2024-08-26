@@ -154,7 +154,7 @@ FLAG="${FLAG} -DUSE_OMP=OFF"
 #=========================================================
 # [Note] Wheather to run cytnx tests (DEFAULT = OFF)
 #-----------------------------------
-DRUN_TESTS=ON
+DRUN_TESTS=OFF
 FLAG="${FLAG} -DRUN_TESTS=${DRUN_TESTS}"
 #-----------------------------------
 
@@ -197,9 +197,9 @@ cmake ../ ${FLAG} #-DDEV_MODE=on
 make -j`nproc`
 make install
 # if DRUN_TESTS=ON, run tests
-ctest
-shopt -s nocasematch
-case "${DRUN_TESTS}" in
- "ON" ) ctest; gcovr -r ../ . --html-details cov.html;;
- *) echo "Tests are skipped";;
-esac
+# ctest
+# shopt -s nocasematch
+# case "${DRUN_TESTS}" in
+#  "ON" ) ctest; gcovr -r ../ . --html-details cov.html;;
+#  *) echo "Tests are skipped";;
+# esac
