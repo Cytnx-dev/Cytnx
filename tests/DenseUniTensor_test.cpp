@@ -1900,6 +1900,63 @@ TEST_F(DenseUniTensorTest, combineBonds_ut_uninit) {
   EXPECT_ANY_THROW(ut_uninit.combineBonds(labels_combine));
 }
 
+/*=====test info=====
+describe:test combineBond
+====================*/
+TEST_F(DenseUniTensorTest, combineBond) {
+  std::vector<std::string> labels = {"a", "b", "c"};
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+  std::vector<std::string> labels_combine = {"b", "c"};
+  ut.combineBond(labels_combine);
+
+  // construct answer directly
+  labels = {"a", "b"};
+  int rowrank = 1;
+  auto ans_ut = UniTensor({Bond(5), Bond(12)}, labels, rowrank);
+  auto tens = ut.get_block().reshape({5, 12});
+  ans_ut.put_block(tens);
+
+  // compare
+  EXPECT_TRUE(AreEqUniTensor(ut, ans_ut));
+}
+
+/*=====test info=====
+describe:test combineBond with diagonal UniTensor
+====================*/
+TEST_F(DenseUniTensorTest, combineBond_diag) {
+  EXPECT_THROW(ut_complex_diag.combineBond(ut_complex_diag.labels()), std::logic_error);
+}
+
+/*=====test info=====
+describe:test combineBond error
+====================*/
+TEST_F(DenseUniTensorTest, combineBond_error) {
+  std::vector<std::string> labels = {"a", "b", "c"};
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+
+  // not exist labels
+  std::vector<std::string> labels_combine = {"c", "d"};
+  EXPECT_THROW(ut.combineBond(labels_combine), std::logic_error);
+
+  // empty combine's label
+  labels_combine = std::vector<std::string>();
+  EXPECT_THROW(ut.combineBond(labels_combine), std::logic_error);
+}
+
+/*=====test info=====
+describe:test combindbonds with uninitialized UniTensor
+====================*/
+TEST_F(DenseUniTensorTest, combineBond_ut_uninit) {
+  std::vector<std::string> labels_combine = {};
+  EXPECT_ANY_THROW(ut_uninit.combineBond(labels_combine));
+}
+
 TEST_F(DenseUniTensorTest, contract1) {
   ut1.set_labels({"a", "b", "c", "d"});
   ut2.set_labels({"a", "aa", "bb", "cc"});
