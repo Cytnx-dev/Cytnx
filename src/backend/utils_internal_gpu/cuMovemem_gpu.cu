@@ -201,8 +201,8 @@ namespace cytnx {
     boost::intrusive_ptr<Storage_base> cuMovemem_cutensor_gpu(
       boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape,
       const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper,
-      const bool is_inplace, cudaDataType_t type_in, cudaDataType_t type_out,
-      cudaDataType_t type_one, const cuT &ONE) {
+      const bool is_inplace, cutensorDataType_t type_in, cutensorDataType_t type_out,
+      const cutensorComputeDescriptor_t descCompute, const cuT &ONE) {
       T proxy;
       unsigned int dtype_T = Type_class::cy_typeid(proxy);
     #ifdef UNI_DEBUG
@@ -233,20 +233,41 @@ namespace cytnx {
       std::reverse(ori.begin(), ori.end());  // matching API
 
       cutensorHandle_t handle;
-      checkCudaErrors(cutensorInit(&handle));
+      checkCudaErrors(cutensorCreate(&handle));
 
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
-      checkCudaErrors(cutensorInitTensorDescriptor(&handle, &descA, size.size(), size.data(),
-                                                   NULL /* stride */, type_in,
-                                                   CUTENSOR_OP_IDENTITY));
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, type_in, defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
-      checkCudaErrors(cutensorInitTensorDescriptor(&handle, &descC, new_size.size(),
-                                                   new_size.data(), NULL /* stride */, type_out,
-                                                   CUTENSOR_OP_IDENTITY));
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */, type_out,
+                                                     defaultAlignment));
+      // TODO: verify the type of ONE matches descCompute
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(
+        handle, &desc, descA, ori.data(), CUTENSOR_OP_IDENTITY, descC, perm.data(), descCompute));
 
-      checkCudaErrors(cutensorPermutation(&handle, &ONE, (cuT *)in->Mem, &descA, ori.data(), dtmp,
-                                          &descC, perm.data(), type_one, 0 /* stream */));
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      checkCudaErrors(cutensorPermute(handle, plan, &ONE, (cuT *)in->Mem, dtmp, 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
       boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
       if (is_inplace) {
@@ -269,8 +290,8 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #ifdef UNI_CUTENSOR
       return cuMovemem_cutensor_gpu<cytnx_complex128, cuDoubleComplex>(
-        in, old_shape, mapper, invmapper, is_inplace, CUDA_C_64F, CUDA_C_64F, CUDA_C_64F,
-        make_cuDoubleComplex(1, 0));
+        in, old_shape, mapper, invmapper, is_inplace, CUTENSOR_C_64F, CUTENSOR_C_64F,
+        CUTENSOR_COMPUTE_DESC_64F, make_cuDoubleComplex(1, 0));
   #elif defined(UNI_CUTT)
       return cuMovemem_cutt_gpu<cytnx_complex128, cuDoubleComplex>(in, old_shape, mapper, invmapper,
                                                                    is_inplace);
@@ -287,8 +308,8 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #if defined(UNI_CUTENSOR)
       return cuMovemem_cutensor_gpu<cytnx_complex64, cuFloatComplex>(
-        in, old_shape, mapper, invmapper, is_inplace, CUDA_C_32F, CUDA_C_32F, CUDA_C_32F,
-        make_cuFloatComplex(1, 0));
+        in, old_shape, mapper, invmapper, is_inplace, CUTENSOR_C_32F, CUTENSOR_C_32F,
+        CUTENSOR_COMPUTE_DESC_32F, make_cuFloatComplex(1, 0));
   #elif defined(UNI_CUTT)
       return cuMovemem_cutt_gpu<cytnx_complex64, cuFloatComplex>(in, old_shape, mapper, invmapper,
                                                                  is_inplace);
@@ -305,7 +326,8 @@ namespace cytnx {
                                                        const bool is_inplace) {
   #if defined(UNI_CUTENSOR)
       return cuMovemem_cutensor_gpu<double, double>(in, old_shape, mapper, invmapper, is_inplace,
-                                                    CUDA_R_64F, CUDA_R_64F, CUDA_R_64F, double(1));
+                                                    CUTENSOR_R_64F, CUTENSOR_R_64F,
+                                                    CUTENSOR_COMPUTE_DESC_64F, double(1));
   #elif defined(UNI_CUTT)
       return cuMovemem_cutt_gpu<cytnx_double, cytnx_double>(in, old_shape, mapper, invmapper,
                                                             is_inplace);
@@ -321,7 +343,8 @@ namespace cytnx {
                                                        const bool is_inplace) {
   #if defined(UNI_CUTENSOR)
       return cuMovemem_cutensor_gpu<float, float>(in, old_shape, mapper, invmapper, is_inplace,
-                                                  CUDA_R_32F, CUDA_R_32F, CUDA_R_32F, float(1));
+                                                  CUTENSOR_R_32F, CUTENSOR_R_32F,
+                                                  CUTENSOR_COMPUTE_DESC_32F, float(1));
   #elif defined(UNI_CUTT)
       return cuMovemem_cutt_gpu<cytnx_float, cytnx_float>(in, old_shape, mapper, invmapper,
                                                           is_inplace);
