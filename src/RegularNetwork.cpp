@@ -226,8 +226,16 @@ namespace cytnx {
     return res;
   }
 
+  /*
+   * This function is not used in the codebase and not implemented properly.
+   * Currently disabled.
+   */
   vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree,
                                                              vector<string> tns) {
+    cytnx_error_msg(true,
+                    "[Error][RegularNetwork] CtTree_to_eisumpath is not properly implemented, "
+                    "disabled for now.%s",
+                    "\n");
     vector<pair<cytnx_int64, cytnx_int64>> path;
     stack<Node *> stk;
     Node *root = &(CtTree.nodes_container.back());
@@ -637,7 +645,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }
 
   void RegularNetwork::Fromfile(const string &fname) {
@@ -924,7 +932,7 @@ namespace cytnx {
       if (contract_order != "") {
         _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-        this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+        // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
       } else {
         CtTree.build_default_contraction_tree();
       }
@@ -1282,7 +1290,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }  // end construct
 
 }  // namespace cytnx
