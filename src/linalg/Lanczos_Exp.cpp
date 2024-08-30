@@ -127,7 +127,7 @@ namespace cytnx {
       double eps1 = std::exp(-(k * std::log(k) + std::log(1.0 + Op_apprx_norm)));
 
       std::vector<UniTensor> vs;
-      Tensor as = zeros({k + 1, k + 1}, Hop->dtype(), Hop->device());
+      Tensor as = zeros({(cytnx_uint64)k + 1, (cytnx_uint64)k + 1}, Hop->dtype(), Hop->device());
 
       // Initialized v0 = v
       auto v = Tin;
@@ -149,17 +149,17 @@ namespace cytnx {
         // For j = 0 to i
         for (int j = 0; j <= i; ++j) {
           // Let a[j,i] = <v[j], w[i]>
-          as.at({j, i}) = _Dot(Vs.at(j), w);
+          as.at({(cytnx_uint64)j, (cytnx_uint64)i}) = _Dot(Vs.at(j), w);
         }
         // Define wp[i] = w[i] - \sum_{j=0}^{j=i} {a[j,i]v[j]}
         auto wp = w;
         for (int j = 0; j <= i; j++) {
-          wp -= as.at({j, i}) * Vs.at(j);
+          wp -= as.at({(cytnx_uint64)j, (cytnx_uint64)i}) * Vs.at(j);
         }
         // Let a[i+1, i] = |wp[i]|, v[i+1]=wp[i] / a[i+1, i]
         auto b = std::sqrt(double(_Dot(wp, wp).real()));
         if (i < k) {
-          as.at({i + 1, i}) = b;
+          as.at({(cytnx_uint64)i + 1, (cytnx_uint64)i}) = b;
           v = wp / b;
           Vk.append(v.get_block_());
           Vs.push_back(v);
@@ -282,10 +282,11 @@ namespace cytnx {
         }
         Vk.append(v.get_block_().contiguous());
         Vs.push_back(v);
-        Hp.at({i, i - 1}) = Hp.at({i - 1, i}) = beta;
+        Hp.at({(cytnx_uint64)i, (cytnx_uint64)i - 1}) =
+          Hp.at({(cytnx_uint64)i - 1, (cytnx_uint64)i}) = beta;
         wp = (Hop->matvec(v)).relabels_(v.labels());
         alpha = _Dot(wp, v);
-        Hp.at({i, i}) = alpha;
+        Hp.at({(cytnx_uint64)i, (cytnx_uint64)i}) = alpha;
         w = (wp - alpha * v - beta * v_old).relabels_(v.labels());
 
         // Converge check
@@ -293,7 +294,7 @@ namespace cytnx {
         // We use ExpM since H*tau may not be Hermitian if tau is complex.
         B_mat = linalg::ExpM(Hp_sub * tau);
         // Set the error as the element of bottom left of the exp(H_sub*tau)
-        auto error = abs(B_mat.at({i, 0}));
+        auto error = abs(B_mat.at({(cytnx_uint64)i, 0}));
         if (error < CvgCrit || i == imp_maxiter - 1) {
           if (i == imp_maxiter - 1 && error > CvgCrit) {
             cytnx_warning_msg(
