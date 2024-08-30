@@ -111,7 +111,7 @@ namespace cytnx {
         auto maxIdx = max_indices[ik];
         auto eigTens = zeros(qs[0].shape(), Type.ComplexDouble);
         for (cytnx_int64 i = 0; i < krydim; ++i) {
-          eigTens += P_inv[{i, maxIdx}] * qs[i];
+          eigTens += P_inv[{i, static_cast<cytnx_int64>(maxIdx)}] * qs[i];
         }
         eigTens /= eigTens.Norm().item();
         eigTens_s[ik] = eigTens;
@@ -127,9 +127,10 @@ namespace cytnx {
       auto eigTens_s = std::vector<UniTensor>(k, UniTensor());
       for (cytnx_int32 ik = 0; ik < k; ++ik) {
         auto maxIdx = max_indices[ik];
-        auto eigTens = P_inv.at({0, maxIdx}) * qs[0];
+        auto eigTens = P_inv.at({0, static_cast<cytnx_uint64>(maxIdx)}) * qs[0];
         for (cytnx_int64 i = 1; i < krydim; ++i) {
-          eigTens += P_inv.at({i, maxIdx}) * qs[i];
+          eigTens +=
+            P_inv.at({static_cast<cytnx_uint64>(i), static_cast<cytnx_uint64>(maxIdx)}) * qs[i];
         }
         eigTens /= eigTens.Norm().item();
         eigTens_s[ik] = eigTens;
