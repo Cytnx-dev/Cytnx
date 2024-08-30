@@ -63,6 +63,7 @@ target_sources_local(cytnx
     Tridiag.cpp
     Lanczos.cpp
     Lanczos_ER.cpp
+    Lanczos_Exp.cpp
     Lanczos_Gnd.cpp
     Lanczos_Gnd_Ut.cpp
     Lstsq.cpp

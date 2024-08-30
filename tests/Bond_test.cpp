@@ -155,7 +155,7 @@ TEST(Bond, CombindBondSymm_v2) {
 
   Bond bd_sym_b = Bond(BD_BRA, {{0, 0}, {2, 1}}, {1, 1}, {Symmetry::U1(), Symmetry::Zn(2)});
   Bond bd_sym_c = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::Zn(2)});
-  Bond bd_sym_d = bd_sym_a.combineBonds({bd_sym_b, bd_sym_c});
+  Bond bd_sym_d = bd_sym_a.combineBond({bd_sym_b, bd_sym_c});
   EXPECT_EQ(bd_sym_d.type(), BD_BRA);
   EXPECT_EQ(bd_sym_d, Bond(BD_BRA, {{1, 0}, {3, 1}}, {6, 6}, {Symmetry::U1(), Symmetry::Zn(2)}));
 

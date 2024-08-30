@@ -11,7 +11,7 @@ add_executable(
   Network_test.cpp
   UniTensor_base_test.cpp
   ncon_test.cpp
-  Contracts_test.cpp
+  Contract_test.cpp
   BlockUniTensor_test.cpp
   DenseUniTensor_test.cpp
   Accessor_test.cpp
@@ -23,8 +23,10 @@ add_executable(
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
+  linalg_test/Lanczos_Exp_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Arnoldi_test.cpp
+  linalg_test/Arnoldi_Ut_test.cpp
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
   linalg_test/linalg_test.cpp

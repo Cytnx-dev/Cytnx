@@ -1,9 +1,10 @@
-#include "linalg.hpp"
-#include "Accessor.hpp"
 #include <vector>
+
+#include "Accessor.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "linalg.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -21,7 +22,7 @@ namespace cytnx {
     typedef Accessor ac;
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const bool &is_U, const bool &is_vT,
-                                       const unsigned int &return_err) {
+                                       const unsigned int &return_err, const unsigned int &mindim) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Gesvd_truncate] error, Gesvd_truncate can only operate on rank-2 Tensor.%s",
                       "\n");
@@ -31,7 +32,7 @@ namespace cytnx {
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
         cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err);
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err, mindim);
 
         std::vector<Tensor> outT;
         outT.push_back(tmps[0]);
@@ -65,7 +66,7 @@ namespace cytnx {
                                                                   S, vT, terr);
 
         cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[in.dtype()](
-          U, vT, S, terr, keepdim, err, is_U, is_vT, return_err);
+          U, vT, S, terr, keepdim, err, is_U, is_vT, return_err, mindim);
 
         std::vector<Tensor> outT;
         outT.push_back(S);
@@ -80,7 +81,7 @@ namespace cytnx {
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
         cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err);
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err, mindim);
 
         std::vector<Tensor> outT;
         outT.push_back(tmps[0]);
@@ -107,7 +108,8 @@ namespace cytnx {
 
     void _gesvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                   const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                  const bool &is_vT, const unsigned int &return_err) {
+                                  const bool &is_vT, const unsigned int &return_err,
+                                  const unsigned int &mindim) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -126,7 +128,7 @@ namespace cytnx {
       tmp = tmp.reshape({rowdim, -1});
 
       vector<Tensor> outT =
-        cytnx::linalg::Gesvd_truncate(tmp, keepdim, err, is_U, is_vT, return_err);
+        cytnx::linalg::Gesvd_truncate(tmp, keepdim, err, is_U, is_vT, return_err, mindim);
 
       // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
 
@@ -210,7 +212,8 @@ namespace cytnx {
 
     void _gesvd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                   const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                  const bool &is_vT, const unsigned int &return_err) {
+                                  const bool &is_vT, const unsigned int &return_err,
+                                  const unsigned int &mindim) {
       cytnx_uint64 keep_dim = keepdim;
 
       outCyT = linalg::Gesvd(Tin, is_U, is_vT);
@@ -229,7 +232,7 @@ namespace cytnx {
       if (keep_dim < Sall.shape()[0]) {
         smidx = Sall.shape()[0] - keep_dim;
         Smin = Sall.storage()(smidx);
-        while ((Smin < err)) {
+        while ((Smin < err) and keep_dim - 1 > mindim) {
           keep_dim -= 1;
           if (keep_dim == 0) break;
           smidx = Sall.shape()[0] - keep_dim;
@@ -359,7 +362,8 @@ namespace cytnx {
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim, const double &err,
                                                  const bool &is_U, const bool &is_vT,
-                                                 const unsigned int &return_err) {
+                                                 const unsigned int &return_err,
+                                                 const unsigned int &mindim) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
                       "[Gesvd][ERROR] Gesvd for UniTensor should have rank>1 and rank>rowrank>0%s",
@@ -367,9 +371,9 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
+        _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim);
       } else if (Tin.uten_type() == UTenType.Block) {
-        _gesvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err);
+        _gesvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim);
       } else {
         cytnx_error_msg(true, "[ERROR] only support gesvd for Dense and Block UniTensor.%s", "\n");
       }

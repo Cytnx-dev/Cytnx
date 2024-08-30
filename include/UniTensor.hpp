@@ -199,7 +199,10 @@ namespace cytnx {
     }
 
     void set_labels(const std::vector<std::string> &new_labels);
+    void relabel_(const std::vector<std::string> &new_labels);  // implemented
     void relabels_(const std::vector<std::string> &new_labels);  // implemented
+    void relabel_(const std::vector<std::string> &old_labels,
+                  const std::vector<std::string> &new_labels);  // implemented
     void relabels_(const std::vector<std::string> &old_labels,
                    const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::string &old_label, const std::string &new_label) {
@@ -293,6 +296,7 @@ namespace cytnx {
                                                          const cytnx_uint64 &rowrank = 0);
     virtual boost::intrusive_ptr<UniTensor_base> to_dense();
     virtual void to_dense_();
+    virtual void combineBond(const std::vector<std::string> &indicators, const bool &force = false);
     virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                               const bool &by_label);
     virtual void combineBonds(const std::vector<std::string> &indicators,
@@ -310,9 +314,13 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b);
     virtual boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b);
 
+    virtual boost::intrusive_ptr<UniTensor_base> relabel(
+      const std::vector<std::string> &new_labels);
     virtual boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &new_labels);
 
+    virtual boost::intrusive_ptr<UniTensor_base> relabel(
+      const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
     virtual boost::intrusive_ptr<UniTensor_base> relabels(
       const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels);
 
@@ -532,8 +540,11 @@ namespace cytnx {
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
 
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
 
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &old_labels,
+                                                 const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels,
                                                   const std::vector<std::string> &new_labels);
 
@@ -722,6 +733,7 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = true);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);
     void combineBonds(const std::vector<std::string> &indicators, const bool &force = true);
@@ -1365,8 +1377,11 @@ namespace cytnx {
                                                   const bool &mv_elem_self = false,
                                                   const bool &mv_elem_rhs = false);
 
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
 
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &old_labels,
+                                                 const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels,
                                                   const std::vector<std::string> &new_labels);
 
@@ -1704,6 +1719,7 @@ namespace cytnx {
 
     void group_basis_();
 
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = false);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);
@@ -2310,6 +2326,20 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
+        2. Compare to relabel(const std::vector<std::string> &new_labels) const, this
+        function set the new label to itself.
+    */
+    UniTensor &relabel_(const std::vector<std::string> &new_labels) {
+      this->_impl->relabel_(new_labels);
+      return *this;
+    }
+    /**
+    @deprecated
+    @brief Set new labels for all the bonds.
+    @param[in] new_labels the new labels for each bond.
+    @note
+        1. the new assign label cannot be the same as the label of any other bonds in the
+    UniTensor. ( cannot have duplicate labels )
         2. Compare to relabels(const std::vector<std::string> &new_labels) const, this
         function set the new label to itself.
     */
@@ -2319,6 +2349,23 @@ namespace cytnx {
     }
 
     /**
+    @brief relable all of the labels in UniTensor.
+    @param[in] new_labels the new labels for each bond.
+    @note
+        1. the new assign label cannot be the same as the label of any other bonds in the
+    UniTensor. ( cannot have duplicate labels )
+
+    @attention This function will return a new UniTensor with the new label, but the data is
+    still shared with the original UniTensor. That is the meta data of the UniTensor is
+    different, but the internal data is still shared.
+     */
+    UniTensor relabel(const std::vector<std::string> &new_labels) const {
+      UniTensor out;
+      out._impl = this->_impl->relabel(new_labels);
+      return out;
+    }
+    /**
+    @deprecated
     @brief relables all of the labels in UniTensor.
     @param[in] new_labels the new labels for each bond.
     @note
@@ -2336,6 +2383,20 @@ namespace cytnx {
     }
 
     /**
+    @see relabel(const std::vector<std::string> &new_labels) const
+     */
+    UniTensor relabel(const std::initializer_list<char *> &new_labels) const {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      UniTensor out;
+      out._impl = this->_impl->relabel(vs);
+      return out;
+    }
+    /**
+    @deprecated
     @see relabels(const std::vector<std::string> &new_labels) const
      */
     UniTensor relabels(const std::initializer_list<char *> &new_labels) const {
@@ -2349,6 +2410,19 @@ namespace cytnx {
       return out;
     }
     /**
+    @see relabel_(const std::vector<std::string> &new_labels)
+     */
+    UniTensor &relabel_(const std::initializer_list<char *> &new_labels) {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      this->_impl->relabel_(vs);
+      return *this;
+    }
+    /**
+    @deprecated
     @see relabels_(const std::vector<std::string> &new_labels)
      */
     UniTensor &relabels_(const std::initializer_list<char *> &new_labels) {
@@ -2368,6 +2442,20 @@ namespace cytnx {
     @note
         1. the final output UniTensor cannot have duplicate labels.
     */
+    UniTensor relabel(const std::vector<std::string> &old_labels,
+                      const std::vector<std::string> &new_labels) const {
+      UniTensor out;
+      out._impl = this->_impl->relabel(old_labels, new_labels);
+      return out;
+    }
+    /**
+    @deprecated
+    @brief replace part or all labels by given new labels for the bonds.
+    @param[in] old_labels the old labels for each bond.
+    @param[in] new_labels the new labels for each bond.
+    @note
+        1. the final output UniTensor cannot have duplicate labels.
+    */
     UniTensor relabels(const std::vector<std::string> &old_labels,
                        const std::vector<std::string> &new_labels) const {
       UniTensor out;
@@ -2376,6 +2464,27 @@ namespace cytnx {
     }
 
     /**
+    @brief relable part or all of the labels in UniTensor by given new labels
+    @param[in] old_labels the old labels for each bond.
+    @param[in] new_labels the new labels for each bond.
+    @note
+        1. the final output UniTensor cannot have duplicate labels.
+        2. Compare to relabel(const std::vector<std::string> &old_labels,  const
+    std::vector<std::string> &new_labels) const , this function set the new label(s) to itself.
+
+    @see relabel(const std::vector<std::string> &old_labels, const std::vector<std::string>
+    &new_labels) const
+    @attention This function will return a new UniTensor with the new labels, but the data is
+    still shared with the original UniTensor. That is the meta data of the UniTensor is
+    different, but the internal data is still shared.
+     */
+    UniTensor &relabel_(const std::vector<std::string> &old_labels,
+                        const std::vector<std::string> &new_labels) {
+      this->_impl->relabel_(old_labels, new_labels);
+      return *this;
+    }
+    /**
+    @deprecated
     @brief relables part or all of the labels in UniTensor by given new labels
     @param[in] old_labels the old labels for each bond.
     @param[in] new_labels the new labels for each bond.
@@ -2397,6 +2506,26 @@ namespace cytnx {
     }
 
     /**
+    @see relabel(const std::vector<std::string> &old_labels, const std::vector<std::string>
+    &new_labels) const
+     */
+    UniTensor relabel(const std::initializer_list<char *> &old_labels,
+                      const std::initializer_list<char *> &new_labels) const {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      std::vector<char *> old_lbls(old_labels);
+      std::vector<std::string> vs_old(old_lbls.size());
+      transform(old_lbls.begin(), old_lbls.end(), vs_old.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      return this->relabel(vs_old, vs);
+    }
+
+    /**
+    @deprecated
     @see relabels(const std::vector<std::string> &old_labels, const std::vector<std::string>
     &new_labels) const
      */
@@ -2416,6 +2545,26 @@ namespace cytnx {
     }
 
     /**
+    @see relabel_(const std::vector<std::string> &old_labels, const std::vector<std::string>
+    &new_labels)
+     */
+    UniTensor &relabel_(const std::initializer_list<char *> &old_labels,
+                        const std::initializer_list<char *> &new_labels) {
+      std::vector<char *> new_lbls(new_labels);
+      std::vector<std::string> vs(new_lbls.size());
+      transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      std::vector<char *> old_lbls(old_labels);
+      std::vector<std::string> vs_old(old_lbls.size());
+      transform(old_lbls.begin(), old_lbls.end(), vs_old.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      this->relabel_(vs_old, vs);
+      return *this;
+    }
+    /**
+    @deprecated
     @see relabels_(const std::vector<std::string> &old_labels, const std::vector<std::string>
     &new_labels)
      */
@@ -3213,7 +3362,7 @@ namespace cytnx {
 
     /**
      * @deprecated This function is deprecated. Please use \n
-     *   combineBonds(const std::vector<std::string> &indicators, const bool &force) \n
+     *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
@@ -3222,6 +3371,7 @@ namespace cytnx {
     }
 
     /**
+    @deprecated
     @brief Combine the sevral bonds of the UniTensor.
         @param[in] indicators the labels of the lags you want to combine.
         @param[in] force If force is true, it will combine the bonds anyway even the direction
@@ -3237,11 +3387,25 @@ namespace cytnx {
 
     /**
      * @deprecated This function is deprecated. Please use \n
-     *   combineBonds(const std::vector<std::string> &indicators, const bool &force) \n
+     *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
+    }
+
+    /**
+    @brief Combine the sevral bonds of the UniTensor.
+        @param[in] indicators the labels of the lags you want to combine.
+        @param[in] force If force is true, it will combine the bonds anyway even the direction
+      of the bonds are same. After combining, the direction of the bonds will be set as
+      same as the first bond.
+        @pre
+            1. The size of \p indicators need to >= 2.
+            2. The UniTensor cannot be diagonal form (that means is_diag cannot be true.)
+        */
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = false) {
+      this->_impl->combineBond(indicators, force);
     }
 
     /**
@@ -4455,6 +4619,22 @@ namespace cytnx {
   See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
 
   */
+  UniTensor Contract(const std::vector<UniTensor> &TNs, const std::string &order,
+                     const bool &optimal);
+
+  /**
+  @deprecated
+  @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
+  operation.
+  @param[in] TNs the Tensors.
+  @param[in] order desired contraction order.
+  @param[in] optimal wheather to find the optimal contraction order automatically.
+  @return
+      [UniTensor]
+
+  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+
+  */
   UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order,
                       const bool &optimal);
 
@@ -4468,6 +4648,26 @@ namespace cytnx {
   /// @endcond
 
   /**
+  @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
+  operation.
+  @param in the Tensors.
+  @param args the Tensors.
+  @return
+      [UniTensor]
+
+  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
+
+  */
+  template <class... T>
+  UniTensor Contract(const UniTensor &in, const T &...args, const std::string &order,
+                     const bool &optimal) {
+    std::vector<UniTensor> TNlist;
+    _resolve_CT(TNlist, in, args...);
+    return Contract(TNlist, order, optimal);
+  }
+
+  /**
+  @deprecated
   @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
   operation.
   @param in the Tensors.

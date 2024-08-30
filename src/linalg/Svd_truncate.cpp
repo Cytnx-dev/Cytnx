@@ -1,9 +1,10 @@
-#include "linalg.hpp"
-#include "Accessor.hpp"
 #include <vector>
+
+#include "Accessor.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
+#include "linalg.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -14,7 +15,7 @@ namespace cytnx {
     typedef Accessor ac;
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err, const bool &is_UvT,
-                                     const unsigned int &return_err) {
+                                     const unsigned int &return_err, const unsigned int &mindim) {
       cytnx_error_msg(return_err < 0, "[ERROR] return_err can only be positive int%s", "\n");
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> tmps = Svd(Tin, is_UvT);
@@ -22,7 +23,7 @@ namespace cytnx {
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
         cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err);
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err, mindim);
 
         std::vector<Tensor> outT;
         outT.push_back(tmps[0]);
@@ -39,7 +40,7 @@ namespace cytnx {
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
         cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err);
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err, mindim);
 
         std::vector<Tensor> outT;
         outT.push_back(tmps[0]);
@@ -67,7 +68,7 @@ namespace cytnx {
 
     void _svd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
-                                const unsigned int &return_err) {
+                                const unsigned int &return_err, const unsigned int &mindim) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -85,7 +86,8 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp = tmp.reshape({rowdim, -1});
 
-      vector<Tensor> outT = cytnx::linalg::Svd_truncate(tmp, keepdim, err, is_UvT, return_err);
+      vector<Tensor> outT =
+        cytnx::linalg::Svd_truncate(tmp, keepdim, err, is_UvT, return_err, mindim);
 
       // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
 
@@ -169,7 +171,7 @@ namespace cytnx {
 
     void _svd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
-                                const int &return_err) {
+                                const int &return_err, const unsigned int &mindim) {
       cytnx_uint64 keep_dim = keepdim;
 
       outCyT = linalg::Gesvd(Tin, is_UvT, is_UvT);
@@ -199,7 +201,7 @@ namespace cytnx {
         keep_dim = Sall.shape()[0];
         Smin = Sall.storage()(0);
         smidx = 0;
-        while ((Smin < err)) {
+        while ((Smin < err) and keep_dim - 1 > mindim) {
           keep_dim -= 1;
           if (keep_dim == 0) break;
           smidx = Sall.shape()[0] - keep_dim;
@@ -317,7 +319,8 @@ namespace cytnx {
 
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
-                                               const bool &is_UvT, const unsigned int &return_err) {
+                                               const bool &is_UvT, const unsigned int &return_err,
+                                               const unsigned int &mindim) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
                       "[Svd][ERROR] Svd for UniTensor should have rank>1 and rank>rowrank>0%s",
@@ -325,10 +328,10 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _svd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_UvT, return_err);
+        _svd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
 
       } else if (Tin.uten_type() == UTenType.Block) {
-        _svd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_UvT, return_err);
+        _svd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
 
       } else {
         cytnx_error_msg(true, "[ERROR] svd_truncate for UniTensor only support Dense/Block.%s",

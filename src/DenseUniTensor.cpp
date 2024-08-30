@@ -214,6 +214,24 @@ namespace cytnx {
     }
   }
 
+  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
+    const std::vector<std::string> &new_labels) {
+    DenseUniTensor *out_raw = this->clone_meta();
+    out_raw->_block = this->_block;
+    out_raw->set_labels(new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(out_raw);
+    return out;
+  }
+
+  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabel(
+    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
+    DenseUniTensor *tmp = this->clone_meta();
+    tmp->_block = this->_block;
+    tmp->relabel_(old_labels, new_labels);
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::relabels(
     const std::vector<std::string> &new_labels) {
     DenseUniTensor *out_raw = this->clone_meta();
@@ -668,7 +686,7 @@ namespace cytnx {
     }
     return out;
   }
-  void DenseUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+  void DenseUniTensor::combineBond(const std::vector<std::string> &indicators, const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -682,6 +700,11 @@ namespace cytnx {
     }
     this->combineBonds(idx_mapper, force);
   }
+  // Deprecated
+  void DenseUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+    this->combineBond(indicators, force);
+  }
+  // Deprecated
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
@@ -876,6 +899,7 @@ namespace cytnx {
   }
   */
 
+  // Deprecated
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                                     const bool &by_label) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",

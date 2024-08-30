@@ -43,40 +43,55 @@ namespace cytnx {
     vector<string> tmp = str_split(line, false, ";");
     // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                 "Invalid TOUT line");
-    if (tmp.size() != 2) {
-      // tmp.push_back("");
-      tmp.insert(tmp.begin(), "");
-    }
-
-    // handle col-space label
-    vector<string> ket_labels = str_split(tmp[0], false, ",");
-    if (ket_labels.size() == 1)
-      if (ket_labels[0].length() == 0) ket_labels.clear();
-    for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
-      string tmp = str_strip(ket_labels[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                      line_num, "\n");
-      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                 "Invalid TOUT line. label contain non integer.");
-      labels.push_back(tmp);
-    }
-    TOUT_iBondNum = labels.size();
-
-    // handle row-space label
-    vector<string> bra_labels = str_split(tmp[1], false, ",");
-    if (bra_labels.size() == 1)
-      if (bra_labels[0].length() == 0) bra_labels.clear();
-    for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
-      string tmp = str_strip(bra_labels[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                      line_num, "\n");
-      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                 "Invalid TOUT line. label contain non integer.");
-      labels.push_back(tmp);
+    if (tmp.size() == 1) {
+      // no ; provided
+      vector<string> tout_lbls = str_split(line, false, ",");
+      cytnx_uint64 default_rowrank = tout_lbls.size() / 2;
+      // handle col-space label
+      for (cytnx_uint64 i = 0; i < default_rowrank; i++) {
+        string tmp_ = str_strip(tout_lbls[i]);
+        cytnx_error_msg(tmp_.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp_);
+      }
+      TOUT_iBondNum = labels.size();
+      // handle row-space label
+      for (cytnx_uint64 i = default_rowrank; i < tout_lbls.size(); i++) {
+        string tmp_ = str_strip(tout_lbls[i]);
+        cytnx_error_msg(tmp_.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp_);
+      }
+    } else if (tmp.size() == 2) {
+      // one ;
+      // handle col-space label
+      vector<string> ket_labels = str_split(tmp[0], false, ",");
+      if (ket_labels.size() == 1)
+        if (ket_labels[0].length() == 0) ket_labels.clear();
+      for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
+        string tmp = str_strip(ket_labels[i]);
+        cytnx_error_msg(tmp.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp);
+      }
+      TOUT_iBondNum = labels.size();
+      // handle row-space label
+      vector<string> bra_labels = str_split(tmp[1], false, ",");
+      if (bra_labels.size() == 1)
+        if (bra_labels[0].length() == 0) bra_labels.clear();
+      for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
+        string tmp = str_strip(bra_labels[i]);
+        cytnx_error_msg(tmp.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                        line_num, "\n");
+        labels.push_back(tmp);
+      }
+    } else if (tmp.size() > 2) {
+      // more than one ;
+      cytnx_error_msg(true, "[ERROR][Network] line:%d Invalid TOUT line.%s", line_num, "\n");
     }
   }
 
@@ -211,8 +226,16 @@ namespace cytnx {
     return res;
   }
 
+  /*
+   * This function is not used in the codebase and not implemented properly.
+   * Currently disabled.
+   */
   vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree,
                                                              vector<string> tns) {
+    cytnx_error_msg(true,
+                    "[Error][RegularNetwork] CtTree_to_eisumpath is not properly implemented, "
+                    "disabled for now.%s",
+                    "\n");
     vector<pair<cytnx_int64, cytnx_int64>> path;
     stack<Node *> stk;
     Node *root = &(CtTree.nodes_container.back());
@@ -622,7 +645,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }
 
   void RegularNetwork::Fromfile(const string &fname) {
@@ -909,7 +932,7 @@ namespace cytnx {
       if (contract_order != "") {
         _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-        this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+        // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
       } else {
         CtTree.build_default_contraction_tree();
       }
@@ -1267,7 +1290,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }  // end construct
 
 }  // namespace cytnx
