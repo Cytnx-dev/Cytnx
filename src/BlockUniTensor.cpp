@@ -1843,6 +1843,7 @@ namespace cytnx {
     this->_fx_group_duplicates(has_dup, idx_mappers);
   }
 
+  // Deprecated, internal use only
   void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force) {
     cytnx_error_msg(this->is_diag(),
                     "[ERROR][BlockUniTensor] cannot combineBonds when is_diag = true!%s", "\n");
@@ -1974,7 +1975,7 @@ namespace cytnx {
     this->group_basis_();
   }
 
-  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+  void BlockUniTensor::combineBond(const std::vector<std::string> &indicators, const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -1989,6 +1990,11 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
+  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+    this->combineBond(indicators, force);
+  }
+
+  // Deprecated
   void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                                     const bool &by_label) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
