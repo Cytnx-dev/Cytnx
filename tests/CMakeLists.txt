@@ -49,7 +49,9 @@ target_link_libraries(
 target_link_libraries(test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
-gtest_discover_tests(test_main PROPERTIES TEST_DISCOVERY_TIMEOUT 600)
+gtest_discover_tests(test_main
+                     PROPERTIES TEST_DISCOVERY_TIMEOUT 600
+                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

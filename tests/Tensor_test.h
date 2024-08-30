@@ -8,7 +8,7 @@ using namespace cytnx;
 using namespace std;
 class TensorTest : public ::testing::Test {
  public:
-  std::string data_dir = "../../tests/test_data_base/common/Tensor/";
+  std::string data_dir = "./test_data_base/common/Tensor/";
 
   Tensor tzero345;
   Tensor tone345;
