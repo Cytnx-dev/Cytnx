@@ -261,7 +261,6 @@ namespace cytnx {
             tns.erase(tns.begin() + id2);
           else
             tns.erase(tns.begin() + id2 - 1);
-          // tns.push_back(root->name);
           tns.push_back("(" + root->left->name + "," + root->right->name + ")");
           root->name = "(" + root->left->name + "," + root->right->name + ")";
           path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1, id2));
