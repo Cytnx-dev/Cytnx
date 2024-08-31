@@ -139,7 +139,9 @@ if(USE_DEBUG)
 endif()
 
 if(RUN_TESTS)
-  enable_testing()
+  # Include CTest explicitly to suppress the error that DartConfiguration.tcl
+  # is not found
+  include(CTest)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
   target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
   add_subdirectory(tests)
