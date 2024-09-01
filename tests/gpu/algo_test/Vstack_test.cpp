@@ -208,9 +208,9 @@ namespace VstackTest {
       auto src_shape = tens.shape();
       auto r_num = src_shape[0];  // row number
       auto c_num = src_shape[1];  // column number
-      for (int r = 0; r < r_num; ++r) {
+      for (cytnx_uint64 r = 0; r < r_num; ++r) {
         auto dst_r = r + block_row_shift;
-        for (int c = 0; c < c_num; ++c) {
+        for (cytnx_uint64 c = 0; c < c_num; ++c) {
           is_same_elem = AreElemSame(cvt_tens, {r, c}, vstack_tens, {dst_r, c});
           if (!is_same_elem) break;
         }  // end col
