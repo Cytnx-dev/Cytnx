@@ -1891,15 +1891,6 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const std::string &name = "")
         : _impl(new UniTensor_base()) {
-  #ifdef UNI_DEBUG
-      cytnx_warning_msg(
-        true,
-        "[DEBUG] message: entry for UniTensor(const std::vector<Bond> &bonds, const "
-        "std::vector<std::string> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned "
-        "int "
-        "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
-        "\n");
-  #endif
       this->Init(bonds, in_labels, rowrank, dtype, device, is_diag, name);
     }
 
