@@ -1,5 +1,5 @@
 #include "Vectordot_internal.hpp"
-#include "../utils_internal_interface.hpp"
+
 #include "utils/utils.hpp"
 #include "backend/lapack_wrapper.hpp"
 #include <vector>

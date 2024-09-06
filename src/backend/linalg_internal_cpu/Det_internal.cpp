@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "backend/lapack_wrapper.hpp"
-#include "backend/utils_internal_interface.hpp"
+
 #include "utils/utils.hpp"
 
 #ifdef UNI_OMP

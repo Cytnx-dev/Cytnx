@@ -1,5 +1,5 @@
 #include "cuCpr_internal.hpp"
-#include "../utils_internal_interface.hpp"
+
 #include "utils/cucomplex_arithmetic.hpp"
 #ifdef UNI_OMP
   #include <omp.h>

@@ -1,7 +1,6 @@
 #include "UniTensor.hpp"
 #include "Accessor.hpp"
 #include "utils/utils.hpp"
-#include "utils/utils_internal_interface.hpp"
 #include "linalg.hpp"
 #include "Generator.hpp"
 #include <vector>

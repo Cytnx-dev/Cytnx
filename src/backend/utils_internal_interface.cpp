@@ -1,5 +1,22 @@
 #include "utils_internal_interface.hpp"
+
 #include <vector>
+
+#include "backend/utils_internal_cpu/blocks_mvelems_cpu.hpp"
+#include "backend/utils_internal_cpu/Cast_cpu.hpp"
+#include "backend/utils_internal_cpu/GetElems_contiguous_cpu.hpp"
+#include "backend/utils_internal_cpu/GetElems_cpu.hpp"
+#include "backend/utils_internal_cpu/SetArange_cpu.hpp"
+#include "backend/utils_internal_cpu/SetElems_contiguous_cpu.hpp"
+#include "backend/utils_internal_cpu/SetElems_cpu.hpp"
+#include "backend/utils_internal_gpu/cuCast_gpu.hpp"
+#include "backend/utils_internal_gpu/cuGetElems_contiguous_gpu.hpp"
+#include "backend/utils_internal_gpu/cuGetElems_gpu.hpp"
+#include "backend/utils_internal_gpu/cuSetArange_gpu.hpp"
+#include "backend/utils_internal_gpu/cuSetElems_contiguous_gpu.hpp"
+#include "backend/utils_internal_gpu/cuSetElems_contiguous_gpu.hpp"
+#include "backend/utils_internal_gpu/cuSetElems_gpu.hpp"
+
 using namespace std;
 namespace cytnx {
   namespace utils_internal {
