@@ -1,10 +1,7 @@
-#include "cuFill_gpu.hpp"
-#include "backend/Storage.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
+#include "backend/utils_internal_gpu/cuFill_gpu.hpp"
 
-using namespace std;
+#include "Type.hpp"
+
 namespace cytnx {
   namespace utils_internal {
 

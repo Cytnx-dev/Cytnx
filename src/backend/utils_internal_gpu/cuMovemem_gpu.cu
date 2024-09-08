@@ -1,7 +1,11 @@
 #include "cuMovemem_gpu.hpp"
-#include "cuAlloc_gpu.hpp"
-#include "backend/Storage.hpp"
+
 #include <algorithm>
+#include <vector>
+
+#include "backend/Storage.hpp"
+#include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "Type.hpp"
 #include "utils/vec_print.hpp"
 
 #ifdef UNI_GPU
