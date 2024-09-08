@@ -261,3 +261,5 @@ TYPED_TEST(vector_suite, storage_fill_b) {
   EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
   EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
 }
+
+// TODO: add Storage tests for GPU

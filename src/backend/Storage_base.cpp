@@ -94,7 +94,89 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<Storage_base> Storage_base::astype(const unsigned int &dtype) {
-    boost::intrusive_ptr<Storage_base> out(new Storage_base());
+    boost::intrusive_ptr<Storage_base> out;
+    if (device == Device.cpu) {
+      switch (dtype) {
+        case Type.ComplexDouble:
+          out = new ComplexDoubleStorage(device);
+          break;
+        case Type.ComplexFloat:
+          out = new ComplexFloatStorage(device);
+          break;
+        case Type.Double:
+          out = new DoubleStorage(device);
+          break;
+        case Type.Float:
+          out = new FloatStorage(device);
+          break;
+        case Type.Int64:
+          out = new Int64Storage(device);
+          break;
+        case Type.Uint64:
+          out = new Uint64Storage(device);
+          break;
+        case Type.Int32:
+          out = new Int32Storage(device);
+          break;
+        case Type.Uint32:
+          out = new Uint32Storage(device);
+          break;
+        case Type.Int16:
+          out = new Int16Storage(device);
+          break;
+        case Type.Uint16:
+          out = new Uint16Storage(device);
+          break;
+        case Type.Bool:
+          out = new BoolStorage(device);
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] Unsupported type:%d", dtype);
+          break;
+      }
+    } else {
+      switch (dtype) {
+        case Type.ComplexDouble:
+          out = new ComplexDoubleGpuStorage(device);
+          break;
+        case Type.ComplexFloat:
+          out = new ComplexFloatGpuStorage(device);
+          break;
+        case Type.Double:
+          out = new DoubleGpuStorage(device);
+          break;
+        case Type.Float:
+          out = new FloatGpuStorage(device);
+          break;
+        case Type.Int64:
+          out = new Int64GpuStorage(device);
+          break;
+        case Type.Uint64:
+          out = new Uint64GpuStorage(device);
+          break;
+        case Type.Int32:
+          out = new Int32GpuStorage(device);
+          break;
+        case Type.Uint32:
+          out = new Uint32GpuStorage(device);
+          break;
+        case Type.Int16:
+          out = new Int16GpuStorage(device);
+          break;
+        case Type.Uint16:
+          out = new Uint16GpuStorage(device);
+          break;
+        case Type.Bool:
+          out = new BoolGpuStorage(device);
+          break;
+        default:
+          cytnx_error_msg(true, "[ERROR] Unsupported type:%d", dtype);
+          break;
+      }
+    }
+
+    cytnx_error_msg(out->device != device, "[ERROR] device not match. out->device:%d device:%d",
+                    out->device, device);
     if (dtype == this->dtype) return boost::intrusive_ptr<Storage_base>(this);
 
     if (this->device == Device.cpu) {
@@ -125,10 +207,7 @@ namespace cytnx {
     return nullptr;
   }
 
-  boost::intrusive_ptr<Storage_base> Storage_base::clone() {
-    boost::intrusive_ptr<Storage_base> out(new Storage_base());
-    return out;
-  }
+  boost::intrusive_ptr<Storage_base> Storage_base::clone() { return this->clone(); }
 
   string Storage_base::dtype_str() const { return Type.getname(this->dtype); }
   string Storage_base::device_str() const { return Device.getname(this->device); }
@@ -137,20 +216,7 @@ namespace cytnx {
     cytnx_error_msg(1, "%s", "[ERROR] call _Init_byptr in base");
   }
 
-  Storage_base::~Storage_base() {
-    // cout << "delet" << endl;
-    if (Mem != NULL) {
-      if (this->device == Device.cpu) {
-        free(Mem);
-      } else {
-#ifdef UNI_GPU
-        checkCudaErrors(cudaFree(Mem));
-#else
-        cytnx_error_msg(1, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
-#endif
-      }
-    }
-  }
+  Storage_base::~Storage_base() {}
 
   void Storage_base::Move_memory_(const std::vector<cytnx_uint64> &old_shape,
                                   const std::vector<cytnx_uint64> &mapper,
@@ -1045,6 +1111,18 @@ namespace cytnx {
   void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_bool &val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
+
+  template <>
+  Scalar StorageImplementation<char>::get_item(const cytnx_uint64 &in) const {
+    return static_cast<cytnx_bool>(storage_[in]);
+  };
+
+  template <>
+  Scalar StorageImplementation<char, GpuAllocator<char>>::get_item(const cytnx_uint64 &in) const {
+    checkCudaErrors(cudaSetDevice(device));
+    checkCudaErrors(cudaDeviceSynchronize());
+    return static_cast<cytnx_bool>(storage_[in]);
+  };
 
   // bool Storage_base::approx_eq(const boost::intrusive_ptr<Storage_base> &rhs,
   //                              const cytnx_double tol) {

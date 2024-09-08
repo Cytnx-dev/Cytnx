@@ -50,7 +50,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -61,7 +60,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
 
@@ -77,7 +75,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cuFloatComplex* _in = static_cast<cuFloatComplex*>(in->Mem);
@@ -92,7 +89,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -104,7 +100,6 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                          const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -120,7 +115,6 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                          const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -136,7 +130,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -146,7 +139,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -160,7 +152,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -173,7 +164,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -187,7 +177,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -201,7 +190,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -215,7 +203,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -229,7 +216,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -243,7 +229,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
@@ -258,7 +243,6 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                          const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -273,7 +257,6 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                          const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -287,7 +270,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -301,7 +283,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -311,7 +292,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -325,7 +305,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -339,7 +318,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -353,7 +331,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -367,7 +344,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -381,7 +357,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -395,7 +370,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
@@ -411,7 +385,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -425,7 +398,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -440,7 +412,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -454,7 +425,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -468,7 +438,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -478,7 +447,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -492,7 +460,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -506,7 +473,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -520,7 +486,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -534,7 +499,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -548,7 +512,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
@@ -564,7 +527,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -578,7 +540,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -592,7 +553,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -606,7 +566,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -620,7 +579,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -634,7 +592,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -644,7 +601,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -658,7 +614,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -672,7 +627,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -686,7 +640,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -700,7 +653,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
@@ -716,7 +668,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -730,7 +681,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -744,7 +694,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -758,7 +707,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -772,7 +720,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -786,7 +733,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -800,7 +746,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -810,7 +755,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -824,7 +768,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -838,7 +781,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -852,7 +794,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
@@ -867,7 +808,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -881,7 +821,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -895,7 +834,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -909,7 +847,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -923,7 +860,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -937,7 +873,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -951,7 +886,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -965,7 +899,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -975,7 +908,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -989,7 +921,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -1003,7 +934,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
@@ -1018,7 +948,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1032,7 +961,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1046,7 +974,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1060,7 +987,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1074,7 +1000,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1088,7 +1013,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1102,7 +1026,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1116,7 +1039,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1130,7 +1052,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -1140,7 +1061,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1154,7 +1074,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
@@ -1169,7 +1088,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1183,7 +1101,6 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base>& out,
                            const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1197,7 +1114,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1211,7 +1127,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1225,7 +1140,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1239,7 +1153,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1253,7 +1166,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1267,7 +1179,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1281,7 +1192,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1295,7 +1205,6 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base>& out,
                             const unsigned long long& len_in, const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
@@ -1305,7 +1214,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
@@ -1320,7 +1228,6 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                          const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1334,7 +1241,6 @@ namespace cytnx {
                          boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                          const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1348,7 +1254,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1362,7 +1267,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1376,7 +1280,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1390,7 +1293,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1404,7 +1306,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1418,7 +1319,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1432,7 +1332,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1446,7 +1345,6 @@ namespace cytnx {
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                           const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
@@ -1460,7 +1358,6 @@ namespace cytnx {
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
                         const int& alloc_device) {
       if (alloc_device >= 0) {
-        out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(

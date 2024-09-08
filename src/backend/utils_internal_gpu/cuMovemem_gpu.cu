@@ -141,7 +141,7 @@ namespace cytnx {
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T](in->device);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
@@ -186,7 +186,7 @@ namespace cytnx {
 
       cuttDestroy(plan);
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T](in->device);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
@@ -273,7 +273,7 @@ namespace cytnx {
       checkCudaErrors(cutensorDestroyPlan(plan));
       checkCudaErrors(cutensorDestroy(handle));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T](in->device);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
