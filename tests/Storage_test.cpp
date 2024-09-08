@@ -1,6 +1,13 @@
 #include "Storage_test.h"
-#include "test_tools.h"
+
+#include <type_traits>
 #include <vector>
+
+#include "backend/Storage.hpp"
+#include "utils/is.hpp"
+
+using namespace cytnx;
+using namespace std;
 
 TEST_F(StorageTest, dtype_str) {
   std::vector<cytnx_complex128> vcd = {cytnx_complex128(1, 2), cytnx_complex128(3, 4),
