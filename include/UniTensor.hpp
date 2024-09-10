@@ -1171,28 +1171,30 @@ namespace cytnx {
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].dtype();
+      return this->_blocks.size() < 1 ? N_Type + 1 : this->_blocks[0].dtype();
     };
     int device() const {
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].device();
+      return this->_blocks.size() < 1 ? 404 : this->_blocks[0].device();
     };
     std::string dtype_str() const {
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].dtype_str();
+      return this->_blocks.size() < 1 ? "No valid blocks, so no dtype!"
+                                      : this->_blocks[0].dtype_str();
     };
     std::string device_str() const {
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].device_str();
+      return this->_blocks.size() < 1 ? "No valid blocks, so no device!"
+                                      : this->_blocks[0].device_str();
     };
 
     Tensor get_block(const cytnx_uint64 &idx = 0) const {
