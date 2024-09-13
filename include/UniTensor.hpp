@@ -480,8 +480,9 @@ namespace cytnx {
         std::vector<Tensor> _interface_block;  // this is serves as interface for get_blocks_();
         return this;
       } else {
+        // TODO: Do not allocate the memory twice.
         boost::intrusive_ptr<UniTensor_base> out = this->clone();
-        out->to_(device);
+        out->get_block_() = out->get_block_().to(device);
         return out;
       }
     }
@@ -1155,8 +1156,11 @@ namespace cytnx {
       if (this->device() == device) {
         return this;
       } else {
+        // TODO: Do not allocate the memory twice.
         boost::intrusive_ptr<UniTensor_base> out = this->clone();
-        out->to_(device);
+        for (cytnx_uint64 i = 0; i < out->get_blocks_(true).size(); i++) {
+          out->get_blocks_(true)[i] = out->get_blocks_(true)[i].to(device);
+        }
         return out;
       }
     };
