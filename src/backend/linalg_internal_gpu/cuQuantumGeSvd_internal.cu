@@ -472,10 +472,10 @@ namespace cytnx {
       HANDLE_ERROR(cutensornetTensorSVDInfoGetAttribute(handle, svdInfo,
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
-      if (User_debug){
+      if (User_debug) {
         printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
         printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-              gesvdjStatus.sweeps);
+               gesvdjStatus.sweeps);
         printf("reduced extent found at runtime: %lu\n", reducedExtent);
         std::cout << "discarded weight: " << discardedWeight << std::endl;
       }
@@ -716,10 +716,10 @@ namespace cytnx {
       HANDLE_ERROR(cutensornetTensorSVDInfoGetAttribute(handle, svdInfo,
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
-      if (User_debug){
+      if (User_debug) {
         printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
         printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-              gesvdjStatus.sweeps);
+               gesvdjStatus.sweeps);
         printf("reduced extent found at runtime: %lu\n", reducedExtent);
         std::cout << "discarded weight: " << discardedWeight << std::endl;
       }
@@ -960,10 +960,10 @@ namespace cytnx {
       HANDLE_ERROR(cutensornetTensorSVDInfoGetAttribute(handle, svdInfo,
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
-      if (User_debug){
+      if (User_debug) {
         printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
         printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-              gesvdjStatus.sweeps);
+               gesvdjStatus.sweeps);
         printf("reduced extent found at runtime: %lu\n", reducedExtent);
         std::cout << "discarded weight: " << discardedWeight << std::endl;
       }
@@ -1204,10 +1204,10 @@ namespace cytnx {
       HANDLE_ERROR(cutensornetTensorSVDInfoGetAttribute(handle, svdInfo,
                                                         CUTENSORNET_TENSOR_SVD_INFO_ALGO_STATUS,
                                                         &gesvdjStatus, sizeof(gesvdjStatus)));
-      if (User_debug){
+      if (User_debug) {
         printf("elapsed time: %.2f ms\n", minTimeCUTENSOR * 1000.f);
         printf("GESVDJ residual: %.4f, runtime sweeps = %d\n", gesvdjStatus.residual,
-              gesvdjStatus.sweeps);
+               gesvdjStatus.sweeps);
         printf("reduced extent found at runtime: %lu\n", reducedExtent);
         std::cout << "discarded weight: " << discardedWeight << std::endl;
       }
