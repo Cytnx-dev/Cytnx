@@ -23,11 +23,21 @@ namespace cytnx {
 #ifdef UNI_GPU
     template <class BidirectionalIterator>
     void reverse_perm(BidirectionalIterator first, BidirectionalIterator last, int N) {
-      while ((first != last) && (first != --last)) {
+      // while ((first != last) && (first != --last)) {
+      //   *first = (N - 1) - *first;
+      //   *last = (N - 1) - *last;
+      //   std::iter_swap(first, last);
+      //   ++first;
+      // }
+      // if (N % 2) *first = (N - 1) - *first;
+      --last;
+      while (first != last and first != --last) {
+        ++last;
         *first = (N - 1) - *first;
         *last = (N - 1) - *last;
         std::iter_swap(first, last);
         ++first;
+        --last;
       }
       if (N % 2) *first = (N - 1) - *first;
     }
@@ -170,7 +180,6 @@ namespace cytnx {
       cuT *dtmp;
       dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->cap);
       cytnx_uint64 Nelem = in->len;
-
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int> size(old_shape.begin(), old_shape.end());
       std::reverse(size.begin(), size.end());  // matching API CUTT
@@ -187,8 +196,7 @@ namespace cytnx {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
         cudaFree(dtmp);
-        return out;
-
+        return in;
       } else {
         out->_Init_byptr(dtmp, Nelem, in->device, true, in->cap);
         return out;
