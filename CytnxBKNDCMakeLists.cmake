@@ -169,26 +169,6 @@ if(USE_CUDA)
 
     endif()
 
-    if(USE_MAGMA)
-        find_package( MAGMA REQUIRED)
-        if(NOT MAGMA_FOUND)
-            message(FATAL_ERROR "MAGMA not found!")
-        endif()
-        message(STATUS "^^^magma root aft: ${MAGMA_ROOT}")
-        message(STATUS "^^^magma inc dr: ${MAGMA_INCLUDE_DIRS}")
-        message(STATUS "^^^magma lib dr: ${MAGMA_LIBRARY_DIRS}")
-        message(STATUS "^^^magma libs: ${MAGMA_LIBRARIES}")
-        #add_dependencies(cytnx magma)
-        target_include_directories(cytnx PRIVATE ${MAGMA_INCLUDE_DIRS})
-        target_compile_definitions(cytnx PRIVATE UNI_MAGMA)
-        target_link_libraries(cytnx PUBLIC ${MAGMA_LIBRARIES})
-
-        message( STATUS "Build with MAGMA: YES")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MAGMA\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${MAGMA_INCLUDE_DIRS}\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${MAGMA_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
-        message( STATUS "MAGMA: libdir:${MAGMA_LIBRARY_DIRS} incdir:${MAGMA_INCLUDE_DIRS} libs:${MAGMA_LIBRARIES}")
-    endif()
 
     message( STATUS " Build CUDA Support: YES")
     message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
