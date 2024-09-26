@@ -4,10 +4,6 @@
   #include <omp.h>
 #endif
 
-#ifdef UNI_MAGMA
-  #include "magma_v2.h"
-#endif
-
 using namespace std;
 namespace cytnx {
 
@@ -43,12 +39,6 @@ namespace cytnx {
       }
     }
 
-    // #ifdef UNI_MAGMA
-    //     int magma_status = magma_init();
-    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot
-    //     initialize!%s","\n");
-    // #endif
-
 #endif
 
 #ifdef UNI_OMP
@@ -62,11 +52,7 @@ namespace cytnx {
   };
 
   Device_class::~Device_class(){
-    // #ifdef UNI_MAGMA
-    //     int magma_status = magma_finalize();
-    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot
-    //     finalize!%s","\n");
-    // #endif
+
   };
 
   string Device_class::getname(const int& device_id) {
