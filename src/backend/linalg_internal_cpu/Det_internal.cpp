@@ -27,8 +27,9 @@ namespace cytnx {
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_zgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
+      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'zgetrf': Lapack INFO = ", info);
 
       // Whether lapack_complex_T is defined as std::complex<T> (c++ complex) or T _Complex
@@ -51,6 +52,8 @@ namespace cytnx {
       free(ipiv);
       free(_Rin);
       if (neg) od[0] *= -1;
+
+      if (info > 0) od[0] = 0;
     }
     void Det_internal_cf(void *out, const boost::intrusive_ptr<Storage_base> &Rin,
                          const cytnx_uint64 &L) {
@@ -63,8 +66,9 @@ namespace cytnx {
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_cgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
+      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'cgetrf': Lapack INFO = ", info);
 
       // Whether lapack_complex_T is defined as std::complex<T> (c++ complex) or T _Complex
@@ -87,6 +91,8 @@ namespace cytnx {
       free(ipiv);
       free(_Rin);
       if (neg) od[0] *= -1;
+
+      if (info > 0) od[0] = 0;
     }
     void Det_internal_d(void *out, const boost::intrusive_ptr<Storage_base> &Rin,
                         const cytnx_uint64 &L) {
@@ -98,8 +104,9 @@ namespace cytnx {
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_dgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
+      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'dgetrf': Lapack INFO = ", info);
       od[0] = 1;
       bool neg = 0;
@@ -110,6 +117,8 @@ namespace cytnx {
       free(ipiv);
       free(_Rin);
       if (neg) od[0] *= -1;
+
+      if (info > 0) od[0] = 0;
     }
     void Det_internal_f(void *out, const boost::intrusive_ptr<Storage_base> &Rin,
                         const cytnx_uint64 &L) {
@@ -121,8 +130,9 @@ namespace cytnx {
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_sgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
+      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'sgetrf': Lapack INFO = ", info);
       od[0] = 1;
       bool neg = 0;
@@ -133,6 +143,8 @@ namespace cytnx {
       free(ipiv);
       free(_Rin);
       if (neg) od[0] *= -1;
+
+      if (info > 0) od[0] = 0;
     }
 
   }  // namespace linalg_internal
