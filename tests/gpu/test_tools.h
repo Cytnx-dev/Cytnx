@@ -35,8 +35,8 @@ namespace TestTools {
     Type.Int32,         Type.Uint32,       Type.Int16,  Type.Uint16, Type.Bool};
 
   static std::vector<int> device_list = {
-    Device.cpu,
-    // Device.cuda,  //currently cuda version still not implement
+    // Device.cpu,
+    Device.cuda,
   };
 
   // Tensor tools

@@ -85,7 +85,6 @@ option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(USE_CUTT "Build Cytnx with CUTT" OFF)
-option(USE_MAGMA "Build Cytnx with MAGMA (requires CUDA)" ON)
 option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
 option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
 
