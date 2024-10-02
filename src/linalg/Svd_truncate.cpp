@@ -22,7 +22,8 @@ namespace cytnx {
 
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
-        cytnx::linalg_internal::lii.memcpyTruncation_ii[tmps[0].dtype()](
+        // dtype should be that of U (or Vt) here, since S is real and Tin could be Int, Bool etc.
+        cytnx::linalg_internal::lii.memcpyTruncation_ii[tmps[1].dtype()](
           tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err, mindim);
 
         std::vector<Tensor> outT;
@@ -39,7 +40,7 @@ namespace cytnx {
         std::vector<Tensor> tmps = Svd(Tin, is_UvT);
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
-        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[tmps[0].dtype()](
+        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[tmps[1].dtype()](
           tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err, mindim);
 
         std::vector<Tensor> outT;
