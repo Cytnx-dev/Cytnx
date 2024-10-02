@@ -23,21 +23,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     template <class BidirectionalIterator>
     void reverse_perm(BidirectionalIterator first, BidirectionalIterator last, int N) {
-      // while ((first != last) && (first != --last)) {
-      //   *first = (N - 1) - *first;
-      //   *last = (N - 1) - *last;
-      //   std::iter_swap(first, last);
-      //   ++first;
-      // }
-      // if (N % 2) *first = (N - 1) - *first;
-      --last;
-      while (first != last and first != --last) {
-        ++last;
+      while ((first != last) && (first != --last)) {
         *first = (N - 1) - *first;
         *last = (N - 1) - *last;
         std::iter_swap(first, last);
         ++first;
-        --last;
       }
       if (N % 2) *first = (N - 1) - *first;
     }
