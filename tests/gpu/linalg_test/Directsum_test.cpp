@@ -24,7 +24,7 @@ namespace DirectsumTest {
     axes:{1}
   ====================*/
   TEST(Directsum, gpu_allDType) {
-    for (auto device : device_list) {
+    for (auto device : device_list) {  // now only test for cpu device.
       for (auto dtype1 : dtype_list) {
         for (auto dtype2 : dtype_list) {
           Tensor T1 = Tensor({12, 5, 7}, dtype1, device);
