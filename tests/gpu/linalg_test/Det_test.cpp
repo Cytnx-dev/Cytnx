@@ -1,6 +1,7 @@
-#include "cytnx.hpp"
 #include <gtest/gtest.h>
+
 #include "../test_tools.h"
+#include "cytnx.hpp"
 
 using namespace cytnx;
 using namespace testing;
@@ -101,14 +102,9 @@ namespace DetTest {
   Tensor ConstructExpectTens(const Tensor& T) {
     Tensor dst_T = zeros(1, T.dtype(), T.device());
     int n = T.shape()[0];
-    cytnx_error_msg(
-      T.shape().size() != 2,
-      "[ERROR] [Det_test] [ConstructExpectTens]The input tensor should be rank-2 tensor.%s", "\n");
+    ASSERT_TRUE(T.shape().size() != 2);
     for (auto s : T.shape()) {
-      cytnx_error_msg(
-        s != n,
-        "[ERROR] [Det_test] [ConstructExpectTens]The input tensor should be square matrix.%s",
-        "\n");
+      ASSERT_TRUE(s != n);
     }
     if (n == 1) {
       dst_T.at({0}) = T.at({0, 0});
@@ -136,12 +132,10 @@ namespace DetTest {
     Tensor expect_T;
     expect_T =
       ConstructExpectTens(T.dtype() > 4 ? T.astype(Type.Double).to(-1) : T.to(-1)).to(T.device());
-    // std::cout << det_T << expect_T << std::endl;
     const double tolerance =
       std::pow(10.0, std::max((int)std::abs(std::log10(det_T(0).item<cytnx_double>())) - 6, 0));
     // Because the determinant will be casted to at least double, so we just cast the result to
     // ComplexDouble for comparison.
-    std::cout << "Type: " << Type.getname(T.dtype()) << std::endl;
     EXPECT_TRUE(AreNearlyEqTensor(det_T.astype(Type.ComplexDouble),
                                   expect_T.astype(Type.ComplexDouble), tolerance));
   }
