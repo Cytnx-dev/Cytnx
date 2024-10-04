@@ -2706,8 +2706,8 @@ namespace cytnx {
     this->group_basis_();
   }
 
-  void BlockFermionicUniTensor::combineBonds(const std::vector<std::string> &indicators,
-                                             const bool &force) {
+  void BlockFermionicUniTensor::combineBond(const std::vector<std::string> &indicators,
+                                            const bool &force) {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
@@ -2723,11 +2723,11 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+  void BlockFermionicUniTensor::combineBonds(const std::vector<std::string> &indicators,
+                                             const bool &force) {
     //[4 Oct 2024] This is a copy from BlockUniTensor;
     this->combineBond(indicators, force);
   }
-
 
   // Deprecated
   void BlockFermionicUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,

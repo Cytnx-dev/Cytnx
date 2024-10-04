@@ -2531,6 +2531,7 @@ namespace cytnx {
 
     void group_basis_();
 
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = false);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);

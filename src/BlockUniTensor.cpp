@@ -1989,7 +1989,7 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void BlockUniTensor::combineBond(const std::vector<std::string> &indicators, const bool &force) {
+  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
     this->combineBond(indicators, force);
   }
 
