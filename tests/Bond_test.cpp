@@ -155,7 +155,7 @@ TEST(Bond, CombindBondSymm_v2) {
 
   Bond bd_sym_b = Bond(BD_BRA, {{0, 0}, {2, 1}}, {1, 1}, {Symmetry::U1(), Symmetry::Zn(2)});
   Bond bd_sym_c = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::Zn(2)});
-  Bond bd_sym_d = bd_sym_a.combineBonds({bd_sym_b, bd_sym_c});
+  Bond bd_sym_d = bd_sym_a.combineBond({bd_sym_b, bd_sym_c});
   EXPECT_EQ(bd_sym_d.type(), BD_BRA);
   EXPECT_EQ(bd_sym_d, Bond(BD_BRA, {{1, 0}, {3, 1}}, {6, 6}, {Symmetry::U1(), Symmetry::Zn(2)}));
 
@@ -163,6 +163,13 @@ TEST(Bond, CombindBondSymm_v2) {
   Bond bd_sym_g = Bond(BD_BRA, {{1, 1}}, {2}, {Symmetry::U1(), Symmetry::U1()});
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_f), std::logic_error);
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
+}
+
+TEST(Bond, Clear_type) {
+  Bond bd_sym = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
+
+  EXPECT_THROW(bd_sym.clear_type(), std::logic_error);
+  EXPECT_THROW(bd_sym.set_type(BD_REG), std::logic_error);
 }
 
 // TEST(Bond, ConstructorTypeQnums){

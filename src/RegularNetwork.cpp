@@ -1,10 +1,11 @@
-#include <typeinfo>
-#include "Network.hpp"
-#include "search_tree.hpp"
-#include <stack>
 #include <algorithm>
 #include <iostream>
+#include <stack>
+#include <typeinfo>
+
 #include "Generator.hpp"
+#include "Network.hpp"
+#include "search_tree.hpp"
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -261,7 +262,8 @@ namespace cytnx {
             tns.erase(tns.begin() + id2);
           else
             tns.erase(tns.begin() + id2 - 1);
-          tns.push_back(root->name);
+          tns.push_back("(" + root->left->name + "," + root->right->name + ")");
+          root->name = "(" + root->left->name + "," + root->right->name + ")";
           path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1, id2));
         }
         root = nullptr;
@@ -1084,6 +1086,11 @@ namespace cytnx {
         return out;
       }
     #else
+      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
+        this->CtTree.base_nodes[idx].utensor =
+          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+        this->CtTree.base_nodes[idx].is_assigned = true;
+      }
       // 1.5 contraction order:
       if (ORDER_tokens.size() != 0) {
         // *set by user or optimally found

@@ -98,10 +98,10 @@ namespace cytnx {
                          const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
                          const bool &cacheR) {
       unsigned int t = Tl.dtype();
-      if (t == Type.Uint64 || t == Type.Int64 || t == Type.Uint16 || t == Type.Int16 ||
-          t == Type.Bool) {
+      if (t == Type.Uint64 || t == Type.Int64 || t == Type.Uint32 || t == Type.Int32 ||
+          t == Type.Uint16 || t == Type.Int16 || t == Type.Bool) {
         cytnx_warning_msg(true, "Unsupported data type in cuTensor: %s, use default implementation",
-                          Type.Typeinfos[Tl.dtype()].name);
+                          Type.Typeinfos[Tl.dtype()].name.c_str());
         return _Tensordot_generic(out, Tl, Tr, idxl, idxr, cacheL, cacheR);
       }
       // This works:

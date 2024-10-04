@@ -14,14 +14,25 @@
       }                                                                          \
     };
 
+  #define HANDLE_CUDA_ERROR(x)                           \
+    {                                                    \
+      const auto err = x;                                \
+      if (err != cudaSuccess) {                          \
+        printf("Error in line %d: %s\n", __LINE__, err); \
+        exit(-1);                                        \
+      }                                                  \
+    };
+
 namespace cytnx {
 
   namespace linalg_internal {
 
     inline void _cuTensordot_internal(Tensor &out, const Tensor &Lin, const Tensor &Rin,
                                       const std::vector<cytnx_uint64> &idxl,
-                                      const std::vector<cytnx_uint64> &idxr, cudaDataType_t type,
-                                      cutensorComputeType_t typeCompute, void *alpha, void *beta) {
+                                      const std::vector<cytnx_uint64> &idxr,
+                                      cutensorDataType_t type,
+                                      cutensorComputeDescriptor_t descCompute, void *alpha,
+                                      void *beta) {
       // hostType alpha = (hostType){1.f, 0.f};
       // hostType beta = (hostType){0.f, 0.f};
 
@@ -90,94 +101,89 @@ namespace cytnx {
        * cuTENSOR
        *************************/
 
-      cutensorHandle_t *handle;
+      cutensorHandle_t handle;
       HANDLE_ERROR(cutensorCreate(&handle));
 
       /**********************
        * Create Tensor Descriptors
        **********************/
 
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descL;
-      HANDLE_ERROR(cutensorInitTensorDescriptor(handle, &descL, nlabelL, extentL.data(),
-                                                NULL, /*stride*/
-                                                type, CUTENSOR_OP_IDENTITY));
+      HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descL, nlabelL, extentL.data(),
+                                                  NULL, /*stride*/
+                                                  type, defaultAlignment));
 
       cutensorTensorDescriptor_t descR;
-      HANDLE_ERROR(cutensorInitTensorDescriptor(handle, &descR, nlabelR, extentR.data(),
-                                                NULL, /*stride*/
-                                                type, CUTENSOR_OP_IDENTITY));
+      HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descR, nlabelR, extentR.data(),
+                                                  NULL, /*stride*/
+                                                  type, defaultAlignment));
 
       cutensorTensorDescriptor_t descOut;
-      HANDLE_ERROR(cutensorInitTensorDescriptor(handle, &descOut, nlabelOut, extentOut.data(),
-                                                NULL, /*stride*/
-                                                type, CUTENSOR_OP_IDENTITY));
-
-      /**********************************************
-       * Retrieve the memory alignment for each tensor
-       **********************************************/
-
-      uint32_t alignmentRequirementL;
-      HANDLE_ERROR(cutensorGetAlignmentRequirement(handle, lPtr, &descL, &alignmentRequirementL));
-
-      uint32_t alignmentRequirementR;
-      HANDLE_ERROR(cutensorGetAlignmentRequirement(handle, rPtr, &descR, &alignmentRequirementR));
-
-      uint32_t alignmentRequirementOut;
-      HANDLE_ERROR(
-        cutensorGetAlignmentRequirement(handle, outPtr, &descOut, &alignmentRequirementOut));
+      HANDLE_ERROR(cutensorCreateTensorDescriptor(handle, &descOut, nlabelOut, extentOut.data(),
+                                                  NULL, /*stride*/
+                                                  type, defaultAlignment));
 
       /*******************************
        * Create Contraction Descriptor
        *******************************/
 
-      cutensorContractionDescriptor_t desc;
-      HANDLE_ERROR(cutensorInitContractionDescriptor(
-        handle, &desc, &descL, labelL.data(), alignmentRequirementL, &descR, labelR.data(),
-        alignmentRequirementR, &descOut, labelOut.data(), alignmentRequirementOut, &descOut,
-        labelOut.data(), alignmentRequirementOut, typeCompute));
+      cutensorOperationDescriptor_t desc;
+      HANDLE_ERROR(
+        cutensorCreateContraction(handle, &desc, descL, labelL.data(), CUTENSOR_OP_IDENTITY, descR,
+                                  labelR.data(), CUTENSOR_OP_IDENTITY, descOut, labelOut.data(),
+                                  CUTENSOR_OP_IDENTITY, descOut, labelOut.data(), descCompute));
 
       /**************************
        * Set the algorithm to use
        ***************************/
 
-      cutensorContractionFind_t find;
-      HANDLE_ERROR(cutensorInitContractionFind(handle, &find, CUTENSOR_ALGO_DEFAULT));
+      cutensorPlanPreference_t planPref;
+      cutensorCreatePlanPreference(handle, &planPref, CUTENSOR_ALGO_DEFAULT,
+                                   CUTENSOR_JIT_MODE_NONE);
 
       /**********************
        * Query workspace
        **********************/
 
-      uint64_t worksize = 0;
-      HANDLE_ERROR(cutensorContractionGetWorkspaceSize(handle, &desc, &find,
-                                                       CUTENSOR_WORKSPACE_RECOMMENDED, &worksize));
-
-      void *work = nullptr;
-      if (worksize > 0) {
-        if (cudaSuccess != cudaMalloc(&work, worksize)) {
-          work = nullptr;
-          worksize = 0;
-        }
-      }
+      uint64_t workspaceSizeEstimate = 0;
+      cutensorEstimateWorkspaceSize(handle, desc, planPref, CUTENSOR_WORKSPACE_DEFAULT,
+                                    &workspaceSizeEstimate);
 
       /**************************
        * Create Contraction Plan
        **************************/
 
-      cutensorContractionPlan_t plan;
-      HANDLE_ERROR(cutensorInitContractionPlan(handle, &plan, &desc, &find, worksize));
+      cutensorPlan_t plan;
+      cutensorCreatePlan(handle, &plan, desc, planPref, workspaceSizeEstimate);
+
+      uint64_t actualWorkspaceSize = 0;
+      cutensorPlanGetAttribute(handle, plan, CUTENSOR_PLAN_REQUIRED_WORKSPACE, &actualWorkspaceSize,
+                               sizeof(actualWorkspaceSize));
+
+      void *work = nullptr;
+      if (actualWorkspaceSize > 0) HANDLE_CUDA_ERROR(cudaMalloc(&work, actualWorkspaceSize));
 
       /**********************
        * Run
        **********************/
 
-      HANDLE_ERROR(cutensorContraction(handle, &plan, alpha, lPtr, rPtr, beta, outPtr, outPtr, work,
-                                       worksize, 0 /* stream */));
+      cutensorContract(handle, plan, (void *)alpha, lPtr, rPtr, (void *)beta, outPtr, outPtr, work,
+                       actualWorkspaceSize, /* stream */ 0);
 
       /*************************/
 
       cudaDeviceSynchronize();
 
       if (work) checkCudaErrors(cudaFree(work));
+      // XXX: Can the OperationDescriptor be destories before running?
+      HANDLE_ERROR(cutensorDestroyTensorDescriptor(descL));
+      HANDLE_ERROR(cutensorDestroyTensorDescriptor(descR));
+      HANDLE_ERROR(cutensorDestroyTensorDescriptor(descOut));
+      HANDLE_ERROR(cutensorDestroyPlanPreference(planPref));
+      HANDLE_ERROR(cutensorDestroyPlan(plan));
       HANDLE_ERROR(cutensorDestroy(handle));
     }
 
@@ -185,80 +191,52 @@ namespace cytnx {
                                  const std::vector<cytnx_uint64> &idxl,
                                  const std::vector<cytnx_uint64> &idxr) {
       typedef cuDoubleComplex hostType;
-      cudaDataType_t type = CUDA_C_64F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_64F;
+      cutensorDataType_t type = CUTENSOR_C_64F;
+      cutensorComputeDescriptor_t descCompute = CUTENSOR_COMPUTE_DESC_64F;
 
       hostType alpha = {1., 0.};
       hostType beta = {0., 0.};
 
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
+      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, descCompute, &alpha, &beta);
     }
 
     void cuTensordot_internal_cf(Tensor &out, const Tensor &Lin, const Tensor &Rin,
                                  const std::vector<cytnx_uint64> &idxl,
                                  const std::vector<cytnx_uint64> &idxr) {
       typedef cuFloatComplex hostType;
-      cudaDataType_t type = CUDA_C_32F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32F;
+      cutensorDataType_t type = CUTENSOR_C_32F;
+      cutensorComputeDescriptor_t descCompute = CUTENSOR_COMPUTE_DESC_32F;
 
       hostType alpha = {1.f, 0.f};
       hostType beta = {0.f, 0.f};
 
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
+      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, descCompute, &alpha, &beta);
     }
 
     void cuTensordot_internal_d(Tensor &out, const Tensor &Lin, const Tensor &Rin,
                                 const std::vector<cytnx_uint64> &idxl,
                                 const std::vector<cytnx_uint64> &idxr) {
       typedef double hostType;
-      cudaDataType_t type = CUDA_R_64F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_64F;
+      cutensorDataType_t type = CUTENSOR_R_64F;
+      cutensorComputeDescriptor_t descCompute = CUTENSOR_COMPUTE_DESC_64F;
 
       hostType alpha = 1.f;
       hostType beta = 0.f;
 
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
+      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, descCompute, &alpha, &beta);
     }
 
     void cuTensordot_internal_f(Tensor &out, const Tensor &Lin, const Tensor &Rin,
                                 const std::vector<cytnx_uint64> &idxl,
                                 const std::vector<cytnx_uint64> &idxr) {
       typedef float hostType;
-      cudaDataType_t type = CUDA_R_32F;
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32F;
+      cutensorDataType_t type = CUTENSOR_R_32F;
+      cutensorComputeDescriptor_t descCompute = CUTENSOR_COMPUTE_DESC_32F;
 
       hostType alpha = 1.f;
       hostType beta = 0.f;
 
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
-    }
-
-    void cuTensordot_internal_u32(Tensor &out, const Tensor &Lin, const Tensor &Rin,
-                                  const std::vector<cytnx_uint64> &idxl,
-                                  const std::vector<cytnx_uint64> &idxr) {
-      typedef cytnx_uint32 hostType;
-      cudaDataType_t type = CUDA_R_32U;
-
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32U;
-
-      hostType alpha = 1;
-      hostType beta = 0;
-
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
-    }
-
-    void cuTensordot_internal_i32(Tensor &out, const Tensor &Lin, const Tensor &Rin,
-                                  const std::vector<cytnx_uint64> &idxl,
-                                  const std::vector<cytnx_uint64> &idxr) {
-      typedef cytnx_int32 hostType;
-      cudaDataType_t type = CUDA_R_32I;
-
-      cutensorComputeType_t typeCompute = CUTENSOR_COMPUTE_32I;
-
-      hostType alpha = 1;
-      hostType beta = 0;
-
-      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, typeCompute, &alpha, &beta);
+      _cuTensordot_internal(out, Lin, Rin, idxl, idxr, type, descCompute, &alpha, &beta);
     }
 
   }  // namespace linalg_internal

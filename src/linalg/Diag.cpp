@@ -11,7 +11,7 @@ namespace cytnx {
   namespace linalg {
     Tensor Diag(const Tensor &Tin) {
       cytnx_error_msg(Tin.shape().size() > 2,
-                      "[ERROR] the input tensor shoud be rank-1 or rank-2 Tensor.%s", "\n");
+                      "[ERROR] the input tensor should be rank-1 or rank-2 Tensor.%s", "\n");
 
       Tensor out;
 

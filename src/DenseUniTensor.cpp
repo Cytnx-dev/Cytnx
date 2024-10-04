@@ -688,7 +688,7 @@ namespace cytnx {
     }
     return out;
   }
-  void DenseUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+  void DenseUniTensor::combineBond(const std::vector<std::string> &indicators, const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -702,6 +702,11 @@ namespace cytnx {
     }
     this->combineBonds(idx_mapper, force);
   }
+  // Deprecated
+  void DenseUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+    this->combineBond(indicators, force);
+  }
+  // Deprecated
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
@@ -896,6 +901,7 @@ namespace cytnx {
   }
   */
 
+  // Deprecated
   void DenseUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                                     const bool &by_label) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",

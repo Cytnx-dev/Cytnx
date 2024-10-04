@@ -569,6 +569,74 @@ namespace cytnx {
             1. The type of all bonds (see cytnx::bondType) need to be same.
             2. The Symmetry of all bonds should be same.
           @note Compare to \n
+      combineBond_(const std::vector<Bond> &bds, const bool &is_grp),\n
+            this function will create a new Bond object.
+    @see combineBond_(const std::vector<Bond> &bds, const bool &is_grp)
+
+    ## Example:
+    ### c++ API:
+    \include example/Bond/combineBond.cpp
+    #### output>
+    \verbinclude example/Bond/combineBond.cpp.out
+    ### python API:
+    \include example/Bond/combineBond.py
+    #### output>
+    \verbinclude example/Bond/combineBond.py.out
+    */
+    Bond combineBond(const std::vector<Bond> &bds, const bool &is_grp = true) {
+      Bond out = this->clone();
+      for (cytnx_uint64 i = 0; i < bds.size(); i++) {
+        out.combineBond_(bds[i], is_grp);
+      }
+      return out;
+    }
+
+    /**
+    @brief combine multiple input bonds with self, inplacely
+    @param[in] bds the bonds that to be combined with self.
+          @param[in] is_grp this parameter is only used when the bond is
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
+      If is_grp is true, the basis with duplicated quantum number will be
+      grouped together as a single basis. See
+      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
+        @pre
+          1. The type of all bonds (see cytnx::bondType) need to be same.
+          2. The Symmetry of all bonds should be same.
+        @note Compare to \n
+      combineBond(const std::vector<Bond> &bds, const bool &is_grp),\n
+          this function will create a new Bond object.
+    @see combineBond(const std::vector<Bond> &bds, const bool &is_grp)
+
+    ## Example:
+    ### c++ API:
+    \include example/Bond/combineBond_.cpp
+    #### output>
+    \verbinclude example/Bond/combineBond_.cpp.out
+    ### python API:
+    \include example/Bond/combineBond_.py
+    #### output>
+    \verbinclude example/Bond/combineBond_.py.out
+    */
+    void combineBond_(const std::vector<Bond> &bds, const bool &is_grp = true) {
+      for (cytnx_uint64 i = 0; i < bds.size(); i++) {
+        this->combineBond_(bds[i], is_grp);
+      }
+    }
+
+    /**
+    @deprecated
+    @brief combine multiple input bonds with self, and return a new combined Bond instance.
+    @param[in] bds the bonds that to be combined with self.
+          @param[in] is_grp this parameter is only used when the bond is
+      symmetric bond (bondType.BD_BRA or bondType.BD_KET).
+      If is_grp is true, the basis with duplicated quantum number will be
+      grouped together as a single basis. See
+      group_duplicates(std::vector<cytnx_uint64> &mapper) const.
+    @return [Bond] a new combined bond instance.
+          @pre
+            1. The type of all bonds (see cytnx::bondType) need to be same.
+            2. The Symmetry of all bonds should be same.
+          @note Compare to \n
       combineBonds_(const std::vector<Bond> &bds, const bool &is_grp),\n
             this function will create a new Bond object.
     @see combineBonds_(const std::vector<Bond> &bds, const bool &is_grp)
@@ -592,6 +660,7 @@ namespace cytnx {
     }
 
     /**
+    @deprecated
     @brief combine multiple input bonds with self, inplacely
     @param[in] bds the bonds that to be combined with self.
           @param[in] is_grp this parameter is only used when the bond is

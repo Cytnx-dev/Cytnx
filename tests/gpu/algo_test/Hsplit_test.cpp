@@ -229,8 +229,8 @@ namespace HsplitTest {
       auto split_shape = tens.shape();
       auto r_num = split_shape[0];  // row number
       auto c_num = split_shape[1];  // column number
-      for (int r = 0; r < r_num; ++r) {
-        for (int c = 0; c < c_num; ++c) {
+      for (cytnx_uint64 r = 0; r < r_num; ++r) {
+        for (cytnx_uint64 c = 0; c < c_num; ++c) {
           auto in_c = c + block_col_shift;
           is_same_elem = AreElemSame(T_in, {r, in_c}, tens, {r, c});
           if (!is_same_elem) break;

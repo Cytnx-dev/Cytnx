@@ -41,7 +41,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc_dim - 1 >= mindim) {
           truc_dim--;
         } else {
           break;
@@ -112,7 +112,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc_dim - 1 >= mindim) {
           truc_dim--;
         } else {
           break;
@@ -183,7 +183,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc_dim - 1 >= mindim) {
           truc_dim--;
         } else {
           break;
@@ -254,7 +254,7 @@ namespace cytnx {
       }
       cytnx_uint64 truc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc - 1 >= mindim) {
+        if (((cytnx_double *)S._impl->storage()._impl->Mem)[i] < err and truc_dim - 1 >= mindim) {
           truc_dim--;
         } else {
           break;

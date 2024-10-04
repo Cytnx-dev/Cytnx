@@ -37,7 +37,9 @@ target_link_libraries(
 target_link_libraries(gpu_test_main cytnx)
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
-gtest_discover_tests(gpu_test_main PROPERTIES TEST_DISCOVERY_TIMEOUT 600)
+cmake_path(APPEND CMAKE_CURRENT_SOURCE_DIR ".." OUTPUT_VARIABLE test_dir)
+gtest_discover_tests(gpu_test_main
+                     WORKING_DIRECTORY ${test_dir})
 
 file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/testNet.net"
       DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

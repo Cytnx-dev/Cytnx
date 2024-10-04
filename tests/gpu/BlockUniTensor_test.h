@@ -10,7 +10,7 @@ using namespace TestTools;
 
 class BlockUniTensorTest : public ::testing::Test {
  public:
-  std::string data_dir = "../../../tests/test_data_base/common/BlockUniTensor/";
+  std::string data_dir = "./test_data_base/common/BlockUniTensor/";
 
   Bond B1 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2});
   Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
@@ -168,7 +168,7 @@ class BlockUniTensorTest : public ::testing::Test {
     using namespace std::complex_literals;
     for (size_t i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
       cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
-      UT_diag_cplx.get_block_(i).fill(std::complex<double>{i + 1, i + 1});
+      UT_diag_cplx.get_block_(i).fill(cytnx_complex128{i + 1., i + 1.});
     }
   }
   void TearDown() override {}

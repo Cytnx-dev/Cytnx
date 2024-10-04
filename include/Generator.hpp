@@ -58,7 +58,7 @@ namespace cytnx {
                   const int &device = Device.cpu);
 
   /**
-  @brief create an square rank-2 Tensor with all diagonal to be one.
+  @brief create a square rank-2 Tensor with all diagonal to be one.
   @param Dim the dimension of diagonal.
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink

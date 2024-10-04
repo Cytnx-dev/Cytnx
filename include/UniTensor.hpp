@@ -303,6 +303,7 @@ namespace cytnx {
                                                          const cytnx_uint64 &rowrank = 0);
     virtual boost::intrusive_ptr<UniTensor_base> to_dense();
     virtual void to_dense_();
+    virtual void combineBond(const std::vector<std::string> &indicators, const bool &force = false);
     virtual void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                               const bool &by_label);
     virtual void combineBonds(const std::vector<std::string> &indicators,
@@ -739,6 +740,7 @@ namespace cytnx {
      * @param permute_back
      * @param by_label
      */
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = true);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);
     void combineBonds(const std::vector<std::string> &indicators, const bool &force = true);
@@ -1175,6 +1177,7 @@ namespace cytnx {
     };
 
     unsigned int dtype() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
@@ -1182,6 +1185,7 @@ namespace cytnx {
       return this->_blocks.size() < 1 ? Type.Void : this->_blocks[0].dtype();
     };
     int device() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
@@ -1189,6 +1193,7 @@ namespace cytnx {
       return this->_blocks.size() < 1 ? -404 : this->_blocks[0].device();
     };
     std::string dtype_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
@@ -1196,6 +1201,7 @@ namespace cytnx {
       return this->_blocks.size() < 1 ? "Void, no valid blocks" : this->_blocks[0].dtype_str();
     };
     std::string device_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
@@ -1725,6 +1731,7 @@ namespace cytnx {
 
     void group_basis_();
 
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = false);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);
@@ -4277,7 +4284,7 @@ namespace cytnx {
 
     /**
      * @deprecated This function is deprecated. Please use \n
-     *   combineBonds(const std::vector<std::string> &indicators, const bool &force) \n
+     *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
@@ -4286,6 +4293,7 @@ namespace cytnx {
     }
 
     /**
+    @deprecated
     @brief Combine the sevral bonds of the UniTensor.
         @param[in] indicators the labels of the legs you want to combine.
         @param[in] force If force is true, it will combine the bonds anyway even the direction
@@ -4301,11 +4309,25 @@ namespace cytnx {
 
     /**
      * @deprecated This function is deprecated. Please use \n
-     *   combineBonds(const std::vector<std::string> &indicators, const bool &force) \n
+     *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
+    }
+
+    /**
+    @brief Combine the sevral bonds of the UniTensor.
+        @param[in] indicators the labels of the lags you want to combine.
+        @param[in] force If force is true, it will combine the bonds anyway even the direction
+      of the bonds are same. After combining, the direction of the bonds will be set as
+      same as the first bond.
+        @pre
+            1. The size of \p indicators need to >= 2.
+            2. The UniTensor cannot be diagonal form (that means is_diag cannot be true.)
+        */
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = false) {
+      this->_impl->combineBond(indicators, force);
     }
 
     /**

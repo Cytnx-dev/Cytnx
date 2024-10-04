@@ -425,16 +425,23 @@ namespace cytnx {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
+  // Deprecated
   void UniTensor_base::combineBonds(const std::vector<cytnx_int64> &indicators,
                                     const bool &permute_back, const bool &by_labels) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+  }
+  void UniTensor_base::combineBond(const std::vector<std::string> &indicators,
+                                   const bool &permute_back) {
+    cytnx_error_msg(true, "[ERROR] fatal internal, cannot call on a un-initialize UniTensor_base%s",
+                    "\n");
   }
   void UniTensor_base::combineBonds(const std::vector<std::string> &indicators,
                                     const bool &permute_back) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
+  // Deprecated
   void UniTensor_base::combineBonds(const std::vector<cytnx_int64> &indicators,
                                     const bool &permute_back) {
     cytnx_error_msg(

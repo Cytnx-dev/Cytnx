@@ -18,7 +18,7 @@ using namespace TestTools;
 
 namespace CommonDataGen {
 
-  std::string dataRoot = "../../tests/test_data_base/common/";
+  std::string dataRoot = "./test_data_base/common/";
   static std::vector<unsigned int> dtype_list1 = {
     Type.ComplexDouble,
     Type.Double,

@@ -3,6 +3,8 @@ using namespace std;
 using namespace cytnx;
 using namespace std::complex_literals;
 
+#include <cstdio>
+#include <filesystem>
 #include "test_tools.h"
 
 #define FAIL_CASE_OPEN 0
@@ -1898,6 +1900,63 @@ describe:test combindbonds with uninitialized UniTensor
 TEST_F(DenseUniTensorTest, combineBonds_ut_uninit) {
   std::vector<std::string> labels_combine = {};
   EXPECT_ANY_THROW(ut_uninit.combineBonds(labels_combine));
+}
+
+/*=====test info=====
+describe:test combineBond
+====================*/
+TEST_F(DenseUniTensorTest, combineBond) {
+  std::vector<std::string> labels = {"a", "b", "c"};
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+  std::vector<std::string> labels_combine = {"b", "c"};
+  ut.combineBond(labels_combine);
+
+  // construct answer directly
+  labels = {"a", "b"};
+  int rowrank = 1;
+  auto ans_ut = UniTensor({Bond(5), Bond(12)}, labels, rowrank);
+  auto tens = ut.get_block().reshape({5, 12});
+  ans_ut.put_block(tens);
+
+  // compare
+  EXPECT_TRUE(AreEqUniTensor(ut, ans_ut));
+}
+
+/*=====test info=====
+describe:test combineBond with diagonal UniTensor
+====================*/
+TEST_F(DenseUniTensorTest, combineBond_diag) {
+  EXPECT_THROW(ut_complex_diag.combineBond(ut_complex_diag.labels()), std::logic_error);
+}
+
+/*=====test info=====
+describe:test combineBond error
+====================*/
+TEST_F(DenseUniTensorTest, combineBond_error) {
+  std::vector<std::string> labels = {"a", "b", "c"};
+  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
+  ut.set_rowrank(1);
+  int seed = 0;
+  random::uniform_(ut, -100.0, 100.0, seed);
+
+  // not exist labels
+  std::vector<std::string> labels_combine = {"c", "d"};
+  EXPECT_THROW(ut.combineBond(labels_combine), std::logic_error);
+
+  // empty combine's label
+  labels_combine = std::vector<std::string>();
+  EXPECT_THROW(ut.combineBond(labels_combine), std::logic_error);
+}
+
+/*=====test info=====
+describe:test combindbonds with uninitialized UniTensor
+====================*/
+TEST_F(DenseUniTensorTest, combineBond_ut_uninit) {
+  std::vector<std::string> labels_combine = {};
+  EXPECT_ANY_THROW(ut_uninit.combineBond(labels_combine));
 }
 
 TEST_F(DenseUniTensorTest, contract1) {
@@ -4476,15 +4535,14 @@ TEST_F(DenseUniTensorTest, elem_exists_uninit) { EXPECT_ANY_THROW(ut_uninit.elem
 describe:test Save and Load by string
 ====================*/
 TEST_F(DenseUniTensorTest, Save) {
-  const std::string fileName = "SaveUniTestUniTensor";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(fileName);
-  UniTensor ut_load = UniTensor::Load(fileName + ".cytnx");
+  ut.Save(temp_file_path);
+  UniTensor ut_load = UniTensor::Load(temp_file_path + ".cytnx");
   EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
 }
 
@@ -4492,15 +4550,14 @@ TEST_F(DenseUniTensorTest, Save) {
 describe:test Save and Load by charPtr
 ====================*/
 TEST_F(DenseUniTensorTest, Save_chr) {
-  const std::string fileName = "SaveUniTestUniTensor_chr";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(fileName.c_str());
-  UniTensor ut_load = UniTensor::Load((fileName + ".cytnx").c_str());
+  ut.Save(temp_file_path.c_str());
+  UniTensor ut_load = UniTensor::Load((temp_file_path + ".cytnx").c_str());
   EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
 }
 
@@ -4508,24 +4565,25 @@ TEST_F(DenseUniTensorTest, Save_chr) {
 describe:test Save Load not exist file
 ====================*/
 TEST_F(DenseUniTensorTest, Save_path_incorrect) {
-  const std::string fileName = "./NotExistFolder/SaveUniTestUniTensor";
+  std::filesystem::path file_path_under_non_existent_folder = std::tmpnam(nullptr);
+  std::filesystem::path temp_filename = std::tmpnam(nullptr);
+  // std::tmpnam(nullptr) returns full temp file path, like /tmp/fileRandSuffix
+  file_path_under_non_existent_folder /= temp_filename.filename();
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  EXPECT_THROW(ut.Save(fileName), std::logic_error);
-  EXPECT_THROW(UniTensor::Load(fileName + ".cytnx"), std::logic_error);
+  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder), std::logic_error);
+  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string() + ".cytnx"),
+               std::logic_error);
 }
 
 /*=====test info=====
 describe:test Save uninitialized UniTensor
 ====================*/
-TEST_F(DenseUniTensorTest, Save_uninit) {
-  const std::string fileName = "SaveUniTestUniTensor_uninit";
-  EXPECT_ANY_THROW(ut_uninit.Save(fileName));
-}
+TEST_F(DenseUniTensorTest, Save_uninit) { EXPECT_ANY_THROW(ut_uninit.Save(temp_file_path)); }
 
 /*=====test info=====
 describe:test truncate by label
