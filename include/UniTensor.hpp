@@ -4294,7 +4294,7 @@ namespace cytnx {
 
     /**
     @deprecated
-    @brief Combine the sevral bonds of the UniTensor.
+    @brief Combine several bonds of the UniTensor.
         @param[in] indicators the labels of the legs you want to combine.
         @param[in] force If force is true, it will combine the bonds anyway even the direction
       of the bonds are same. After combining, the direction of the bonds will be set as

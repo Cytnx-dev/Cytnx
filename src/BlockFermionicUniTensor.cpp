@@ -2568,6 +2568,7 @@ namespace cytnx {
     this->_fx_group_duplicates(has_dup, idx_mappers);
   }
 
+  // Deprecated, internal use only
   void BlockFermionicUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
                                              const bool &force) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; TODO: signflips need to be included!!!
@@ -2722,6 +2723,13 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
+  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+    //[4 Oct 2024] This is a copy from BlockUniTensor;
+    this->combineBond(indicators, force);
+  }
+
+
+  // Deprecated
   void BlockFermionicUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
                                              const bool &force, const bool &by_label) {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
