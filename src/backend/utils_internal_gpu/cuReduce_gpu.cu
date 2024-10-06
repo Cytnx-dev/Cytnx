@@ -1,5 +1,8 @@
 #include "cuReduce_gpu.hpp"
-#include "utils/complex_arithmetic.hpp"
+
+#include <cuComplex.h>
+
+#include "Type.hpp"
 
 namespace cytnx {
   namespace utils_internal {
@@ -69,40 +72,13 @@ namespace cytnx {
     //=======================
 
     __device__ void warp_unroll(cuDoubleComplex* smem, int tid) {
-      cuDoubleComplex v = make_cuDoubleComplex(0, 0);
-      v.x += smem[tid + 32].x;
-      v.y += smem[tid + 32].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 16].x;
-      v.y += smem[tid + 16].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 8].x;
-      v.y += smem[tid + 8].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 4].x;
-      v.y += smem[tid + 4].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 2].x;
-      v.y += smem[tid + 2].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 1].x;
-      v.y += smem[tid + 1].y;
-      __syncwarp();
-      smem[tid] = v;
-
-      /* deprecated after volta, warp_unroll(volatile X*smem, int thidx);
-      smem[thidx].x += smem[thidx + 32].x; smem[thidx].y += smem[thidx + 32].y;
-      smem[thidx].x += smem[thidx + 16].x; smem[thidx].y += smem[thidx + 16].y;
-      smem[thidx].x += smem[thidx + 8].x; smem[thidx].y += smem[thidx + 8].y;
-      smem[thidx].x += smem[thidx + 4].x; smem[thidx].y += smem[thidx + 4].y;
-      smem[thidx].x += smem[thidx + 2].x; smem[thidx].y += smem[thidx + 2].y;
-      smem[thidx].x += smem[thidx + 1].x; smem[thidx].y += smem[thidx + 1].y;
-      */
+      double v = reinterpret_cast<double*>(smem)[tid];
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 16);
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 8);
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 4);
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 2);
+      // Retain two double values, which together represent one complex double number.
+      reinterpret_cast<double*>(smem)[tid] = v;
     }
     __global__ void cuReduce_kernel_cd(cuDoubleComplex* out, cuDoubleComplex* in,
                                        cytnx_uint64 Nelem) {
@@ -142,7 +118,23 @@ namespace cytnx {
         }
         __syncthreads();
       }
+      if (blockDim.x >= 64) {
+        if (threadIdx.x < 32) {
+          sD[threadIdx.x].x += sD[threadIdx.x + 32].x;
+          sD[threadIdx.x].y += sD[threadIdx.x + 32].y;
+        }
+        __syncthreads();
+      }
+      if (blockDim.x >= 32) {
+        if (threadIdx.x < 16) {
+          sD[threadIdx.x].x += sD[threadIdx.x + 16].x;
+          sD[threadIdx.x].y += sD[threadIdx.x + 16].y;
+        }
+        __syncthreads();
+      }
 
+      // A complex double consists of two double values. Up to 32 double values (equivalent to 16
+      // complex double numbers) may need to be reduced.
       if (threadIdx.x < 32) warp_unroll(sD, threadIdx.x);
       __syncthreads();
 
@@ -150,40 +142,13 @@ namespace cytnx {
     }
 
     __device__ void warp_unroll(cuFloatComplex* smem, int tid) {
-      cuFloatComplex v = make_cuFloatComplex(0, 0);
-      v.x += smem[tid + 32].x;
-      v.y += smem[tid + 32].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 16].x;
-      v.y += smem[tid + 16].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 8].x;
-      v.y += smem[tid + 8].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 4].x;
-      v.y += smem[tid + 4].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 2].x;
-      v.y += smem[tid + 2].y;
-      __syncwarp();
-      smem[tid] = v;
-      v.x += smem[tid + 1].x;
-      v.y += smem[tid + 1].y;
-      __syncwarp();
-      smem[tid] = v;
-
-      /* deprecated after volta.
-      smem[thidx].x += smem[thidx + 32].x; smem[thidx].y += smem[thidx + 32].y;
-      smem[thidx].x += smem[thidx + 16].x; smem[thidx].y += smem[thidx + 16].y;
-      smem[thidx].x += smem[thidx + 8].x; smem[thidx].y += smem[thidx + 8].y;
-      smem[thidx].x += smem[thidx + 4].x; smem[thidx].y += smem[thidx + 4].y;
-      smem[thidx].x += smem[thidx + 2].x; smem[thidx].y += smem[thidx + 2].y;
-      smem[thidx].x += smem[thidx + 1].x; smem[thidx].y += smem[thidx + 1].y;
-      */
+      float v = reinterpret_cast<float*>(smem)[tid];
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 16);
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 8);
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 4);
+      v += __shfl_down_sync(0xFFFFFFFFU, v, 2);
+      // Retain two float values, which together represent one complex float number.
+      reinterpret_cast<float*>(smem)[tid] = v;
     }
     __global__ void cuReduce_kernel_cf(cuFloatComplex* out, cuFloatComplex* in,
                                        cytnx_uint64 Nelem) {
@@ -224,6 +189,24 @@ namespace cytnx {
         __syncthreads();
       }
 
+      if (blockDim.x >= 64) {
+        if (threadIdx.x < 32) {
+          sD[threadIdx.x].x += sD[threadIdx.x + 32].x;
+          sD[threadIdx.x].y += sD[threadIdx.x + 32].y;
+        }
+        __syncthreads();
+      }
+
+      if (blockDim.x >= 32) {
+        if (threadIdx.x < 16) {
+          sD[threadIdx.x].x += sD[threadIdx.x + 16].x;
+          sD[threadIdx.x].y += sD[threadIdx.x + 16].y;
+        }
+        __syncthreads();
+      }
+
+      // A complex float consists of two float values. Up to 32 float values (equivalent to 16
+      // complex float numbers) may need to be reduced.
       if (threadIdx.x < 32) warp_unroll(sD, threadIdx.x);
       __syncthreads();
 
@@ -247,7 +230,6 @@ namespace cytnx {
 
       // alloc mem for each block:
       T* dblk;
-      // std::cout << NBlocks*sizeof(cytnx_double) << std::endl;
       checkCudaErrors(cudaMalloc((void**)&dblk, NBlocks * sizeof(T)));
       if (NBlocks == 1) {
         cuReduce_kernel<<<NBlocks, _TNinB_REDUCE_>>>(out, in, Nelems);
@@ -265,10 +247,9 @@ namespace cytnx {
         } else {
           T* dblk2;
           cudaMalloc((void**)&dblk2, NBlocks * sizeof(T));
-          // do something:
           cuReduce_kernel<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
 
-          swap(dblk2, dblk);  // swap new data to old data, and free the old
+          swap(dblk2, dblk);
           cudaFree(dblk2);
         }
         Nelems = NBlocks;
@@ -313,7 +294,6 @@ namespace cytnx {
 
       // alloc mem for each block:
       cuFloatComplex* dblk;
-      // std::cout << NBlocks*sizeof(cytnx_double) << std::endl;
       cudaMalloc((void**)&dblk, NBlocks * sizeof(cuFloatComplex));
 
       if (NBlocks == 1) {
@@ -333,10 +313,9 @@ namespace cytnx {
         } else {
           cuFloatComplex* dblk2;
           cudaMalloc((void**)&dblk2, NBlocks * sizeof(cuFloatComplex));
-          // do something:
           cuReduce_kernel_cf<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
 
-          swap(dblk2, dblk);  // swap new data to old data, and free the old
+          swap(dblk2, dblk);
           cudaFree(dblk2);
         }
         Nelems = NBlocks;
@@ -353,7 +332,6 @@ namespace cytnx {
 
       // alloc mem for each block:
       cuDoubleComplex* dblk;
-      // std::cout << NBlocks*sizeof(cytnx_double) << std::endl;
       cudaMalloc((void**)&dblk, NBlocks * sizeof(cuDoubleComplex));
 
       if (NBlocks == 1) {
@@ -373,10 +351,9 @@ namespace cytnx {
         } else {
           cuDoubleComplex* dblk2;
           cudaMalloc((void**)&dblk2, NBlocks * sizeof(cuDoubleComplex));
-          // do something:
           cuReduce_kernel_cd<<<NBlocks, _TNinB_REDUCE_>>>(dblk2, dblk, Nelems);
 
-          swap(dblk2, dblk);  // swap new data to old data, and free the old
+          swap(dblk2, dblk);
           cudaFree(dblk2);
         }
         Nelems = NBlocks;
@@ -385,5 +362,4 @@ namespace cytnx {
     }
 
   }  // namespace utils_internal
-
 }  // namespace cytnx
