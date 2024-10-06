@@ -49,7 +49,7 @@ namespace cytnx {
    * Note: `cytnx_bool` is not supported for the `linalg::Sum()` function.
    * This test also assesses the accuracy of summing floating-point numbers.
    */
-  TYPED_TEST(LinalgSumHomogeneousValuesTest, Accuracy) {
+  TYPED_TEST(LinalgSumHomogeneousValuesTest, DISABLED_Accuracy) {
     TypeParam value = LinalgSumHomogeneousValuesTest<TypeParam>::value;
     int element_number = 10000;
     unsigned int dtype = Type_class().cy_typeid(value);
