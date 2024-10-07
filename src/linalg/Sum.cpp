@@ -7,7 +7,8 @@
 namespace cytnx {
   namespace linalg {
     Tensor Sum(const Tensor &Tin) {
-      cytnx_error_msg(Tin.dtype() == Type.Void, "[Cannot have void (Uninitialize) Tensor]%s", "\n");
+      cytnx_error_msg(Tin.dtype() == Type.Void,
+                      "[Cannot have void (uninitialized) Tensor as input]%s", "\n");
       Tensor out({1}, Tin.dtype(), Tin.device());
 
       if (Tin.device() == Device.cpu) {
