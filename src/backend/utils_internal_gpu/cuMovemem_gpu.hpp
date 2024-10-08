@@ -1,15 +1,16 @@
-#ifndef _H_cuMovemem_gpu_
-#define _H_cuMovemem_gpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUMOVEMEM_GPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUMOVEMEM_GPU_H_
 
-#include <cstdio>
-#include <cstdlib>
-#include <stdint.h>
-#include <climits>
+#include <vector>
+
+#include "boost/smart_ptr/intrusive_ptr.hpp"
+
 #include "Type.hpp"
-#include "backend/Storage.hpp"
-#include "cytnx_error.hpp"
 
 namespace cytnx {
+  // TODO: Remove the dependency of Storage.
+  class Storage_base;
+
   namespace utils_internal {
 #ifdef UNI_GPU
     boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cd(boost::intrusive_ptr<Storage_base> &in,
@@ -80,4 +81,4 @@ namespace cytnx {
 
   }  // namespace utils_internal
 }  // namespace cytnx
-#endif
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUMOVEMEM_GPU_H_

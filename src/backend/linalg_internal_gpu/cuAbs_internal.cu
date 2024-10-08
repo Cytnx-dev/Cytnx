@@ -1,5 +1,4 @@
 #include "cuAbs_internal.hpp"
-#include "../utils_internal_interface.hpp"
 
 // #include "cytnx_error.hpp"
 // #include "utils/backend/lapack_wrapper.hpp"

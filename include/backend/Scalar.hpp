@@ -2848,6 +2848,12 @@ namespace cytnx {
     }
 
     // casting
+    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_complex128.
+    explicit operator cytnx_complex128() const { return this->_impl->to_cytnx_complex128(); }
+
+    /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_complex64.
+    explicit operator cytnx_complex64() const { return this->_impl->to_cytnx_complex64(); }
+
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_double.
     explicit operator cytnx_double() const { return this->_impl->to_cytnx_double(); }
 

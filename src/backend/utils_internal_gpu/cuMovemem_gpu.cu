@@ -1,7 +1,11 @@
 #include "cuMovemem_gpu.hpp"
-#include "cuAlloc_gpu.hpp"
-#include "backend/Storage.hpp"
+
 #include <algorithm>
+#include <vector>
+
+#include "backend/Storage.hpp"
+#include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "Type.hpp"
 #include "utils/vec_print.hpp"
 
 #ifdef UNI_GPU
@@ -137,7 +141,7 @@ namespace cytnx {
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T](in->device);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
@@ -182,7 +186,7 @@ namespace cytnx {
 
       cuttDestroy(plan);
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T](in->device);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
@@ -269,7 +273,7 @@ namespace cytnx {
       checkCudaErrors(cutensorDestroyPlan(plan));
       checkCudaErrors(cutensorDestroy(handle));
 
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
+      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T](in->device);
       if (is_inplace) {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));

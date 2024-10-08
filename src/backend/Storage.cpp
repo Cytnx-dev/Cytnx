@@ -279,7 +279,7 @@ namespace cytnx {
       }
     }
 
-    this->_impl = __SII.USIInit[dt]();
+    this->_impl = __SII.USIInit[dt](dv);
     this->_impl->Init(sz, dv);
 
     // data:
@@ -308,7 +308,7 @@ namespace cytnx {
     // check:
     cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
 
-    this->_impl = __SII.USIInit[dtype]();
+    this->_impl = __SII.USIInit[dtype](Device.cpu);
     this->_impl->Init(Nelem, Device.cpu);
 
     f.read((char *)this->_impl->Mem, Type.typeSize(dtype) * Nelem);

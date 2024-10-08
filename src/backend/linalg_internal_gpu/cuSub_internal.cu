@@ -1,5 +1,4 @@
 #include "cuSub_internal.hpp"
-#include "../utils_internal_interface.hpp"
 
 #ifdef UNI_OMP
   #include <omp.h>

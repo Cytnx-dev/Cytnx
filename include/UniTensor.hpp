@@ -480,8 +480,9 @@ namespace cytnx {
         std::vector<Tensor> _interface_block;  // this is serves as interface for get_blocks_();
         return this;
       } else {
+        // TODO: Do not allocate the memory twice.
         boost::intrusive_ptr<UniTensor_base> out = this->clone();
-        out->to_(device);
+        out->get_block_() = out->get_block_().to(device);
         return out;
       }
     }
@@ -1155,8 +1156,11 @@ namespace cytnx {
       if (this->device() == device) {
         return this;
       } else {
+        // TODO: Do not allocate the memory twice.
         boost::intrusive_ptr<UniTensor_base> out = this->clone();
-        out->to_(device);
+        for (cytnx_uint64 i = 0; i < out->get_blocks_(true).size(); i++) {
+          out->get_blocks_(true)[i] = out->get_blocks_(true)[i].to(device);
+        }
         return out;
       }
     };
@@ -1895,15 +1899,6 @@ namespace cytnx {
               const int &device = Device.cpu, const bool &is_diag = false,
               const std::string &name = "")
         : _impl(new UniTensor_base()) {
-  #ifdef UNI_DEBUG
-      cytnx_warning_msg(
-        true,
-        "[DEBUG] message: entry for UniTensor(const std::vector<Bond> &bonds, const "
-        "std::vector<std::string> &in_labels={}, const cytnx_int64 &rowrank=-1, const unsigned "
-        "int "
-        "&dtype=Type.Double, const int &device = Device.cpu, const bool &is_diag=false)%s",
-        "\n");
-  #endif
       this->Init(bonds, in_labels, rowrank, dtype, device, is_diag, name);
     }
 

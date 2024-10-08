@@ -1,43 +1,51 @@
 #ifndef _H_utils_internal_
 #define _H_utils_internal_
 
-#include "utils_internal_cpu/Cast_cpu.hpp"
-#include "utils_internal_cpu/Movemem_cpu.hpp"
-#include "utils_internal_cpu/Alloc_cpu.hpp"
-#include "utils_internal_cpu/SetZeros_cpu.hpp"
-#include "utils_internal_cpu/Range_cpu.hpp"
-#include "utils_internal_cpu/Fill_cpu.hpp"
-#include "utils_internal_cpu/SetArange_cpu.hpp"
-#include "utils_internal_cpu/GetElems_cpu.hpp"
-#include "utils_internal_cpu/GetElems_contiguous_cpu.hpp"
-#include "utils_internal_cpu/SetElems_cpu.hpp"
-#include "utils_internal_cpu/SetElems_contiguous_cpu.hpp"
-#include "utils_internal_cpu/Complexmem_cpu.hpp"
+// #include "utils_internal_cpu/Cast_cpu.hpp"
+// #include "utils_internal_cpu/Movemem_cpu.hpp"
+// #include "utils_internal_cpu/Alloc_cpu.hpp"
+// #include "utils_internal_cpu/SetZeros_cpu.hpp"
+// #include "utils_internal_cpu/Range_cpu.hpp"
+// #include "utils_internal_cpu/Fill_cpu.hpp"
+// #include "utils_internal_cpu/SetArange_cpu.hpp"
+// #include "utils_internal_cpu/GetElems_cpu.hpp"
+// #include "utils_internal_cpu/GetElems_contiguous_cpu.hpp"
+// #include "utils_internal_cpu/SetElems_cpu.hpp"
+// #include "utils_internal_cpu/SetElems_contiguous_cpu.hpp"
+// #include "utils_internal_cpu/Complexmem_cpu.hpp"
 
-#include "utils_internal_cpu/blocks_mvelems_cpu.hpp"
+// #include "utils_internal_cpu/blocks_mvelems_cpu.hpp"
 
-#ifdef UNI_GPU
-  #include "utils_internal_gpu/cuCast_gpu.hpp"
-  #include "utils_internal_gpu/cuAlloc_gpu.hpp"
-  #include "utils_internal_gpu/cuMovemem_gpu.hpp"
-  #include "utils_internal_gpu/cuReduce_gpu.hpp"
-  #include "utils_internal_gpu/cuSetZeros_gpu.hpp"
-  #include "utils_internal_gpu/cuFill_gpu.hpp"
-  #include "utils_internal_gpu/cuSetArange_gpu.hpp"
-  #include "utils_internal_gpu/cuSetElems_gpu.hpp"
-  #include "utils_internal_gpu/cuSetElems_contiguous_gpu.hpp"
-  #include "utils_internal_gpu/cuGetElems_gpu.hpp"
-  #include "utils_internal_gpu/cuGetElems_contiguous_gpu.hpp"
-  #include "utils_internal_gpu/cuComplexmem_gpu.hpp"
-#endif
+// #ifdef UNI_GPU
+//   #include "utils_internal_gpu/cuCast_gpu.hpp"
+//   #include "utils_internal_gpu/cuAlloc_gpu.hpp"
+//   #include "utils_internal_gpu/cuMovemem_gpu.hpp"
+//   #include "utils_internal_gpu/cuReduce_gpu.hpp"
+//   #include "utils_internal_gpu/cuSetZeros_gpu.hpp"
+//   #include "utils_internal_gpu/cuFill_gpu.hpp"
+//   #include "utils_internal_gpu/cuSetArange_gpu.hpp"
+//   #include "utils_internal_gpu/cuSetElems_gpu.hpp"
+//   #include "utils_internal_gpu/cuSetElems_contiguous_gpu.hpp"
+//   #include "utils_internal_gpu/cuGetElems_gpu.hpp"
+//   #include "utils_internal_gpu/cuGetElems_contiguous_gpu.hpp"
+//   #include "utils_internal_gpu/cuComplexmem_gpu.hpp"
+// #endif
 
-#include "Type.hpp"
-#include "utils/complex_arithmetic.hpp"
-#ifdef UNI_GPU
-  #include "utils/cucomplex_arithmetic.hpp"
-#endif
+// #include "utils/complex_arithmetic.hpp"
+// #ifdef UNI_GPU
+//   #include "utils/cucomplex_arithmetic.hpp"
+// #endif
+
+#include <map>
+#include <utility>
+#include <vector>
+
+#include "boost/intrusive_ptr.hpp"
 
 #include "backend/Storage.hpp"
+#include "Tensor.hpp"
+#include "Type.hpp"
+
 namespace cytnx {
   namespace utils_internal {
 
@@ -70,14 +78,14 @@ namespace cytnx {
     //     pair<cytnx_uint64,cytnx_uint64>> &, const vector<cytnx_uint64> &, const
     //     vector<cytnx_uint64> &, const cytnx_uint64 &,  const cytnx_uint64 &);
 
-    typedef void (*blocks_mvelems_io)(vector<Tensor> &, const vector<Tensor> &,
-                                      const vector<cytnx_uint64> &,
-                                      const vector<vector<cytnx_uint64>> &,
-                                      const vector<vector<cytnx_uint64>> &,
-                                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &,
-                                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &,
-                                      const vector<cytnx_uint64> &, const vector<cytnx_uint64> &,
-                                      const cytnx_uint64 &, const cytnx_uint64 &);
+    typedef void (*blocks_mvelems_io)(
+      std::vector<Tensor> &, const std::vector<Tensor> &, const std::vector<cytnx_uint64> &,
+      const std::vector<std::vector<cytnx_uint64>> &,
+      const std::vector<std::vector<cytnx_uint64>> &,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &,
+      std::map<cytnx_uint64, std::pair<cytnx_uint64, cytnx_uint64>> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const cytnx_uint64 &,
+      const cytnx_uint64 &);
 
     class utils_internal_interface {
      public:

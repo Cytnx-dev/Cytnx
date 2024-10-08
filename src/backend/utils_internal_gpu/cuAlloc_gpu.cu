@@ -1,4 +1,7 @@
-#include "cuAlloc_gpu.hpp"
+#include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
+
+#include "cytnx_error.hpp"
+#include "Type.hpp"
 
 using namespace std;
 

@@ -1,5 +1,5 @@
 #include "cuKron_internal.hpp"
-#include "../utils_internal_interface.hpp"
+
 #include "utils/utils.hpp"
 #include "../utils_internal_gpu/cuAlloc_gpu.hpp"
 #include <algorithm>

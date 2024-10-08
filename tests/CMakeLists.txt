@@ -36,6 +36,11 @@ add_executable(
   algo_test/Vstack_test.cpp
 )
 
+target_include_directories(
+  test_main
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../src
+)
+
 if(USE_CUDA)
       add_subdirectory(gpu)
 endif()

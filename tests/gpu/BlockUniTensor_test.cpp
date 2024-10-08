@@ -221,8 +221,8 @@ TEST_F(BlockUniTensorTest, gpu_Conj) {
           }
 
   tmp = UT_diag_cplx.Conj();
-  for (size_t i = 0; i < UT_diag.bonds()[0].qnums().size(); i++) {
-    cytnx_uint64 deg = UT_diag.bonds()[0]._impl->_degs[i];
+  for (size_t i = 0; i < UT_diag_cplx.bonds()[0].qnums().size(); i++) {
+    cytnx_uint64 deg = UT_diag_cplx.bonds()[0]._impl->_degs[i];
     for (size_t j = 0; j < deg; j++) {
       EXPECT_DOUBLE_EQ(double(tmp.get_block_(i).at({j}).real()),
                        double(UT_diag_cplx.get_block_(i).at({j}).real()));

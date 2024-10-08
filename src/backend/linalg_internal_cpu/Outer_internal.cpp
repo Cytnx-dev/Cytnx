@@ -1,6 +1,6 @@
 #include "Outer_internal.hpp"
 #include "Ger_internal.hpp"
-#include "../utils_internal_interface.hpp"
+
 #include "utils/complex_arithmetic.hpp"
 #include "backend/lapack_wrapper.hpp"
 
