@@ -112,7 +112,7 @@ namespace cytnx {
     const bool &is_tag() const { return this->_is_tag; }
     const std::vector<std::string> &labels() const { return this->_labels; }
     /**
-     * @brief Get the index of an desired label string
+     * @brief Get the index of a desired label (string)
      *
      * @param label Label you want to find
      * @return The index of the label. If not found, return -1
@@ -146,13 +146,14 @@ namespace cytnx {
     void set_name(const std::string &in) { this->_name = in; }
 
     /**
-     * @brief Set the label object
-     * @details Replace the old label by new label.
+     * @brief Set a label
+     * @details Replace the old label by a new label.
      * @param[in] oldlabel The old label you want to replace.
-     * @param[in] new_lable The label you want to replace with.
+     * @param[in] new_label The new label.
      * @pre
-     * 1. \p oldlabel should be exist in this UniTensor.
-     * 2. The new label \p new_label cannot set as others exit labels (cannot be duplicated.)
+     * 1. \p oldlabel should exist in this UniTensor.
+     * 2. The new label \p new_label cannot be the same as other existing labels (no duplicate
+     * labels allowed).
      * @see set_label(const cytnx_int64 &inx, const std::string &new_label)
      */
     void set_label(const std::string &oldlabel, const std::string &new_label) {
@@ -560,7 +561,7 @@ namespace cytnx {
      *
      *
      *
-     * @param inx
+     * @param inx / old_label
      * @param new_label
      *
      * @return boost::intrusive_ptr<UniTensor_base>
@@ -737,7 +738,7 @@ namespace cytnx {
      * @deprecated
      *
      * @param indicators
-     * @param permute_back
+     * @param force
      * @param by_label
      */
     void combineBond(const std::vector<std::string> &indicators, const bool &force = true);
@@ -1011,7 +1012,7 @@ namespace cytnx {
      *
      */
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
-    void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
+    void truncate_(const std::string &bond_label, const cytnx_uint64 &dim);
 
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
@@ -2362,13 +2363,14 @@ namespace cytnx {
     }
 
     void Conj_() {
-      // TODO: implement Conj_
-      cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Conj_] not implemented yet.%s", "\n");
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
       for (int i = 0; i < this->_blocks.size(); i++) {
         this->_blocks[i].Conj_();
       }
     };
 
+    // Transpose(_) changes the index order without sign flips and reverses the bond directions for
+    // fermionic tensors
     void Transpose_();
     boost::intrusive_ptr<UniTensor_base> Transpose() {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
@@ -2386,17 +2388,13 @@ namespace cytnx {
     }
 
     boost::intrusive_ptr<UniTensor_base> Dagger() {
-      // TODO: implement Dagger
-      cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Dagger] not implemented yet.%s",
-                      "\n");
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
       boost::intrusive_ptr<UniTensor_base> out = this->Conj();
       out->Transpose_();
       return out;
     }
     void Dagger_() {
-      // TODO: implement Dagger_
-      cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Dagger_] not implemented yet.%s",
-                      "\n");
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
       this->Conj_();
       this->Transpose_();
     }
@@ -2637,24 +2635,24 @@ namespace cytnx {
     /**
     @brief Construct a UniTensor from a cytnx::Tensor.
     @param[in] in_tensor a cytnx::Tensor
-    @param[in] is_diag Whether the input Tensor \p in_tensor is a diagonal Tensor.
-                     This will requires that the input of \p in_tensor to be 1D.
-    @param[in] rowrank the rowrank of the outcome UniTensor
+    @param[in] is_diag whether the input Tensor \p in_tensor is a diagonal Tensor;
+                     this requires the input \p in_tensor to be 1D.
+    @param[in] rowrank the rowrank of the resulting UniTensor
 
     @note
-        1. The constructed UniTensor will have same rank as the input Tensor, with default labels,
-    and a shared view (shared instance) of interal block as the input Tensor.
+        1. The constructed UniTensor will have the same rank as the input Tensor, with default
+    labels, and a shared view (shared instance) of interal block as the input Tensor.
         2. The constructed UniTensor is always untagged.
-    @attention The internal block of UniTensor is a referece of input Tensor. That is, they
-    share the same memory. All the change afterward on UniTensor block will change in input Tensor
-    as well. Use Tensor.clone() if a shared view is not the case.
+    @attention The internal block of the UniTensor is a referece to the input Tensor. That is, they
+    share the same memory. If the elements of the UniTensor are changed, the original Tensor is also
+    changed and vice-versa. Use Tensor.clone() if a shared view is not desired.
 
     ## Example:
-    ### c++ API:
+    ### C++ API:
     \include example/UniTensor/fromTensor.cpp
     #### output>
     \verbinclude example/UniTensor/fromTensor.cpp.out
-    ### python API:
+    ### Python API:
     \include example/UniTensor/fromTensor.py
     #### output>
     \verbinclude example/UniTensor/fromTensor.py.out
@@ -2667,20 +2665,20 @@ namespace cytnx {
       this->Init(in_tensor, is_diag, rowrank, in_labels, name);
     }
     /**
-    @brief Initialize a UniTensor with cytnx::Tensor.
+    @brief Initialize a UniTensor from a cytnx::Tensor.
     @param[in] in_tensor a cytnx::Tensor
-    @param[in] is_diag Whether the input Tensor \p in_tensor is a diagonal Tensor.
-                     This will requires that the input of \p in_tensor to be 1D.
-    @param[in] rowrank the rowrank of the outcome UniTensor.
-    @param[in] name user specified name of the UniTensor.
+    @param[in] is_diag whether the input Tensor \p in_tensor is a diagonal Tensor.
+                     this requires the input \p in_tensor to be 1D.
+    @param[in] rowrank the rowrank of the resulting UniTensor.
+    @param[in] name user-specified name of the UniTensor.
 
     @note
-        1. The constructed UniTensor will have same rank as the input Tensor, with default labels,
-    and a shared view (shared instance) of interal block as the input Tensor.
+        1. The constructed UniTensor will have the same rank as the input Tensor, with default
+    labels, and a shared view (shared instance) of interal block as the input Tensor.
         2. The constructed UniTensor is always untagged.
-    @attention The internal block of UniTensor is a referece of input Tensor. That is, they
-    share the same memory. All the change afterward on UniTensor block will change in input Tensor
-    as well. Use Tensor.clone() if a shared view is not the case.
+    @attention The internal block of the UniTensor is a referece to the input Tensor. That is, they
+    share the same memory. If the elements of the UniTensor are changed, the original Tensor is also
+    changed and vice-versa. Use Tensor.clone() if a shared view is not desired.
         @see UniTensor(const Tensor &, const bool &, const cytnx_int64 &)
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false, const cytnx_int64 &rowrank = -1,
@@ -2832,7 +2830,7 @@ namespace cytnx {
     }
 
     /**
-    @brief Set the name of the UniTensor.
+    @brief Set the name of a UniTensor.
         @details You can use this function to give a name for the UniTensor.
     @param[in] in Input the name you want to set for the UniTensor. It should be a string.
         @return UniTensor
@@ -2849,7 +2847,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabel(const cytnx_int64 &idx, const std::string &new_label) const,
+        2. Compared to relabel(const cytnx_int64 &idx, const std::string &new_label) const,
         this function set the new label and return self.
     */
     UniTensor &set_label(const cytnx_int64 &idx, const std::string &new_label) {
@@ -2872,7 +2870,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabel(const std::string &old_label, const std::string &new_label) const,
+        2. Compared to relabel(const std::string &old_label, const std::string &new_label) const,
         this function set the new label and return self.
     */
     UniTensor &set_label(const std::string &old_label, const std::string &new_label) {
@@ -2917,7 +2915,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabels(const std::vector<std::string> &new_labels) const, this
+        2. Compared to relabels(const std::vector<std::string> &new_labels) const, this
         function set the new label and return self.
     */
     UniTensor &set_labels(const std::vector<std::string> &new_labels) {
@@ -2940,7 +2938,7 @@ namespace cytnx {
     }
 
     /**
-    @brief Set the row rank of the UniTensor.
+    @brief Set the rowrank of the UniTensor.
         @details You can use this function to set the row rank of the UniTensor. The row rank is
           important if you want to use the linear algebra process.
     @param[in] new_rowrank the new row rank of the UniTensor
@@ -3171,7 +3169,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabel(const std::vector<std::string> &new_labels) const, this
+        2. Compared to relabel(const std::vector<std::string> &new_labels) const, this
         function set the new label to itself.
     */
     UniTensor &relabel_(const std::vector<std::string> &new_labels) {
@@ -3185,7 +3183,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabels(const std::vector<std::string> &new_labels) const, this
+        2. Compared to relabels(const std::vector<std::string> &new_labels) const, this
         function set the new label to itself.
     */
     UniTensor &relabels_(const std::vector<std::string> &new_labels) {
@@ -3194,7 +3192,7 @@ namespace cytnx {
     }
 
     /**
-    @brief relable all of the labels in UniTensor.
+    @brief relabel all of the labels in UniTensor.
     @param[in] new_labels the new labels for each bond.
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
@@ -3211,7 +3209,7 @@ namespace cytnx {
     }
     /**
     @deprecated
-    @brief relables all of the labels in UniTensor.
+    @brief relabels all of the labels in UniTensor.
     @param[in] new_labels the new labels for each bond.
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
@@ -3309,12 +3307,12 @@ namespace cytnx {
     }
 
     /**
-    @brief relable part or all of the labels in UniTensor by given new labels
+    @brief relabel part or all of the labels in UniTensor by given new labels
     @param[in] old_labels the old labels for each bond.
     @param[in] new_labels the new labels for each bond.
     @note
         1. the final output UniTensor cannot have duplicate labels.
-        2. Compare to relabel(const std::vector<std::string> &old_labels,  const
+        2. Compared to relabel(const std::vector<std::string> &old_labels,  const
     std::vector<std::string> &new_labels) const , this function set the new label(s) to itself.
 
     @see relabel(const std::vector<std::string> &old_labels, const std::vector<std::string>
@@ -3330,12 +3328,12 @@ namespace cytnx {
     }
     /**
     @deprecated
-    @brief relables part or all of the labels in UniTensor by given new labels
+    @brief relabels part or all of the labels in UniTensor by given new labels
     @param[in] old_labels the old labels for each bond.
     @param[in] new_labels the new labels for each bond.
     @note
         1. the final output UniTensor cannot have duplicate labels.
-        2. Compare to relabels(const std::vector<std::string> &old_labels,  const
+        2. Compared to relabels(const std::vector<std::string> &old_labels,  const
     std::vector<std::string> &new_labels) const , this function set the new label(s) to itself.
 
     @see relabels(const std::vector<std::string> &old_labels, const std::vector<std::string>
@@ -3430,11 +3428,11 @@ namespace cytnx {
     }
 
     /**
-    @brief rebable the legs in the UniTensor by given index.
+    @brief rebabel the legs in the UniTensor by given index.
     @details This function will relabel the legs in the UniTensor by a given index.
     This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor (that is if you use same_data() to check,
-    it will return true). Compare to set_label(), this function will return a new
+    it will return true). Compared to set_label(), this function will return a new
     UniTensor object with different meta data.
         @param[in] inx a given index
         @param[in] new_label the new label of the UniTensor in the index \p inx
@@ -3479,7 +3477,7 @@ namespace cytnx {
     @details This function will relabel the legs in the UniTensor by a given label.
     This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor (that is if you use same_data() to check,
-    it will return true). Compare to set_label(), this function will return a new
+    it will return true). Compared to set_label(), this function will return a new
     UniTensor object with different meta data.
           @param[in] old_label original label you want to replace
           @param[in] new_label the new label
@@ -4404,7 +4402,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Add(const UniTensor&)const, this is an inplace function.
+        @note Compared to Add(const UniTensor&)const, this is an inplace function.
         @see Add_(const Scalar&), Add(const UniTensor&)const, Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4425,7 +4423,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Mul(const UniTensor&)const, this is an inplace function.
+        @note Compared to Mul(const UniTensor&)const, this is an inplace function.
         @see Mul_(const Scalar&), Mul(const UniTensor&)const, Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4446,7 +4444,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Sub(const UniTensor&)const, this is an inplace function.
+        @note Compared to Sub(const UniTensor&)const, this is an inplace function.
         @see Sub_(const Scalar&), Sub(const UniTensor&)const, Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -4467,7 +4465,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Div(const UniTensor&)const, this is an inplace function.
+        @note Compared to Div(const UniTensor&)const, this is an inplace function.
         @see Div_(const Scalar&), Div(const UniTensor&)const, Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -4482,7 +4480,7 @@ namespace cytnx {
             in UniTensor with this Scalar \p rhs.
         @param[in] rhs a Scalar you want to add in the UniTensor.
         @return UniTensor&
-        @note Compare to Add(const Scalar&)const, this is an inplace function.
+        @note Compared to Add(const Scalar&)const, this is an inplace function.
         @see Add_(const UniTensor&), Add(const UniTensor&)const, Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4497,7 +4495,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to multiplicate in the UniTensor.
         @return UniTensor&
-        @note Compare to Mul(const Scalar&)const, this is an inplace function.
+        @note Compared to Mul(const Scalar&)const, this is an inplace function.
         @see Mul_(const UniTensor&), Mul(const UniTensor&)const, Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4512,7 +4510,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to subtract in the UniTensor.
         @return UniTensor&
-        @note Compare to Sub(const Scalar&)const, this is an inplace function.
+        @note Compared to Sub(const Scalar&)const, this is an inplace function.
         @see Sub_(const UniTensor&), Sub(const UniTensor&)const, Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -4527,7 +4525,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to divide in the UniTensor.
         @return UniTensor&
-        @note Compare to Sub(const Scalar&)const, this is an inplace function.
+        @note Compared to Sub(const Scalar&)const, this is an inplace function.
         @see Div_(const UniTensor&), Div(const UniTensor&)const, Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -4548,7 +4546,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Add_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Add_(const UniTensor&), this function will create a new UniTensor.
         @see Add_(const UniTensor&), Add_(const Scalar&), Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4560,7 +4558,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to add in the UniTensor.
         @return UniTensor
-        @note Compare to Add_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Add_(const Scalar&), this function will create a new UniTensor.
         @see Add_(const Scalar&), Add_(const UniTensor&), Add(const UniTensor&)const,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -4578,7 +4576,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Mul_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Mul_(const UniTensor&), this function will create a new UniTensor.
         @see Mul_(const UniTensor&), Mul_(const Scalar&), Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4590,7 +4588,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to multiply in the UniTensor.
         @return UniTensor
-        @note Compare to Mul_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Mul_(const Scalar&), this function will create a new UniTensor.
         @see Mul_(const Scalar&), Mul_(const UniTensor&), Mul(const UniTensor&)const,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -4608,7 +4606,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Div_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Div_(const UniTensor&), this function will create a new UniTensor.
         @see Div_(const UniTensor&), Div_(const Scalar&), Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -4620,7 +4618,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to divide in the UniTensor.
         @return UniTensor
-        @note Compare to Div_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Div_(const Scalar&), this function will create a new UniTensor.
         @see Div_(const Scalar&), Div_(const UniTensor&), Div(const UniTensor&)const,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -4638,7 +4636,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Sub_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Sub_(const UniTensor&), this function will create a new UniTensor.
         @see Sub_(const UniTensor&), Sub_(const Scalar&), Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -4650,7 +4648,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs the subtrahend
         @return UniTensor
-        @note Compare to Sub_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Sub_(const Scalar&), this function will create a new UniTensor.
         @see Sub_(const Scalar&), Sub_(const UniTensor&), Sub(const UniTensor&)const,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -4810,7 +4808,7 @@ namespace cytnx {
     @brief Apply complex conjugate on each entry of the UniTensor.
         @details Conj() apply complex conjugate on each entry of the UniTensor.
         @return UniTensor
-    @note Compare to Conj_(), this fucntion will create a new object UniTensor.
+    @note Compared to Conj_(), this function will create a new object UniTensor.
         @see Conj_()
         */
     UniTensor Conj() const {
@@ -4823,7 +4821,7 @@ namespace cytnx {
     @brief Apply complex conjugate on each entry of the UniTensor.
         @details Conj_() apply complex conjugate on each entry of the UniTensor, inplacely.
         @return UniTensor
-    @note Compare to Conj(), this fucntion is inplace function.
+    @note Compared to Conj(), this function is an inplace function.
         @see Conj()
         */
     UniTensor &Conj_() {
@@ -4837,8 +4835,10 @@ namespace cytnx {
       tagged (i.e. the Bonds are directional), it will swap the direction of the Bonds but
       the rowrank will not change. If the UniTensor is untagged (i.e. the Bonds are
       BondType::BD_REG), it will change the rowrank to the opposite side.
+      For fermionic UniTensors, the index order will be reversed without sign flips, and the
+    direction of all Bonds will swapped.
         @return UniTensor
-    @note Compare to Transpose_(), this fucntion will return new UniTensor object.
+    @note Compared to Transpose_(), this function will return new UniTensor object.
         @see Transpose_()
         */
     UniTensor Transpose() const {
@@ -4850,7 +4850,7 @@ namespace cytnx {
     /**
     @brief Take the transpose of the UniTensor, inplacely.
         @return UniTensor
-    @note Compare to Transpose(), this fucntion is inplace function.
+    @note Compared to Transpose(), this function is an inplace function.
         @see Transpose()
         */
     UniTensor &Transpose_() {
@@ -4861,7 +4861,7 @@ namespace cytnx {
     /**
     @brief normalize the current UniTensor instance with 2-norm.
         @return UniTensor
-    @note Compare to normalize_(), this fucntion will return new UniTensor object.
+    @note Compared to normalize_(), this function will return new UniTensor object.
         @see normalize_()
         */
     UniTensor normalize() const {
@@ -4873,7 +4873,7 @@ namespace cytnx {
     /**
     @brief normalize the UniTensor, inplacely.
         @return UniTensor
-    @note Compare to normalize(), this fucntion is inplace function.
+    @note Compared to normalize(), this function is inplace function.
         @see normalize()
         */
     UniTensor &normalize_() {
@@ -4882,12 +4882,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor.
+    @brief Take the partial trace of the UniTensor.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor
-    @note Compare to Trace_(), this fucntion will return a new UniTensor object.
+    @note Compared to Trace_(), this function will return a new UniTensor object.
         @see Trace_()
         */
     UniTensor Trace(const std::string &a, const std::string &b) const {
@@ -4897,12 +4897,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor.
+    @brief Take the partial trace of the UniTensor.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor
-    @note Compare to Trace_(), this fucntion will return a new UniTensor object.
+    @note Compared to Trace_(), this function will return a new UniTensor object.
         @see Trace_()
         */
     UniTensor Trace(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) const {
@@ -4912,12 +4912,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor, inplacely.
+    @brief Take the partial trace of the UniTensor, inplacely.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor&
-    @note Compare to Trace(), this is an inplace function.
+    @note Compared to Trace(), this is an inplace function.
         @see Trace()
         */
     UniTensor &Trace_(const std::string &a, const std::string &b) {
@@ -4934,12 +4934,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor, inplacely.
+    @brief Take the partial trace of the UniTensor, inplacely.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor&
-    @note Compare to Trace(), this is an inplace function.
+    @note Compared to Trace(), this is an inplace function.
         @see Trace()
         */
     UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
@@ -4958,7 +4958,7 @@ namespace cytnx {
     /**
     @brief Take the conjugate transpose to the UniTensor.
         @return UniTensor
-    @note Compare to Dagger_(), this function will create a new UniTensor ojbect.
+    @note Compared to Dagger_(), this function will create a new UniTensor ojbect.
         @see Dagger_(), Transpose()
         */
     UniTensor Dagger() const {
@@ -4970,7 +4970,7 @@ namespace cytnx {
     /**
     @brief Take the conjugate transpose to the UniTensor, inplacely.
         @return UniTensor&
-    @note Compare to Dagger(), this is an inplace function.
+    @note Compared to Dagger(), this is an inplace function.
         @see Dagger()
         */
     UniTensor &Dagger_() {
@@ -4996,7 +4996,7 @@ namespace cytnx {
         @details Take power \p p on all the elements in the UniTensor.
         @param p power
         @return UniTensor
-    @note Compare to Pow_(), this function will create a new UniTensor ojbect.
+    @note Compared to Pow_(), this function will create a new UniTensor ojbect.
         @see Pow_()
         */
     UniTensor Pow(const double &p) const;
@@ -5006,7 +5006,7 @@ namespace cytnx {
         @details Take power \p p on all the elements in the UniTensor, inplacely.
         @param p power
         @return UniTensor&
-    @note Compare to Pow(), this function is an inplacely function.
+    @note Compared to Pow(), this function is an inplacely function.
         @see Pow()
         */
     UniTensor &Pow_(const double &p);
@@ -5083,7 +5083,7 @@ namespace cytnx {
      * @param[in] label the bond label.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate(const std::string &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate(const std::string &bond_idx, const cytnx_uint64 &dim),
      *   this is inplace function and will modify the current UniTensor object.
      */
     UniTensor &truncate_(const std::string &label, const cytnx_uint64 &dim) {
@@ -5096,7 +5096,7 @@ namespace cytnx {
      * @param[in] bond_idx the bond index.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
      *  this is inplace function and will modify the current UniTensor object.
      */
     UniTensor &truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) {
@@ -5109,7 +5109,7 @@ namespace cytnx {
      * @param[in] label the bond label.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate_(const std::string &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate_(const std::string &bond_idx, const cytnx_uint64 &dim),
      *   this function will return a new UniTensor object.
      * @see UniTensor::truncate_(const std::string &bond_idx, const cytnx_uint64 &dim)
      */
@@ -5124,7 +5124,7 @@ namespace cytnx {
      * @param[in] bond_idx the bond index.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
      *  this function will return a new UniTensor object.
      * @see UniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim)
      */

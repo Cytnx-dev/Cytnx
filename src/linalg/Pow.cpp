@@ -76,9 +76,15 @@ namespace cytnx {
         out.get_block_().Pow_(p);
       } else if (Tin.uten_type() == UTenType.Block) {
         cytnx_error_msg(true,
-                        "[Pow][BlockUniTensor] Currently disable and evaluating. This is "
-                        "unphysical operation and will destroy Symmetry structure.%s",
+                        "[Pow][BlockUniTensor] Powers of BlockUniTensors cannot be calculated. "
+                        "This would destroy the Symmetry structure and is thus not implemented.%s",
                         "\n");
+      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
+        cytnx_error_msg(
+          true,
+          "[Pow][BlockFermionicUniTensor] Powers of BlockFermionicUniTensors cannot be calculated. "
+          "This would destroy the Symmetry structure and is thus not implemented.%s",
+          "\n");
       } else {
         // cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
         out = Tin.clone();

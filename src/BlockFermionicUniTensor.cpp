@@ -1342,6 +1342,7 @@ namespace cytnx {
       // check each valid block:
       std::vector<cytnx_uint64> Lidx(this->_bonds.size());  // buffer
       std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  // buffer
+      std::vector<bool> signfliprhs = rhs->signflip();
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
         memcpy(&Lidx[0], &tmp->_inner_to_outer_idx[b][0],
                sizeof(cytnx_uint64) * this->_bonds.size());
@@ -1384,6 +1385,7 @@ namespace cytnx {
           cytnx_error_msg(Ott.shape() != tmp->_blocks[b].shape(), "[ERROR] mismatching shape!%s",
                           "\n");
           tmp->_blocks[b] = Ott;
+          tmp->_signflip[b] = (this->_signflip[b] == signfliprhs[b]) ? EVEN : ODD;
         }
       }
 
@@ -1850,13 +1852,19 @@ namespace cytnx {
   void BlockFermionicUniTensor::Transpose_() {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     // modify tag
-    for (int i = 0; i < this->bonds().size(); i++) {
+    // The index order is reversed without any sign flips!
+    std::vector<cytnx_int64> idxorder(this->_bonds.size());
+    std::size_t idxnum = this->bonds().size() - 1;
+    for (int i = 0; i <= idxnum; i++) {
       this->bonds()[i].redirect_();
       // this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
+      idxorder[i] = idxnum - i;
     }
+    this->permute_nosignflip_(idxorder);
   };
 
   void BlockFermionicUniTensor::normalize_() {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     Scalar out(0, this->dtype());
     for (auto &block : this->_blocks) {
       out += Scalar(linalg::Pow(linalg::Norm(block), 2).item());
@@ -1878,8 +1886,8 @@ namespace cytnx {
     this->Trace_(ida, idb);
   }
   void BlockFermionicUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b) {
-    //[21 Aug 2024] This is a copy from BlockUniTensor; TODO: sign structure needs to be
-    // incorporated, and supertrace needs to be avoided!
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODOfermions: sign structure needs to be incorporated, and supertrace needs to be avoided!
     cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Trace_] not implemented yet.%s", "\n");
     cytnx_int64 ida = a;
     cytnx_int64 idb = b;
@@ -2058,8 +2066,8 @@ namespace cytnx {
   //-------------------------------------------
   // at_for_sparse
   Scalar::Sproxy BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator) {
-    //[21 Aug 2024] This is a copy from BlockUniTensor; TODO: one might want to store the sign in
-    // Sproxy as well in the future
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODOfermions: one might want to store the sign in Sproxy as well in the future
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -2152,8 +2160,9 @@ namespace cytnx {
 
   const Scalar::Sproxy BlockFermionicUniTensor::at_for_sparse(
     const std::vector<cytnx_uint64> &locator) const {
-    //[21 Aug 2024] This is a copy from BlockUniTensor; TODO: one might want to store the sign in
-    // Sproxy as well in the future
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODO: one might want to store the sign in Sproxy as well in the future (here and in other
+    // instances)
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -2424,13 +2433,14 @@ namespace cytnx {
         if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
           this->_blocks[b] *= Rtn->_blocks[blockrhs];
           if (Rtn->_signflip[blockrhs]) {
-            // easy way: multiply by scalar -1
+            // 3 possibilities:
+            // 1) easy way: multiply by scalar -1
             this->_blocks[b] = -this->_blocks[b];
-            // dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
+            // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
             // could depend on the block and are not aware of this sign flip!
             //  this->_signflip[b] = this->_signflip[b] ? true : false;
-            // fast way: TODO: implement Tensor.negmul, which does the multiplication and sign flip
-            // in one step
+            // 3) fast way: TODOfermion: implement Tensor.negmul, which does the multiplication and
+            // sign flip in one step
           }
           break;
         }
@@ -2571,7 +2581,8 @@ namespace cytnx {
   // Deprecated, internal use only
   void BlockFermionicUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
                                              const bool &force) {
-    //[21 Aug 2024] This is a copy from BlockUniTensor; TODO: signflips need to be included!!!
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODOfermion: signflips need to be included!!!
     cytnx_error_msg(
       true, "[ERROR][BlockFermionicUniTensor][_fx_group_duplicates] not implemented yet.%s", "\n");
     cytnx_error_msg(this->is_diag(),
@@ -2768,6 +2779,7 @@ namespace cytnx {
     cytnx_uint64 total_elem = rhs->_block.storage().size();
 
     std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
+    ths->_signflip = std::vector<bool>(rhs->shape().size(), EVEN);
     for (int i = (rhs->rank() - 2); i >= 0; i--) {
       stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
     }

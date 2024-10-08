@@ -31,7 +31,7 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     BFUT1.at({1, 1, 0}) = 7.;
     BFUT1.at({1, 1, 1}) = 8.;
     BFUT2 = BFUT1.clone();
-    BFUT2.permute_nosignflip_({2, 1, 0});
+    // BFUT2.permute_nosignflip_({2, 1, 0});
     BFUT2.Transpose_();
     BFUT2.set_rowrank_(1);
 

@@ -357,7 +357,7 @@ namespace cytnx {
       } else if (return_err) {
         outCyT.push_back(UniTensor(Sall.get({ac::tilend(smidx)})));
       }
-    }
+    }  // _gesvd_truncate_Block_UT
 
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim, const double &err,
@@ -372,10 +372,13 @@ namespace cytnx {
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
         _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim);
-      } else if (Tin.uten_type() == UTenType.Block) {
+      } else if ((Tin.uten_type() == UTenType.Block) ||
+                 (Tin.uten_type() == UTenType.BlockFermionic)) {
         _gesvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim);
       } else {
-        cytnx_error_msg(true, "[ERROR] only support gesvd for Dense and Block UniTensor.%s", "\n");
+        cytnx_error_msg(
+          true, "[ERROR] Gesvd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",
+          "\n");
       }
       return outCyT;
 

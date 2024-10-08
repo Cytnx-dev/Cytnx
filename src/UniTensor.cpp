@@ -35,7 +35,7 @@ namespace cytnx {
   void UniTensor::_Save(std::fstream &f) const {
     cytnx_error_msg(!f.is_open(), "[ERROR][UniTensor] invalid fstream!.%s", "\n");
     cytnx_error_msg(this->_impl->uten_type_id == UTenType.Void,
-                    "[ERROR][UniTensor] cannot save an uninitialize UniTensor.%s", "\n");
+                    "[ERROR][UniTensor] cannot save an uninitialized UniTensor.%s", "\n");
 
     // temporary disable:
     // cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for SparseUniTensor

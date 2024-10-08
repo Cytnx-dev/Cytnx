@@ -20,36 +20,36 @@ namespace cytnx {
   int get_mkl_code();
 
   /**
-   * @brief The addtion operator between two UniTensor.
-   * @details This is the addtion function for UniTensor. It will call
+   * @brief The addition operator between two UniTensors.
+   * @details This is the addition function for UniTensors. It will call
    * linalg::Add(const UniTensor &Lt, const UniTensor &Rt) function.
    * @param[in] Lt The left UniTensor.
    * @param[in] Rt The right UniTensor.
-   * @return [UniTensor] The result of the addtion.
+   * @return [UniTensor] The result of the addition.
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const UniTensor &Lt, const UniTensor &Rt)
    */
   cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
   /**
-   * @brief The addtion operator between a template type and a UniTensor.
-   * @details This is the addtion function for UniTensor. It will call
+   * @brief The addition operator between a template type and a UniTensor.
+   * @details This is the addition function for UniTensor. It will call
    * linalg::Add(const T &lc, const UniTensor &Rt) function.
    * @param[in] lc The left template type.
    * @param[in] Rt The right UniTensor.
-   * @return [UniTensor] The result of the addtion.
+   * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const T &lc, const UniTensor &Rt)
    */
   template <class T>
   cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
 
   /**
-   * @brief The addtion operator between a UniTensor and a template type.
-   * @details This is the addtion function for UniTensor. It will call
+   * @brief The addition operator between a UniTensor and a template type.
+   * @details This is the addition function for UniTensor. It will call
    * linalg::Add(const UniTensor &Lt, const T &rc) function.
    * @param[in] Lt The left UniTensor.
    * @param[in] rc The right template type.
-   * @return [UniTensor] The result of the addtion.
+   * @return [UniTensor] The result of the addition.
    * @see linalg::Add(const UniTensor &Lt, const T &rc)
    */
   template <class T>
@@ -214,9 +214,9 @@ namespace cytnx {
     // Add:
     //==================================================
     /**
-     * @brief The addtion function between two UniTensor.
-     * @details This is the addtion function for UniTensor. It will perform
-     * the element-wise addtion. That means if the left UniTensor \p Lt
+     * @brief The addition function between two UniTensor.
+     * @details This is the addition function for UniTensor. It will perform
+     * the element-wise addition. That means if the left UniTensor \p Lt
      * is given as \f$ T_L \f$ and the right UniTensor \p Rt is given as \f$ T_R \f$,
      * then the result will be:
      *   \f[
@@ -224,7 +224,7 @@ namespace cytnx {
      *  \f]
      * where \f$ T_L[i] \f$ and \f$ T_R[i] \f$ are the elements in the
      * UniTensor \f$ T_L \f$ and \f$ T_R \f$.
-     * It will perform the element-wise addtion and note that it will return a
+     * It will perform the element-wise addition and note that it will return a
      * new UniTensor object.
      * @param[in] Lt The left UniTensor.
      * @param[in] Rt The right UniTensor.
@@ -237,8 +237,8 @@ namespace cytnx {
     cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
 
     /**
-     * @brief The addtion function between a template type and a UniTensor.
-     * @details This is the addtion function for UniTensor. It will
+     * @brief The addition function between a template type and a UniTensor.
+     * @details This is the addition function for UniTensor. It will
      * add the UniTensor and a template type together and add every element
      * in the UniTensor with the template type. That means if the template type
      * \p lc is given as \f$ c \f$ and the UniTensor \p Rt is given as \f$ T_i \f$,
@@ -272,8 +272,8 @@ namespace cytnx {
     cytnx::UniTensor Add(const T &lc, const cytnx::UniTensor &Rt);
 
     /**
-     * @brief The addtion function between a UniTensor and a template type.
-     * @details This is the addtion function for UniTensor. It will
+     * @brief The addition function between a UniTensor and a template type.
+     * @details This is the addition function for UniTensor. It will
      * add the UniTensor and a template type together and add every element
      * in the UniTensor with the template type. That means if the UniTensor
      * \p Lt is given as \f$ T_i \f$ and the template type \p rc is given as
@@ -873,8 +873,8 @@ namespace cytnx {
 
     /**
      * @bridf The addition function for Tensor.
-     * @details This is the addtion function between two Tensor. It will perform
-     * the element-wise addtion. That means if the left Tensor \p Lt
+     * @details This is the addition function between two Tensor. It will perform
+     * the element-wise addition. That means if the left Tensor \p Lt
      * is given as \f$ T_L \f$ and the right Tensor \p Rt is given as \f$ T_R \f$,
      * then the result will be:
      *   \f[
@@ -882,7 +882,7 @@ namespace cytnx {
      *  \f]
      * where \f$ T_L[i] \f$ and \f$ T_R[i] \f$ are the elements in the
      * Tensor \f$ T_L \f$ and \f$ T_R \f$.
-     * It will perform the element-wise addtion and note that it will return a
+     * It will perform the element-wise addition and note that it will return a
      * new Tensor object.
      * @param[in] Lt The left Tensor.
      * @param[in] Rt The right Tensor.
@@ -898,15 +898,15 @@ namespace cytnx {
 
     /**
      * @brief The addition function for Tensor.
-     * @details This is the addtion function between a Tensor and a template type.
-     * It will perform the element-wise addtion. That means if the template type \p lc
+     * @details This is the addition function between a Tensor and a template type.
+     * It will perform the element-wise addition. That means if the template type \p lc
      * is given as \f$ c \f$ and the Tensor \p Rt is given as \f$ T_R \f$,
      * then the result will be:
      *   \f[
      *    T_o[i] = c + T_L[i],
      *  \f]
      * where \f$ T_R[i] \f$ is the elements in the Tensor \f$ T_R \f$.
-     * It will perform the element-wise addtion and note that it will return a
+     * It will perform the element-wise addition and note that it will return a
      * new Tensor object.
      * @param[in] lc The left template type.
      * @param[in] Rt The right Tensor.
@@ -922,15 +922,15 @@ namespace cytnx {
 
     /**
      * @brief The addition function for Tensor.
-     * @details This is the addtion function between a Tensor and a template type.
-     * It will perform the element-wise addtion. That means if the Tensor \p Lt
+     * @details This is the addition function between a Tensor and a template type.
+     * It will perform the element-wise addition. That means if the Tensor \p Lt
      * is given as \f$ T_L \f$ and the template type \p rc is given as \f$ c \f$,
      * then the result will be:
      *   \f[
      *    T_o[i] = T_L[i] + c,
      *  \f]
      * where \f$ T_L[i] \f$ is the elements in the Tensor \f$ T_L \f$.
-     * It will perform the element-wise addtion and note that it will return a
+     * It will perform the element-wise addition and note that it will return a
      * new Tensor object.
      * @param[in] Lt The left Tensor.
      * @param[in] rc The right template type.
@@ -946,8 +946,8 @@ namespace cytnx {
 
     /**
      * @brief The addition function for Tensor, inplacely.
-     * @details This is the inplace addtion function between two Tensor. It will perform
-     * the element-wise addtion. That means if the left Tensor \p Lt
+     * @details This is the inplace addition function between two Tensor. It will perform
+     * the element-wise addition. That means if the left Tensor \p Lt
      * is given as \f$ T_L \f$ and the right Tensor \p Rt is given as \f$ T_R \f$,
      * then the result will be:
      *   \f[
@@ -955,7 +955,7 @@ namespace cytnx {
      *  \f]
      * where \f$ T_L[i] \f$ and \f$ T_R[i] \f$ are the elements in the
      * Tensor \f$ T_L \f$ and \f$ T_R \f$.
-     * It will perform the element-wise addtion and note that it will modify the
+     * It will perform the element-wise addition and note that it will modify the
      * left Tensor \p Lt.
      * @param[in,out] Lt The left Tensor.
      * @param[in] Rt The right Tensor.
