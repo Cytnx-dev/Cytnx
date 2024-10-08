@@ -32,6 +32,24 @@ namespace cytnx {
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
 
+      cuDoubleComplex *dtmp;
+      dtmp = (cuDoubleComplex *)cuMalloc_gpu(sizeof(cuDoubleComplex) * in->cap);
+      cytnx_uint64 Nelem = in->len;
+
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cuDoubleComplex), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
+
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -53,15 +71,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cuDoubleComplex *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cuDoubleComplex *)cuMalloc_gpu(sizeof(cuDoubleComplex) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -82,6 +97,7 @@ namespace cytnx {
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
+  #endif
 
       boost::intrusive_ptr<Storage_base> out(new ComplexDoubleStorage());
       if (is_inplace) {
@@ -122,7 +138,7 @@ namespace cytnx {
       reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
 
       cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(double), 0);
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cuFloatComplex), 0);
       cuttExecute(plan, in->Mem, dtmp);
 
       cuttDestroy(plan);
@@ -392,7 +408,23 @@ namespace cytnx {
       cytnx_error_msg(in->device == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
+      cytnx_int64 *dtmp;
+      dtmp = (cytnx_int64 *)cuMalloc_gpu(sizeof(cytnx_int64) * in->cap);
+      cytnx_uint64 Nelem = in->len;
 
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_int64), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -414,15 +446,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cytnx_int64 *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cytnx_int64 *)cuMalloc_gpu(sizeof(cytnx_int64) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -443,7 +472,7 @@ namespace cytnx {
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
-
+  #endif
       boost::intrusive_ptr<Storage_base> out(new Int64Storage());
       if (is_inplace) {
         /// cpy back:
@@ -471,7 +500,22 @@ namespace cytnx {
       cytnx_error_msg(in->device == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
+      cytnx_uint64 *dtmp;
+      dtmp = (cytnx_uint64 *)cuMalloc_gpu(sizeof(cytnx_uint64) * in->cap);
+      cytnx_uint64 Nelem = in->len;
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
 
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_uint64), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -493,15 +537,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cytnx_uint64 *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cytnx_uint64 *)cuMalloc_gpu(sizeof(cytnx_uint64) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -522,7 +563,7 @@ namespace cytnx {
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
-
+  #endif
       boost::intrusive_ptr<Storage_base> out(new Uint64Storage());
       if (is_inplace) {
         /// cpy back:
@@ -550,7 +591,22 @@ namespace cytnx {
       cytnx_error_msg(in->device == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
+      cytnx_int32 *dtmp;
+      dtmp = (cytnx_int32 *)cuMalloc_gpu(sizeof(cytnx_int32) * in->cap);
+      cytnx_uint64 Nelem = in->len;
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
 
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_int32), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -572,15 +628,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cytnx_int32 *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cytnx_int32 *)cuMalloc_gpu(sizeof(cytnx_int32) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -601,6 +654,8 @@ namespace cytnx {
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
+
+  #endif
 
       boost::intrusive_ptr<Storage_base> out(new Int32Storage());
       if (is_inplace) {
@@ -629,7 +684,22 @@ namespace cytnx {
       cytnx_error_msg(in->device == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
+      cytnx_uint32 *dtmp;
+      dtmp = (cytnx_uint32 *)cuMalloc_gpu(sizeof(cytnx_uint32) * in->cap);
+      cytnx_uint64 Nelem = in->len;
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
 
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_uint32), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -651,15 +721,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cytnx_uint32 *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cytnx_uint32 *)cuMalloc_gpu(sizeof(cytnx_uint32) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -681,6 +748,7 @@ namespace cytnx {
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
 
+  #endif
       boost::intrusive_ptr<Storage_base> out(new Uint32Storage());
       if (is_inplace) {
         /// cpy back:
@@ -707,7 +775,22 @@ namespace cytnx {
       cytnx_error_msg(in->device == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
+      cytnx_uint16 *dtmp;
+      dtmp = (cytnx_uint16 *)cuMalloc_gpu(sizeof(cytnx_uint16) * in->cap);
+      cytnx_uint64 Nelem = in->len;
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
 
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_uint16), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -729,15 +812,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cytnx_uint16 *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cytnx_uint16 *)cuMalloc_gpu(sizeof(cytnx_uint16) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -758,7 +838,7 @@ namespace cytnx {
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
-
+  #endif
       boost::intrusive_ptr<Storage_base> out(new Uint16Storage());
       if (is_inplace) {
         /// cpy back:
@@ -785,7 +865,22 @@ namespace cytnx {
       cytnx_error_msg(in->device == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
+      cytnx_int16 *dtmp;
+      dtmp = (cytnx_int16 *)cuMalloc_gpu(sizeof(cytnx_int16) * in->cap);
+      cytnx_uint64 Nelem = in->len;
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
 
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_int16), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -807,15 +902,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cytnx_int16 *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cytnx_int16 *)cuMalloc_gpu(sizeof(cytnx_int16) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -836,7 +928,7 @@ namespace cytnx {
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
-
+  #endif
       boost::intrusive_ptr<Storage_base> out(new Int16Storage());
       if (is_inplace) {
         /// cpy back:
@@ -864,6 +956,22 @@ namespace cytnx {
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
 
+      cytnx_bool *dtmp;
+      dtmp = (cytnx_bool *)cuMalloc_gpu(sizeof(cytnx_bool) * in->cap);
+      cytnx_uint64 Nelem = in->len;
+  #ifdef UNI_CUTT
+      std::vector<int> perm(mapper.begin(), mapper.end());
+      std::vector<int> size(old_shape.begin(), old_shape.end());
+      std::reverse(size.begin(), size.end());  // matching API CUTT
+      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+
+      cuttHandle plan;
+      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_bool), 0);
+      cuttExecute(plan, in->Mem, dtmp);
+
+      cuttDestroy(plan);
+
+  #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
       for (cytnx_uint64 i = 0; i < old_shape.size(); i++) newshape[i] = old_shape[mapper[i]];
 
@@ -885,15 +993,12 @@ namespace cytnx {
 
       /// allocate a GPU for psn-vec/so-vec/tmp des-vec
       cytnx_uint64 *dshifter_old, *dperm_shifter_new;
-      cytnx_bool *dtmp;
-      cytnx_uint64 Nelem = accu_old;
 
       cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cytnx_bool *)cuMalloc_gpu(sizeof(cytnx_bool) * in->cap);
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -914,7 +1019,7 @@ namespace cytnx {
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
       checkCudaErrors(cudaFree(dperm_shifter_new));
-
+  #endif
       boost::intrusive_ptr<Storage_base> out(new BoolStorage());
       if (is_inplace) {
         /// cpy back:

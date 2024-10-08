@@ -9,6 +9,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include <execinfo.h>
+
 #ifdef _MSC_VER
   #define __PRETTY_FUNCTION__ __FUNCTION__
 #endif
@@ -31,6 +33,16 @@ static inline void error_msg(char const *const func, const char *const file, int
             file, line);
     va_end(args);
     // std::cerr << output_str << std::endl;
+    std::cerr << output_str << std::endl;
+    std::cerr << "Stack trace:" << std::endl;
+    void *array[10];
+    size_t size;
+    size = backtrace(array, 10);
+    char **strings = backtrace_symbols(array, size);
+    for (size_t i = 0; i < size; i++) {
+      std::cerr << strings[i] << std::endl;
+    }
+    free(strings);
     throw std::logic_error(output_str);
   }
   // } catch (const char *output_msg) {
