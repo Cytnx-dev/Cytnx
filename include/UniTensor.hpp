@@ -3559,8 +3559,9 @@ namespace cytnx {
     @param[in] rowrank the row rank after the permutation
           @warning \p by_label will be deprecated!
     */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
+      return *this;
     }
 
     /**
@@ -3569,8 +3570,9 @@ namespace cytnx {
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
-    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
+      return *this;
     }
 
     /**
@@ -4256,8 +4258,10 @@ namespace cytnx {
         cannot be UTenType::Block.
           @see reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank)
         */
-    void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
+    UniTensor &reshape_(const std::vector<cytnx_int64> &new_shape,
+                        const cytnx_uint64 &rowrank = 0) {
       this->_impl->reshape_(new_shape, rowrank);
+      return *this;
     }
 
     /**

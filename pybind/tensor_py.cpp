@@ -184,7 +184,7 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, py::args args) {
            std::vector<cytnx::cytnx_uint64> c_args = args.cast<std::vector<cytnx::cytnx_uint64>>();
            // std::cout << c_args.size() << std::endl;
-           self.permute_(c_args);
+           return &self.permute_(c_args);
          })
     .def("permute",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {
@@ -200,7 +200,7 @@ void tensor_binding(py::module &m) {
     .def("reshape_",
          [](cytnx::Tensor &self, py::args args) {
            std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
-           self.reshape_(c_args);
+           return &self.reshape_(c_args);
          })
     .def("reshape",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {

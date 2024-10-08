@@ -1740,7 +1740,7 @@ namespace cytnx {
               group_size.resize(group_count, 1);
               // TODOfermions: alphas need to include sign factors!
               cytnx_error_msg(true,
-                              "[ERROR] Fermionic sign flips not implemented yet Gemm_Batch "
+                              "[ERROR] Fermionic sign flips not implemented yet in Gemm_Batch "
                               "contracition. One needs to change the signs of the alphas.%2",
                               "\n")
                 linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas,
