@@ -331,10 +331,14 @@ namespace cytnx {
       if (Tin.uten_type() == UTenType.Dense) {
         _svd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
 
-      } else if ((Tin.uten_type() == UTenType.Block) ||
-                 (Tin.uten_type() == UTenType.BlockFermionic)) {
+      } else if (Tin.uten_type() == UTenType.Block) {
         _svd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
-
+      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
+        // _svd_truncate_BlockFermionic_UT(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
+        cytnx_error_msg(true,
+                        "[ERROR][_svd_truncate_BlockFermionic_UT] not implemented yet. The "
+                        "signflips need to be removed if blocks are deleted in the truncation.%s",
+                        "\n")
       } else {
         cytnx_error_msg(
           true, "[ERROR] Svd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",

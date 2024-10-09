@@ -1743,7 +1743,7 @@ namespace cytnx {
               // TODOfermions: alphas need to include sign factors!
               cytnx_error_msg(true,
                               "[ERROR] Fermionic sign flips not implemented yet in Gemm_Batch "
-                              "contracition. One needs to change the signs of the alphas.%2",
+                              "contracition. One needs to change the signs of the alphas.%s",
                               "\n")
                 linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas,
                                      (const void **)LMems.data(), (const void **)RMems.data(),
@@ -2369,7 +2369,7 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
     cytnx_int64 blockrhs;
     // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
     BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
@@ -2407,7 +2407,7 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
     // checking Type:
     cytnx_int64 blockrhs;
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
     BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
@@ -2452,7 +2452,7 @@ namespace cytnx {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
     cytnx_int64 blockrhs;
     // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
     BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();

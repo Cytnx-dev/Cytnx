@@ -621,6 +621,7 @@ namespace cytnx {
         vT_ptr->_is_braket_form = vT_ptr->_update_braket();
         vT_ptr->_inner_to_outer_idx = vT_itoi;
         vT_ptr->_blocks = vT_blocks;
+        vT_ptr->_signflip = std::vector(vT_blocks.size(), false);
         UniTensor vT;
         vT._impl = boost::intrusive_ptr<UniTensor_base>(vT_ptr);
         outCyT.push_back(vT);
