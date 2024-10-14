@@ -727,22 +727,22 @@ namespace cytnx {
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
-     * \p minblockdim singular values in each block.
+     * \p min_blockdim singular values in each block.
      * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
      * truncates the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For each block, the minimum dimension can be chosen. This can be helpful to
      * avoid loosing symmetry sectors in the truncated SVD. For more details, please refer to the
      * documentation of the function Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
      * const double &err, const bool &is_UvT, const unsigned int &return_err).
-     * @param[in] minblockdim a vector containing the minimum dimension of each block;
-     * alternatively, a vector with only one element can be given to have the same minblockdim for
+     * @param[in] min_blockdim a vector containing the minimum dimension of each block;
+     * alternatively, a vector with only one element can be given to have the same min_blockdim for
      * each block
      * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *                   const bool &is_UvT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim,
-                                               const std::vector<cytnx_uint64> minblockdim,
+                                               const std::vector<cytnx_uint64> min_blockdim,
                                                const double &err = 0., const bool &is_UvT = true,
                                                const unsigned int &return_err = 0,
                                                const cytnx_uint64 &mindim = 1);
@@ -766,22 +766,22 @@ namespace cytnx {
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
-     * \p minblockdim singular values in each block.
+     * \p min_blockdim singular values in each block.
      * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
      * truncates the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For each block, the minimum dimension can be chosen. This can be helpful to
      * avoid loosing symmetry sectors in the truncated SVD. For more details, please refer to the
      * documentation of the function Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
      * const double &err, const bool &is_UvT, const unsigned int &return_err).
-     * @param[in] minblockdim a vector containing the minimum dimension of each block;
-     * alternatively, a vector with only one element can be given to have the same minblockdim for
+     * @param[in] min_blockdim a vector containing the minimum dimension of each block;
+     * alternatively, a vector with only one element can be given to have the same min_blockdim for
      * each block
      * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *                   const bool &is_UvT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(
       const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
-      const std::vector<cytnx_uint64> minblockdim, const double &err = 0., const bool &is_U = true,
+      const std::vector<cytnx_uint64> min_blockdim, const double &err = 0., const bool &is_U = true,
       const bool &is_vT = true, const unsigned int &return_err = 0, const cytnx_uint64 &mindim = 1);
 
     std::vector<cytnx::UniTensor> Hosvd(
