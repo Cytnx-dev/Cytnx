@@ -65,12 +65,12 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Gesvd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim,
-       const std::vector<cytnx_uint64> minblockdim, const cytnx_double &err, const bool &is_U,
+       const std::vector<cytnx_uint64> min_blockdim, const cytnx_double &err, const bool &is_U,
        const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim) {
-      return cytnx::linalg::Gesvd_truncate(Tin, keepdim, minblockdim, err, is_U, is_vT, return_err,
+      return cytnx::linalg::Gesvd_truncate(Tin, keepdim, min_blockdim, err, is_U, is_vT, return_err,
                                            mindim);
     },
-    py::arg("Tin"), py::arg("keepdim"), py::arg("minblockdim"), py::arg("err") = 0,
+    py::arg("Tin"), py::arg("keepdim"), py::arg("min_blockdim"), py::arg("err") = 0,
     py::arg("is_U") = true, py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0),
     py::arg("mindim") = 1);
 
@@ -93,12 +93,12 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Svd_truncate",
     [](const UniTensor &Tin, const cytnx_uint64 &keepdim,
-       const std::vector<cytnx_uint64> minblockdim, const cytnx_double &err, const bool &is_UvT,
+       const std::vector<cytnx_uint64> min_blockdim, const cytnx_double &err, const bool &is_UvT,
        const unsigned int &return_err, const cytnx_uint64 &mindim) {
-      return cytnx::linalg::Svd_truncate(Tin, keepdim, minblockdim, err, is_UvT, return_err,
+      return cytnx::linalg::Svd_truncate(Tin, keepdim, min_blockdim, err, is_UvT, return_err,
                                          mindim);
     },
-    py::arg("Tin"), py::arg("keepdim"), py::arg("minblockdim"), py::arg("err") = 0,
+    py::arg("Tin"), py::arg("keepdim"), py::arg("min_blockdim"), py::arg("err") = 0,
     py::arg("is_UvT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1);
 
   // m_linalg.def("Eigh", &cytnx::linalg::Eigh, py::arg("Tin"), py::arg("is_V") = true,
