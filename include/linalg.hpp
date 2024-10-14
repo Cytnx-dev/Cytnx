@@ -711,8 +711,8 @@ namespace cytnx {
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
-     * @details This function performs the Singular-Value decomposition on a UniTensor \p Tin and
-     * do the truncation on the singular values. The result will depend on the rowrank of the
+     * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
+     * truncates the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For more details, please refer to the documentation of the function
      * Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *              const bool &is_UvT, const unsigned int &return_err).
@@ -723,12 +723,34 @@ namespace cytnx {
                                                const cytnx_uint64 &keepdim, const double &err = 0.,
                                                const bool &is_UvT = true,
                                                const unsigned int &return_err = 0,
-                                               const unsigned int &mindim = 1);
+                                               const cytnx_uint64 &mindim = 1);
+
+    /**
+     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
+     * \p minblockdim singular values in each block.
+     * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
+     * truncates the singular values. The result will depend on the rowrank of the
+     * UniTensor \p Tin. For each block, the minimum dimension can be chosen. This can be helpful to
+     * avoid loosing symmetry sectors in the truncated SVD. For more details, please refer to the
+     * documentation of the function Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
+     * const double &err, const bool &is_UvT, const unsigned int &return_err).
+     * @param[in] minblockdim a vector containing the minimum dimension of each block;
+     * alternatively, a vector with only one element can be given to have the same minblockdim for
+     * each block
+     * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
+     *                   const bool &is_UvT, const unsigned int &return_err)
+     */
+    std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
+                                               const cytnx_uint64 &keepdim,
+                                               const std::vector<cytnx_uint64> minblockdim,
+                                               const double &err = 0., const bool &is_UvT = true,
+                                               const unsigned int &return_err = 0,
+                                               const cytnx_uint64 &mindim = 1);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
-     * @details This function performs the Singular-Value decomposition on a UniTensor \p Tin and
-     * do the truncation on the singular values. The result will depend on the rowrank of the
+     * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
+     * truncates the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. For more details, please refer to the documentation of the function
      * Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
      *              const bool &is_U, const bool &is_vT, const unsigned int &return_err).
@@ -740,7 +762,27 @@ namespace cytnx {
                                                  const double &err = 0., const bool &is_U = true,
                                                  const bool &is_vT = true,
                                                  const unsigned int &return_err = 0,
-                                                 const unsigned int &mindim = 1);
+                                                 const cytnx_uint64 &mindim = 1);
+
+    /**
+     * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
+     * \p minblockdim singular values in each block.
+     * @details This function performs the Singular-Value decomposition of a UniTensor \p Tin and
+     * truncates the singular values. The result will depend on the rowrank of the
+     * UniTensor \p Tin. For each block, the minimum dimension can be chosen. This can be helpful to
+     * avoid loosing symmetry sectors in the truncated SVD. For more details, please refer to the
+     * documentation of the function Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
+     * const double &err, const bool &is_UvT, const unsigned int &return_err).
+     * @param[in] minblockdim a vector containing the minimum dimension of each block;
+     * alternatively, a vector with only one element can be given to have the same minblockdim for
+     * each block
+     * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
+     *                   const bool &is_UvT, const unsigned int &return_err)
+     */
+    std::vector<cytnx::UniTensor> Gesvd_truncate(
+      const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
+      const std::vector<cytnx_uint64> minblockdim, const double &err = 0., const bool &is_U = true,
+      const bool &is_vT = true, const unsigned int &return_err = 0, const cytnx_uint64 &mindim = 1);
 
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
@@ -1518,7 +1560,7 @@ namespace cytnx {
     @parblock
     [std::vector<Tensors>]
 
-    1. The first tensor is a 1-d tensor contanin the singular values
+    1. The first tensor is a 1-d tensor contaning the singular values
     2. If \p is_U is true, then the tensor \f$ U \f$ will be pushed back to the vector, and if \p
     is_vT is true, \f$ V^\dagger \f$ will be pushed back to the vector.
     @endparblock
@@ -1531,10 +1573,10 @@ namespace cytnx {
     // Svd_truncate:
     //==================================================
     /**
-    @brief Perform the truncate Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
-    @details This function will perform the truncate Singular-Value decomposition
-    on a matrix (a rank-2 Tensor). It will perform the SVD first, and then truncate the
-    singular values to the given cutoff \p err. That means givent a matrix \p Tin as \f$ M \f$,
+    @brief Perform a truncated Singular-Value decomposition of a rank-2 Tensor (a @em matrix).
+    @details This function will perform a truncated Singular-Value decomposition
+    of a matrix (a rank-2 Tensor). It will perform the full SVD first, and then truncate the
+    singular values to the given cutoff \p err. That means, given a matrix \p Tin as \f$ M \f$,
     then the result will be:
     \f[
     M = U S V^\dagger,
@@ -1545,34 +1587,40 @@ namespace cytnx {
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
-    @param[in] is_UvT whether need to return a left unitary matrix and a right unitary matrix.
-    @param[in] return_err whether need to return the error. If \p return_err is \em true, then
-    largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is \em positive int, then it will return the
-    full list of truncated singular values.
+    @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
+    @param[in] return_err whether the error shall be returened. If \p return_err is \em true, then
+    the largest error will be pushed back to the vector (The smallest singular value in the return
+    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
+    full list of truncated singular values will be returned.
     @return
     @parblock
     [std::vector<Tensors>]
 
-    1. The first tensor is a 1-d tensor contanin the singular values
-    2. If \p is_UvT is true, then the tensor \f$ U,V^\dagger \f$ will be pushed back to the vector.
+    1. The first tensor is a 1-d tensor containing the singular values
+    2. If \p is_UvT is \em true, then the tensors \f$ U \f$ and \f$ V^\dagger \f$ will be pushed
+    back to the vector.
     4. If \p return_err is true, then the error will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
+    @note The truncated bond dimension can be larger than \p keepdim for degenerate singular values:
+    if the largest \f$ n \f$ truncated singular values would be exactly equal to the smallest kept
+    singular value, then the bond dimension is enlarged to \p keepdim \f$ + n \f$. Example: if the
+    singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension will be 5 in order
+    to keep all the degenerate singular values.
     */
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err = 0., const bool &is_UvT = true,
                                      const unsigned int &return_err = 0,
-                                     const unsigned int &mindim = 1);
+                                     const cytnx_uint64 &mindim = 1);
 
     // Gesvd_truncate:
     //==================================================
     /**
-    @brief Perform the truncate Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
-    @details This function will perform the truncate Singular-Value decomposition
-    on a matrix (a rank-2 Tensor). It will perform the SVD first, and then truncate the
-    singular values to the given cutoff \p err. That means givent a matrix \p Tin as \f$ M \f$,
+    @brief Perform a truncated Singular-Value decomposition of a rank-2 Tensor (a @em matrix).
+    @details This function will perform a truncated Singular-Value decomposition
+    of a matrix (a rank-2 Tensor). It will perform the full SVD first, and then truncate the
+    singular values to the given cutoff \p err. That means, given a matrix \p Tin as \f$ M \f$,
     then the result will be:
     \f[
     M = U S V^\dagger,
@@ -1583,28 +1631,32 @@ namespace cytnx {
     @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
     @param[in] keepdim the number (at most) of singular values to keep.
     @param[in] err the cutoff error (the singular values smaller than \p err will be truncated.)
-    @param[in] is_U whether need to return a left unitary matrix.
-    @param[in] is_vT whether need to return a right unitary matrix.
-    @param[in] return_err whether need to return the error. If \p return_err is \em true, then
-    largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is \em positive int, then it will return the
-    full list of truncated singular values.
+    @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
+    @param[in] return_err whether the error shall be returened. If \p return_err is \em true, then
+    the largest error will be pushed back to the vector (The smallest singular value in the return
+    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
+    full list of truncated singular values will be returned.
     @return
     @parblock
     [std::vector<Tensors>]
 
-    1. The first tensor is a 1-d tensor contanin the singular values
-    2. If \p is_U is true, then the tensor \f$ U\f$ will be pushed back to the vector.
-    3. If \p is_U is true, then the tensor \f$ V^\dagger \f$ will be pushed back to the vector.
+    1. The first tensor is a 1-d tensor containing the singular values
+    2. If \p is_UvT is \em true, then the tensors \f$ U \f$ and \f$ V^\dagger \f$ will be pushed
+    back to the vector.
     4. If \p return_err is true, then the error will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
-    @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
+    @see \ref Gesvd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Gesvd"
+    @note The truncated bond dimension can be larger than \p keepdim for degenerate singular values:
+    if the largest \f$ n \f$ truncated singular values would be exactly equal to the smallest kept
+    singular value, then the bond dimension is enlarged to \p keepdim \f$ + n \f$. Example: if the
+    singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension will be 5 in order
+    to keep all the degenerate singular values.
     */
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err = 0., const bool &is_U = true,
                                        const bool &is_vT = true, const unsigned int &return_err = 0,
-                                       const unsigned int &mindim = 1);
+                                       const cytnx_uint64 &mindim = 1);
 
     // Hosvd:
     std::vector<Tensor> Hosvd(
