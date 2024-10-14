@@ -720,10 +720,10 @@ namespace cytnx {
      *                   const bool &is_UvT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
-                                               const cytnx_uint64 &keepdim, const double &err = 0,
+                                               const cytnx_uint64 &keepdim, const double &err = 0.,
                                                const bool &is_UvT = true,
                                                const unsigned int &return_err = 0,
-                                               const unsigned int &mindim = 0);
+                                               const unsigned int &mindim = 1);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
@@ -736,10 +736,11 @@ namespace cytnx {
      *                   const bool &is_U, const bool &is_vT, const unsigned int &return_err)
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
-                                                 const cytnx_uint64 &keepdim, const double &err = 0,
-                                                 const bool &is_U = true, const bool &is_vT = true,
+                                                 const cytnx_uint64 &keepdim,
+                                                 const double &err = 0., const bool &is_U = true,
+                                                 const bool &is_vT = true,
                                                  const unsigned int &return_err = 0,
-                                                 const unsigned int &mindim = 0);
+                                                 const unsigned int &mindim = 1);
 
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
@@ -1561,9 +1562,9 @@ namespace cytnx {
     @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
     */
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                     const double &err = 0, const bool &is_UvT = true,
+                                     const double &err = 0., const bool &is_UvT = true,
                                      const unsigned int &return_err = 0,
-                                     const unsigned int &mindim = 0);
+                                     const unsigned int &mindim = 1);
 
     // Gesvd_truncate:
     //==================================================
@@ -1601,9 +1602,9 @@ namespace cytnx {
     @see \ref Svd(const Tensor &Tin, const bool &is_U, const bool &is_vT) "Svd"
     */
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                       const double &err = 0, const bool &is_U = true,
+                                       const double &err = 0., const bool &is_U = true,
                                        const bool &is_vT = true, const unsigned int &return_err = 0,
-                                       const unsigned int &mindim = 0);
+                                       const unsigned int &mindim = 1);
 
     // Hosvd:
     std::vector<Tensor> Hosvd(
