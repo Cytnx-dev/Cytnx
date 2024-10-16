@@ -778,7 +778,7 @@ namespace cytnx {
      */
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim,
-                                               const std::vector<cytnx_uint64> min_blockdim,
+                                               std::vector<cytnx_uint64> min_blockdim,
                                                const double &err = 0., const bool &is_UvT = true,
                                                const unsigned int &return_err = 0,
                                                const cytnx_uint64 &mindim = 1);
@@ -814,7 +814,7 @@ namespace cytnx {
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(
       const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
-      const std::vector<cytnx_uint64> min_blockdim, const double &err = 0., const bool &is_U = true,
+      std::vector<cytnx_uint64> min_blockdim, const double &err = 0., const bool &is_U = true,
       const bool &is_vT = true, const unsigned int &return_err = 0, const cytnx_uint64 &mindim = 1);
 
     std::vector<cytnx::UniTensor> Hosvd(

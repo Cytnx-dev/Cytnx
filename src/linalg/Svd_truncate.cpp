@@ -354,49 +354,47 @@ namespace cytnx {
     }  // Svd_truncate
 
     void _svd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                const cytnx_uint64 &keepdim,
-                                const std::vector<cytnx_uint64> min_blockdim, const double &err,
-                                const bool &is_UvT, const int &return_err,
+                                const cytnx_uint64 &keepdim, std::vector<cytnx_uint64> min_blockdim,
+                                const double &err, const bool &is_UvT, const int &return_err,
                                 const cytnx_uint64 &mindim) {
       // currently, Gesvd is used as a standard for the full SVD before truncation
       cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                        // negative!
       cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
-      std::vector<cytnx_uint64> minblockdim = min_blockdim;
 
       outCyT = linalg::Gesvd(Tin, is_UvT, is_UvT);
-      if (minblockdim.size() == 1)  // if only one element given, make it a vector
-        minblockdim = std::vector<cytnx_uint64>(outCyT[0].Nblocks(), minblockdim[0]);
-      cytnx_error_msg(minblockdim.size() != outCyT[0].Nblocks(),
+      if (min_blockdim.size() == 1)  // if only one element given, make it a vector
+        min_blockdim.resize(outCyT[0].Nblocks(), min_blockdim.front());
+      cytnx_error_msg(min_blockdim.size() != outCyT[0].Nblocks(),
                       "[ERROR][Svd_truncate] min_blockdim must have the same number of elements as "
                       "blocks in the singular value UniTensor%s",
                       "\n");
 
       // process truncation:
-      // 1) concate all S vals from all blk but exclude the firt minblockdim Svals in each block
+      // 1) concate all S vals from all blk but exclude the first min_blockdim Svals in each block
       // (since they will be kept anyways later)
       Tensor Sall;  // S vals excluding the already kept ones
       Tensor Block;  // current block
       cytnx_uint64 blockdim;
       bool anySall = false;  // are there already any values in Sall vals?
-      bool any_min_blockdim = false;  // is any minblockdim > 0?
+      bool any_min_blockdim = false;  // is any min_blockdim > 0?
       for (int b = 0; b < outCyT[0].Nblocks(); b++) {
-        if (minblockdim[b] < 1)  // save whole block to Sall
+        if (min_blockdim[b] < 1)  // save whole block to Sall
           Block = outCyT[0].get_block_(b);
         else {
           any_min_blockdim = true;
           blockdim = outCyT[0].get_block_(b).shape()[0];
-          if (blockdim <= minblockdim[b]) {
+          if (blockdim <= min_blockdim[b]) {
             // keep whole block
             keep_dim -= blockdim;
             min_dim -= blockdim;
             continue;
           }
-          // remove first minblockdim[b] values
+          // remove first min_blockdim[b] values
           blockdim = outCyT[0].get_block_(b).shape()[0];
-          Block = outCyT[0].get_block_(b).get({ac::range(minblockdim[b], blockdim)});
-          keep_dim -= minblockdim[b];
-          min_dim -= minblockdim[b];
+          Block = outCyT[0].get_block_(b).get({ac::range(min_blockdim[b], blockdim)});
+          keep_dim -= min_blockdim[b];
+          min_dim -= min_blockdim[b];
         }
         if (anySall)
           Sall = algo::Concatenate(Sall, Block);
@@ -467,13 +465,13 @@ namespace cytnx {
         cytnx_uint64 cnt = 0;
         for (int b = 0; b < S.Nblocks(); b++) {
           Storage stmp = S.get_block_(b).storage();
-          cytnx_int64 kdim = minblockdim[b];
+          cytnx_int64 kdim = min_blockdim[b];
           if (keep_dim > 0) {
             // search for first value >= Smin
-            for (int i = stmp.size(); i > minblockdim[b]; i--) {
-              // Careful here: if (int i = stmp.size() -1; i >= minblockdim[b]; i--) is used
-              // instead, the compiler might make i an unsigned integer; if then minblockdim[b] ==
-              // 0, the condition i > minblockdim[b] is always fulfilled and the loop never stops!
+            for (int i = stmp.size(); i > min_blockdim[b]; i--) {
+              // Careful here: if (int i = stmp.size() -1; i >= min_blockdim[b]; i--) is used
+              // instead, the compiler might make i an unsigned integer; if then min_blockdim[b] ==
+              // 0, the condition i > min_blockdim[b] is always fulfilled and the loop never stops!
               if (stmp(i - 1) >= Smin) {
                 kdim = i;
                 break;
