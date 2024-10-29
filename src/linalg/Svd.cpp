@@ -419,6 +419,7 @@ namespace cytnx {
       //   BDLeft -[ ]- BDRight
       //
       std::vector<cytnx_uint64> strides;
+      std::vector<bool> signflip = Tin.signflip();
       strides.reserve(Tin.rank());
       auto BdLeft = Tin.bonds()[0].clone();
       for (int i = 1; i < Tin.rowrank(); i++) {
@@ -492,16 +493,23 @@ namespace cytnx {
         std::vector<cytnx_int64> row_szs(order.size(), 1);
         cytnx_uint64 Rblk_dim = 0;
         cytnx_int64 tmp = -1;
+        cytnx_int64 current_block;
         for (int i = 0; i < order.size(); i++) {
+          current_block = x.second[order[i]];
           if (itoi_indicators[i][0] != tmp) {
             tmp = itoi_indicators[i][0];
             Rblk_dim++;
           }
-          Tlist[i] = Tin.get_blocks_()[x.second[order[i]]];
+          Tlist[i] = Tin.get_blocks_()[current_block];
           for (int j = 0; j < Tin.rowrank(); j++) {
             row_szs[i] *= Tlist[i].shape()[j];
           }
-          Tlist[i] = Tlist[i].reshape({row_szs[i], -1});
+          if (signflip[current_block]) {
+            Tlist[i] = -Tlist[i];  // copies Tensor
+            // Tlist[i] = Tlist[i].Mul(-1); // copies Tensor
+            Tlist[i].reshape_({row_szs[i], -1});
+          } else
+            Tlist[i] = Tlist[i].reshape({row_szs[i], -1});  // copies Tensor
         }
         cytnx_error_msg(Tlist.size() % Rblk_dim, "[Internal ERROR] Tlist is not complete!%s", "\n");
         // BTen is the big block!!
@@ -601,13 +609,13 @@ namespace cytnx {
         U_ptr->_is_braket_form = U_ptr->_update_braket();
         U_ptr->_inner_to_outer_idx = U_itoi;
         U_ptr->_blocks = U_blocks;
-        U_ptr->_signflip = Tin.signflip();
+        U_ptr->_signflip = std::vector(U_blocks.size(), false);
         UniTensor U;
         U._impl = boost::intrusive_ptr<UniTensor_base>(U_ptr);
         outCyT.push_back(U);
-      }
+        // }
 
-      if (compute_uv) {
+        // if (compute_uv) {
         BlockFermionicUniTensor *vT_ptr = new BlockFermionicUniTensor();
         vT_ptr->_bonds.push_back(Bd_aux);
         vT_ptr->_labels.push_back("_aux_R");

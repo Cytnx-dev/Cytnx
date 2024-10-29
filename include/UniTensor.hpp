@@ -111,6 +111,7 @@ namespace cytnx {
     const bool &is_braket_form() const { return this->_is_braket_form; }
     const bool &is_tag() const { return this->_is_tag; }
     const std::vector<std::string> &labels() const { return this->_labels; }
+    std::vector<bool> signflip() const;
     /**
      * @brief Get the index of a desired label (string)
      *
@@ -225,7 +226,6 @@ namespace cytnx {
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
-    virtual std::vector<bool> signflip() const;
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -370,7 +370,7 @@ namespace cytnx {
 
     virtual void tag();
 
-    virtual void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
+    virtual void truncate_(const std::string &label, const cytnx_uint64 &dim);
     virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
 
     virtual bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
@@ -1012,7 +1012,7 @@ namespace cytnx {
      *
      */
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
-    void truncate_(const std::string &bond_label, const cytnx_uint64 &dim);
+    void truncate_(const std::string &label, const cytnx_uint64 &dim);
 
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
@@ -1677,7 +1677,7 @@ namespace cytnx {
     void _load_dispatch(std::fstream &f);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
-    void truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index);
+    void truncate_(const std::string &label, const cytnx_uint64 &q_index);
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index);
 
     void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -1882,6 +1882,8 @@ namespace cytnx {
     };
 
     std::vector<bool> signflip() const { return this->_signflip; };
+    // std::vector<bool> &signflip_reference() { return this->_signflip; };
+    // const std::vector<bool> &signflip_reference() const { return this->_signflip; };
 
     void to_(const int &device) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
@@ -2469,7 +2471,7 @@ namespace cytnx {
     void _load_dispatch(std::fstream &f);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
-    void truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index);
+    void truncate_(const std::string &label, const cytnx_uint64 &q_index);
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index);
 
     void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
