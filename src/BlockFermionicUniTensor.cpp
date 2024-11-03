@@ -436,7 +436,7 @@ namespace cytnx {
     free(buffer);
   }
 
-  void BlockFermionicUniTensor::print_diagram(const bool &bond_info) {
+  void BlockFermionicUniTensor::print_diagram(const bool &bond_info) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, 'f' symbols in the corners of
     // the diagram are shown, and the sign structure is printed
     char *buffer = (char *)malloc(10240 * sizeof(char));
@@ -593,6 +593,10 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(tmp);
       return out;
     }
+  }
+
+  std::vector<bool> BlockFermionicUniTensor::signflip() const {
+    return this->_signflip;
   }
 
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {

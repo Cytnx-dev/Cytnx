@@ -710,7 +710,7 @@ namespace cytnx {
     free(buffer);
   }
 
-  void SparseUniTensor::print_diagram(const bool &bond_info) {
+  void SparseUniTensor::print_diagram(const bool &bond_info) const {
     char *buffer = (char *)malloc(1024 * sizeof(char));
     unsigned int BUFFsize = 100;
 

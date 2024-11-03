@@ -406,7 +406,7 @@ namespace cytnx {
     free(buffer);
   }
 
-  void BlockUniTensor::print_diagram(const bool &bond_info) {
+  void BlockUniTensor::print_diagram(const bool &bond_info) const {
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 

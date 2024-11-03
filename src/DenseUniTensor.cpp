@@ -449,7 +449,7 @@ namespace cytnx {
     this->print_block(0, full_info);
   }
 
-  void DenseUniTensor::print_diagram(const bool &bond_info) {
+  void DenseUniTensor::print_diagram(const bool &bond_info) const {
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 

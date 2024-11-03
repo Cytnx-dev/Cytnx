@@ -111,7 +111,6 @@ namespace cytnx {
     const bool &is_braket_form() const { return this->_is_braket_form; }
     const bool &is_tag() const { return this->_is_tag; }
     const std::vector<std::string> &labels() const { return this->_labels; }
-    std::vector<bool> signflip() const;
     /**
      * @brief Get the index of a desired label (string)
      *
@@ -226,6 +225,7 @@ namespace cytnx {
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
+    virtual std::vector<bool> signflip() const;
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -261,7 +261,7 @@ namespace cytnx {
     // -1);
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
-    virtual void print_diagram(const bool &bond_info = false);
+    virtual void print_diagram(const bool &bond_info = false) const;
     virtual void print_blocks(const bool &full_info = true) const;
     virtual void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
 
@@ -600,7 +600,7 @@ namespace cytnx {
         return out;
       }
     }
-    void print_diagram(const bool &bond_info = false);
+    void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
     Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_block.clone(); }
@@ -1382,7 +1382,7 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> contiguous();
 
-    void print_diagram(const bool &bond_info = false);
+    void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
 
@@ -1881,7 +1881,7 @@ namespace cytnx {
       return this->_blocks.size();
     };
 
-    std::vector<bool> signflip() const { return this->_signflip; };
+    std::vector<bool> signflip() const;
     // std::vector<bool> &signflip_reference() { return this->_signflip; };
     // const std::vector<bool> &signflip_reference() const { return this->_signflip; };
 
@@ -2157,7 +2157,7 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> contiguous();
 
-    void print_diagram(const bool &bond_info = false);
+    void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
 
@@ -3686,7 +3686,7 @@ namespace cytnx {
     @brief Plot the diagram of the UniTensor.
         @param[in] bond_info whether need to print the information of the bonds of the UniTensor.
     */
-    void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
+    void print_diagram(const bool &bond_info = false) const { this->_impl->print_diagram(bond_info); }
 
     /**
     @brief Print all of the blocks in the UniTensor.
