@@ -408,7 +408,7 @@ namespace cytnx {
       Tensor Sall;  // S vals excluding the already kept ones
       Tensor Block;  // current block
       cytnx_uint64 blockdim;
-      bool anySall = false;  // are there already any values in Sall vals?
+      bool anySall = false;  // are there already any values in Sall?
       bool any_min_blockdim = false;  // is any min_blockdim > 0?
       for (int b = 0; b < outCyT[0].Nblocks(); b++) {
         if (min_blockdim[b] < 1)  // save whole block to Sall
@@ -422,7 +422,8 @@ namespace cytnx {
             min_dim -= blockdim;
             continue;
           }
-          // remove first min_blockdim[b] values
+          // remove first min_blockdim[b] values since they are saved anyways and do not need to be
+          // included in Sall
           blockdim = outCyT[0].get_block_(b).shape()[0];
           Block = outCyT[0].get_block_(b).get({ac::range(min_blockdim[b], blockdim)});
           keep_dim -= min_blockdim[b];
