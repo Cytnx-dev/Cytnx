@@ -170,7 +170,6 @@ namespace cytnx {
       cuT *dtmp;
       dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->cap);
       cytnx_uint64 Nelem = in->len;
-
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int> size(old_shape.begin(), old_shape.end());
       std::reverse(size.begin(), size.end());  // matching API CUTT
@@ -187,8 +186,7 @@ namespace cytnx {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
         cudaFree(dtmp);
-        return out;
-
+        return in;
       } else {
         out->_Init_byptr(dtmp, Nelem, in->device, true, in->cap);
         return out;

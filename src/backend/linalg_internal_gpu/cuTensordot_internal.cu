@@ -141,8 +141,7 @@ namespace cytnx {
        ***************************/
 
       cutensorPlanPreference_t planPref;
-      cutensorCreatePlanPreference(handle, &planPref, CUTENSOR_ALGO_DEFAULT,
-                                   CUTENSOR_JIT_MODE_NONE);
+      cutensorCreatePlanPreference(handle, &planPref, CUTENSOR_ALGO_TGETT, CUTENSOR_JIT_MODE_NONE);
 
       /**********************
        * Query workspace
