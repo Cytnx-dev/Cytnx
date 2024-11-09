@@ -1,17 +1,15 @@
 #ifndef INCLUDE_TYPE_H_
 #define INCLUDE_TYPE_H_
+#ifndef INCLUDE_TYPE_H_
+#define INCLUDE_TYPE_H_
 
 #include <complex>
 #include <cstdint>
 #include <string>
 #include <type_traits>
-#include <tuple>
-#include <array>
-#include <utility>
 #include <vector>
-#include <variant>
 
-#include "cytnx_error.hpp"  // also brings in cuComplex.h
+#include "cytnx_error.hpp"
 
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
@@ -58,161 +56,31 @@ namespace cytnx {
     template <class T>
     struct is_complex_impl<std::complex<T>> : std::true_type {};
 
-    template <typename>
-    struct is_complex_floating_point_impl : std::false_type {};
-
-    template <typename T>
-    struct is_complex_floating_point_impl<std::complex<T>> : std::is_floating_point<T> {};
-
-    template <std::size_t I, typename T, typename Tuple>
-    constexpr std::size_t index_in_tuple_helper() {
-      static_assert(I < std::tuple_size_v<Tuple>, "Type not found!");
-      if constexpr (std::is_same_v<T, std::tuple_element_t<I, Tuple>>) {
-        return I;
-      } else {
-        return index_in_tuple_helper<I + 1, T, Tuple>();
-      }
-    }
-
   }  // namespace internal
-
-  // helper metafunction to transform a variant into another variant via a
-  // transform template alias
-  template <typename V, template <typename> class Transform>
-  struct make_variant_from_transform;
-
-  template <template <typename> class Transform, typename... Args>
-  struct make_variant_from_transform<std::variant<Args...>, Transform> {
-    using type = std::variant<typename Transform<Args>::type...>;
-  };
-
-  // helper type alias for make_variant_from_transform
-  template <typename V, template <typename> class Transform>
-  using make_variant_from_transform_t = typename make_variant_from_transform<V, Transform>::type;
 
   template <typename T>
   using is_complex = internal::is_complex_impl<std::remove_cv_t<T>>;
 
   template <typename T>
-  using is_complex_floating_point = internal::is_complex_floating_point_impl<std::remove_cv_t<T>>;
-
-  // is_complex_v checks if a data type is of type std::complex
-  // usage: is_complex_v<T> returns true or false for a data type T
-  template <typename T>
   constexpr bool is_complex_v = is_complex<T>::value;
 
-  // is_complex_floating_point_v<T> is a template constant that is true if T is of type complex<U>
-  // where U is a floating point type, and false otherwise.
-  template <typename T>
-  constexpr bool is_complex_floating_point_v = is_complex_floating_point<T>::value;
-
-  // variant_index<T, Variant> returns the index of type T in the Variant, or compile error if not
-  // found
-  template <typename T, typename Variant>
-  struct variant_index;
-
-  template <typename T, typename... Types>
-  struct variant_index<T, std::variant<Types...>> {
-    static constexpr size_t value = std::variant_size_v<std::variant<Types...>>;
+  /// @cond
+  struct __type {
+    enum __pybind_type {
+      Void,
+      ComplexDouble,
+      ComplexFloat,
+      Double,
+      Float,
+      Int64,
+      Uint64,
+      Int32,
+      Uint32,
+      Int16,
+      Uint16,
+      Bool,
+    };
   };
-
-  template <typename T, typename... Types>
-  struct variant_index<T, std::variant<T, Types...>> {
-    static constexpr size_t value = 0;
-  };
-
-  template <typename T, typename U, typename... Types>
-  struct variant_index<T, std::variant<U, Types...>> {
-    static constexpr size_t value = 1 + variant_index<T, std::variant<Types...>>::value;
-  };
-
-  // helper template variable
-  template <typename T, typename Variant>
-  static constexpr size_t variant_index_v = variant_index<T, Variant>::value;
-
-  namespace internal {
-    // type_size returns the sizeof(T) for the supported types. This is the same as
-    // sizeof(T), except that size_type<void> is 0.
-    template <typename T>
-    constexpr int type_size = sizeof(T);
-    template <>
-    constexpr int type_size<void> = 0;
-  }  // namespace internal
-
-  // the list of supported types. The dtype() of an object is an index into this list.
-  // std::variant works better than std::tuple here since a variant is constrained to only
-  // hold each type once, and we have std::variant_alternative_t<n> to get the n'th type,
-  // as well as the variant_index_v helper to get the index of a given type
-  using Type_list =
-    std::variant<void, cytnx_complex128, cytnx_complex64, cytnx_double, cytnx_float, cytnx_int64,
-                 cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
-
-  // For GPU storage, the types are slightly different because CUDA uses their own complex type
-#ifdef UNI_GPU
-  using Type_list_gpu =
-    std::variant<void, cuDoubleComplex, cuComplex, cytnx_double, cytnx_float, cytnx_int64,
-                 cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
-#endif
-
-  // The number of supported types
-  constexpr int N_Type = std::variant_size_v<Type_list>;
-  constexpr int N_fType = 5;
-
-  // The friendly name of each type
-  template <typename T>
-  constexpr char* Type_names = nullptr;
-  template <>
-  constexpr const char* Type_names<void> = "Void";
-  template <>
-  constexpr const char* Type_names<cytnx_complex128> = "Complex Double (Complex Float64)";
-  template <>
-  constexpr const char* Type_names<cytnx_complex64> = "Complex Float (Complex Float32)";
-  template <>
-  constexpr const char* Type_names<cytnx_double> = "Double (Float64)";
-  template <>
-  constexpr const char* Type_names<cytnx_float> = "Float (Float32)";
-  template <>
-  constexpr const char* Type_names<cytnx_int64> = "Int64";
-  template <>
-  constexpr const char* Type_names<cytnx_uint64> = "Uint64";
-  template <>
-  constexpr const char* Type_names<cytnx_int32> = "Int32";
-  template <>
-  constexpr const char* Type_names<cytnx_uint32> = "Uint32";
-  template <>
-  constexpr const char* Type_names<cytnx_int16> = "Int16";
-  template <>
-  constexpr const char* Type_names<cytnx_uint16> = "Uint16";
-  template <>
-  constexpr const char* Type_names<cytnx_bool> = "Bool";
-
-  // The corresponding Python enumeration name
-  template <typename T>
-  constexpr char* Type_enum_name = nullptr;
-  template <>
-  constexpr const char* Type_enum_name<void> = "Void";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_complex128> = "ComplexDouble";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_complex64> = "ComplexFloat";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_double> = "Double";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_float> = "Float";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_int64> = "Int64";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_uint64> = "Uint64";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_int32> = "Int32";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_uint32> = "Uint32";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_int16> = "Int16";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_uint16> = "Uint16";
-  template <>
-  constexpr const char* Type_enum_name<cytnx_bool> = "Bool";
 
   struct Type_struct {
     const char* name;  // char* is OK here, it is only ever initialized from a string literal
@@ -431,4 +299,5 @@ namespace cytnx {
 
 }  // namespace cytnx
 
+#endif  // INCLUDE_TYPE_H_
 #endif  // INCLUDE_TYPE_H_
