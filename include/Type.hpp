@@ -1,14 +1,12 @@
-#ifndef _H_TYPE_
-#define _H_TYPE_
+#ifndef INCLUDE_TYPE_H_
+#define INCLUDE_TYPE_H_
 
-#include <string>
 #include <complex>
+#include <cstdint>
+#include <string>
+#include <type_traits>
 #include <vector>
-#include <stdint.h>
-#include <climits>
-#include <typeinfo>
-#include <unordered_map>
-#include <typeindex>
+
 #include "cytnx_error.hpp"
 
 #define MKL_Complex8 std::complex<float>
@@ -62,6 +60,21 @@ namespace cytnx {
   typedef std::complex<float> cytnx_complex64;
   typedef std::complex<double> cytnx_complex128;
   typedef bool cytnx_bool;
+
+  namespace internal {
+    template <class>
+    struct is_complex_impl : std::false_type {};
+
+    template <class T>
+    struct is_complex_impl<std::complex<T>> : std::true_type {};
+
+  }  // namespace internal
+
+  template <typename T>
+  using is_complex = internal::is_complex_impl<std::remove_cv_t<T>>;
+
+  template <typename T>
+  constexpr bool is_complex_v = is_complex<T>::value;
 
   /// @cond
   struct __type {
@@ -219,4 +232,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // INCLUDE_TYPE_H_
