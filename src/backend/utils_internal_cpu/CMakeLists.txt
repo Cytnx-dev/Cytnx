@@ -14,7 +14,6 @@ target_sources_local(cytnx
     Complexmem_cpu.hpp
     Alloc_cpu.cpp
     Cast_cpu.cpp
-    Fill_cpu.cpp
     GetElems_cpu.cpp
     GetElems_contiguous_cpu.cpp
     Movemem_cpu.cpp
