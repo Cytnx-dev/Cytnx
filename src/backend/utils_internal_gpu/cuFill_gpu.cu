@@ -31,8 +31,8 @@ namespace cytnx {
       using CudaDType = typename ToCudaDType<DType>::type;
 
       CudaDType* typed_first = reinterpret_cast<CudaDType*>(first);
-      cytnx_uint64 block_count = (count + 511) / 512;
-      FillGpuKernel<<<block_count, 512>>>(typed_first, static_cast<CudaDType>(value), count);
+      cytnx_uint64 block_count = (count + 1023) / 1024;
+      FillGpuKernel<<<block_count, 1024>>>(typed_first, static_cast<CudaDType>(value), count);
     }
 
     template void FillGpu<cytnx_complex128>(void*, const cytnx_complex128&, cytnx_uint64);
