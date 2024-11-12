@@ -165,7 +165,15 @@ struct StoragePutValue : testing::Test {
       } else {
         return std::false_type{};
       }
-    } else if constexpr (is_convertible_v<ValueDType, StorageDType>) {
+    } else if constexpr (std::is_same_v<ValueDType, Scalar> &&
+                         std::is_same_v<StorageDType, cytnx_complex128>) {
+      // There is no conversion function for converting a value from Scalar to complex types.
+      return complex128(value);
+    } else if constexpr (std::is_same_v<ValueDType, Scalar> &&
+                         std::is_same_v<StorageDType, cytnx_complex64>) {
+      return complex64(value);
+    } else if constexpr (std::is_constructible_v<StorageDType, ValueDType>) {
+      // handle both implicit conversion and explicit conversion
       return StorageDType(value);
     } else {
       return std::false_type{};
@@ -195,5 +203,31 @@ TYPED_TEST(StoragePutValue, Fill) {
       EXPECT_EQ(storage.at<StorageDType>(0), StorageDType(value_to_fill));
       EXPECT_EQ(storage.at<StorageDType>(1), StorageDType(value_to_fill));
     }
+  }
+}
+
+TYPED_TEST(StoragePutValue, AppendWithReallocation) {
+  using StorageDType = typename TestFixture::StorageDType;
+  using ValueDType = typename TestFixture::ValueDType;
+
+  auto element1 = StorageDType(2);
+  auto element2 = StorageDType(7);
+
+  std::vector<StorageDType> v = {element1, element2};
+  Storage storage = Storage::from_vector(v);
+
+  ASSERT_EQ(storage.dtype(), Type.cy_typeid(element1));
+  ASSERT_EQ(storage.size(), storage.capacity());
+
+  auto value_to_append = ValueDType(10);
+  auto value_in_storage_dtype = this->TryConvertToStorageDType(value_to_append);
+  constexpr bool is_not_convertible =
+    std::is_same_v<decltype(value_in_storage_dtype), std::false_type>;
+  if constexpr (is_not_convertible) {
+    EXPECT_THROW(storage.append(value_to_append), std::logic_error);
+  } else {
+    storage.append(value_to_append);
+    EXPECT_GE(storage.capacity(), storage.size());
+    EXPECT_EQ(storage.size(), 3);
   }
 }
