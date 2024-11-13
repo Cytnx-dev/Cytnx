@@ -14,23 +14,23 @@
 
 namespace cytnx {
   /// @cond
-  class PsudoUniTensor {
+  class PseudoUniTensor {
    public:
     // UniTensor utensor; //don't worry about copy, because everything are references in cytnx!
     std::vector<std::string> labels;
     std::vector<cytnx_uint64> shape;
     bool is_assigned;
-    PsudoUniTensor *left;
-    PsudoUniTensor *right;
-    PsudoUniTensor *root;
+    PseudoUniTensor *left;
+    PseudoUniTensor *right;
+    PseudoUniTensor *root;
     cytnx_float cost;
     cytnx_uint64 ID;
 
     std::string accu_str;
 
-    PsudoUniTensor()
+    PseudoUniTensor()
         : is_assigned(false), left(nullptr), right(nullptr), root(nullptr), cost(0), ID(0){};
-    PsudoUniTensor(const PsudoUniTensor &rhs) {
+    PseudoUniTensor(const PseudoUniTensor &rhs) {
       this->left = rhs.left;
       this->right = rhs.right;
       this->root = rhs.root;
@@ -41,7 +41,7 @@ namespace cytnx {
       this->accu_str = rhs.accu_str;
       this->ID = rhs.ID;
     }
-    PsudoUniTensor &operator==(const PsudoUniTensor &rhs) {
+    PseudoUniTensor &operator==(const PseudoUniTensor &rhs) {
       this->left = rhs.left;
       this->right = rhs.right;
       this->root = rhs.root;
@@ -71,9 +71,9 @@ namespace cytnx {
 
   class SearchTree {
    public:
-    std::vector<std::vector<PsudoUniTensor>> nodes_container;
+    std::vector<std::vector<PseudoUniTensor>> nodes_container;
     // std::vector<PsudoUniTensor> nodes_container; // this contains intermediate layer.
-    std::vector<PsudoUniTensor> base_nodes;  // this is the button layer.
+    std::vector<PseudoUniTensor> base_nodes;  // this is the button layer.
 
     SearchTree(){};
     SearchTree(const SearchTree &rhs) {
