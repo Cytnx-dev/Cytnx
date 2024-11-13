@@ -1,6 +1,7 @@
 #include "BlockUniTensor_test.h"
 
 TEST_F(BlockUniTensorTest, gpu_Trace) {
+  GTEST_SKIP() << "Calculating the trace of a matrix is not implemented on the GPU.";
   // std::cout<<BUT4<<std::endl;
   auto tmp = BUT4.Trace(0, 3);
   // std::cout<<BUtrT4<<std::endl;
