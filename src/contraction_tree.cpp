@@ -15,17 +15,18 @@ namespace cytnx {
                     "should contain >=2 tensors in order to build contraction order.%s",
                     "\n");
 
-    Node *left = &(this->base_nodes[0]);
-    Node *right;
+    std::shared_ptr<Node> left = std::make_shared<Node>(this->base_nodes[0]);
+    std::shared_ptr<Node> right;
     this->nodes_container.reserve(
-      this->base_nodes.size());  // reserve a contiguous memeory address to prevent re-allocate that
+      this->base_nodes.size());  // reserve a contiguous memory address to prevent re-allocate that
                                  // change address.
     for (cytnx_uint64 i = 1; i < this->base_nodes.size(); i++) {
-      right = &(this->base_nodes[i]);
+      right = std::make_shared<Node>(this->base_nodes[i]);
       this->nodes_container.push_back(Node(left, right));
-      left = &(this->nodes_container.back());
+      left = std::make_shared<Node>(this->nodes_container.back());
     }
   }
+
   void ContractionTree::build_contraction_tree_by_tokens(
     const std::map<std::string, cytnx_uint64> &name2pos, const std::vector<std::string> &tokens) {
     this->reset_contraction_order();
@@ -38,28 +39,24 @@ namespace cytnx {
       "[ERROR][ContractionTree][build_contraction_order_by_tokens] cannot have empty tokens.%s",
       "\n");
 
-    stack<Node *> stk;
-    Node *left;
-    Node *right;
-    stack<char> operators;
+    std::stack<std::shared_ptr<Node>> stk;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
+    std::stack<char> operators;
     char topc;
     size_t pos = 0;
     std::string tok;
 
     // evaluate each token, and construct the Contraction Tree.
     this->nodes_container.reserve(
-      this->base_nodes.size());  // reserve a contiguous memeory address to prevent re-allocate that
+      this->base_nodes.size());  // reserve a contiguous memory address to prevent re-allocate that
                                  // change address.
     for (cytnx_uint64 i = 0; i < tokens.size(); i++) {
       tok = str_strip(tokens[i]);  // remove space.
-      // cout << tokens[i] << "|" << tok << "|" << endl;
       if (tok.length() == 0) continue;
-      // cout << tok << "|";
       if (tok == "(") {
         operators.push(tok.c_str()[0]);
-        // cout << "put(" << endl;
       } else if (tok == ")") {
-        // cout << "put)-->";
         if (!operators.empty()) {
           topc = operators.top();
           while ((topc != '(')) {
@@ -69,19 +66,15 @@ namespace cytnx {
             left = stk.top();
             stk.pop();
             this->nodes_container.push_back(Node(left, right));
-            // cout << right->name << " " << left->name <<">";
-            // this->nodes_container.back().name = right->name + left->name;
-            stk.push(&this->nodes_container.back());
+            stk.push(std::make_shared<Node>(this->nodes_container.back()));
             if (!operators.empty())
               topc = operators.top();
             else
               break;
           }
         }
-        // cout << endl;
         operators.pop();  // discard the '('
       } else if (tok == ",") {
-        // cout << "put,-->";
         if (!operators.empty()) {
           topc = operators.top();
           while ((topc != '(') && (topc != ')')) {
@@ -91,16 +84,13 @@ namespace cytnx {
             left = stk.top();
             stk.pop();
             this->nodes_container.push_back(Node(left, right));
-            // cout << right->name << " " << left->name << ">";
-            // this->nodes_container.back().name = right->name  + left->name;
-            stk.push(&this->nodes_container.back());
+            stk.push(std::make_shared<Node>(this->nodes_container.back()));
             if (!operators.empty())
               topc = operators.top();
             else
               break;
           }
         }
-        // cout << endl;
         operators.push(',');
       } else {
         cytnx_uint64 idx;
@@ -112,8 +102,7 @@ namespace cytnx {
                           "contain invalid TN name: %s ,which is not previously defined. \n",
                           tok.c_str());
         }
-        stk.push(&this->base_nodes[idx]);
-        // cout << "TN" << this->base_nodes[idx].name << endl;
+        stk.push(std::make_shared<Node>(this->base_nodes[idx]));
       }
 
     }  // for each token
@@ -124,17 +113,9 @@ namespace cytnx {
       stk.pop();
       left = stk.top();
       stk.pop();
-      // this->nodes_container.back().name = right->name +  left->name;
       this->nodes_container.push_back(Node(left, right));
-      stk.push(&this->nodes_container.back());
+      stk.push(std::make_shared<Node>(this->nodes_container.back()));
     }
-    /*
-    cout << "============" << endl;
-    for(int i=0;i<this->nodes_container.size();i++){
-        cout << this->nodes_container[i].name << endl;
-    }
-    cout << "============" << endl;
-    */
   }
 
 }  // namespace cytnx
