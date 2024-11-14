@@ -52,29 +52,31 @@ namespace cytnx {
     cytnx_int64 pid = 0;
     this->nodes_container.resize(this->base_nodes.size());
     //[Regiving each base nodes it's own ID]:
-    for (cytnx_uint64 i = 0; i < this->base_nodes.size(); i++) {
-      this->base_nodes[i].set_ID(pow(2, i));
+    cytnx_uint64 i = 0;
+    for (auto &node : this->base_nodes) {
+      node->set_ID(pow(2, i));
       this->nodes_container[i].reserve(this->base_nodes.size() * 2);  // try
+      i++;
     }
 
     // init first layer
-    for (cytnx_uint64 t = 0; t < this->base_nodes.size(); t++) {
-      this->nodes_container[0].push_back(this->base_nodes[t]);
+    for (auto &node : this->base_nodes) {
+      this->nodes_container[0].push_back(node);
     }
 
     bool secondtimescan = 0;
     while (this->nodes_container.back().size() ==
            0) {  // I can't see the need of this while loop before using secondtimescan
-      for (int c = 1; c < this->base_nodes.size(); c++) {
-        for (int d1 = 0; d1 < (c + 1) / 2; d1++) {
-          int d2 = c - d1 - 1;
-          int n1 = this->nodes_container[d1].size();
-          int n2 = this->nodes_container[d2].size();
-          for (int i1 = 0; i1 < n1; i1++) {
-            int i2_start = (d1 == d2) ? i1 + 1 : 0;
-            for (int i2 = i2_start; i2 < n2; i2++) {
-              PseudoUniTensor &t1 = this->nodes_container[d1][i1];
-              PseudoUniTensor &t2 = this->nodes_container[d2][i2];
+      for (auto c = 1; c < this->base_nodes.size(); c++) {
+        for (auto d1 = 0; d1 < (c + 1) / 2; d1++) {
+          auto d2 = c - d1 - 1;
+          auto n1 = this->nodes_container[d1].size();
+          auto n2 = this->nodes_container[d2].size();
+          for (auto i1 = 0; i1 < n1; i1++) {
+            auto i2_start = (d1 == d2) ? i1 + 1 : 0;
+            for (auto i2 = i2_start; i2 < n2; i2++) {
+              PseudoUniTensor t1 = *(this->nodes_container[d1][i1]);
+              PseudoUniTensor t2 = *(this->nodes_container[d2][i2]);
 
               // No common labels
               // If it's the secondtimescan, that's probably because there're need of Kron
@@ -87,21 +89,21 @@ namespace cytnx {
               PseudoUniTensor t3 = pContract(t1, t2);
               bool exist = false;
               for (int i = 0; i < nodes_container[c].size(); i++) {
-                if (t3.ID == nodes_container[c][i].ID) {
+                if (t3.ID == nodes_container[c][i]->ID) {
                   exist = true;
-                  if (t3.cost < nodes_container[c][i].cost) {
-                    nodes_container[c][i] = t3;
-                    t1.root = &nodes_container[c][i];
-                    t2.root = &nodes_container[c][i];
+                  if (t3.cost < nodes_container[c][i]->cost) {
+                    nodes_container[c][i] = std::make_shared<PseudoUniTensor>(t3);
+                    t1.root = nodes_container[c][i];
+                    t2.root = nodes_container[c][i];
                   }
                   break;
                 }
               }  // i
 
               if (!exist) {
-                nodes_container[c].push_back(t3);
-                t1.root = &nodes_container[c].back();
-                t2.root = &nodes_container[c].back();
+                nodes_container[c].push_back(std::make_shared<PseudoUniTensor>(t3));
+                t1.root = nodes_container[c].back();
+                t2.root = nodes_container[c].back();
               }
 
             }  // for i2
