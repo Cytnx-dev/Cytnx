@@ -73,6 +73,8 @@ namespace cytnx {
   template <typename T>
   using is_complex = internal::is_complex_impl<std::remove_cv_t<T>>;
 
+  // is_complex_v checks if a data type is of type std::complex
+  // usage: is_complex_v<T> returns true or false for a data type T
   template <typename T>
   constexpr bool is_complex_v = is_complex<T>::value;
 
