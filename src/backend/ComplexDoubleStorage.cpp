@@ -395,11 +395,11 @@ namespace cytnx {
 
   void ComplexDoubleStorage::fill(const cytnx_complex128 &val) {
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&val), this->len);
+      utils_internal::FillCpu(this->Mem, val, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&val), this->len);
+      utils_internal::FillGpu(this->Mem, val, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -409,11 +409,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_complex64 &val) {
     cytnx_complex128 tmp(val.real(), val.imag());
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -423,11 +423,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_double &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -437,11 +437,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_float &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -451,11 +451,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_int64 &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -465,11 +465,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_uint64 &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -479,11 +479,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_int32 &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -493,11 +493,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_uint32 &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -507,11 +507,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_int16 &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -521,11 +521,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_uint16 &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
@@ -535,11 +535,11 @@ namespace cytnx {
   void ComplexDoubleStorage::fill(const cytnx_bool &val) {
     cytnx_complex128 tmp(val, 0);
     if (this->device == Device.cpu) {
-      utils_internal::Fill_cpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillCpu(this->Mem, tmp, this->len);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuFill_gpu_cd(this->Mem, (void *)(&tmp), this->len);
+      utils_internal::FillGpu(this->Mem, tmp, this->len);
 #else
       cytnx_error_msg(true, "[ERROR][fill] fatal internal, %s",
                       "storage is on gpu without CUDA support\n");
