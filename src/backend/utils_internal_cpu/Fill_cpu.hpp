@@ -27,7 +27,7 @@ namespace cytnx {
     void FillCpu(void *first, const DType &value, cytnx_uint64 count) {
       DType *typed_first = reinterpret_cast<DType *>(first);
 #ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
+  #pragma omp parallel for schedule(static)
 #endif
       for (cytnx_uint64 i = 0; i < count; i++) {
         typed_first[i] = value;
