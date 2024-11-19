@@ -90,11 +90,11 @@ namespace cytnx {
                                           const std::vector<cytnx_uint64> &invmapper) {
     boost::intrusive_ptr<Storage_base> tmp(this);
     if (this->device == Device.cpu) {
-      utils_internal::Movemem_cpu_cd(tmp, old_shape, mapper, invmapper, 1);
+      utils_internal::MoveMemoryCpu<cytnx_complex128>(tmp, old_shape, mapper, invmapper, 1);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      utils_internal::cuMovemem_gpu_cd(tmp, old_shape, mapper, invmapper, 1);
+      utils_internal::MoveMemoryGpu<cytnx_complex128>(tmp, old_shape, mapper, invmapper, 1);
 #else
       cytnx_error_msg(1, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
 #endif
@@ -106,11 +106,11 @@ namespace cytnx {
     const std::vector<cytnx_uint64> &invmapper) {
     boost::intrusive_ptr<Storage_base> tmp(this);
     if (this->device == Device.cpu) {
-      return utils_internal::Movemem_cpu_cd(tmp, old_shape, mapper, invmapper, 0);
+      return utils_internal::MoveMemoryCpu<cytnx_complex128>(tmp, old_shape, mapper, invmapper, 0);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device));
-      return utils_internal::cuMovemem_gpu_cd(tmp, old_shape, mapper, invmapper, 0);
+      return utils_internal::MoveMemoryGpu<cytnx_complex128>(tmp, old_shape, mapper, invmapper, 0);
 #else
       cytnx_error_msg(1, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
 #endif
