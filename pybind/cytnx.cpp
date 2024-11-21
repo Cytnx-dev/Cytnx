@@ -59,20 +59,12 @@ PYBIND11_MODULE(cytnx, m) {
   bond_binding(m);
   py::add_ostream_redirect(m, "ostream_redirect");
 
-  py::enum_<cytnx::__type::__pybind_type>(m, "Type")
-    .value("Void", cytnx::__type::__pybind_type::Void)
-    .value("ComplexDouble", cytnx::__type::__pybind_type::ComplexDouble)
-    .value("ComplexFloat", cytnx::__type::__pybind_type::ComplexFloat)
-    .value("Double", cytnx::__type::__pybind_type::Double)
-    .value("Float", cytnx::__type::__pybind_type::Float)
-    .value("Uint64", cytnx::__type::__pybind_type::Uint64)
-    .value("Int64", cytnx::__type::__pybind_type::Int64)
-    .value("Uint32", cytnx::__type::__pybind_type::Uint32)
-    .value("Int32", cytnx::__type::__pybind_type::Int32)
-    .value("Uint16", cytnx::__type::__pybind_type::Uint16)
-    .value("Int16", cytnx::__type::__pybind_type::Int16)
-    .value("Bool", cytnx::__type::__pybind_type::Bool)
-    .export_values();
+  py::enum_<cytnx::Type_class::Type> type_enum(m, "Type");
+  for (std::size_t i = 0; i < N_Type; ++i)
+  {
+    type_enum.value(Type.enum_name(i), static_cast<Type_class::Type>(i));
+  }
+  type_enum.export_values();
 
   auto mdev = m.def_submodule("Device");
   mdev.attr("cpu") = (cytnx_int64)cytnx::Device.cpu;
