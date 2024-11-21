@@ -14,9 +14,8 @@ namespace SvdTest {
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
-  std::string data_root = "../../tests/test_data_base/";
-  std::string src_data_root = data_root + "common/";
-  std::string ans_data_root = data_root + "linalg/Svd/";
+  std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
+  std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd/";
   // normal test
 
   /*=====test info=====

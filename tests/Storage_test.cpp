@@ -96,7 +96,7 @@ TEST_F(StorageTest, from_vec_cf) {
 
 // create suite for all real types (exclude bool)
 using vector_typelist = testing::Types<cytnx_int64, cytnx_uint64, cytnx_int32, cytnx_uint32,
-                                       cytnx_double, cytnx_float, cytnx_uint16, cytnx_int64>;
+                                       cytnx_double, cytnx_float, cytnx_uint16, cytnx_int16>;
 template <class>
 struct vector_suite : testing::Test {};
 TYPED_TEST_SUITE(vector_suite, vector_typelist);
