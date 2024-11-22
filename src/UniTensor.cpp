@@ -168,14 +168,9 @@ namespace cytnx {
   UniTensor UniTensor::Load(const std::string &fname) {
     UniTensor out;
     fstream f;
-
-    char buffer[256];
-    getcwd(buffer, sizeof(buffer));
-  
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-
-      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s CWD is %s\n", fname.c_str(), buffer);
+      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
     }
     out._Load(f);
     f.close();
