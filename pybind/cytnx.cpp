@@ -60,8 +60,7 @@ PYBIND11_MODULE(cytnx, m) {
   py::add_ostream_redirect(m, "ostream_redirect");
 
   py::enum_<cytnx::Type_class::Type> type_enum(m, "Type");
-  for (std::size_t i = 0; i < N_Type; ++i)
-  {
+  for (std::size_t i = 0; i < N_Type; ++i) {
     type_enum.value(Type.enum_name(i), static_cast<Type_class::Type>(i));
   }
   type_enum.export_values();
