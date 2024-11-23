@@ -5,6 +5,9 @@ else()
 # Define the path to the test data directory
 set(CYTNX_TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test_data_base")
 
+# Add the preprocessor definition for CYTNX_TEST_DATA_DIR
+add_compile_definitions(CYTNX_TEST_DATA_DIR="${CYTNX_TEST_DATA_DIR}")
+
 add_executable(
   test_main
   test_tools.cpp
@@ -38,9 +41,6 @@ add_executable(
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
 )
-
-# Add the preprocessor definition for CYTNX_TEST_DATA_DIR
-target_compile_definitions(test_main PUBLIC CYTNX_TEST_DATA_DIR="${CYTNX_TEST_DATA_DIR}")
 
 if(USE_CUDA)
       add_subdirectory(gpu)
