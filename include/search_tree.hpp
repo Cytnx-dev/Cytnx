@@ -8,11 +8,12 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <bitset>
 #include "UniTensor.hpp"
 
 #ifdef BACKEND_TORCH
 #else
-
+using IndexSet = std::bitset<128>;
 namespace cytnx {
   /// @cond
   class PseudoUniTensor : public std::enable_shared_from_this<PseudoUniTensor> {

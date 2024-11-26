@@ -7,7 +7,33 @@ using namespace std;
 #else
 
 namespace cytnx {
+  // helper functions
+  int64_t addCost(int64_t cost1, int64_t cost2) {
+    if (cost1 > std::numeric_limits<int64_t>::max() - cost2) {
+      throw std::overflow_error("Cost addition overflow");
+    }
+    return cost1 + cost2;
+  }
 
+  int64_t mulCost(int64_t cost1, int64_t cost2) {
+    if (cost2 != 0 && cost1 > std::numeric_limits<int64_t>::max() / cost2) {
+      throw std::overflow_error("Cost multiplication overflow");
+    }
+    return cost1 * cost2;
+  }
+
+  int64_t computeCost(const std::vector<int64_t> &allCosts, const IndexSet &ind1,
+                      const IndexSet &ind2) {
+    IndexSet result = ind1 | ind2;
+    int64_t cost = 1;
+
+    for (size_t i = 0; i < result.size(); ++i) {
+      if (result[i]) {
+        cost = mulCost(cost, allCosts[i]);
+      }
+    }
+    return cost;
+  }
   cytnx_float get_cost(const PseudoUniTensor &t1, const PseudoUniTensor &t2) {
     cytnx_float cost = 1;
     vector<cytnx_uint64> shape1 = t1.shape;
@@ -54,7 +80,7 @@ namespace cytnx {
     //[Regiving each base nodes it's own ID]:
     cytnx_uint64 i = 0;
     for (auto &node : this->base_nodes) {
-      node->set_ID(pow(2, i));
+      node->set_ID(1 << i);
       this->nodes_container[i].reserve(this->base_nodes.size() * 2);  // try
       i++;
     }
