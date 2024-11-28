@@ -121,9 +121,9 @@ namespace cytnx {
      * @return The index of the label. If not found, return -1
      */
     cytnx_int64 get_index(std::string label) const {
-      std::vector<std::string> labels = this->_labels;
-      for (cytnx_uint64 i = 0; i < labels.size(); i++) {
-        if (labels[i] == label) return i;
+      auto it = std::find(this->_labels.begin(), this->_labels.end(), label);
+      if (it != this->_labels.end()) {
+        return std::distance(this->_labels.begin(), it);
       }
       return -1;
     }
