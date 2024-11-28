@@ -30,46 +30,28 @@ namespace cytnx {
 }
 
 namespace cytnx {
-  unsigned int Type_class::type_promote(unsigned int typeL, unsigned int typeR) {
-    if (typeL < typeR) {
-      if (typeL == 0) return 0;
-
-      if (!is_unsigned(typeR) && is_unsigned(typeL)) {
-        return typeL - 1;
-      } else {
-        return typeL;
-      }
-    } else {
-      if (typeR == 0) return 0;
-      if (!is_unsigned(typeL) && is_unsigned(typeR)) {
-        return typeR - 1;
-      } else {
-        return typeR;
-      }
-    }
-  }
 
   // Construct an array of typeid(T).name() for each type in Type_list.
-  // This is complicated by Type_list containing 'void', which means we can't use an ordinary lambda, but
-  // instead we need a metafunction and a template template parameter.
+  // This is complicated by Type_list containing 'void', which means we can't use an ordinary
+  // lambda, but instead we need a metafunction and a template template parameter.
   template <typename T>
   struct c_typename {
-    static const char* get() {
-      return typeid(T).name();
-    }
+    static const char* get() { return typeid(T).name(); }
   };
 
-  template <typename Tuple, template <typename> class Func, std::size_t... Indices>
+  template <typename Variant, template <typename> class Func, std::size_t... Indices>
   auto make_type_array_from_func_helper(std::index_sequence<Indices...>) {
-    return std::array<decltype(Func<int>::get()), sizeof...(Indices)>{Func<std::tuple_element_t<Indices, Tuple>>::get()...};
+    return std::array<decltype(Func<int>::get()), sizeof...(Indices)>{
+      Func<std::variant_alternative_t<Indices, Variant>>::get()...};
   }
 
-  template <typename Tuple, template <typename> class Func>
+  template <typename Variant, template <typename> class Func>
   auto make_type_array_from_func() {
-    return make_type_array_from_func_helper<Tuple, Func>(std::make_index_sequence<std::tuple_size_v<Tuple>>());
+    return make_type_array_from_func_helper<Variant, Func>(
+      std::make_index_sequence<std::variant_size_v<Variant>>());
   }
 
-  unsigned int Type_class::c_typename_to_id(const std::string &c_name) {
+  unsigned int Type_class::c_typename_to_id(const std::string& c_name) {
     static auto c_typenames = make_type_array_from_func<Type_list, c_typename>();
 
     auto i = std::find(c_typenames.begin(), c_typenames.end(), c_name);
