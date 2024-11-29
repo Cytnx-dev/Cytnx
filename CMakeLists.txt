@@ -85,7 +85,6 @@ option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(USE_CUTT "Build Cytnx with CUTT" OFF)
-option(USE_MAGMA "Build Cytnx with MAGMA (requires CUDA)" ON)
 option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
 option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
 
@@ -142,7 +141,9 @@ if(USE_DEBUG)
 endif()
 
 if(RUN_TESTS)
-  enable_testing()
+  # Include CTest explicitly to suppress the error that DartConfiguration.tcl
+  # is not found
+  include(CTest)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
   target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
   add_subdirectory(tests)

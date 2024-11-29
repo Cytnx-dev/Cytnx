@@ -673,13 +673,13 @@ namespace cytnx {
     */
     const bool &is_contiguous() const { return this->_impl->is_contiguous(); }
 
-    Tensor permute_(const std::vector<cytnx_uint64> &rnks) {
+    Tensor &permute_(const std::vector<cytnx_uint64> &rnks) {
       this->_impl->permute_(rnks);
       return *this;
     }
     /// @cond
     template <class... Ts>
-    Tensor permute_(const cytnx_uint64 &e1, const Ts &...elems) {
+    Tensor &permute_(const cytnx_uint64 &e1, const Ts &...elems) {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
       this->_impl->permute_(argv);
       return *this;
@@ -778,21 +778,27 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/reshape_.py.out
     */
-    void reshape_(const std::vector<cytnx_int64> &new_shape) { this->_impl->reshape_(new_shape); }
+    Tensor &reshape_(const std::vector<cytnx_int64> &new_shape) {
+      this->_impl->reshape_(new_shape);
+      return *this;
+    }
     /// @cond
-    void reshape_(const std::vector<cytnx_uint64> &new_shape) {
+    Tensor &reshape_(const std::vector<cytnx_uint64> &new_shape) {
       std::vector<cytnx_int64> shape(new_shape.begin(), new_shape.end());
       this->_impl->reshape_(shape);
+      return *this;
     }
-    void reshape_(const std::initializer_list<cytnx_int64> &new_shape) {
+    Tensor &reshape_(const std::initializer_list<cytnx_int64> &new_shape) {
       std::vector<cytnx_int64> shape = new_shape;
       this->_impl->reshape_(shape);
+      return *this;
     }
     template <class... Ts>
-    void reshape_(const cytnx_int64 &e1, const Ts... elems) {
+    Tensor &reshape_(const cytnx_int64 &e1, const Ts... elems) {
       std::vector<cytnx_int64> shape = dynamic_arg_int64_resolver(e1, elems...);
       // std::cout << shape << std::endl;
       this->_impl->reshape_(shape);
+      return *this;
     }
     /// @endcond
 

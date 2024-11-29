@@ -70,7 +70,7 @@ namespace cytnx {
                                         (cytnx_double *)S->Mem, (d_data_type *)vTMem, ldu,
                                         (d_data_type *)UMem, ldvT, (d_data_type *)d_work, lwork,
                                         devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      if (U->Mem and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cd(U, M * min);
       }
@@ -158,7 +158,7 @@ namespace cytnx {
                                         (cytnx_float *)S->Mem, (d_data_type *)vTMem, ldu,
                                         (d_data_type *)UMem, ldvT, (d_data_type *)d_work, lwork,
                                         devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      if (U->Mem and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cf(U, M * min);
       }
@@ -244,7 +244,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnDgesvdj(
         cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->Mem, (data_type *)vTMem,
         ldu, (data_type *)UMem, ldvT, (data_type *)d_work, lwork, devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      if (U->Mem and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
       }
 
@@ -329,7 +329,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnSgesvdj(
         cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->Mem, (data_type *)vTMem,
         ldu, (data_type *)UMem, ldvT, (data_type *)d_work, lwork, devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      if (U->Mem and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
       }
 

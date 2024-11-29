@@ -1169,32 +1169,36 @@ namespace cytnx {
     };
 
     unsigned int dtype() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].dtype();
+      return this->_blocks.size() < 1 ? Type.Void : this->_blocks[0].dtype();
     };
     int device() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].device();
+      return this->_blocks.size() < 1 ? -404 : this->_blocks[0].device();
     };
     std::string dtype_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].dtype_str();
+      return this->_blocks.size() < 1 ? "Void, no valid blocks" : this->_blocks[0].dtype_str();
     };
     std::string device_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
   #ifdef UNI_DEBUG
       cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
                       "\n");
   #endif
-      return this->_blocks[0].device_str();
+      return this->_blocks.size() < 1 ? "None, no valid blocks" : this->_blocks[0].device_str();
     };
 
     Tensor get_block(const cytnx_uint64 &idx = 0) const {
@@ -2714,8 +2718,9 @@ namespace cytnx {
     @param[in] rowrank the row rank after the permutation
           @warning \p by_label will be deprecated!
     */
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
+      return *this;
     }
 
     /**
@@ -2724,8 +2729,9 @@ namespace cytnx {
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
-    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
+      return *this;
     }
 
     // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
@@ -3333,8 +3339,10 @@ namespace cytnx {
         cannot be UTenType::Block.
           @see reshape(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank)
         */
-    void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
+    UniTensor &reshape_(const std::vector<cytnx_int64> &new_shape,
+                        const cytnx_uint64 &rowrank = 0) {
       this->_impl->reshape_(new_shape, rowrank);
+      return *this;
     }
 
     /**

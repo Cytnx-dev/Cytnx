@@ -1,11 +1,11 @@
-#include "linalg.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
 
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include <iostream>
-#include <vector>
-#include <string>
+#include "linalg.hpp"
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -121,7 +121,7 @@ namespace cytnx {
       cytnx::Bond newBond(outT[t].shape()[0]);
 
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-                Device.cpu, true);  // it is just reference so no hurt to alias ^^
+                Tin.device(), true);  // it is just reference so no hurt to alias ^^
 
       // cout << "[AFTER INIT]" << endl;
       Cy_S.put_block_(outT[t]);

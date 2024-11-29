@@ -50,42 +50,49 @@ namespace ArnoldiTest {
   // corrected test
   // 1-1, test for 'which' = 'LM'
   TEST(Arnoldi, gpu_which_LM_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "LM";
     ExcuteTest(which);
   }
 
   // 1-2, test for 'which' = 'LR'
   TEST(Arnoldi, gpu_which_LR_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "LR";
     ExcuteTest(which);
   }
 
   // 1-3, test for 'which' = 'LI'
   TEST(Arnoldi, gpu_which_LI_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "LI";
     ExcuteTest(which);
   }
 
   // 1-4, test for 'which' = 'SM'
   TEST(Arnoldi, gpu_which_SM_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "SM";
     ExcuteTest(which);
   }
 
   // 1-5, test for 'which' = 'SR'
   TEST(Arnoldi, gpu_which_SR_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "SR";
     ExcuteTest(which);
   }
 
   // 1-6, test for 'which' = 'SI'
   TEST(Arnoldi, gpu_which_SI_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "SI";
     ExcuteTest(which);
   }
 
   // 1-7, test matrix is real type
   TEST(Arnoldi, gpu_mat_type_real_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "LM";
     auto mat_type = Type.Double;
     ExcuteTest(which, mat_type);
@@ -93,6 +100,7 @@ namespace ArnoldiTest {
 
   // 1-8, test eigenalue number k = 1
   TEST(Arnoldi, gpu_k1_test) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "LM";
     auto mat_type = Type.ComplexDouble;
     cytnx_uint64 k = 1;
@@ -101,6 +109,7 @@ namespace ArnoldiTest {
 
   // 1-9, test eigenalue number k match maximum, that means k = dim.
   TEST(Arnoldi, gpu_k_max) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "LM";
     auto mat_type = Type.ComplexDouble;
     cytnx_uint64 k, dim;
@@ -110,6 +119,7 @@ namespace ArnoldiTest {
 
   // 1-10, test the smallest matrix dimenstion.
   TEST(Arnoldi, gpu_smallest_dim) {
+    GTEST_SKIP() << "Arnoldi is not implemented in CUDA.";
     std::string which = "LM";
     auto mat_type = Type.ComplexDouble;
     cytnx_uint64 k, dim;

@@ -1,8 +1,15 @@
 #include "cuMovemem_gpu.hpp"
-#include "cuAlloc_gpu.hpp"
-#include "backend/Storage.hpp"
+
 #include <algorithm>
-#include "utils/vec_print.hpp"
+#include <vector>
+#include <type_traits>
+
+#include "boost/smart_ptr/intrusive_ptr.hpp"
+#include "cuda_runtime_api.h"
+
+#include "backend/Storage.hpp"
+#include "cuAlloc_gpu.hpp"
+#include "Type.hpp"
 
 #ifdef UNI_GPU
   #ifdef UNI_CUTT
@@ -21,6 +28,28 @@ namespace cytnx {
   namespace utils_internal {
 
 #ifdef UNI_GPU
+
+    /**
+     * A helper class that retrieves corresponding complex type defined in CUDA for the complex
+     * dtype.
+     */
+    template <class DType>
+    struct ToCudaTypeMap {
+      typedef DType type;
+    };
+
+    template <>
+    struct ToCudaTypeMap<cytnx_complex128> {
+      typedef cuDoubleComplex type;
+    };
+    template <>
+    struct ToCudaTypeMap<cytnx_complex64> {
+      typedef cuFloatComplex type;
+    };
+
+    template <class DType>
+    using ToCudaType = typename ToCudaTypeMap<DType>::type;
+
     template <class BidirectionalIterator>
     void reverse_perm(BidirectionalIterator first, BidirectionalIterator last, int N) {
       while ((first != last) && (first != --last)) {
@@ -70,11 +99,12 @@ namespace cytnx {
 
     // T is the cytnx type, cuT is the cuda type. For all types they should be the same except for
     // cuDoubleComplex and cuFloatComplex.
-    template <class T, class cuT>
+    template <class T>
     boost::intrusive_ptr<Storage_base> cuMovemem_gpu_general(
       boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape,
       const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper,
       const bool is_inplace) {
+      using cuT = ToCudaType<T>;
       T proxy;
       unsigned int dtype_T = Type_class::cy_typeid(proxy);
   #ifdef UNI_DEBUG
@@ -151,11 +181,12 @@ namespace cytnx {
     }
 
   #ifdef UNI_CUTT
-    template <class T, class cuT>
+    template <class T>
     boost::intrusive_ptr<Storage_base> cuMovemem_cutt_gpu(
       boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape,
       const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper,
       const bool is_inplace) {
+      using cuT = ToCudaType<T>;
       T proxy;
       unsigned int dtype_T = Type_class::cy_typeid(proxy);
     #ifdef UNI_DEBUG
@@ -170,7 +201,6 @@ namespace cytnx {
       cuT *dtmp;
       dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->cap);
       cytnx_uint64 Nelem = in->len;
-
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int> size(old_shape.begin(), old_shape.end());
       std::reverse(size.begin(), size.end());  // matching API CUTT
@@ -187,8 +217,7 @@ namespace cytnx {
         /// cpy back:
         checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
         cudaFree(dtmp);
-        return out;
-
+        return in;
       } else {
         out->_Init_byptr(dtmp, Nelem, in->device, true, in->cap);
         return out;
@@ -197,14 +226,14 @@ namespace cytnx {
   #endif
 
   #ifdef UNI_CUTENSOR
-    template <class T, class cuT>  // T: cpu type, cuT: gpu type, cutnT: cntensor type
+    template <class DType>
     boost::intrusive_ptr<Storage_base> cuMovemem_cutensor_gpu(
       boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape,
       const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper,
-      const bool is_inplace, cutensorDataType_t type_in, cutensorDataType_t type_out,
-      const cutensorComputeDescriptor_t descCompute, const cuT &ONE) {
-      T proxy;
-      unsigned int dtype_T = Type_class::cy_typeid(proxy);
+      const bool is_inplace) {
+      using CudaType = ToCudaType<DType>;
+
+      unsigned int dtype_T = Type_class::cy_typeid(DType());
     #ifdef UNI_DEBUG
       cytnx_error_msg(
         in->dtype != dtype_T,
@@ -214,8 +243,7 @@ namespace cytnx {
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
     #endif
 
-      cuT *dtmp;
-      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->cap);
+      CudaType *dtmp = reinterpret_cast<CudaType *>(cuMalloc_gpu(sizeof(CudaType) * in->cap));
       cytnx_uint64 Nelem = in->len;
 
       std::vector<int> perm(mapper.begin(), mapper.end());
@@ -232,6 +260,27 @@ namespace cytnx {
       std::reverse(new_size.begin(), new_size.end());  // matching API
       std::reverse(ori.begin(), ori.end());  // matching API
 
+      cutensorDataType_t cutensor_data_type;
+      cutensorComputeDescriptor_t compute_descriptor;
+      CudaType one;
+      if constexpr (std::is_same_v<cytnx_complex128, DType>) {
+        cutensor_data_type = CUTENSOR_C_64F;
+        compute_descriptor = CUTENSOR_COMPUTE_DESC_64F;
+        one = make_cuDoubleComplex(1, 0);
+      } else if constexpr (std::is_same_v<cytnx_complex64, DType>) {
+        cutensor_data_type = CUTENSOR_C_32F;
+        compute_descriptor = CUTENSOR_COMPUTE_DESC_32F;
+        one = make_cuFloatComplex(1, 0);
+      } else if constexpr (std::is_same_v<cytnx_double, DType>) {
+        cutensor_data_type = CUTENSOR_R_64F;
+        compute_descriptor = CUTENSOR_COMPUTE_DESC_64F;
+        one = 1;
+      } else if constexpr (std::is_same_v<cytnx_float, DType>) {
+        cutensor_data_type = CUTENSOR_R_32F;
+        compute_descriptor = CUTENSOR_COMPUTE_DESC_32F;
+        one = 1;
+      }
+
       cutensorHandle_t handle;
       checkCudaErrors(cutensorCreate(&handle));
 
@@ -240,16 +289,17 @@ namespace cytnx {
       cytnx_uint64 defaultAlignment = 256;
       cutensorTensorDescriptor_t descA;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
-                                                     NULL /* stride */, type_in, defaultAlignment));
+                                                     NULL /* stride */, cutensor_data_type,
+                                                     defaultAlignment));
 
       cutensorTensorDescriptor_t descC;
       checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
-                                                     new_size.data(), NULL /* stride */, type_out,
-                                                     defaultAlignment));
-      // TODO: verify the type of ONE matches descCompute
+                                                     new_size.data(), NULL /* stride */,
+                                                     cutensor_data_type, defaultAlignment));
       cutensorOperationDescriptor_t desc;
-      checkCudaErrors(cutensorCreatePermutation(
-        handle, &desc, descA, ori.data(), CUTENSOR_OP_IDENTITY, descC, perm.data(), descCompute));
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                compute_descriptor));
 
       const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
 
@@ -261,7 +311,8 @@ namespace cytnx {
       checkCudaErrors(
         cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
 
-      checkCudaErrors(cutensorPermute(handle, plan, &ONE, (cuT *)in->Mem, dtmp, 0 /* stream */));
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<CudaType *>(in->Mem),
+                                      dtmp, 0 /* stream */));
 
       checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
       checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
@@ -272,7 +323,7 @@ namespace cytnx {
       boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
       if (is_inplace) {
         /// cpy back:
-        checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
+        checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(DType) * Nelem, cudaMemcpyDeviceToDevice));
         cudaFree(dtmp);
         return out;
 
@@ -283,137 +334,58 @@ namespace cytnx {
     }
   #endif
 
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cd(boost::intrusive_ptr<Storage_base> &in,
-                                                        const std::vector<cytnx_uint64> &old_shape,
-                                                        const std::vector<cytnx_uint64> &mapper,
-                                                        const std::vector<cytnx_uint64> &invmapper,
-                                                        const bool is_inplace) {
-  #ifdef UNI_CUTENSOR
-      return cuMovemem_cutensor_gpu<cytnx_complex128, cuDoubleComplex>(
-        in, old_shape, mapper, invmapper, is_inplace, CUTENSOR_C_64F, CUTENSOR_C_64F,
-        CUTENSOR_COMPUTE_DESC_64F, make_cuDoubleComplex(1, 0));
-  #elif defined(UNI_CUTT)
-      return cuMovemem_cutt_gpu<cytnx_complex128, cuDoubleComplex>(in, old_shape, mapper, invmapper,
-                                                                   is_inplace);
-  #else
-      return cuMovemem_gpu_general<cytnx_complex128, cuDoubleComplex>(in, old_shape, mapper,
-                                                                      invmapper, is_inplace);
-  #endif
-    }
-
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_cf(boost::intrusive_ptr<Storage_base> &in,
-                                                        const std::vector<cytnx_uint64> &old_shape,
-                                                        const std::vector<cytnx_uint64> &mapper,
-                                                        const std::vector<cytnx_uint64> &invmapper,
-                                                        const bool is_inplace) {
+    template <typename DType>
+    boost::intrusive_ptr<Storage_base> MoveMemoryGpu(boost::intrusive_ptr<Storage_base> &in,
+                                                     const std::vector<cytnx_uint64> &old_shape,
+                                                     const std::vector<cytnx_uint64> &mapper,
+                                                     const std::vector<cytnx_uint64> &invmapper,
+                                                     bool is_inplace) {
+      if constexpr (is_complex_v<DType> || std::is_floating_point_v<DType>) {
   #if defined(UNI_CUTENSOR)
-      return cuMovemem_cutensor_gpu<cytnx_complex64, cuFloatComplex>(
-        in, old_shape, mapper, invmapper, is_inplace, CUTENSOR_C_32F, CUTENSOR_C_32F,
-        CUTENSOR_COMPUTE_DESC_32F, make_cuFloatComplex(1, 0));
+        return cuMovemem_cutensor_gpu<DType>(in, old_shape, mapper, invmapper, is_inplace);
   #elif defined(UNI_CUTT)
-      return cuMovemem_cutt_gpu<cytnx_complex64, cuFloatComplex>(in, old_shape, mapper, invmapper,
-                                                                 is_inplace);
+        return cuMovemem_cutt_gpu<DType>(in, old_shape, mapper, invmapper, is_inplace);
   #else
-      return cuMovemem_gpu_general<cytnx_complex64, cuFloatComplex>(in, old_shape, mapper,
-                                                                    invmapper, is_inplace);
+        return cuMovemem_gpu_general<DType>(in, old_shape, mapper, invmapper, is_inplace);
   #endif
+      } else {
+        return cuMovemem_gpu_general<DType>(in, old_shape, mapper, invmapper, is_inplace);
+      }
     }
 
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_d(boost::intrusive_ptr<Storage_base> &in,
-                                                       const std::vector<cytnx_uint64> &old_shape,
-                                                       const std::vector<cytnx_uint64> &mapper,
-                                                       const std::vector<cytnx_uint64> &invmapper,
-                                                       const bool is_inplace) {
-  #if defined(UNI_CUTENSOR)
-      return cuMovemem_cutensor_gpu<double, double>(in, old_shape, mapper, invmapper, is_inplace,
-                                                    CUTENSOR_R_64F, CUTENSOR_R_64F,
-                                                    CUTENSOR_COMPUTE_DESC_64F, double(1));
-  #elif defined(UNI_CUTT)
-      return cuMovemem_cutt_gpu<cytnx_double, cytnx_double>(in, old_shape, mapper, invmapper,
-                                                            is_inplace);
-  #else
-      return cuMovemem_gpu_general<cytnx_double, cytnx_double>(in, old_shape, mapper, invmapper,
-                                                               is_inplace);
-  #endif
-    }
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_f(boost::intrusive_ptr<Storage_base> &in,
-                                                       const std::vector<cytnx_uint64> &old_shape,
-                                                       const std::vector<cytnx_uint64> &mapper,
-                                                       const std::vector<cytnx_uint64> &invmapper,
-                                                       const bool is_inplace) {
-  #if defined(UNI_CUTENSOR)
-      return cuMovemem_cutensor_gpu<float, float>(in, old_shape, mapper, invmapper, is_inplace,
-                                                  CUTENSOR_R_32F, CUTENSOR_R_32F,
-                                                  CUTENSOR_COMPUTE_DESC_32F, float(1));
-  #elif defined(UNI_CUTT)
-      return cuMovemem_cutt_gpu<cytnx_float, cytnx_float>(in, old_shape, mapper, invmapper,
-                                                          is_inplace);
-  #else
-      return cuMovemem_gpu_general<cytnx_float, cytnx_float>(in, old_shape, mapper, invmapper,
-                                                             is_inplace);
-  #endif
-    }
-
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i64(boost::intrusive_ptr<Storage_base> &in,
-                                                         const std::vector<cytnx_uint64> &old_shape,
-                                                         const std::vector<cytnx_uint64> &mapper,
-                                                         const std::vector<cytnx_uint64> &invmapper,
-                                                         const bool is_inplace) {
-      return cuMovemem_gpu_general<cytnx_int64, cytnx_int64>(in, old_shape, mapper, invmapper,
-                                                             is_inplace);
-    }
-
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u64(boost::intrusive_ptr<Storage_base> &in,
-                                                         const std::vector<cytnx_uint64> &old_shape,
-                                                         const std::vector<cytnx_uint64> &mapper,
-                                                         const std::vector<cytnx_uint64> &invmapper,
-                                                         const bool is_inplace) {
-      return cuMovemem_gpu_general<cytnx_uint64, cytnx_uint64>(in, old_shape, mapper, invmapper,
-                                                               is_inplace);
-    }
-
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i32(boost::intrusive_ptr<Storage_base> &in,
-                                                         const std::vector<cytnx_uint64> &old_shape,
-                                                         const std::vector<cytnx_uint64> &mapper,
-                                                         const std::vector<cytnx_uint64> &invmapper,
-                                                         const bool is_inplace) {
-      return cuMovemem_gpu_general<cytnx_int32, cytnx_int32>(in, old_shape, mapper, invmapper,
-                                                             is_inplace);
-    }
-
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u32(boost::intrusive_ptr<Storage_base> &in,
-                                                         const std::vector<cytnx_uint64> &old_shape,
-                                                         const std::vector<cytnx_uint64> &mapper,
-                                                         const std::vector<cytnx_uint64> &invmapper,
-                                                         const bool is_inplace) {
-      return cuMovemem_gpu_general<cytnx_uint32, cytnx_uint32>(in, old_shape, mapper, invmapper,
-                                                               is_inplace);
-    }
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_u16(boost::intrusive_ptr<Storage_base> &in,
-                                                         const std::vector<cytnx_uint64> &old_shape,
-                                                         const std::vector<cytnx_uint64> &mapper,
-                                                         const std::vector<cytnx_uint64> &invmapper,
-                                                         const bool is_inplace) {
-      return cuMovemem_gpu_general<cytnx_uint16, cytnx_uint16>(in, old_shape, mapper, invmapper,
-                                                               is_inplace);
-    }
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_i16(boost::intrusive_ptr<Storage_base> &in,
-                                                         const std::vector<cytnx_uint64> &old_shape,
-                                                         const std::vector<cytnx_uint64> &mapper,
-                                                         const std::vector<cytnx_uint64> &invmapper,
-                                                         const bool is_inplace) {
-      return cuMovemem_gpu_general<cytnx_int16, cytnx_int16>(in, old_shape, mapper, invmapper,
-                                                             is_inplace);
-    }
-    boost::intrusive_ptr<Storage_base> cuMovemem_gpu_b(boost::intrusive_ptr<Storage_base> &in,
-                                                       const std::vector<cytnx_uint64> &old_shape,
-                                                       const std::vector<cytnx_uint64> &mapper,
-                                                       const std::vector<cytnx_uint64> &invmapper,
-                                                       const bool is_inplace) {
-      return cuMovemem_gpu_general<cytnx_bool, cytnx_bool>(in, old_shape, mapper, invmapper,
-                                                           is_inplace);
-    }
-
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_complex128>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_complex64>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_double>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_float>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_uint64>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_int64>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_uint32>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_int32>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_uint16>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_int16>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
+    template boost::intrusive_ptr<Storage_base> MoveMemoryGpu<cytnx_bool>(
+      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
+      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, bool);
 #endif  // UNI_GPU
   }  // namespace utils_internal
 }  // namespace cytnx

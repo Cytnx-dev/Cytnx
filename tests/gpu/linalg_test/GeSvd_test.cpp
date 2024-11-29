@@ -14,7 +14,7 @@ namespace GesvdTest {
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
-  std::string data_root = "../../../tests/test_data_base/";
+  std::string data_root = "./test_data_base/";
   std::string src_data_root = data_root + "common/";
   std::string ans_data_root = data_root + "linalg/Gesvd/";
   // normal test

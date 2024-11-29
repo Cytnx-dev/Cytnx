@@ -1,10 +1,11 @@
-#include <typeinfo>
-#include "Network.hpp"
-#include "search_tree.hpp"
-#include <stack>
 #include <algorithm>
 #include <iostream>
+#include <stack>
+#include <typeinfo>
+
 #include "Generator.hpp"
+#include "Network.hpp"
+#include "search_tree.hpp"
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -226,16 +227,8 @@ namespace cytnx {
     return res;
   }
 
-  /*
-   * This function is not used in the codebase and not implemented properly.
-   * Currently disabled.
-   */
   vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree,
                                                              vector<string> tns) {
-    cytnx_error_msg(true,
-                    "[Error][RegularNetwork] CtTree_to_eisumpath is not properly implemented, "
-                    "disabled for now.%s",
-                    "\n");
     vector<pair<cytnx_int64, cytnx_int64>> path;
     stack<Node *> stk;
     Node *root = &(CtTree.nodes_container.back());
@@ -269,7 +262,8 @@ namespace cytnx {
             tns.erase(tns.begin() + id2);
           else
             tns.erase(tns.begin() + id2 - 1);
-          tns.push_back(root->name);
+          tns.push_back("(" + root->left->name + "," + root->right->name + ")");
+          root->name = "(" + root->left->name + "," + root->right->name + ")";
           path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1, id2));
         }
         root = nullptr;
@@ -645,7 +639,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }
 
   void RegularNetwork::Fromfile(const string &fname) {
@@ -932,7 +926,7 @@ namespace cytnx {
       if (contract_order != "") {
         _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-        // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+        this->einsum_path = CtTree_to_eisumpath(CtTree, names);
       } else {
         CtTree.build_default_contraction_tree();
       }
@@ -1092,6 +1086,11 @@ namespace cytnx {
         return out;
       }
     #else
+      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
+        this->CtTree.base_nodes[idx].utensor =
+          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+        this->CtTree.base_nodes[idx].is_assigned = true;
+      }
       // 1.5 contraction order:
       if (ORDER_tokens.size() != 0) {
         // *set by user or optimally found
@@ -1290,7 +1289,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    // this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }  // end construct
 
 }  // namespace cytnx
