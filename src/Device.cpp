@@ -1,4 +1,7 @@
 #include "Device.hpp"
+
+#include <thread>
+
 #include "cytnx_error.hpp"
 #ifdef UNI_OMP
   #include <omp.h>
@@ -7,7 +10,7 @@
 using namespace std;
 namespace cytnx {
 
-  Device_class::Device_class() : Ngpus(0), Ncpus(1) {
+  Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
     // cout << "init_device class!" << endl;
 #ifdef UNI_GPU
 
@@ -38,17 +41,7 @@ namespace cytnx {
         }
       }
     }
-
-#endif
-
-#ifdef UNI_OMP
-  #pragma omp parallel
-    {
-      if (omp_get_thread_num() == 0) {
-        Ncpus = omp_get_num_threads();
-      }
-    }
-#endif
+#endif  // UNI_GPU
   };
 
   Device_class::~Device_class(){
