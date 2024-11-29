@@ -140,16 +140,6 @@ if(USE_DEBUG)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 endif()
 
-if(RUN_TESTS)
-  # Include CTest explicitly to suppress the error that DartConfiguration.tcl
-  # is not found
-  include(CTest)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
-  target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
-  add_subdirectory(tests)
-  #add_subdirectory(bm_tests)
-endif()
-
 include(GNUInstallDirs)
 
 if(USE_ICPC)
@@ -207,7 +197,17 @@ endif() # Backend torch
 # ## Get Gtest & benchmark
 # #####################################################################
 if(RUN_TESTS)
-  find_package(GTest REQUIRED)
+  # Include CTest explicitly to suppress the error that DartConfiguration.tcl
+  # is not found
+  include(CTest)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+  target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
+  # "-fopenmp" flag is appended to CMAKE_CXX_FLAGS in CytnxBKNDCMakeLists.cmake.
+  # To make the executalbe targets defined under tests/ link OpenMP correctly,
+  # tests/ must be added after including CytnxBKNDCMakeLists.cmake.
+  add_subdirectory(tests)
+  #add_subdirectory(bm_tests)
+
   #find_package(benchmark REQUIRED)
 
 

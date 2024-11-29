@@ -139,9 +139,7 @@ namespace cytnx {
           new_qnums = std::vector<std::vector<cytnx_int64>>(Dnew_qnums,
                                                             std::vector<cytnx_int64>(this->Nsym()));
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
           for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
               if (bd_in->type() != this->type()) {
@@ -169,9 +167,7 @@ namespace cytnx {
         new_qnums =
           std::vector<std::vector<cytnx_int64>>(this->_dim, std::vector<cytnx_int64>(this->Nsym()));
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < this->_dim; d++) {
           for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
             if (bd_in->type() != this->type()) {
@@ -252,9 +248,7 @@ namespace cytnx {
           new_qnums = std::vector<std::vector<cytnx_int64>>(Dnew_qnums,
                                                             std::vector<cytnx_int64>(this->Nsym()));
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
           for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
               this->_syms[i].combine_rule_(new_qnums[d][i],
@@ -276,9 +270,7 @@ namespace cytnx {
         new_qnums =
           std::vector<std::vector<cytnx_int64>>(this->_dim, std::vector<cytnx_int64>(this->Nsym()));
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < this->_dim; d++) {
           for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
             this->_syms[i].combine_rule_(new_qnums[d][i],
@@ -470,9 +462,7 @@ namespace cytnx {
   std::vector<std::vector<cytnx_int64>> Bond_impl::calc_reverse_qnums() {
     std::vector<std::vector<cytnx_int64>> out(this->_qnums.size(),
                                               std::vector<cytnx_int64>(this->_syms.size()));
-#ifdef UNI_OMP
-  #pragma omp parallel for
-#endif
+#pragma omp parallel for
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       for (int j = 0; j < out[i].size(); j++) {
         this->_syms[j].reverse_rule_(out[i][j], this->_qnums[i][j]);

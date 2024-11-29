@@ -168,9 +168,7 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < cb_inbonds.size(); i++) {
         N_sym = cb_inbonds[i].Nsym();
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < N_sym * cb_inbonds[i].dim(); d++) {
           cb_inbonds[i].qnums()[cytnx_uint64(d / N_sym)][d % N_sym] *=
             cb_inbonds[i].type() * bondType::BD_KET;
@@ -187,9 +185,7 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < cb_outbonds.size(); i++) {
         N_sym = cb_outbonds[i].Nsym();
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < N_sym * cb_outbonds[i].dim(); d++) {
           cb_outbonds[i].qnums()[cytnx_uint64(d / N_sym)][d % N_sym] *=
             cb_outbonds[i].type() * bondType::BD_BRA;
