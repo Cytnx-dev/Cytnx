@@ -54,6 +54,32 @@ namespace cytnx {
     return self;
   }
 
+  template <std::size_t... Is>
+  Tensor::pointer_types void_ptr_to_variant_impl(void *p, unsigned int dtype,
+                                                 std::index_sequence<Is...>) {
+    // Lambda to select the correct type based on dtype
+    Tensor::pointer_types result;
+    (
+      [&]() {
+        if (dtype == Is) {
+          using TargetType =
+            std::variant_alternative_t<Is,
+                                       typename Tensor::internal::exclude_first<Type_list>::type>;
+          result = static_cast<TargetType *>(p);
+        }
+      }(),
+      ...);  // Fold expression
+    return result;
+  }
+
+  Tensor::pointer_types Tensor::ptr() const {
+    cytnx_error_msg(this->dtype() == 0, "[ERROR] operation not allowed for empty (void) Tensor.%s",
+                    "\n");
+    // dtype()-1 here because we have removed void from the variant
+    return void_ptr_to_variant_impl(this->_impl->_storage._impl->Mem, this->dtype() - 1,
+                                    std::make_index_sequence<std::variant_size_v<pointer_types>>{});
+  }
+
   // ADD
   Tensor Tensor::Tproxy::operator+(
     const cytnx_complex128 &rc) const {  //{return this->_operatorADD(rc);};

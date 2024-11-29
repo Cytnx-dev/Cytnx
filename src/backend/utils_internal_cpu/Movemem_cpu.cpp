@@ -191,8 +191,10 @@ namespace cytnx {
         newshape[i] = old_shape[mapper[i]];
       }
       std::vector<cytnx_int64> shifter_new(old_shape.size());
+      std::vector<cytnx_int64> shifter_old(old_shape.size());
 
       for (cytnx_int64 i = old_shape.size() - 1; i >= 0; i--) {
+        shifter_old[i] = accu_old;
         shifter_new[i] = accu_new;
         accu_old *= old_shape[i];
         accu_new *= newshape[i];
