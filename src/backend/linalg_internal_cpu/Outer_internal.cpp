@@ -23,9 +23,7 @@ namespace cytnx {
       T1 *_Lin = (T1 *)Lin->Mem;
       T2 *_Rin = (T2 *)Rin->Mem;
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (unsigned long long r = 0; r < j1 * j2; r++) {
         _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
       }

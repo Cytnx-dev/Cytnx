@@ -24,16 +24,12 @@ namespace cytnx {
       cytnx_complex128 *src = static_cast<cytnx_complex128 *>(in);
 
       if (get_real) {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].real();
         }
       } else {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].imag();
         }
@@ -45,16 +41,12 @@ namespace cytnx {
       cytnx_complex64 *src = static_cast<cytnx_complex64 *>(in);
 
       if (get_real) {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].real();
         }
       } else {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].imag();
         }
