@@ -261,10 +261,6 @@ if(USE_OMP)
 else()
     message( STATUS " Build OMP Support: NO")
 
-    if(USE_MKL)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-    endif()
-
     if(USE_HPTT)
         find_package( OpenMP )
         if ( OPENMP_FOUND )
