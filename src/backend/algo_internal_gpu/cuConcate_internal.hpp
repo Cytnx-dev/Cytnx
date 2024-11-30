@@ -1,5 +1,5 @@
-#ifndef __cuConcate_internal_H__
-#define __cuConcate_internal_H__
+#ifndef CYTNX_BACKEND_ALGO_INTERNAL_GPU_CUCONCATE_INTERNAL_H_
+#define CYTNX_BACKEND_ALGO_INTERNAL_GPU_CUCONCATE_INTERNAL_H_
 
 #include "backend/algo_internal_interface.hpp"
 #include <assert.h>
@@ -24,4 +24,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_ALGO_INTERNAL_GPU_CUCONCATE_INTERNAL_H_

@@ -1,5 +1,5 @@
-#ifndef _H_cuGetElems_conti_gpu_
-#define _H_cuGetElems_conti_gpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUGETELEMS_CONTIGUOUS_GPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUGETELEMS_CONTIGUOUS_GPU_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -67,4 +67,5 @@ namespace cytnx {
                                      const cytnx_uint64 &TotalElem, const cytnx_uint64 &Nelem_grp);
   }  // namespace utils_internal
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUGETELEMS_CONTIGUOUS_GPU_H_

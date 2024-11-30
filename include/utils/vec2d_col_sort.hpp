@@ -1,5 +1,5 @@
-#ifndef __H_vec2d_col_sort_
-#define __H_vec2d_col_sort_
+#ifndef CYTNX_UTILS_VEC2D_COL_SORT_H_
+#define CYTNX_UTILS_VEC2D_COL_SORT_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -9,4 +9,5 @@ namespace cytnx {
   // &return_order);
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC2D_COL_SORT_H_

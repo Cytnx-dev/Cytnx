@@ -1,5 +1,5 @@
-#ifndef _H_Cast_cpu_
-#define _H_Cast_cpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_CPU_CAST_CPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_CPU_CAST_CPU_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -335,4 +335,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_CPU_CAST_CPU_H_

@@ -1,3 +1,6 @@
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUKRON_INTERNAL_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUKRON_INTERNAL_H_
+
 #include "../utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include "../utils_internal_gpu/cuAlloc_gpu.hpp"
@@ -107,3 +110,5 @@ namespace cytnx {
 
   }  // namespace linalg_internal
 }  // namespace cytnx
+
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUKRON_INTERNAL_H_

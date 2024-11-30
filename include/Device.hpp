@@ -1,5 +1,6 @@
-#ifndef _H_Device_
-#define _H_Device_
+#ifndef CYTNX_DEVICE_H_
+#define CYTNX_DEVICE_H_
+
 #include <vector>
 #include <string>
 
@@ -41,4 +42,5 @@ namespace cytnx {
    */
   extern Device_class Device;
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_DEVICE_H_

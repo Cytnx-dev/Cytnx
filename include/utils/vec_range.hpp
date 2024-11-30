@@ -1,5 +1,5 @@
-#ifndef _H_vec_range_
-#define _H_vec_range_
+#ifndef CYTNX_UTILS_VEC_RANGE_H_
+#define CYTNX_UTILS_VEC_RANGE_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -27,4 +27,5 @@ namespace cytnx {
   void vec_range_(std::vector<cytnx_int64> &v, const cytnx_int64 &start, const cytnx_int64 &end);
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_RANGE_H_

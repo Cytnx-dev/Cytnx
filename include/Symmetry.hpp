@@ -1,5 +1,5 @@
-#ifndef _H_Symmetry
-#define _H_Symmetry
+#ifndef CYTNX_SYMMETRY_H_
+#define CYTNX_SYMMETRY_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -426,4 +426,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_SYMMETRY_H_

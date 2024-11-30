@@ -1,5 +1,5 @@
-#ifndef __Arithmetic_internal_H_
-#define __Arithmetic_internal_H_
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_CPU_ARITHMETIC_INTERNAL_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_CPU_ARITHMETIC_INTERNAL_H_
 
 #include "Type.hpp"
 #include "backend/Storage.hpp"
@@ -802,4 +802,4 @@ namespace cytnx {
   }  // namespace linalg_internal
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_CPU_ARITHMETIC_INTERNAL_H_

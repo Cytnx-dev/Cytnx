@@ -1,5 +1,6 @@
-#ifndef __LAPACK_WRAPPER_H__
-#define __LAPACK_WRAPPER_H__
+#ifndef CYTNX_BACKEND_LAPACK_WRAPPER_H_
+#define CYTNX_BACKEND_LAPACK_WRAPPER_H_
+
 #ifndef BACKEND_TORCH
   #include <stdint.h>
 
@@ -778,4 +779,5 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
   #endif  // UNI_MKL
 
 #endif
-#endif
+
+#endif  // CYTNX_BACKEND_LAPACK_WRAPPER_H_

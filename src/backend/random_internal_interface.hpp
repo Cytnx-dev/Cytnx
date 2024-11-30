@@ -1,5 +1,5 @@
-#ifndef _H_random_internal_
-#define _H_random_internal_
+#ifndef CYTNX_BACKEND_RANDOM_INTERNAL_INTERFACE_H_
+#define CYTNX_BACKEND_RANDOM_INTERNAL_INTERFACE_H_
 
 #include "random_internal_cpu/Normal_internal.hpp"
 #include "random_internal_cpu/Uniform_internal.hpp"
@@ -36,4 +36,4 @@ namespace cytnx {
   }  // namespace random_internal
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_RANDOM_INTERNAL_INTERFACE_H_

@@ -1,5 +1,5 @@
-#ifndef SRC_BACKEND_UTILS_INTERNAL_CPU_MOVEMEM_CPU_H_
-#define SRC_BACKEND_UTILS_INTERNAL_CPU_MOVEMEM_CPU_H_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_CPU_MOVEMEM_CPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_CPU_MOVEMEM_CPU_H_
 
 #include <type_traits>
 #include <vector>
@@ -27,4 +27,5 @@ namespace cytnx {
                                                      const bool is_inplace);
   }  // namespace utils_internal
 }  // namespace cytnx
-#endif  // SRC_BACKEND_UTILS_INTERNAL_CPU_MOVEMEM_CPU_H_
+
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_CPU_MOVEMEM_CPU_H_

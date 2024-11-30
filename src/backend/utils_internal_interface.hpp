@@ -1,5 +1,5 @@
-#ifndef SRC_BACKEND_UTILS_INTERNAL_INTERFACE_H_
-#define SRC_BACKEND_UTILS_INTERNAL_INTERFACE_H_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_INTERFACE_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_INTERFACE_H_
 
 #include "utils_internal_cpu/Cast_cpu.hpp"
 #include "utils_internal_cpu/Range_cpu.hpp"
@@ -98,4 +98,4 @@ namespace cytnx {
   }  // namespace utils_internal
 }  // namespace cytnx
 
-#endif  // SRC_BACKEND_UTILS_INTERNAL_INTERFACE_H_
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_INTERFACE_H_

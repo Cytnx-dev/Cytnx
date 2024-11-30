@@ -1,7 +1,5 @@
-#ifndef INCLUDE_TYPE_H_
-#define INCLUDE_TYPE_H_
-#ifndef INCLUDE_TYPE_H_
-#define INCLUDE_TYPE_H_
+#ifndef CYTNX_TYPE_H_
+#define CYTNX_TYPE_H_
 
 #include <complex>
 #include <cstdint>
@@ -301,5 +299,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif  // INCLUDE_TYPE_H_
-#endif  // INCLUDE_TYPE_H_
+#endif  // CYTNX_TYPE_H_

@@ -1,5 +1,5 @@
-#ifndef _H_GetElems_cpu_
-#define _H_GetElems_cpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_CPU_GETELEMS_CPU_HPP_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_CPU_GETELEMS_CPU_HPP_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -29,4 +29,5 @@ namespace cytnx{
         void GetElems_cpu_b(void* out, void *in,const std::vector<cytnx_uint64> &offj, const std::vector<cytnx_uint64> &new_offj, const std::vector<std::vector<cytnx_uint64> >&locators, const cytnx_uint64 &TotalElem, const cytnx_uint64 & CommElem);
     }
 }
-#endif
+
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_CPU_GETELEMS_CPU_HPP_H_

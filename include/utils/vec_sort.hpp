@@ -1,5 +1,5 @@
-#ifndef __H_vec_sort_
-#define __H_vec_sort_
+#ifndef CYTNX_UTILS_VEC_SORT_H_
+#define CYTNX_UTILS_VEC_SORT_H_
 
 #include <vector>
 #include <algorithm>
@@ -11,4 +11,5 @@ namespace cytnx {
   std::vector<cytnx_uint64> vec_sort(std::vector<T>& in, const bool& return_order = true);
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_SORT_H_

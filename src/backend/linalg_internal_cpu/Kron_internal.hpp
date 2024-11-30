@@ -1,5 +1,5 @@
-#ifndef __Kron_internal_H__
-#define __Kron_internal_H__
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_CPU_KRON_INTERNAL_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_CPU_KRON_INTERNAL_H_
 
 #include <assert.h>
 #include <iostream>
@@ -53,4 +53,4 @@ namespace cytnx {
   }  // namespace linalg_internal
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_CPU_KRON_INTERNAL_H_

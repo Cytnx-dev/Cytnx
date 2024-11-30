@@ -1,5 +1,5 @@
-#ifndef _H_GetElems_cpu_
-#define _H_GetElems_cpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_CPU_GETELEMS_CPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_CPU_GETELEMS_CPU_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -61,4 +61,5 @@ namespace cytnx {
                         const cytnx_uint64 &TotalElem);
   }  // namespace utils_internal
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_CPU_GETELEMS_CPU_H_

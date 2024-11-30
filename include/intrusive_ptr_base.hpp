@@ -1,5 +1,5 @@
-#ifndef _H_intrusive_ptr_base_
-#define _H_intrusive_ptr_base_
+#ifndef CYTNX_INTRUSIVE_PTR_BASE_H_
+#define CYTNX_INTRUSIVE_PTR_BASE_H_
 
 #include <ostream>
 #include <cassert>
@@ -62,4 +62,4 @@ namespace cytnx {
   ///@endcond
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_INTRUSIVE_PTR_BASE_H_

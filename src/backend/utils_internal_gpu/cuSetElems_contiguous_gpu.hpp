@@ -1,5 +1,5 @@
-#ifndef _H_cuSetElems_conti_gpu_
-#define _H_cuSetElems_conti_gpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSETELEMS_CONTIGUOUS_GPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSETELEMS_CONTIGUOUS_GPU_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -631,4 +631,5 @@ namespace cytnx {
 
   }  // namespace utils_internal
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSETELEMS_CONTIGUOUS_GPU_H_

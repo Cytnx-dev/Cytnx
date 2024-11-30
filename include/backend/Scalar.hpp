@@ -1,5 +1,6 @@
-#ifndef _H_Scalar_
-#define _H_Scalar_
+#ifndef CYTNX_BACKEND_SCALAR_H_
+#define CYTNX_BACKEND_SCALAR_H_
+
 #ifndef BACKEND_TORCH
   #include "Type.hpp"
   #include "cytnx_error.hpp"
@@ -3460,4 +3461,5 @@ namespace cytnx {
 }  // namespace cytnx
 
 #endif
-#endif
+
+#endif  // CYTNX_BACKEND_SCALAR_H_
