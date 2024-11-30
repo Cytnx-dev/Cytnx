@@ -1,5 +1,5 @@
-#ifndef __cuEig_internal_H__
-#define __cuEig_internal_H__
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUEIG_INTERNAL_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUEIG_INTERNAL_H_
 
 #include <assert.h>
 #include <iostream>
@@ -28,4 +28,4 @@ namespace cytnx {
   }  // namespace linalg_internal
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUEIG_INTERNAL_H_

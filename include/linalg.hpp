@@ -1,5 +1,5 @@
-#ifndef _linalg_H_
-#define _linalg_H_
+#ifndef CYTNX_LINALG_H_
+#define CYTNX_LINALG_H_
 
 #include "LinOp.hpp"
 #include "Tensor.hpp"
@@ -2964,4 +2964,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_LINALG_H_

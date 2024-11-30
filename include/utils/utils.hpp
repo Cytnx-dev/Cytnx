@@ -1,5 +1,5 @@
-#ifndef __utils_H_
-#define __utils_H_
+#ifndef CYTNX_UTILS_UTILS_H_
+#define CYTNX_UTILS_UTILS_H_
 
 #include "cartesian.hpp"
 #include "vec_cast.hpp"
@@ -32,4 +32,4 @@ namespace cytnx {
   bool _fx_compare_vec_dec(const std::vector<cytnx_int64> &v1, const std::vector<cytnx_int64> &v2);
 };  // namespace cytnx
 
-#endif
+#endif  // CYTNX_UTILS_UTILS_H_

@@ -1,5 +1,5 @@
-#ifndef _H_str_utils_
-#define _H_str_utils_
+#ifndef CYTNX_UTILS_STR_UTILS_H_
+#define CYTNX_UTILS_STR_UTILS_H_
 
 #include <iostream>
 #include <string>
@@ -22,4 +22,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_UTILS_STR_UTILS_H_

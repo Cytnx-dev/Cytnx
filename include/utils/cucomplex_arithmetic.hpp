@@ -1,5 +1,5 @@
-#ifndef __cucomplex_arithmetic__H_
-#define __cucomplex_arithmetic__H_
+#ifndef CYTNX_UTILS_CUCOMPLEX_ARITHMETIC_H_
+#define CYTNX_UTILS_CUCOMPLEX_ARITHMETIC_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -120,4 +120,4 @@ namespace cytnx {
   // operator overload for GPU code. for COMPLEX type arithmetic.
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_UTILS_CUCOMPLEX_ARITHMETIC_H_

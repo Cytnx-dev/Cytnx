@@ -1,5 +1,5 @@
-#ifndef _H_cytnx_error_
-#define _H_cytnx_error_
+#ifndef CYTNX_CYTNX_ERROR_H_
+#define CYTNX_CYTNX_ERROR_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -485,4 +485,4 @@ void check(T result, char const *const func, const char *const file, int const l
 
 #endif  // End of #if defined(UNI_GPU)
 
-#endif
+#endif  // CYTNX_CYTNX_ERROR_H_

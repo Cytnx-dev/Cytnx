@@ -1,5 +1,5 @@
-#ifndef _H_UniTensor_
-#define _H_UniTensor_
+#ifndef CYTNX_UNITENSOR_H_
+#define CYTNX_UNITENSOR_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -4698,4 +4698,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_UNITENSOR_H_

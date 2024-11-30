@@ -1,5 +1,5 @@
-#ifndef _TORCH_BKND_TYPE_CONVERT_H_
-#define _TORCH_BKND_TYPE_CONVERT_H_
+#ifndef CYTNX_BACKEND_TORCH_TYPE_CONVERT_H_
+#define CYTNX_BACKEND_TORCH_TYPE_CONVERT_H_
 
 #ifdef BACKEND_TORCH
 
@@ -20,4 +20,4 @@ namespace cytnx {
 }  // namespace cytnx
 #endif  // BACKEND_TORCH header guard
 
-#endif
+#endif  // CYTNX_BACKEND_TORCH_TYPE_CONVERT_H_

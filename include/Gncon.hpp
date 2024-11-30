@@ -1,5 +1,5 @@
-#ifndef _H_Gncon_
-#define _H_Gncon_
+#ifndef CYTNX_GNCON_H_
+#define CYTNX_GNCON_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -364,4 +364,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_GNCON_H_

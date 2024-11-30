@@ -1,5 +1,5 @@
-#ifndef _H_cuSetZeros_gpu_
-#define _H_cuSetZeros_gpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSETZEROS_GPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSETZEROS_GPU_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -15,4 +15,5 @@ namespace cytnx {
 #endif
   }  // namespace utils_internal
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUSETZEROS_GPU_H_

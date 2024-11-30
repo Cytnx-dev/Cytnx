@@ -1,5 +1,5 @@
-#ifndef _H_search_tree_
-#define _H_search_tree_
+#ifndef CYTNX_SEARCH_TREE_H_
+#define CYTNX_SEARCH_TREE_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -101,4 +101,4 @@ namespace cytnx {
 }  // namespace cytnx
 #endif
 
-#endif
+#endif  // CYTNX_SEARCH_TREE_H_

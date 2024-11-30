@@ -1,5 +1,5 @@
-#ifndef SRC_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_
-#define SRC_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_
 
 #include "Type.hpp"
 
@@ -36,4 +36,4 @@ namespace cytnx {
   }  // namespace utils_internal
 }  // namespace cytnx
 
-#endif  // SRC_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_

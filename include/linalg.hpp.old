@@ -1,5 +1,5 @@
-#ifndef _linalg_H_
-#define _linalg_H_
+#ifndef CYTNX_LINALG_HPP_H_
+#define CYTNX_LINALG_HPP_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -1063,4 +1063,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_LINALG_HPP_H_

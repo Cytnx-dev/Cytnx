@@ -1,5 +1,5 @@
-#ifndef _H_Tensor_
-#define _H_Tensor_
+#ifndef CYTNX_TENSOR_OLD_H_
+#define CYTNX_TENSOR_OLD_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -1955,4 +1955,4 @@ namespace cytnx {
   //{ os << Tensor(in);};
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_TENSOR_OLD_H_

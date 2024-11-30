@@ -1,5 +1,5 @@
-#ifndef SRC_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
-#define SRC_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
 
 #include "Type.hpp"
 
@@ -23,4 +23,4 @@ namespace cytnx {
   }  // namespace utils_internal
 }  // namespace cytnx
 
-#endif  // SRC_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_GPU_CUFILL_GPU_H_
