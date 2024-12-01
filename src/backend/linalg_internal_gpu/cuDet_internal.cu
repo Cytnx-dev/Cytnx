@@ -13,9 +13,9 @@ namespace cytnx {
                            const cytnx_uint64& L) {
       cytnx_complex128* od = (cytnx_complex128*)out;  // result on cpu!
       cuDoubleComplex* _in = (cuDoubleComplex*)utils_internal::cuMalloc_gpu(
-        in->len * sizeof(cuDoubleComplex));  // unify mem.
-      checkCudaErrors(
-        cudaMemcpy(_in, in->Mem, sizeof(cytnx_complex128) * in->len, cudaMemcpyDeviceToDevice));
+        in->size() * sizeof(cuDoubleComplex));  // unify mem.
+      checkCudaErrors(cudaMemcpy(_in, in->data(), sizeof(cytnx_complex128) * in->size(),
+                                 cudaMemcpyDeviceToDevice));
 
       cusolverDnHandle_t cusolverH;
       cusolverDnCreate(&cusolverH);
@@ -58,9 +58,9 @@ namespace cytnx {
                            const cytnx_uint64& L) {
       cytnx_complex64* od = (cytnx_complex64*)out;  // result on cpu!
       cuFloatComplex* _in = (cuFloatComplex*)utils_internal::cuMalloc_gpu(
-        in->len * sizeof(cuFloatComplex));  // unify mem.
-      checkCudaErrors(
-        cudaMemcpy(_in, in->Mem, sizeof(cytnx_complex64) * in->len, cudaMemcpyDeviceToDevice));
+        in->size() * sizeof(cuFloatComplex));  // unify mem.
+      checkCudaErrors(cudaMemcpy(_in, in->data(), sizeof(cytnx_complex64) * in->size(),
+                                 cudaMemcpyDeviceToDevice));
 
       cusolverDnHandle_t cusolverH;
       cusolverDnCreate(&cusolverH);
@@ -102,10 +102,10 @@ namespace cytnx {
     void cuDet_internal_d(void* out, const boost::intrusive_ptr<Storage_base>& in,
                           const cytnx_uint64& L) {
       cytnx_double* od = (cytnx_double*)out;  // result on cpu!
-      cytnx_double* _in =
-        (cytnx_double*)utils_internal::cuMalloc_gpu(in->len * sizeof(cytnx_double));  // unify mem.
+      cytnx_double* _in = (cytnx_double*)utils_internal::cuMalloc_gpu(
+        in->size() * sizeof(cytnx_double));  // unify mem.
       checkCudaErrors(
-        cudaMemcpy(_in, in->Mem, sizeof(cytnx_double) * in->len, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(_in, in->data(), sizeof(cytnx_double) * in->size(), cudaMemcpyDeviceToDevice));
 
       cusolverDnHandle_t cusolverH;
       cusolverDnCreate(&cusolverH);
@@ -148,9 +148,9 @@ namespace cytnx {
                           const cytnx_uint64& L) {
       cytnx_float* od = (cytnx_float*)out;  // result on cpu!
       cytnx_float* _in =
-        (cytnx_float*)utils_internal::cuMalloc_gpu(in->len * sizeof(cytnx_float));  // unify mem.
+        (cytnx_float*)utils_internal::cuMalloc_gpu(in->size() * sizeof(cytnx_float));  // unify mem.
       checkCudaErrors(
-        cudaMemcpy(_in, in->Mem, sizeof(cytnx_float) * in->len, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(_in, in->data(), sizeof(cytnx_float) * in->size(), cudaMemcpyDeviceToDevice));
 
       cusolverDnHandle_t cusolverH;
       cusolverDnCreate(&cusolverH);

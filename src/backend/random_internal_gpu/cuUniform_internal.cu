@@ -5,7 +5,7 @@ namespace cytnx {
 
     void cuRng_uniform_cd(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
                           const unsigned int &seed) {
-      double *rptr = static_cast<double *>(in->Mem);
+      double *rptr = static_cast<double *>(in->data());
 
       curandGenerator_t gen;
       curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_MT19937);
@@ -14,13 +14,13 @@ namespace cytnx {
       curandSetPseudoRandomGeneratorSeed(gen, seed);
 
       // generate:
-      curandGenerateUniformDouble(gen, rptr, in->len * 2);
+      curandGenerateUniformDouble(gen, rptr, in->size() * 2);
 
       curandDestroyGenerator(gen);
     }
     void cuRng_uniform_cf(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
                           const unsigned int &seed) {
-      float *rptr = static_cast<float *>(in->Mem);
+      float *rptr = static_cast<float *>(in->data());
       curandGenerator_t gen;
       curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_MT19937);
 
@@ -28,13 +28,13 @@ namespace cytnx {
       curandSetPseudoRandomGeneratorSeed(gen, seed);
 
       // generate:
-      curandGenerateUniform(gen, rptr, in->len * 2);
+      curandGenerateUniform(gen, rptr, in->size() * 2);
 
       curandDestroyGenerator(gen);
     }
     void cuRng_uniform_d(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
                          const unsigned int &seed) {
-      double *rptr = static_cast<double *>(in->Mem);
+      double *rptr = static_cast<double *>(in->data());
       curandGenerator_t gen;
       curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_MT19937);
 
@@ -42,13 +42,13 @@ namespace cytnx {
       curandSetPseudoRandomGeneratorSeed(gen, seed);
 
       // generate:
-      curandGenerateUniformDouble(gen, rptr, in->len);
+      curandGenerateUniformDouble(gen, rptr, in->size());
 
       curandDestroyGenerator(gen);
     }
     void cuRng_uniform_f(boost::intrusive_ptr<Storage_base> &in, const double &a, const double &b,
                          const unsigned int &seed) {
-      float *rptr = static_cast<float *>(in->Mem);
+      float *rptr = static_cast<float *>(in->data());
       curandGenerator_t gen;
       curandCreateGenerator(&gen, CURAND_RNG_PSEUDO_MT19937);
 
@@ -56,7 +56,7 @@ namespace cytnx {
       curandSetPseudoRandomGeneratorSeed(gen, seed);
 
       // generate:
-      curandGenerateUniform(gen, rptr, in->len);
+      curandGenerateUniform(gen, rptr, in->size());
 
       curandDestroyGenerator(gen);
     }

@@ -521,7 +521,7 @@ namespace cytnx {
                       "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
                       this->dtype(), Type_class::getname(this->dtype()).c_str(),
                       Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
-      return static_cast<T *>(this->_impl->_storage._impl->Mem);
+      return static_cast<T *>(this->_impl->_storage._impl->data());
     }
 
   #ifdef UNI_GPU
@@ -542,7 +542,7 @@ namespace cytnx {
         "[ERROR] Attempt to convert dtype %d (%s) to GPU pointer of type %s", this->dtype(),
         Type_class::getname(this->dtype()).c_str(),
         Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
-      return static_cast<T *>(this->_impl->_storage._impl->Mem);
+      return static_cast<T *>(this->_impl->_storage._impl->data());
     }
   #endif
 
@@ -1517,7 +1517,7 @@ namespace cytnx {
       this->_impl->_storage.resize(oldsize + in.size());
       memcpy(((char *)this->_impl->_storage.data()) +
                oldsize * Type.typeSize(this->dtype()) / sizeof(char),
-             in._impl->Mem, Type.typeSize(in.dtype()) * in.size());
+             in._impl->data(), Type.typeSize(in.dtype()) * in.size());
     }
     /*
     void append(const Tensor &rhs){

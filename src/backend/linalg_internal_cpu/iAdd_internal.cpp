@@ -62,8 +62,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -81,8 +81,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -100,8 +100,8 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -119,8 +119,8 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -138,8 +138,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -157,8 +157,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -176,8 +176,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -195,8 +195,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -214,8 +214,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -233,8 +233,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -252,8 +252,8 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -273,8 +273,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -292,8 +292,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -311,8 +311,8 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -330,8 +330,8 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -349,8 +349,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -368,8 +368,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -387,8 +387,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -406,8 +406,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -425,8 +425,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -444,8 +444,8 @@ namespace cytnx {
                               const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
                               const std::vector<cytnx_uint64> &invmapper_L,
                               const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -463,8 +463,8 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -500,8 +500,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -519,8 +519,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -538,8 +538,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -557,8 +557,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -576,8 +576,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -595,8 +595,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -614,8 +614,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -633,8 +633,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -652,8 +652,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -688,8 +688,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -707,8 +707,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -726,8 +726,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -745,8 +745,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -764,8 +764,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -783,8 +783,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -802,8 +802,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -821,8 +821,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -840,8 +840,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -877,8 +877,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -896,8 +896,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -916,8 +916,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -936,8 +936,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -956,8 +956,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -976,8 +976,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -996,8 +996,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1016,8 +1016,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1035,8 +1035,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1072,8 +1072,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1091,8 +1091,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1111,8 +1111,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1131,8 +1131,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1151,8 +1151,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1171,8 +1171,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1191,8 +1191,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1211,8 +1211,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1230,8 +1230,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1267,8 +1267,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1286,8 +1286,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1306,8 +1306,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1326,8 +1326,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1346,8 +1346,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1366,8 +1366,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1386,8 +1386,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1406,8 +1406,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1425,8 +1425,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1462,8 +1462,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1481,8 +1481,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1501,8 +1501,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1521,8 +1521,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1541,8 +1541,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1561,8 +1561,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1581,8 +1581,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1601,8 +1601,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1620,8 +1620,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1657,8 +1657,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1676,8 +1676,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1696,8 +1696,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1716,8 +1716,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1736,8 +1736,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1756,8 +1756,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1776,8 +1776,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1796,8 +1796,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1815,8 +1815,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1852,8 +1852,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1871,8 +1871,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1891,8 +1891,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1911,8 +1911,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1931,8 +1931,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1951,8 +1951,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1971,8 +1971,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -1991,8 +1991,8 @@ namespace cytnx {
                                const std::vector<cytnx_uint64> &shape,
                                const std::vector<cytnx_uint64> &invmapper_L,
                                const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2010,8 +2010,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2047,8 +2047,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2066,8 +2066,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2085,8 +2085,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2104,8 +2104,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2123,8 +2123,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_int32 *_Rin = (cytnx_int32 *)Rin->data();
       if (shape.size() == 0) {  // contiguous:
         _kernel_conti_iadd(_Lin, _Rin, len);
       } else {
@@ -2137,8 +2137,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2156,8 +2156,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2175,8 +2175,8 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);
@@ -2194,8 +2194,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &invmapper_L,
                            const std::vector<cytnx_uint64> &invmapper_R) {
-      cytnx_bool *_Lin = (cytnx_bool *)Lin->Mem;
-      cytnx_bool *_Rin = (cytnx_bool *)Rin->Mem;
+      cytnx_bool *_Lin = (cytnx_bool *)Lin->data();
+      cytnx_bool *_Rin = (cytnx_bool *)Rin->data();
 
       if (Rin->size() == 1) {
         _kernel_const_iadd(_Lin, _Rin, len);

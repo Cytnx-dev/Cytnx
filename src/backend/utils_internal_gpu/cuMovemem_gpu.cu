@@ -109,10 +109,10 @@ namespace cytnx {
       unsigned int dtype_T = Type_class::cy_typeid(proxy);
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != dtype_T,
+        in->dtype() != dtype_T,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_gpu with type %s",
         in->dtype_str().c_str(), Type.getname(dtype_T));
-      cytnx_error_msg(in->device == Device.cpu, "%s",
+      cytnx_error_msg(in->device() == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
   #endif
 
@@ -140,12 +140,12 @@ namespace cytnx {
       cuT *dtmp;
       cytnx_uint64 Nelem = accu_old;
 
-      cudaSetDevice(in->device);  // ensure the following allocation on the same device as src.
+      cudaSetDevice(in->device());  // ensure the following allocation on the same device as src.
       checkCudaErrors(
         cudaMalloc((void **)&dshifter_old, sizeof(cytnx_uint64) * shifter_old.size()));
       checkCudaErrors(cudaMalloc((void **)&dperm_shifter_new,
                                  sizeof(cytnx_uint64) * permuted_shifter_new.size()));
-      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->cap);
+      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->capacity());
 
       /// copy psn-vec/so-vec to device
       checkCudaErrors(cudaMemcpy(dperm_shifter_new, &permuted_shifter_new[0],
@@ -161,7 +161,7 @@ namespace cytnx {
         NBlocks += 1;
       }
       cuMovemem_kernel<<<NBlocks, 256, shifter_old.size() * 2 * sizeof(cytnx_uint64)>>>(
-        dtmp, (cuT *)in->Mem, dshifter_old, dperm_shifter_new, old_shape.size(), Nelem);
+        dtmp, (cuT *)in->data(), dshifter_old, dperm_shifter_new, old_shape.size(), Nelem);
 
       /// house keeping:
       checkCudaErrors(cudaFree(dshifter_old));
@@ -170,12 +170,12 @@ namespace cytnx {
       boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
       if (is_inplace) {
         /// cpy back:
-        checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
+        checkCudaErrors(cudaMemcpy(in->data(), dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
         checkCudaErrors(cudaFree(dtmp));
         return out;
 
       } else {
-        out->_Init_byptr(dtmp, Nelem, in->device, true, in->cap);
+        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
         return out;
       }
     }
@@ -191,16 +191,16 @@ namespace cytnx {
       unsigned int dtype_T = Type_class::cy_typeid(proxy);
     #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != dtype_T,
+        in->dtype() != dtype_T,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_cutt with type %s",
         in->dtype_str().c_str(), Type.getname(dtype_T));
-      cytnx_error_msg(in->device == Device.cpu, "%s",
+      cytnx_error_msg(in->device() == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
     #endif
 
       cuT *dtmp;
-      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->cap);
-      cytnx_uint64 Nelem = in->len;
+      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->capacity());
+      cytnx_uint64 Nelem = in->size();
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int> size(old_shape.begin(), old_shape.end());
       std::reverse(size.begin(), size.end());  // matching API CUTT
@@ -208,18 +208,18 @@ namespace cytnx {
 
       cuttHandle plan;
       cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cuT), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      cuttExecute(plan, in->data(), dtmp);
 
       cuttDestroy(plan);
 
       boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
       if (is_inplace) {
         /// cpy back:
-        checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
+        checkCudaErrors(cudaMemcpy(in->data(), dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
         cudaFree(dtmp);
         return in;
       } else {
-        out->_Init_byptr(dtmp, Nelem, in->device, true, in->cap);
+        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
         return out;
       }
     }
@@ -236,15 +236,16 @@ namespace cytnx {
       unsigned int dtype_T = Type_class::cy_typeid(DType());
     #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != dtype_T,
+        in->dtype() != dtype_T,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_cutt with type %s",
         in->dtype_str().c_str(), Type.getname(dtype_T));
-      cytnx_error_msg(in->device == Device.cpu, "%s",
+      cytnx_error_msg(in->device() == Device.cpu, "%s",
                       "[DEBUG][internal error] in.device is on cpu but all cuda function.");
     #endif
 
-      CudaType *dtmp = reinterpret_cast<CudaType *>(cuMalloc_gpu(sizeof(CudaType) * in->cap));
-      cytnx_uint64 Nelem = in->len;
+      CudaType *dtmp =
+        reinterpret_cast<CudaType *>(cuMalloc_gpu(sizeof(CudaType) * in->capacity()));
+      cytnx_uint64 Nelem = in->size();
 
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int64_t> size(old_shape.begin(), old_shape.end());
@@ -311,7 +312,7 @@ namespace cytnx {
       checkCudaErrors(
         cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
 
-      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<CudaType *>(in->Mem),
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<CudaType *>(in->data()),
                                       dtmp, 0 /* stream */));
 
       checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
@@ -323,12 +324,13 @@ namespace cytnx {
       boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
       if (is_inplace) {
         /// cpy back:
-        checkCudaErrors(cudaMemcpy(in->Mem, dtmp, sizeof(DType) * Nelem, cudaMemcpyDeviceToDevice));
+        checkCudaErrors(
+          cudaMemcpy(in->data(), dtmp, sizeof(DType) * Nelem, cudaMemcpyDeviceToDevice));
         cudaFree(dtmp);
         return out;
 
       } else {
-        out->_Init_byptr(dtmp, Nelem, in->device, true, in->cap);
+        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
         return out;
       }
     }
