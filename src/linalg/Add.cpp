@@ -406,10 +406,8 @@ namespace cytnx {
 
     template <>
     Tensor Add<Scalar>(const Scalar &lc, const Tensor &Rt) {
-      Storage Cnst;  // create a shallow container without allocate. Using base!
-
-      Cnst._impl->Mem = lc._impl->get_raw_address();
-      Cnst._impl->len = 1;
+      Storage Cnst(1, lc.dtype());
+      Cnst.set_item(0, lc);
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();
@@ -431,10 +429,6 @@ namespace cytnx {
                         "\n");
   #endif
       }
-
-      // swap back to prevent also free by recycle mech.
-      Cnst._impl->Mem = nullptr;
-
       return out;
     }
 
