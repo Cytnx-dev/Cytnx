@@ -146,6 +146,18 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<std::vector<cytnx_uint64>> &locators,
                             const cytnx_uint64 &Nunit, const bool &is_scalar);
+
+    /**
+     * @brief Drop the ownership of the underlying contiguous memory.
+     *
+     * The caller MUST take the ownership before calling this method. Any operation following this
+     * method causes undefined behavior.
+     *
+     * @return The pointer referencing the underlying storage.
+     * @deprecated This method may be removed without any notification.
+     */
+    virtual void *release() noexcept { return nullptr; }
+
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);
     virtual void Init(const unsigned long long &len_in, const int &device = -1,
@@ -250,6 +262,23 @@ namespace cytnx {
 
     boost::intrusive_ptr<Storage_base> real();
     boost::intrusive_ptr<Storage_base> imag();
+
+    /**
+     * @brief Drop the ownership of the underlying contiguous memory.
+     *
+     * The caller MUST take the ownership before calling this method. Any operation following this
+     * method causes undefined behavior.
+     *
+     * @return The pointer referencing the underlying storage.
+     * @deprecated This method may be removed without any notification.
+     */
+    void *release() noexcept override {
+      void *original_start = Mem;
+      Mem = nullptr;
+      len = 0;
+      cap = 0;
+      return original_start;
+    };
 
     // generators:
     void fill(const cytnx_complex128 &val);
@@ -709,6 +738,17 @@ namespace cytnx {
 
     */
     const unsigned long long &capacity() const { return this->_impl->cap; }
+
+    /**
+     * @brief Drop the ownership of the underlying contiguous memory.
+     *
+     * The caller MUST take the ownership before calling this method. Any operation following this
+     * method causes undefined behavior.
+     *
+     * @return The pointer referencing the underlying storage.
+     * @deprecated This method may be removed without any notification.
+     */
+    void *release() noexcept { return this->_impl->release(); }
 
     /**
     @brief print the info of the Storage, including the device, dtype and size.
