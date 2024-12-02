@@ -136,9 +136,6 @@ namespace cytnx {
       cytnx_uint64 accu_old = 1, accu_new = 1;
 
 #ifdef UNI_HPTT
-  #ifdef UNI_DEBUG
-      cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s", "\n");
-  #endif
       if (in->size() > 64) {
         std::vector<int> perm(mapper.begin(), mapper.end());
         std::vector<int> size(old_shape.begin(), old_shape.end());
