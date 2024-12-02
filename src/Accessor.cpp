@@ -222,10 +222,8 @@ namespace cytnx {
       pos.clear();
       pos.resize(this->idx_list.size());
       len = pos.size();
-// cout << "list in accessor len:" <<len << endl;
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+      // cout << "list in accessor len:" <<len << endl;
+#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 i = 0; i < this->idx_list.size(); i++) {
         // checking:
         if (this->idx_list[i] < 0) {

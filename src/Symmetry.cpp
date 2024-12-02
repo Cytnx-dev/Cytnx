@@ -82,9 +82,7 @@ namespace cytnx {
                                         const std::vector<cytnx_int64> &inL,
                                         const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()];
     }
@@ -146,9 +144,7 @@ namespace cytnx {
                                         const std::vector<cytnx_int64> &inL,
                                         const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n);
     }
