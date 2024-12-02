@@ -1,5 +1,5 @@
-#ifndef _H_contraction_tree_
-#define _H_contraction_tree_
+#ifndef CYTNX_CONTRACTION_TREE_H_
+#define CYTNX_CONTRACTION_TREE_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -104,4 +104,4 @@ namespace cytnx {
 }  // namespace cytnx
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_CONTRACTION_TREE_H_

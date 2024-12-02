@@ -1,5 +1,5 @@
-#ifndef __H_vec_map_
-#define __H_vec_map_
+#ifndef CYTNX_UTILS_VEC_MAP_H_
+#define CYTNX_UTILS_VEC_MAP_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -8,4 +8,5 @@ namespace cytnx {
   std::vector<T> vec_map(const std::vector<T> &in, const std::vector<cytnx_uint64> &mapper);
 
 };
-#endif
+
+#endif  // CYTNX_UTILS_VEC_MAP_H_

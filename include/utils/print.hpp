@@ -1,5 +1,5 @@
-#ifndef __print__H_
-#define __print__H_
+#ifndef CYTNX_UTILS_PRINT_H_
+#define CYTNX_UTILS_PRINT_H_
 
 #include "Type.hpp"
 #include "Tensor.hpp"
@@ -25,4 +25,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_UTILS_PRINT_H_

@@ -22,9 +22,9 @@ namespace cytnx {
       if (Tl.dtype() > 4) {
         // do conversion:
         _tl = _tl.astype(Type.Double);
-        out.Init({1}, Type.Double, _tl.device());
+        out.Init({1}, Type.Double, Device.cpu);  // scalar, so on cpu always!
       } else {
-        out.Init({1}, _tl.dtype(), _tl.device());
+        out.Init({1}, _tl.dtype(), Device.cpu);  // scalar, so on cpu always!
       }
 
       if (Tl.device() == Device.cpu) {

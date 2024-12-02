@@ -1,5 +1,5 @@
-#ifndef __Trace_internal_H__
-#define __Trace_internal_H__
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_CPU_TRACE_INTERNAL_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_CPU_TRACE_INTERNAL_H_
 
 #include <assert.h>
 #include <iostream>
@@ -102,4 +102,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_CPU_TRACE_INTERNAL_H_

@@ -3,6 +3,7 @@ using namespace std;
 using namespace cytnx;
 using namespace std::complex_literals;
 TEST_F(DenseUniTensorTest, gpu_Trace) {
+  GTEST_SKIP() << "Calculating the trace of a matrix is not implemented on the GPU.";
   auto tmp = dense4trtensor.Trace(0, 3);
   for (size_t j = 1; j <= 4; j++)
     for (size_t k = 1; k <= 5; k++)

@@ -1,5 +1,5 @@
-#ifndef __H_vec_intersect_
-#define __H_vec_intersect_
+#ifndef CYTNX_UTILS_VEC_INTERSECT_H_
+#define CYTNX_UTILS_VEC_INTERSECT_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -21,4 +21,5 @@ namespace cytnx {
   void vec_intersect_(std::vector<T> &out, const std::vector<T> &inL, const std::vector<T> &inR);
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_INTERSECT_H_

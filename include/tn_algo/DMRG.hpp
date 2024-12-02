@@ -1,5 +1,5 @@
-#ifndef _H_DMRG_
-#define _H_DMRG_
+#ifndef CYTNX_TN_ALGO_DMRG_H_
+#define CYTNX_TN_ALGO_DMRG_H_
 
 #include "cytnx_error.hpp"
 #include "Device.hpp"
@@ -99,4 +99,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_TN_ALGO_DMRG_H_

@@ -1,5 +1,5 @@
-#ifndef _H_Bond_
-#define _H_Bond_
+#ifndef CYTNX_BOND_H_
+#define CYTNX_BOND_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -931,4 +931,4 @@ namespace cytnx {
   ///@endcond
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BOND_H_

@@ -1,5 +1,5 @@
-#ifndef _H_cytnx_error_
-#define _H_cytnx_error_
+#ifndef CYTNX_CYTNX_ERROR_H_
+#define CYTNX_CYTNX_ERROR_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <stdexcept>
+
+#include <execinfo.h>
 
 #ifdef _MSC_VER
   #define __PRETTY_FUNCTION__ __FUNCTION__
@@ -31,6 +33,16 @@ static inline void error_msg(char const *const func, const char *const file, int
             file, line);
     va_end(args);
     // std::cerr << output_str << std::endl;
+    std::cerr << output_str << std::endl;
+    std::cerr << "Stack trace:" << std::endl;
+    void *array[10];
+    size_t size;
+    size = backtrace(array, 10);
+    char **strings = backtrace_symbols(array, size);
+    for (size_t i = 0; i < size; i++) {
+      std::cerr << strings[i] << std::endl;
+    }
+    free(strings);
     throw std::logic_error(output_str);
   }
   // } catch (const char *output_msg) {
@@ -473,4 +485,4 @@ void check(T result, char const *const func, const char *const file, int const l
 
 #endif  // End of #if defined(UNI_GPU)
 
-#endif
+#endif  // CYTNX_CYTNX_ERROR_H_

@@ -13,9 +13,7 @@ namespace cytnx {
                                   const cytnx_uint64 &Nelem) {
       cytnx_complex64 *tmp = (cytnx_complex64 *)ten->Mem;
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         tmp[n].imag(-tmp[n].imag());
       }
@@ -25,9 +23,7 @@ namespace cytnx {
                                   const cytnx_uint64 &Nelem) {
       cytnx_complex128 *tmp = (cytnx_complex128 *)ten->Mem;
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         tmp[n].imag(-tmp[n].imag());
       }

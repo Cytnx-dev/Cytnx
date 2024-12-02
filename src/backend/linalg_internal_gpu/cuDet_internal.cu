@@ -34,8 +34,7 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
-      cytnx_error_msg(info < 0, "[ERROR] cusolverDnZgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info != 0, "[ERROR] cusolverDnZgetrf fail with info= %d\n", info);
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
@@ -53,8 +52,6 @@ namespace cytnx {
       cudaFree(_in);
       cusolverDnDestroy(cusolverH);
       if (neg) od[0] *= -1;
-
-      if (info > 0) od[0] = 0;
     }
 
     void cuDet_internal_cf(void* out, const boost::intrusive_ptr<Storage_base>& in,
@@ -82,8 +79,7 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
-      cytnx_error_msg(info < 0, "[ERROR] cusolverDnCgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info != 0, "[ERROR] cusolverDnCgetrf fail with info= %d\n", info);
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
@@ -101,8 +97,6 @@ namespace cytnx {
       cudaFree(_in);
       cusolverDnDestroy(cusolverH);
       if (neg) od[0] *= -1;
-
-      if (info > 0) od[0] = 0;
     }
 
     void cuDet_internal_d(void* out, const boost::intrusive_ptr<Storage_base>& in,
@@ -130,8 +124,7 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
-      cytnx_error_msg(info < 0, "[ERROR] cusolverDnDgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info != 0, "[ERROR] cusolverDnDgetrf fail with info= %d\n", info);
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
@@ -149,8 +142,6 @@ namespace cytnx {
       cudaFree(_in);
       cusolverDnDestroy(cusolverH);
       if (neg) od[0] *= -1;
-
-      if (info > 0) od[0] = 0;
     }
 
     void cuDet_internal_f(void* out, const boost::intrusive_ptr<Storage_base>& in,
@@ -178,8 +169,7 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      // If the info > 0, that means the U factor is exactly singular, and the det is 0.
-      cytnx_error_msg(info < 0, "[ERROR] cusolverDnSgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info != 0, "[ERROR] cusolverDnSgetrf fail with info= %d\n", info);
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
@@ -197,8 +187,6 @@ namespace cytnx {
       cudaFree(_in);
       cusolverDnDestroy(cusolverH);
       if (neg) od[0] *= -1;
-
-      if (info > 0) od[0] = 0;
     }
 
   }  // namespace linalg_internal

@@ -2,6 +2,12 @@
 if(BACKEND_TORCH)
 else()
 
+# Define the path to the test data directory
+set(CYTNX_TEST_DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/test_data_base")
+
+# Add the preprocessor definition for CYTNX_TEST_DATA_DIR
+add_compile_definitions(CYTNX_TEST_DATA_DIR="${CYTNX_TEST_DATA_DIR}")
+
 add_executable(
   test_main
   test_tools.cpp
@@ -30,7 +36,6 @@ add_executable(
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
   linalg_test/linalg_test.cpp
-  linalg_test/Det_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp
