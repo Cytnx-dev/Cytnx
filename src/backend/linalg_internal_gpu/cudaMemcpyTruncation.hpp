@@ -1,5 +1,5 @@
-#ifndef __cudaMemcpyTruncation_internal_H__
-#define __cudaMemcpyTruncation_internal_H__
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUDAMEMCPYTRUNCATION_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUDAMEMCPYTRUNCATION_H_
 
 #include <iostream>
 #include <vector>
@@ -34,4 +34,4 @@ namespace cytnx {
   }  // namespace linalg_internal
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUDAMEMCPYTRUNCATION_H_

@@ -1,5 +1,5 @@
-#ifndef __cuInvM_inplace_internal_H__
-#define __cuInvM_inplace_internal_H__
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUINVM_INPLACE_INTERNAL_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUINVM_INPLACE_INTERNAL_H_
 
 #include <assert.h>
 #include <iostream>
@@ -20,4 +20,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUINVM_INPLACE_INTERNAL_H_

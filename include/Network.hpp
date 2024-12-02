@@ -1,5 +1,5 @@
-#ifndef _H_Network_
-#define _H_Network_
+#ifndef CYTNX_NETWORK_H_
+#define CYTNX_NETWORK_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -462,4 +462,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_NETWORK_H_

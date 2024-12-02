@@ -1,5 +1,5 @@
-#ifndef __cutensornet_H_
-#define __cutensornet_H_
+#ifndef CYTNX_UTILS_CUTENSORNET_H_
+#define CYTNX_UTILS_CUTENSORNET_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -138,4 +138,4 @@ namespace cytnx {
 #endif
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_UTILS_CUTENSORNET_H_

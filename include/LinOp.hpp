@@ -1,5 +1,5 @@
-#ifndef _H_LinOp_
-#define _H_LinOp_
+#ifndef CYTNX_LINOP_H_
+#define CYTNX_LINOP_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -180,4 +180,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_LINOP_H_

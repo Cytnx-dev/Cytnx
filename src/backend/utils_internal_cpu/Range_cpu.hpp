@@ -1,5 +1,5 @@
-#ifndef _H_Range_cpu_
-#define _H_Range_cpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_CPU_RANGE_CPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_CPU_RANGE_CPU_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -21,4 +21,5 @@ namespace cytnx {
 
   }  // namespace utils_internal
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_CPU_RANGE_CPU_H_

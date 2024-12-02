@@ -1,5 +1,5 @@
-#ifndef __H_dynamic_arg_resolver_
-#define __H_dynamic_arg_resolver_
+#ifndef CYTNX_UTILS_DYNAMIC_ARG_RESOLVER_H_
+#define CYTNX_UTILS_DYNAMIC_ARG_RESOLVER_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -54,4 +54,5 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_DYNAMIC_ARG_RESOLVER_H_

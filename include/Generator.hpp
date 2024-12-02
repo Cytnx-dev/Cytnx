@@ -1,5 +1,6 @@
-#ifndef _Generator_H_
-#define _Generator_H_
+#ifndef CYTNX_GENERATOR_H_
+#define CYTNX_GENERATOR_H_
+
 #include "Type.hpp"
 #include "Device.hpp"
 #include "cytnx_error.hpp"
@@ -146,4 +147,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_GENERATOR_H_

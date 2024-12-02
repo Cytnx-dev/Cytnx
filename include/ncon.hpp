@@ -1,5 +1,5 @@
-#ifndef _ncon_H_
-#define _ncon_H_
+#ifndef CYTNX_NCON_H_
+#define CYTNX_NCON_H_
 
 #include "cytnx.hpp"
 #include <string>
@@ -17,4 +17,4 @@ namespace cytnx {
 }  // namespace cytnx
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_NCON_H_

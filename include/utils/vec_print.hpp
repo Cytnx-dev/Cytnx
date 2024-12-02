@@ -1,5 +1,5 @@
-#ifndef __H_vec_print_
-#define __H_vec_print_
+#ifndef CYTNX_UTILS_VEC_PRINT_H_
+#define CYTNX_UTILS_VEC_PRINT_H_
 
 #include <vector>
 #include <iostream>
@@ -48,4 +48,5 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_PRINT_H_

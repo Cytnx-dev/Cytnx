@@ -1,5 +1,6 @@
-#ifndef INCLUDE_BACKEND_STORAGE_H_
-#define INCLUDE_BACKEND_STORAGE_H_
+#ifndef CYTNX_BACKEND_STORAGE_H_
+#define CYTNX_BACKEND_STORAGE_H_
+
 #ifndef BACKEND_TORCH
 
   #include <cstdlib>
@@ -951,4 +952,5 @@ namespace cytnx {
 }  // namespace cytnx
 
 #endif  // BACKEND_TORCH
-#endif  // INCLUDE_BACKEND_STORAGE_H_
+
+#endif  // CYTNX_BACKEND_STORAGE_H_
