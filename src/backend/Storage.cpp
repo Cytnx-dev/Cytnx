@@ -136,18 +136,21 @@ namespace cytnx {
 
     unsigned int IDDs = 999;
     f.write((char *)&IDDs, sizeof(unsigned int));
-    f.write((char *)&this->size(), sizeof(unsigned long long));
-    f.write((char *)&this->dtype(), sizeof(unsigned int));
-    f.write((char *)&this->device(), sizeof(int));
+    auto write_number = [&f](auto number) {
+      f.write(reinterpret_cast<char *>(&number), sizeof(number));
+    };
+    write_number(this->size());
+    write_number(this->dtype());
+    write_number(this->device());
 
     // data:
     if (this->device() == Device.cpu) {
-      f.write((char *)this->_impl->Mem, Type.typeSize(this->dtype()) * this->size());
+      f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device()));
       void *htmp = malloc(Type.typeSize(this->dtype()) * this->size());
-      checkCudaErrors(cudaMemcpy(htmp, this->_impl->Mem,
+      checkCudaErrors(cudaMemcpy(htmp, this->_impl->data(),
                                  Type.typeSize(this->dtype()) * this->size(),
                                  cudaMemcpyDeviceToHost));
       f.write((char *)htmp, Type.typeSize(this->dtype()) * this->size());
@@ -165,12 +168,12 @@ namespace cytnx {
 
     // data:
     if (this->device() == Device.cpu) {
-      f.write((char *)this->_impl->Mem, Type.typeSize(this->dtype()) * this->size());
+      f.write((char *)this->_impl->data(), Type.typeSize(this->dtype()) * this->size());
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(this->device()));
       void *htmp = malloc(Type.typeSize(this->dtype()) * this->size());
-      checkCudaErrors(cudaMemcpy(htmp, this->_impl->Mem,
+      checkCudaErrors(cudaMemcpy(htmp, this->_impl->data(),
                                  Type.typeSize(this->dtype()) * this->size(),
                                  cudaMemcpyDeviceToHost));
       f.write((char *)htmp, Type.typeSize(this->dtype()) * this->size());
@@ -284,14 +287,14 @@ namespace cytnx {
 
     // data:
     if (dv == Device.cpu) {
-      f.read((char *)this->_impl->Mem, Type.typeSize(dt) * sz);
+      f.read((char *)this->_impl->data(), Type.typeSize(dt) * sz);
     } else {
 #ifdef UNI_GPU
       checkCudaErrors(cudaSetDevice(dv));
       void *htmp = malloc(Type.typeSize(dt) * sz);
       f.read((char *)htmp, Type.typeSize(dt) * sz);
       checkCudaErrors(
-        cudaMemcpy(this->_impl->Mem, htmp, Type.typeSize(dt) * sz, cudaMemcpyHostToDevice));
+        cudaMemcpy(this->_impl->data(), htmp, Type.typeSize(dt) * sz, cudaMemcpyHostToDevice));
       free(htmp);
 
 #else
@@ -311,7 +314,7 @@ namespace cytnx {
     this->_impl = __SII.USIInit[dtype]();
     this->_impl->Init(Nelem, Device.cpu);
 
-    f.read((char *)this->_impl->Mem, Type.typeSize(dtype) * Nelem);
+    f.read((char *)this->_impl->data(), Type.typeSize(dtype) * Nelem);
   }
 
   Scalar::Sproxy Storage::operator()(const cytnx_uint64 &idx) {

@@ -20,11 +20,11 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       // trf:
       checkCudaErrors(
-        cusolverDnDgetrf_bufferSize(cusolverH, L, L, (cytnx_double *)ten->Mem, L, &lwork));
+        cusolverDnDgetrf_bufferSize(cusolverH, L, L, (cytnx_double *)ten->data(), L, &lwork));
       checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_double) * lwork));
 
       checkCudaErrors(
-        cusolverDnDgetrf(cusolverH, L, L, (cytnx_double *)ten->Mem, L, d_work, ipiv, devinfo));
+        cusolverDnDgetrf(cusolverH, L, L, (cytnx_double *)ten->data(), L, d_work, ipiv, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
@@ -39,7 +39,7 @@ namespace cytnx {
 
       checkCudaErrors(cudaMemcpy(d_I, h_I, sizeof(cytnx_double) * L * L, cudaMemcpyHostToDevice));
 
-      checkCudaErrors(cusolverDnDgetrs(cusolverH, CUBLAS_OP_N, L, L, (cytnx_double *)ten->Mem, L,
+      checkCudaErrors(cusolverDnDgetrs(cusolverH, CUBLAS_OP_N, L, L, (cytnx_double *)ten->data(), L,
                                        ipiv, d_I, L, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
@@ -47,7 +47,7 @@ namespace cytnx {
                       "ERROR in cuSolver function 'cusolverDnDgetrs': cuBlas INFO = ", info);
 
       checkCudaErrors(
-        cudaMemcpy(ten->Mem, d_I, sizeof(cytnx_double) * L * L, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_double) * L * L, cudaMemcpyDeviceToDevice));
 
       cudaFree(d_I);
       cudaFree(d_work);
@@ -70,11 +70,11 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       // trf:
       checkCudaErrors(
-        cusolverDnSgetrf_bufferSize(cusolverH, L, L, (cytnx_float *)ten->Mem, L, &lwork));
+        cusolverDnSgetrf_bufferSize(cusolverH, L, L, (cytnx_float *)ten->data(), L, &lwork));
       checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_float) * lwork));
 
       checkCudaErrors(
-        cusolverDnSgetrf(cusolverH, L, L, (cytnx_float *)ten->Mem, L, d_work, ipiv, devinfo));
+        cusolverDnSgetrf(cusolverH, L, L, (cytnx_float *)ten->data(), L, d_work, ipiv, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
@@ -89,7 +89,7 @@ namespace cytnx {
 
       checkCudaErrors(cudaMemcpy(d_I, h_I, sizeof(cytnx_float) * L * L, cudaMemcpyHostToDevice));
 
-      checkCudaErrors(cusolverDnSgetrs(cusolverH, CUBLAS_OP_N, L, L, (cytnx_float *)ten->Mem, L,
+      checkCudaErrors(cusolverDnSgetrs(cusolverH, CUBLAS_OP_N, L, L, (cytnx_float *)ten->data(), L,
                                        ipiv, d_I, L, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
@@ -97,7 +97,7 @@ namespace cytnx {
                       "ERROR in cuSolver function 'cusolverDnSgetrs': cuBlas INFO = ", info);
 
       checkCudaErrors(
-        cudaMemcpy(ten->Mem, d_I, sizeof(cytnx_float) * L * L, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_float) * L * L, cudaMemcpyDeviceToDevice));
 
       cudaFree(d_I);
       cudaFree(d_work);
@@ -120,10 +120,10 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       // trf:
       checkCudaErrors(
-        cusolverDnZgetrf_bufferSize(cusolverH, L, L, (cuDoubleComplex *)ten->Mem, L, &lwork));
+        cusolverDnZgetrf_bufferSize(cusolverH, L, L, (cuDoubleComplex *)ten->data(), L, &lwork));
       checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_complex128) * lwork));
 
-      checkCudaErrors(cusolverDnZgetrf(cusolverH, L, L, (cuDoubleComplex *)ten->Mem, L,
+      checkCudaErrors(cusolverDnZgetrf(cusolverH, L, L, (cuDoubleComplex *)ten->data(), L,
                                        (cuDoubleComplex *)d_work, ipiv, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
@@ -140,15 +140,15 @@ namespace cytnx {
       checkCudaErrors(
         cudaMemcpy(d_I, h_I, sizeof(cytnx_complex128) * L * L, cudaMemcpyHostToDevice));
 
-      checkCudaErrors(cusolverDnZgetrs(cusolverH, CUBLAS_OP_N, L, L, (cuDoubleComplex *)ten->Mem, L,
-                                       ipiv, (cuDoubleComplex *)d_I, L, devinfo));
+      checkCudaErrors(cusolverDnZgetrs(cusolverH, CUBLAS_OP_N, L, L, (cuDoubleComplex *)ten->data(),
+                                       L, ipiv, (cuDoubleComplex *)d_I, L, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnZgetrs': cuBlas INFO = ", info);
 
       checkCudaErrors(
-        cudaMemcpy(ten->Mem, d_I, sizeof(cytnx_complex128) * L * L, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_complex128) * L * L, cudaMemcpyDeviceToDevice));
 
       cudaFree(d_I);
       cudaFree(d_work);
@@ -172,10 +172,10 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       // trf:
       checkCudaErrors(
-        cusolverDnCgetrf_bufferSize(cusolverH, L, L, (cuFloatComplex *)ten->Mem, L, &lwork));
+        cusolverDnCgetrf_bufferSize(cusolverH, L, L, (cuFloatComplex *)ten->data(), L, &lwork));
       checkCudaErrors(cudaMalloc((void **)&d_work, sizeof(cytnx_complex64) * lwork));
 
-      checkCudaErrors(cusolverDnCgetrf(cusolverH, L, L, (cuFloatComplex *)ten->Mem, L,
+      checkCudaErrors(cusolverDnCgetrf(cusolverH, L, L, (cuFloatComplex *)ten->data(), L,
                                        (cuFloatComplex *)d_work, ipiv, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
@@ -192,15 +192,15 @@ namespace cytnx {
       checkCudaErrors(
         cudaMemcpy(d_I, h_I, sizeof(cytnx_complex64) * L * L, cudaMemcpyHostToDevice));
 
-      checkCudaErrors(cusolverDnCgetrs(cusolverH, CUBLAS_OP_N, L, L, (cuFloatComplex *)ten->Mem, L,
-                                       ipiv, (cuFloatComplex *)d_I, L, devinfo));
+      checkCudaErrors(cusolverDnCgetrs(cusolverH, CUBLAS_OP_N, L, L, (cuFloatComplex *)ten->data(),
+                                       L, ipiv, (cuFloatComplex *)d_I, L, devinfo));
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
 
       cytnx_error_msg(info != 0, "%s %d",
                       "ERROR in cuSolver function 'cusolverDnCgetrs': cuBlas INFO = ", info);
 
       checkCudaErrors(
-        cudaMemcpy(ten->Mem, d_I, sizeof(cytnx_complex64) * L * L, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(ten->data(), d_I, sizeof(cytnx_complex64) * L * L, cudaMemcpyDeviceToDevice));
 
       cudaFree(d_I);
       cudaFree(d_work);

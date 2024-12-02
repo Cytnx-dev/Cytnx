@@ -18,8 +18,8 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -31,20 +31,20 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -59,7 +59,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   S->data(), cuda_data_type, /* dataTypeU */
                                                    vTMem, ldu, /* ldu */
                                                    cuda_data_type, /* dataTypeV */
                                                    UMem, ldvT, /* ldv */
@@ -84,7 +84,7 @@ namespace cytnx {
       cusolverDnXgesvdp(cusolverH, NULL, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                        S->Mem, cuda_data_type, /* dataTypeU */
+                        S->data(), cuda_data_type, /* dataTypeU */
                         vTMem, ldu, /* ldu */
                         cuda_data_type, /* dataTypeV */
                         UMem, ldvT, /* ldv */
@@ -105,10 +105,10 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));
@@ -128,8 +128,8 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -141,21 +141,21 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -170,7 +170,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   S->data(), cuda_data_type, /* dataTypeU */
                                                    vTMem, ldu, /* ldu */
                                                    cuda_data_type, /* dataTypeV */
                                                    UMem, ldvT, /* ldv */
@@ -195,7 +195,7 @@ namespace cytnx {
       cusolverDnXgesvdp(cusolverH, NULL, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                        S->Mem, cuda_data_type, /* dataTypeU */
+                        S->data(), cuda_data_type, /* dataTypeU */
                         vTMem, ldu, /* ldu */
                         cuda_data_type, /* dataTypeV */
                         UMem, ldvT, /* ldv */
@@ -216,10 +216,10 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));
@@ -238,8 +238,8 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -251,21 +251,21 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -280,7 +280,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   S->data(), cuda_data_type, /* dataTypeU */
                                                    vTMem, ldu, /* ldu */
                                                    cuda_data_type, /* dataTypeV */
                                                    UMem, ldvT, /* ldv */
@@ -305,7 +305,7 @@ namespace cytnx {
       cusolverDnXgesvdp(cusolverH, NULL, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                        S->Mem, cuda_data_type, /* dataTypeU */
+                        S->data(), cuda_data_type, /* dataTypeU */
                         vTMem, ldu, /* ldu */
                         cuda_data_type, /* dataTypeV */
                         UMem, ldvT, /* ldv */
@@ -325,10 +325,10 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));
@@ -347,8 +347,8 @@ namespace cytnx {
 
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -360,21 +360,21 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -389,7 +389,7 @@ namespace cytnx {
       checkCudaErrors(cusolverDnXgesvdp_bufferSize(cusolverH, NULL, /* params */
                                                    jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                                                    Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                                                   S->Mem, cuda_data_type, /* dataTypeU */
+                                                   S->data(), cuda_data_type, /* dataTypeU */
                                                    vTMem, ldu, /* ldu */
                                                    cuda_data_type, /* dataTypeV */
                                                    UMem, ldvT, /* ldv */
@@ -414,7 +414,7 @@ namespace cytnx {
       cusolverDnXgesvdp(cusolverH, NULL, /* params */
                         jobz, econ, N, M, cuda_data_type, /* dataTypeA */
                         Mij, ldA, cuda_data_typeR, /* dataTypeS */
-                        S->Mem, cuda_data_type, /* dataTypeU */
+                        S->data(), cuda_data_type, /* dataTypeU */
                         vTMem, ldu, /* ldu */
                         cuda_data_type, /* dataTypeV */
                         UMem, ldvT, /* ldv */
@@ -434,10 +434,10 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnXgesvdp': cuBlas INFO = ", info);
 
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));

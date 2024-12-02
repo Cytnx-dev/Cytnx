@@ -15,9 +15,9 @@ namespace cytnx {
       cytnx_complex128 *tA;
       cytnx_complex128 *buffer_A =
         (cytnx_complex128 *)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex128));
-      memcpy(buffer_A, in->Mem, sizeof(cytnx_complex128) * cytnx_uint64(L) * L);
-      if (v->dtype != Type.Void) {
-        tA = (cytnx_complex128 *)v->Mem;
+      memcpy(buffer_A, in->data(), sizeof(cytnx_complex128) * cytnx_uint64(L) * L);
+      if (v->dtype() != Type.Void) {
+        tA = (cytnx_complex128 *)v->data();
         jobs = 'V';
       }
 
@@ -26,8 +26,8 @@ namespace cytnx {
       lapack_int ONE = 1;
 
       info = LAPACKE_zgeev(LAPACK_COL_MAJOR, jobs, 'N', L, (lapack_complex_double *)buffer_A, ldA,
-                           (lapack_complex_double *)e->Mem, (lapack_complex_double *)tA, L, nullptr,
-                           ONE);
+                           (lapack_complex_double *)e->data(), (lapack_complex_double *)tA, L,
+                           nullptr, ONE);
 
       cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgeev': Lapack INFO = ", info);
 
@@ -41,9 +41,9 @@ namespace cytnx {
       cytnx_complex64 *tA;
       cytnx_complex64 *buffer_A =
         (cytnx_complex64 *)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex64));
-      memcpy(buffer_A, in->Mem, sizeof(cytnx_complex64) * cytnx_uint64(L) * L);
-      if (v->dtype != Type.Void) {
-        tA = (cytnx_complex64 *)v->Mem;
+      memcpy(buffer_A, in->data(), sizeof(cytnx_complex64) * cytnx_uint64(L) * L);
+      if (v->dtype() != Type.Void) {
+        tA = (cytnx_complex64 *)v->data();
         jobs = 'V';
       }
 
@@ -51,9 +51,9 @@ namespace cytnx {
       lapack_int info;
       lapack_int ONE = 1;
 
-      info =
-        LAPACKE_cgeev(LAPACK_COL_MAJOR, jobs, 'N', L, (lapack_complex_float *)buffer_A, ldA,
-                      (lapack_complex_float *)e->Mem, (lapack_complex_float *)tA, L, nullptr, ONE);
+      info = LAPACKE_cgeev(LAPACK_COL_MAJOR, jobs, 'N', L, (lapack_complex_float *)buffer_A, ldA,
+                           (lapack_complex_float *)e->data(), (lapack_complex_float *)tA, L,
+                           nullptr, ONE);
 
       cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgeev': Lapack INFO = ", info);
 
@@ -72,7 +72,7 @@ namespace cytnx {
       cytnx_double *e_real = (cytnx_double*)malloc(cytnx_uint64(L)*sizeof(cytnx_double));
       cytnx_double *e_imag = (cytnx_double*)malloc(cytnx_uint64(L)*sizeof(cytnx_double));
 
-      if(v->dtype!=Type.Void){
+      if(v->dtype()!=Type.Void){
           tA = (cytnx_double*)v->Mem;
           jobs = 'V';
       }
@@ -120,7 +120,7 @@ namespace cytnx {
       cytnx_float *e_real = (cytnx_float*)malloc(cytnx_uint64(L)*sizeof(cytnx_float));
       cytnx_float *e_imag = (cytnx_float*)malloc(cytnx_uint64(L)*sizeof(cytnx_float));
 
-      if(v->dtype!=Type.Void){
+      if(v->dtype()!=Type.Void){
           tA = (cytnx_float*)v->Mem;
           jobs = 'V';
       }

@@ -10,8 +10,8 @@ namespace cytnx {
       mt19937 eng(seed);
       std::uniform_real_distribution<double> distro(a, b);
 
-      double *rptr = static_cast<double *>(in->Mem);
-      for (cytnx_uint64 i = 0; i < in->len * 2; i++) {
+      double *rptr = static_cast<double *>(in->data());
+      for (cytnx_uint64 i = 0; i < in->size() * 2; i++) {
         rptr[i] = distro(eng);
       }
     }
@@ -20,8 +20,8 @@ namespace cytnx {
       mt19937 eng(seed);
       std::uniform_real_distribution<float> distro(a, b);
 
-      float *rptr = static_cast<float *>(in->Mem);
-      for (cytnx_uint64 i = 0; i < in->len * 2; i++) {
+      float *rptr = static_cast<float *>(in->data());
+      for (cytnx_uint64 i = 0; i < in->size() * 2; i++) {
         rptr[i] = distro(eng);
       }
     }
@@ -29,8 +29,8 @@ namespace cytnx {
                            const unsigned int &seed) {
       mt19937 eng(seed);
       std::uniform_real_distribution<double> distro(a, b);
-      double *rptr = static_cast<double *>(in->Mem);
-      for (cytnx_uint64 i = 0; i < in->len; i++) {
+      double *rptr = static_cast<double *>(in->data());
+      for (cytnx_uint64 i = 0; i < in->size(); i++) {
         rptr[i] = distro(eng);
       }
     }
@@ -38,8 +38,8 @@ namespace cytnx {
                            const unsigned int &seed) {
       mt19937 eng(seed);
       std::uniform_real_distribution<float> distro(a, b);
-      float *rptr = static_cast<float *>(in->Mem);
-      for (cytnx_uint64 i = 0; i < in->len; i++) {
+      float *rptr = static_cast<float *>(in->data());
+      for (cytnx_uint64 i = 0; i < in->size(); i++) {
         rptr[i] = distro(eng);
       }
     }

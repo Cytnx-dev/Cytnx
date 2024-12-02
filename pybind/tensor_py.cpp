@@ -129,21 +129,20 @@ void tensor_binding(py::module &m) {
           cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s", "\n");
         }
 
-        npbuf = py::buffer_info(tmpIN.storage()._impl->Mem,  // ptr
+        npbuf = py::buffer_info(tmpIN.storage()._impl->data(),  // ptr
                                 Type.typeSize(tmpIN.dtype()),  // size of elem
                                 chr_dtype,  // pss format
                                 tmpIN.rank(),  // rank
                                 shape,  // shape
                                 stride  // stride
         );
-        py::array out(npbuf);
-        // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to
-        // free.
-        if (share_mem == false) {
-          void *pswap = malloc(sizeof(bool));
-          tmpIN.storage()._impl->Mem = pswap;
+
+        if (!share_mem) {
+          // Avoid the memory passed to numpy being freed.
+          tmpIN.storage().release();
         }
-        return out;
+
+        return py::array(npbuf);
       },
       py::arg("share_mem") = false)
     // construction

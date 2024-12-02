@@ -149,7 +149,7 @@ namespace cytnx {
   }
 
   void cutensornet::setOutputMem(UniTensor &res) {
-    R_d = (void *)res.get_block_()._impl->storage()._impl->Mem;
+    R_d = (void *)res.get_block_()._impl->storage()._impl->data();
   }
 
   void cutensornet::setInputMem(std::vector<UniTensor> &uts) {
@@ -158,14 +158,15 @@ namespace cytnx {
     tns = std::vector<UniTensor>(uts.size());
     for (int idx = 0; idx < uts.size(); idx++) {
       if (uts[idx].is_contiguous())
-        rawDataIn_d[idx] = (void *)uts[idx].get_block_()._impl->storage()._impl->Mem;
+        rawDataIn_d[idx] = (void *)uts[idx].get_block_()._impl->storage()._impl->data();
       else
-        rawDataIn_d[idx] = (void *)uts[idx].get_block_().contiguous()._impl->storage()._impl->Mem;
+        rawDataIn_d[idx] =
+          (void *)uts[idx].get_block_().contiguous()._impl->storage()._impl->data();
       if (uts[idx].is_contiguous())
         tns[idx] = uts[idx];
       else
         tns[idx] = uts[idx].contiguous();
-      rawDataIn_d[idx] = tns[idx].get_block_()._impl->storage()._impl->Mem;
+      rawDataIn_d[idx] = tns[idx].get_block_()._impl->storage()._impl->data();
     }
   }
 

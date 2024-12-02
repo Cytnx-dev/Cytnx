@@ -28,7 +28,7 @@ namespace cytnx {
                                                      const bool is_inplace) {
 #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.cy_typeid(T()),
+        in->dtype() != Type.cy_typeid(T()),
         "[DEBUG][internal error] in.dtype_str is [%s] but call MoveMemoryCpu with type %s",
         in->dtype_str().c_str(), Type.getname(Type.cy_typeid(T())));
 #endif
@@ -47,8 +47,8 @@ namespace cytnx {
         accu_new *= newshape[i];
       }
 
-      T *des = (T *)malloc(in->cap * sizeof(T));
-      T *src = static_cast<T *>(in->Mem);
+      T *des = (T *)malloc(in->capacity() * sizeof(T));
+      T *src = static_cast<T *>(in->data());
 
 #ifdef UNI_OMP
       std::vector<std::vector<cytnx_uint64>> old_inds;
@@ -109,11 +109,11 @@ namespace cytnx {
         out = new BoolStorage();
       }
       if (is_inplace) {
-        memcpy(in->Mem, des, sizeof(T) * accu_old);
+        memcpy(in->data(), des, sizeof(T) * accu_old);
         free(des);
         return out;
       } else {
-        out->_Init_byptr(des, accu_old, in->device, true, in->cap);
+        out->_Init_byptr(des, accu_old, in->device(), true, in->capacity());
         return out;
       }
     }
@@ -126,19 +126,16 @@ namespace cytnx {
                                                      const bool is_inplace) {
 #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.cy_typeid(T()),
+        in->dtype() != Type.cy_typeid(T()),
         "[DEBUG][internal error] in.dtype_str is [%s] but call MoveMemoryCpu with type %s",
         in->dtype_str().c_str(), Type.getname(Type.cy_typeid(T())));
 #endif
 
-      T *des = (T *)malloc(in->cap * sizeof(T));
-      T *src = static_cast<T *>(in->Mem);
+      T *des = (T *)malloc(in->capacity() * sizeof(T));
+      T *src = static_cast<T *>(in->data());
       cytnx_uint64 accu_old = 1, accu_new = 1;
 
 #ifdef UNI_HPTT
-  #ifdef UNI_DEBUG
-      cytnx_error_msg(true, "[DEBUG][Internal prompt] USE HPTT%s", "\n");
-  #endif
       if (in->size() > 64) {
         std::vector<int> perm(mapper.begin(), mapper.end());
         std::vector<int> size(old_shape.begin(), old_shape.end());
@@ -263,11 +260,11 @@ namespace cytnx {
         out = new FloatStorage();
       }
       if (is_inplace) {
-        memcpy(in->Mem, des, sizeof(T) * accu_old);
+        memcpy(in->data(), des, sizeof(T) * accu_old);
         free(des);
         return out;
       } else {
-        out->_Init_byptr(des, accu_old, in->device, true, in->cap);
+        out->_Init_byptr(des, accu_old, in->device(), true, in->capacity());
         return out;
       }
     }

@@ -105,9 +105,9 @@ namespace cytnx {
       const int32_t numModesQ = modesQ.size();
       const int32_t numModesR = modesR.size();
 
-      void *D_T = in->Mem;
-      void *D_Q = Q->Mem;
-      void *D_R = R->Mem;
+      void *D_T = in->data();
+      void *D_Q = Q->data();
+      void *D_R = R->data();
 
       /******************
        * cuTensorNet
@@ -243,9 +243,9 @@ namespace cytnx {
       const int32_t numModesQ = modesQ.size();
       const int32_t numModesR = modesR.size();
 
-      void *D_T = in->Mem;
-      void *D_Q = Q->Mem;
-      void *D_R = R->Mem;
+      void *D_T = in->data();
+      void *D_Q = Q->data();
+      void *D_R = R->data();
 
       /******************
        * cuTensorNet
@@ -380,9 +380,9 @@ namespace cytnx {
       const int32_t numModesQ = modesQ.size();
       const int32_t numModesR = modesR.size();
 
-      void *D_T = in->Mem;
-      void *D_Q = Q->Mem;
-      void *D_R = R->Mem;
+      void *D_T = in->data();
+      void *D_Q = Q->data();
+      void *D_R = R->data();
 
       /******************
        * cuTensorNet
@@ -517,9 +517,9 @@ namespace cytnx {
       const int32_t numModesQ = modesQ.size();
       const int32_t numModesR = modesR.size();
 
-      void *D_T = in->Mem;
-      void *D_Q = Q->Mem;
-      void *D_R = R->Mem;
+      void *D_T = in->data();
+      void *D_Q = Q->data();
+      void *D_R = R->data();
 
       /******************
        * cuTensorNet

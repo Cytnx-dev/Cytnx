@@ -19,9 +19,9 @@ namespace cytnx {
                        const boost::intrusive_ptr<Storage_base> &Lin,
                        const boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &j1,
                        const cytnx_uint64 &j2) {
-      TO *_out = (TO *)out->Mem;
-      T1 *_Lin = (T1 *)Lin->Mem;
-      T2 *_Rin = (T2 *)Rin->Mem;
+      TO *_out = (TO *)out->data();
+      T1 *_Lin = (T1 *)Lin->data();
+      T2 *_Rin = (T2 *)Rin->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (unsigned long long r = 0; r < j1 * j2; r++) {

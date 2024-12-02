@@ -500,89 +500,93 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &ten,
                               const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cuDoubleComplex *)out->Mem, (cuDoubleComplex *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cuDoubleComplex *)out->data(), (cuDoubleComplex *)ten->data(),
+                          ten->size());
       else
-        cuMin_gpu_generic((cuDoubleComplex *)out->Mem, (cuDoubleComplex *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cuDoubleComplex *)out->data(), (cuDoubleComplex *)ten->data(),
+                          ten->size());
     }
     void cuMaxMin_internal_cf(boost::intrusive_ptr<Storage_base> &out,
                               const boost::intrusive_ptr<Storage_base> &ten,
                               const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cuFloatComplex *)out->Mem, (cuFloatComplex *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cuFloatComplex *)out->data(), (cuFloatComplex *)ten->data(),
+                          ten->size());
       else
-        cuMin_gpu_generic((cuFloatComplex *)out->Mem, (cuFloatComplex *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cuFloatComplex *)out->data(), (cuFloatComplex *)ten->data(),
+                          ten->size());
     }
     void cuMaxMin_internal_d(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_double *)out->Mem, (cytnx_double *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_double *)out->data(), (cytnx_double *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_double *)out->Mem, (cytnx_double *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_double *)out->data(), (cytnx_double *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_f(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_float *)out->Mem, (cytnx_float *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_float *)out->data(), (cytnx_float *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_float *)out->Mem, (cytnx_float *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_float *)out->data(), (cytnx_float *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_u64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_uint64 *)out->Mem, (cytnx_uint64 *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_uint64 *)out->data(), (cytnx_uint64 *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_uint64 *)out->Mem, (cytnx_uint64 *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_uint64 *)out->data(), (cytnx_uint64 *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_i64(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_int64 *)out->Mem, (cytnx_int64 *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_int64 *)out->data(), (cytnx_int64 *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_int64 *)out->Mem, (cytnx_int64 *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_int64 *)out->data(), (cytnx_int64 *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_u32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_uint32 *)out->Mem, (cytnx_uint32 *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_uint32 *)out->data(), (cytnx_uint32 *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_uint32 *)out->Mem, (cytnx_uint32 *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_uint32 *)out->data(), (cytnx_uint32 *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_i32(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_int32 *)out->Mem, (cytnx_int32 *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_int32 *)out->data(), (cytnx_int32 *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_int32 *)out->Mem, (cytnx_int32 *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_int32 *)out->data(), (cytnx_int32 *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_u16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_uint16 *)out->Mem, (cytnx_uint16 *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_uint16 *)out->data(), (cytnx_uint16 *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_uint16 *)out->Mem, (cytnx_uint16 *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_uint16 *)out->data(), (cytnx_uint16 *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_i16(boost::intrusive_ptr<Storage_base> &out,
                                const boost::intrusive_ptr<Storage_base> &ten,
                                const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_int16 *)out->Mem, (cytnx_int16 *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_int16 *)out->data(), (cytnx_int16 *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_int16 *)out->Mem, (cytnx_int16 *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_int16 *)out->data(), (cytnx_int16 *)ten->data(), ten->size());
     }
     void cuMaxMin_internal_b(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
       if (type == 'x')
-        cuMax_gpu_generic((cytnx_bool *)out->Mem, (cytnx_bool *)ten->Mem, ten->len);
+        cuMax_gpu_generic((cytnx_bool *)out->data(), (cytnx_bool *)ten->data(), ten->size());
       else
-        cuMin_gpu_generic((cytnx_bool *)out->Mem, (cytnx_bool *)ten->Mem, ten->len);
+        cuMin_gpu_generic((cytnx_bool *)out->data(), (cytnx_bool *)ten->data(), ten->size());
     }
 
   }  // namespace linalg_internal

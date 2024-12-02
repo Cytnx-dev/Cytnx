@@ -15,9 +15,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cuDoubleComplex *_out = (cuDoubleComplex *)out->Mem;
-      cuDoubleComplex *_Lin = (cuDoubleComplex *)Lin->Mem;
-      cuDoubleComplex *_Rin = (cuDoubleComplex *)Rin->Mem;
+      cuDoubleComplex *_out = (cuDoubleComplex *)out->data();
+      cuDoubleComplex *_Lin = (cuDoubleComplex *)Lin->data();
+      cuDoubleComplex *_Rin = (cuDoubleComplex *)Rin->data();
 
       //_out[0] = make_cuDoubleComplex(0.,0.);
       unsigned long long remain = len;
@@ -76,9 +76,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cuFloatComplex *_out = (cuFloatComplex *)out->Mem;
-      cuFloatComplex *_Lin = (cuFloatComplex *)Lin->Mem;
-      cuFloatComplex *_Rin = (cuFloatComplex *)Rin->Mem;
+      cuFloatComplex *_out = (cuFloatComplex *)out->data();
+      cuFloatComplex *_Lin = (cuFloatComplex *)Lin->data();
+      cuFloatComplex *_Rin = (cuFloatComplex *)Rin->data();
 
       //_out[0] = make_cuFloatComplex(0.,0.);
       unsigned long long remain = len;
@@ -135,9 +135,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cytnx_double *_out = (cytnx_double *)out->Mem;
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_double *_out = (cytnx_double *)out->data();
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       //_out[0] = 0;
       unsigned long long remain = len;
@@ -192,9 +192,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cytnx_float *_out = (cytnx_float *)out->Mem;
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_float *_out = (cytnx_float *)out->data();
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       //_out[0] = 0;
       unsigned long long remain = len;

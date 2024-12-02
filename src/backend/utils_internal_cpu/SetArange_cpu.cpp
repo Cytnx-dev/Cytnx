@@ -6,7 +6,7 @@ namespace cytnx {
     void SetArange_cpu_cd(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                           const cytnx_double &end, const cytnx_double &step,
                           const cytnx_uint64 &Nelem) {
-      cytnx_complex128 *ptr = (cytnx_complex128 *)in->Mem;
+      cytnx_complex128 *ptr = (cytnx_complex128 *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -17,7 +17,7 @@ namespace cytnx {
     void SetArange_cpu_cf(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                           const cytnx_double &end, const cytnx_double &step,
                           const cytnx_uint64 &Nelem) {
-      cytnx_complex64 *ptr = (cytnx_complex64 *)in->Mem;
+      cytnx_complex64 *ptr = (cytnx_complex64 *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -28,7 +28,7 @@ namespace cytnx {
     void SetArange_cpu_d(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                          const cytnx_double &end, const cytnx_double &step,
                          const cytnx_uint64 &Nelem) {
-      cytnx_double *ptr = (cytnx_double *)in->Mem;
+      cytnx_double *ptr = (cytnx_double *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -38,7 +38,8 @@ namespace cytnx {
     void SetArange_cpu_f(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                          const cytnx_double &end, const cytnx_double &step,
                          const cytnx_uint64 &Nelem) {
-      cytnx_float *ptr = (cytnx_float *)in->Mem;
+      cytnx_float *ptr = (cytnx_float *)in->data();
+
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
@@ -47,7 +48,8 @@ namespace cytnx {
     void SetArange_cpu_i64(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
                            const cytnx_uint64 &Nelem) {
-      cytnx_int64 *ptr = (cytnx_int64 *)in->Mem;
+      cytnx_int64 *ptr = (cytnx_int64 *)in->data();
+
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
@@ -56,7 +58,7 @@ namespace cytnx {
     void SetArange_cpu_u64(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
                            const cytnx_uint64 &Nelem) {
-      cytnx_uint64 *ptr = (cytnx_uint64 *)in->Mem;
+      cytnx_uint64 *ptr = (cytnx_uint64 *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -66,7 +68,7 @@ namespace cytnx {
     void SetArange_cpu_i32(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
                            const cytnx_uint64 &Nelem) {
-      cytnx_int32 *ptr = (cytnx_int32 *)in->Mem;
+      cytnx_int32 *ptr = (cytnx_int32 *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -76,7 +78,7 @@ namespace cytnx {
     void SetArange_cpu_u32(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
                            const cytnx_uint64 &Nelem) {
-      cytnx_uint32 *ptr = (cytnx_uint32 *)in->Mem;
+      cytnx_uint32 *ptr = (cytnx_uint32 *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -86,7 +88,7 @@ namespace cytnx {
     void SetArange_cpu_i16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
                            const cytnx_uint64 &Nelem) {
-      cytnx_int16 *ptr = (cytnx_int16 *)in->Mem;
+      cytnx_int16 *ptr = (cytnx_int16 *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -96,7 +98,7 @@ namespace cytnx {
     void SetArange_cpu_u16(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                            const cytnx_double &end, const cytnx_double &step,
                            const cytnx_uint64 &Nelem) {
-      cytnx_uint16 *ptr = (cytnx_uint16 *)in->Mem;
+      cytnx_uint16 *ptr = (cytnx_uint16 *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
@@ -106,7 +108,7 @@ namespace cytnx {
     void SetArange_cpu_b(boost::intrusive_ptr<Storage_base> &in, const cytnx_double &start,
                          const cytnx_double &end, const cytnx_double &step,
                          const cytnx_uint64 &Nelem) {
-      cytnx_bool *ptr = (cytnx_bool *)in->Mem;
+      cytnx_bool *ptr = (cytnx_bool *)in->data();
 
 #pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {

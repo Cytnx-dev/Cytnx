@@ -24,7 +24,7 @@ namespace cytnx {
                                                        const std::vector<cytnx_uint64> &invmapper,
                                                        const bool is_inplace) {
   #ifdef UNI_DEBUG
-      cytnx_error_msg(in->dtype != Type.ComplexDouble,
+      cytnx_error_msg(in->dtype() != Type.ComplexDouble,
                       "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with "
                       "type ComplexDouble",
                       in->dtype_str().c_str());
@@ -120,7 +120,7 @@ namespace cytnx {
                                                        const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.ComplexFloat,
+        in->dtype() != Type.ComplexFloat,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type ComplexFloat",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -214,7 +214,7 @@ namespace cytnx {
                                                       const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Double,
+        in->dtype() != Type.Double,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Double",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -309,7 +309,7 @@ namespace cytnx {
                                                       const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Float,
+        in->dtype() != Type.Float,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Float",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -402,7 +402,7 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Int64,
+        in->dtype() != Type.Int64,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Int64",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -494,7 +494,7 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Uint64,
+        in->dtype() != Type.Uint64,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Uint64",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -585,7 +585,7 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Int32,
+        in->dtype() != Type.Int32,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Int32",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -678,7 +678,7 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Uint32,
+        in->dtype() != Type.Uint32,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Uint32",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -769,7 +769,7 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Uint16,
+        in->dtype() != Type.Uint16,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Uint16",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -859,7 +859,7 @@ namespace cytnx {
                                                         const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Int16,
+        in->dtype() != Type.Int16,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Int16",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",
@@ -949,7 +949,7 @@ namespace cytnx {
                                                       const bool is_inplace) {
   #ifdef UNI_DEBUG
       cytnx_error_msg(
-        in->dtype != Type.Bool,
+        in->dtype() != Type.Bool,
         "[DEBUG][internal error] in.dtype_str is [%s] but call cuTNPerm_gpu with type Bool",
         in->dtype_str().c_str());
       cytnx_error_msg(in->device == Device.cpu, "%s",

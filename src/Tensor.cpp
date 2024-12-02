@@ -76,7 +76,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() == 0, "[ERROR] operation not allowed for empty (void) Tensor.%s",
                     "\n");
     // dtype()-1 here because we have removed void from the variant
-    return void_ptr_to_variant_impl(this->_impl->_storage._impl->Mem, this->dtype() - 1,
+    return void_ptr_to_variant_impl(this->_impl->_storage._impl->data(), this->dtype() - 1,
                                     std::make_index_sequence<std::variant_size_v<pointer_types>>{});
   }
 
@@ -103,7 +103,7 @@ namespace cytnx {
                     "\n");
     // dtype()-1 here because we have removed void from the variant
     return gpu_void_ptr_to_variant_impl(
-      this->_impl->_storage._impl->Mem, this->dtype() - 1,
+      this->_impl->_storage._impl->data(), this->dtype() - 1,
       std::make_index_sequence<std::variant_size_v<gpu_pointer_types>>{});
   }
   #endif  // UNI_GPU

@@ -33,7 +33,7 @@ class cHclass {
   }
 
   bool exists() const { return this->proxy.exists(); }
-  int dtype() const { return this->proxy._insimpl->dtype; }
+  int dtype() const { return this->proxy._insimpl->dtype(); }
 
   cytnx_double get_elem_d() const { return cytnx_double(Scalar(this->proxy)); }
   cytnx_float get_elem_f() const { return cytnx_float(Scalar(this->proxy)); }

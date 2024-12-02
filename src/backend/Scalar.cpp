@@ -124,7 +124,7 @@ namespace cytnx {
     return *this;
   }
 
-  bool Scalar::Sproxy::exists() const { return this->_insimpl->dtype != Type.Void; };
+  bool Scalar::Sproxy::exists() const { return this->_insimpl->dtype() != Type.Void; };
 
   Scalar Scalar::Sproxy::real() { return Scalar(*this).real(); }
   Scalar Scalar::Sproxy::imag() { return Scalar(*this).imag(); }

@@ -15,9 +15,9 @@ namespace cytnx {
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const unsigned long long &len, const bool &is_conj) {
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
-      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->Mem;
-      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->Mem;
+      cytnx_complex128 *_out = (cytnx_complex128 *)out->data();
+      cytnx_complex128 *_Lin = (cytnx_complex128 *)Lin->data();
+      cytnx_complex128 *_Rin = (cytnx_complex128 *)Rin->data();
 
       _out[0] = 0;
       unsigned long long remain = len;
@@ -55,9 +55,9 @@ namespace cytnx {
                                const boost::intrusive_ptr<Storage_base> &Lin,
                                const boost::intrusive_ptr<Storage_base> &Rin,
                                const unsigned long long &len, const bool &is_conj) {
-      cytnx_complex64 *_out = (cytnx_complex64 *)out->Mem;
-      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->Mem;
-      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->Mem;
+      cytnx_complex64 *_out = (cytnx_complex64 *)out->data();
+      cytnx_complex64 *_Lin = (cytnx_complex64 *)Lin->data();
+      cytnx_complex64 *_Rin = (cytnx_complex64 *)Rin->data();
       _out[0] = 0;
       unsigned long long remain = len;
       unsigned long long bias = 0;
@@ -94,9 +94,9 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const unsigned long long &len, const bool &is_conj) {
-      cytnx_double *_out = (cytnx_double *)out->Mem;
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_double *_out = (cytnx_double *)out->data();
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       _out[0] = 0;
       unsigned long long remain = len;
@@ -127,9 +127,9 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const unsigned long long &len, const bool &is_conj) {
-      cytnx_float *_out = (cytnx_float *)out->Mem;
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_float *_out = (cytnx_float *)out->data();
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       _out[0] = 0;
       unsigned long long remain = len;
@@ -160,9 +160,9 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cytnx_int64 *_out = (cytnx_int64 *)out->Mem;
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->Mem;
-      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->Mem;
+      cytnx_int64 *_out = (cytnx_int64 *)out->data();
+      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_int64 *_Rin = (cytnx_int64 *)Rin->data();
 
 #ifdef UNI_OMP
       std::vector<cytnx_int64> tmp;
@@ -191,9 +191,9 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cytnx_uint64 *_out = (cytnx_uint64 *)out->Mem;
-      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->Mem;
-      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->Mem;
+      cytnx_uint64 *_out = (cytnx_uint64 *)out->data();
+      cytnx_uint64 *_Lin = (cytnx_uint64 *)Lin->data();
+      cytnx_uint64 *_Rin = (cytnx_uint64 *)Rin->data();
 
 #ifdef UNI_OMP
       std::vector<cytnx_uint64> tmp;
@@ -222,9 +222,9 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      blas_int *_out = (blas_int *)out->Mem;
-      blas_int *_Lin = (blas_int *)Lin->Mem;
-      blas_int *_Rin = (blas_int *)Rin->Mem;
+      blas_int *_out = (blas_int *)out->data();
+      blas_int *_Lin = (blas_int *)Lin->data();
+      blas_int *_Rin = (blas_int *)Rin->data();
 
 #ifdef UNI_OMP
       std::vector<blas_int> tmp;
@@ -253,9 +253,9 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cytnx_uint32 *_out = (cytnx_uint32 *)out->Mem;
-      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->Mem;
-      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->Mem;
+      cytnx_uint32 *_out = (cytnx_uint32 *)out->data();
+      cytnx_uint32 *_Lin = (cytnx_uint32 *)Lin->data();
+      cytnx_uint32 *_Rin = (cytnx_uint32 *)Rin->data();
 
 #ifdef UNI_OMP
       std::vector<cytnx_uint32> tmp;
@@ -284,9 +284,9 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cytnx_int16 *_out = (cytnx_int16 *)out->Mem;
-      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->Mem;
-      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->Mem;
+      cytnx_int16 *_out = (cytnx_int16 *)out->data();
+      cytnx_int16 *_Lin = (cytnx_int16 *)Lin->data();
+      cytnx_int16 *_Rin = (cytnx_int16 *)Rin->data();
 
 #ifdef UNI_OMP
       std::vector<cytnx_int16> tmp;
@@ -315,9 +315,9 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &Lin,
                                 const boost::intrusive_ptr<Storage_base> &Rin,
                                 const unsigned long long &len, const bool &is_conj) {
-      cytnx_uint16 *_out = (cytnx_uint16 *)out->Mem;
-      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->Mem;
-      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->Mem;
+      cytnx_uint16 *_out = (cytnx_uint16 *)out->data();
+      cytnx_uint16 *_Lin = (cytnx_uint16 *)Lin->data();
+      cytnx_uint16 *_Rin = (cytnx_uint16 *)Rin->data();
 
 #ifdef UNI_OMP
       std::vector<cytnx_uint16> tmp;

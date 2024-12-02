@@ -392,11 +392,8 @@ namespace cytnx {
 
     template <>
     Tensor Mod<Scalar>(const Scalar &lc, const Tensor &Rt) {
-      Storage Cnst;
-
-      // Cnst.at<cytnx_bool>(0) = lc;
-      Cnst._impl->Mem = lc._impl->get_raw_address();
-      Cnst._impl->len = 1;
+      Storage Cnst(1, lc.dtype());
+      Cnst.set_item(0, lc);
 
       Tensor out;
       out._impl = Rt._impl->_clone_meta_only();  //(Rt.shape(),Type.ComplexDouble,Rt.device());
@@ -419,8 +416,6 @@ namespace cytnx {
                         "\n");
   #endif
       }
-
-      Cnst._impl->Mem = nullptr;
 
       return out;
     }
@@ -744,11 +739,8 @@ namespace cytnx {
 
     template <>
     Tensor Mod<Scalar>(const Tensor &Lt, const Scalar &rc) {
-      Storage Cnst;
-      // Cnst.at<cytnx_bool>(0) = rc;
-
-      Cnst._impl->Mem = rc._impl->get_raw_address();
-      Cnst._impl->len = 1;
+      Storage Cnst(1, rc.dtype());
+      Cnst.set_item(0, rc);
 
       Tensor out;
       out._impl = Lt._impl->_clone_meta_only();
@@ -771,9 +763,6 @@ namespace cytnx {
                         "\n");
   #endif
       }
-
-      // swap back to prevent also free by recycle mech.
-      Cnst._impl->Mem = nullptr;
 
       return out;
     }

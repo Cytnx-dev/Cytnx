@@ -347,11 +347,8 @@ namespace cytnx {
 
     template <>
     Tensor Cpr<Scalar>(const Scalar &lc, const Tensor &Rt) {
-      Storage Cnst;
-      // Cnst.at<cytnx_bool>(0) = lc;
-
-      Cnst._impl->Mem = lc._impl->get_raw_address();
-      Cnst._impl->len = 1;
+      Storage Cnst(1, lc.dtype());
+      Cnst.set_item(0, lc);
 
       Tensor out(Rt.shape(), Type.Bool, Rt.device());
 
@@ -370,7 +367,6 @@ namespace cytnx {
                         "\n");
   #endif
       }
-      Cnst._impl->Mem = nullptr;
 
       return out;
     }
