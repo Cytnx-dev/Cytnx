@@ -1,5 +1,5 @@
-#ifndef BACKEND_LINALG_INTERNAL_CPU_SUM_INTERNAL_H_
-#define BACKEND_LINALG_INTERNAL_CPU_SUM_INTERNAL_H_
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_CPU_SUM_INTERNAL_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_CPU_SUM_INTERNAL_H_
 
 #include "boost/smart_ptr/intrusive_ptr.hpp"
 
@@ -34,4 +34,4 @@ namespace cytnx {
   }  // namespace linalg_internal
 }  // namespace cytnx
 
-#endif  // BACKEND_LINALG_INTERNAL_CPU_SUM_INTERNAL_H_
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_CPU_SUM_INTERNAL_H_

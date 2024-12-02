@@ -95,6 +95,9 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 # #####################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
+# C++ uses link-time optimization anyway; this enables additionally -flto=auto, for parallel compilation
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
 set_property(TARGET cytnx PROPERTY VISIBILITY_INLINES_HIDDEN ON)

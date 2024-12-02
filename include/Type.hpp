@@ -1,15 +1,17 @@
-#ifndef _H_TYPE_
-#define _H_TYPE_
+#ifndef CYTNX_TYPE_H_
+#define CYTNX_TYPE_H_
 
-#include <string>
 #include <complex>
+#include <cstdint>
+#include <string>
+#include <type_traits>
+#include <tuple>
+#include <array>
+#include <utility>
 #include <vector>
-#include <stdint.h>
-#include <climits>
-#include <typeinfo>
-#include <unordered_map>
-#include <typeindex>
-#include "cytnx_error.hpp"
+#include <variant>
+
+#include "cytnx_error.hpp"  // also brings in cuComplex.h
 
 #define MKL_Complex8 std::complex<float>
 #define MKL_Complex16 std::complex<double>
@@ -27,22 +29,8 @@ typedef int32_t blas_int;
 
 #endif
 
+// @cond
 namespace cytnx {
-  // // using namespace boost::container;
-
-  // //This option specifies the desired alignment for the internal value_type
-  // typedef boost::container::small_vector_options<boost::container::inplace_alignment<16u>>::type
-  // alignment_16_option_t;
-  // // //This option specifies that a vector will increase its capacity 50%
-  // // //each time the previous capacity was exhausted.
-  // // typedef small_vector_options< growth_factor<growth_factor_50> >::type growth_50_option_t;
-  // // //Check 16 byte alignment option
-  // // small_vector<int, 10, void, alignment_16_option_t > sv;
-  // // //Fill the vector until full capacity is reached
-  // // small_vector<int, 10, void, growth_50_option_t > growth_50_vector(10, 0);
-
-  // template <class T, size_t N = 16>
-  // using smallvec = boost::container::small_vector<T, N>;
 
   template <class T>
   using vec3d = std::vector<std::vector<std::vector<T>>>;
@@ -63,27 +51,172 @@ namespace cytnx {
   typedef std::complex<double> cytnx_complex128;
   typedef bool cytnx_bool;
 
-  /// @cond
-  struct __type {
-    enum __pybind_type {
-      Void,
-      ComplexDouble,
-      ComplexFloat,
-      Double,
-      Float,
-      Int64,
-      Uint64,
-      Int32,
-      Uint32,
-      Int16,
-      Uint16,
-      Bool,
-    };
+  namespace internal {
+    template <class>
+    struct is_complex_impl : std::false_type {};
+
+    template <class T>
+    struct is_complex_impl<std::complex<T>> : std::true_type {};
+
+    template <typename>
+    struct is_complex_floating_point_impl : std::false_type {};
+
+    template <typename T>
+    struct is_complex_floating_point_impl<std::complex<T>> : std::is_floating_point<T> {};
+
+    template <std::size_t I, typename T, typename Tuple>
+    constexpr std::size_t index_in_tuple_helper() {
+      static_assert(I < std::tuple_size_v<Tuple>, "Type not found!");
+      if constexpr (std::is_same_v<T, std::tuple_element_t<I, Tuple>>) {
+        return I;
+      } else {
+        return index_in_tuple_helper<I + 1, T, Tuple>();
+      }
+    }
+
+  }  // namespace internal
+
+  // helper metafunction to transform a variant into another variant via a
+  // transform template alias
+  template <typename V, template <typename> class Transform>
+  struct make_variant_from_transform;
+
+  template <template <typename> class Transform, typename... Args>
+  struct make_variant_from_transform<std::variant<Args...>, Transform> {
+    using type = std::variant<typename Transform<Args>::type...>;
   };
 
+  // helper type alias for make_variant_from_transform
+  template <typename V, template <typename> class Transform>
+  using make_variant_from_transform_t = typename make_variant_from_transform<V, Transform>::type;
+
+  template <typename T>
+  using is_complex = internal::is_complex_impl<std::remove_cv_t<T>>;
+
+  template <typename T>
+  using is_complex_floating_point = internal::is_complex_floating_point_impl<std::remove_cv_t<T>>;
+
+  // is_complex_v checks if a data type is of type std::complex
+  // usage: is_complex_v<T> returns true or false for a data type T
+  template <typename T>
+  constexpr bool is_complex_v = is_complex<T>::value;
+
+  // is_complex_floating_point_v<T> is a template constant that is true if T is of type complex<U>
+  // where U is a floating point type, and false otherwise.
+  template <typename T>
+  constexpr bool is_complex_floating_point_v = is_complex_floating_point<T>::value;
+
+  // variant_index<T, Variant> returns the index of type T in the Variant, or compile error if not
+  // found
+  template <typename T, typename Variant>
+  struct variant_index;
+
+  template <typename T, typename... Types>
+  struct variant_index<T, std::variant<Types...>> {
+    static constexpr size_t value = std::variant_size_v<std::variant<Types...>>;
+  };
+
+  template <typename T, typename... Types>
+  struct variant_index<T, std::variant<T, Types...>> {
+    static constexpr size_t value = 0;
+  };
+
+  template <typename T, typename U, typename... Types>
+  struct variant_index<T, std::variant<U, Types...>> {
+    static constexpr size_t value = 1 + variant_index<T, std::variant<Types...>>::value;
+  };
+
+  // helper template variable
+  template <typename T, typename Variant>
+  static constexpr size_t variant_index_v = variant_index<T, Variant>::value;
+
+  namespace internal {
+    // type_size returns the sizeof(T) for the supported types. This is the same as
+    // sizeof(T), except that size_type<void> is 0.
+    template <typename T>
+    constexpr int type_size = sizeof(T);
+    template <>
+    constexpr int type_size<void> = 0;
+  }  // namespace internal
+
+  // the list of supported types. The dtype() of an object is an index into this list.
+  // std::variant works better than std::tuple here since a variant is constrained to only
+  // hold each type once, and we have std::variant_alternative_t<n> to get the n'th type,
+  // as well as the variant_index_v helper to get the index of a given type
+  using Type_list =
+    std::variant<void, cytnx_complex128, cytnx_complex64, cytnx_double, cytnx_float, cytnx_int64,
+                 cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
+
+  // For GPU storage, the types are slightly different because CUDA uses their own complex type
+#ifdef UNI_GPU
+  using Type_list_gpu =
+    std::variant<void, cuDoubleComplex, cuComplex, cytnx_double, cytnx_float, cytnx_int64,
+                 cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
+#endif
+
+  // The number of supported types
+  constexpr int N_Type = std::variant_size_v<Type_list>;
+  constexpr int N_fType = 5;
+
+  // The friendly name of each type
+  template <typename T>
+  constexpr char* Type_names = nullptr;
+  template <>
+  constexpr const char* Type_names<void> = "Void";
+  template <>
+  constexpr const char* Type_names<cytnx_complex128> = "Complex Double (Complex Float64)";
+  template <>
+  constexpr const char* Type_names<cytnx_complex64> = "Complex Float (Complex Float32)";
+  template <>
+  constexpr const char* Type_names<cytnx_double> = "Double (Float64)";
+  template <>
+  constexpr const char* Type_names<cytnx_float> = "Float (Float32)";
+  template <>
+  constexpr const char* Type_names<cytnx_int64> = "Int64";
+  template <>
+  constexpr const char* Type_names<cytnx_uint64> = "Uint64";
+  template <>
+  constexpr const char* Type_names<cytnx_int32> = "Int32";
+  template <>
+  constexpr const char* Type_names<cytnx_uint32> = "Uint32";
+  template <>
+  constexpr const char* Type_names<cytnx_int16> = "Int16";
+  template <>
+  constexpr const char* Type_names<cytnx_uint16> = "Uint16";
+  template <>
+  constexpr const char* Type_names<cytnx_bool> = "Bool";
+
+  // The corresponding Python enumeration name
+  template <typename T>
+  constexpr char* Type_enum_name = nullptr;
+  template <>
+  constexpr const char* Type_enum_name<void> = "Void";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_complex128> = "ComplexDouble";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_complex64> = "ComplexFloat";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_double> = "Double";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_float> = "Float";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_int64> = "Int64";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_uint64> = "Uint64";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_int32> = "Int32";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_uint32> = "Uint32";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_int16> = "Int16";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_uint16> = "Uint16";
+  template <>
+  constexpr const char* Type_enum_name<cytnx_bool> = "Bool";
+
   struct Type_struct {
-    std::string name;
-    // char name[35];
+    const char* name;  // char* is OK here, it is only ever initialized from a string literal
+    const char* enum_name;
     bool is_unsigned;
     bool is_complex;
     bool is_float;
@@ -91,97 +224,176 @@ namespace cytnx {
     unsigned int typeSize;
   };
 
-  static const int N_Type = 12;
-  const int N_fType = 5;
+  template <typename T>
+  struct Type_struct_t {
+    static constexpr unsigned int cy_typeid = variant_index_v<T, Type_list>;
+#ifdef UNI_GPU
+    static constexpr unsigned int cy_typeid_gpu = variant_index_v<T, Type_list_gpu>;
+#endif
+    static constexpr const char* name = Type_names<T>;
+    static constexpr const char* enum_name = Type_enum_name<T>;
+    static constexpr bool is_complex = is_complex_v<T>;
+    static constexpr bool is_unsigned = std::is_unsigned_v<T>;
+    static constexpr bool is_float = std::is_floating_point_v<T> || is_complex_floating_point_v<T>;
+    static constexpr bool is_int = std::is_integral_v<T> && !std::is_same_v<T, bool>;
+    static constexpr std::size_t typeSize = internal::type_size<T>;
+
+    static constexpr Type_struct construct() {
+      return {name, enum_name, is_unsigned, is_complex, is_float, is_int, typeSize};
+    }
+  };
+
+  namespace internal {
+    template <typename Variant, std::size_t... Indices>
+    constexpr auto make_type_array_helper(std::index_sequence<Indices...>) {
+      return std::array<Type_struct, sizeof...(Indices)>{
+        Type_struct_t<std::variant_alternative_t<Indices, Variant>>::construct()...};
+    }
+    template <typename Variant>
+    constexpr auto make_type_array() {
+      return make_type_array_helper<Variant>(
+        std::make_index_sequence<std::variant_size_v<Variant>>());
+    }
+  }  // namespace internal
 
   class Type_class {
    private:
    public:
-    enum : unsigned int {
-      Void,
-      ComplexDouble,
-      ComplexFloat,
-      Double,
-      Float,
-      Int64,
-      Uint64,
-      Int32,
-      Uint32,
-      Int16,
-      Uint16,
-      Bool
+    // Typeinfos is a std::array<Type_struct> for each type in Type_list
+    static constexpr auto Typeinfos = internal::make_type_array<Type_list>();
+
+    template <typename T>
+    static constexpr unsigned int cy_typeid_v = variant_index_v<T, Type_list>;
+
+#ifdef UNI_GPU
+    template <typename T>
+    static constexpr unsigned int cy_typeid_gpu_v = variant_index_v<T, Type_list_gpu>;
+#endif
+
+    enum Type : unsigned int {
+      Void = cy_typeid_v<void>,
+      ComplexDouble = cy_typeid_v<cytnx_complex128>,
+      ComplexFloat = cy_typeid_v<cytnx_complex64>,
+      Double = cy_typeid_v<cytnx_double>,
+      Float = cy_typeid_v<cytnx_float>,
+      Int64 = cy_typeid_v<cytnx_int64>,
+      Uint64 = cy_typeid_v<cytnx_uint64>,
+      Int32 = cy_typeid_v<cytnx_int32>,
+      Uint32 = cy_typeid_v<cytnx_uint32>,
+      Int16 = cy_typeid_v<cytnx_int16>,
+      Uint16 = cy_typeid_v<cytnx_uint16>,
+      Bool = cy_typeid_v<cytnx_bool>
     };
-    // std::vector<Type_struct> Typeinfos;
-    inline static Type_struct Typeinfos[N_Type];
-    inline static bool inited = false;
-    Type_class &operator=(const Type_class &rhs) {
-      for (int i = 0; i < N_Type; i++) this->Typeinfos[i] = rhs.Typeinfos[i];
-      return *this;
+
+    static constexpr void check_type(unsigned int type_id) {
+      cytnx_error_msg(type_id >= N_Type, "[ERROR] invalid type_id: %s", type_id);
     }
 
-    Type_class() {
-      // #ifdef DEBUG
-      //   std::cout << "[DEBUG] Type constructor call. " << std::endl;
-      // #endif
-      if (!inited) {
-        Typeinfos[this->Void] = (Type_struct){"Void", true, false, false, false, 0};
-        Typeinfos[this->ComplexDouble] = (Type_struct){
-          "Complex Double (Complex Float64)", false, true, true, false, sizeof(cytnx_complex128)};
-        Typeinfos[this->ComplexFloat] = (Type_struct){
-          "Complex Float (Complex Float32)", false, true, true, false, sizeof(cytnx_complex64)};
-        Typeinfos[this->Double] =
-          (Type_struct){"Double (Float64)", false, false, true, false, sizeof(cytnx_double)};
-        Typeinfos[this->Float] =
-          (Type_struct){"Float (Float32)", false, false, true, false, sizeof(cytnx_float)};
-        Typeinfos[this->Int64] =
-          (Type_struct){"Int64", false, false, false, true, sizeof(cytnx_int64)};
-        Typeinfos[this->Uint64] =
-          (Type_struct){"Uint64", true, false, false, true, sizeof(cytnx_uint64)};
-        Typeinfos[this->Int32] =
-          (Type_struct){"Int32", false, false, false, true, sizeof(cytnx_int32)};
-        Typeinfos[this->Uint32] =
-          (Type_struct){"Uint32", true, false, false, true, sizeof(cytnx_uint32)};
-        Typeinfos[this->Int16] =
-          (Type_struct){"Int16", false, false, false, true, sizeof(cytnx_int16)};
-        Typeinfos[this->Uint16] =
-          (Type_struct){"Uint16", true, false, false, true, sizeof(cytnx_uint16)};
-        Typeinfos[this->Bool] =
-          (Type_struct){"Bool", true, false, false, false, sizeof(cytnx_bool)};
+    // This could be constexpr returning constexpr char*, but there is lots of code that
+    // assumes that it returns a std::string and calls getname(n).c_str()
+    static std::string getname(unsigned int type_id) {
+      check_type(type_id);
+      return Typeinfos[type_id].name;
+    }
+    // This cannot be constexpr as we define it in a .cpp file,
+    // and typeid(T).name() is not constexpr
+    static unsigned int c_typename_to_id(const std::string& c_name);
+    static char const* enum_name(unsigned int type_id) {
+      check_type(type_id);
+      return Typeinfos[type_id].enum_name;
+    }
+    static constexpr unsigned int typeSize(unsigned int type_id) {
+      check_type(type_id);
+      return Typeinfos[type_id].typeSize;
+    }
+    static constexpr bool is_unsigned(unsigned int type_id) {
+      check_type(type_id);
+      return Typeinfos[type_id].is_unsigned;
+    }
+    static constexpr bool is_complex(unsigned int type_id) {
+      check_type(type_id);
+      return Typeinfos[type_id].is_complex;
+    }
+    static constexpr bool is_float(unsigned int type_id) {
+      check_type(type_id);
+      return Typeinfos[type_id].is_float;
+    }
+    static constexpr bool is_int(unsigned int type_id) {
+      check_type(type_id);
+      return Typeinfos[type_id].is_int;
+    }
 
-        inited = true;
+    template <class T>
+    static constexpr unsigned int cy_typeid(const T& rc) {
+      return cy_typeid_v<T>;
+    }
+
+    // Find a common type for typeL and typeR
+    static constexpr unsigned int type_promote(unsigned int typeL, unsigned int typeR) {
+      if (typeL < typeR) {
+        if (typeL == 0) return 0;
+
+        if (!is_unsigned(typeR) && is_unsigned(typeL)) {
+          return typeL - 1;
+        } else {
+          return typeL;
+        }
+      } else {
+        if (typeR == 0) return 0;
+        if (!is_unsigned(typeL) && is_unsigned(typeR)) {
+          return typeR - 1;
+        } else {
+          return typeR;
+        }
       }
     }
-    const std::string &getname(const unsigned int &type_id) const;
-    unsigned int c_typename_to_id(const std::string &c_name) const;
-    unsigned int typeSize(const unsigned int &type_id) const;
-    bool is_unsigned(const unsigned int &type_id) const;
-    bool is_complex(const unsigned int &type_id) const;
-    bool is_float(const unsigned int &type_id) const;
-    bool is_int(const unsigned int &type_id) const;
-    // int c_typeindex_to_id(const std::type_index &type_idx);
-    template <class T>
-    unsigned int cy_typeid(const T &rc) const {
-      cytnx_error_msg(true, "[ERROR] invalid type%s", "\n");
-      return 0;
-    }
-    static unsigned int cy_typeid(const cytnx_complex128 &rc) { return Type_class::ComplexDouble; }
-    static unsigned int cy_typeid(const cytnx_complex64 &rc) { return Type_class::ComplexFloat; }
-    static unsigned int cy_typeid(const cytnx_double &rc) { return Type_class::Double; }
-    static unsigned int cy_typeid(const cytnx_float &rc) { return Type_class::Float; }
-    static unsigned int cy_typeid(const cytnx_uint64 &rc) { return Type_class::Uint64; }
-    static unsigned int cy_typeid(const cytnx_int64 &rc) { return Type_class::Int64; }
-    static unsigned int cy_typeid(const cytnx_uint32 &rc) { return Type_class::Uint32; }
-    static unsigned int cy_typeid(const cytnx_int32 &rc) { return Type_class::Int32; }
-    static unsigned int cy_typeid(const cytnx_uint16 &rc) { return Type_class::Uint16; }
-    static unsigned int cy_typeid(const cytnx_int16 &rc) { return Type_class::Int16; }
-    static unsigned int cy_typeid(const cytnx_bool &rc) { return Type_class::Bool; }
 
-    unsigned int type_promote(const unsigned int &typeL, const unsigned int &typeR);
-  };
-  /// @endcond
+    // type metafunction for type promotion
+    template <typename TL, typename TR>
+    using type_promote_t =
+      std::variant_alternative_t<Type_class::type_promote(variant_index_v<TL, Type_list>,
+                                                          variant_index_v<TR, Type_list>),
+                                 Type_list>;
 
-  /// @cond
-  int type_promote(const int &typeL, const int &typeR);
+    // Helper to promote two pointer types (note does _not_ return another pointer type)
+    template <typename TL, typename TR>
+    struct type_promote_from_pointer {
+      using type = void;
+    };
+
+    template <typename TL, typename TR>
+    struct type_promote_from_pointer<TL*, TR*> {
+      using type = type_promote_t<std::decay_t<TL>, std::decay_t<TR>>;
+    };
+
+    // helper typedef
+    template <typename TL, typename TR>
+    using type_promote_from_pointer_t = typename type_promote_from_pointer<TL, TR>::type;
+
+#ifdef UNI_GPU
+    // .. and we need a version where TL and TR are GPU device pointers
+    template <typename TL, typename TR>
+    using type_promote_gpu_t =
+      std::variant_alternative_t<Type_class::type_promote(variant_index_v<TL, Type_list_gpu>,
+                                                          variant_index_v<TR, Type_list_gpu>),
+                                 Type_list_gpu>;
+
+    template <typename TL, typename TR>
+    struct type_promote_from_gpu_pointer {
+      using type = void;
+    };
+
+    template <typename TL, typename TR>
+    struct type_promote_from_gpu_pointer<TL*, TR*> {
+      using type = type_promote_gpu_t<std::decay_t<TL>, std::decay_t<TR>>;
+    };
+
+    // helper typedef
+    template <typename TL, typename TR>
+    using type_promote_from_gpu_pointer_t = typename type_promote_from_gpu_pointer<TL, TR>::type;
+#endif
+
+  };  // Type_class
   /// @endcond
 
   /**
@@ -210,8 +422,8 @@ namespace cytnx {
    *  Uint16       |  undigned short integer with 16 bits
    *  Bool         |  boolean type
    */
-  extern Type_class Type;  // move to cytnx.hpp and guarded
-  // static const Type_class Type = Type_class();
+
+  constexpr Type_class Type;
 
   extern int __blasINTsize__;
 
@@ -219,4 +431,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_TYPE_H_

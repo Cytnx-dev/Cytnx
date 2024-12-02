@@ -1,5 +1,5 @@
-#ifndef __Accessor_H_
-#define __Accessor_H_
+#ifndef CYTNX_ACCESSOR_H_
+#define CYTNX_ACCESSOR_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -191,4 +191,4 @@ namespace cytnx {
 
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_ACCESSOR_H_

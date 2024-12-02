@@ -1,29 +1,39 @@
-#ifndef _H_Fill_cpu_
-#define _H_Fill_cpu_
+#ifndef CYTNX_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_
+#define CYTNX_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_
 
-#include <cstdio>
-#include <cstdlib>
-#include <stdint.h>
-#include <climits>
 #include "Type.hpp"
-#include "backend/Storage.hpp"
-#include "cytnx_error.hpp"
+
+#ifdef UNI_OMP
+  #include <omp.h>
+#endif
+
 namespace cytnx {
   namespace utils_internal {
 
-    void Fill_cpu_cd(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_cf(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_d(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_f(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_i64(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_u64(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_i32(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_u32(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_u16(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_i16(void *in, void *val, const cytnx_uint64 &Nelem);
-    void Fill_cpu_b(void *in, void *val, const cytnx_uint64 &Nelem);
+    /**
+     * @brief Assign the given value to the first `count` elements in the range beginning at
+     * `first`.
+     *
+     * This function act the same as `std::fill_n`. The execution will be parallelized when OMP is
+     * enabled.
+     *
+     * @tparam DType the data type of the elements in the range
+     *
+     * @param first the beginning of the range
+     * @param value the value to be assigned
+     * @param count the number of elements to modify
+     */
+    template <typename DType>
+    void FillCpu(void *first, const DType &value, cytnx_uint64 count) {
+      DType *typed_first = reinterpret_cast<DType *>(first);
+#ifdef UNI_OMP
+  #pragma omp parallel for schedule(static)
+#endif
+      for (cytnx_uint64 i = 0; i < count; i++) {
+        typed_first[i] = value;
+      }
+    }
   }  // namespace utils_internal
-
 }  // namespace cytnx
 
-#endif
+#endif  // CYTNX_BACKEND_UTILS_INTERNAL_CPU_FILL_CPU_H_

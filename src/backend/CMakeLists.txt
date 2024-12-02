@@ -21,17 +21,7 @@ target_sources_local(cytnx
     Scalar.cpp
     Storage.cpp
     Storage_base.cpp
-    ComplexDoubleStorage.cpp
-    ComplexFloatStorage.cpp
-    DoubleStorage.cpp
-    FloatStorage.cpp
-    Uint64Storage.cpp
-    Int64Storage.cpp
-    Uint32Storage.cpp
-    Int32Storage.cpp
-    Uint16Storage.cpp
-    Int16Storage.cpp
-    BoolStorage.cpp
+    StorageImplementation.cpp
 
     Tensor_impl.cpp
 )

@@ -1,5 +1,5 @@
-#ifndef __H_cartesian_
-#define __H_cartesian_
+#ifndef CYTNX_UTILS_CARTESIAN_H_
+#define CYTNX_UTILS_CARTESIAN_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -11,4 +11,5 @@ namespace cytnx {
                                         const std::vector<cytnx_uint64> &accu_shape);
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_CARTESIAN_H_
