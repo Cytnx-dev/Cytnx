@@ -22,28 +22,26 @@ namespace DetTest {
   ====================*/
   TEST(Det, allDType) {
     for (auto device : device_list) {  // now only test for cpu device.
-      for (auto dtype1 : dtype_list) {
-        for (auto dtype2 : dtype_list) {
-          Tensor T = Tensor({6, 6}, dtype1, device);
-          InitTensorUniform(T, rand_seed1 = 3);
-          ExcuteDetTest(T);
+      for (auto dtype : dtype_list) {
+        Tensor T = Tensor({6, 6}, dtype, device);
+        InitTensorUniform(T, rand_seed1 = 3);
+        ExcuteDetTest(T);
 
-          T = Tensor({2, 2}, dtype1, device);
-          InitTensorUniform(T, rand_seed1 = 3);
-          ExcuteDetTest(T);
+        T = Tensor({2, 2}, dtype, device);
+        InitTensorUniform(T, rand_seed1 = 3);
+        ExcuteDetTest(T);
 
-          T = Tensor({1, 1}, dtype1, device);
-          InitTensorUniform(T, rand_seed1 = 3);
-          ExcuteDetTest(T);
+        T = Tensor({1, 1}, dtype, device);
+        InitTensorUniform(T, rand_seed1 = 3);
+        ExcuteDetTest(T);
 
-          T = Tensor({3, 3}, dtype1, device);
-          InitTensorUniform(T, rand_seed1 = 3);
-          ExcuteDetTest(T);
+        T = Tensor({3, 3}, dtype, device);
+        InitTensorUniform(T, rand_seed1 = 3);
+        ExcuteDetTest(T);
 
-          T = Tensor({4, 4}, dtype1, device);
-          InitTensorUniform(T, rand_seed1 = 3);
-          ExcuteDetTest(T);
-        }
+        T = Tensor({4, 4}, dtype, device);
+        InitTensorUniform(T, rand_seed1 = 3);
+        ExcuteDetTest(T);
       }
     }
   }
@@ -99,10 +97,6 @@ namespace DetTest {
   Tensor ConstructExpectTens(const Tensor& T) {
     Tensor dst_T = zeros(1, T.dtype(), T.device());
     int n = T.shape()[0];
-    ASSERT_TRUE(T.shape().size() != 2);
-    for (auto s : T.shape()) {
-      ASSERT_TRUE(s != n);
-    }
     if (n == 1) {
       dst_T.at({0}) = T.at({0, 0});
       return dst_T;
