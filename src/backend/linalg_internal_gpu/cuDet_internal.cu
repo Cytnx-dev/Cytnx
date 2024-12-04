@@ -34,7 +34,9 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      cytnx_error_msg(info != 0, "[ERROR] cusolverDnZgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info < 0, "[ERROR] cusolverDnZgetrf fail with info= %d\n", info);
+      // TODO: info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is
+      // zero. The steps below can be skipped.
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
@@ -79,7 +81,9 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      cytnx_error_msg(info != 0, "[ERROR] cusolverDnCgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info < 0, "[ERROR] cusolverDnCgetrf fail with info= %d\n", info);
+      // TODO: info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is
+      // zero. The steps below can be skipped.
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
@@ -124,7 +128,9 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      cytnx_error_msg(info != 0, "[ERROR] cusolverDnDgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info < 0, "[ERROR] cusolverDnDgetrf fail with info= %d\n", info);
+      // TODO: info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is
+      // zero. The steps below can be skipped.
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
@@ -169,7 +175,9 @@ namespace cytnx {
 
       int info;
       checkCudaErrors(cudaMemcpy(&info, devInfo, sizeof(int), cudaMemcpyDeviceToHost));
-      cytnx_error_msg(info != 0, "[ERROR] cusolverDnSgetrf fail with info= %d\n", info);
+      cytnx_error_msg(info < 0, "[ERROR] cusolverDnSgetrf fail with info= %d\n", info);
+      // TODO: info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is
+      // zero. The steps below can be skipped.
 
       // since we do unify mem, direct access element is possible:
       od[0] = 1;
