@@ -16,61 +16,23 @@ namespace cytnx {
 
   using IndexSet = std::bitset<128>;
 
-  class TreeNode {
-   public:
-    TreeNode(int tensor_idx = -1) : tensor_index(tensor_idx), left(nullptr), right(nullptr) {}
-    bool isLeaf() const { return left == nullptr && right == nullptr; }
-    int getTensorIndex() const { return tensor_index; }
-    TreeNode* getLeft() const { return left; }
-    TreeNode* getRight() const { return right; }
-    void setChildren(TreeNode* l, TreeNode* r) {
-      left = l;
-      right = r;
-    }
-
-   private:
-    int tensor_index;
-    TreeNode* left;
-    TreeNode* right;
-  };
-
-  class OptimalTreeResult {
-   public:
-    OptimalTreeResult(TreeNode* tree = nullptr) : tree(tree) {}
-    const TreeNode* getTree() const { return tree.get(); }
-
-   private:
-    std::unique_ptr<TreeNode> tree;
-  };
-
-  namespace OptimalTreeSolver {
-    OptimalTreeResult solve(const std::vector<std::vector<int>>& network,
-                            const std::unordered_map<int, int64_t>& dimensions,
-                            bool verbose = false);
-  }
-
   class PseudoUniTensor {
    public:
     bool isLeaf;
-    union {
-      // Leaf node data (tensor info)
-      struct {
-        std::vector<std::string> labels;
-        std::vector<cytnx_uint64> shape;
-        bool is_assigned;
-        cytnx_uint64 tensorIndex;  // Added for optimaltree compatibility
-      };
-      // Internal node data (tree structure)
-      struct {
-        std::unique_ptr<PseudoUniTensor> left;
-        std::unique_ptr<PseudoUniTensor> right;
-      };
-    };
+
+    // Leaf node data
+    std::vector<std::string> labels;
+    std::vector<cytnx_uint64> shape;
+    bool is_assigned;
+    cytnx_uint64 tensorIndex;
+
+    // Internal node data
+    std::unique_ptr<PseudoUniTensor> left;
+    std::unique_ptr<PseudoUniTensor> right;
 
     cytnx_float cost;
     cytnx_uint64 ID;
     std::string accu_str;
-    std::shared_ptr<PseudoUniTensor> root;  // For tracking the root during construction
 
     // Constructors
     explicit PseudoUniTensor(cytnx_uint64 index = 0)
@@ -90,20 +52,25 @@ namespace cytnx {
     void clear_utensor();
   };
 
+  namespace OptimalTreeSolver {
+    std::unique_ptr<PseudoUniTensor> solve(const std::vector<PseudoUniTensor>& tensors,
+                                           bool verbose = false);
+  }
+
   class SearchTree {
    public:
     std::unique_ptr<PseudoUniTensor> root;
     std::vector<PseudoUniTensor> base_nodes;
 
     SearchTree() = default;
-
     void clear() {
       root.reset();
       base_nodes.clear();
     }
-
     void reset_search_order() { root.reset(); }
     void search_order();
+
+    std::vector<std::vector<PseudoUniTensor*>> get_nodes() const;
   };
 
   // Helper functions declarations

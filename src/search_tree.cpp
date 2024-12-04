@@ -44,7 +44,7 @@ namespace cytnx {
   }
 
   PseudoUniTensor pContract(PseudoUniTensor& t1, PseudoUniTensor& t2) {
-    PseudoUniTensor t3;
+    PseudoUniTensor t3(0);  // Initialize with index 0
     t3.ID = t1.ID ^ t2.ID;
     t3.cost = get_cost(t1, t2);
     vector<cytnx_uint64> loc1, loc2;
@@ -56,41 +56,131 @@ namespace cytnx {
     return t3;
   }
 
-  TreeNode::TreeNode(int tensor_idx) : tensor_index(tensor_idx), left(nullptr), right(nullptr) {}
-
-  bool TreeNode::isLeaf() const { return left == nullptr && right == nullptr; }
-
-  int TreeNode::getTensorIndex() const { return tensor_index; }
-
-  TreeNode* TreeNode::getLeft() const { return left; }
-
-  TreeNode* TreeNode::getRight() const { return right; }
-
-  void TreeNode::setChildren(TreeNode* l, TreeNode* r) {
-    left = l;
-    right = r;
-  }
-
-  OptimalTreeResult::OptimalTreeResult(TreeNode* t) : tree(t) {}
-
-  const TreeNode* OptimalTreeResult::getTree() const { return tree.get(); }
-
   namespace OptimalTreeSolver {
-    OptimalTreeResult solve(const std::vector<std::vector<int>>& network,
-                            const std::unordered_map<int, int64_t>& dimensions, bool verbose) {
-      std::vector<TreeNode*> nodes;
-      for (size_t i = 0; i < network.size(); ++i) {
-        nodes.push_back(new TreeNode(i));
+    // Helper function to find connected components using DFS
+    void dfs(size_t node, const std::vector<std::vector<bool>>& adjacencyMatrix,
+             std::vector<bool>& visited, std::vector<size_t>& component) {
+      visited[node] = true;
+      component.push_back(node);
+
+      for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
+        if (adjacencyMatrix[node][i] && !visited[i]) {
+          dfs(i, adjacencyMatrix, visited, component);
+        }
+      }
+    }
+
+    // Find connected components in the tensor network
+    std::vector<std::vector<size_t>> findConnectedComponents(
+      const std::vector<std::vector<bool>>& adjacencyMatrix) {
+      std::vector<std::vector<size_t>> components;
+      std::vector<bool> visited(adjacencyMatrix.size(), false);
+
+      for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
+        if (!visited[i]) {
+          std::vector<size_t> component;
+          dfs(i, adjacencyMatrix, visited, component);
+          components.push_back(component);
+        }
       }
 
-      while (nodes.size() > 1) {
-        TreeNode* parent = new TreeNode();
-        parent->setChildren(nodes[0], nodes[1]);
-        nodes.erase(nodes.begin(), nodes.begin() + 2);
-        nodes.insert(nodes.begin(), parent);
+      return components;
+    }
+
+    std::unique_ptr<PseudoUniTensor> solve(const std::vector<PseudoUniTensor>& tensors,
+                                           bool verbose) {
+      // Initialize nodes with copies of input tensors
+      std::vector<std::unique_ptr<PseudoUniTensor>> nodes;
+      for (size_t i = 0; i < tensors.size(); ++i) {
+        auto node = std::make_unique<PseudoUniTensor>(i);
+        *node = tensors[i];
+        node->ID = 1ULL << i;
+        nodes.push_back(std::move(node));
       }
 
-      return OptimalTreeResult(nodes[0]);
+      // Build adjacency matrix
+      std::vector<std::vector<bool>> adjacencyMatrix(nodes.size(),
+                                                     std::vector<bool>(nodes.size(), false));
+      for (size_t i = 0; i < nodes.size(); ++i) {
+        for (size_t j = i + 1; j < nodes.size(); ++j) {
+          vector<string> common_lbl;
+          vector<cytnx_uint64> comm_idx1, comm_idx2;
+          vec_intersect_(common_lbl, nodes[i]->labels, nodes[j]->labels, comm_idx1, comm_idx2);
+
+          if (!common_lbl.empty()) {
+            adjacencyMatrix[i][j] = true;
+            adjacencyMatrix[j][i] = true;
+          }
+        }
+      }
+
+      // Find connected components
+      auto components = findConnectedComponents(adjacencyMatrix);
+      if (verbose && components.size() > 1) {
+        std::cout << "Found " << components.size() << " disconnected components" << std::endl;
+      }
+
+      // Process each component separately
+      std::vector<std::unique_ptr<PseudoUniTensor>> component_results;
+      for (const auto& component : components) {
+        // Extract nodes for this component
+        std::vector<std::unique_ptr<PseudoUniTensor>> component_nodes;
+        std::vector<size_t> remaining_indices = component;
+
+        while (remaining_indices.size() > 1) {
+          // Find best contraction pair within component
+          size_t best_i = 0, best_j = 1;
+          cytnx_float min_cost = std::numeric_limits<cytnx_float>::max();
+
+          for (size_t ii = 0; ii < remaining_indices.size(); ++ii) {
+            size_t i = remaining_indices[ii];
+            for (size_t jj = ii + 1; jj < remaining_indices.size(); ++jj) {
+              size_t j = remaining_indices[jj];
+              if (adjacencyMatrix[i][j]) {
+                cytnx_float cost = get_cost(*nodes[i], *nodes[j]);
+                if (cost < min_cost) {
+                  min_cost = cost;
+                  best_i = ii;
+                  best_j = jj;
+                }
+              }
+            }
+          }
+
+          if (verbose) {
+            std::cout << "Contracting nodes " << remaining_indices[best_i] << " and "
+                      << remaining_indices[best_j] << " with cost " << min_cost << std::endl;
+          }
+
+          // Contract best pair
+          auto left = std::move(nodes[remaining_indices[best_i]]);
+          auto right = std::move(nodes[remaining_indices[best_j]]);
+          auto result = std::make_unique<PseudoUniTensor>(std::move(left), std::move(right));
+
+          // Update remaining indices
+          remaining_indices.erase(remaining_indices.begin() + best_j);
+          remaining_indices.erase(remaining_indices.begin() + best_i);
+
+          // Store result in original nodes vector
+          size_t new_idx = nodes.size();
+          nodes.push_back(std::move(result));
+          remaining_indices.push_back(new_idx);
+        }
+
+        // Store the component result
+        component_results.push_back(std::move(nodes[remaining_indices[0]]));
+      }
+
+      // If there were multiple components, combine them
+      while (component_results.size() > 1) {
+        auto left = std::move(component_results[0]);
+        auto right = std::move(component_results[1]);
+        auto result = std::make_unique<PseudoUniTensor>(std::move(left), std::move(right));
+        component_results.erase(component_results.begin(), component_results.begin() + 2);
+        component_results.insert(component_results.begin(), std::move(result));
+      }
+
+      return std::move(component_results[0]);
     }
   }  // namespace OptimalTreeSolver
 
@@ -100,62 +190,8 @@ namespace cytnx {
       cytnx_error_msg(true, "[ERROR][SearchTree] no base node exist.%s", "\n");
     }
 
-    // Convert base_nodes to network format
-    std::vector<std::vector<int>> network;
-    std::unordered_map<int, int64_t> optdata;
-    std::unordered_map<std::string, int> label_to_index;
-    int next_index = 0;
-
-    // First pass: collect all unique labels and assign indices
-    for (const auto& node : base_nodes) {
-      for (const auto& label : node.labels) {
-        if (label_to_index.find(label) == label_to_index.end()) {
-          label_to_index[label] = next_index++;
-          // Use actual dimension from shape if available
-          size_t pos =
-            std::find(node.labels.begin(), node.labels.end(), label) - node.labels.begin();
-          optdata[next_index - 1] = (pos < node.shape.size()) ? node.shape[pos] : 2;
-        }
-      }
-    }
-
-    // Second pass: convert nodes to network format
-    for (size_t i = 0; i < base_nodes.size(); i++) {
-      const auto& node = base_nodes[i];
-      std::vector<int> tensor_indices;
-      for (const auto& label : node.labels) {
-        tensor_indices.push_back(label_to_index[label]);
-      }
-      network.push_back(tensor_indices);
-
-      // Set ID for each base node
-      base_nodes[i].ID = 1ULL << i;
-    }
-
-    // Run optimal tree solver
-    auto result = OptimalTreeSolver::solve(network, optdata, false);
-
-    // Convert the result back to PseudoUniTensor format
-    std::function<std::unique_ptr<PseudoUniTensor>(const TreeNode*)> convert_tree;
-    convert_tree = [&](const TreeNode* node) -> std::unique_ptr<PseudoUniTensor> {
-      if (node->isLeaf()) {
-        auto tensor = std::make_unique<PseudoUniTensor>();
-        *tensor = base_nodes[node->getTensorIndex()];
-        tensor->accu_str = std::to_string(node->getTensorIndex());
-        return tensor;
-      } else {
-        auto left = convert_tree(node->getLeft());
-        auto right = convert_tree(node->getRight());
-        auto result = pContract(*left, *right);
-        auto new_node = std::make_unique<PseudoUniTensor>();
-        *new_node = std::move(result);
-        new_node->accu_str = "(" + left->accu_str + "," + right->accu_str + ")";
-        return new_node;
-      }
-    };
-
-    // Convert and store the result
-    root = convert_tree(result.getTree());
+    // Run optimal tree solver directly with base_nodes
+    root = OptimalTreeSolver::solve(base_nodes, false);
   }
 
 }  // namespace cytnx
