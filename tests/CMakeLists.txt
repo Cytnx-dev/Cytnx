@@ -40,6 +40,7 @@ add_executable(
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
+  random_test/uniform_test.cpp
 )
 
 if(USE_CUDA)
