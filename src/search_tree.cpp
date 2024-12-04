@@ -8,33 +8,20 @@ using namespace std;
 
 namespace cytnx {
   // helper functions
-  int64_t addCost(int64_t cost1, int64_t cost2) {
-    if (cost1 > std::numeric_limits<int64_t>::max() - cost2) {
-      throw std::overflow_error("Cost addition overflow");
-    }
-    return cost1 + cost2;
-  }
-
-  int64_t mulCost(int64_t cost1, int64_t cost2) {
-    if (cost2 != 0 && cost1 > std::numeric_limits<int64_t>::max() / cost2) {
-      throw std::overflow_error("Cost multiplication overflow");
-    }
-    return cost1 * cost2;
-  }
-
-  int64_t computeCost(const std::vector<int64_t> &allCosts, const IndexSet &ind1,
-                      const IndexSet &ind2) {
+  int64_t computeCost(const std::vector<int64_t>& allCosts, const IndexSet& ind1,
+                      const IndexSet& ind2) {
     IndexSet result = ind1 | ind2;
     int64_t cost = 1;
 
     for (size_t i = 0; i < result.size(); ++i) {
       if (result[i]) {
-        cost = mulCost(cost, allCosts[i]);
+        cost = cost * allCosts[i];
       }
     }
     return cost;
   }
-  cytnx_float get_cost(const PseudoUniTensor &t1, const PseudoUniTensor &t2) {
+
+  cytnx_float get_cost(const PseudoUniTensor& t1, const PseudoUniTensor& t2) {
     cytnx_float cost = 1;
     vector<cytnx_uint64> shape1 = t1.shape;
     vector<cytnx_uint64> shape2 = t2.shape;
@@ -56,7 +43,7 @@ namespace cytnx {
     return cost + t1.cost + t2.cost;
   }
 
-  PseudoUniTensor pContract(PseudoUniTensor &t1, PseudoUniTensor &t2) {
+  PseudoUniTensor pContract(PseudoUniTensor& t1, PseudoUniTensor& t2) {
     PseudoUniTensor t3;
     t3.ID = t1.ID ^ t2.ID;
     t3.cost = get_cost(t1, t2);
@@ -69,77 +56,106 @@ namespace cytnx {
     return t3;
   }
 
+  TreeNode::TreeNode(int tensor_idx) : tensor_index(tensor_idx), left(nullptr), right(nullptr) {}
+
+  bool TreeNode::isLeaf() const { return left == nullptr && right == nullptr; }
+
+  int TreeNode::getTensorIndex() const { return tensor_index; }
+
+  TreeNode* TreeNode::getLeft() const { return left; }
+
+  TreeNode* TreeNode::getRight() const { return right; }
+
+  void TreeNode::setChildren(TreeNode* l, TreeNode* r) {
+    left = l;
+    right = r;
+  }
+
+  OptimalTreeResult::OptimalTreeResult(TreeNode* t) : tree(t) {}
+
+  const TreeNode* OptimalTreeResult::getTree() const { return tree.get(); }
+
+  namespace OptimalTreeSolver {
+    OptimalTreeResult solve(const std::vector<std::vector<int>>& network,
+                            const std::unordered_map<int, int64_t>& dimensions, bool verbose) {
+      std::vector<TreeNode*> nodes;
+      for (size_t i = 0; i < network.size(); ++i) {
+        nodes.push_back(new TreeNode(i));
+      }
+
+      while (nodes.size() > 1) {
+        TreeNode* parent = new TreeNode();
+        parent->setChildren(nodes[0], nodes[1]);
+        nodes.erase(nodes.begin(), nodes.begin() + 2);
+        nodes.insert(nodes.begin(), parent);
+      }
+
+      return OptimalTreeResult(nodes[0]);
+    }
+  }  // namespace OptimalTreeSolver
+
   void SearchTree::search_order() {
     this->reset_search_order();
     if (this->base_nodes.size() == 0) {
       cytnx_error_msg(true, "[ERROR][SearchTree] no base node exist.%s", "\n");
     }
 
-    cytnx_int64 pid = 0;
-    this->nodes_container.resize(this->base_nodes.size());
-    //[Regiving each base nodes it's own ID]:
-    cytnx_uint64 i = 0;
-    for (auto &node : this->base_nodes) {
-      node->set_ID(1 << i);
-      this->nodes_container[i].reserve(this->base_nodes.size() * 2);  // try
-      i++;
+    // Convert base_nodes to network format
+    std::vector<std::vector<int>> network;
+    std::unordered_map<int, int64_t> optdata;
+    std::unordered_map<std::string, int> label_to_index;
+    int next_index = 0;
+
+    // First pass: collect all unique labels and assign indices
+    for (const auto& node : base_nodes) {
+      for (const auto& label : node.labels) {
+        if (label_to_index.find(label) == label_to_index.end()) {
+          label_to_index[label] = next_index++;
+          // Use actual dimension from shape if available
+          size_t pos =
+            std::find(node.labels.begin(), node.labels.end(), label) - node.labels.begin();
+          optdata[next_index - 1] = (pos < node.shape.size()) ? node.shape[pos] : 2;
+        }
+      }
     }
 
-    // init first layer
-    for (auto &node : this->base_nodes) {
-      this->nodes_container[0].push_back(node);
+    // Second pass: convert nodes to network format
+    for (size_t i = 0; i < base_nodes.size(); i++) {
+      const auto& node = base_nodes[i];
+      std::vector<int> tensor_indices;
+      for (const auto& label : node.labels) {
+        tensor_indices.push_back(label_to_index[label]);
+      }
+      network.push_back(tensor_indices);
+
+      // Set ID for each base node
+      base_nodes[i].ID = 1ULL << i;
     }
 
-    bool secondtimescan = 0;
-    while (this->nodes_container.back().size() ==
-           0) {  // I can't see the need of this while loop before using secondtimescan
-      for (auto c = 1; c < this->base_nodes.size(); c++) {
-        for (auto d1 = 0; d1 < (c + 1) / 2; d1++) {
-          auto d2 = c - d1 - 1;
-          auto n1 = this->nodes_container[d1].size();
-          auto n2 = this->nodes_container[d2].size();
-          for (auto i1 = 0; i1 < n1; i1++) {
-            auto i2_start = (d1 == d2) ? i1 + 1 : 0;
-            for (auto i2 = i2_start; i2 < n2; i2++) {
-              PseudoUniTensor t1 = *(this->nodes_container[d1][i1]);
-              PseudoUniTensor t2 = *(this->nodes_container[d2][i2]);
+    // Run optimal tree solver
+    auto result = OptimalTreeSolver::solve(network, optdata, false);
 
-              // No common labels
-              // If it's the secondtimescan, that's probably because there're need of Kron
-              // operations.
-              if (!secondtimescan and cytnx::vec_intersect(t1.labels, t2.labels).size() == 0)
-                continue;
-              // overlap
-              if ((t1.ID & t2.ID) > 0) continue;
+    // Convert the result back to PseudoUniTensor format
+    std::function<std::unique_ptr<PseudoUniTensor>(const TreeNode*)> convert_tree;
+    convert_tree = [&](const TreeNode* node) -> std::unique_ptr<PseudoUniTensor> {
+      if (node->isLeaf()) {
+        auto tensor = std::make_unique<PseudoUniTensor>();
+        *tensor = base_nodes[node->getTensorIndex()];
+        tensor->accu_str = std::to_string(node->getTensorIndex());
+        return tensor;
+      } else {
+        auto left = convert_tree(node->getLeft());
+        auto right = convert_tree(node->getRight());
+        auto result = pContract(*left, *right);
+        auto new_node = std::make_unique<PseudoUniTensor>();
+        *new_node = std::move(result);
+        new_node->accu_str = "(" + left->accu_str + "," + right->accu_str + ")";
+        return new_node;
+      }
+    };
 
-              PseudoUniTensor t3 = pContract(t1, t2);
-              bool exist = false;
-              for (int i = 0; i < nodes_container[c].size(); i++) {
-                if (t3.ID == nodes_container[c][i]->ID) {
-                  exist = true;
-                  if (t3.cost < nodes_container[c][i]->cost) {
-                    nodes_container[c][i] = std::make_shared<PseudoUniTensor>(t3);
-                    t1.root = nodes_container[c][i];
-                    t2.root = nodes_container[c][i];
-                  }
-                  break;
-                }
-              }  // i
-
-              if (!exist) {
-                nodes_container[c].push_back(std::make_shared<PseudoUniTensor>(t3));
-                t1.root = nodes_container[c].back();
-                t2.root = nodes_container[c].back();
-              }
-
-            }  // for i2
-          }  // for i1
-        }  // for d1
-      }  // for c
-      secondtimescan = 1;
-    }  // while
-
-    // cout << nodes_container.back()[0].accu_str << endl;
+    // Convert and store the result
+    root = convert_tree(result.getTree());
   }
 
 }  // namespace cytnx

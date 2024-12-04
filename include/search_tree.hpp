@@ -9,11 +9,45 @@
 #include <string>
 #include <bitset>
 #include <memory>
+#include <unordered_map>
 #include "UniTensor.hpp"
 
 namespace cytnx {
 
   using IndexSet = std::bitset<128>;
+
+  class TreeNode {
+   public:
+    TreeNode(int tensor_idx = -1) : tensor_index(tensor_idx), left(nullptr), right(nullptr) {}
+    bool isLeaf() const { return left == nullptr && right == nullptr; }
+    int getTensorIndex() const { return tensor_index; }
+    TreeNode* getLeft() const { return left; }
+    TreeNode* getRight() const { return right; }
+    void setChildren(TreeNode* l, TreeNode* r) {
+      left = l;
+      right = r;
+    }
+
+   private:
+    int tensor_index;
+    TreeNode* left;
+    TreeNode* right;
+  };
+
+  class OptimalTreeResult {
+   public:
+    OptimalTreeResult(TreeNode* tree = nullptr) : tree(tree) {}
+    const TreeNode* getTree() const { return tree.get(); }
+
+   private:
+    std::unique_ptr<TreeNode> tree;
+  };
+
+  namespace OptimalTreeSolver {
+    OptimalTreeResult solve(const std::vector<std::vector<int>>& network,
+                            const std::unordered_map<int, int64_t>& dimensions,
+                            bool verbose = false);
+  }
 
   class PseudoUniTensor {
    public:
@@ -36,6 +70,7 @@ namespace cytnx {
     cytnx_float cost;
     cytnx_uint64 ID;
     std::string accu_str;
+    std::shared_ptr<PseudoUniTensor> root;  // For tracking the root during construction
 
     // Constructors
     explicit PseudoUniTensor(cytnx_uint64 index = 0)
@@ -45,7 +80,6 @@ namespace cytnx {
         : isLeaf(false), left(std::move(l)), right(std::move(r)), cost(0), ID(0) {}
 
     // Copy and move constructors and assignment operators
-    PseudoUniTensor() = default;  // Add default constructor
     PseudoUniTensor(const PseudoUniTensor& rhs);
     PseudoUniTensor(PseudoUniTensor&& rhs) noexcept;
     PseudoUniTensor& operator=(const PseudoUniTensor& rhs);
@@ -54,23 +88,6 @@ namespace cytnx {
 
     void from_utensor(const UniTensor& in_uten);
     void clear_utensor();
-  };
-
-  struct OptimalTreeResult {
-    std::unique_ptr<PseudoUniTensor> tree;
-    int64_t cost;
-  };
-
-  struct ComponentData {
-    std::vector<std::unordered_map<IndexSet, int64_t>> costDict;
-    std::vector<std::unordered_map<IndexSet, std::unique_ptr<PseudoUniTensor>>> treeDict;
-    std::vector<std::unordered_map<IndexSet, IndexSet>> indexDict;
-
-    void resize(size_t size) {
-      costDict.resize(size);
-      treeDict.resize(size);
-      indexDict.resize(size);
-    }
   };
 
   class SearchTree {
@@ -86,40 +103,12 @@ namespace cytnx {
     }
 
     void reset_search_order() { root.reset(); }
-
-    void search_order() {
-      // Convert base_nodes to network format
-      std::vector<std::vector<int>> network;
-      std::unordered_map<int, int64_t> optdata;
-
-      // Convert your existing nodes to the format expected by optimaltree
-      for (const auto& node : base_nodes) {
-        std::vector<int> tensor_indices;
-        // Convert labels to indices as needed
-        // Fill optdata with costs
-        // ... conversion logic here ...
-        network.push_back(tensor_indices);
-      }
-
-      // Define the optimaltree function within search_order
-      auto optimaltree = [](const std::vector<std::vector<int>>& network,
-                            const std::unordered_map<int, int64_t>& optdata) -> OptimalTreeResult {
-        // Implement the logic of optimaltree here
-        // This is a placeholder implementation
-        OptimalTreeResult result;
-        result.tree = std::make_unique<PseudoUniTensor>();
-        result.cost = 0;
-        // ... actual optimaltree logic ...
-        return result;
-      };
-
-      // Run optimaltree
-      auto result = optimaltree(network, optdata);
-
-      // Store the result
-      root = std::move(result.tree);
-    }
+    void search_order();
   };
+
+  // Helper functions declarations
+  cytnx_float get_cost(const PseudoUniTensor& t1, const PseudoUniTensor& t2);
+  PseudoUniTensor pContract(PseudoUniTensor& t1, PseudoUniTensor& t2);
 
 }  // namespace cytnx
 
