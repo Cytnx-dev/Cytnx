@@ -7,99 +7,120 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <memory>
 #include <bitset>
+#include <memory>
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-using IndexSet = std::bitset<128>;
 namespace cytnx {
-  /// @cond
-  class PseudoUniTensor : public std::enable_shared_from_this<PseudoUniTensor> {
+
+  using IndexSet = std::bitset<128>;
+
+  class PseudoUniTensor {
    public:
-    std::vector<std::string> labels;
-    std::vector<cytnx_uint64> shape;
-    bool is_assigned;
-    std::shared_ptr<PseudoUniTensor> left;
-    std::shared_ptr<PseudoUniTensor> right;
-    std::shared_ptr<PseudoUniTensor> root;
+    bool isLeaf;
+    union {
+      // Leaf node data (tensor info)
+      struct {
+        std::vector<std::string> labels;
+        std::vector<cytnx_uint64> shape;
+        bool is_assigned;
+        cytnx_uint64 tensorIndex;  // Added for optimaltree compatibility
+      };
+      // Internal node data (tree structure)
+      struct {
+        std::unique_ptr<PseudoUniTensor> left;
+        std::unique_ptr<PseudoUniTensor> right;
+      };
+    };
+
     cytnx_float cost;
     cytnx_uint64 ID;
     std::string accu_str;
 
-    PseudoUniTensor()
-        : is_assigned(false), left(nullptr), right(nullptr), root(nullptr), cost(0), ID(0) {}
-    PseudoUniTensor(const PseudoUniTensor &rhs)
-        : labels(rhs.labels),
-          shape(rhs.shape),
-          is_assigned(rhs.is_assigned),
-          left(rhs.left),
-          right(rhs.right),
-          root(rhs.root),
-          cost(rhs.cost),
-          ID(rhs.ID),
-          accu_str(rhs.accu_str) {}
-    PseudoUniTensor &operator=(const PseudoUniTensor &rhs) {
-      if (this != &rhs) {
-        labels = rhs.labels;
-        shape = rhs.shape;
-        is_assigned = rhs.is_assigned;
-        left = rhs.left;
-        right = rhs.right;
-        root = rhs.root;
-        cost = rhs.cost;
-        ID = rhs.ID;
-        accu_str = rhs.accu_str;
-      }
-      return *this;
+    // Constructors
+    explicit PseudoUniTensor(cytnx_uint64 index = 0)
+        : isLeaf(true), tensorIndex(index), is_assigned(false), cost(0), ID(0) {}
+
+    PseudoUniTensor(std::unique_ptr<PseudoUniTensor> l, std::unique_ptr<PseudoUniTensor> r)
+        : isLeaf(false), left(std::move(l)), right(std::move(r)), cost(0), ID(0) {}
+
+    // Copy and move constructors and assignment operators
+    PseudoUniTensor() = default;  // Add default constructor
+    PseudoUniTensor(const PseudoUniTensor& rhs);
+    PseudoUniTensor(PseudoUniTensor&& rhs) noexcept;
+    PseudoUniTensor& operator=(const PseudoUniTensor& rhs);
+    PseudoUniTensor& operator=(PseudoUniTensor&& rhs) noexcept;
+    ~PseudoUniTensor();
+
+    void from_utensor(const UniTensor& in_uten);
+    void clear_utensor();
+  };
+
+  struct OptimalTreeResult {
+    std::unique_ptr<PseudoUniTensor> tree;
+    int64_t cost;
+  };
+
+  struct ComponentData {
+    std::vector<std::unordered_map<IndexSet, int64_t>> costDict;
+    std::vector<std::unordered_map<IndexSet, std::unique_ptr<PseudoUniTensor>>> treeDict;
+    std::vector<std::unordered_map<IndexSet, IndexSet>> indexDict;
+
+    void resize(size_t size) {
+      costDict.resize(size);
+      treeDict.resize(size);
+      indexDict.resize(size);
     }
-    void from_utensor(const UniTensor &in_uten) {
-      labels = in_uten.labels();
-      shape = in_uten.shape();
-      is_assigned = true;
-    }
-    void clear_utensor() {
-      is_assigned = false;
-      labels.clear();
-      shape.clear();
-      ID = 0;
-      cost = 0;
-      accu_str.clear();
-    }
-    void set_ID(const cytnx_int64 &ID) { this->ID = ID; }
   };
 
   class SearchTree {
    public:
-    std::vector<std::vector<std::shared_ptr<PseudoUniTensor>>> nodes_container;
-    std::vector<std::shared_ptr<PseudoUniTensor>> base_nodes;
+    std::unique_ptr<PseudoUniTensor> root;
+    std::vector<PseudoUniTensor> base_nodes;
 
     SearchTree() = default;
-    SearchTree(const SearchTree &rhs)
-        : nodes_container(rhs.nodes_container), base_nodes(rhs.base_nodes) {}
-    SearchTree &operator=(const SearchTree &rhs) {
-      if (this != &rhs) {
-        nodes_container = rhs.nodes_container;
-        base_nodes = rhs.base_nodes;
-      }
-      return *this;
-    }
 
     void clear() {
-      nodes_container.clear();
+      root.reset();
       base_nodes.clear();
     }
-    void reset_search_order() {
-      nodes_container.clear();
-      for (auto &node : base_nodes) {
-        node->root = nullptr;
+
+    void reset_search_order() { root.reset(); }
+
+    void search_order() {
+      // Convert base_nodes to network format
+      std::vector<std::vector<int>> network;
+      std::unordered_map<int, int64_t> optdata;
+
+      // Convert your existing nodes to the format expected by optimaltree
+      for (const auto& node : base_nodes) {
+        std::vector<int> tensor_indices;
+        // Convert labels to indices as needed
+        // Fill optdata with costs
+        // ... conversion logic here ...
+        network.push_back(tensor_indices);
       }
+
+      // Define the optimaltree function within search_order
+      auto optimaltree = [](const std::vector<std::vector<int>>& network,
+                            const std::unordered_map<int, int64_t>& optdata) -> OptimalTreeResult {
+        // Implement the logic of optimaltree here
+        // This is a placeholder implementation
+        OptimalTreeResult result;
+        result.tree = std::make_unique<PseudoUniTensor>();
+        result.cost = 0;
+        // ... actual optimaltree logic ...
+        return result;
+      };
+
+      // Run optimaltree
+      auto result = optimaltree(network, optdata);
+
+      // Store the result
+      root = std::move(result.tree);
     }
-    void search_order();
   };
-  /// @endcond
+
 }  // namespace cytnx
-#endif
 
 #endif  // CYTNX_SEARCH_TREE_H_

@@ -604,7 +604,7 @@ namespace cytnx {
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
-    return Stree.nodes_container.back()[0].accu_str;
+    return Stree.nodes_tree.back()[0].accu_str;
   }
 
   UniTensor RegularGncon::Launch(const bool &optimal, const string &contract_order /*default ""*/) {

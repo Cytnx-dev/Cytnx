@@ -938,12 +938,12 @@ namespace cytnx {
     SearchTree Stree;
     Stree.base_nodes.resize(this->tensors.size());
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
-      Stree.base_nodes[t]->from_utensor(this->tensors[t]);  // create psudotensors from base tensors
+      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create psudotensors from base tensors
       // Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
-      Stree.base_nodes[t]->accu_str = this->names[t];
+      Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
-    return Stree.nodes_container.back()[0]->accu_str;
+    return Stree.get_nodes().back()[0]->accu_str;
   }
 
   UniTensor RegularNetwork::Launch() {
