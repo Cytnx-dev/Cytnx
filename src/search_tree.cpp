@@ -8,19 +8,6 @@ using namespace std;
 
 namespace cytnx {
   // helper functions
-  int64_t computeCost(const std::vector<int64_t>& allCosts, const IndexSet& ind1,
-                      const IndexSet& ind2) {
-    IndexSet result = ind1 | ind2;
-    int64_t cost = 1;
-
-    for (size_t i = 0; i < result.size(); ++i) {
-      if (result[i]) {
-        cost = cost * allCosts[i];
-      }
-    }
-    return cost;
-  }
-
   cytnx_float get_cost(const PseudoUniTensor& t1, const PseudoUniTensor& t2) {
     cytnx_float cost = 1;
     vector<cytnx_uint64> shape1 = t1.shape;
