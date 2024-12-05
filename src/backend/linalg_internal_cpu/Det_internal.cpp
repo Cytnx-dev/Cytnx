@@ -28,8 +28,16 @@ namespace cytnx {
       lapack_int info;
       info = LAPACKE_zgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'zgetrf': Lapack INFO = ", info);
+
+      // info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is zero.
+      if (info > 0) {
+        od[0] = 0;
+        free(ipiv);
+        free(_Rin);
+        return;
+      }
 
       // Whether lapack_complex_T is defined as std::complex<T> (c++ complex) or T _Complex
       // (C complex) depends on whether MKL is used.
@@ -64,8 +72,16 @@ namespace cytnx {
       lapack_int info;
       info = LAPACKE_cgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'cgetrf': Lapack INFO = ", info);
+
+      // info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is zero.
+      if (info > 0) {
+        od[0] = 0;
+        free(ipiv);
+        free(_Rin);
+        return;
+      }
 
       // Whether lapack_complex_T is defined as std::complex<T> (c++ complex) or T _Complex
       // (C complex) depends on whether MKL is used.
@@ -99,8 +115,17 @@ namespace cytnx {
       lapack_int info;
       info = LAPACKE_dgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'dgetrf': Lapack INFO = ", info);
+
+      // info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is zero.
+      if (info > 0) {
+        od[0] = 0;
+        free(ipiv);
+        free(_Rin);
+        return;
+      }
+
       od[0] = 1;
       bool neg = 0;
       for (lapack_int i = 0; i < N; i++) {
@@ -122,8 +147,17 @@ namespace cytnx {
       lapack_int info;
       info = LAPACKE_sgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
       cytnx_error_msg(
-        info != 0, "%s %d",
+        info < 0, "%s %d",
         "[ERROR][Det_internal] Error in Lapack function 'sgetrf': Lapack INFO = ", info);
+
+      // info > 0 means U[info - 1, info - 1] is zero, which implies the determinant is zero.
+      if (info > 0) {
+        od[0] = 0;
+        free(ipiv);
+        free(_Rin);
+        return;
+      }
+
       od[0] = 1;
       bool neg = 0;
       for (lapack_int i = 0; i < N; i++) {
