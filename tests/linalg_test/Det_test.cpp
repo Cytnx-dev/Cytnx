@@ -13,7 +13,32 @@ namespace cytnx {
   using TestTools::dtype_list;
   using TestTools::InitTensorUniform;
 
-  Tensor CalculateDeterminant(const Tensor& T);
+  Tensor CalculateDeterminant(const Tensor& T) {
+    // Regardless of whether the input tensor is on the CPU or CPU, the result tensor of Det is
+    // always on the CPU, so we always initialize `determinant` on the CPU to avoid the error of
+    // adding two tensors on different devices.
+    Tensor determinant = zeros(1, T.dtype(), Device.cpu);
+    size_t n = T.shape()[0];
+    if (n == 1) {
+      determinant.at({0}) = T.at({0, 0});
+      return determinant;
+    } else if (n == 2) {
+      determinant.at({0}) = T.at({0, 0}) * T.at({1, 1}) - T.at({0, 1}) * T.at({1, 0});
+      return determinant;
+    }
+    for (cytnx_uint64 a = 0; a < n; a++) {
+      Tensor T2 = zeros({T.shape()[0] - 1, T.shape()[1] - 1}, T.dtype(), T.device());
+      for (cytnx_uint64 i = 0; i < n - 1; i++) {
+        for (cytnx_uint64 j = 0; j < n - 1; j++) {
+          cytnx_uint64 ii = i + (i >= 0);
+          cytnx_uint64 jj = j + (j >= a);
+          T2.at({i, j}) = T.at({ii, jj});
+        }
+      }
+      determinant({0}) += (a % 2 == 0 ? 1 : -1) * T.at({0, a}) * linalg::Det(T2);
+    }
+    return determinant;
+  }
 
   cytnx_complex128 ExpectedDeterminant(const Tensor& T) {
     return CalculateDeterminant(Type_class::is_float(T.dtype()) ? T : T.astype(Type.Double))
@@ -110,33 +135,6 @@ namespace cytnx {
     Tensor T = Tensor({2, 3}, Type.Double, Device.cpu);
     InitTensorUniform(T, /*rand_seed=*/0);
     EXPECT_THROW(linalg::Det(T), std::logic_error);
-  }
-
-  Tensor CalculateDeterminant(const Tensor& T) {
-    // Regardless of whether the input tensor is on the CPU or CPU, the result tensor of Det is
-    // always on the CPU, so we always initialize `determinant` on the CPU to avoid the error of
-    // adding two tensors on different devices.
-    Tensor determinant = zeros(1, T.dtype(), Device.cpu);
-    size_t n = T.shape()[0];
-    if (n == 1) {
-      determinant.at({0}) = T.at({0, 0});
-      return determinant;
-    } else if (n == 2) {
-      determinant.at({0}) = T.at({0, 0}) * T.at({1, 1}) - T.at({0, 1}) * T.at({1, 0});
-      return determinant;
-    }
-    for (cytnx_uint64 a = 0; a < n; a++) {
-      Tensor T2 = zeros({T.shape()[0] - 1, T.shape()[1] - 1}, T.dtype(), T.device());
-      for (cytnx_uint64 i = 0; i < n - 1; i++) {
-        for (cytnx_uint64 j = 0; j < n - 1; j++) {
-          cytnx_uint64 ii = i + (i >= 0);
-          cytnx_uint64 jj = j + (j >= a);
-          T2.at({i, j}) = T.at({ii, jj});
-        }
-      }
-      determinant({0}) += (a % 2 == 0 ? 1 : -1) * T.at({0, a}) * linalg::Det(T2);
-    }
-    return determinant;
   }
 
 }  // namespace cytnx
