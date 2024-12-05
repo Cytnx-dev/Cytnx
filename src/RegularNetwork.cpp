@@ -230,24 +230,24 @@ namespace cytnx {
   vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree,
                                                              vector<string> tns) {
     vector<pair<cytnx_int64, cytnx_int64>> path;
-    stack<Node *> stk;
-    Node *root = &(CtTree.nodes_container.back());
+    stack<shared_ptr<Node>> stk;
+    shared_ptr<Node> root = make_shared<Node>(CtTree.nodes_container.back());
     int ly = 0;
     bool ict;
     do {
       while ((root != nullptr)) {
-        if (root->right != nullptr) stk.push(root->right);
+        if (root->right != nullptr) stk.push(make_shared<Node>(*(root->right)));
         stk.push(root);
-        root = root->left;
+        root = make_shared<Node>(*(root->left));
       }
       root = stk.top();
       stk.pop();
       ict = true;
       if ((root->right != nullptr) && !stk.empty()) {
-        if (stk.top() == root->right) {
+        if (stk.top()->name == root->right->name) {
           stk.pop();
           stk.push(root);
-          root = root->right;
+          root = make_shared<Node>(*(root->right));
           ict = false;
         }
       }
@@ -943,7 +943,7 @@ namespace cytnx {
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
-    return Stree.nodes_container.back()[0].accu_str;
+    return Stree.get_nodes().back()[0]->accu_str;
   }
 
   UniTensor RegularNetwork::Launch() {
@@ -969,17 +969,17 @@ namespace cytnx {
 
       // 2. contract using postorder traversal:
       // cout << this->CtTree.nodes_container.size() << endl;
-      stack<Node *> stk;
-      Node *root = &(this->CtTree.nodes_container.back());
+      stack<shared_ptr<Node>> stk;
+      shared_ptr<Node> root = make_shared<Node>(this->CtTree.nodes_container.back());
       int ly = 0;
       bool ict;
 
       do {
         // move the lmost
         while ((root != nullptr)) {
-          if (root->right != nullptr) stk.push(root->right);
+          if (root->right != nullptr) stk.push(make_shared<Node>(*(root->right)));
           stk.push(root);
-          root = root->left;
+          root = make_shared<Node>(*(root->left));
         }
 
         root = stk.top();
@@ -987,10 +987,10 @@ namespace cytnx {
         // cytnx_error_msg(stk.size()==0,"[eRROR]","\n");
         ict = true;
         if ((root->right != nullptr) && !stk.empty()) {
-          if (stk.top() == root->right) {
+          if (stk.top()->name == root->right->name) {
             stk.pop();
             stk.push(root);
-            root = root->right;
+            root = make_shared<Node>(*(root->right));
             ict = false;
           }
         }
@@ -1100,17 +1100,17 @@ namespace cytnx {
       }
       // 2. contract using postorder traversal:
       // cout << this->CtTree.nodes_container.size() << endl;
-      stack<Node *> stk;
-      Node *root = &(this->CtTree.nodes_container.back());
+      stack<shared_ptr<Node>> stk;
+      shared_ptr<Node> root = make_shared<Node>(this->CtTree.nodes_container.back());
       int ly = 0;
       bool ict;
 
       do {
         // move the lmost
         while ((root != nullptr)) {
-          if (root->right != nullptr) stk.push(root->right);
+          if (root->right != nullptr) stk.push(make_shared<Node>(*(root->right)));
           stk.push(root);
-          root = root->left;
+          root = make_shared<Node>(*(root->left));
         }
 
         root = stk.top();
@@ -1118,10 +1118,10 @@ namespace cytnx {
         // cytnx_error_msg(stk.size()==0,"[eRROR]","\n");
         ict = true;
         if ((root->right != nullptr) && !stk.empty()) {
-          if (stk.top() == root->right) {
+          if (stk.top()->name == root->right->name) {
             stk.pop();
             stk.push(root);
-            root = root->right;
+            root = make_shared<Node>(*(root->right));
             ict = false;
           }
         }
