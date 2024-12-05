@@ -30,10 +30,8 @@ namespace cytnx {
         tmp3 *= shape[invmapper_R[shape.size() - 1 - i]];
       }
 
-// handle non-contiguous
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+      // handle non-contiguous
+#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 i = 0; i < len; i++) {
         std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
         _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] /=
@@ -43,9 +41,7 @@ namespace cytnx {
 
     template <class T1, class T2>
     void _kernel_conti_idiv(T1 *_Lin, T2 *_Rin, const unsigned long long &len) {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len; i++) {
         _Lin[i] /= _Rin[i];
       }
@@ -53,9 +49,7 @@ namespace cytnx {
 
     template <class T1, class T2>
     void _kernel_const_idiv(T1 *_Lin, T2 *_Rin, const unsigned long long &len) {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len; i++) {
         _Lin[i] /= _Rin[0];
       }

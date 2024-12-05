@@ -1,5 +1,5 @@
-#ifndef _H_Tensor_
-#define _H_Tensor_
+#ifndef CYTNX_TENSOR_H_
+#define CYTNX_TENSOR_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -493,6 +493,59 @@ namespace cytnx {
     // }
     //@}
 
+    // This mechanism is to remove the 'void' type from Type_list. Taking advantage of it
+    // appearing first ...
+    struct internal {
+      template <typename Variant>
+      struct exclude_first;
+
+      template <typename First, typename... Rest>
+      struct exclude_first<std::variant<First, Rest...>> {
+        using type = std::variant<Rest...>;
+      };
+    };  // internal
+
+    // std::variant of pointers to Type_list, without void ....
+    using pointer_types =
+      make_variant_from_transform_t<typename internal::exclude_first<Type_list>::type,
+                                    std::add_pointer>;
+
+    // convert this->_impl->_storage._impl->Mem to a typed variant of pointers, excluding void*
+    pointer_types ptr() const;
+
+    // convert this->_impl->_strorage->Mem to the given pointer type.
+    // Throws an exception if T does not match this->dtype
+    template <typename T>
+    T *ptr_as() const {
+      cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
+                      "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
+                      this->dtype(), Type_class::getname(this->dtype()).c_str(),
+                      Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
+      return static_cast<T *>(this->_impl->_storage._impl->Mem);
+    }
+
+  #ifdef UNI_GPU
+    // std::variant of pointers to Type_list_gpu, without void ....
+    using gpu_pointer_types =
+      make_variant_from_transform_t<typename internal::exclude_first<Type_list_gpu>::type,
+                                    std::add_pointer>;
+
+    // convert this->_impl->_storage->Mem to a typed variant of pointers, excluding void*
+    gpu_pointer_types gpu_ptr() const;
+
+    // convert this->_impl->_strorage->Mem to the given pointer type.
+    // Throws an exception if T does not match this->dtype
+    template <typename T>
+    T *gpu_ptr_as() const {
+      cytnx_error_msg(
+        this->dtype() != Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>,
+        "[ERROR] Attempt to convert dtype %d (%s) to GPU pointer of type %s", this->dtype(),
+        Type_class::getname(this->dtype()).c_str(),
+        Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
+      return static_cast<T *>(this->_impl->_storage._impl->Mem);
+    }
+  #endif
+
     /**
     @brief Convert a Storage to Tensor
     @param[in] in the Storage to be converted
@@ -620,13 +673,13 @@ namespace cytnx {
     */
     const bool &is_contiguous() const { return this->_impl->is_contiguous(); }
 
-    Tensor permute_(const std::vector<cytnx_uint64> &rnks) {
+    Tensor &permute_(const std::vector<cytnx_uint64> &rnks) {
       this->_impl->permute_(rnks);
       return *this;
     }
     /// @cond
     template <class... Ts>
-    Tensor permute_(const cytnx_uint64 &e1, const Ts &...elems) {
+    Tensor &permute_(const cytnx_uint64 &e1, const Ts &...elems) {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
       this->_impl->permute_(argv);
       return *this;
@@ -725,21 +778,27 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/reshape_.py.out
     */
-    void reshape_(const std::vector<cytnx_int64> &new_shape) { this->_impl->reshape_(new_shape); }
+    Tensor &reshape_(const std::vector<cytnx_int64> &new_shape) {
+      this->_impl->reshape_(new_shape);
+      return *this;
+    }
     /// @cond
-    void reshape_(const std::vector<cytnx_uint64> &new_shape) {
+    Tensor &reshape_(const std::vector<cytnx_uint64> &new_shape) {
       std::vector<cytnx_int64> shape(new_shape.begin(), new_shape.end());
       this->_impl->reshape_(shape);
+      return *this;
     }
-    void reshape_(const std::initializer_list<cytnx_int64> &new_shape) {
+    Tensor &reshape_(const std::initializer_list<cytnx_int64> &new_shape) {
       std::vector<cytnx_int64> shape = new_shape;
       this->_impl->reshape_(shape);
+      return *this;
     }
     template <class... Ts>
-    void reshape_(const cytnx_int64 &e1, const Ts... elems) {
+    Tensor &reshape_(const cytnx_int64 &e1, const Ts... elems) {
       std::vector<cytnx_int64> shape = dynamic_arg_int64_resolver(e1, elems...);
       // std::cout << shape << std::endl;
       this->_impl->reshape_(shape);
+      return *this;
     }
     /// @endcond
 
@@ -1653,4 +1712,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_TENSOR_H_

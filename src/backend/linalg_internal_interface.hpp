@@ -1,5 +1,6 @@
-#ifndef _H_linalg_internal_interface_
-#define _H_linalg_internal_interface_
+#ifndef CYTNX_BACKEND_LINALG_INTERNAL_INTERFACE_H_
+#define CYTNX_BACKEND_LINALG_INTERNAL_INTERFACE_H_
+
 #include <iostream>
 #include <vector>
 
@@ -21,7 +22,6 @@
 #include "linalg_internal_cpu/Gesvd_internal.hpp"
 #include "linalg_internal_cpu/InvM_inplace_internal.hpp"
 #include "linalg_internal_cpu/Inv_inplace_internal.hpp"
-#include "linalg_internal_cpu/Kron_internal.hpp"
 #include "linalg_internal_cpu/Lstsq_internal.hpp"
 #include "linalg_internal_cpu/Matmul_dg_internal.hpp"
 #include "linalg_internal_cpu/Matmul_internal.hpp"
@@ -53,7 +53,6 @@
   #include "linalg_internal_gpu/cuGer_internal.hpp"
   #include "linalg_internal_gpu/cuInvM_inplace_internal.hpp"
   #include "linalg_internal_gpu/cuInv_inplace_internal.hpp"
-  #include "linalg_internal_gpu/cuKron_internal.hpp"
   #include "linalg_internal_gpu/cuMatmul_dg_internal.hpp"
   #include "linalg_internal_gpu/cuMatmul_internal.hpp"
   #include "linalg_internal_gpu/cuMatvec_internal.hpp"
@@ -153,11 +152,6 @@ namespace cytnx {
                                boost::intrusive_ptr<Storage_base> &,
                                boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
                                bool throw_excp);
-    typedef void (*Kronfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                 const boost::intrusive_ptr<Storage_base> &,
-                                 const boost::intrusive_ptr<Storage_base> &,
-                                 const std::vector<cytnx_uint64> &,
-                                 const std::vector<cytnx_uint64> &);
     typedef void (*Powfunc_oii)(boost::intrusive_ptr<Storage_base> &,
                                 const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
                                 const double &);
@@ -234,7 +228,6 @@ namespace cytnx {
       std::vector<Matmul_dgfunc_oii> Matmul_dg_ii;
       std::vector<Matvecfunc_oii> Matvec_ii;
       std::vector<std::vector<Outerfunc_oii>> Outer_ii;
-      std::vector<std::vector<Kronfunc_oii>> Kron_ii;
       std::vector<Vectordotfunc_oii> Vd_ii;
       std::vector<Tdfunc_oii> Td_ii;
       std::vector<Normfunc_oii> Norm_ii;
@@ -277,7 +270,6 @@ namespace cytnx {
       std::vector<Detfunc_oii> cuDet_ii;
       std::vector<MaxMinfunc_oii> cuMM_ii;
       std::vector<MaxMinfunc_oii> cuSum_ii;
-      std::vector<std::vector<Kronfunc_oii>> cuKron_ii;
       std::vector<Tensordotfunc_oii> cuTensordot_ii;
 
       std::vector<cudaMemcpyTruncation_oii> cudaMemcpyTruncation_ii;
@@ -297,4 +289,5 @@ namespace cytnx {
   }  // namespace linalg_internal
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_LINALG_INTERNAL_INTERFACE_H_

@@ -39,6 +39,78 @@ namespace TestTools {
     // Device.cuda,  //currently cuda version still not implement
   };
 
+  template <typename, typename>
+  struct TypeCombinationsImpl;
+
+  template <typename FirstType, typename... SecondTypes>
+  struct TypeCombinationsImpl<FirstType, std::tuple<SecondTypes...>> {
+    using type = std::tuple<std::pair<FirstType, SecondTypes>...>;
+  };
+
+  template <typename... FirstTypes, typename... SecondTypes>
+  struct TypeCombinationsImpl<std::tuple<FirstTypes...>, std::tuple<SecondTypes...>> {
+    using type = decltype(std::tuple_cat(
+      std::declval<
+        typename TypeCombinationsImpl<FirstTypes, std::tuple<SecondTypes...>>::type>()...));
+  };
+
+  /**
+   * @brief Generate pairs of all combinations of the types in the given tuples.
+   *
+   * @tparam FirstTuple a tuple composed of the types which will be the first type of the pair
+   * @tparam SecondTuple a tuple composed of the types which will be the second type of the pair
+   *
+   *
+   * @code
+   * ```cpp
+   *
+   * static_assert(
+   *     std::is_same_v<
+   *         TypeCombinations<std::tuple<int, std::string>,
+   *                          std::tuple<int, double, std::string>>,
+   *         std::tuple<std::pair<int, int>, std::pair<int, double>,
+   *                    std::pair<int, std::string>, std::pair<std::string, int>,
+   *                    std::pair<std::string, double>,
+   *                    std::pair<std::string, std::string>>>);
+   *
+   * ```
+   * @endcode
+   */
+  template <typename FirstTuple, typename SecondTuple>
+  using TypeCombinations = typename TypeCombinationsImpl<FirstTuple, SecondTuple>::type;
+
+  template <typename... TypesInTuple>
+  constexpr auto TupleToTestTypesHelper(std::tuple<TypesInTuple...>)
+    -> testing::Types<TypesInTuple...>;
+
+  /**
+   * @brief Generate pairs of all combinations of the types in the given tuples.
+   *
+   * @tparam FirstTuple a tuple composed of the types which will be the first type of the pair
+   * @tparam SecondTuple a tuple composed of the types which will be the second type of the pair
+   *
+   *
+   * @code
+   * ```cpp
+   *
+   * static_assert(
+   *     std::is_same_v<
+   *         TypeCombinations<std::tuple<int, std::string>,
+   *                          std::tuple<int, double, std::string>>,
+   *         testing::Types<std::pair<int, int>,
+   *                        std::pair<int, double>,
+   *                        std::p<air<int, std::string>,
+   *                        std::pair<std::string, int>,
+   *                        std::pair<std::string, double>,
+   *                        std::pair<std::string, std::string>>>);
+   *
+   * ```
+   * @endcode
+   */
+  template <typename FirstTuple, typename SecondTuple>
+  using TestTypeCombinations =
+    decltype(TupleToTestTypesHelper(std::declval<TypeCombinations<FirstTuple, SecondTuple>>()));
+
   // Tensor tools
 
   // given the tensor T with shape and dtype has been initialzed, set its data as random uniform.

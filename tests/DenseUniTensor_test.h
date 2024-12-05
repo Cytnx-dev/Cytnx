@@ -1,8 +1,10 @@
 #ifndef _H_DENSEUNITENSOR_TEST
 #define _H_DENSEUNITENSOR_TEST
 
-#include "cytnx.hpp"
+#include <cstdio>
+#include <filesystem>
 #include <gtest/gtest.h>
+#include "cytnx.hpp"
 #include "test_tools.h"
 
 using namespace cytnx;
@@ -10,7 +12,8 @@ using namespace std;
 using namespace TestTools;
 class DenseUniTensorTest : public ::testing::Test {
  public:
-  std::string data_dir = "../../tests/test_data_base/common/DenseUniTensor/";
+  std::string data_dir = CYTNX_TEST_DATA_DIR "/common/DenseUniTensor/";
+  const std::string temp_file_path = std::tmpnam(nullptr);
 
   UniTensor ut_uninit;
   UniTensor utzero345;
@@ -39,6 +42,14 @@ class DenseUniTensorTest : public ::testing::Test {
 
   UniTensor ut1, ut2, contres1, contres2, contres3, dense4trtensor, densetr;
   UniTensor ut3, ut4, permu1, permu2;
+
+  ~DenseUniTensorTest() {
+    try {
+      std::filesystem::remove(temp_file_path);
+    } catch (const std::filesystem::filesystem_error& error) {
+      // Do nothing. The system cleans the temp files periodically.
+    }
+  }
 
  protected:
   void SetUp() override {

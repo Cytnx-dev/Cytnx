@@ -6,7 +6,12 @@
 
 #ifdef BACKEND_TORCH
 #else
-  #include "../backend/linalg_internal_interface.hpp"
+
+  #include "../backend/linalg_internal_cpu/Kron_internal.hpp"
+
+  #ifdef UNI_GPU
+    #include "../backend/linalg_internal_gpu/cuKron_internal.cuh"
+  #endif
 
 namespace cytnx {
 
@@ -61,17 +66,31 @@ namespace cytnx {
       Tensor out(new_shape, Type.type_promote(Tl.dtype(), Tr.dtype()), Tl.device());
 
       if (Tl.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Kron_ii[Tl.dtype()][Tr.dtype()](
-          out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl,
-          pad_shape1, pad_shape2);
+        // Dispatch to the kernel based on the types of Tl and Tr
+        std::visit(
+          [&](auto tl, auto tr) {
+            // tl and tr are pointer types here.
+            using out_type = Type_class::type_promote_from_pointer_t<decltype(tl), decltype(tr)>;
+            static_assert(!std::is_same_v<out_type, void>);
+            cytnx::linalg_internal::Kron_general(out.ptr_as<out_type>(), tl, tr, pad_shape1,
+                                                 pad_shape2);
+          },
+          Tl.ptr(), Tr.ptr());
+
       } else {
   #ifdef UNI_GPU
-        // cytnx_error_msg(true, "[Kron] currently Kron is not support for GPU, pending for fix.%s",
-        //                 "\n");
         // checkCudaErrors(cudaSetDevice(Tl.device()));
-        cytnx::linalg_internal::lii.cuKron_ii[Tl.dtype()][Tr.dtype()](
-          out._impl->storage()._impl, Tl._impl->storage()._impl, Tr._impl->storage()._impl,
-          pad_shape1, pad_shape2);
+        // Dispatch to the kernel based on the types of Tl and Tr
+        std::visit(
+          [&](auto tl, auto tr) {
+            // tl and tr are pointer types here.
+            using out_type =
+              Type_class::type_promote_from_gpu_pointer_t<decltype(tl), decltype(tr)>;
+            static_assert(!std::is_same_v<out_type, void>);
+            cytnx::linalg_internal::cuKron_general(out.ptr_as<out_type>(), tl, tr, pad_shape1,
+                                                   pad_shape2);
+          },
+          Tl.gpu_ptr(), Tr.gpu_ptr());
   #else
         cytnx_error_msg(true, "[Kron] fatal error, the tensor is on GPU without CUDA support.%s",
                         "\n");

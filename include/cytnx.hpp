@@ -1,5 +1,6 @@
-#ifndef __cytnx_H_
-#define __cytnx_H_
+#ifndef CYTNX_CYTNX_H_
+#define CYTNX_CYTNX_H_
+
 #include <iostream>
 #include <typeinfo>
 
@@ -44,4 +45,4 @@
 
 #include "Gncon.hpp"
 
-#endif
+#endif  // CYTNX_CYTNX_H_

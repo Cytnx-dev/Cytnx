@@ -9,10 +9,10 @@
 #   CUQUANTUM_INCLUDE_DIRS        ... cutensor include directory
 #   CUQUANTUM_LIBRARIES           ... cutensor libraries
 #
-#   MAGMA_ROOT                this is required to set!
+#   CUQUANTUM_ROOT                this is required to set!
 #
 
-#If environment variable MAGMA_ROOT is specified, it has same effect as MAGMA_ROOT
+#If environment variable CUQUANTUM_ROOT is specified, it has same effect as CUQUANTUM_ROOT
 
 if(NOT DEFINED ENV{CUQUANTUM_ROOT} AND NOT DEFINED CUQUANTUM_ROOT)
   message(FATAL_ERROR "CUQUANTUM_ROOT not set!")

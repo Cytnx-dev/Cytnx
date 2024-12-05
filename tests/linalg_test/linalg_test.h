@@ -27,7 +27,7 @@ class linalg_Test : public ::testing::Test {
   UniTensor ones3x3cd_ut = UniTensor(ones3x3cd, false, -1);
   UniTensor invertable3x3cd_ut = UniTensor(invertable3x3cd, false, -1);
 
-  std::string data_dir = "../../tests/test_data_base/linalg/";
+  std::string data_dir = CYTNX_TEST_DATA_DIR "/linalg/";
   // ==================== svd_truncate ===================
   Bond svd_I = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
   Bond svd_J =

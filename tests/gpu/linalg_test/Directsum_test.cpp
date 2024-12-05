@@ -375,23 +375,23 @@ namespace DirectsumTest {
       case 0:
         break;
       case 1:
-        for (int i1 = 0; i1 < dst_axes[0]; ++i1) {
+        for (cytnx_uint64 i1 = 0; i1 < dst_axes[0]; ++i1) {
           auto idx = std::vector<cytnx_uint64>{i1};
           SetDstElem(dst_axes, axes, idx, T1, T2, dst_T);
         }
         break;
       case 2:
-        for (int i1 = 0; i1 < dst_axes[0]; ++i1) {
-          for (int i2 = 0; i2 < dst_axes[1]; ++i2) {
+        for (cytnx_uint64 i1 = 0; i1 < dst_axes[0]; ++i1) {
+          for (cytnx_uint64 i2 = 0; i2 < dst_axes[1]; ++i2) {
             auto idx = std::vector<cytnx_uint64>{i1, i2};
             SetDstElem(dst_axes, axes, idx, T1, T2, dst_T);
           }
         }
         break;
       case 3:
-        for (int i1 = 0; i1 < dst_axes[0]; ++i1) {
-          for (int i2 = 0; i2 < dst_axes[1]; ++i2) {
-            for (int i3 = 0; i3 < dst_axes[2]; ++i3) {
+        for (cytnx_uint64 i1 = 0; i1 < dst_axes[0]; ++i1) {
+          for (cytnx_uint64 i2 = 0; i2 < dst_axes[1]; ++i2) {
+            for (cytnx_uint64 i3 = 0; i3 < dst_axes[2]; ++i3) {
               auto idx = std::vector<cytnx_uint64>{i1, i2, i3};
               SetDstElem(dst_axes, axes, idx, T1, T2, dst_T);
             }
@@ -399,10 +399,10 @@ namespace DirectsumTest {
         }
         break;
       case 4:
-        for (int i1 = 0; i1 < dst_axes[0]; ++i1) {
-          for (int i2 = 0; i2 < dst_axes[1]; ++i2) {
-            for (int i3 = 0; i3 < dst_axes[2]; ++i3) {
-              for (int i4 = 0; i4 < dst_axes[3]; ++i4) {
+        for (cytnx_uint64 i1 = 0; i1 < dst_axes[0]; ++i1) {
+          for (cytnx_uint64 i2 = 0; i2 < dst_axes[1]; ++i2) {
+            for (cytnx_uint64 i3 = 0; i3 < dst_axes[2]; ++i3) {
+              for (cytnx_uint64 i4 = 0; i4 < dst_axes[3]; ++i4) {
                 auto idx = std::vector<cytnx_uint64>{i1, i2, i3, i4};
                 SetDstElem(dst_axes, axes, idx, T1, T2, dst_T);
               }
@@ -411,11 +411,11 @@ namespace DirectsumTest {
         }
         break;
       case 5:
-        for (int i1 = 0; i1 < dst_axes[0]; ++i1) {
-          for (int i2 = 0; i2 < dst_axes[1]; ++i2) {
-            for (int i3 = 0; i3 < dst_axes[2]; ++i3) {
-              for (int i4 = 0; i4 < dst_axes[3]; ++i4) {
-                for (int i5 = 0; i5 < dst_axes[4]; ++i5) {
+        for (cytnx_uint64 i1 = 0; i1 < dst_axes[0]; ++i1) {
+          for (cytnx_uint64 i2 = 0; i2 < dst_axes[1]; ++i2) {
+            for (cytnx_uint64 i3 = 0; i3 < dst_axes[2]; ++i3) {
+              for (cytnx_uint64 i4 = 0; i4 < dst_axes[3]; ++i4) {
+                for (cytnx_uint64 i5 = 0; i5 < dst_axes[4]; ++i5) {
                   auto idx = std::vector<cytnx_uint64>{i1, i2, i3, i4, i5};
                   SetDstElem(dst_axes, axes, idx, T1, T2, dst_T);
                 }

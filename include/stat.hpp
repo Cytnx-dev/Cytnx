@@ -1,5 +1,5 @@
-#ifndef _stat_H_
-#define _stat_H_
+#ifndef CYTNX_STAT_H_
+#define CYTNX_STAT_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -215,4 +215,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_STAT_H_

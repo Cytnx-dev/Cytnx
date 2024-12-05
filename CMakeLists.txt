@@ -19,7 +19,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# set(CMAKE_CXX_EXTENSIONS OFF)
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
@@ -85,7 +84,6 @@ option(BUILD_DOC "Build API docuemntation" OFF)
 option(USE_HPTT "Build Cytnx with HPTT" OFF)
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(USE_CUTT "Build Cytnx with CUTT" OFF)
-option(USE_MAGMA "Build Cytnx with MAGMA (requires CUDA)" ON)
 option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
 option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
 
@@ -95,6 +93,10 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 # ## PROJECT
 # #####################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
+
+# C++ uses link-time optimization anyway; this enables additionally -flto=auto,
+# for parallel compilation
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
@@ -115,20 +117,9 @@ target_include_directories(cytnx SYSTEM
   ${Boost_INCLUDE_DIRS}
 )
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation -fsanitize=address")
-
 target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation -diag-disable=10441")
-
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_DISABLE_AVAILABILITY")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION")
 target_compile_features(cytnx PUBLIC cxx_std_17)
 
-# target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
-# target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
-# set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 add_subdirectory(src)
 
 if(USE_DEBUG)
@@ -138,21 +129,14 @@ if(USE_DEBUG)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 endif()
 
-if(RUN_TESTS)
-  enable_testing()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
-  target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
-  add_subdirectory(tests)
-  #add_subdirectory(bm_tests)
-endif()
-
 include(GNUInstallDirs)
 
 if(USE_ICPC)
   target_compile_definitions(cytnx PUBLIC UNI_ICPC)
   # This option is to disable the warning of icpc
   target_compile_options(cytnx PUBLIC -diag-disable=10441)
-  # This option is to maintain consistency of the floating point operation, also try to improve the performance
+  # This option is to maintain consistency of the floating point operation, also
+  # try to improve the performance
   target_compile_options(cytnx PUBLIC -fp-model consistent -fimf-use-svml)
 endif()
 
@@ -203,36 +187,24 @@ endif() # Backend torch
 # ## Get Gtest & benchmark
 # #####################################################################
 if(RUN_TESTS)
-  find_package(GTest REQUIRED)
-  #find_package(benchmark REQUIRED)
+  # Include CTest explicitly to suppress the error that DartConfiguration.tcl
+  # is not found
+  include(CTest)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+  target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
+  # "-fopenmp" flag is appended to CMAKE_CXX_FLAGS in CytnxBKNDCMakeLists.cmake.
+  # To make the executalbe targets defined under tests/ link OpenMP correctly,
+  # tests/ must be added after including CytnxBKNDCMakeLists.cmake.
+  add_subdirectory(tests)
+  #add_subdirectory(bm_tests)
 
-
-  #include(FetchContent)
-  #FetchContent_Declare(
-  #  googletest
-  #  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-  #)
-
-  # For Windows: Prevent overriding the parent project's compiler/linker settings
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-  #FetchContent_Declare(
-  #  googlebenchmark
-  #  GIT_REPOSITORY https://github.com/google/benchmark.git
-  #  GIT_TAG v1.7.1) # need master for benchmark::benchmark
-  #set(BENCHMARK_ENABLE_TESTING off) # to suppress benchmark internal tests
-
-  #FetchContent_MakeAvailable(
-  #  googletest
-  #  googlebenchmark)
 endif()
 
 # #######
 # ## Python wrapper
 # #######
 IF(BUILD_PYTHON)
-  # PythonInterp is removed in newer version of cmake
-  # find_package(PythonInterp REQUIRED)
   find_package (Python COMPONENTS Interpreter Development)
   find_package(pybind11 REQUIRED)
 
@@ -402,7 +374,6 @@ message(STATUS "    CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "    BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS "    Link libraries: ${CYTNX_LINK_Libs}")
 
-# # this need to append into the linkflags.tmp
 FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "${CMAKE_CXX_FLAGS}\n" "")
 
