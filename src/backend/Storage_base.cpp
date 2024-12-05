@@ -547,9 +547,6 @@ namespace cytnx {
       "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s",
       Type.getname(dtype).c_str());
 #ifdef UNI_GPU
-    cytnx_error_msg(this->device != Device.cpu, "%s",
-                    "[ERROR] the Storage is on GPU but try to get with CUDA complex type "
-                    "complex<double>. use type <cuDoubleComplex>  instead.");
     cudaDeviceSynchronize();
 #endif
     return static_cast<std::complex<double> *>(this->Mem);
@@ -562,9 +559,6 @@ namespace cytnx {
       "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s",
       Type.getname(dtype).c_str());
 #ifdef UNI_GPU
-    cytnx_error_msg(this->device != Device.cpu, "%s",
-                    "[ERROR] the Storage is on GPU but try to get with CUDA complex type "
-                    "complex<float>. use type <cuFloatComplex>  instead.");
     cudaDeviceSynchronize();
 #endif
     return static_cast<std::complex<float> *>(this->Mem);
