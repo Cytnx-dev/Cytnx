@@ -46,7 +46,7 @@ namespace cytnx {
     PseudoUniTensor(PseudoUniTensor&& rhs) noexcept;
     PseudoUniTensor& operator=(const PseudoUniTensor& rhs);
     PseudoUniTensor& operator=(PseudoUniTensor&& rhs) noexcept;
-    ~PseudoUniTensor();
+    ~PseudoUniTensor() = default;
 
     void from_utensor(const UniTensor& in_uten);
     void clear_utensor();
