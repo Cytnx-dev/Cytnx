@@ -209,7 +209,7 @@ namespace cytnx {
     root = OptimalTreeSolver::solve(base_nodes, false);
   }
 
-  cytnx::PseudoUniTensor& cytnx::PseudoUniTensor::operator=(const PseudoUniTensor& rhs) {
+  PseudoUniTensor& PseudoUniTensor::operator=(const PseudoUniTensor& rhs) {
     if (this != &rhs) {
       isLeaf = rhs.isLeaf;
       labels = rhs.labels;
@@ -235,7 +235,7 @@ namespace cytnx {
     return *this;
   }
 
-  cytnx::PseudoUniTensor::PseudoUniTensor(const PseudoUniTensor& rhs)
+  PseudoUniTensor::PseudoUniTensor(const PseudoUniTensor& rhs)
       : isLeaf(rhs.isLeaf),
         labels(rhs.labels),
         shape(rhs.shape),
@@ -262,7 +262,7 @@ namespace cytnx {
         ID(rhs.ID),
         accu_str(std::move(rhs.accu_str)) {}
 
-  cytnx::PseudoUniTensor& cytnx::PseudoUniTensor::operator=(PseudoUniTensor&& rhs) noexcept {
+  PseudoUniTensor& PseudoUniTensor::operator=(PseudoUniTensor&& rhs) noexcept {
     if (this != &rhs) {
       isLeaf = rhs.isLeaf;
       labels = std::move(rhs.labels);
@@ -278,7 +278,7 @@ namespace cytnx {
     return *this;
   }
 
-  void cytnx::PseudoUniTensor::from_utensor(const UniTensor& in_uten) {
+  void PseudoUniTensor::from_utensor(const UniTensor& in_uten) {
     isLeaf = true;
     labels = in_uten.labels();
     shape = in_uten.shape();
