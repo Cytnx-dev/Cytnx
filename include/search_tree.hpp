@@ -59,20 +59,23 @@ namespace cytnx {
 
   class SearchTree {
    public:
-    std::unique_ptr<PseudoUniTensor> root;
+  
     std::vector<PseudoUniTensor> base_nodes;
 
     SearchTree() = default;
     void clear() {
-      root.reset();
-      base_nodes.clear();
+        root_ptr.reset();
+        base_nodes.clear();
     }
-    void reset_search_order() { root.reset(); }
+    void reset_search_order() { root_ptr.reset(); }
     void search_order();
 
-    std::vector<std::vector<PseudoUniTensor*>> get_nodes() const {
-      return {{root.get()}};  // Return root node as a single-element vector
+    std::vector<std::vector<PseudoUniTensor*>> get_root() const {
+        return {{root_ptr.get()}};
     }
+
+   private:
+    std::unique_ptr<PseudoUniTensor> root_ptr;
   };
 
   // Helper functions declarations

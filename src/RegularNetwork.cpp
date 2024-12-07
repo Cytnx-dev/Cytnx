@@ -943,7 +943,7 @@ namespace cytnx {
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
-    return Stree.get_nodes().back()[0]->accu_str;
+    return Stree.get_root().back()[0]->accu_str;
   }
 
   UniTensor RegularNetwork::Launch() {
