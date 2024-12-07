@@ -32,13 +32,41 @@ namespace cytnx {
 
   PseudoUniTensor pContract(PseudoUniTensor& t1, PseudoUniTensor& t2) {
     PseudoUniTensor t3(0);  // Initialize with index 0
-    t3.ID = t1.ID ^ t2.ID;
-    t3.cost = get_cost(t1, t2);
+    
+    /* XOR of IDs tracks which tensors participate in contractions:
+     * Example for 4 tensors:
+     * Initial IDs (in binary):
+     *   tensor0.ID = 1  (0001)
+     *   tensor1.ID = 2  (0010)
+     *   tensor2.ID = 4  (0100)
+     *   tensor3.ID = 8  (1000)
+     * 
+     * After contracting 0,1:
+     *   temp1.ID = 1 ^ 2 = 3    (0011)
+     * After contracting 2,3:
+     *   temp2.ID = 4 ^ 8 = 12   (1100)
+     * Final contraction:
+     *   final.ID = 3 ^ 12 = 15  (1111)
+     * 
+     * The final 1111 indicates all tensors were used exactly once
+     */
+    t3.ID = t1.ID ^ t2.ID;  // XOR of IDs to track contracted tensors
+    t3.cost = get_cost(t1, t2);  // Calculate contraction cost
+    
+    // Find common labels between t1 and t2
     vector<cytnx_uint64> loc1, loc2;
     vector<string> comm_lbl;
     vec_intersect_(comm_lbl, t1.labels, t2.labels, loc1, loc2);
-    t3.shape = vec_concatenate(vec_erase(t1.shape, loc1), vec_erase(t2.shape, loc2));
-    t3.labels = vec_concatenate(vec_erase(t1.labels, loc1), vec_erase(t2.labels, loc2));
+    
+    // New shape is concatenation of non-contracted dimensions
+    t3.shape = vec_concatenate(vec_erase(t1.shape, loc1), 
+                             vec_erase(t2.shape, loc2));
+    
+    // New labels are concatenation of non-contracted labels  
+    t3.labels = vec_concatenate(vec_erase(t1.labels, loc1),
+                              vec_erase(t2.labels, loc2));
+    
+    // Track contraction history in string form
     t3.accu_str = "(" + t1.accu_str + "," + t2.accu_str + ")";
     return t3;
   }
