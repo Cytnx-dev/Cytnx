@@ -170,6 +170,9 @@ namespace cytnx {
                                   const cytnx_int64 &N, const cytnx_int64 &nrhs,
                                   const cytnx_float &rcond);
 
+    typedef void (*Sumfunc_oii)(boost::intrusive_ptr<Storage_base> &,
+                                const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
+
     typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &,
                                   const int &, const cytnx_uint64 &,
                                   const std::vector<cytnx_uint64> &,
@@ -233,7 +236,7 @@ namespace cytnx {
       std::vector<Normfunc_oii> Norm_ii;
       std::vector<Qrfunc_oii> QR_ii;
       std::vector<MaxMinfunc_oii> MM_ii;
-      std::vector<MaxMinfunc_oii> Sum_ii;
+      std::vector<Sumfunc_oii> Sum_ii;
       std::vector<Detfunc_oii> Det_ii;
 
       std::vector<Lstsqfunc_oii> Lstsq_ii;
@@ -269,7 +272,7 @@ namespace cytnx {
       std::vector<ger_oii> cuGer_ii;
       std::vector<Detfunc_oii> cuDet_ii;
       std::vector<MaxMinfunc_oii> cuMM_ii;
-      std::vector<MaxMinfunc_oii> cuSum_ii;
+      std::vector<Sumfunc_oii> cuSum_ii;
       std::vector<Tensordotfunc_oii> cuTensordot_ii;
 
       std::vector<cudaMemcpyTruncation_oii> cudaMemcpyTruncation_ii;

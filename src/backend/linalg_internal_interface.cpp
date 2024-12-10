@@ -366,7 +366,7 @@ namespace cytnx {
       MM_ii[Type.Bool] = MaxMin_internal_b;
 
       //=====================
-      Sum_ii = vector<MaxMinfunc_oii>(N_Type);
+      Sum_ii = vector<Sumfunc_oii>(N_Type);
 
       Sum_ii[Type.ComplexDouble] = Sum_internal_cd;
       Sum_ii[Type.ComplexFloat] = Sum_internal_cf;
@@ -824,7 +824,7 @@ namespace cytnx {
       cuMM_ii[Type.Bool] = cuMaxMin_internal_b;
 
       //=====================
-      cuSum_ii = vector<MaxMinfunc_oii>(N_Type);
+      cuSum_ii = vector<Sumfunc_oii>(N_Type);
 
       cuSum_ii[Type.ComplexDouble] = cuSum_internal_cd;
       cuSum_ii[Type.ComplexFloat] = cuSum_internal_cf;
