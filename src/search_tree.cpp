@@ -33,23 +33,6 @@ namespace cytnx {
   PseudoUniTensor pContract(PseudoUniTensor& t1, PseudoUniTensor& t2) {
     PseudoUniTensor t3(0);  // Initialize with index 0
     
-    /* XOR of IDs tracks which tensors participate in contractions:
-     * Example for 4 tensors:
-     * Initial IDs (in binary):
-     *   tensor0.ID = 1  (0001)
-     *   tensor1.ID = 2  (0010)
-     *   tensor2.ID = 4  (0100)
-     *   tensor3.ID = 8  (1000)
-     * 
-     * After contracting 0,1:
-     *   temp1.ID = 1 ^ 2 = 3    (0011)
-     * After contracting 2,3:
-     *   temp2.ID = 4 ^ 8 = 12   (1100)
-     * Final contraction:
-     *   final.ID = 3 ^ 12 = 15  (1111)
-     * 
-     * The final 1111 indicates all tensors were used exactly once
-     */
     t3.ID = t1.ID ^ t2.ID;  // XOR of IDs to track contracted tensors
     t3.cost = get_cost(t1, t2);  // Calculate contraction cost
     
@@ -66,8 +49,16 @@ namespace cytnx {
     t3.labels = vec_concatenate(vec_erase(t1.labels, loc1),
                               vec_erase(t2.labels, loc2));
     
-    // Track contraction history in string form
+    // Set accumulation string using the original accu_str if available
+    if (t1.accu_str.empty()) t1.accu_str = std::to_string(t1.tensorIndex);
+    if (t2.accu_str.empty()) t2.accu_str = std::to_string(t2.tensorIndex);
     t3.accu_str = "(" + t1.accu_str + "," + t2.accu_str + ")";
+    
+    // Set as internal node
+    t3.isLeaf = false;
+    t3.left = std::make_unique<PseudoUniTensor>(t1);
+    t3.right = std::make_unique<PseudoUniTensor>(t2);
+    
     return t3;
   }
 
@@ -170,7 +161,8 @@ namespace cytnx {
           // Contract best pair
           auto left = std::move(nodes[remaining_indices[best_i]]);
           auto right = std::move(nodes[remaining_indices[best_j]]);
-          auto result = std::make_unique<PseudoUniTensor>(std::move(left), std::move(right));
+          auto result = pContract(*left, *right);
+          auto result_ptr = std::make_unique<PseudoUniTensor>(std::move(result));
 
           // Update remaining indices
           remaining_indices.erase(remaining_indices.begin() + best_j);
@@ -178,7 +170,7 @@ namespace cytnx {
 
           // Store result in original nodes vector
           size_t new_idx = nodes.size();
-          nodes.push_back(std::move(result));
+          nodes.push_back(std::move(result_ptr));
           remaining_indices.push_back(new_idx);
         }
 
@@ -190,9 +182,11 @@ namespace cytnx {
       while (component_results.size() > 1) {
         auto left = std::move(component_results[0]);
         auto right = std::move(component_results[1]);
-        auto result = std::make_unique<PseudoUniTensor>(std::move(left), std::move(right));
+        auto result = pContract(*left, *right);
+        auto result_ptr = std::make_unique<PseudoUniTensor>(std::move(result));
+        
         component_results.erase(component_results.begin(), component_results.begin() + 2);
-        component_results.insert(component_results.begin(), std::move(result));
+        component_results.insert(component_results.begin(), std::move(result_ptr));
       }
 
       return std::move(component_results[0]);
@@ -201,12 +195,12 @@ namespace cytnx {
 
   void SearchTree::search_order() {
     this->reset_search_order();
-    if (this->base_nodes.size() == 0) {
-      cytnx_error_msg(true, "[ERROR][SearchTree] no base node exist.%s", "\n");
+    if (this->base_nodes.size() == 1 || this->base_nodes.size() == 0  ) {
+      cytnx_error_msg(true, "[ERROR][SearchTree] need at least 2 nodes.%s", "\n");
     }
 
     // Run optimal tree solver directly with base_nodes
-    root = OptimalTreeSolver::solve(base_nodes, false);
+    root_ptr = OptimalTreeSolver::solve(base_nodes, true);
   }
 
   PseudoUniTensor& PseudoUniTensor::operator=(const PseudoUniTensor& rhs) {
@@ -287,6 +281,8 @@ namespace cytnx {
     left = nullptr;
     right = nullptr;
   }
+
+
 
 }  // namespace cytnx
 #endif

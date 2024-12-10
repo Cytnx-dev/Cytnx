@@ -36,7 +36,8 @@ namespace cytnx {
 
     // Constructors
     explicit PseudoUniTensor(cytnx_uint64 index = 0)
-        : isLeaf(true), tensorIndex(index), is_assigned(false), cost(0), ID(0) {}
+        : isLeaf(true), tensorIndex(index), is_assigned(false), cost(0), ID(1ULL << index), 
+          accu_str(std::to_string(index)) {}
 
     PseudoUniTensor(std::unique_ptr<PseudoUniTensor> l, std::unique_ptr<PseudoUniTensor> r)
         : isLeaf(false), left(std::move(l)), right(std::move(r)), cost(0), ID(0) {}
