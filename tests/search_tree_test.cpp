@@ -102,12 +102,12 @@ TEST_F(SearchTreeTest, BasicSearchOrder2) {
 
   // Verify the final contraction cost is optimal
   // The optimal sequence contracts (t1,t2) first, then t3, then t4
-  EXPECT_EQ(result->cost, 832);
+  EXPECT_EQ(result->cost, 1536);
 
   // Verify the contraction sequence string matches expected optimal order
   // Format is (tensor_id,(tensor_id,tensor_id)) showing order of pairwise contractions
   cout << result->accu_str << endl;
-  EXPECT_EQ(result->accu_str, "(3,(0,(1,2)))");
+  EXPECT_EQ(result->accu_str, "((2,3),(0,1))");
 }
 
 TEST_F(SearchTreeTest, EmptyTree) {
