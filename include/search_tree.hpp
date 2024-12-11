@@ -7,98 +7,82 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <bitset>
+#include <memory>
+#include <unordered_map>
 #include "UniTensor.hpp"
 
-#ifdef BACKEND_TORCH
-#else
-
 namespace cytnx {
-  /// @cond
-  class PsudoUniTensor {
+
+  using IndexSet = std::bitset<128>;
+
+  class PseudoUniTensor {
    public:
-    // UniTensor utensor; //don't worry about copy, because everything are references in cytnx!
+    bool isLeaf;
+
+    // Leaf node data
     std::vector<std::string> labels;
     std::vector<cytnx_uint64> shape;
     bool is_assigned;
-    PsudoUniTensor *left;
-    PsudoUniTensor *right;
-    PsudoUniTensor *root;
+    cytnx_uint64 tensorIndex;
+
+    // Internal node data
+    std::unique_ptr<PseudoUniTensor> left;
+    std::unique_ptr<PseudoUniTensor> right;
+
     cytnx_float cost;
     cytnx_uint64 ID;
-
     std::string accu_str;
 
-    PsudoUniTensor()
-        : is_assigned(false), left(nullptr), right(nullptr), root(nullptr), cost(0), ID(0){};
-    PsudoUniTensor(const PsudoUniTensor &rhs) {
-      this->left = rhs.left;
-      this->right = rhs.right;
-      this->root = rhs.root;
-      this->labels = rhs.labels;
-      this->shape = rhs.shape;
-      this->is_assigned = rhs.is_assigned;
-      this->cost = rhs.cost;
-      this->accu_str = rhs.accu_str;
-      this->ID = rhs.ID;
-    }
-    PsudoUniTensor &operator==(const PsudoUniTensor &rhs) {
-      this->left = rhs.left;
-      this->right = rhs.right;
-      this->root = rhs.root;
-      this->labels = rhs.labels;
-      this->shape = rhs.shape;
-      this->is_assigned = rhs.is_assigned;
-      this->cost = rhs.cost;
-      this->accu_str = rhs.accu_str;
-      this->ID = rhs.ID;
-      return *this;
-    }
-    void from_utensor(const UniTensor &in_uten) {
-      this->labels = in_uten.labels();
-      this->shape = in_uten.shape();
-      this->is_assigned = true;
-    }
-    void clear_utensor() {
-      this->is_assigned = false;
-      this->labels.clear();
-      this->shape.clear();
-      this->ID = 0;
-      this->cost = 0;
-      this->accu_str = "";
-    }
-    void set_ID(const cytnx_int64 &ID) { this->ID = ID; }
+    // Constructors
+    explicit PseudoUniTensor(cytnx_uint64 index = 0)
+        : isLeaf(true), tensorIndex(index), is_assigned(false), cost(0), ID(1ULL << index), 
+          accu_str(std::to_string(index)) {}
+
+    PseudoUniTensor(std::unique_ptr<PseudoUniTensor> l, std::unique_ptr<PseudoUniTensor> r)
+        : isLeaf(false), left(std::move(l)), right(std::move(r)), cost(0), ID(0) {}
+
+    // Copy and move constructors and assignment operators
+    PseudoUniTensor(const PseudoUniTensor& rhs);
+    PseudoUniTensor(PseudoUniTensor&& rhs) noexcept;
+    PseudoUniTensor& operator=(const PseudoUniTensor& rhs);
+    PseudoUniTensor& operator=(PseudoUniTensor&& rhs) noexcept;
+    ~PseudoUniTensor() = default;
+
+    void from_utensor(const UniTensor& in_uten);
+    void clear_utensor();
   };
+
+  namespace OptimalTreeSolver {
+    std::unique_ptr<PseudoUniTensor> solve(const std::vector<PseudoUniTensor>& tensors,
+                                           bool verbose = false);
+  }
 
   class SearchTree {
    public:
-    std::vector<std::vector<PsudoUniTensor>> nodes_container;
-    // std::vector<PsudoUniTensor> nodes_container; // this contains intermediate layer.
-    std::vector<PsudoUniTensor> base_nodes;  // this is the button layer.
+  
+    std::vector<PseudoUniTensor> base_nodes;
 
-    SearchTree(){};
-    SearchTree(const SearchTree &rhs) {
-      this->nodes_container = rhs.nodes_container;
-      this->base_nodes = rhs.base_nodes;
-    }
-    SearchTree &operator==(const SearchTree &rhs) {
-      this->nodes_container = rhs.nodes_container;
-      this->base_nodes = rhs.base_nodes;
-      return *this;
-    }
-
-    // clear all the elements in the whole tree.
+    SearchTree() = default;
     void clear() {
-      nodes_container.clear();
-      base_nodes.clear();
-      // nodes_container.reserve(1024);
+        root_ptr.reset();
+        base_nodes.clear();
     }
-    // clear all the intermediate layer, leave all the base_nodes intact.
-    // and reset the root pointer on the base ondes
-    void reset_search_order() { nodes_container.clear(); }
+    void reset_search_order() { root_ptr.reset(); }
     void search_order();
+
+    std::vector<std::vector<PseudoUniTensor*>> get_root() const {
+        return {{root_ptr.get()}};
+    }
+
+   private:
+    std::unique_ptr<PseudoUniTensor> root_ptr;
   };
-  /// @endcond
+
+  // Helper functions declarations
+  cytnx_float get_cost(const PseudoUniTensor& t1, const PseudoUniTensor& t2);
+  PseudoUniTensor pContract(PseudoUniTensor& t1, PseudoUniTensor& t2);
+
 }  // namespace cytnx
-#endif
 
 #endif  // CYTNX_SEARCH_TREE_H_
