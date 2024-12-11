@@ -64,13 +64,13 @@ namespace cytnx {
 
   namespace OptimalTreeSolver {
     // Helper function to find connected components using DFS
-    void dfs(size_t node, const std::vector<std::vector<bool>>& adjacencyMatrix,
-             std::vector<bool>& visited, std::vector<size_t>& component) {
-      visited[node] = true;
+    void dfs(size_t node, const std::vector<IndexSet>& adjacencyMatrix,
+             IndexSet& visited, std::vector<size_t>& component) {
+      visited.set(node);
       component.push_back(node);
 
       for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
-        if (adjacencyMatrix[node][i] && !visited[i]) {
+        if (adjacencyMatrix[node].test(i) && !visited.test(i)) {
           dfs(i, adjacencyMatrix, visited, component);
         }
       }
@@ -78,12 +78,12 @@ namespace cytnx {
 
     // Find connected components in the tensor network
     std::vector<std::vector<size_t>> findConnectedComponents(
-      const std::vector<std::vector<bool>>& adjacencyMatrix) {
+      const std::vector<IndexSet>& adjacencyMatrix) {
       std::vector<std::vector<size_t>> components;
-      std::vector<bool> visited(adjacencyMatrix.size(), false);
+      IndexSet visited;
 
       for (size_t i = 0; i < adjacencyMatrix.size(); ++i) {
-        if (!visited[i]) {
+        if (!visited.test(i)) {
           std::vector<size_t> component;
           dfs(i, adjacencyMatrix, visited, component);
           components.push_back(component);
@@ -95,8 +95,13 @@ namespace cytnx {
 
     std::unique_ptr<PseudoUniTensor> solve(const std::vector<PseudoUniTensor>& tensors,
                                            bool verbose) {
+      if (tensors.empty()) {
+        return nullptr;
+      }
+
       // Initialize nodes with copies of input tensors
       std::vector<std::unique_ptr<PseudoUniTensor>> nodes;
+      nodes.reserve(tensors.size());
       for (size_t i = 0; i < tensors.size(); ++i) {
         auto node = std::make_unique<PseudoUniTensor>(i);
         *node = tensors[i];
@@ -104,18 +109,21 @@ namespace cytnx {
         nodes.push_back(std::move(node));
       }
 
-      // Build adjacency matrix
-      std::vector<std::vector<bool>> adjacencyMatrix(nodes.size(),
-                                                     std::vector<bool>(nodes.size(), false));
-      for (size_t i = 0; i < nodes.size(); ++i) {
-        for (size_t j = i + 1; j < nodes.size(); ++j) {
+      const size_t n = nodes.size();
+      // Build adjacency matrix with proper size
+      std::vector<IndexSet> adjacencyMatrix(n);
+      
+      // Fill adjacency matrix
+      for (size_t i = 0; i < n; ++i) {
+        for (size_t j = i + 1; j < n; ++j) {
+          // Find common labels
           vector<string> common_lbl;
           vector<cytnx_uint64> comm_idx1, comm_idx2;
           vec_intersect_(common_lbl, nodes[i]->labels, nodes[j]->labels, comm_idx1, comm_idx2);
 
           if (!common_lbl.empty()) {
-            adjacencyMatrix[i][j] = true;
-            adjacencyMatrix[j][i] = true;
+            adjacencyMatrix[i].set(j);
+            adjacencyMatrix[j].set(i);
           }
         }
       }
@@ -139,10 +147,10 @@ namespace cytnx {
           cytnx_float min_cost = std::numeric_limits<cytnx_float>::max();
 
           for (size_t ii = 0; ii < remaining_indices.size(); ++ii) {
-            size_t i = remaining_indices[ii];
+            size_t i = remaining_indices.at(ii);
             for (size_t jj = ii + 1; jj < remaining_indices.size(); ++jj) {
-              size_t j = remaining_indices[jj];
-              if (adjacencyMatrix[i][j]) {
+              size_t j = remaining_indices.at(jj);
+              if (adjacencyMatrix[i].test(j)) {
                 cytnx_float cost = get_cost(*nodes[i], *nodes[j]);
                 if (cost < min_cost) {
                   min_cost = cost;
@@ -180,13 +188,22 @@ namespace cytnx {
 
       // If there were multiple components, combine them
       while (component_results.size() > 1) {
-        auto left = std::move(component_results[0]);
-        auto right = std::move(component_results[1]);
-        auto result = pContract(*left, *right);
-        auto result_ptr = std::make_unique<PseudoUniTensor>(std::move(result));
+        // Create new node for combining components
+        auto new_node = std::make_unique<PseudoUniTensor>();
+        new_node->isLeaf = false;
         
+        // Move the first two components as children
+        new_node->left = std::move(component_results[0]);
+        new_node->right = std::move(component_results[1]);
+        
+        // Calculate cost and set properties
+        new_node->cost = get_cost(*new_node->left, *new_node->right);
+        new_node->accu_str = "(" + new_node->left->accu_str + "," + new_node->right->accu_str + ")";
+        new_node->ID = new_node->left->ID ^ new_node->right->ID;
+        
+        // Update component list
         component_results.erase(component_results.begin(), component_results.begin() + 2);
-        component_results.insert(component_results.begin(), std::move(result_ptr));
+        component_results.insert(component_results.begin(), std::move(new_node));
       }
 
       return std::move(component_results[0]);
