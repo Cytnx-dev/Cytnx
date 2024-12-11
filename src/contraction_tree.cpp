@@ -10,21 +10,29 @@ using namespace std;
 namespace cytnx {
   void ContractionTree::build_default_contraction_tree() {
     this->reset_contraction_order();
-    cytnx_error_msg(this->base_nodes.size() < 2,
-                    "[ERROR][ContractionTree][build_default_contraction_order] contraction tree "
-                    "should contain >=2 tensors in order to build contraction order.%s",
-                    "\n");
+    
+ 
+    cytnx_error_msg(this->base_nodes.size() < 2, "[ERROR] Need at least 2 tensors for contraction","\n");
+  
 
     std::shared_ptr<Node> left = this->base_nodes[0];
     std::shared_ptr<Node> right;
-    this->nodes_container.reserve(
-      this->base_nodes.size());  // reserve a contiguous memeory address to prevent re-allocate that
-                                 // change address.
+    
+    this->nodes_container.reserve(this->base_nodes.size());
+    
     for (cytnx_uint64 i = 1; i < this->base_nodes.size(); i++) {
-      right = this->base_nodes[i];
-      auto new_node = std::make_shared<Node>(left, right);
-      this->nodes_container.push_back(new_node);
-      left = this->nodes_container.back();
+        right = this->base_nodes[i];
+        
+        auto new_node = std::make_shared<Node>(left, right);
+        
+        this->nodes_container.push_back(new_node);
+        left = new_node;
+    }
+
+    if (!nodes_container.empty()) {
+        auto root = nodes_container.back();
+        std::cout << "Setting root pointers from " << root->name << std::endl;
+        root->set_root_ptrs();
     }
   }
   void ContractionTree::build_contraction_tree_by_tokens(

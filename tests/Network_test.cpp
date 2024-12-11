@@ -19,8 +19,29 @@
 // }
 
 TEST_F(NetworkTest, Network_dense_FromString) {
-  auto net = Network();
-  net.FromString({"A: a,b,c", "B: c,d", "C: d,e", "ORDER:(A,(B,C))", "TOUT: a,b;e"});
+    try {
+        std::cout << "Creating network..." << std::endl;
+        auto net = Network();
+        
+        std::vector<std::string> network_def = {
+            "A: a,b,c", 
+            "B: c,d", 
+            "C: d,e", 
+            "ORDER:(A,(B,C))", 
+            "TOUT: a,b;e"
+        };
+        
+        for(const auto& def : network_def) {
+            std::cout << "Processing: " << def << std::endl;
+        }
+        
+        net.FromString(network_def);
+        std::cout << "Network construction successful" << std::endl;
+        
+    } catch (const std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+        throw;
+    }
 }
 
 TEST_F(NetworkTest, Network_dense_no_order) {
