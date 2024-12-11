@@ -299,6 +299,17 @@ namespace cytnx {
 
     // // put tensor:
     // for (int i = 0; i < utensors.size(); i++) this->tensors[i] = utensors[i];
+
+    // Update node creation
+    this->tensors.resize(this->names.size());
+    this->CtTree.base_nodes.clear();
+    
+    // Create nodes using make_shared
+    for(size_t i = 0; i < this->names.size(); i++) {
+      auto node = std::make_shared<Node>();
+      node->name = this->names[i];
+      this->CtTree.base_nodes.push_back(node);
+    }
   }
 
   void RegularGncon::FromString(const std::vector<std::string> &contents) {
@@ -597,14 +608,15 @@ namespace cytnx {
   string RegularGncon::getOptimalOrder() {
     // Creat a SearchTree to search for optim contraction order.
     SearchTree Stree;
+    Stree.base_nodes.clear();
     Stree.base_nodes.resize(this->tensors.size());
+    
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
-      // Stree.base_nodes[t].from_utensor(this->tensors[t]); //create psudotensors from base tensors
-      Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
+      Stree.base_nodes[t].from_utensor(this->tensors[t]);
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
-    return Stree.nodes_container.back()[0].accu_str;
+    return Stree.get_root().back()[0]->accu_str;
   }
 
   UniTensor RegularGncon::Launch(const bool &optimal, const string &contract_order /*default ""*/) {
@@ -636,10 +648,10 @@ namespace cytnx {
 
       // modify the label of unitensor (shared):
       //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
-      this->CtTree.base_nodes[idx].utensor =
+      this->CtTree.base_nodes[idx]->utensor =
         this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
       // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
-      this->CtTree.base_nodes[idx].is_assigned = true;
+      this->CtTree.base_nodes[idx]->is_assigned = true;
 
       // cout << this->tensors[idx].name() << " " << idx << "from dict:" <<
       // this->name2pos[this->tensors[idx].name()] << endl;
@@ -667,8 +679,8 @@ namespace cytnx {
 
     // 2. contract using postorder traversal:
     // cout << this->CtTree.nodes_container.size() << endl;
-    stack<Node *> stk;
-    Node *root = &(this->CtTree.nodes_container.back());
+    stack<std::shared_ptr<Node>> stk;
+    std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
     int ly = 0;
     bool ict;
 
@@ -720,7 +732,7 @@ namespace cytnx {
     } while (!stk.empty());
 
     // 3. get result:
-    UniTensor out = this->CtTree.nodes_container.back().utensor;
+    UniTensor out = this->CtTree.nodes_container.back()->utensor;
     // std::cout << out << std::endl;
     // out.print_diagram();
 
@@ -734,7 +746,7 @@ namespace cytnx {
 
     // 6. permute accroding to pre-set labels:
     if (TOUT_labels.size()) {
-      out.permute_(TOUT_labels, TOUT_iBondNum, true);
+      out.permute_(TOUT_labels, TOUT_iBondNum);
     }
 
     // UniTensor out;

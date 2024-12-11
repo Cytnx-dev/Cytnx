@@ -8,97 +8,107 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 
 #ifdef BACKEND_TORCH
 #else
 namespace cytnx {
   /// @cond
-  class Node {
+  class Node : public std::enable_shared_from_this<Node> {
    public:
     UniTensor utensor;  // don't worry about copy, because everything are references in cytnx!
     bool is_assigned;
-    Node *left;
-    Node *right;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
+    std::weak_ptr<Node> root;  // Use weak_ptr to avoid circular references
     std::string name;
-    Node *root;
 
-    Node() : is_assigned(false), left(nullptr), right(nullptr), root(nullptr){};
-    Node(const Node &rhs) {
-      this->left = rhs.left;
-      this->right = rhs.right;
-      this->root = rhs.root;
-      this->utensor = rhs.utensor;
-      this->is_assigned = rhs.is_assigned;
+    Node() : is_assigned(false) {}
+    
+    Node(const Node& rhs) 
+        : utensor(rhs.utensor),
+          is_assigned(rhs.is_assigned),
+          left(rhs.left),
+          right(rhs.right),
+          name(rhs.name) {
+      if (auto r = rhs.root.lock()) {
+        root = r;
+      }
     }
-    Node &operator==(const Node &rhs) {
-      this->left = rhs.left;
-      this->right = rhs.right;
-      this->root = rhs.root;
-      this->utensor = rhs.utensor;
-      this->is_assigned = rhs.is_assigned;
+    
+    Node& operator=(const Node& rhs) {
+      if (this != &rhs) {
+        utensor = rhs.utensor;
+        is_assigned = rhs.is_assigned;
+        left = rhs.left;
+        right = rhs.right;
+        name = rhs.name;
+        if (auto r = rhs.root.lock()) {
+          root = r;
+        }
+      }
       return *this;
     }
-    Node(Node *in_left, Node *in_right, const UniTensor &in_uten = UniTensor())
-        : is_assigned(false), left(nullptr), right(nullptr), root(nullptr) {
-      this->left = in_left;
-      this->right = in_right;
-      in_left->root = this;
-      in_right->root = this;
-      if (in_uten.uten_type() != UTenType.Void) this->utensor = in_uten;
+
+    Node(std::shared_ptr<Node> in_left, std::shared_ptr<Node> in_right, 
+         const UniTensor& in_uten = UniTensor())
+        : is_assigned(false) {
+      left = in_left;
+      right = in_right;
+      if (in_uten.uten_type() != UTenType.Void) {
+        utensor = in_uten;
+      }
+      
+      // Set root pointers using shared_from_this()
+      if (left) left->root = shared_from_this();
+      if (right) right->root = shared_from_this();
     }
-    void assign_utensor(const UniTensor &in_uten) {
-      this->utensor = in_uten;
-      this->is_assigned = true;
+
+    void assign_utensor(const UniTensor& in_uten) {
+      utensor = in_uten;
+      is_assigned = true;
     }
+
     void clear_utensor() {
-      this->is_assigned = false;
-      this->utensor = UniTensor();
+      is_assigned = false;
+      utensor = UniTensor();
     }
   };
 
   class ContractionTree {
    public:
-    std::vector<Node> nodes_container;  // this contains intermediate layer.
-    std::vector<Node> base_nodes;  // this is the button layer.
+    std::vector<std::shared_ptr<Node>> nodes_container;  // intermediate layer
+    std::vector<std::shared_ptr<Node>> base_nodes;       // bottom layer
 
-    ContractionTree(){};
-    ContractionTree(const ContractionTree &rhs) {
-      this->nodes_container = rhs.nodes_container;
-      this->base_nodes = rhs.base_nodes;
-    }
-    ContractionTree &operator==(const ContractionTree &rhs) {
-      this->nodes_container = rhs.nodes_container;
-      this->base_nodes = rhs.base_nodes;
-      return *this;
-    }
+    ContractionTree() = default;
+    ContractionTree(const ContractionTree&) = default;
+    ContractionTree& operator=(const ContractionTree&) = default;
 
-    // clear all the elements in the whole tree.
     void clear() {
       nodes_container.clear();
       base_nodes.clear();
-      // nodes_container.reserve(1024);
     }
-    // clear all the intermediate layer, leave all the base_nodes intact.
-    // and reset the root pointer on the base ondes
+
     void reset_contraction_order() {
       nodes_container.clear();
-      for (cytnx_uint64 i = 0; i < base_nodes.size(); i++) {
-        base_nodes[i].root = nullptr;
+      for (auto& node : base_nodes) {
+        node->root.reset();  // Dereference shared_ptr with ->
       }
-      // nodes_container.reserve(1024);
     }
+
     void reset_nodes() {
-      // reset all nodes but keep the skeleton
-      for (cytnx_uint64 i = 0; i < this->nodes_container.size(); i++) {
-        this->nodes_container[i].clear_utensor();
+      for (auto& node : nodes_container) {
+        node->clear_utensor();
       }
-      for (cytnx_uint64 i = 0; i < this->base_nodes.size(); i++) {
-        this->base_nodes[i].clear_utensor();
+      for (auto& node : base_nodes) {
+        node->clear_utensor();
       }
     }
+
     void build_default_contraction_tree();
-    void build_contraction_tree_by_tokens(const std::map<std::string, cytnx_uint64> &name2pos,
-                                          const std::vector<std::string> &tokens);
+    void build_contraction_tree_by_tokens(
+        const std::map<std::string, cytnx_uint64>& name2pos,
+        const std::vector<std::string>& tokens);
   };
   /// @endcond
 }  // namespace cytnx
