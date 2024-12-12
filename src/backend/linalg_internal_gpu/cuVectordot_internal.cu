@@ -51,8 +51,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_cd((cytnx_complex128 *)_out, (cytnx_complex128 *)dacres,
-                                        TotSeg);
+        utils_internal::cuReduce_gpu((cytnx_complex128 *)_out, (cytnx_complex128 *)dacres, TotSeg);
       }
       /*
       cytnx_complex128 *hacres = (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*TotSeg);
@@ -111,7 +110,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_cf((cytnx_complex64 *)_out, (cytnx_complex64 *)dacres, TotSeg);
+        utils_internal::cuReduce_gpu((cytnx_complex64 *)_out, (cytnx_complex64 *)dacres, TotSeg);
       }
       /*
       cytnx_complex64 *hacres = (cytnx_complex64*)malloc(sizeof(cytnx_complex64)*TotSeg);
@@ -169,7 +168,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_d(_out, dacres, TotSeg);
+        utils_internal::cuReduce_gpu(_out, dacres, TotSeg);
       }
       // std::cout << "done" << std::endl;
       /*
@@ -224,7 +223,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_f(_out, dacres, TotSeg);
+        utils_internal::cuReduce_gpu(_out, dacres, TotSeg);
       }
       /*
       cytnx_float *hacres = (cytnx_float*)malloc(sizeof(cytnx_float)*TotSeg);
