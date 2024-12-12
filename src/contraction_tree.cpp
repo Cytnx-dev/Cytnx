@@ -12,7 +12,8 @@ namespace cytnx {
     this->reset_contraction_order();
     
  
-    cytnx_error_msg(this->base_nodes.size() < 2, "[ERROR] Need at least 2 tensors for contraction","\n");
+    cytnx_error_msg(this->base_nodes.size() < 2, 
+    "[ERROR] Need at least 2 tensors for contraction","\n");
   
 
     std::shared_ptr<Node> left = this->base_nodes[0];
