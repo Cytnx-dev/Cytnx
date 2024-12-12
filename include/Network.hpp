@@ -86,7 +86,7 @@ namespace cytnx {
     friend class FermionNetwork;
     friend class RegularNetwork;
     friend class Network;
-    Network_base() : nwrktype_id(NtType.Void){};
+    Network_base() : nwrktype_id(NtType.Void) {};
 
     bool HasPutAllUniTensor() {
       for (cytnx_uint64 i = 0; i < this->tensors.size(); i++) {
@@ -138,7 +138,7 @@ namespace cytnx {
     virtual void PrintNet(std::ostream &os);
     virtual boost::intrusive_ptr<Network_base> clone();
     virtual void Savefile(const std::string &fname);
-    virtual ~Network_base(){};
+    virtual ~Network_base() {};
 
   };  // Network_base
 
@@ -196,7 +196,7 @@ namespace cytnx {
     }
     void PrintNet(std::ostream &os);
     void Savefile(const std::string &fname);
-    ~RegularNetwork(){};
+    ~RegularNetwork() {};
   };
 
   // Under dev!!
@@ -206,19 +206,19 @@ namespace cytnx {
 
    public:
     FermionNetwork() { this->nwrktype_id = NtType.Fermion; };
-    void Fromfile(const std::string &fname){};
-    void FromString(const std::vector<std::string> &contents){};
-    void RmUniTensor(const cytnx_uint64 &idx){};
-    void RmUniTensor(const std::string &name){};
-    void RmUniTensors(const std::vector<std::string> &name){};
+    void Fromfile(const std::string &fname) {};
+    void FromString(const std::vector<std::string> &contents) {};
+    void RmUniTensor(const cytnx_uint64 &idx) {};
+    void RmUniTensor(const std::string &name) {};
+    void RmUniTensors(const std::vector<std::string> &name) {};
 
-    void PutUniTensor(const std::string &name, const UniTensor &utensor){};
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){};
+    void PutUniTensor(const std::string &name, const UniTensor &utensor) {};
+    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {};
     void PutUniTensors(const std::vector<std::string> &name,
-                       const std::vector<UniTensor> &utensors){};
+                       const std::vector<UniTensor> &utensors) {};
     void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
                        const std::vector<std::string> &alias = {},
-                       const std::string &contract_order = ""){};
+                       const std::string &contract_order = "") {};
     void clear() {
       this->name2pos.clear();
       this->CtTree.clear();
@@ -245,9 +245,9 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os){};
-    void Savefile(const std::string &fname){};
-    ~FermionNetwork(){};
+    void PrintNet(std::ostream &os) {};
+    void Savefile(const std::string &fname) {};
+    ~FermionNetwork() {};
   };
 
   ///@endcond
@@ -262,7 +262,7 @@ namespace cytnx {
    public:
     ///@cond
     boost::intrusive_ptr<Network_base> _impl;
-    Network() : _impl(new Network_base()){};
+    Network() : _impl(new Network_base()) {};
     Network(const Network &rhs) { this->_impl = rhs._impl; }
     Network &operator=(const Network &rhs) {
       this->_impl = rhs._impl;

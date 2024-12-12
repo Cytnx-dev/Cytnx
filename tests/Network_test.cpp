@@ -19,8 +19,7 @@
 // }
 
 TEST_F(NetworkTest, Network_dense_FromString) {
-    try {
-        std::cout << "Creating network..." << std::endl;
+
         auto net = Network();
         
         std::vector<std::string> network_def = {
@@ -30,18 +29,9 @@ TEST_F(NetworkTest, Network_dense_FromString) {
             "ORDER:(A,(B,C))", 
             "TOUT: a,b;e"
         };
-        
-        for(const auto& def : network_def) {
-            std::cout << "Processing: " << def << std::endl;
-        }
-        
+
         net.FromString(network_def);
-        std::cout << "Network construction successful" << std::endl;
-        
-    } catch (const std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-        throw;
-    }
+
 }
 
 TEST_F(NetworkTest, Network_dense_no_order) {

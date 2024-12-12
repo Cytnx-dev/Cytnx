@@ -537,12 +537,12 @@ namespace cytnx {
     this->tensors.resize(this->names.size());
     this->CtTree.base_nodes.resize(this->names.size());
     this->CtTree.base_nodes.clear();
-    
+
     // Create base nodes properly
-    for(size_t i = 0; i < this->names.size(); i++) {
-        auto node = std::make_shared<Node>();
-        node->name = this->names[i];
-        this->CtTree.base_nodes.push_back(node);
+    for (size_t i = 0; i < this->names.size(); i++) {
+      auto node = std::make_shared<Node>();
+      node->name = this->names[i];
+      this->CtTree.base_nodes.push_back(node);
     }
 
     // checking if all TN are set in ORDER.
@@ -648,7 +648,7 @@ namespace cytnx {
       CtTree.build_default_contraction_tree();
     }
     this->einsum_path = CtTree_to_eisumpath(CtTree, names);
-  } // end of FromString
+  }  // end of FromString
 
   void RegularNetwork::Fromfile(const string &fname) {
     const cytnx_uint64 MAXLINES = 1024;
@@ -993,7 +993,7 @@ namespace cytnx {
 
         root = stk.top();
         stk.pop();
-        
+
         ict = true;
         if (root->right && !stk.empty()) {
           if (stk.top() == root->right) {  // This comparison now works with shared_ptr
@@ -1111,7 +1111,7 @@ namespace cytnx {
 
         root = stk.top();
         stk.pop();
-        
+
         ict = true;
         if (root->right && !stk.empty()) {
           if (stk.top() == root->right) {  // This comparison now works with shared_ptr
@@ -1198,7 +1198,7 @@ namespace cytnx {
     this->CtTree.base_nodes.clear();
 
     // Create nodes using make_shared
-    for(size_t i = 0; i < this->names.size(); i++) {
+    for (size_t i = 0; i < this->names.size(); i++) {
       auto node = std::make_shared<Node>();
       node->name = this->names[i];
       this->CtTree.base_nodes.push_back(node);

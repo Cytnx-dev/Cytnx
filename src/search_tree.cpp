@@ -32,40 +32,38 @@ namespace cytnx {
 
   PseudoUniTensor pContract(PseudoUniTensor& t1, PseudoUniTensor& t2) {
     PseudoUniTensor t3(0);  // Initialize with index 0
-    
+
     t3.ID = t1.ID ^ t2.ID;  // XOR of IDs to track contracted tensors
     t3.cost = get_cost(t1, t2);  // Calculate contraction cost
-    
+
     // Find common labels between t1 and t2
     vector<cytnx_uint64> loc1, loc2;
     vector<string> comm_lbl;
     vec_intersect_(comm_lbl, t1.labels, t2.labels, loc1, loc2);
-    
+
     // New shape is concatenation of non-contracted dimensions
-    t3.shape = vec_concatenate(vec_erase(t1.shape, loc1), 
-                             vec_erase(t2.shape, loc2));
-    
-    // New labels are concatenation of non-contracted labels  
-    t3.labels = vec_concatenate(vec_erase(t1.labels, loc1),
-                              vec_erase(t2.labels, loc2));
-    
+    t3.shape = vec_concatenate(vec_erase(t1.shape, loc1), vec_erase(t2.shape, loc2));
+
+    // New labels are concatenation of non-contracted labels
+    t3.labels = vec_concatenate(vec_erase(t1.labels, loc1), vec_erase(t2.labels, loc2));
+
     // Set accumulation string using the original accu_str if available
     if (t1.accu_str.empty()) t1.accu_str = std::to_string(t1.tensorIndex);
     if (t2.accu_str.empty()) t2.accu_str = std::to_string(t2.tensorIndex);
     t3.accu_str = "(" + t1.accu_str + "," + t2.accu_str + ")";
-    
+
     // Set as internal node
     t3.isLeaf = false;
     t3.left = std::make_unique<PseudoUniTensor>(t1);
     t3.right = std::make_unique<PseudoUniTensor>(t2);
-    
+
     return t3;
   }
 
   namespace OptimalTreeSolver {
     // Helper function to find connected components using DFS
-    void dfs(size_t node, const std::vector<IndexSet>& adjacencyMatrix,
-             IndexSet& visited, std::vector<size_t>& component) {
+    void dfs(size_t node, const std::vector<IndexSet>& adjacencyMatrix, IndexSet& visited,
+             std::vector<size_t>& component) {
       visited.set(node);
       component.push_back(node);
 
@@ -112,7 +110,7 @@ namespace cytnx {
       const size_t n = nodes.size();
       // Build adjacency matrix with proper size
       std::vector<IndexSet> adjacencyMatrix(n);
-      
+
       // Fill adjacency matrix
       for (size_t i = 0; i < n; ++i) {
         for (size_t j = i + 1; j < n; ++j) {
@@ -191,16 +189,16 @@ namespace cytnx {
         // Create new node for combining components
         auto new_node = std::make_unique<PseudoUniTensor>();
         new_node->isLeaf = false;
-        
+
         // Move the first two components as children
         new_node->left = std::move(component_results[0]);
         new_node->right = std::move(component_results[1]);
-        
+
         // Calculate cost and set properties
         new_node->cost = get_cost(*new_node->left, *new_node->right);
         new_node->accu_str = "(" + new_node->left->accu_str + "," + new_node->right->accu_str + ")";
         new_node->ID = new_node->left->ID ^ new_node->right->ID;
-        
+
         // Update component list
         component_results.erase(component_results.begin(), component_results.begin() + 2);
         component_results.insert(component_results.begin(), std::move(new_node));
@@ -212,7 +210,7 @@ namespace cytnx {
 
   void SearchTree::search_order() {
     this->reset_search_order();
-    if (this->base_nodes.size() == 1 || this->base_nodes.size() == 0  ) {
+    if (this->base_nodes.size() == 1 || this->base_nodes.size() == 0) {
       cytnx_error_msg(true, "[ERROR][SearchTree] need at least 2 nodes.%s", "\n");
     }
 
@@ -298,8 +296,6 @@ namespace cytnx {
     left = nullptr;
     right = nullptr;
   }
-
-
 
 }  // namespace cytnx
 #endif
