@@ -50,7 +50,7 @@ TEST_F(SearchTreeTest, BasicSearchOrder) {
   EXPECT_EQ(result->cost, 32);  // 2*3*4 + 2*2*4 = 24 + 16 = 40 flops, cost = 32
 
   // Verify contraction string format
-  EXPECT_EQ(result->accu_str, "(2,(0,1))"); 
+  EXPECT_EQ(result->accu_str, "(2,(0,1))");
 }
 
 TEST_F(SearchTreeTest, BasicSearchOrder2) {
@@ -67,7 +67,7 @@ TEST_F(SearchTreeTest, BasicSearchOrder2) {
 
   // Create tensor 2 with shape [10,4,8] and labels ["j","k","m"]
   // This connects with t1 through j, t3 through k, and t4 through m
-  PseudoUniTensor t2(1); 
+  PseudoUniTensor t2(1);
   t2.shape = {10, 4, 8};
   t2.labels = {"j", "k", "m"};
   t2.cost = 0;
@@ -76,7 +76,7 @@ TEST_F(SearchTreeTest, BasicSearchOrder2) {
   // Create tensor 3 with shape [4,2] and labels ["k","l"]
   // This connects with t2 through k and t4 through l
   PseudoUniTensor t3(2);
-  t3.shape = {4, 2}; 
+  t3.shape = {4, 2};
   t3.labels = {"k", "l"};
   t3.cost = 0;
   tensors.push_back(t3);
