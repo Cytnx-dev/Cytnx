@@ -303,9 +303,9 @@ namespace cytnx {
     // Update node creation
     this->tensors.resize(this->names.size());
     this->CtTree.base_nodes.clear();
-    
+
     // Create nodes using make_shared
-    for(size_t i = 0; i < this->names.size(); i++) {
+    for (size_t i = 0; i < this->names.size(); i++) {
       auto node = std::make_shared<Node>();
       node->name = this->names[i];
       this->CtTree.base_nodes.push_back(node);
@@ -610,7 +610,7 @@ namespace cytnx {
     SearchTree Stree;
     Stree.base_nodes.clear();
     Stree.base_nodes.resize(this->tensors.size());
-    
+
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
       Stree.base_nodes[t].from_utensor(this->tensors[t]);
       Stree.base_nodes[t].accu_str = this->names[t];

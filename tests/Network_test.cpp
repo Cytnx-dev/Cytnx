@@ -19,19 +19,12 @@
 // }
 
 TEST_F(NetworkTest, Network_dense_FromString) {
+  auto net = Network();
 
-        auto net = Network();
-        
-        std::vector<std::string> network_def = {
-            "A: a,b,c", 
-            "B: c,d", 
-            "C: d,e", 
-            "ORDER:(A,(B,C))", 
-            "TOUT: a,b;e"
-        };
+  std::vector<std::string> network_def = {"A: a,b,c", "B: c,d", "C: d,e", "ORDER:(A,(B,C))",
+                                          "TOUT: a,b;e"};
 
-        net.FromString(network_def);
-
+  net.FromString(network_def);
 }
 
 TEST_F(NetworkTest, Network_dense_no_order) {

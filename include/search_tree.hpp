@@ -36,7 +36,11 @@ namespace cytnx {
 
     // Constructors
     explicit PseudoUniTensor(cytnx_uint64 index = 0)
-        : isLeaf(true), tensorIndex(index), is_assigned(false), cost(0), ID(1ULL << index), 
+        : isLeaf(true),
+          tensorIndex(index),
+          is_assigned(false),
+          cost(0),
+          ID(1ULL << index),
           accu_str(std::to_string(index)) {}
 
     PseudoUniTensor(std::unique_ptr<PseudoUniTensor> l, std::unique_ptr<PseudoUniTensor> r)
@@ -60,20 +64,17 @@ namespace cytnx {
 
   class SearchTree {
    public:
-  
     std::vector<PseudoUniTensor> base_nodes;
 
     SearchTree() = default;
     void clear() {
-        root_ptr.reset();
-        base_nodes.clear();
+      root_ptr.reset();
+      base_nodes.clear();
     }
     void reset_search_order() { root_ptr.reset(); }
     void search_order();
 
-    std::vector<std::vector<PseudoUniTensor*>> get_root() const {
-        return {{root_ptr.get()}};
-    }
+    std::vector<std::vector<PseudoUniTensor*>> get_root() const { return {{root_ptr.get()}}; }
 
    private:
     std::unique_ptr<PseudoUniTensor> root_ptr;
