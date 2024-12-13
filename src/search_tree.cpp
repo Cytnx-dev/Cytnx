@@ -215,7 +215,7 @@ namespace cytnx {
     }
 
     // Run optimal tree solver directly with base_nodes
-    root_ptr = OptimalTreeSolver::solve(base_nodes, true);
+    root_ptr = OptimalTreeSolver::solve(base_nodes, false);
   }
 
   PseudoUniTensor& PseudoUniTensor::operator=(const PseudoUniTensor& rhs) {
