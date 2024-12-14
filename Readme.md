@@ -3,9 +3,9 @@
 
 ![alt text](./Icons/Icon_small.png)
 
-`*`The name of this project pronounced as sci-tens!`*`
+[API Documentation](https://kaihsinwu.gitlab.io/cytnx_api/)
 
-## Introduction
+## What is Cytnx (pronounced as sci-tens)?
 
 Cytnx is a library designed for Quantum/classical Physics simulations.
 
@@ -17,8 +17,15 @@ Cytnx also supports multi-devices (CPUs/GPUs) directly on the base container lev
 
 For algorithms in physics, Cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces.
 
-- [API Documentation](https://kaihsinwu.gitlab.io/cytnx_api/)
-- [Intro slide for Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
+[Intro slide for Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
+
+## Why choose Cytnx?
+
+- C++ and Python are co-existing, there is no one first.
+- 95% of API are the same in C++ and Python. This means that one can do a fast prototype in Python, and directly convert to C++ with extremely minimal re-writing of the codebase.
+- GPUs/CPUs multi-device support.
+- Easy to use user-interface similar to numpy/scipy/pytorch.
+- Enhanced tools specifically designed for quantum/classical physics simulations, including symmetries.
 
 ## Installation
 
@@ -29,7 +36,7 @@ See The following user guide for installation instructions and an introduction t
 
 [Cytnx User Guide](https://kaihsinwu.gitlab.io/Cytnx_doc/)
 
-## Objects:
+## Objects
     * Storage   [binded]
     * Tensor    [binded]
     * Accessor  [C++ only]
@@ -38,7 +45,7 @@ See The following user guide for installation instructions and an introduction t
     * CyTensor	[binded]
     * Network   [binded]
 
-## Feature:
+## Features
 
 ### Python x C++
     Benefit from both side.
@@ -255,19 +262,15 @@ See The following user guide for installation instructions and an introduction t
 
     [Note] The difference between initializer and generator is that the initializer is used to initialize the Tensor, and the generator creates a new Tensor.
 
-## How to contribute & get in contact
-    If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
-	Also, if you have any questions or suggestions, feel free to reach out to us.
+## Community and Contribution
 
-	You can contact us by:
-    * Discord:
-[https://discord.gg/dyhF7CCE9D](https://discord.gg/dyhF7CCE9D)
+If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
 
-    * Creating an issue on github if you find a bug or have a suggestion:
+Also, if you have any questions or suggestions, feel free to reach out to us.
 
-[https://github.com/Cytnx-dev/Cytnx/issues](https://github.com/Cytnx-dev/Cytnx/issues)
-
-    * Email, see below
+You can contact us by:
+- Discord: [https://discord.gg/dyhF7CCE9D](https://discord.gg/dyhF7CCE9D)
+- Email: kaihsinwu@gmail.com
 
 ## Developers & Maintainers
 
