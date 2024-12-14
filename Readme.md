@@ -3,31 +3,31 @@
 
 ![alt text](./Icons/Icon_small.png)
 
-## Install
+`*`The name of this project pronounced as sci-tens!`*`
+
+## Introduction
+
+Cytnx is a library designed for Quantum/classical Physics simulations.
+
+The library is built from bottom-up, with both C++ and Python in mind right at the beginning of development. That’s why nearly 95% of the APIs are exactly the same at both C++ and Python ends.
+
+Most of Cytnx APIs share very similar interfaces as the most common and popular libraries: numpy/scipy/pytorch. This is specifically designed so as to reduce the learning curve for users. Furthermore, we implement these easy-to-use Python libraries interfacing to the C++ side in hope to benefit users who want to bring their Python programming experience to the C++ side and speed up their programs.
+
+Cytnx also supports multi-devices (CPUs/GPUs) directly on the base container level. Especially, not only the container but also our linear algebra functions share the same APIs regardless of the devices where the input Tensors are stored, just like pytorch. This provides users the ability to accelerate the code without worrying too much about details of multi-device programming.
+
+For algorithms in physics, Cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces.
+
+- [API Documentation](https://kaihsinwu.gitlab.io/cytnx_api/)
+- [Intro slide for Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
+
+## Installation
+
 See The following user guide for installation instructions and an introduction to Cytnx:
-
 [https://kaihsinwu.gitlab.io/Cytnx_doc/install.html](https://kaihsinwu.gitlab.io/Cytnx_doc/install.html)
-
-## Intro slide
-[Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
-
-## News
-    [v0.9.x]
-
-    Implementation of new data structure for symmetric UniTensor, which differs from previous versions
-
-
-
-
-## API Documentation:
-
-[https://kaihsinwu.gitlab.io/cytnx_api/](https://kaihsinwu.gitlab.io/cytnx_api/)
 
 ## User Guide [under construction]:
 
 [Cytnx User Guide](https://kaihsinwu.gitlab.io/Cytnx_doc/)
-
-
 
 ## Objects:
     * Storage   [binded]
