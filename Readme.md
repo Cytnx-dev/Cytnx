@@ -3,33 +3,40 @@
 
 ![alt text](./Icons/Icon_small.png)
 
-## Install
+[API Documentation](https://kaihsinwu.gitlab.io/cytnx_api/)
+
+## What is Cytnx (pronounced as sci-tens)?
+
+Cytnx is a library designed for Quantum/classical Physics simulations.
+
+The library is built from bottom-up, with both C++ and Python in mind right at the beginning of development. That’s why nearly 95% of the APIs are exactly the same at both C++ and Python ends.
+
+Most of Cytnx APIs share very similar interfaces as the most common and popular libraries: numpy/scipy/pytorch. This is specifically designed so as to reduce the learning curve for users. Furthermore, we implement these easy-to-use Python libraries interfacing to the C++ side in hope to benefit users who want to bring their Python programming experience to the C++ side and speed up their programs.
+
+Cytnx also supports multi-devices (CPUs/GPUs) directly on the base container level. Especially, not only the container but also our linear algebra functions share the same APIs regardless of the devices where the input Tensors are stored, just like pytorch. This provides users the ability to accelerate the code without worrying too much about details of multi-device programming.
+
+For algorithms in physics, Cytnx provides powerful tools such as UniTensor, Network, Bond, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces.
+
+[Intro slide for Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
+
+## Why choose Cytnx?
+
+- C++ and Python are co-existing, there is no one first.
+- 95% of API are the same in C++ and Python. This means that one can do a fast prototype in Python, and directly convert to C++ with extremely minimal re-writing of the codebase.
+- GPUs/CPUs multi-device support.
+- Easy to use user-interface similar to numpy/scipy/pytorch.
+- Enhanced tools specifically designed for quantum/classical physics simulations, including symmetries.
+
+## Installation
+
 See The following user guide for installation instructions and an introduction to Cytnx:
-
 [https://kaihsinwu.gitlab.io/Cytnx_doc/install.html](https://kaihsinwu.gitlab.io/Cytnx_doc/install.html)
-
-## Intro slide
-[Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
-
-## News
-    [v0.9.x]
-
-    Implementation of new data structure for symmetric UniTensor, which differs from previous versions
-
-
-
-
-## API Documentation:
-
-[https://kaihsinwu.gitlab.io/cytnx_api/](https://kaihsinwu.gitlab.io/cytnx_api/)
 
 ## User Guide [under construction]:
 
 [Cytnx User Guide](https://kaihsinwu.gitlab.io/Cytnx_doc/)
 
-
-
-## Objects:
+## Objects
     * Storage   [binded]
     * Tensor    [binded]
     * Accessor  [C++ only]
@@ -38,7 +45,7 @@ See The following user guide for installation instructions and an introduction t
     * CyTensor	[binded]
     * Network   [binded]
 
-## Feature:
+## Features
 
 ### Python x C++
     Benefit from both side.
@@ -255,19 +262,15 @@ See The following user guide for installation instructions and an introduction t
 
     [Note] The difference between initializer and generator is that the initializer is used to initialize the Tensor, and the generator creates a new Tensor.
 
-## How to contribute & get in contact
-    If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
-	Also, if you have any questions or suggestions, feel free to reach out to us.
+## Community and Contribution
 
-	You can contact us by:
-    * Discord:
-[https://discord.gg/dyhF7CCE9D](https://discord.gg/dyhF7CCE9D)
+If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
 
-    * Creating an issue on github if you find a bug or have a suggestion:
+Also, if you have any questions or suggestions, feel free to reach out to us.
 
-[https://github.com/Cytnx-dev/Cytnx/issues](https://github.com/Cytnx-dev/Cytnx/issues)
-
-    * Email, see below
+You can contact us by:
+- Discord: [https://discord.gg/dyhF7CCE9D](https://discord.gg/dyhF7CCE9D)
+- Email: kaihsinwu@gmail.com
 
 ## Developers & Maintainers
 
