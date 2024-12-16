@@ -6,6 +6,7 @@
 
 #include "../test_tools.h"
 #include "Device.hpp"
+#include "linalg.hpp"
 #include "Type.hpp"
 
 namespace cytnx {
