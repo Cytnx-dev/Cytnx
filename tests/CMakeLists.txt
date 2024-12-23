@@ -22,6 +22,7 @@ add_executable(
   Accessor_test.cpp
   Tensor_test.cpp
   Storage_test.cpp
+  search_tree_test.cpp
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
@@ -55,6 +56,10 @@ target_link_libraries(
   gtest
 )
 target_link_libraries(test_main cytnx)
+
+add_compile_options(-fsanitize=address)
+add_link_options(-fsanitize=address)
+
 #target_link_libraries(test_main PUBLIC "-lgcov --coverage")
 include(GoogleTest)
 gtest_discover_tests(test_main

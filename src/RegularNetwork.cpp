@@ -230,8 +230,8 @@ namespace cytnx {
   vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree,
                                                              vector<string> tns) {
     vector<pair<cytnx_int64, cytnx_int64>> path;
-    stack<Node *> stk;
-    Node *root = &(CtTree.nodes_container.back());
+    stack<std::shared_ptr<Node>> stk;
+    std::shared_ptr<Node> root = CtTree.nodes_container.back();
     int ly = 0;
     bool ict;
     do {
@@ -536,6 +536,14 @@ namespace cytnx {
 
     this->tensors.resize(this->names.size());
     this->CtTree.base_nodes.resize(this->names.size());
+    this->CtTree.base_nodes.clear();
+
+    // Create base nodes properly
+    for (size_t i = 0; i < this->names.size(); i++) {
+      auto node = std::make_shared<Node>();
+      node->name = this->names[i];
+      this->CtTree.base_nodes.push_back(node);
+    }
 
     // checking if all TN are set in ORDER.
     if (isORDER_exist) {
@@ -632,7 +640,7 @@ namespace cytnx {
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
       names.push_back(this->names[i]);
-      CtTree.base_nodes[i].name = this->names[i];
+      CtTree.base_nodes[i]->name = this->names[i];
     }
     if (ORDER_tokens.size() != 0) {
       CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
@@ -640,7 +648,7 @@ namespace cytnx {
       CtTree.build_default_contraction_tree();
     }
     this->einsum_path = CtTree_to_eisumpath(CtTree, names);
-  }
+  }  // end of FromString
 
   void RegularNetwork::Fromfile(const string &fname) {
     const cytnx_uint64 MAXLINES = 1024;
@@ -943,7 +951,7 @@ namespace cytnx {
       Stree.base_nodes[t].accu_str = this->names[t];
     }
     Stree.search_order();
-    return Stree.nodes_container.back()[0].accu_str;
+    return Stree.get_root().back()[0]->accu_str;
   }
 
   UniTensor RegularNetwork::Launch() {
@@ -955,9 +963,9 @@ namespace cytnx {
       // cpu workflow
 
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
-        this->CtTree.base_nodes[idx].utensor =
+        this->CtTree.base_nodes[idx]->utensor =
           this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
-        this->CtTree.base_nodes[idx].is_assigned = true;
+        this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:
       if (ORDER_tokens.size() != 0) {
@@ -969,59 +977,46 @@ namespace cytnx {
 
       // 2. contract using postorder traversal:
       // cout << this->CtTree.nodes_container.size() << endl;
-      stack<Node *> stk;
-      Node *root = &(this->CtTree.nodes_container.back());
+      stack<std::shared_ptr<Node>> stk;
+      std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
+      root->set_root_ptrs();  // Add this line
       int ly = 0;
       bool ict;
 
       do {
-        // move the lmost
-        while ((root != nullptr)) {
-          if (root->right != nullptr) stk.push(root->right);
+        // move the leftmost
+        while (root != nullptr) {
+          if (root->right) stk.push(root->right);
           stk.push(root);
           root = root->left;
         }
 
         root = stk.top();
         stk.pop();
-        // cytnx_error_msg(stk.size()==0,"[eRROR]","\n");
+
         ict = true;
-        if ((root->right != nullptr) && !stk.empty()) {
-          if (stk.top() == root->right) {
+        if (root->right && !stk.empty()) {
+          if (stk.top() == root->right) {  // This comparison now works with shared_ptr
             stk.pop();
             stk.push(root);
             root = root->right;
             ict = false;
           }
         }
+
         if (ict) {
-          // process!
-
-          // cout << "OK" << endl;
-          if ((root->right != nullptr) && (root->left != nullptr)) {
-            // cout << "L,R::\n";
-            // root->left->utensor.print_diagram(1);
-            // root->right->utensor.print_diagram(1);
+          if (root->right && root->left) {
             root->utensor = Contract(root->left->utensor, root->right->utensor);
-            // root->left->utensor.print_diagram(); root->right->utensor.print_diagram();
-            // root->utensor.print_diagram(); root->utensor.set_name(root->left->utensor.name() +
-            // root->right->utensor.name());
-            root->left->clear_utensor();  // remove intermediate unitensor to save heap space
-            root->right->clear_utensor();  // remove intermediate unitensor to save heap space
+            root->left->clear_utensor();
+            root->right->clear_utensor();
             root->is_assigned = true;
-            // cout << "contract!" << endl;
           }
-
           root = nullptr;
         }
-
-        // cout.flush();
-        // break;
-
       } while (!stk.empty());
 
       // 3. get result:
-      UniTensor out = this->CtTree.nodes_container.back().utensor;
+      UniTensor out = this->CtTree.nodes_container.back()->utensor;
       // cout << out << endl;
       // out.print_diagram();
 
@@ -1087,9 +1082,9 @@ namespace cytnx {
       }
     #else
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
-        this->CtTree.base_nodes[idx].utensor =
+        this->CtTree.base_nodes[idx]->utensor =
           this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
-        this->CtTree.base_nodes[idx].is_assigned = true;
+        this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:
       if (ORDER_tokens.size() != 0) {
@@ -1100,36 +1095,35 @@ namespace cytnx {
       }
       // 2. contract using postorder traversal:
       // cout << this->CtTree.nodes_container.size() << endl;
-      stack<Node *> stk;
-      Node *root = &(this->CtTree.nodes_container.back());
+      stack<std::shared_ptr<Node>> stk;
+      std::shared_ptr<Node> root = std::make_shared<Node>(this->CtTree.nodes_container.back());
+      root->set_root_ptrs();  // Add this line
       int ly = 0;
       bool ict;
 
       do {
-        // move the lmost
-        while ((root != nullptr)) {
-          if (root->right != nullptr) stk.push(root->right);
+        // move the leftmost
+        while (root != nullptr) {
+          if (root->right) stk.push(root->right);
           stk.push(root);
           root = root->left;
         }
 
         root = stk.top();
         stk.pop();
-        // cytnx_error_msg(stk.size()==0,"[eRROR]","\n");
+
         ict = true;
-        if ((root->right != nullptr) && !stk.empty()) {
-          if (stk.top() == root->right) {
+        if (root->right && !stk.empty()) {
+          if (stk.top() == root->right) {  // This comparison now works with shared_ptr
             stk.pop();
             stk.push(root);
             root = root->right;
             ict = false;
           }
         }
-        if (ict) {
-          // process!
 
-          // cout << "OK" << endl;
-          if ((root->right != nullptr) && (root->left != nullptr)) {
+        if (ict) {
+          if (root->right && root->left) {
             root->utensor = Contract(root->left->utensor, root->right->utensor);
             root->left->clear_utensor();  // remove intermediate unitensor to save heap space
             root->right->clear_utensor();  // remove intermediate unitensor to save heap space
@@ -1139,7 +1133,7 @@ namespace cytnx {
         }
       } while (!stk.empty());
       // 3. get result:
-      UniTensor out = this->CtTree.nodes_container.back().utensor;
+      UniTensor out = this->CtTree.nodes_container.back()->utensor;
       // 4. reset nodes:
       this->CtTree.reset_nodes();
       // 6. permute accroding to pre-set labels:
@@ -1201,7 +1195,14 @@ namespace cytnx {
       "\n");
 
     this->tensors.resize(this->names.size());
-    this->CtTree.base_nodes.resize(this->names.size());
+    this->CtTree.base_nodes.clear();
+
+    // Create nodes using make_shared
+    for (size_t i = 0; i < this->names.size(); i++) {
+      auto node = std::make_shared<Node>();
+      node->name = this->names[i];
+      this->CtTree.base_nodes.push_back(node);
+    }
 
     // checking label matching:
     map<string, cytnx_int64> labelcnt;
@@ -1282,7 +1283,7 @@ namespace cytnx {
     vector<string> names;
     for (int i = 0; i < this->names.size(); i++) {
       names.push_back(this->names[i]);
-      CtTree.base_nodes[i].name = this->names[i];
+      CtTree.base_nodes[i]->name = this->names[i];
     }
     if (ORDER_tokens.size() != 0) {
       CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
