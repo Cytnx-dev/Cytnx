@@ -70,7 +70,7 @@ namespace cytnx {
         auto self = shared_from_this();
 
         if (left) {
-          //std::cout << "Setting root for left child of " << name << std::endl;
+          // std::cout << "Setting root for left child of " << name << std::endl;
           left->root = self;
           left->set_root_ptrs();
         }
