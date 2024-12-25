@@ -604,16 +604,6 @@ namespace cytnx {
       combineBond(const std::vector<Bond> &bds, const bool &is_grp),\n
           this function will create a new Bond object.
     @see combineBond(const std::vector<Bond> &bds, const bool &is_grp)
-
-    ## Example:
-    ### c++ API:
-    \include example/Bond/combineBond_.cpp
-    #### output>
-    \verbinclude example/Bond/combineBond_.cpp.out
-    ### python API:
-    \include example/Bond/combineBond_.py
-    #### output>
-    \verbinclude example/Bond/combineBond_.py.out
     */
     void combineBond_(const std::vector<Bond> &bds, const bool &is_grp = true) {
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
@@ -622,7 +612,9 @@ namespace cytnx {
     }
 
     /**
-    @deprecated
+        @deprecated This function is deprecated. Please use \n
+    Bond combineBond(const Bond &bd_in, const bool &is_grp) const\n
+        instead.
     @brief combine multiple input bonds with self, and return a new combined Bond instance.
     @param[in] bds the bonds that to be combined with self.
           @param[in] is_grp this parameter is only used when the bond is
@@ -649,7 +641,11 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBonds.py.out
     */
-    Bond combineBonds(const std::vector<Bond> &bds, const bool &is_grp = true) {
+    [[deprecated(
+      "Please use "
+      "Bond combineBond(const Bond &bd_in, const bool &is_grp) const "
+      "instead.")]] Bond
+      combineBonds(const std::vector<Bond> &bds, const bool &is_grp = true) {
       Bond out = this->clone();
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
         out.combineBond_(bds[i], is_grp);
@@ -658,7 +654,9 @@ namespace cytnx {
     }
 
     /**
-    @deprecated
+        @deprecated This function is deprecated. Please use \n
+    combineBond_(const std::vector<Bond> &bds, const bool &is_grp)\n
+        instead.
     @brief combine multiple input bonds with self, inplacely
     @param[in] bds the bonds that to be combined with self.
           @param[in] is_grp this parameter is only used when the bond is
@@ -684,7 +682,11 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBonds_.py.out
     */
-    void combineBonds_(const std::vector<Bond> &bds, const bool &is_grp = true) {
+    [[deprecated(
+      "Please use "
+      "combineBond_(const std::vector<Bond> &bds, const bool &is_grp) "
+      "instead.")]] void
+      combineBonds_(const std::vector<Bond> &bds, const bool &is_grp = true) {
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
         this->combineBond_(bds[i], is_grp);
       }
