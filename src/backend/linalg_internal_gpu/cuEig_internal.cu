@@ -37,7 +37,7 @@ namespace cytnx {
                       NULL, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(cuDoubleComplex) * L, cudaMemcpyDeviceToHost);
-      if (v->dtype != Type.Void) {
+      if (v->dtype() != Type.Void) {
         cudaMemcpy(v->Mem, d_V, sizeof(cuDoubleComplex) * L * L, cudaMemcpyDeviceToHost);
       }
 
@@ -77,7 +77,7 @@ namespace cytnx {
                       NULL, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(cuFloatComplex) * L, cudaMemcpyDeviceToHost);
-      if (v->dtype != Type.Void) {
+      if (v->dtype() != Type.Void) {
         cudaMemcpy(v->Mem, d_V, sizeof(cuFloatComplex) * L * L, cudaMemcpyDeviceToHost);
       }
 
@@ -117,7 +117,7 @@ namespace cytnx {
                       NULL, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(double) * L, cudaMemcpyDeviceToHost);
-      if (v->dtype != Type.Void) {
+      if (v->dtype() != Type.Void) {
         cudaMemcpy(v->Mem, d_V, sizeof(double) * L * L, cudaMemcpyDeviceToHost);
       }
 
@@ -157,7 +157,7 @@ namespace cytnx {
                       NULL, 1, d_work, lwork, devInfo);
 
       cudaMemcpy(e->Mem, d_W, sizeof(float) * L, cudaMemcpyDeviceToHost);
-      if (v->dtype != Type.Void) {
+      if (v->dtype() != Type.Void) {
         cudaMemcpy(v->Mem, d_V, sizeof(float) * L * L, cudaMemcpyDeviceToHost);
       }
 

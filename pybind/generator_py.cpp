@@ -140,7 +140,7 @@ void generator_binding(py::module &m) {
 
     Tensor m;
     m.Init(shape, dtype);
-    memcpy(m.storage()._impl->Mem, info.ptr, Totbytes);
+    memcpy(m.storage()._impl->data(), info.ptr, Totbytes);
     return m;
   });
 }

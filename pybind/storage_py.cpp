@@ -1,6 +1,7 @@
-#include <vector>
 #include <map>
 #include <random>
+#include <string>
+#include <vector>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -34,9 +35,9 @@ void storage_binding(py::module &m) {
            }
 
            // calculate stride:
-           std::vector<ssize_t> stride(1, Type.typeSize(tmpIN.dtype()));
+           size_t type_size = Type.typeSize(tmpIN.dtype());
+           std::vector<ssize_t> stride(1, type_size);
            std::vector<ssize_t> shape(1, tmpIN.size());
-           // ssize_t accu = tmpIN.size();
 
            py::buffer_info npbuf;
            std::string chr_dtype;
@@ -63,19 +64,11 @@ void storage_binding(py::module &m) {
                              "\n");
            }
 
-           npbuf = py::buffer_info(tmpIN._impl->Mem,  // ptr
-                                   Type.typeSize(tmpIN.dtype()),  // size of elem
+           // Call `.release()` to avoid the memory passed to numpy being freed.
+           npbuf = py::buffer_info(tmpIN.release(), type_size,
                                    chr_dtype,  // pss format
-                                   1,  // rank
-                                   shape,  // shape
-                                   stride  // stride
-           );
-           py::array out(npbuf);
-           // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to
-           // free.
-           void *pswap = malloc(sizeof(bool));
-           tmpIN._impl->Mem = pswap;
-           return out;
+                                   /* rank= */ 1, shape, stride);
+           return py::array(npbuf);
          })
 
     // construction

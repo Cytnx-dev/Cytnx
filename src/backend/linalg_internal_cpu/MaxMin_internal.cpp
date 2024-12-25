@@ -15,8 +15,8 @@ namespace cytnx {
     void MaxMin_internal_u64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_uint64 *_ten = (cytnx_uint64 *)ten->Mem;
-      cytnx_uint64 *_out = (cytnx_uint64 *)out->Mem;
+      cytnx_uint64 *_ten = (cytnx_uint64 *)ten->data();
+      cytnx_uint64 *_out = (cytnx_uint64 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -75,8 +75,8 @@ namespace cytnx {
     void MaxMin_internal_i64(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_int64 *_ten = (cytnx_int64 *)ten->Mem;
-      cytnx_int64 *_out = (cytnx_int64 *)out->Mem;
+      cytnx_int64 *_ten = (cytnx_int64 *)ten->data();
+      cytnx_int64 *_out = (cytnx_int64 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -135,8 +135,8 @@ namespace cytnx {
     void MaxMin_internal_u32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_uint32 *_ten = (cytnx_uint32 *)ten->Mem;
-      cytnx_uint32 *_out = (cytnx_uint32 *)out->Mem;
+      cytnx_uint32 *_ten = (cytnx_uint32 *)ten->data();
+      cytnx_uint32 *_out = (cytnx_uint32 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -195,8 +195,8 @@ namespace cytnx {
     void MaxMin_internal_i32(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_int32 *_ten = (cytnx_int32 *)ten->Mem;
-      cytnx_int32 *_out = (cytnx_int32 *)out->Mem;
+      cytnx_int32 *_ten = (cytnx_int32 *)ten->data();
+      cytnx_int32 *_out = (cytnx_int32 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -255,8 +255,8 @@ namespace cytnx {
     void MaxMin_internal_u16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_uint16 *_ten = (cytnx_uint16 *)ten->Mem;
-      cytnx_uint16 *_out = (cytnx_uint16 *)out->Mem;
+      cytnx_uint16 *_ten = (cytnx_uint16 *)ten->data();
+      cytnx_uint16 *_out = (cytnx_uint16 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -315,8 +315,8 @@ namespace cytnx {
     void MaxMin_internal_i16(boost::intrusive_ptr<Storage_base> &out,
                              const boost::intrusive_ptr<Storage_base> &ten,
                              const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_int16 *_ten = (cytnx_int16 *)ten->Mem;
-      cytnx_int16 *_out = (cytnx_int16 *)out->Mem;
+      cytnx_int16 *_ten = (cytnx_int16 *)ten->data();
+      cytnx_int16 *_out = (cytnx_int16 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -375,8 +375,8 @@ namespace cytnx {
     void MaxMin_internal_d(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
                            const char &type) {
-      cytnx_double *_ten = (cytnx_double *)ten->Mem;
-      cytnx_double *_out = (cytnx_double *)out->Mem;
+      cytnx_double *_ten = (cytnx_double *)ten->data();
+      cytnx_double *_out = (cytnx_double *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -435,8 +435,8 @@ namespace cytnx {
     void MaxMin_internal_f(boost::intrusive_ptr<Storage_base> &out,
                            const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
                            const char &type) {
-      cytnx_float *_ten = (cytnx_float *)ten->Mem;
-      cytnx_float *_out = (cytnx_float *)out->Mem;
+      cytnx_float *_ten = (cytnx_float *)ten->data();
+      cytnx_float *_out = (cytnx_float *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -494,8 +494,8 @@ namespace cytnx {
     void MaxMin_internal_cd(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &ten,
                             const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_complex128 *_ten = (cytnx_complex128 *)ten->Mem;
-      cytnx_complex128 *_out = (cytnx_complex128 *)out->Mem;
+      cytnx_complex128 *_ten = (cytnx_complex128 *)ten->data();
+      cytnx_complex128 *_out = (cytnx_complex128 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP
@@ -556,8 +556,8 @@ namespace cytnx {
     void MaxMin_internal_cf(boost::intrusive_ptr<Storage_base> &out,
                             const boost::intrusive_ptr<Storage_base> &ten,
                             const cytnx_uint64 &Nelem, const char &type) {
-      cytnx_complex64 *_ten = (cytnx_complex64 *)ten->Mem;
-      cytnx_complex64 *_out = (cytnx_complex64 *)out->Mem;
+      cytnx_complex64 *_ten = (cytnx_complex64 *)ten->data();
+      cytnx_complex64 *_out = (cytnx_complex64 *)out->data();
 
       if (type == 'x') {
 #ifdef UNI_OMP

@@ -393,6 +393,9 @@ namespace cytnx {
       return nullptr;
     }
 
+    /**
+     * @deprecated This method is not in use anymore.
+     */
     virtual void *get_raw_address() const {
       cytnx_error_msg(true, "[ERROR] Void Type Scalar cannot have operation!!%s", "\n");
       return nullptr;

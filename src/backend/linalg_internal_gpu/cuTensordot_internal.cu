@@ -76,9 +76,9 @@ namespace cytnx {
         labelOut[i] = i + idxl.size();
       }
 
-      void *outPtr = out._impl->storage()._impl->Mem;
-      void *lPtr = Lin._impl->storage()._impl->Mem;
-      void *rPtr = Rin._impl->storage()._impl->Mem;
+      void *outPtr = out._impl->storage()._impl->data();
+      void *lPtr = Lin._impl->storage()._impl->data();
+      void *rPtr = Rin._impl->storage()._impl->data();
 
       int nlabelOut = labelOut.size();
       int nlabelL = labelL.size();
