@@ -12,7 +12,7 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base> &e,
                             boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       cusolverEigMode_t jobz = CUSOLVER_EIG_MODE_VECTOR;
-      if (v->dtype == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
+      if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
@@ -20,12 +20,13 @@ namespace cytnx {
 
       cytnx_complex128 *tA;
       if (v != NULL) {
-        tA = (cytnx_complex128 *)v->Mem;
-        checkCudaErrors(cudaMemcpy(v->Mem, in->Mem, sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
+        tA = (cytnx_complex128 *)v->data();
+        checkCudaErrors(cudaMemcpy(v->data(), in->data(),
+                                   sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
         checkCudaErrors(cudaMalloc((void **)&tA, cytnx_uint64(L) * L * sizeof(cytnx_complex128)));
-        checkCudaErrors(cudaMemcpy(tA, in->Mem, sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
+        checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_complex128) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
 
@@ -34,7 +35,7 @@ namespace cytnx {
       cytnx_int32 b32L = L;
       checkCudaErrors(cusolverDnZheevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
                                                   (cuDoubleComplex *)tA, b32L,
-                                                  (cytnx_double *)e->Mem, &lwork));
+                                                  (cytnx_double *)e->data(), &lwork));
 
       // allocate working space:
       cytnx_complex128 *work;
@@ -45,7 +46,7 @@ namespace cytnx {
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       checkCudaErrors(cusolverDnZheevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
-                                       (cuDoubleComplex *)tA, b32L, (cytnx_double *)e->Mem,
+                                       (cuDoubleComplex *)tA, b32L, (cytnx_double *)e->data(),
                                        (cuDoubleComplex *)work, lwork, devinfo));
 
       // get info
@@ -55,7 +56,7 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnZheevd': cuBlas INFO = ", info);
 
       cudaFree(work);
-      if (v->dtype == Type.Void) cudaFree(tA);
+      if (v->dtype() == Type.Void) cudaFree(tA);
 
       cudaFree(devinfo);
       cusolverDnDestroy(cusolverH);
@@ -64,7 +65,7 @@ namespace cytnx {
                             boost::intrusive_ptr<Storage_base> &e,
                             boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       cusolverEigMode_t jobz = CUSOLVER_EIG_MODE_VECTOR;
-      if (v->dtype == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
+      if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
@@ -72,12 +73,13 @@ namespace cytnx {
 
       cytnx_complex64 *tA;
       if (v != NULL) {
-        tA = (cytnx_complex64 *)v->Mem;
-        checkCudaErrors(cudaMemcpy(v->Mem, in->Mem, sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
+        tA = (cytnx_complex64 *)v->data();
+        checkCudaErrors(cudaMemcpy(v->data(), in->data(),
+                                   sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
         checkCudaErrors(cudaMalloc((void **)&tA, cytnx_uint64(L) * L * sizeof(cytnx_complex64)));
-        checkCudaErrors(cudaMemcpy(tA, in->Mem, sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
+        checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_complex64) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
 
@@ -85,8 +87,8 @@ namespace cytnx {
       cytnx_int32 lwork = 0;
       cytnx_int32 b32L = L;
       checkCudaErrors(cusolverDnCheevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
-                                                  (cuFloatComplex *)tA, b32L, (cytnx_float *)e->Mem,
-                                                  &lwork));
+                                                  (cuFloatComplex *)tA, b32L,
+                                                  (cytnx_float *)e->data(), &lwork));
 
       // allocate working space:
       cytnx_complex64 *work;
@@ -97,7 +99,7 @@ namespace cytnx {
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       checkCudaErrors(cusolverDnCheevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L,
-                                       (cuFloatComplex *)tA, b32L, (cytnx_float *)e->Mem,
+                                       (cuFloatComplex *)tA, b32L, (cytnx_float *)e->data(),
                                        (cuFloatComplex *)work, lwork, devinfo));
 
       // get info
@@ -107,7 +109,7 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnZheevd': cuBlas INFO = ", info);
 
       cudaFree(work);
-      if (v->dtype == Type.Void) cudaFree(tA);
+      if (v->dtype() == Type.Void) cudaFree(tA);
 
       cudaFree(devinfo);
       cusolverDnDestroy(cusolverH);
@@ -116,20 +118,21 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base> &e,
                            boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       cusolverEigMode_t jobz = CUSOLVER_EIG_MODE_VECTOR;
-      if (v->dtype == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
+      if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_double *tA;
-      if (v->dtype != Type.Void) {
-        tA = (cytnx_double *)v->Mem;
-        checkCudaErrors(cudaMemcpy(v->Mem, in->Mem, sizeof(cytnx_double) * cytnx_uint64(L) * L,
+      if (v->dtype() != Type.Void) {
+        tA = (cytnx_double *)v->data();
+        checkCudaErrors(cudaMemcpy(v->data(), in->data(),
+                                   sizeof(cytnx_double) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
         checkCudaErrors(cudaMalloc((void **)&tA, cytnx_uint64(L) * L * sizeof(cytnx_double)));
-        checkCudaErrors(cudaMemcpy(tA, in->Mem, sizeof(cytnx_double) * cytnx_uint64(L) * L,
+        checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_double) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
 
@@ -137,7 +140,7 @@ namespace cytnx {
       cytnx_int32 lwork = 0;
       cytnx_int32 b32L = L;
       checkCudaErrors(cusolverDnDsyevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA,
-                                                  b32L, (cytnx_double *)e->Mem, &lwork));
+                                                  b32L, (cytnx_double *)e->data(), &lwork));
 
       // allocate working space:
       cytnx_double *work;
@@ -148,7 +151,7 @@ namespace cytnx {
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       checkCudaErrors(cusolverDnDsyevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA, b32L,
-                                       (cytnx_double *)e->Mem, work, lwork, devinfo));
+                                       (cytnx_double *)e->data(), work, lwork, devinfo));
 
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
@@ -157,7 +160,7 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnDsysevd': cuBlas INFO = ", info);
 
       cudaFree(work);
-      if (v->dtype == Type.Void) cudaFree(tA);
+      if (v->dtype() == Type.Void) cudaFree(tA);
 
       cudaFree(devinfo);
       cusolverDnDestroy(cusolverH);
@@ -166,20 +169,20 @@ namespace cytnx {
                            boost::intrusive_ptr<Storage_base> &e,
                            boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
       cusolverEigMode_t jobz = CUSOLVER_EIG_MODE_VECTOR;
-      if (v->dtype == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
+      if (v->dtype() == Type.Void) jobz = CUSOLVER_EIG_MODE_NOVECTOR;
 
       // create handles:
       cusolverDnHandle_t cusolverH = NULL;
       checkCudaErrors(cusolverDnCreate(&cusolverH));
 
       cytnx_float *tA;
-      if (v->dtype != Type.Void) {
-        tA = (cytnx_float *)v->Mem;
-        checkCudaErrors(cudaMemcpy(v->Mem, in->Mem, sizeof(cytnx_float) * cytnx_uint64(L) * L,
+      if (v->dtype() != Type.Void) {
+        tA = (cytnx_float *)v->data();
+        checkCudaErrors(cudaMemcpy(v->data(), in->data(), sizeof(cytnx_float) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       } else {
         checkCudaErrors(cudaMalloc((void **)&tA, cytnx_uint64(L) * L * sizeof(cytnx_float)));
-        checkCudaErrors(cudaMemcpy(tA, in->Mem, sizeof(cytnx_float) * cytnx_uint64(L) * L,
+        checkCudaErrors(cudaMemcpy(tA, in->data(), sizeof(cytnx_float) * cytnx_uint64(L) * L,
                                    cudaMemcpyDeviceToDevice));
       }
 
@@ -187,7 +190,7 @@ namespace cytnx {
       cytnx_int32 lwork = 0;
       cytnx_int32 b32L = L;
       checkCudaErrors(cusolverDnSsyevd_bufferSize(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA,
-                                                  b32L, (cytnx_float *)e->Mem, &lwork));
+                                                  b32L, (cytnx_float *)e->data(), &lwork));
 
       // allocate working space:
       cytnx_float *work;
@@ -198,7 +201,7 @@ namespace cytnx {
       cytnx_int32 *devinfo;
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       checkCudaErrors(cusolverDnSsyevd(cusolverH, jobz, CUBLAS_FILL_MODE_UPPER, b32L, tA, b32L,
-                                       (cytnx_float *)e->Mem, work, lwork, devinfo));
+                                       (cytnx_float *)e->data(), work, lwork, devinfo));
 
       // get info
       checkCudaErrors(cudaMemcpy(&info, devinfo, sizeof(cytnx_int32), cudaMemcpyDeviceToHost));
@@ -206,7 +209,7 @@ namespace cytnx {
                       "Error in cuBlas function 'cusolverDnDsysevd': cuBlas INFO = ", info);
 
       cudaFree(work);
-      if (v->dtype == Type.Void) cudaFree(tA);
+      if (v->dtype() == Type.Void) cudaFree(tA);
 
       cudaFree(devinfo);
       cusolverDnDestroy(cusolverH);

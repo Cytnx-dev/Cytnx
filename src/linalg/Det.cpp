@@ -28,7 +28,7 @@ namespace cytnx {
       }
 
       if (Tl.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Det_ii[_tl.dtype()](out._impl->storage()._impl->Mem,
+        cytnx::linalg_internal::lii.Det_ii[_tl.dtype()](out._impl->storage()._impl->data(),
                                                         _tl._impl->storage()._impl, Tl.shape()[0]);
 
         return out;
@@ -38,7 +38,7 @@ namespace cytnx {
         // cytnx_error_msg(true, "[Det] on GPU Developing!%s", "\n");
         checkCudaErrors(cudaSetDevice(Tl.device()));
         cytnx::linalg_internal::lii.cuDet_ii[_tl.dtype()](
-          out._impl->storage()._impl->Mem, _tl._impl->storage()._impl, Tl.shape()[0]);
+          out._impl->storage()._impl->data(), _tl._impl->storage()._impl, Tl.shape()[0]);
 
         return out;
   #else
