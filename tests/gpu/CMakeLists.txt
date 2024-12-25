@@ -14,6 +14,7 @@ add_executable(
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
+  linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
@@ -22,10 +23,12 @@ add_executable(
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
   linalg_test/linalg_test.cpp
+  linalg_test/sum_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
+  random_test/uniform_test.cpp
 )
 
 target_link_libraries(

@@ -10,22 +10,31 @@ using namespace std;
 namespace cytnx {
   void ContractionTree::build_default_contraction_tree() {
     this->reset_contraction_order();
-    cytnx_error_msg(this->base_nodes.size() < 2,
-                    "[ERROR][ContractionTree][build_default_contraction_order] contraction tree "
-                    "should contain >=2 tensors in order to build contraction order.%s",
+
+    cytnx_error_msg(this->base_nodes.size() < 2, "[ERROR] Need at least 2 tensors for contraction",
                     "\n");
 
-    Node *left = &(this->base_nodes[0]);
-    Node *right;
-    this->nodes_container.reserve(
-      this->base_nodes.size());  // reserve a contiguous memeory address to prevent re-allocate that
-                                 // change address.
+    std::shared_ptr<Node> left = this->base_nodes[0];
+    std::shared_ptr<Node> right;
+
+    this->nodes_container.reserve(this->base_nodes.size());
+
     for (cytnx_uint64 i = 1; i < this->base_nodes.size(); i++) {
-      right = &(this->base_nodes[i]);
-      this->nodes_container.push_back(Node(left, right));
-      left = &(this->nodes_container.back());
+      right = this->base_nodes[i];
+
+      auto new_node = std::make_shared<Node>(left, right);
+
+      this->nodes_container.push_back(new_node);
+      left = new_node;
+    }
+
+    if (!nodes_container.empty()) {
+      auto root = nodes_container.back();
+      std::cout << "Setting root pointers from " << root->name << std::endl;
+      root->set_root_ptrs();
     }
   }
+
   void ContractionTree::build_contraction_tree_by_tokens(
     const std::map<std::string, cytnx_uint64> &name2pos, const std::vector<std::string> &tokens) {
     this->reset_contraction_order();
@@ -38,9 +47,8 @@ namespace cytnx {
       "[ERROR][ContractionTree][build_contraction_order_by_tokens] cannot have empty tokens.%s",
       "\n");
 
-    stack<Node *> stk;
-    Node *left;
-    Node *right;
+    stack<std::shared_ptr<Node>> stk;
+    std::shared_ptr<Node> left, right;
     stack<char> operators;
     char topc;
     size_t pos = 0;
@@ -68,10 +76,9 @@ namespace cytnx {
             stk.pop();
             left = stk.top();
             stk.pop();
-            this->nodes_container.push_back(Node(left, right));
-            // cout << right->name << " " << left->name <<">";
-            // this->nodes_container.back().name = right->name + left->name;
-            stk.push(&this->nodes_container.back());
+            auto new_node = std::make_shared<Node>(left, right);
+            this->nodes_container.push_back(new_node);
+            stk.push(this->nodes_container.back());
             if (!operators.empty())
               topc = operators.top();
             else
@@ -90,10 +97,9 @@ namespace cytnx {
             stk.pop();
             left = stk.top();
             stk.pop();
-            this->nodes_container.push_back(Node(left, right));
-            // cout << right->name << " " << left->name << ">";
-            // this->nodes_container.back().name = right->name  + left->name;
-            stk.push(&this->nodes_container.back());
+            auto new_node = std::make_shared<Node>(left, right);
+            this->nodes_container.push_back(new_node);
+            stk.push(this->nodes_container.back());
             if (!operators.empty())
               topc = operators.top();
             else
@@ -112,8 +118,7 @@ namespace cytnx {
                           "contain invalid TN name: %s ,which is not previously defined. \n",
                           tok.c_str());
         }
-        stk.push(&this->base_nodes[idx]);
-        // cout << "TN" << this->base_nodes[idx].name << endl;
+        stk.push(this->base_nodes[idx]);
       }
 
     }  // for each token
@@ -125,8 +130,9 @@ namespace cytnx {
       left = stk.top();
       stk.pop();
       // this->nodes_container.back().name = right->name +  left->name;
-      this->nodes_container.push_back(Node(left, right));
-      stk.push(&this->nodes_container.back());
+      auto new_node = std::make_shared<Node>(left, right);
+      this->nodes_container.push_back(new_node);
+      stk.push(this->nodes_container.back());
     }
     /*
     cout << "============" << endl;
