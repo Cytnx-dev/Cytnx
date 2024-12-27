@@ -13,7 +13,7 @@ Cytnx is a tensor network library designed for quantum physics simulations using
 * Cytnx supports multi-device operations (CPUs/GPUs) directly at the base container level. Both the containers and linear algebra functions share consistent APIs regardless of the devices on which the input tensors are stored, similar to PyTorch.
 * For algorithms in physics, Cytnx provides powerful tools such as UniTensor, Network, Symmetry etc. These objects are built on top of Tensor objects, specifically aiming to reduce the developing work of Tensor network algorithms by simplifying the user interfaces.
 
-**Intro slide**
+**Intro slides**
 >[Cytnx_v0.5.pdf (dated 07/25/2020)](https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing)
 
 ## News
@@ -33,20 +33,20 @@ Cytnx is a tensor network library designed for quantum physics simulations using
 
 
 ## Objects:
-* Storage   [python binded]
-* Tensor    [python binded]
+* Storage   [Python binded]
+* Tensor    [Python binded]
 * Accessor  [C++ only]
-* Bond      [python binded]
-* Symmetry  [python binded]
-* UniTensor [python binded]
-* Network   [python binded]
+* Bond      [Python binded]
+* Symmetry  [Python binded]
+* UniTensor [Python binded]
+* Network   [Python binded]
 
-## Feature:
+## Features:
 
-### Python x C++
->Benefit from both side.
- One can do simple prototype on Python side
- and easy transfer to C++ with small effort!
+### Python & C++
+>Benefit from both sides!
+ One can do simple prototyping in Python
+ and easy transfer code to C++ with small effort!
 
 
 ```c++
@@ -64,7 +64,7 @@ A =  cytnx.Tensor((3,4,5),dtype=cytnx.Type.Double,device=cytnx.Device.cpu)
 
 
 ### 1. All Storage and Tensor objects support multiple types.
-The avaliable types are :
+Available types are :
 
 | cytnx type       | c++ type             | Type object
 |------------------|----------------------|--------------------
@@ -82,16 +82,16 @@ The avaliable types are :
 
 ### 2. Storage
 * Memory container with GPU/CPU support.
-          maintain type conversions (type casting between Storages)
-          and moving between devices.
-* Generic type object, the behavior is very similar to python.
+          Type conversions (type casting between Storages)
+          and moving between devices easily possible.
+* Generic type object, the behavior is very similar to Python.
 
 ```c++
 Storage A(400,Type.Double);
 for(int i=0;i<400;i++)
 A.at<double>(i) = i;
 
-Storage B = A; // A and B share same memory, this is similar as python
+Storage B = A; // A and B share same memory, this is similar to Python
 
 Storage C = A.to(Device.cuda+0);
 ```
@@ -99,55 +99,54 @@ Storage C = A.to(Device.cuda+0);
 
 ### 3. Tensor
 * A tensor, API very similar to numpy and pytorch.
-* simple moving between CPU and GPU:
+* Simple moving between CPU and GPU:
 
 ```c++
 Tensor A({3,4},Type.Double,Device.cpu); // create tensor on CPU (default)
 Tensor B({3,4},Type.Double,Device.cuda+0); // create tensor on GPU with gpu-id=0
 
-
 Tensor C = B; // C and B share same memory.
 
-// move A to gpu
+// move A to GPU
 Tensor D = A.to(Device.cuda+0);
 
-// inplace move A to gpu
+// inplace move A to GPU
 A.to_(Device.cuda+0);
 ```
-* Type conversion in between avaliable:
+* Type conversion possible:
 ```c++
 Tensor A({3,4},Type.Double);
 Tensor B = A.astype(Type.Uint64); // cast double to uint64_t
 ```
 
-* Virtual swap and permute. All the permute and swap will not change the underlying memory
-* Use Contiguous() when needed to actual moving the memory layout.
+* Virtual swap and permute. All permute and swap operations do not change the underlying memory immediately. Minimizes cost of moving elements.
+* Use `Contiguous()` when needed to actually move the memory layout.
 ```c++
 Tensor A({3,4,5,2},Type.Double);
 A.permute_(0,3,1,2); // this will not change the memory, only the shape info is changed.
-cout << A.is_contiguous() << endl; // this will be false!
+cout << A.is_contiguous() << endl; // false
 
-A.contiguous_(); // call Configuous() to actually move the memory.
-cout << A.is_contiguous() << endl; // this will be true!
+A.contiguous_(); // call Contiguous() to actually move the memory.
+cout << A.is_contiguous() << endl; // true
 ```
 
-* access single element using .at
+* Access a single element using `.at`
 ```c++
 Tensor A({3,4,5},Type.Double);
 double val = A.at<double>(0,2,2);
 ```
 
-* access elements with python slices similarity:
+* Access elements similar to Python slices:
 ```c++
 typedef Accessor ac;
 Tensor A({3,4,5},Type.Double);
 Tensor out = A(0,":","1:4");
-// equivalent to python: out = A[0,:,1:4]
+// equivalent to Python: out = A[0,:,1:4]
 
 ```
 
 ### 4. UniTensor
-* extension of Tensor, specifically design for Tensor network simulation.
+* Extension of Tensor, specifically designed for Tensor network simulations.
 
 * See Intro slide for more details
 ```c++
@@ -213,7 +212,7 @@ Yu-Cheng Lin    | NTU, Taiwan
 * Paper:
 [https://arxiv.org/abs/2401.01921](https://arxiv.org/abs/2401.01921)
 
-* example/DMRG:
+* Example/DMRG:
 [https://www.tensors.net/dmrg](https://www.tensors.net/dmrg)
 
 * hptt library:
