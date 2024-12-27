@@ -20,7 +20,7 @@ Cytnx is a tensor network library designed for quantum physics simulations using
 	[v1.0.0]
 	This is the release of the version v1.0.0, which is the stable version of the project.
  **See also**
-[Release Note](misc/version.log).
+[Release Note](misc_doc/version.log).
 
 ## API Documentation:
 
