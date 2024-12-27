@@ -24,11 +24,11 @@ namespace DirectsumTest {
     axes:{1}
   ====================*/
   TEST(Directsum, gpu_allDType) {
-    for (auto device : device_list) {  // now only test for cpu device.
+    for (auto device : device_list) {
       for (auto dtype1 : dtype_list) {
         for (auto dtype2 : dtype_list) {
-          Tensor T1 = Tensor({12, 5, 7}, dtype1, device);
-          Tensor T2 = Tensor({12, 5, 8}, dtype2, device);
+          Tensor T1 = Tensor({12, 5, 7}, dtype1, device).to(cytnx::Device.cuda);
+          Tensor T2 = Tensor({12, 5, 8}, dtype2, device).to(cytnx::Device.cuda);
           InitTensorUniform(T1, rand_seed1 = 0);
           InitTensorUniform(T2, rand_seed2 = 1);
           std::vector<cytnx_uint64> shared_axes = {1};
@@ -41,8 +41,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test all possible combination (and permutation) of share axes.
   input:
-    T1:double data type tensor with shape {7, 5, 3, 3} on cpu.
-    T2:double data type tensor with shape {7, 9, 3, 3} on cpu.
+    T1:double data type tensor with shape {7, 5, 3, 3} on gpu.
+    T2:double data type tensor with shape {7, 9, 3, 3} on gpu.
     axes:test for all possible combination and permutation of the index {0, 2, 3}
   ====================*/
   TEST(Directsum, gpu_shared_axes_combination) {
@@ -64,8 +64,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test for share axes is empty vector.
   input:
-    T1:double data type tensor with shape {2, 1, 2} on cpu.
-    T2:double data type tensor with shape {2, 4, 2} on cpu.
+    T1:double data type tensor with shape {2, 1, 2} on gpu.
+    T2:double data type tensor with shape {2, 4, 2} on gpu.
     axes:empty
   ====================*/
   TEST(Directsum, gpu_shared_axes_empty) {
@@ -80,8 +80,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test the tensor only 1 have one element. Test for all possible data type.
   input:
-    T1:Tensor with shape {1} on cpu, testing for all possible data type.
-    T2:Tensor with shape {1} on cpu, testing for all possible data type.
+    T1:Tensor with shape {1} on gpu, testing for all possible data type.
+    T2:Tensor with shape {1} on gpu, testing for all possible data type.
     axes:test empty.
   ====================*/
   TEST(Directsum, gpu_one_elem_tens) {
@@ -98,8 +98,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test for matrix case.
   input:
-    T1:Tensor with shape {3, 2} on cpu, testing for all possible data type.
-    T2:Tensor with shape {3, 2} on cpu, testing for all possible data type.
+    T1:Tensor with shape {3, 2} on gpu, testing for all possible data type.
+    T2:Tensor with shape {3, 2} on gpu, testing for all possible data type.
     axes:empty, {0}, {1}.
   ====================*/
   TEST(Directsum, gpu_matrix_case) {
@@ -118,7 +118,7 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test two tensor are reference copy.
   input:
-    T1:Tensor with shape {3, 2} on cpu, testing for all possible data type.
+    T1:Tensor with shape {3, 2} on gpu, testing for all possible data type.
     T2:T2=T1
     axes:empty, {0}, {1}.
   ====================*/
@@ -137,8 +137,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test the shared axes contain all axes.
   input:
-    T1:complex double type tensor with shape {2, 3} on cpu.
-    T2:double type tensor with shape {2, 3} on cpu.
+    T1:complex double type tensor with shape {2, 3} on gpu.
+    T2:double type tensor with shape {2, 3} on gpu.
     axes:{0, 1}
   ====================*/
   TEST(Directsum, gpu_shared_axis_contains_all) {
@@ -153,8 +153,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test the shared axes contain all axes. Input tensors have only one elem.
   input:
-    T1:complex double type tensor with shape {1} on cpu.
-    T2:double type tensor with shape {1} on cpu.
+    T1:complex double type tensor with shape {1} on gpu.
+    T2:double type tensor with shape {1} on gpu.
     axes:{0}
   ====================*/
   TEST(Directsum, gpu_shared_axis_contains_all_tens_one_elem) {
@@ -169,8 +169,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test for not contiguous tensor.
   input:
-    T1:int32 data type not contiguous tensor with shape {5, 7, 3, 3} on cpu.
-    T2:double data type not contiguous tensor with shape {9, 7, 3, 3} on cpu.
+    T1:int32 data type not contiguous tensor with shape {5, 7, 3, 3} on gpu.
+    T2:double data type not contiguous tensor with shape {9, 7, 3, 3} on gpu.
     axes:empty
   ====================*/
   TEST(Directsum, gpu_not_contiguous) {
@@ -210,8 +210,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test the rank of the input tensors are not same.
   input:
-    T1:double type tensor with shape {2} on cpu.
-    T2:double type tensor with shape {2, 1} on cpu.
+    T1:double type tensor with shape {2} on gpu.
+    T2:double type tensor with shape {2, 1} on gpu.
     axes:empty
   ====================*/
   TEST(Directsum, gpu_err_diff_rank) {
@@ -226,8 +226,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test contains shared axis of the tensors are not same.
   input:
-    T1:double type tensor with shape {2, 3, 3} on cpu.
-    T2:double type tensor with shape {2, 1, 3} on cpu.
+    T1:double type tensor with shape {2, 3, 3} on gpu.
+    T2:double type tensor with shape {2, 1, 3} on gpu.
     axes:{2, 1}
   ====================*/
   TEST(Directsum, gpu_err_shared_axis_dim_wrong) {
@@ -242,8 +242,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test the shared axes out of the range.
   input:
-    T1:double type tensor with shape {2, 3, 3} on cpu.
-    T2:double type tensor with shape {2, 1, 3} on cpu.
+    T1:double type tensor with shape {2, 3, 3} on gpu.
+    T2:double type tensor with shape {2, 1, 3} on gpu.
     axes:{3}
   ====================*/
   TEST(Directsum, gpu_err_shared_axis_out_range) {
@@ -258,8 +258,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test contains the shared axes out of the range.
   input:
-    T1:double type tensor with shape {2, 3, 3} on cpu.
-    T2:double type tensor with shape {2, 1, 3} on cpu.
+    T1:double type tensor with shape {2, 3, 3} on gpu.
+    T2:double type tensor with shape {2, 1, 3} on gpu.
     axes:{0, 3}
   ====================*/
   TEST(Directsum, gpu_err_one_shared_axis_out_range) {
@@ -274,8 +274,8 @@ namespace DirectsumTest {
   /*=====test info=====
   describe:Test the shared axes not uniqe.
   input:
-    T1:double type tensor with shape {2, 3, 3} on cpu.
-    T2:double type tensor with shape {2, 1, 3} on cpu.
+    T1:double type tensor with shape {2, 3, 3} on gpu.
+    T2:double type tensor with shape {2, 1, 3} on gpu.
     axes:{0, 0}
   ====================*/
   TEST(Directsum, gpu_err_shared_axis_not_uniqe) {
