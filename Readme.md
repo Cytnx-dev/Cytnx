@@ -191,7 +191,7 @@ Developers      | Affiliation     | Roles
 ----------------|-----------------|---------
 Chang-Teng Lin  |NTU, Taiwan      |major maintainer and developer
 Ke Hsu          |NTU, Taiwan      |major maintainer and developer
-Ivana           |NTU, Taiwan      |major maintainer and developer
+Ivana Gyro      |NTU, Taiwan      |major maintainer and developer
 Hao-Ti Hung     |NTU, Taiwan      |documentation and linalg
 Ying-Jer Kao    |NTU, Taiwan      |setuptool, cmake
 
