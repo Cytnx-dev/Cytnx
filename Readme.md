@@ -206,7 +206,7 @@ Yen-Hsin Wu     | NTU, Taiwan
 Po-Kwan Wu      | OSU, USA
 Wen-Han Kao     | UMN, USA
 Yu-Hsueh Chen   | NTU, Taiwan
-Yu_Cheng Lin    | NTU, Taiwan
+Yu-Cheng Lin    | NTU, Taiwan
 
 
 ## References
