@@ -21,7 +21,7 @@ int main() {
   A.at<cytnx_double>({0, 0, 2});  // note the braket{}
 
   // Method 2: more like 'python' way:
-  A.at<cytnx_float>(0, 0, 2);
+  A.at<cytnx_double>(0, 0, 2);
 
   return 0;
 }
