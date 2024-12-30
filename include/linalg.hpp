@@ -2365,7 +2365,7 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
 
-        @pre
+    @pre
         1. The initial UniTensor cannot be empty.
         2. The UniTensor version of the Arnoldi not support \p which = 'SM'.
     */
