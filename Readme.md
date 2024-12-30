@@ -52,7 +52,7 @@ Cytnx is a tensor network library designed for quantum physics simulations using
 ```c++
 // C++ version:
 #include "cytnx.hpp"
-cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu)
+cytnx::Tensor A({3,4,5},cytnx::Type.Double,cytnx::Device.cpu);
 ```
 
 
@@ -147,16 +147,77 @@ Tensor out = A(0,":","1:4");
 
 ### 4. UniTensor
 * Extension of Tensor, specifically designed for Tensor network simulations.
-
-* See Intro slide for more details
+* `UniTensor` is a tensor with additional information such as `Bond`, `Symmetry` and `labels`. With these information, one can easily implement the tensor contraction.
 ```c++
 Tensor A({3,4,5},Type.Double);
-UniTensor tA = UniTensor(A,2); // convert directly.
+UniTensor tA = UniTensor(A); // convert directly.
+UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{}); // init from scratch.
+// Relabel the tensor and then contract.
+tA.relabels_({"common_1", "common_2", "out_a"});
+tB.relabels_({"common_1", "common_2", "out_b"});
+UniTensor out = cytnx::Contract(tA,tB);
+tA.print_diagram();
+tB.print_diagram();
+out.print_diagram();
+```
+Output:
+```
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+                 ---------
+                /         \
+   common_1 ____| 3     4 |____ common_2
+                |         |
+                |       5 |____ out_a
+                \         /
+                 ---------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+                 ---------
+                /         \
+   common_1 ____| 3     4 |____ common_2
+                |         |
+                |       5 |____ out_b
+                \         /
+                 ---------
+-----------------------
+tensor Name :
+tensor Rank : 2
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+         --------
+        /        \
+        |      5 |____ out_a
+        |        |
+        |      5 |____ out_b
+        \        /
+         --------
 
-UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch.
 ```
 
+* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://kaihsinwu.gitlab.io/Cytnx_doc/) for more details.
 
+## Linear Algebra
+Cytnx provides a set of linear algebra functions.
+* For instance, one can perform SVD, Eig, Eigh decomposition, etc. on a `Tensor` or `UniTensor`.
+* Iterative methods such as Lanczos, Arnoldi are also available.
+* The linear algebra functions are implemented in the `linalg` namespace.
+For more details, see the [API documentation](https://kaihsinwu.gitlab.io/cytnx_api/).
+```c++
+auto mean = 0.0;
+auto std = 1.0;
+Tensor A = cytnx::random::normal({3, 4}, mean, std);
+auto svds = cytnx::linalg::Svd(A); // SVD decomposition
+```
 
 ## Examples
 See the examples in the folder `example`
@@ -166,7 +227,7 @@ See the examples in the folder `example`
     See example/DMRG folder for implementation on DMRG algo.
     See example/TDVP folder for implementation on TDVP algo.
     See example/LinOp and example/ED folder for implementation using LinOp & Lanczos.
-    
+
 
 ## How to contribute & get in contact
 If you want to contribute to the development of the library, you are more than welocome. No matter if you want to dig deep into the technical details of the library, help improving the documentation and make the library more accessible to new users, or if you want to contribute to the project with high level algorithms - we are happy to keep improving Cytnx together.
@@ -195,7 +256,7 @@ Hao-Ti Hung     |NTU, Taiwan      |documentation and linalg
 Ying-Jer Kao    |NTU, Taiwan      |setuptool, cmake
 
 ## Contributors
-Contributors    | Affiliation     
+Contributors    | Affiliation
 ----------------|-----------------
 PoChung Chen    | NTHU, Taiwan
 Chia-Min Chung  | NSYSU, Taiwan
