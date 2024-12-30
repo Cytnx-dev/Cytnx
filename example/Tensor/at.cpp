@@ -4,7 +4,7 @@
 using namespace cytnx;
 using namespace std;
 int main() {
-  Tensor A = arange(30).reshape(2, 3, 5); 
+  Tensor A = arange(30).reshape(2, 3, 5);
   cout << A << endl;
 
   // note that type resolver should be consist with the dtype
@@ -21,7 +21,7 @@ int main() {
   A.at<cytnx_double>({0, 0, 2});  // note the braket{}
 
   // Method 2: more like 'python' way:
-  A.at<cytnx_float>(0, 0, 2); 
+  A.at<cytnx_float>(0, 0, 2);
 
   return 0;
 }

@@ -768,8 +768,8 @@ namespace cytnx {
      * 4. If \p return_err is true, then the error will be pushed back to the vector.
      * @endparblock
      * @pre This function assumes a BlockUniTensor as input for \p Tin.
-     * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool
-	 * &is_UvT, const unsigned int &return_err, const cytnx_uint64& mindim)
+     * @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const
+     * bool &is_UvT, const unsigned int &return_err, const cytnx_uint64& mindim)
      * @note The truncated bond dimension can be larger than \p keepdim for degenerate singular
      * values: if the largest \f$ n \f$ truncated singular values would be exactly equal to the
      * smallest kept singular value, then the bond dimension is enlarged to \p keepdim \f$ + n \f$.
@@ -789,9 +789,10 @@ namespace cytnx {
      * truncates the singular values. The result will depend on the rowrank of the
      * UniTensor \p Tin. This version uses the ?gesvd method. See references below for
      * more details.
-     * @see Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const std::vector<cytnx_uint64> min_blockdim,
-     * const double &err, const bool &is_UvT, const unsigned int &return_err, const cytnx_uint64
-     * &mindim), Gesvd(const cytnx::UniTensor &Tin, const bool &is_U, const bool &is_vT)
+     * @see Svd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const
+     * std::vector<cytnx_uint64> min_blockdim, const double &err, const bool &is_UvT, const unsigned
+     * int &return_err, const cytnx_uint64 &mindim), Gesvd(const cytnx::UniTensor &Tin, const bool
+     * &is_U, const bool &is_vT)
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim,

@@ -235,10 +235,12 @@ UniTensor tA = UniTensor(A,2); // convert directly.
 UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch.
 ```
 
+------------------------------
 ## Developers & Maintainers
 Creator and Project manager | Affiliation     | Email
 ----------------------------|-----------------|---------
 Kai-Hsin Wu                 |Boston Univ., USA|kaihsinwu@gmail.com
+\n
 
 Developers      | Affiliation     | Roles
 ----------------|-----------------|---------
@@ -271,4 +273,3 @@ Yu-Cheng Lin    | NTU, Taiwan
 
 * hptt library:
 [https://github.com/springer13/hptt](https://github.com/springer13/hptt)
-
