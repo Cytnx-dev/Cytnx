@@ -1548,7 +1548,7 @@ namespace cytnx {
     /**
     @brief Perform Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
     @details This function will perform Singular-Value decomposition on a matrix (a rank-2
-    Tensor). That means givent a matrix \p Tin as \f$ M \f$, then the result will be:
+    Tensor). That means given a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
     M = U S V^\dagger,
     \f]
@@ -1577,7 +1577,7 @@ namespace cytnx {
     /**
     @brief Perform Singular-Value decomposition on a rank-2 Tensor (a @em matrix).
     @details This function will perform Singular-Value decomposition on a matrix (a rank-2
-    Tensor). That means givent a matrix \p Tin as \f$ M \f$, then the result will be:
+    Tensor). That means given a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
     M = U S V^\dagger,
     \f]
@@ -1713,7 +1713,7 @@ namespace cytnx {
     /**
     @brief Perform QR decomposition on a rank-2 Tensor.
     @details This function will perform QR decomposition on a matrix (a rank-2 Tensor). That means
-    givent a matrix \p Tin as \f$ M \f$, then the result will be:
+    given a matrix \p Tin as \f$ M \f$, then the result will be:
     \f[
     M = Q R,
     \f]
