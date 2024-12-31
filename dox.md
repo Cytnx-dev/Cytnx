@@ -226,14 +226,65 @@ See \link cytnx::linalg cytnx::linalg \endlink for further details
 
 ### UniTensor
 * Extension of Tensor, specifically designed for Tensor network simulations.
-
-* See Intro slide for more details
-```{.cpp}
+* `UniTensor` is a tensor with additional information such as `Bond`, `Symmetry` and `labels`. With these information, one can easily implement the tensor contraction.
+```c++
 Tensor A({3,4,5},Type.Double);
-UniTensor tA = UniTensor(A,2); // convert directly.
-
-UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{},2); // init from scratch.
+UniTensor tA = UniTensor(A); // convert directly.
+UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{}); // init from scratch.
+// Relabel the tensor and then contract.
+tA.relabels_({"common_1", "common_2", "out_a"});
+tB.relabels_({"common_1", "common_2", "out_b"});
+UniTensor out = cytnx::Contract(tA,tB);
+tA.print_diagram();
+tB.print_diagram();
+out.print_diagram();
 ```
+Output:
+```
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+                 ---------
+                /         \
+   common_1 ____| 3     4 |____ common_2
+                |         |
+                |       5 |____ out_a
+                \         /
+                 ---------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+                 ---------
+                /         \
+   common_1 ____| 3     4 |____ common_2
+                |         |
+                |       5 |____ out_b
+                \         /
+                 ---------
+-----------------------
+tensor Name :
+tensor Rank : 2
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+         --------
+        /        \
+        |      5 |____ out_a
+        |        |
+        |      5 |____ out_b
+        \        /
+         --------
+
+```
+
+* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://kaihsinwu.gitlab.io/Cytnx_doc/) for more details.
+
 
 ------------------------------
 ## Developers & Maintainers
