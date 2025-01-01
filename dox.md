@@ -196,14 +196,14 @@ See \link cytnx::linalg cytnx::linalg \endlink for further details
 
 ```
     * Virtual swap and permute. All the permute and swap operations do not change the underlying memory immediately. Minimized cost of moving elements.
-    * Use `Contiguous()` when needed to actually move the memory layout.
+    * Use `contiguous()` when needed to actually move the memory layout.
 ```{.cpp}
 
         Tensor A({3,4,5,2},Type.Double);
         A.permute_(0,3,1,2); // this will not change the memory, only the shape info is changed.
         cout << A.is_contiguous() << endl; // false
 
-        A.contiguous_(); // call Contiguous() to actually move the memory.
+        A.contiguous_(); // call contiguous() to actually move the memory.
         cout << A.is_contiguous() << endl; // this will be true!
 
 ```
