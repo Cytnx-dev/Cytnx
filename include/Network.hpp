@@ -278,10 +278,10 @@ namespace cytnx {
            Currently, only Regular Network is support!
 
 
-    @note
+    ##note:
         1. each network file cannot have more than 1024 lines.
 
-    @details
+    ##detail:
         Format of a network file:
 
         - each line defines a UniTensor, that takes the format '[name] : [Labels]'
@@ -336,10 +336,10 @@ namespace cytnx {
            Currently, only Regular Network is support!
 
 
-    @note
+    ##note:
         1. contents cannot have more than 1024 lines/strings.
 
-    @details
+    ##detail:
         Format of each string follows the same policy as Fromfile.
 
 
