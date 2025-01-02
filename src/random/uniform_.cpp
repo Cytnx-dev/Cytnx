@@ -39,7 +39,7 @@ namespace cytnx {
         if (Tin.dtype() == Type.ComplexDouble) {
           Tin += cytnx_complex128{low, low};
         } else if (Tin.dtype() == Type.ComplexFloat) {
-          Tin += cytnx_complex64{low, low};
+          Tin += cytnx_complex64{static_cast<float>(low), static_cast<float>(low)};
         } else if (Tin.dtype() == Type.Double) {
           Tin += low;
         } else if (Tin.dtype() == Type.Float) {
