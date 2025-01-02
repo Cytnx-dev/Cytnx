@@ -62,10 +62,6 @@ namespace cytnx {
     examples for how to use them.
 
     ## Example:
-    ### c++ API:
-    \include example/LinOp/init.cpp
-    #### output>
-    \verbinclude example/LinOp/init.cpp.out
     ### python API:
     \include example/LinOp/init.py
     #### output>

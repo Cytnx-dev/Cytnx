@@ -495,6 +495,8 @@ namespace cytnx {
 
     // This mechanism is to remove the 'void' type from Type_list. Taking advantage of it
     // appearing first ...
+
+    /// @cond
     struct internal {
       template <typename Variant>
       struct exclude_first;
@@ -504,6 +506,7 @@ namespace cytnx {
         using type = std::variant<Rest...>;
       };
     };  // internal
+        /// @endcond
 
     // std::variant of pointers to Type_list, without void ....
     using pointer_types =
