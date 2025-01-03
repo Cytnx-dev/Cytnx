@@ -1,5 +1,4 @@
 name: Tests and Codecov
-
 on:
   pull_request:
     branches:
@@ -9,20 +8,13 @@ on:
 
 jobs:
   BuildAndTest:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-       #os: [ubuntu-latest, macos-latest]
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     defaults:
       run:
         shell: bash -l {0}
-
     steps:
     - uses: actions/checkout@v3
-
     - uses: conda-incubator/setup-miniconda@v2
       with:
         # Specify python version your environment will have. Remember to quote this, or
@@ -35,40 +27,19 @@ jobs:
         # prone than conda while being completely compatible with the conda CLI
         use-mamba: true
         mamba-version: "*"
-
     - name: Install dependencies
       shell: bash -l {0}
       run: |
-        echo "Config Conda---------------------------------"
-        mamba install anaconda-client boa -c conda-forge
-
-        if [ "${{ runner.os }}" == "Linux" ]; then
-          mamba install _openmp_mutex=*=*_llvm
-        elif [ "${{ runner.os }}" == "macOS" ]; then
-          mamba install llvm-openmp
-        fi
-        mamba install cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl beartype
+        mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl beartype
         python -m pip install gcovr
         mamba install gtest
         mamba install pytest pytest-cov
-
     - name: CPU info
       shell: bash -l {0}
-      run: |
-        if [ "${{ runner.os }}" == "Linux" ]; then
-          lscpu
-        elif [ "${{ runner.os }}" == "macOS" ]; then
-          sysctl -a | grep machdep.cpu
-        fi
-
+      run: lscpu
     - name: Configure CMake
       shell: bash -l {0}
-      run: |
-        if [ "${{ runner.os }}" == "Linux" ]; then
-          cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=off -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
-        elif [ "${{ runner.os }}" == "macOS" ]; then
-          cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=off -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=off
-        fi
+      run: cmake -S ${{github.workspace}} -B ${{github.workspace}}/build -DCMAKE_INSTALL_PREFIX=/home/runner/work/Cytnx_lib -DUSE_MKL=on -DUSE_HPTT=on -DHPTT_ENABLE_FINE_TUNE=on -DHPTT_ENABLE_AVX=off -DBUILD_PYTHON=on -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DRUN_TESTS=on
 
     - name: Build
       shell: bash -l {0}
