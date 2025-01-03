@@ -134,9 +134,9 @@ namespace cytnx {
     // type_size returns the sizeof(T) for the supported types. This is the same as
     // sizeof(T), except that size_type<void> is 0.
     template <typename T>
-    constexpr int type_size = sizeof(T);
+    inline constexpr int type_size = sizeof(T);
     template <>
-    constexpr int type_size<void> = 0;
+    inline constexpr int type_size<void> = 0;
   }  // namespace internal
 
   // the list of supported types. The dtype() of an object is an index into this list.
