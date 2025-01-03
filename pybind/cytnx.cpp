@@ -59,7 +59,6 @@ PYBIND11_MODULE(cytnx, m) {
   bond_binding(m);
   py::add_ostream_redirect(m, "ostream_redirect");
 
-
   auto mdev = m.def_submodule("Device");
   mdev.attr("cpu") = (cytnx_int64)cytnx::Device.cpu;
   mdev.attr("cuda") = (cytnx_int64)cytnx::Device.cuda;
