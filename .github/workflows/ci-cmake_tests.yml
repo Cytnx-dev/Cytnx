@@ -3,7 +3,8 @@ name: Tests and Codecov
 on:
   pull_request:
     branches:
-      - haoti/test_mac_build
+      - master
+      - dev-master
   workflow_dispatch:
 
 jobs:
