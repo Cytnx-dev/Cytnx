@@ -49,7 +49,12 @@ jobs:
 
     - name: CPU info
       shell: bash -l {0}
-      run: lscpu
+      run: |
+        if [ "${{ runner.os }}" == "Linux" ]; then
+          lscpu
+        elif [ "${{ runner.os }}" == "macOS" ]; then
+          sysctl -a | grep machdep.cpu
+        fi
 
     - name: Configure CMake
       shell: bash -l {0}
