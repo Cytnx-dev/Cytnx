@@ -59,6 +59,12 @@ PYBIND11_MODULE(cytnx, m) {
   bond_binding(m);
   py::add_ostream_redirect(m, "ostream_redirect");
 
+  py::enum_<cytnx::Type_class::Type> type_enum(m, "Type");
+  for (std::size_t i = 0; i < N_Type; ++i) {
+    type_enum.value(Type.enum_name(i), static_cast<Type_class::Type>(i));
+  }
+  type_enum.export_values();
+
   auto mdev = m.def_submodule("Device");
   mdev.attr("cpu") = (cytnx_int64)cytnx::Device.cpu;
   mdev.attr("cuda") = (cytnx_int64)cytnx::Device.cuda;

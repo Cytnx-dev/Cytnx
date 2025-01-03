@@ -160,59 +160,59 @@ namespace cytnx {
 
   // The friendly name of each type
   template <typename T>
-  constexpr char* Type_names = nullptr;
+  inline constexpr char* Type_names = nullptr;
   template <>
-  constexpr const char* Type_names<void> = "Void";
+  inline constexpr const char* Type_names<void> = "Void";
   template <>
-  constexpr const char* Type_names<cytnx_complex128> = "Complex Double (Complex Float64)";
+  inline constexpr const char* Type_names<cytnx_complex128> = "Complex Double (Complex Float64)";
   template <>
-  constexpr const char* Type_names<cytnx_complex64> = "Complex Float (Complex Float32)";
+  inline constexpr const char* Type_names<cytnx_complex64> = "Complex Float (Complex Float32)";
   template <>
-  constexpr const char* Type_names<cytnx_double> = "Double (Float64)";
+  inline constexpr const char* Type_names<cytnx_double> = "Double (Float64)";
   template <>
-  constexpr const char* Type_names<cytnx_float> = "Float (Float32)";
+  inline constexpr const char* Type_names<cytnx_float> = "Float (Float32)";
   template <>
-  constexpr const char* Type_names<cytnx_int64> = "Int64";
+  inline constexpr const char* Type_names<cytnx_int64> = "Int64";
   template <>
-  constexpr const char* Type_names<cytnx_uint64> = "Uint64";
+  inline constexpr const char* Type_names<cytnx_uint64> = "Uint64";
   template <>
-  constexpr const char* Type_names<cytnx_int32> = "Int32";
+  inline constexpr const char* Type_names<cytnx_int32> = "Int32";
   template <>
-  constexpr const char* Type_names<cytnx_uint32> = "Uint32";
+  inline constexpr const char* Type_names<cytnx_uint32> = "Uint32";
   template <>
-  constexpr const char* Type_names<cytnx_int16> = "Int16";
+  inline constexpr const char* Type_names<cytnx_int16> = "Int16";
   template <>
-  constexpr const char* Type_names<cytnx_uint16> = "Uint16";
+  inline constexpr const char* Type_names<cytnx_uint16> = "Uint16";
   template <>
-  constexpr const char* Type_names<cytnx_bool> = "Bool";
+  inline constexpr const char* Type_names<cytnx_bool> = "Bool";
 
   // The corresponding Python enumeration name
   template <typename T>
-  constexpr char* Type_enum_name = nullptr;
+  inline constexpr char* Type_enum_name = nullptr;
   template <>
-  constexpr const char* Type_enum_name<void> = "Void";
+  inline constexpr const char* Type_enum_name<void> = "Void";
   template <>
-  constexpr const char* Type_enum_name<cytnx_complex128> = "ComplexDouble";
+  inline constexpr const char* Type_enum_name<cytnx_complex128> = "ComplexDouble";
   template <>
-  constexpr const char* Type_enum_name<cytnx_complex64> = "ComplexFloat";
+  inline constexpr const char* Type_enum_name<cytnx_complex64> = "ComplexFloat";
   template <>
-  constexpr const char* Type_enum_name<cytnx_double> = "Double";
+  inline constexpr const char* Type_enum_name<cytnx_double> = "Double";
   template <>
-  constexpr const char* Type_enum_name<cytnx_float> = "Float";
+  inline constexpr const char* Type_enum_name<cytnx_float> = "Float";
   template <>
-  constexpr const char* Type_enum_name<cytnx_int64> = "Int64";
+  inline constexpr const char* Type_enum_name<cytnx_int64> = "Int64";
   template <>
-  constexpr const char* Type_enum_name<cytnx_uint64> = "Uint64";
+  inline constexpr const char* Type_enum_name<cytnx_uint64> = "Uint64";
   template <>
-  constexpr const char* Type_enum_name<cytnx_int32> = "Int32";
+  inline constexpr const char* Type_enum_name<cytnx_int32> = "Int32";
   template <>
-  constexpr const char* Type_enum_name<cytnx_uint32> = "Uint32";
+  inline constexpr const char* Type_enum_name<cytnx_uint32> = "Uint32";
   template <>
-  constexpr const char* Type_enum_name<cytnx_int16> = "Int16";
+  inline constexpr const char* Type_enum_name<cytnx_int16> = "Int16";
   template <>
-  constexpr const char* Type_enum_name<cytnx_uint16> = "Uint16";
+  inline constexpr const char* Type_enum_name<cytnx_uint16> = "Uint16";
   template <>
-  constexpr const char* Type_enum_name<cytnx_bool> = "Bool";
+  inline constexpr const char* Type_enum_name<cytnx_bool> = "Bool";
 
   struct Type_struct {
     const char* name;  // char* is OK here, it is only ever initialized from a string literal
