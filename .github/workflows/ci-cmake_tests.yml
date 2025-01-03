@@ -3,13 +3,16 @@ name: Tests and Codecov
 on:
   pull_request:
     branches:
-      - master
-      - dev-master
+      - haoti/test_mac_build
   workflow_dispatch:
 
 jobs:
   BuildAndTest:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
 
     defaults:
       run:
