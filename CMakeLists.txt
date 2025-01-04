@@ -96,7 +96,11 @@ project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
 # C++ uses link-time optimization anyway; this enables additionally -flto=auto,
 # for parallel compilation
-#set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+IF (APPLE)
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+ELSE ()
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+ENDIF ()
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
