@@ -96,6 +96,8 @@ project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
 # C++ uses link-time optimization anyway; this enables additionally -flto=auto,
 # for parallel compilation
+# It cannot enable on MacOS since it cuase bulding error when linking the library libcytnx.a.
+# Error message: Error running link command: no such file or directorymake[2]: *** [CMakeFiles/cytnx.dir/build.make:3109: libcytnx.a]
 IF (APPLE)
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 ELSE ()
