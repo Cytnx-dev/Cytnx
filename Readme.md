@@ -89,7 +89,7 @@ Available types are :
 ```c++
 Storage A(400,Type.Double);
 for(int i=0;i<400;i++)
-A.at<double>(i) = i;
+  A.at<double>(i) = i;
 
 Storage B = A; // A and B share same memory, this is similar to Python
 
