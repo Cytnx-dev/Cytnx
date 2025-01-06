@@ -11,11 +11,9 @@ namespace cytnx {
 
     void Conj_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten,
                                   const cytnx_uint64 &Nelem) {
-      cytnx_complex64 *tmp = (cytnx_complex64 *)ten->Mem;
+      cytnx_complex64 *tmp = (cytnx_complex64 *)ten->data();
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         tmp[n].imag(-tmp[n].imag());
       }
@@ -23,11 +21,9 @@ namespace cytnx {
 
     void Conj_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten,
                                   const cytnx_uint64 &Nelem) {
-      cytnx_complex128 *tmp = (cytnx_complex128 *)ten->Mem;
+      cytnx_complex128 *tmp = (cytnx_complex128 *)ten->data();
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         tmp[n].imag(-tmp[n].imag());
       }

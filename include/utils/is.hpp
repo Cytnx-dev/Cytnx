@@ -1,5 +1,5 @@
-#ifndef __is__H_
-#define __is__H_
+#ifndef CYTNX_UTILS_IS_H_
+#define CYTNX_UTILS_IS_H_
 
 #include "Type.hpp"
 #include "Tensor.hpp"
@@ -26,4 +26,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_UTILS_IS_H_

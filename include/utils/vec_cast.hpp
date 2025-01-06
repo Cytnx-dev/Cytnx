@@ -1,5 +1,5 @@
-#ifndef __H_vec_cast_
-#define __H_vec_cast_
+#ifndef CYTNX_UTILS_VEC_CAST_H_
+#define CYTNX_UTILS_VEC_CAST_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -20,4 +20,5 @@ namespace cytnx {
   }
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_CAST_H_

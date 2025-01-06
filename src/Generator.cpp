@@ -50,6 +50,10 @@ namespace cytnx {
   //-----------------
   Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step,
                 const unsigned int &dtype, const int &device) {
+    cytnx_error_msg((end - start) / step <= 0,
+                    "[ERROR] arange(start=%f,end=%f,step=%f) "
+                    "No values in the sspecified range.\n",
+                    start, end, step);
     cytnx_uint64 Nelem;
     Tensor out;
     if (start < end) {

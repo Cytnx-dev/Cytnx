@@ -1,5 +1,6 @@
-#ifndef _algo_H_
-#define _algo_H_
+#ifndef CYTNX_ALGO_H_
+#define CYTNX_ALGO_H_
+
 #include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "Tensor.hpp"
@@ -215,4 +216,4 @@ namespace cytnx {
 }  // namespace cytnx
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_ALGO_H_

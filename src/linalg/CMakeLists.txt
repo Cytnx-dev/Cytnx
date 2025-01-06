@@ -1,3 +1,9 @@
+
+# This must be before the target_sources_local(), so that the target is added as CUDA
+if(USE_CUDA)
+  set_source_files_properties(Kron.cpp DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTIES LANGUAGE CUDA)
+endif()
+
 target_sources_local(cytnx
     PRIVATE
     #linalg_internal_interface.hpp

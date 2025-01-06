@@ -35,7 +35,8 @@ jobs:
       shell: bash -l {0}
       run: |
         mamba install _openmp_mutex=*=*_llvm cmake make boost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl beartype
-        mamba install gcovr gtest
+        python -m pip install gcovr
+        mamba install gtest
         mamba install pytest pytest-cov
 
     - name: CPU info

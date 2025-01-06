@@ -1,5 +1,5 @@
-#ifndef __H_vec_clone_
-#define __H_vec_clone_
+#ifndef CYTNX_UTILS_VEC_CLONE_H_
+#define CYTNX_UTILS_VEC_CLONE_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -19,4 +19,5 @@ namespace cytnx {
                            const cytnx_uint64& end);
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_CLONE_H_

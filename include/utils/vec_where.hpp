@@ -1,5 +1,5 @@
-#ifndef __H_vec_where_
-#define __H_vec_where_
+#ifndef CYTNX_UTILS_VEC_WHERE_H_
+#define CYTNX_UTILS_VEC_WHERE_H_
 
 #include <vector>
 #include "Type.hpp"
@@ -12,4 +12,5 @@ namespace cytnx {
   std::vector<cytnx_uint64> vec_argwhere(std::vector<T> const& v, const T& target);
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_WHERE_H_

@@ -1,5 +1,6 @@
-#ifndef _Generator_H_
-#define _Generator_H_
+#ifndef CYTNX_GENERATOR_H_
+#define CYTNX_GENERATOR_H_
+
 #include "Type.hpp"
 #include "Device.hpp"
 #include "cytnx_error.hpp"
@@ -58,7 +59,7 @@ namespace cytnx {
                   const int &device = Device.cpu);
 
   /**
-  @brief create an square rank-2 Tensor with all diagonal to be one.
+  @brief create a square rank-2 Tensor with all diagonal to be one.
   @param Dim the dimension of diagonal.
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -146,4 +147,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_GENERATOR_H_

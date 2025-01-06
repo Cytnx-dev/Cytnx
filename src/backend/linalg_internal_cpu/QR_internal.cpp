@@ -20,9 +20,7 @@ namespace cytnx {
       cytnx_uint64 min = M < N ? M : N;
       min = min < diag_N ? min : diag_N;
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
+#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 i = 0; i < min; i++) out[i] = elem[i * N + i];
     }
 
@@ -36,12 +34,12 @@ namespace cytnx {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_complex128 *pQ = (cytnx_complex128 *)Q->Mem;
-      cytnx_complex128 *pR = (cytnx_complex128 *)R->Mem;
-      cytnx_complex128 *ptau = (cytnx_complex128 *)tau->Mem;
+      cytnx_complex128 *pQ = (cytnx_complex128 *)Q->data();
+      cytnx_complex128 *pR = (cytnx_complex128 *)R->data();
+      cytnx_complex128 *ptau = (cytnx_complex128 *)tau->data();
 
       // cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
-      memcpy(pQ, in->Mem, M * N * sizeof(cytnx_complex128));
+      memcpy(pQ, in->data(), M * N * sizeof(cytnx_complex128));
 
       lapack_int ldA = N;
       lapack_int info;
@@ -58,7 +56,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_complex128 *pD = (cytnx_complex128 *)D->Mem;
+        cytnx_complex128 *pD = (cytnx_complex128 *)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:
@@ -89,12 +87,12 @@ namespace cytnx {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_complex64 *pQ = (cytnx_complex64 *)Q->Mem;
-      cytnx_complex64 *pR = (cytnx_complex64 *)R->Mem;
-      cytnx_complex64 *ptau = (cytnx_complex64 *)tau->Mem;
+      cytnx_complex64 *pQ = (cytnx_complex64 *)Q->data();
+      cytnx_complex64 *pR = (cytnx_complex64 *)R->data();
+      cytnx_complex64 *ptau = (cytnx_complex64 *)tau->data();
 
       // cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
-      memcpy(pQ, in->Mem, M * N * sizeof(cytnx_complex64));
+      memcpy(pQ, in->data(), M * N * sizeof(cytnx_complex64));
 
       lapack_int ldA = N;
       lapack_int info;
@@ -111,7 +109,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_complex64 *pD = (cytnx_complex64 *)D->Mem;
+        cytnx_complex64 *pD = (cytnx_complex64 *)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:
@@ -141,11 +139,11 @@ namespace cytnx {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_double *pQ = (cytnx_double *)Q->Mem;
-      cytnx_double *pR = (cytnx_double *)R->Mem;
-      cytnx_double *ptau = (cytnx_double *)tau->Mem;
+      cytnx_double *pQ = (cytnx_double *)Q->data();
+      cytnx_double *pR = (cytnx_double *)R->data();
+      cytnx_double *ptau = (cytnx_double *)tau->data();
 
-      memcpy(pQ, in->Mem, M * N * sizeof(cytnx_double));
+      memcpy(pQ, in->data(), M * N * sizeof(cytnx_double));
 
       lapack_int ldA = N;
       lapack_int info;
@@ -161,7 +159,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_double *pD = (cytnx_double *)D->Mem;
+        cytnx_double *pD = (cytnx_double *)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:
@@ -189,12 +187,12 @@ namespace cytnx {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_float *pQ = (cytnx_float *)Q->Mem;
-      cytnx_float *pR = (cytnx_float *)R->Mem;
-      cytnx_float *ptau = (cytnx_float *)tau->Mem;
+      cytnx_float *pQ = (cytnx_float *)Q->data();
+      cytnx_float *pR = (cytnx_float *)R->data();
+      cytnx_float *ptau = (cytnx_float *)tau->data();
 
       // cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
-      memcpy(pQ, in->Mem, M * N * sizeof(cytnx_float));
+      memcpy(pQ, in->data(), M * N * sizeof(cytnx_float));
 
       lapack_int ldA = N;
       lapack_int info;
@@ -210,7 +208,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_float *pD = (cytnx_float *)D->Mem;
+        cytnx_float *pD = (cytnx_float *)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:

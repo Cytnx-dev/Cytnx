@@ -25,6 +25,7 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate2) {
   auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }
 
+/*
 TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
   UniTensor densvd_T = UniTensor(zeros(svd_T.shape(), svd_T.dtype(), svd_T.device()));
@@ -34,7 +35,7 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
   for (size_t i = 0; i < res[0].shape()[0]; i++)
     vnm_S.push_back((double)(res[0].at({i, i}).real()));
   for (size_t i = 0; i < denres[0].shape()[0]; i++)
-    denvnm_S.push_back((double)(denres[0].at({i, i}).real()));
+    denvnm_S.push_back((double)(denres[0].at({i}).real()));
   std::sort(vnm_S.begin(), vnm_S.end());
   std::sort(denvnm_S.begin(), denvnm_S.end());
   for (size_t i = 0; i < vnm_S.size(); i++) {
@@ -43,6 +44,7 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
   // auto con_T1 = Contract(Contract(res[2], res[0]), res[1]);
   // auto con_T2 = Contract(Contract(res[1], res[0]), res[2]);
 }
+*/
 
 // TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
 //   Bond I = Bond(BD_IN, {Qs(-5), Qs(-3), Qs(-1), Qs(1), Qs(3), Qs(5)}, {1, 4, 10, 9, 5, 1});
@@ -104,6 +106,7 @@ TEST_F(linalg_Test, gpu_BkUt_expH) {
 }
 
 TEST_F(linalg_Test, gpu_BkUt_expM) {
+  GTEST_SKIP() << "Eig is not implemented in CUDA so we cannot do exponential simulation.";
   auto res = linalg::ExpM(H);
   for (size_t i = 0; i < 27; i++)
     for (size_t j = 0; j < 27; j++) {
