@@ -30,7 +30,7 @@ namespace cytnx {
 
     if (!nodes_container.empty()) {
       auto root = nodes_container.back();
-      std::cout << "Setting root pointers from " << root->name << std::endl;
+      // std::cout << "Setting root pointers from " << root->name << std::endl;
       root->set_root_ptrs();
     }
   }
