@@ -813,6 +813,22 @@ namespace cytnx {
     }
   }
 
+  template <typename DType>
+  StorageImplementation<DType>::~StorageImplementation() {
+    // std::cout << "delet" << endl;
+    if (this->data() != NULL) {
+      if (this->device() == Device.cpu) {
+        free(this->data());
+      } else {
+#ifdef UNI_GPU
+        checkCudaErrors(cudaFree(this->data()));
+#else
+        cytnx_error_msg(1, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
+#endif
+      }
+    }
+  }
+
   template class StorageImplementation<cytnx_complex128>;
   template class StorageImplementation<cytnx_complex64>;
   template class StorageImplementation<cytnx_double>;

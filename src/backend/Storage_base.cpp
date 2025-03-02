@@ -138,20 +138,7 @@ namespace cytnx {
     cytnx_error_msg(1, "%s", "[ERROR] call _Init_byptr in base");
   }
 
-  Storage_base::~Storage_base() {
-    // std::cout << "delet" << endl;
-    if (this->data() != NULL) {
-      if (this->device() == Device.cpu) {
-        free(this->data());
-      } else {
-#ifdef UNI_GPU
-        checkCudaErrors(cudaFree(this->data()));
-#else
-        cytnx_error_msg(1, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
-#endif
-      }
-    }
-  }
+  Storage_base::~Storage_base() {}
 
   void Storage_base::Move_memory_(const std::vector<cytnx_uint64> &old_shape,
                                   const std::vector<cytnx_uint64> &mapper,

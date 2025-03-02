@@ -44,7 +44,7 @@ namespace cytnx {
     virtual const unsigned long long size() const {
       cytnx_error_msg(true, "Not implemented.%s", "");
     }
-    ~Storage_base();
+    virtual ~Storage_base();
 
     template <class T>
     T &at(const cytnx_uint64 &idx) const;
@@ -55,7 +55,9 @@ namespace cytnx {
     template <class T>
     T *data() const;
 
-    void *data() const { return this->start_; }
+    // `Storage_base` can be instanitiated directly. It's deconstructor calls `data()`, so we cannot
+    // throw a runtime error here.
+    virtual void *data() const { return nullptr; }
     virtual int dtype() const { return Type.Void; }
     virtual int device() const { return Device.cpu; }
 
@@ -229,8 +231,6 @@ namespace cytnx {
     virtual void set_item(const cytnx_uint64 &idx, const cytnx_int16 &val);
     virtual void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
     virtual void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
-
-    void *start_;
   };
   ///@endcond
 
@@ -239,7 +239,7 @@ namespace cytnx {
   class StorageImplementation : public Storage_base {
    public:
     StorageImplementation()
-        : capacity_(0), size_(0), dtype_(Type.cy_typeid(DType())), device_(-1){};
+        : capacity_(0), size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
     void Init(const unsigned long long &len_in, const int &device = -1,
               const bool &init_zero = true);
     void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
@@ -258,12 +258,14 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &mapper = {});
     void print_elems();
 
+    ~StorageImplementation();
+
     boost::intrusive_ptr<Storage_base> real();
     boost::intrusive_ptr<Storage_base> imag();
 
     const unsigned long long capacity() const override { return capacity_; }
     const unsigned long long size() const override { return size_; }
-
+    void *data() const override { return start_; }
     int dtype() const override { return dtype_; }
     int device() const override { return device_; }
 
@@ -338,6 +340,7 @@ namespace cytnx {
     void SetItem(cytnx_uint64 index, const OtherDType &value);
     void SetItem(cytnx_uint64 index, const Scalar &value);
 
+    void *start_;
     unsigned long long size_;
     unsigned long long capacity_;
     unsigned int dtype_;
