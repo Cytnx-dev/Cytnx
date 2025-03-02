@@ -124,13 +124,13 @@ namespace cytnx {
 
   template <typename DType>
   boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::_create_new_sametype() {
-    boost::intrusive_ptr<Storage_base> out(new StorageImplementation());
+    boost::intrusive_ptr<Storage_base> out(new StorageImplementation<DType>());
     return out;
   }
 
   template <typename DType>
   boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::clone() {
-    boost::intrusive_ptr<Storage_base> out(new StorageImplementation());
+    boost::intrusive_ptr<Storage_base> out(new StorageImplementation<DType>());
     out->Init(this->size_, this->device_);
     if (this->device_ == Device.cpu) {
       memcpy(out->data(), this->start_, sizeof(DType) * this->size_);

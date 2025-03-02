@@ -139,7 +139,7 @@ namespace cytnx {
   }
 
   Storage_base::~Storage_base() {
-    // cout << "delet" << endl;
+    // std::cout << "delet" << endl;
     if (this->data() != NULL) {
       if (this->device() == Device.cpu) {
         free(this->data());
