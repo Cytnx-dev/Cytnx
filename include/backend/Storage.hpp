@@ -258,6 +258,8 @@ namespace cytnx {
                            const std::vector<cytnx_uint64> &mapper = {});
     void print_elems();
 
+    ~StorageImplementation();
+
     boost::intrusive_ptr<Storage_base> real();
     boost::intrusive_ptr<Storage_base> imag();
 

@@ -124,13 +124,13 @@ namespace cytnx {
 
   template <typename DType>
   boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::_create_new_sametype() {
-    boost::intrusive_ptr<Storage_base> out(new StorageImplementation());
+    boost::intrusive_ptr<Storage_base> out(new StorageImplementation<DType>());
     return out;
   }
 
   template <typename DType>
   boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::clone() {
-    boost::intrusive_ptr<Storage_base> out(new StorageImplementation());
+    boost::intrusive_ptr<Storage_base> out(new StorageImplementation<DType>());
     out->Init(this->size_, this->device_);
     if (this->device_ == Device.cpu) {
       memcpy(out->data(), this->start_, sizeof(DType) * this->size_);
@@ -810,6 +810,22 @@ namespace cytnx {
       this->at<DType>(index) = complex64(value);
     } else {
       this->at<DType>(index) = static_cast<DType>(value);
+    }
+  }
+
+  template <typename DType>
+  StorageImplementation<DType>::~StorageImplementation() {
+    // std::cout << "delet" << endl;
+    if (this->data() != NULL) {
+      if (this->device() == Device.cpu) {
+        free(this->data());
+      } else {
+#ifdef UNI_GPU
+        checkCudaErrors(cudaFree(this->data()));
+#else
+        cytnx_error_msg(1, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
+#endif
+      }
     }
   }
 
