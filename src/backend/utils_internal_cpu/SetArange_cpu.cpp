@@ -8,7 +8,7 @@ namespace cytnx {
                           const cytnx_uint64 &Nelem) {
       cytnx_complex128 *ptr = (cytnx_complex128 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n].real(start + n * step);
         ptr[n].imag(0);
@@ -19,7 +19,7 @@ namespace cytnx {
                           const cytnx_uint64 &Nelem) {
       cytnx_complex64 *ptr = (cytnx_complex64 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n].real(start + n * step);
         ptr[n].imag(0);
@@ -30,7 +30,7 @@ namespace cytnx {
                          const cytnx_uint64 &Nelem) {
       cytnx_double *ptr = (cytnx_double *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -40,7 +40,7 @@ namespace cytnx {
                          const cytnx_uint64 &Nelem) {
       cytnx_float *ptr = (cytnx_float *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -50,7 +50,7 @@ namespace cytnx {
                            const cytnx_uint64 &Nelem) {
       cytnx_int64 *ptr = (cytnx_int64 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -60,7 +60,7 @@ namespace cytnx {
                            const cytnx_uint64 &Nelem) {
       cytnx_uint64 *ptr = (cytnx_uint64 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -70,7 +70,7 @@ namespace cytnx {
                            const cytnx_uint64 &Nelem) {
       cytnx_int32 *ptr = (cytnx_int32 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -80,7 +80,7 @@ namespace cytnx {
                            const cytnx_uint64 &Nelem) {
       cytnx_uint32 *ptr = (cytnx_uint32 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -90,7 +90,7 @@ namespace cytnx {
                            const cytnx_uint64 &Nelem) {
       cytnx_int16 *ptr = (cytnx_int16 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -100,7 +100,7 @@ namespace cytnx {
                            const cytnx_uint64 &Nelem) {
       cytnx_uint16 *ptr = (cytnx_uint16 *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }
@@ -110,7 +110,7 @@ namespace cytnx {
                          const cytnx_uint64 &Nelem) {
       cytnx_bool *ptr = (cytnx_bool *)in->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         ptr[n] = start + n * step;
       }

@@ -14,7 +14,7 @@ namespace cytnx {
       cytnx_double *_ten = (cytnx_double *)ten->data();
       cytnx_double *_out = (cytnx_double *)out->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = exp(_ten[n]);
       }
@@ -36,7 +36,7 @@ namespace cytnx {
       cytnx_complex128 *_out = (cytnx_complex128 *)out->data();
       cytnx_complex128 *_ten = (cytnx_complex128 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = exp(_ten[n]);
       }

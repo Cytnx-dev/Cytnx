@@ -13,7 +13,7 @@ namespace cytnx {
                                 const double &clip) {
       cytnx_double *_ten = (cytnx_double *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _ten[n] = _ten[n] < clip ? 0 : double(1) / _ten[n];
       }
@@ -33,7 +33,7 @@ namespace cytnx {
                                  const double &clip) {
       cytnx_complex128 *_ten = (cytnx_complex128 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _ten[n] =
           std::norm(_ten[n]) < clip ? cytnx_complex128(0, 0) : cytnx_complex128(1., 0) / _ten[n];
