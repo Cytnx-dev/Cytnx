@@ -14,7 +14,6 @@ namespace cytnx {
       cytnx_double *_out = (cytnx_double *)out->data();
       cytnx_complex128 *_ten = (cytnx_complex128 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = std::abs(_ten[n]);
       }
@@ -25,7 +24,6 @@ namespace cytnx {
       cytnx_float *_out = (cytnx_float *)out->data();
       cytnx_complex64 *_ten = (cytnx_complex64 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = std::abs(_ten[n]);
       }
@@ -36,7 +34,6 @@ namespace cytnx {
       cytnx_double *_out = (cytnx_double *)out->data();
       cytnx_double *_ten = (cytnx_double *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = std::abs(_ten[n]);
       }
@@ -47,7 +44,6 @@ namespace cytnx {
       cytnx_float *_out = (cytnx_float *)out->data();
       cytnx_float *_ten = (cytnx_float *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = std::abs(_ten[n]);
       }
@@ -59,7 +55,6 @@ namespace cytnx {
       cytnx_int64 *_out = (cytnx_int64 *)out->data();
       cytnx_int64 *_ten = (cytnx_int64 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = std::abs(_ten[n]);
       }
@@ -71,7 +66,6 @@ namespace cytnx {
       cytnx_int32 *_out = (cytnx_int32 *)out->data();
       cytnx_int32 *_ten = (cytnx_int32 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = std::abs(_ten[n]);
       }
@@ -83,7 +77,6 @@ namespace cytnx {
       cytnx_int16 *_out = (cytnx_int16 *)out->data();
       cytnx_int16 *_ten = (cytnx_int16 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = std::abs(cytnx_double(_ten[n]));
       }

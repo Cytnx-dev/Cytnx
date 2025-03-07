@@ -971,7 +971,6 @@ namespace cytnx {
   void Storage_base::_cpy_bool(void *ptr, const std::vector<cytnx_bool> &vin) {
     bool *tmp = static_cast<bool *>(ptr);
 
-#pragma omp parallel for schedule(dynamic)
     for (cytnx_uint64 i = 0; i < vin.size(); i++) {
       tmp[i] = vin[i];
     }

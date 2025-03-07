@@ -18,7 +18,6 @@ namespace cytnx {
       T1 *new_elem_ptr_ = static_cast<T1 *>(in);
       T1 *elem_ptr_ = static_cast<T1 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -45,7 +44,6 @@ namespace cytnx {
       T1 *new_elem_ptr_ = static_cast<T1 *>(in);
       T2 *elem_ptr_ = static_cast<T2 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -71,7 +69,6 @@ namespace cytnx {
       T1 new_elem_ = *(static_cast<T1 *>(in));
       T2 *elem_ptr_ = static_cast<T2 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;

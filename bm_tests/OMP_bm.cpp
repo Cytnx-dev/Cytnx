@@ -5,7 +5,7 @@
 namespace BMTest_OMP {
   static const int D_test = 1000;
 
-  //Abs
+  // Abs
   static void BM_OMP_Abs(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -19,12 +19,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Abs)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Add
+  // Add
   static void BM_OMP_Add(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -40,14 +40,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Add)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Conj
+  // Conj_
   static void BM_OMP_Conj_(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -61,11 +61,11 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Conj_)
-	  ->Args({D_test, cytnx::Type.ComplexFloat})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.ComplexFloat})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Cpr_1
+  // Cpr_1
   static void BM_OMP_Cpr1(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -79,12 +79,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Cpr1)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Cpr_2
+  // Cpr_2
   static void BM_OMP_Cpr2(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -100,14 +100,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Cpr2)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Diag
+  // Diag
   static void BM_OMP_Diag(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -121,12 +121,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Diag)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Div
+  // Div
   static void BM_OMP_Div(benchmark::State& state) {
     auto D = state.range(0);
     const double low = 0.2;
@@ -142,14 +142,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Div)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Exp_
+  // Exp_
   static void BM_OMP_Exp_(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -163,12 +163,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Exp_)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Inv_
+  // Inv_
   static void BM_OMP_Inv_(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -183,12 +183,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Inv_)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Matmul
+  // Matmul
   static void BM_OMP_Matmul(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -204,14 +204,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Matmul)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Matmul_dg
+  // Matmul_dg
   static void BM_OMP_Matmul_dg(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -227,14 +227,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Matmul_dg)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Mod
+  // Mod
   static void BM_OMP_Mod(benchmark::State& state) {
     auto D = state.range(0);
     const int device = cytnx::Device.cpu;
@@ -247,12 +247,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Mod)
-	  ->Args({D_test, cytnx::Type.Uint64, cytnx::Type.Int64})
-	  ->Args({D_test, cytnx::Type.Uint64, cytnx::Type.Int32})
-	  ->Args({D_test, cytnx::Type.Int64, cytnx::Type.Int64})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Uint64, cytnx::Type.Int64})
+    ->Args({D_test, cytnx::Type.Uint64, cytnx::Type.Int32})
+    ->Args({D_test, cytnx::Type.Int64, cytnx::Type.Int64})
+    ->Unit(benchmark::kMillisecond);
 
-  //Mul
+  // Mul
   static void BM_OMP_Mul(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -268,14 +268,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Mul)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Outer
+  // Outer
   static void BM_OMP_Outer(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -291,14 +291,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Outer)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Pow
+  // Pow
   static void BM_OMP_Pow(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -313,12 +313,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Pow)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Abs
+  // Abs
   static void BM_OMP_Qr(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -332,12 +332,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Qr)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //Sub
+  // Sub
   static void BM_OMP_Sub(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -353,14 +353,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Sub)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //iAdd
+  // iAdd
   static void BM_OMP_iAdd(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -376,14 +376,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_iAdd)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //iDiv
+  // iDiv
   static void BM_OMP_iDiv(benchmark::State& state) {
     auto D = state.range(0);
     const double low = 0.2;
@@ -399,14 +399,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_iDiv)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //iMul
+  // iMul
   static void BM_OMP_iMul(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -422,14 +422,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_iMul)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //iSub
+  // iSub
   static void BM_OMP_iSub(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -445,14 +445,14 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_iSub)
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Float, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-  //astype
+  // astype
   static void BM_OMP_astype(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -467,12 +467,12 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_astype)
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Int64})
-	  ->Args({D_test, cytnx::Type.Double, cytnx::Type.Float})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Int64})
+    ->Args({D_test, cytnx::Type.Double, cytnx::Type.Float})
+    ->Unit(benchmark::kMillisecond);
 
-  //real
+  // real
   static void BM_OMP_real(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -486,11 +486,11 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_real)
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Args({D_test, cytnx::Type.ComplexFloat})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Args({D_test, cytnx::Type.ComplexFloat})
+    ->Unit(benchmark::kMillisecond);
 
-  //imag
+  // imag
   static void BM_OMP_imag(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -504,11 +504,11 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_imag)
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Args({D_test, cytnx::Type.ComplexFloat})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Args({D_test, cytnx::Type.ComplexFloat})
+    ->Unit(benchmark::kMillisecond);
 
-  //Fill
+  // Fill
   static void BM_OMP_fill(benchmark::State& state) {
     auto D = state.range(0);
     const int device = cytnx::Device.cpu;
@@ -519,24 +519,22 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_fill)
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.Uint32})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.Uint32})
+    ->Unit(benchmark::kMillisecond);
 
-  //arange
+  // arange
   static void BM_OMP_arange(benchmark::State& state) {
     auto D = state.range(0);
     const int device = cytnx::Device.cpu;
     for (auto _ : state) {
-      cytnx::arange(D*D);
+      cytnx::arange(D * D);
     }
   }
-  BENCHMARK(BM_OMP_arange)
-	  ->Args({D_test})
-	  ->Unit(benchmark::kMillisecond);
+  BENCHMARK(BM_OMP_arange)->Args({D_test})->Unit(benchmark::kMillisecond);
 
-  //range
+  // range
   static void BM_OMP_range(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -546,15 +544,15 @@ namespace BMTest_OMP {
     auto dtype = state.range(1);
     auto A = cytnx::random::uniform({D, D}, low, high, device, seed, dtype);
     for (auto _ : state) {
-      auto tmp = A(cytnx::Accessor::range(0, D-1, 1), cytnx::Accessor::range(0, D-1, 2));
+      auto tmp = A(cytnx::Accessor::range(0, D - 1, 1), cytnx::Accessor::range(0, D - 1, 2));
     }
   }
   BENCHMARK(BM_OMP_range)
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Args({D_test, cytnx::Type.ComplexFloat})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Args({D_test, cytnx::Type.ComplexFloat})
+    ->Unit(benchmark::kMillisecond);
 
-  //Trace
+  // Trace
   static void BM_OMP_Trace(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;
@@ -568,10 +566,9 @@ namespace BMTest_OMP {
     }
   }
   BENCHMARK(BM_OMP_Trace)
-	  ->Args({D_test, cytnx::Type.Float})
-	  ->Args({D_test, cytnx::Type.Double})
-	  ->Args({D_test, cytnx::Type.ComplexDouble})
-	  ->Unit(benchmark::kMillisecond);
+    ->Args({D_test, cytnx::Type.Float})
+    ->Args({D_test, cytnx::Type.Double})
+    ->Args({D_test, cytnx::Type.ComplexDouble})
+    ->Unit(benchmark::kMillisecond);
 
-
-}
+}  // namespace BMTest_OMP

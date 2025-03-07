@@ -82,7 +82,6 @@ namespace cytnx {
                                         const std::vector<cytnx_int64> &inL,
                                         const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#pragma omp parallel for schedule(dynamic)
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()];
     }
@@ -118,7 +117,6 @@ namespace cytnx {
       if (omp_get_thread_num() == 0) buf.assign(omp_get_num_threads(), true);
     }
 
-  #pragma omp parallel for schedule(dynamic)
     for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
       if (buf[omp_get_thread_num()] == false)
         continue;
@@ -144,7 +142,6 @@ namespace cytnx {
                                         const std::vector<cytnx_int64> &inL,
                                         const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#pragma omp parallel for schedule(dynamic)
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n);
     }

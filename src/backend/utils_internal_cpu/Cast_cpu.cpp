@@ -30,7 +30,6 @@ namespace cytnx {
       cytnx_complex128* _in = static_cast<cytnx_complex128*>(in->data());
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -46,7 +45,6 @@ namespace cytnx {
       cytnx_complex64* _in = static_cast<cytnx_complex64*>(in->data());
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -74,7 +72,6 @@ namespace cytnx {
 
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -91,7 +88,6 @@ namespace cytnx {
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -116,7 +112,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -131,7 +126,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -146,7 +140,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -161,7 +154,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -176,7 +168,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -191,7 +182,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -206,7 +196,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -221,7 +210,6 @@ namespace cytnx {
       cytnx_double* _in = static_cast<cytnx_double*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -238,7 +226,6 @@ namespace cytnx {
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -253,7 +240,7 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -268,7 +255,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -292,7 +278,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -307,7 +292,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -322,7 +306,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -337,7 +320,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -352,7 +334,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -367,7 +348,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -382,7 +362,6 @@ namespace cytnx {
       cytnx_float* _in = static_cast<cytnx_float*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -399,7 +378,6 @@ namespace cytnx {
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -415,7 +393,6 @@ namespace cytnx {
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -430,7 +407,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -445,7 +421,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -469,7 +444,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -484,7 +458,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -499,7 +472,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -514,7 +486,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -529,7 +500,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -544,7 +514,6 @@ namespace cytnx {
       cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -561,7 +530,7 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -576,7 +545,7 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -591,7 +560,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -606,7 +574,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -621,7 +588,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -645,7 +611,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -660,7 +625,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -675,7 +639,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -690,7 +653,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -705,7 +667,6 @@ namespace cytnx {
       cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -722,7 +683,7 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -738,7 +699,6 @@ namespace cytnx {
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -753,7 +713,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -768,7 +727,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -783,7 +741,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -798,7 +755,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -822,7 +778,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -837,7 +792,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -852,7 +806,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -867,7 +820,6 @@ namespace cytnx {
       cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -883,7 +835,7 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -899,7 +851,6 @@ namespace cytnx {
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -914,7 +865,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -929,7 +879,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -944,7 +893,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -959,7 +907,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -974,7 +921,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -998,7 +944,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1013,7 +958,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1028,7 +972,6 @@ namespace cytnx {
       cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -1044,7 +987,7 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -1059,7 +1002,7 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -1074,7 +1017,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1089,7 +1031,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1104,7 +1045,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1119,7 +1059,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1134,7 +1073,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1149,7 +1087,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1173,7 +1110,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1188,7 +1124,6 @@ namespace cytnx {
       cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -1204,7 +1139,7 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -1219,7 +1154,7 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -1234,7 +1169,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1249,7 +1183,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1264,7 +1197,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1279,7 +1211,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1294,7 +1225,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1309,7 +1239,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1324,7 +1253,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1348,7 +1276,6 @@ namespace cytnx {
       cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
       cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = bool(_in[i]);
       }
@@ -1364,7 +1291,7 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_complex128* _out = static_cast<cytnx_complex128*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex128) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -1379,7 +1306,7 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_complex64* _out = static_cast<cytnx_complex64*>(out->data());
       memset(_out, 0, sizeof(cytnx_complex64) * len_in);
-#pragma omp parallel for schedule(dynamic)
+
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i].real(_in[i]);
       }
@@ -1394,7 +1321,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1409,7 +1335,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1424,7 +1349,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1439,7 +1363,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1454,7 +1377,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1469,7 +1391,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1484,7 +1405,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
@@ -1499,7 +1419,6 @@ namespace cytnx {
       cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
       cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long i = 0; i < len_in; i++) {
         _out[i] = _in[i];
       }
