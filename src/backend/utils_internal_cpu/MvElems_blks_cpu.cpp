@@ -39,7 +39,7 @@ namespace cytnx {
             oldshape.back() * acc_in_old[acc_in_old.size() - 1 - s];
           oldshape.pop_back();
         }
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
         for (unsigned int elem = 0; elem < src_blocks[b].storage().size(); elem++) {
           unsigned int i = elem / src_blocks[b].shape()[1];
           unsigned int j = elem % src_blocks[b].shape()[1];

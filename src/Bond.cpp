@@ -139,7 +139,7 @@ namespace cytnx {
           new_qnums = std::vector<std::vector<cytnx_int64>>(Dnew_qnums,
                                                             std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
           for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
               if (bd_in->type() != this->type()) {
@@ -167,7 +167,7 @@ namespace cytnx {
         new_qnums =
           std::vector<std::vector<cytnx_int64>>(this->_dim, std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
         for (cytnx_uint64 d = 0; d < this->_dim; d++) {
           for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
             if (bd_in->type() != this->type()) {
@@ -248,7 +248,7 @@ namespace cytnx {
           new_qnums = std::vector<std::vector<cytnx_int64>>(Dnew_qnums,
                                                             std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
           for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
               this->_syms[i].combine_rule_(new_qnums[d][i],
@@ -270,7 +270,7 @@ namespace cytnx {
         new_qnums =
           std::vector<std::vector<cytnx_int64>>(this->_dim, std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
         for (cytnx_uint64 d = 0; d < this->_dim; d++) {
           for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
             this->_syms[i].combine_rule_(new_qnums[d][i],
@@ -395,7 +395,7 @@ namespace cytnx {
             }
           }
 
-  #pragma omp parallel for schedule(static)
+  #pragma omp parallel for schedule(auto)
           for (cytnx_uint64 i = 0; i < this->_qnums.size(); i++) {
             if (this->_qnums[i] == qnum) {
               tmp_cnts[omp_get_thread_num()]++;
@@ -440,7 +440,7 @@ namespace cytnx {
             if (omp_get_thread_num() == 0) tmp_cnts.resize(omp_get_num_threads(), 0);
           }
 
-  #pragma omp parallel for schedule(static)
+  #pragma omp parallel for schedule(auto)
           for (cytnx_uint64 i = 0; i < this->_qnums.size(); i++) {
             if (this->_qnums[i] == qnum) {
               tmp_cnts[omp_get_thread_num()]++;

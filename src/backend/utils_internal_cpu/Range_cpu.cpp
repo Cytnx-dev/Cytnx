@@ -11,7 +11,7 @@ namespace cytnx {
       cytnx_error_msg(end < start, "[ERROR] cannot have end < start%s", "\n");
       vector<cytnx_uint64> out(end - start);
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
       for (cytnx_uint64 i = 0; i < end - start; i++) {
         out[i] = start + i;
       }
@@ -21,7 +21,7 @@ namespace cytnx {
     vector<cytnx_uint64> range_cpu(const cytnx_uint64 &len) {
       vector<cytnx_uint64> out(len);
 
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
       for (cytnx_uint64 i = 0; i < len; i++) {
         out[i] = i;
       }
@@ -31,7 +31,7 @@ namespace cytnx {
     template <>
     vector<cytnx_int64> range_cpu<cytnx_int64>(const cytnx_int64 &len) {
       vector<cytnx_int64> out(len);
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
       for (cytnx_int64 i = 0; i < len; i++) {
         out[i] = i;
       }
@@ -42,7 +42,7 @@ namespace cytnx {
     vector<cytnx_int64> range_cpu<cytnx_int64>(const cytnx_int64 &start, const cytnx_int64 &end) {
       cytnx_error_msg(end < start, "[ERROR] cannot have end < start%s", "\n");
       vector<cytnx_int64> out(end - start);
-#pragma omp parallel for schedule(static)
+#pragma omp parallel for schedule(auto)
       for (cytnx_int64 i = 0; i < end - start; i++) {
         out[i] = start + i;
       }
