@@ -40,7 +40,8 @@ _version = 'v0.9.7'
 # https://sublime-and-sphinx-guide.readthedocs.io/en/latest/references.html
 extensions = ['sphinxcontrib.bibtex',\
               'sphinxcontrib.jquery',\
-              'sphinx.ext.autosectionlabel']
+              'sphinx.ext.autosectionlabel',\
+              'sphinx_multiversion']
 bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.hotrg.bib",\
                    "example/ref.itebd.bib",\
@@ -76,7 +77,6 @@ html_logo = "_static/Iconi.png"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
 
 
 

@@ -3,10 +3,10 @@ The documentation of the Cytnx tensor network library
 
 
 # Compilation instructions
-Use Rye (or other python package management system that support pyproject.toml)
+Use uv (or other python package management system that support pyproject.toml)
 
 ```bash
-   $rye sync
+   $uv sync
    $rye run make_doc
 ```
 
