@@ -3,9 +3,9 @@ sys.path.append('.')
 from link import *
 
 
-html_theme = 'sphinxbootstrap4theme'
-import sphinxbootstrap4theme
-html_theme_path = [sphinxbootstrap4theme.get_path()]
+html_theme = 'furo'
+#import sphinxbootstrap4theme
+#html_theme_path = [sphinxbootstrap4theme.get_path()]
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -56,6 +56,17 @@ extensions.append('sphinx.ext.mathjax')
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
+
+html_sidebars = {
+    "**": [
+        "sidebar/brand.html",
+        "sidebar/search.html",
+        "sidebar/scroll-start.html",
+        "sidebar/navigation.html",
+        "sidebar/versions.html",
+        "sidebar/scroll-end.html",
+    ],
+}
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
