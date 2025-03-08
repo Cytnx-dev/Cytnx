@@ -14,7 +14,8 @@ add_executable(
   linalg/Svd_bm.cpp
   linalg/Svd_truncate_bm.cpp
   linalg/Lanczos_bm.cpp
-  OMP_bm.cpp
+  linalg/linalg_basic_bm.cpp
+  linalg/QR_bm.cpp
 
 )
 if(USE_CUDA)
