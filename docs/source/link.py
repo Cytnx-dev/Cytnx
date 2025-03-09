@@ -1,4 +1,4 @@
-from conf import _version
+#from conf import _version
 ## Add links to following, remember %s is needed for url!
 extlinks = {'splo':("https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.LinearOperator.html%s",None),\
             'torch-tn':("https://pytorch.org/docs/stable/tensors.html%s",None),\
@@ -12,6 +12,6 @@ extlinks = {'splo':("https://docs.scipy.org/doc/scipy/reference/generated/scipy.
             'virtualenv':("https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#%s",None),\
             'mkl-mac':("https://software.intel.com/content/www/us/en/develop/tools/math-kernel-library/choose-download/macos.html%s",None),\
             'wsl':("https://docs.microsoft.com/en-us/windows/wsl/install-win10%s",None),\
-            'cytnx_namespace':("https://kaihsinwu.gitlab.io/cytnx_api/"+ _version + "/namespacecytnx.html%s",None),\
-            'cytnx_linalg':("https://kaihsinwu.gitlab.io/cytnx_api/" + _version + "/namespacecytnx_1_1linalg.html%s",None)\
+            #'cytnx_namespace':("https://kaihsinwu.gitlab.io/cytnx_api/"+ _version + "/namespacecytnx.html%s",None),\
+            #'cytnx_linalg':("https://kaihsinwu.gitlab.io/cytnx_api/" + _version + "/namespacecytnx_1_1linalg.html%s",None)\
             } 

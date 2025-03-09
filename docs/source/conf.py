@@ -29,7 +29,7 @@ html_theme = 'furo'
 project = 'Cytnx'
 copyright = '2019-, Kai-Hsin Wu'
 author = 'Kai-Hsin Wu'
-_version = 'v0.9.7'
+#_version = 'v0.9.7'
 #version = 'v0.5.5a'
 
 # -- General configuration ---------------------------------------------------
@@ -67,6 +67,9 @@ html_sidebars = {
         "sidebar/scroll-end.html",
     ],
 }
+smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'
+smv_branch_whitelist = None
+smv_remote_whitelist = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -123,7 +126,6 @@ html_theme_options = {
     'navbar_links' : [
          ('API Doc', 'https://kaihsinwu.gitlab.io/cytnx_api', True),
          ("Github", "https://github.com/Cytnx-dev/Cytnx", True),
-         ("%s"%(_version), "index", False)
     ],
 
     # Total width(%) of the document and the sidebar.
