@@ -1,0 +1,10 @@
+.DS_Store
+*.DS_Store
+*.vscode
+*.python_version
+.python_version
+source/__pycache__/*
+tests/__pycache__/*
+tests/build/*
+# build
+*.swp

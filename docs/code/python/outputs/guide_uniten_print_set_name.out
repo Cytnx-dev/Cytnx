@@ -1,0 +1,13 @@
+-----------------------
+tensor Name : tensor uT
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------     
+         /         \    
+   a ____| 2     3 |____ b
+         |         |    
+         |       4 |____ c
+         \         /    
+          ---------     
