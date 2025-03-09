@@ -27,7 +27,7 @@ jobs:
           uv run sphinx-multiversion source build
       - name: Create index.html
         run: |
-          cp source/_templates/gh-pages-redirect.html build/index.html
+          uv run python redirect.py ${{ github.ref_name }} > build/index.html
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
