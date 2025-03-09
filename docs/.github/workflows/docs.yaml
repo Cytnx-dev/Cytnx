@@ -1,0 +1,38 @@
+name: Publish Sphinx Documentation
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish_sphinx_docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.5.1"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+      - name: Install dependencies
+        run: |
+          uv sync --python 3.10
+      - name: Sphinx build
+        run: |
+          sphinx-multiversion source build
+      - name: Create index.html
+        run: |
+          cp source/_templates/gh-pages-redirect.html build/index.html
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          publish_branch: gh-pages
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/
+          force_orphan: true
+
