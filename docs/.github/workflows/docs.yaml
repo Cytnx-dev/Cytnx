@@ -24,7 +24,7 @@ jobs:
           uv sync --python 3.10
       - name: Sphinx build
         run: |
-          sphinx-multiversion source build
+          uv run sphinx-multiversion source build
       - name: Create index.html
         run: |
           cp source/_templates/gh-pages-redirect.html build/index.html
