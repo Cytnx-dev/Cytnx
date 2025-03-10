@@ -15,7 +15,7 @@ include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS ${CMAKE_MODULE_PATH})
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -117,15 +117,12 @@ target_include_directories(cytnx
 )
 
 target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
-target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
 target_include_directories(cytnx SYSTEM
   PUBLIC
   ${Boost_INCLUDE_DIRS}
 )
 
 target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
-target_compile_features(cytnx PUBLIC cxx_std_17)
-
 add_subdirectory(src)
 
 if(USE_DEBUG)
