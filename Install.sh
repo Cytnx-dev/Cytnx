@@ -104,17 +104,7 @@ FLAG="${FLAG} -DUSE_CUTT=OFF"
 #-----------------------------------
 FLAG="${FLAG} -DCUTT_ENABLE_FINE_TUNE=OFF"
 #-----------------------------------
-# 7-c) Magma (DEFAULT = OFF)
-# [Note] set to "=off" will make some of the GPU functions unavailable.
-#        in case MAGMA is not automatically found, please specify MAGMAROOT path
-#        where the magma is installed
-# [Remark] You need to install MAGMA with BLA_VENDOR Intel10_64_dyn or Intel10_64ilp
-#-----------------------------------
-FLAG="${FLAG} -DUSE_MAGMA=OFF"
-#CUTENSOR_ROOT=/usr/local/magma-...
-#FLAG="${FLAG} -DMAGMA_ROOT=${MAGMA_ROOT}"
-#-----------------------------------
-# 7-d) CuTensor (DEFAULT = OFF)
+# 7-c) CuTensor (DEFAULT = OFF)
 # [Note] set to "=off" will make permutation on GPU into using cutt library.
 # [Note] CUTENSOR_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
@@ -122,7 +112,7 @@ FLAG="${FLAG} -DUSE_CUTENSOR=OFF"
 #CUTENSOR_ROOT=/usr/local/libcutensor-...
 #FLAG="${FLAG} -DCUTENSOR_ROOT=${CUTENSOR_ROOT}"
 #-----------------------------------
-# 7-e) CuQuantum (DEFAULT = OFF)
+# 7-d) CuQuantum (DEFAULT = OFF)
 # [Note] CUQUANTUM_ROOT is required to given, either from enviroment variable in bashrc
 #        or given in the following line using -DCUTENSOR_ROOT
 FLAG="${FLAG} -DUSE_CUQUANTUM=OFF"
