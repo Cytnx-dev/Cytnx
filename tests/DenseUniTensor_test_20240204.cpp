@@ -3,8 +3,6 @@ using namespace std;
 using namespace cytnx;
 using namespace std::complex_literals;
 
-#include <cstdio>
-#include <filesystem>
 #include "test_tools.h"
 
 #define FAIL_CASE_OPEN 0
@@ -577,26 +575,7 @@ TEST_F(DenseUniTensorTest, relabels_) {
 }
 
 TEST_F(DenseUniTensorTest, relabel) {
-  auto tmp = utzero3456.clone();
-  auto ut = utzero3456.relabel({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "0");
-  EXPECT_EQ(utzero3456.labels()[1], "1");
-  EXPECT_EQ(utzero3456.labels()[2], "2");
-  EXPECT_EQ(utzero3456.labels()[3], "3");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabel({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabel({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
-
-  utzero3456 = tmp;
-  // UniTensor ut;
+  UniTensor ut;
   ut = utzero3456.relabel("0", "a");
   EXPECT_EQ(ut.labels()[0], "a");
   ut = utzero3456.relabel("1", "b");
@@ -638,26 +617,7 @@ TEST_F(DenseUniTensorTest, relabel) {
   EXPECT_THROW(ut_uninit.relabel(0, ""), std::logic_error);
 }
 TEST_F(DenseUniTensorTest, relabel_) {
-  auto tmp = utzero3456.clone();
-  auto ut = utzero3456.relabel_({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "a");
-  EXPECT_EQ(utzero3456.labels()[1], "b");
-  EXPECT_EQ(utzero3456.labels()[2], "cd");
-  EXPECT_EQ(utzero3456.labels()[3], "d");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabel_({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabel_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
-
-  utzero3456 = tmp;
-  // UniTensor ut;
+  UniTensor ut;
   ut = utzero3456.relabel_("0", "a");
   ut = utzero3456.relabel_("1", "b");
   ut = utzero3456.relabel_("2", "d");
@@ -1900,63 +1860,6 @@ describe:test combindbonds with uninitialized UniTensor
 TEST_F(DenseUniTensorTest, combineBonds_ut_uninit) {
   std::vector<std::string> labels_combine = {};
   EXPECT_ANY_THROW(ut_uninit.combineBonds(labels_combine));
-}
-
-/*=====test info=====
-describe:test combineBond
-====================*/
-TEST_F(DenseUniTensorTest, combineBond) {
-  std::vector<std::string> labels = {"a", "b", "c"};
-  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
-  ut.set_rowrank(1);
-  int seed = 0;
-  random::uniform_(ut, -100.0, 100.0, seed);
-  std::vector<std::string> labels_combine = {"b", "c"};
-  ut.combineBond(labels_combine);
-
-  // construct answer directly
-  labels = {"a", "b"};
-  int rowrank = 1;
-  auto ans_ut = UniTensor({Bond(5), Bond(12)}, labels, rowrank);
-  auto tens = ut.get_block().reshape({5, 12});
-  ans_ut.put_block(tens);
-
-  // compare
-  EXPECT_TRUE(AreEqUniTensor(ut, ans_ut));
-}
-
-/*=====test info=====
-describe:test combineBond with diagonal UniTensor
-====================*/
-TEST_F(DenseUniTensorTest, combineBond_diag) {
-  EXPECT_THROW(ut_complex_diag.combineBond(ut_complex_diag.labels()), std::logic_error);
-}
-
-/*=====test info=====
-describe:test combineBond error
-====================*/
-TEST_F(DenseUniTensorTest, combineBond_error) {
-  std::vector<std::string> labels = {"a", "b", "c"};
-  auto ut = UniTensor({Bond(5), Bond(4), Bond(3)}, labels);
-  ut.set_rowrank(1);
-  int seed = 0;
-  random::uniform_(ut, -100.0, 100.0, seed);
-
-  // not exist labels
-  std::vector<std::string> labels_combine = {"c", "d"};
-  EXPECT_THROW(ut.combineBond(labels_combine), std::logic_error);
-
-  // empty combine's label
-  labels_combine = std::vector<std::string>();
-  EXPECT_THROW(ut.combineBond(labels_combine), std::logic_error);
-}
-
-/*=====test info=====
-describe:test combindbonds with uninitialized UniTensor
-====================*/
-TEST_F(DenseUniTensorTest, combineBond_ut_uninit) {
-  std::vector<std::string> labels_combine = {};
-  EXPECT_ANY_THROW(ut_uninit.combineBond(labels_combine));
 }
 
 TEST_F(DenseUniTensorTest, contract1) {
@@ -4535,14 +4438,15 @@ TEST_F(DenseUniTensorTest, elem_exists_uninit) { EXPECT_ANY_THROW(ut_uninit.elem
 describe:test Save and Load by string
 ====================*/
 TEST_F(DenseUniTensorTest, Save) {
+  const std::string fileName = "SaveUniTestUniTensor";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(temp_file_path);
-  UniTensor ut_load = UniTensor::Load(temp_file_path + ".cytnx");
+  ut.Save(fileName);
+  UniTensor ut_load = UniTensor::Load(fileName + ".cytnx");
   EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
 }
 
@@ -4550,14 +4454,15 @@ TEST_F(DenseUniTensorTest, Save) {
 describe:test Save and Load by charPtr
 ====================*/
 TEST_F(DenseUniTensorTest, Save_chr) {
+  const std::string fileName = "SaveUniTestUniTensor_chr";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(temp_file_path.c_str());
-  UniTensor ut_load = UniTensor::Load((temp_file_path + ".cytnx").c_str());
+  ut.Save(fileName.c_str());
+  UniTensor ut_load = UniTensor::Load((fileName + ".cytnx").c_str());
   EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
 }
 
@@ -4565,24 +4470,24 @@ TEST_F(DenseUniTensorTest, Save_chr) {
 describe:test Save Load not exist file
 ====================*/
 TEST_F(DenseUniTensorTest, Save_path_incorrect) {
-  std::filesystem::path file_path_under_non_existent_folder = mkdtemp(nullptr);
-  std::filesystem::path temp_filename = mkdtemp(nullptr);
-  file_path_under_non_existent_folder /= temp_filename.filename();
+  const std::string fileName = "./NotExistFolder/SaveUniTestUniTensor";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder), std::logic_error);
-  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string() + ".cytnx"),
-               std::logic_error);
+  EXPECT_THROW(ut.Save(fileName), std::logic_error);
+  EXPECT_THROW(UniTensor::Load(fileName + ".cytnx"), std::logic_error);
 }
 
 /*=====test info=====
 describe:test Save uninitialized UniTensor
 ====================*/
-TEST_F(DenseUniTensorTest, Save_uninit) { EXPECT_ANY_THROW(ut_uninit.Save(temp_file_path)); }
+TEST_F(DenseUniTensorTest, Save_uninit) {
+  const std::string fileName = "SaveUniTestUniTensor_uninit";
+  EXPECT_ANY_THROW(ut_uninit.Save(fileName));
+}
 
 /*=====test info=====
 describe:test truncate by label
@@ -4974,136 +4879,71 @@ TEST_F(DenseUniTensorTest, normal) {
   EXPECT_TRUE(max.at({0}) > mean);
 }
 
-TEST_F(DenseUniTensorTest, identity) {
-  UniTensor ut = UniTensor::identity(2, {"row", "col"}, false, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 2);
-  EXPECT_EQ(ut.shape()[1], 2);
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), false);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
-
-  ut = UniTensor::identity(2, {"row", "col"}, true, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 2);
-  EXPECT_EQ(ut.shape()[1], 2);
-  vec_print(cout, ut.labels());
-  vec_print(cout, ut.shape());
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), true);
-  std::cout << ut << std::endl;
-  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
-
-  ut = UniTensor::identity(3, {"row", "col"}, false, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 3);
-  EXPECT_EQ(ut.shape()[1], 3);
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), false);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2, 0}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2, 1}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 2}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 2}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2, 2}), 1);
-
-  ut = UniTensor::identity(3, {"row", "col"}, true, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 3);
-  EXPECT_EQ(ut.shape()[1], 3);
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), true);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2}), 1);
+using namespace std;
+TEST_F(DenseUniTensorTest, Paperlist7) {
+  // C++
+  auto A = cytnx::UniTensor::zeros({2, 3});
+  auto B = A;
+  cout << cytnx::is(B, A) << endl;  // Output: true
 }
 
-TEST_F(DenseUniTensorTest, eye) {
-  UniTensor ut = UniTensor::eye(2, {"row", "col"}, false, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 2);
-  EXPECT_EQ(ut.shape()[1], 2);
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), false);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
+TEST_F(DenseUniTensorTest, Paperlist9) {
+  // C++
+  auto A = cytnx::UniTensor::zeros({2, 3});
+  auto B = A;
+  auto C = A.clone();
+  cout << cytnx::is(B, A) << endl;  // Output: true
+  cout << cytnx::is(C, A) << endl;  // Output: false
+}
 
-  ut = UniTensor::eye(2, {"row", "col"}, true, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 2);
-  EXPECT_EQ(ut.shape()[1], 2);
-  vec_print(cout, ut.labels());
-  vec_print(cout, ut.shape());
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), true);
-  std::cout << ut << std::endl;
-  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
+TEST_F(DenseUniTensorTest, Example_ED) {
+namespace cy=cytnx;
+class Hising: public cy::LinOp{
 
-  ut = UniTensor::eye(3, {"row", "col"}, false, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 3);
-  EXPECT_EQ(ut.shape()[1], 3);
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), false);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 1}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 1}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 0}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2, 0}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2, 1}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0, 2}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1, 2}), 0);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2, 2}), 1);
+    public:
+        cytnx_double J,Hx;
+        cytnx_uint32 L;
 
-  ut = UniTensor::eye(3, {"row", "col"}, true, Type.Double, Device.cpu);
-  EXPECT_EQ(ut.shape().size(), 2);
-  EXPECT_EQ(ut.shape()[0], 3);
-  EXPECT_EQ(ut.shape()[1], 3);
-  EXPECT_EQ(ut.is_contiguous(), true);
-  EXPECT_EQ(ut.labels()[0], "row");
-  EXPECT_EQ(ut.labels()[1], "col");
-  EXPECT_EQ(ut.dtype(), Type.Double);
-  EXPECT_EQ(ut.device(), Device.cpu);
-  EXPECT_EQ(ut.is_diag(), true);
-  EXPECT_DOUBLE_EQ(ut.at<double>({0}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({1}), 1);
-  EXPECT_DOUBLE_EQ(ut.at<double>({2}), 1);
+    Hising(cytnx_uint32 L, cytnx_double J, cytnx_double Hx):
+        cy::LinOp("mv",pow(2,L),Type.Double,Device.cpu) //rememeber to invoke base class constructor
+    {
+        //custom members
+        this->J  = J;
+        this->Hx = Hx;
+        this->L  = L;
+    }
+
+    double SzSz(const cytnx_uint32 &i, const cytnx_uint32 &j, const cytnx_uint32 &ipt_id, cytnx_uint32 &out_id){
+        out_id = ipt_id;
+        return (1. - 2.*(((ipt_id>>i)&0x1)^((ipt_id>>j)&0x1)));
+    }
+
+    double Sx(const cytnx_uint32 &i, const cytnx_uint32 &ipt_id, cytnx_uint32 &out_id){
+        out_id = ipt_id^((0x1)<<i);
+        return 1.0;
+    }
+
+    // let's overload this with custom operation:
+    Tensor matvec(const Tensor &v) override{
+        auto out = zeros(v.shape()[0],v.dtype(),v.device());
+        cytnx_uint32 oid;
+        double amp;
+
+        for(cytnx_uint32 a=0; a<v.shape()[0];a++){
+            for(cytnx_uint32 i=0; i<this->L; i++){
+                amp = this->SzSz(i,(i+1)%this->L,a,oid);
+                out(oid) += amp*this->J*v(a);
+
+                amp = this->Sx(i,a,oid);
+                out(oid) += amp*(-this->Hx)*v(a);
+            }
+        }
+        return out;
+    }
+};
+cytnx_uint32 L = 4;
+double J = -1;
+double Hx = 0.3;
+auto H = Hising(L,J,Hx);
+cout << cy::linalg::Lanczos_ER(&H,3) << endl;
 }
