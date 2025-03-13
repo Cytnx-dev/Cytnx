@@ -41,11 +41,6 @@ namespace cytnx {
       Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float,  Type.Int64, Type.Uint64,
       Type.Int32,         Type.Uint32,       Type.Int16,  Type.Uint16, Type.Bool};
 
-    static std::vector<int> device_list = {
-      Device.cpu,
-      // Device.cuda,  //currently cuda version still not implement
-    };
-
     // Tensor tools
 
     // given the tensor T with shape and dtype has been initialzed, set its data as random uniform.
