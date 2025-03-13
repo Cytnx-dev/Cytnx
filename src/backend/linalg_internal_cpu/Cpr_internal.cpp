@@ -2,9 +2,6 @@
 #include "../utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 #include <iostream>
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
 namespace cytnx {
 

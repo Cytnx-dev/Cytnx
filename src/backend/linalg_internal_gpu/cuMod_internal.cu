@@ -1,9 +1,6 @@
 #include "cuMod_internal.hpp"
 #include "../utils_internal_interface.hpp"
 #include <cuda.h>
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
 namespace cytnx {
 

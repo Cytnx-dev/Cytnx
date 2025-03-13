@@ -7,9 +7,6 @@
 
 #include "backend/Storage.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
 #ifdef UNI_HPTT
   #include "hptt.h"
@@ -50,32 +47,6 @@ namespace cytnx {
       T *des = (T *)malloc(in->capacity() * sizeof(T));
       T *src = static_cast<T *>(in->data());
 
-#ifdef UNI_OMP
-      std::vector<std::vector<cytnx_uint64>> old_inds;
-  #pragma omp parallel
-      {
-        if (omp_get_thread_num() == 0)
-          old_inds = std::vector<std::vector<cytnx_uint64>>(
-            omp_get_num_threads(), std::vector<cytnx_uint64>(old_shape.size()));
-      }
-
-  #pragma omp parallel for schedule(dynamic)
-      for (cytnx_uint64 n = 0; n < accu_old; n++) {
-        // calc new id:
-        cytnx_uint64 j;
-        cytnx_uint64 old_loc = n;
-        for (j = 0; j < old_shape.size(); j++) {
-          old_inds[omp_get_thread_num()][j] = old_loc / shifter_old[j];
-          old_loc = old_loc % shifter_old[j];
-        }
-        old_loc = 0;  // position:
-        for (j = 0; j < old_shape.size(); j++) {
-          old_loc += shifter_new[j] * old_inds[omp_get_thread_num()][mapper[j]];
-        }
-        des[old_loc] = src[n];
-      }
-
-#else
       std::vector<cytnx_uint64> old_inds(old_shape.size());
       cytnx_uint64 j, old_loc;
       for (cytnx_uint64 n = 0; n < accu_old; n++) {
@@ -91,7 +62,6 @@ namespace cytnx {
         }
         des[old_loc] = src[n];
       }
-#endif
       boost::intrusive_ptr<Storage_base> out;
       if constexpr (std::is_same_v<T, cytnx_uint64>) {
         out = new Uint64Storage();
@@ -197,32 +167,6 @@ namespace cytnx {
         accu_new *= newshape[i];
       }
 
-  #ifdef UNI_OMP
-      std::vector<std::vector<cytnx_uint64>> old_inds;
-    #pragma omp parallel
-      {
-        if (omp_get_thread_num() == 0)
-          old_inds = std::vector<std::vector<cytnx_uint64>>(
-            omp_get_num_threads(), std::vector<cytnx_uint64>(old_shape.size()));
-      }
-
-    #pragma omp parallel for schedule(dynamic)
-      for (cytnx_uint64 n = 0; n < accu_old; n++) {
-        // calc new id:
-        cytnx_uint64 j;
-        cytnx_uint64 old_loc = n;
-        for (j = 0; j < old_shape.size(); j++) {
-          old_inds[omp_get_thread_num()][j] = old_loc / shifter_old[j];
-          old_loc = old_loc % shifter_old[j];
-        }
-        old_loc = 0;  // position:
-        for (j = 0; j < old_shape.size(); j++) {
-          old_loc += shifter_new[j] * old_inds[omp_get_thread_num()][mapper[j]];
-        }
-        des[old_loc] = src[n];
-      }
-
-  #else
       std::vector<cytnx_int64> old_inds(old_shape.size());
       cytnx_int64 j, new_loc = 0;
       for (cytnx_int64 n = 0; n < accu_old; n++) {
@@ -247,7 +191,6 @@ namespace cytnx {
 
         old_inds[old_shape.size() - 1]++;
       }
-  #endif
 #endif  // hptt
       boost::intrusive_ptr<Storage_base> out;
       if constexpr (std::is_same_v<T, cytnx_complex128>) {

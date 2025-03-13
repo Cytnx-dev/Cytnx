@@ -4,10 +4,6 @@
 
 using namespace std;
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
 
   bool cytnx::Symmetry::operator==(const cytnx::Symmetry &rhs) const {
@@ -110,32 +106,12 @@ namespace cytnx {
   }
 
   bool cytnx::ZnSymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) {
-#ifdef UNI_OMP
-    std::vector<bool> buf(1, true);
-  #pragma omp parallel
-    {
-      if (omp_get_thread_num() == 0) buf.assign(omp_get_num_threads(), true);
-    }
-
-    for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
-      if (buf[omp_get_thread_num()] == false)
-        continue;
-      else
-        buf[omp_get_thread_num()] = ((qnums[i] >= 0) && (qnums[i] < this->n));
-    }
-
-    for (cytnx_uint64 i = 0; i < buf.size(); i++) {
-      buf[0] = (buf[0] && buf[i]);
-    }
-    return buf[0];
-#else
     bool out = true;
     for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
       out = ((qnums[i] >= 0) && (qnums[i] < this->n));
       if (out == false) break;
     }
     return out;
-#endif
   }
 
   void cytnx::ZnSymmetry::combine_rule_(std::vector<cytnx_int64> &out,

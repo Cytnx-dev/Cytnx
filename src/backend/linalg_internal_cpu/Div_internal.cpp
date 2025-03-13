@@ -1,9 +1,6 @@
 #include "Div_internal.hpp"
 #include "../utils_internal_interface.hpp"
 #include "utils/utils.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 #include "backend/lapack_wrapper.hpp"
 
 namespace cytnx {
@@ -145,15 +142,6 @@ namespace cytnx {
           _out[i] = _Lin[0] / _Rin[i];
         }
       } else if (Rin->size() == 1) {
-        /*
-        //#ifdef UNI_OMP
-        //
-        //#endif
-            for(unsigned long long i=0;i<len;i++){
-                //std::cout << i << std::endl;
-                _out[i] = _Lin[i] / _Rin[0];
-            }
-        */
         blas_int N = len;
         blas_int ONE = 1;
         cytnx_complex128 a = 1. / _Rin[0];

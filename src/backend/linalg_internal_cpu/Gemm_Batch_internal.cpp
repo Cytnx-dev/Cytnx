@@ -1,10 +1,6 @@
 #include "Gemm_Batch_internal.hpp"
 #include "cytnx_error.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace linalg_internal {
 

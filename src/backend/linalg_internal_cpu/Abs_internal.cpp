@@ -1,10 +1,6 @@
 #include "backend/linalg_internal_cpu/Abs_internal.hpp"
 #include "cytnx_error.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 // stackoverflow.com/questions/33738509/whats-the-difference-between-abs-and-fabs
 
 namespace cytnx {

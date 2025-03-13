@@ -2,10 +2,6 @@
 #include "backend/Storage.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 #ifdef UNI_MKL
   #define __Cpt_dbl cytnx_complex128 *
   #define __Cpt_flt cytnx_complex64 *

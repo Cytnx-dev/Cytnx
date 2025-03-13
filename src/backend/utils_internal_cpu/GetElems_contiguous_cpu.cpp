@@ -1,9 +1,5 @@
 #include "GetElems_contiguous_cpu.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace utils_internal {
 

@@ -1,6 +1,3 @@
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 #include "backend/Storage.hpp"
 #include "utils_internal_interface.hpp"
 #include "utils/vec_print.hpp"

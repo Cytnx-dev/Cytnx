@@ -5,10 +5,6 @@
 #ifdef BACKEND_TORCH
 #else
 
-  #ifdef UNI_OMP
-    #include <omp.h>
-  #endif
-
 namespace cytnx {
 
   void LinOp::_print() {
@@ -31,26 +27,6 @@ namespace cytnx {
 
     Tensor out(Tin.shape(), Tin.dtype(), Tin.device());
 
-  #ifdef UNI_OMP
-
-    // #pragma omp parallel for
-    for (cytnx_uint64 x = 0; x < this->_elems.size(); x++) {
-      auto it = this->_elems.begin();
-      advance(it, x);
-
-      Tensor e_i = it->second.second;
-      auto &v_i = it->second.first;
-
-      // std::cout << "row:" << x << std::endl;
-      // std::cout << v_i <<e_i << std::endl;
-      for (cytnx_uint64 j = 0; j < v_i.size(); j++) {
-        out(it->first) += e_i(j) * Tin(v_i[j]);
-      }
-      // std::cout << out << std::endl;
-    }
-
-  #else
-
     // traversal all the rows:
     for (auto it = this->_elems.begin(); it != this->_elems.end(); it++) {
       Tensor e_i = it->second.second;
@@ -59,8 +35,6 @@ namespace cytnx {
         out(it->first) += e_i(j) * Tin(v_i[j]);
       }
     }
-
-  #endif
 
     return out;
   }

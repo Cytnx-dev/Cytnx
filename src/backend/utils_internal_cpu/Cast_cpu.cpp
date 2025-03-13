@@ -1,8 +1,5 @@
 #include "Cast_cpu.hpp"
 #include "backend/Storage.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
 using namespace std;
 

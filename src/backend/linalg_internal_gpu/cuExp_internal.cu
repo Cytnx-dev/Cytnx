@@ -1,10 +1,6 @@
 #include "cuExp_internal.hpp"
 #include "../utils_internal_interface.hpp"
 
-// #ifdef UNI_OMP
-//     #include <omp.h>
-// #endif
-
 namespace cytnx {
 
   namespace linalg_internal {

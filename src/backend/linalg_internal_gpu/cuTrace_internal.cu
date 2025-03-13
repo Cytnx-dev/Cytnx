@@ -46,18 +46,9 @@ namespace cytnx {
                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                              const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_complex128>(out, Tn, Ndiag, Nomp);
-#else
         _trace_2d<cytnx_complex128>(out, Tn, Ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_complex128>(out, Tn, Ndiag, Nomp, Nelem, accu, remain_rank_id, shape,
-                                         ax1, ax2);
-#else
         _trace_nd<cytnx_complex128>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -68,18 +59,9 @@ namespace cytnx {
                              const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                              const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_complex64>(out, Tn, Ndiag, Nomp);
-#else
         _trace_2d<cytnx_complex64>(out, Tn, Ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_complex64>(out, Tn, Ndiag, Nomp, Nelem, accu, remain_rank_id, shape,
-                                        ax1, ax2);
-#else
         _trace_nd<cytnx_complex64>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -90,18 +72,9 @@ namespace cytnx {
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                             const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_double>(out, Tn, Ndiag, Nomp);
-#else
         _trace_2d<cytnx_double>(out, Tn, Ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_double>(out, Tn, Ndiag, Nomp, Nelem, accu, remain_rank_id, shape, ax1,
-                                     ax2);
-#else
         _trace_nd<cytnx_double>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -112,18 +85,9 @@ namespace cytnx {
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                             const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_float>(out, Tn, Ndiag, Nomp);
-#else
         _trace_2d<cytnx_float>(out, Tn, Ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_float>(out, Tn, Ndiag, Nomp, Nelem, accu, remain_rank_id, shape, ax1,
-                                    ax2);
-#else
         _trace_nd<cytnx_float>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -134,18 +98,9 @@ namespace cytnx {
                               const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                               const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_uint64>(out, Tn, Ndiag, Nomp);
-#else
         _trace_2d<cytnx_uint64>(out, Tn, Ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_uint64>(out, Tn, Ndiag, Nomp, Nelem, accu, remain_rank_id, shape, ax1,
-                                     ax2);
-#else
         _trace_nd<cytnx_uint64>(out, Tn, Ndiag, Nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -156,18 +111,9 @@ namespace cytnx {
                               const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                               const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_int64>(out, tn, ndiag, nomp);
-#else
         _trace_2d<cytnx_int64>(out, tn, ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_int64>(out, tn, ndiag, nomp, nelem, accu, remain_rank_id, shape, ax1,
-                                    ax2);
-#else
         _trace_nd<cytnx_int64>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -178,18 +124,9 @@ namespace cytnx {
                               const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                               const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_uint32>(out, tn, ndiag, nomp);
-#else
         _trace_2d<cytnx_uint32>(out, tn, ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_uint32>(out, tn, ndiag, nomp, nelem, accu, remain_rank_id, shape, ax1,
-                                     ax2);
-#else
         _trace_nd<cytnx_uint32>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -200,18 +137,9 @@ namespace cytnx {
                               const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                               const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_int32>(out, tn, ndiag, nomp);
-#else
         _trace_2d<cytnx_int32>(out, tn, ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_int32>(out, tn, ndiag, nomp, nelem, accu, remain_rank_id, shape, ax1,
-                                    ax2);
-#else
         _trace_nd<cytnx_int32>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -222,18 +150,9 @@ namespace cytnx {
                               const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                               const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_uint16>(out, tn, ndiag, nomp);
-#else
         _trace_2d<cytnx_uint16>(out, tn, ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_uint16>(out, tn, ndiag, nomp, nelem, accu, remain_rank_id, shape, ax1,
-                                     ax2);
-#else
         _trace_nd<cytnx_uint16>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 
@@ -244,18 +163,9 @@ namespace cytnx {
                               const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                               const cytnx_uint64 &ax2) {
       if (is_2d) {
-#ifdef UNI_OMP
-        _trace_2d_para<cytnx_int16>(out, tn, ndiag, nomp);
-#else
         _trace_2d<cytnx_int16>(out, tn, ndiag);
-#endif
       } else {
-#ifdef UNI_OMP
-        _trace_nd_para<cytnx_int16>(out, tn, ndiag, nomp, nelem, accu, remain_rank_id, shape, ax1,
-                                    ax2);
-#else
         _trace_nd<cytnx_int16>(out, tn, ndiag, nelem, accu, remain_rank_id, shape, ax1, ax2);
-#endif
       }
     }
 

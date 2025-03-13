@@ -3,10 +3,6 @@
 #include <iostream>
 #include <algorithm>
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
 
   namespace algo_internal {

@@ -4,10 +4,6 @@
 #include "utils/complex_arithmetic.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 // change to *ger
 
 namespace cytnx {

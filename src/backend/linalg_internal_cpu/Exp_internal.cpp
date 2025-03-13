@@ -2,10 +2,6 @@
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace linalg_internal {
 
@@ -24,7 +20,6 @@ namespace cytnx {
       cytnx_float *_ten = (cytnx_float *)ten->data();
       cytnx_float *_out = (cytnx_float *)out->data();
 
-#pragma omp parallel for
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = expf(_ten[n]);
       }
@@ -45,7 +40,6 @@ namespace cytnx {
       cytnx_complex64 *_out = (cytnx_complex64 *)out->data();
       cytnx_complex64 *_ten = (cytnx_complex64 *)ten->data();
 
-#pragma omp parallel for
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = exp(_ten[n]);
       }

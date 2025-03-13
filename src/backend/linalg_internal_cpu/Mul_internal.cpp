@@ -1,9 +1,6 @@
 #include "Mul_internal.hpp"
 #include "../utils_internal_interface.hpp"
 #include "utils/utils.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 #include "backend/lapack_wrapper.hpp"
 
 namespace cytnx {
@@ -23,24 +20,10 @@ namespace cytnx {
       blas_int N = len;
       blas_int ONE = 1;
       if (Lin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[0] * _Rin[i];
-        // }
-        //  std::cout << "entroy internal" << std::endl;
-        //  std::cout << *_Lin << std::endl;
         memcpy(_out, _Rin, sizeof(cytnx_complex128) * len);
         zscal(&N, _Lin, _out, &ONE);
 
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
         zscal(&N, _Rin, _out, &ONE);
 
@@ -92,12 +75,6 @@ namespace cytnx {
           _out[i] = _Lin[0] * _Rin[i];
         }
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         cytnx_complex128 a = _Rin[0];
         memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
         zscal(&N, &a, _out, &ONE);
@@ -149,12 +126,6 @@ namespace cytnx {
           _out[i] = _Lin[0] * _Rin[i];
         }
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         cytnx_complex128 a = _Rin[0];
         memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
         zscal(&N, &a, _out, &ONE);
@@ -207,12 +178,6 @@ namespace cytnx {
           _out[i] = _Lin[0] * _Rin[i];
         }
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         cytnx_complex128 a = _Rin[0];
         memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
         zscal(&N, &a, _out, &ONE);
@@ -265,12 +230,6 @@ namespace cytnx {
           _out[i] = _Lin[0] * _Rin[i];
         }
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         cytnx_complex128 a = _Rin[0];
         memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
         zscal(&N, &a, _out, &ONE);
@@ -323,12 +282,6 @@ namespace cytnx {
           _out[i] = _Lin[0] * _Rin[i];
         }
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         cytnx_complex128 a = _Rin[0];
         memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
         zscal(&N, &a, _out, &ONE);
@@ -496,12 +449,6 @@ namespace cytnx {
           _out[i] = _Lin[0] * cytnx_complex128(_Rin[i], 0);
         }
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * cytnx_complex128(_Rin[0],0);
-        // }
         cytnx_complex128 a = _Rin[0];
         memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
         zscal(&N, &a, _out, &ONE);
@@ -1293,22 +1240,10 @@ namespace cytnx {
       blas_int ONE = 1;
 
       if (Lin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[0] * _Rin[i];
-        // }
         memcpy(_out, _Rin, sizeof(double) * len);
         dscal(&N, _Lin, _out, &ONE);
 
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         memcpy(_out, _Lin, sizeof(double) * len);
         dscal(&N, _Rin, _out, &ONE);
 
@@ -1850,22 +1785,10 @@ namespace cytnx {
       blas_int ONE = 1;
 
       if (Lin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[0] * _Rin[i];
-        // }
         memcpy(_out, _Rin, sizeof(float) * len);
         sscal(&N, _Lin, _out, &ONE);
 
       } else if (Rin->size() == 1) {
-        // #ifdef UNI_OMP
-        //
-        // #endif
-        //  for(unsigned long long i=0;i<len;i++){
-        //     _out[i] = _Lin[i] * _Rin[0];
-        // }
         memcpy(_out, _Lin, sizeof(float) * len);
         sscal(&N, _Rin, _out, &ONE);
       } else {

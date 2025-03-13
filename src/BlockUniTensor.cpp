@@ -14,9 +14,6 @@ using namespace std;
 #ifdef BACKEND_TORCH
 #else
 
-  #ifdef UNI_OMP
-    #include <omp.h>
-  #endif
 namespace cytnx {
   typedef Accessor ac;
   void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
