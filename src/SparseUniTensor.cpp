@@ -9,10 +9,6 @@
 #include "utils/vec_concatenate.hpp"
 #include <map>
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 using namespace std;
 namespace cytnx {
   typedef Accessor ac;
@@ -168,7 +164,6 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < cb_inbonds.size(); i++) {
         N_sym = cb_inbonds[i].Nsym();
 
-#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < N_sym * cb_inbonds[i].dim(); d++) {
           cb_inbonds[i].qnums()[cytnx_uint64(d / N_sym)][d % N_sym] *=
             cb_inbonds[i].type() * bondType::BD_KET;
@@ -185,7 +180,6 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < cb_outbonds.size(); i++) {
         N_sym = cb_outbonds[i].Nsym();
 
-#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < N_sym * cb_outbonds[i].dim(); d++) {
           cb_outbonds[i].qnums()[cytnx_uint64(d / N_sym)][d % N_sym] *=
             cb_outbonds[i].type() * bondType::BD_BRA;
@@ -2181,7 +2175,6 @@ namespace cytnx {
                          vec_clone(rhs->_labels, non_comm_idx2));
       }
 
-      // these two cannot omp parallel, due to intrusive_ptr
       for (cytnx_uint64 i = 0; i < non_comm_idx1.size(); i++)
         out_bonds.push_back(this->_bonds[non_comm_idx1[i]]);
       for (cytnx_uint64 i = 0; i < non_comm_idx2.size(); i++)

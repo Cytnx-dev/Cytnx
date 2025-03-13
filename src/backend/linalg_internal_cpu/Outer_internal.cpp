@@ -4,10 +4,6 @@
 #include "utils/complex_arithmetic.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 // change to *ger
 
 namespace cytnx {
@@ -23,7 +19,6 @@ namespace cytnx {
       T1 *_Lin = (T1 *)Lin->data();
       T2 *_Rin = (T2 *)Rin->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (unsigned long long r = 0; r < j1 * j2; r++) {
         _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
       }

@@ -14,9 +14,6 @@ using namespace std;
 #ifdef BACKEND_TORCH
 #else
 
-  #ifdef UNI_OMP
-    #include <omp.h>
-  #endif
 namespace cytnx {
   typedef Accessor ac;
   void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
@@ -912,7 +909,6 @@ namespace cytnx {
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
 
-        // these two cannot omp parallel, due to intrusive_ptr
         for (cytnx_uint64 i = 0; i < non_comm_idx1.size(); i++)
           out_bonds.push_back(this->_bonds[non_comm_idx1[i]].clone());
         for (cytnx_uint64 i = 0; i < non_comm_idx2.size(); i++)

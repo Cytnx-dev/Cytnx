@@ -20,7 +20,6 @@ namespace cytnx {
       cytnx_uint64 min = M < N ? M : N;
       min = min < diag_N ? min : diag_N;
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 i = 0; i < min; i++) out[i] = elem[i * N + i];
     }
 

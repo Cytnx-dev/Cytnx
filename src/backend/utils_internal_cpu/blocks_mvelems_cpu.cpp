@@ -55,9 +55,6 @@ namespace cytnx {
       std::vector<cytnx_uint64> tfidx(acc_in_old.size() + acc_out_old.size());
 
       for (unsigned int b = 0; b < src_blocks.size(); b++) {
-        // #ifdef UNI_OMP
-        // #pragma omp parallel for schedule(dynamic)
-        // #endif
         for (unsigned int elem = 0; elem < src_blocks[b].storage().size(); elem++) {
           unsigned int i = elem / src_blocks[b].shape()[1];
           unsigned int j = elem % src_blocks[b].shape()[1];

@@ -1,9 +1,5 @@
 #include "GetElems_cpu.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace utils_internal {
 
@@ -15,7 +11,6 @@ namespace cytnx {
       cytnx_complex128 *elem_ptr_ = static_cast<cytnx_complex128 *>(in);
       cytnx_complex128 *new_elem_ptr_ = static_cast<cytnx_complex128 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -38,7 +33,6 @@ namespace cytnx {
       cytnx_complex64 *elem_ptr_ = static_cast<cytnx_complex64 *>(in);
       cytnx_complex64 *new_elem_ptr_ = static_cast<cytnx_complex64 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -61,7 +55,6 @@ namespace cytnx {
       cytnx_double *elem_ptr_ = static_cast<cytnx_double *>(in);
       cytnx_double *new_elem_ptr_ = static_cast<cytnx_double *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -84,7 +77,6 @@ namespace cytnx {
       cytnx_float *elem_ptr_ = static_cast<cytnx_float *>(in);
       cytnx_float *new_elem_ptr_ = static_cast<cytnx_float *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -107,7 +99,6 @@ namespace cytnx {
       cytnx_int64 *elem_ptr_ = static_cast<cytnx_int64 *>(in);
       cytnx_int64 *new_elem_ptr_ = static_cast<cytnx_int64 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -130,7 +121,6 @@ namespace cytnx {
       cytnx_uint64 *elem_ptr_ = static_cast<cytnx_uint64 *>(in);
       cytnx_uint64 *new_elem_ptr_ = static_cast<cytnx_uint64 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -153,7 +143,6 @@ namespace cytnx {
       cytnx_int32 *elem_ptr_ = static_cast<cytnx_int32 *>(in);
       cytnx_int32 *new_elem_ptr_ = static_cast<cytnx_int32 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -176,7 +165,6 @@ namespace cytnx {
       cytnx_uint32 *elem_ptr_ = static_cast<cytnx_uint32 *>(in);
       cytnx_uint32 *new_elem_ptr_ = static_cast<cytnx_uint32 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -199,7 +187,6 @@ namespace cytnx {
       cytnx_int16 *elem_ptr_ = static_cast<cytnx_int16 *>(in);
       cytnx_int16 *new_elem_ptr_ = static_cast<cytnx_int16 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -222,7 +209,6 @@ namespace cytnx {
       cytnx_uint16 *elem_ptr_ = static_cast<cytnx_uint16 *>(in);
       cytnx_uint16 *new_elem_ptr_ = static_cast<cytnx_uint16 *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;
@@ -245,7 +231,6 @@ namespace cytnx {
       cytnx_bool *elem_ptr_ = static_cast<cytnx_bool *>(in);
       cytnx_bool *new_elem_ptr_ = static_cast<cytnx_bool *>(out);
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < TotalElem; n++) {
         // map from mem loc of new tensor to old tensor
         cytnx_uint64 Loc = 0;

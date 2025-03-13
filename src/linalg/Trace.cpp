@@ -9,10 +9,6 @@
 #else
   #include "../backend/linalg_internal_interface.hpp"
 
-  #ifdef UNI_OMP
-    #include <omp.h>
-  #endif
-
 using namespace std;
 namespace cytnx {
   namespace linalg {

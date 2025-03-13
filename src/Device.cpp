@@ -3,9 +3,6 @@
 #include <thread>
 
 #include "cytnx_error.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
 using namespace std;
 namespace cytnx {

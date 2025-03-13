@@ -3,10 +3,6 @@
 
 #include "Type.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace utils_internal {
 
@@ -14,8 +10,7 @@ namespace cytnx {
      * @brief Assign the given value to the first `count` elements in the range beginning at
      * `first`.
      *
-     * This function act the same as `std::fill_n`. The execution will be parallelized when OMP is
-     * enabled.
+     * This function act the same as `std::fill_n`.
      *
      * @tparam DType the data type of the elements in the range
      *
@@ -26,7 +21,6 @@ namespace cytnx {
     template <typename DType>
     void FillCpu(void *first, const DType &value, cytnx_uint64 count) {
       DType *typed_first = reinterpret_cast<DType *>(first);
-#pragma omp parallel for schedule(static)
       for (cytnx_uint64 i = 0; i < count; i++) {
         typed_first[i] = value;
       }
