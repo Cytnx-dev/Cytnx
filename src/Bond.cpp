@@ -388,7 +388,6 @@ namespace cytnx {
 
         } else {
           return std::count(this->_qnums.begin(), this->_qnums.end(), qnum);
-
         }  // if return indices
       }  // check format.
 

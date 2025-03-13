@@ -35,7 +35,6 @@ namespace cytnx {
         out(it->first) += e_i(j) * Tin(v_i[j]);
       }
     }
-
     return out;
   }
 

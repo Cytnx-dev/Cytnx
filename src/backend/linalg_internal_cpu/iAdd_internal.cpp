@@ -28,7 +28,6 @@ namespace cytnx {
       }
 
       // handle non-contiguous
-
       for (cytnx_uint64 i = 0; i < len; i++) {
         std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
         _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] +=

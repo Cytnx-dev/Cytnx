@@ -241,7 +241,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -290,7 +289,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -339,7 +337,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -388,7 +385,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -437,7 +433,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -486,7 +481,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -535,7 +529,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -584,7 +577,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -633,7 +625,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -699,7 +690,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -748,7 +738,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -797,7 +786,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -846,7 +834,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -895,7 +882,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -944,7 +930,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -993,7 +978,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -1042,7 +1026,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -1091,7 +1074,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -1158,7 +1140,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -1207,7 +1188,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -1256,7 +1236,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1305,7 +1284,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1354,7 +1332,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1403,7 +1380,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1452,7 +1428,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1501,7 +1476,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1550,7 +1524,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1617,7 +1590,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -1666,7 +1638,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -1715,7 +1686,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1764,7 +1734,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1813,7 +1782,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1862,7 +1830,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1911,7 +1878,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -1960,7 +1926,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2009,7 +1974,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2076,7 +2040,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -2125,7 +2088,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -2174,7 +2136,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2223,7 +2184,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2272,7 +2232,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2321,7 +2280,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2370,7 +2328,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2419,7 +2376,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2468,7 +2424,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2535,7 +2490,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -2584,7 +2538,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -2633,7 +2586,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2682,7 +2634,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2731,7 +2682,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2780,7 +2730,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2829,7 +2778,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2878,7 +2826,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2927,7 +2874,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -2994,7 +2940,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -3043,7 +2988,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -3092,7 +3036,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3141,7 +3084,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3190,7 +3132,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3239,7 +3180,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3288,7 +3228,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3337,7 +3276,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3386,7 +3324,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3452,7 +3389,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -3501,7 +3437,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -3550,7 +3485,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3599,7 +3533,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3648,7 +3581,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3697,7 +3629,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3746,7 +3677,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3795,7 +3725,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3844,7 +3773,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
@@ -3910,7 +3838,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmod(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -3959,7 +3886,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = fmodf(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)],
@@ -4008,7 +3934,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = cytnx_int64(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)]) %
@@ -4057,7 +3982,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = cytnx_uint64(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)]) %
@@ -4106,7 +4030,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = cytnx_int32(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)]) %
@@ -4155,7 +4078,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = cytnx_uint32(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)]) %
@@ -4204,7 +4126,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = cytnx_int16(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)]) %
@@ -4253,7 +4174,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = cytnx_uint16(_Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)]) %
@@ -4302,7 +4222,6 @@ namespace cytnx {
           }
 
           // handle non-contiguous
-
           for (cytnx_uint64 i = 0; i < len; i++) {
             std::vector<cytnx_uint64> tmpv = c2cartesian(i, accu_shape);
             _out[i] = _Lin[cartesian2c(vec_map(tmpv, invmapper_L), old_accu_shapeL)] %
