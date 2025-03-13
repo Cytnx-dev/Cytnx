@@ -74,14 +74,6 @@ ifeq ($(HPTT_Enable),1)
   LDFLAGS += $(HPTT_PATH)/lib/libhptt.so
 endif
 
-ifeq ($(GPU_Enable),1)
-  ifeq ($(MAGMA_Enable),1)
-    CCFLAGS += -DUNI_MAGMA
-	INCFLAGS += -I$(MAGMA_PATH)/include
-	LDFLAGS += $(MAGMA_PATH)/lib/libmagma.a $(MAGMA_PATH)/lib/libmagma_sparse.a
-  endif
-endif
-
 
 ALL_CCFLAGS :=
 ifeq ($(GPU_Enable),1)
@@ -115,7 +107,7 @@ endif
 
 ALL_LDFLAGS :=
 ifeq ($(GPU_Enable),1)
-  LDFLAGS += -lcublasLt -lcublas -lcusolver -lcurand -lcudart -lcusparse #$(MAGMA_PATH)/lib/libmagma.a $(MAGMA_PATH)/lib/libmagma_sparse.a
+  LDFLAGS += -lcublasLt -lcublas -lcusolver -lcurand -lcudart -lcusparse
   ALL_LDFLAGS += $(addprefix -Xlinker , $(LDFLAGS))
   ALL_LDFLAGS += -L$(CUDA_PATH)/lib64
   LDFLAGS += -L$(CUDA_PATH)/lib64

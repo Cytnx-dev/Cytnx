@@ -17,7 +17,6 @@ message(STATUS ${CMAKE_MODULE_PATH})
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
@@ -94,10 +93,22 @@ option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 # #####################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+if(USE_CUDA)
+  enable_language(CUDA)
+  # Disable generation of "--option-file" flag in compile_commands.json.
+  # This workaround helps VSCode's cpptools extension correctly locate CUDA
+  # include files.
+  # Refer to: https://discourse.cmake.org/t/cmake-target-include-directories-doesnt-export-to-compile-commands-json-when-using-cuda/10072/10
+  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
+  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
+  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
+endif()
+
 # C++ uses link-time optimization anyway; this enables additionally -flto=auto,
 # for parallel compilation
-# It cannot enable on MacOS since it cuase bulding error when linking the library libcytnx.a.
-# Error message: Error running link command: no such file or directorymake[2]: *** [CMakeFiles/cytnx.dir/build.make:3109: libcytnx.a]
+# It cannot enable on MacOS since it causes building errors when linking the library libcytnx.a.
+# Error message: Error running link command: no such file or directory make[2]: *** [CMakeFiles/cytnx.dir/build.make:3109: libcytnx.a]
 IF (APPLE)
   set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 ELSE ()
