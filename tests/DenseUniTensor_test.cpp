@@ -4565,8 +4565,9 @@ TEST_F(DenseUniTensorTest, Save_chr) {
 describe:test Save Load not exist file
 ====================*/
 TEST_F(DenseUniTensorTest, Save_path_incorrect) {
-  std::filesystem::path file_path_under_non_existent_folder = mkdtemp(nullptr);
-  std::filesystem::path temp_filename = mkdtemp(nullptr);
+  std::filesystem::path file_path_under_non_existent_folder = std::tmpnam(nullptr);
+  std::filesystem::path temp_filename = std::tmpnam(nullptr);
+  // std::tmpnam(nullptr) returns full temp file path, like /tmp/fileRandSuffix
   file_path_under_non_existent_folder /= temp_filename.filename();
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
