@@ -7,7 +7,6 @@
 
 #include "backend/Storage.hpp"
 
-
 #ifdef UNI_HPTT
   #include "hptt.h"
 #endif

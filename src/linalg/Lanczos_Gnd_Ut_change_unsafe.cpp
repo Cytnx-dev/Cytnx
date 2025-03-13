@@ -97,7 +97,7 @@ namespace cytnx {
 
       // new_psi -= As(0)*psi_1;
 
-	  new_psi -= As(0).item()*psi_1;
+      new_psi -= As(0).item() * psi_1;
 
       Bs(0) = new_psi.Norm().item();  // sqrt(Contract(new_psi,new_psi.Dagger()).item().real());
       // Bs(0) = new_psi.get_block_().Norm();
@@ -122,8 +122,8 @@ namespace cytnx {
         As.append(Contract(new_psi.Dagger(), psi_1).item().real());
         // As.append(linalg::Vectordot(new_psi.get_block_().flatten(),psi_1.get_block_().flatten(),true).item());
 
-		new_psi -= As(i).item()*psi_1;
-		new_psi -= Bs(i - 1).item()*psi_0;
+        new_psi -= As(i).item() * psi_1;
+        new_psi -= Bs(i - 1).item() * psi_0;
 
         try {
           // diagonalize:
@@ -189,18 +189,18 @@ namespace cytnx {
         // new_psi = Hop->matvec(psi_1) - As(0)*psi_1;
 
         new_psi = Hop->matvec(psi_1);
-		new_psi -= As(0).item()*psi_1;
+        new_psi -= As(0).item() * psi_1;
 
         psi_0 = psi_1;
         psi_1 = new_psi / Bs(0).item();
         for (unsigned int n = 1; n < tmpEsVs[0].shape()[0]; n++) {
           // eV += kryVg(n)*psi_1;
-		  eV += kryVg.at(n)*psi_1;
+          eV += kryVg.at(n) * psi_1;
           // new_psi = Hop->matvec(psi_1) - Bs(n-1)*psi_0;
           new_psi = Hop->matvec(psi_1);
-		  new_psi -= Bs(n - 1).item()*psi_0;
+          new_psi -= Bs(n - 1).item() * psi_0;
           // new_psi -= As(n)*psi_1;
-		  new_psi -= As(n).item()*psi_1;
+          new_psi -= As(n).item() * psi_1;
 
           psi_0 = psi_1;
           psi_1 = new_psi / Bs(n).item();

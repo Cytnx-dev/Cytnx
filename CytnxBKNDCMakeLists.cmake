@@ -213,4 +213,3 @@ if(USE_HPTT)
     # relocate hptt
     install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
-

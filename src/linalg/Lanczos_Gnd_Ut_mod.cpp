@@ -19,11 +19,10 @@ namespace cytnx {
     typedef Accessor ac;
     using namespace std;
 
-	// <A|B>
+    // <A|B>
     static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
       return Contract(A.Dagger(), B).item();
     }
-
 
     void _Lanczos_Gnd_general_Ut(std::vector<UniTensor> &out, LinOp *Hop, const UniTensor &Tin,
                                  const bool &is_V, const double &CvgCrit,
@@ -37,10 +36,9 @@ namespace cytnx {
 
       UniTensor psi_1 = Tin / Norm;
       psi_1.contiguous_();
-	  if (is_V) {
-		psi_s.push_back(psi_1);
-	  }
-
+      if (is_V) {
+        psi_s.push_back(psi_1);
+      }
 
       UniTensor psi_0;  // = cytnx::zeros({psi_1.shape()[0]},psi_1.dtype(),Tin.device());
       UniTensor new_psi;
@@ -50,7 +48,6 @@ namespace cytnx {
       Tensor As = zeros({1}, Hop->dtype() < 3 ? Hop->dtype() + 2 : Hop->dtype(), Tin.device());
       Tensor Bs = As.clone();
       Scalar E;
-
 
       // temporary:
       std::vector<Tensor> tmpEsVs;
@@ -71,17 +68,17 @@ namespace cytnx {
                       "labels and shape as input!%s",
                       "\n");
 
-	  auto alpha = _Dot(new_psi, psi_1).real();
+      auto alpha = _Dot(new_psi, psi_1).real();
       As(0) = alpha;
-	  new_psi -= alpha*psi_1;
-	  auto beta = new_psi.Norm().item();
+      new_psi -= alpha * psi_1;
+      auto beta = new_psi.Norm().item();
       Bs(0) = beta;
       psi_0 = psi_1;
       new_psi /= beta;
       psi_1 = new_psi;
-	  if (is_V) {
-		psi_s.push_back(psi_1);
-	  }
+      if (is_V) {
+        psi_s.push_back(psi_1);
+      }
       E = alpha;
       Scalar Ediff;
 
@@ -90,11 +87,11 @@ namespace cytnx {
       // iteration LZ:
       for (unsigned int i = 1; i < Maxiter; i++) {
         new_psi = Hop->matvec(psi_1);
-		alpha = _Dot(new_psi, psi_1).real();
+        alpha = _Dot(new_psi, psi_1).real();
         As.append(alpha);
-		new_psi -= (alpha*psi_1 + beta*psi_0);
+        new_psi -= (alpha * psi_1 + beta * psi_0);
 
-		//diagonalize
+        // diagonalize
         try {
           // diagonalize:
           auto tmptmp = linalg::Tridiag(As, Bs, true, true, true);
@@ -115,15 +112,15 @@ namespace cytnx {
         }
 
         psi_0 = psi_1;
-        psi_1 = new_psi/beta;
-	    if (is_V) {
-		  psi_s.push_back(psi_1);
-		}
+        psi_1 = new_psi / beta;
+        if (is_V) {
+          psi_s.push_back(psi_1);
+        }
         Ediff = abs(E - tmpEsVs[0].storage().at(0));
         if (verbose) {
           printf("iter[%d] Enr: %11.14f, diff from last iter: %11.14f\n", i, double(E),
                  double(Ediff));
-		}
+        }
 
         // chkf = true;
         if (Ediff < CvgCrit) {
@@ -135,10 +132,10 @@ namespace cytnx {
       }  // iteration
 
       if (cvg_fin == false) {
-        //cytnx_warning_msg(true,
-        //                  "[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if "
-        //                  "this is intended%s",
-        //                  "\n");
+        // cytnx_warning_msg(true,
+        //                   "[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore
+        //                   if " "this is intended%s",
+        //                   "\n");
       }
       out.push_back(UniTensor(tmpEsVs[0](0), false, 0));
 
@@ -149,7 +146,7 @@ namespace cytnx {
 
         eV = kryVg.at(0) * psi_s.at(0);
         for (unsigned int n = 1; n < tmpEsVs[0].shape()[0]; n++) {
-		  eV += kryVg.at(n)*psi_s.at(n);
+          eV += kryVg.at(n) * psi_s.at(n);
         }
 
         out.push_back(eV);

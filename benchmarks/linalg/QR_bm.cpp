@@ -23,4 +23,4 @@ namespace BMTest_QR {
     ->Args({D_test, cytnx::Type.Double})
     ->Args({D_test, cytnx::Type.ComplexDouble})
     ->Unit(benchmark::kMillisecond);
-}
+}  // namespace BMTest_QR

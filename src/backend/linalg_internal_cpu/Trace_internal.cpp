@@ -50,7 +50,7 @@ namespace cytnx {
       // }
     }
 
-// parallel version:
+    // parallel version:
 
     void Trace_internal_cd(const bool &is_2d, Tensor &out, const Tensor &Tn,
                            const cytnx_uint64 &Ndiag, const int &Nomp, const cytnx_uint64 &Nelem,

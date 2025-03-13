@@ -571,4 +571,4 @@ namespace BMTest_linalg_basic {
     ->Args({D_test, cytnx::Type.ComplexDouble})
     ->Unit(benchmark::kMillisecond);
 
-}  // namespace BMTest_OMP
+}  // namespace BMTest_linalg_basic
