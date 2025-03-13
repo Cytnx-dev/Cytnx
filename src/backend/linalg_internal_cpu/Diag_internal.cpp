@@ -2,20 +2,14 @@
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace linalg_internal {
 
     template <class T>
     void Diag_internal_driver(T *out, T *in, const cytnx_uint64 &L, const cytnx_bool &isrank2) {
       if (isrank2) {
-#pragma omp parallel for
         for (cytnx_uint64 i = 0; i < L; i++) out[i] = in[i * L + i];
       } else {
-#pragma omp parallel for
         for (cytnx_uint64 i = 0; i < L; i++) out[i * L + i] = in[i];
       }
     }

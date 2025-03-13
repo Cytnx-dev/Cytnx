@@ -2,10 +2,6 @@
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace linalg_internal {
 
@@ -13,7 +9,6 @@ namespace cytnx {
                                 const double &clip) {
       cytnx_double *_ten = (cytnx_double *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _ten[n] = _ten[n] < clip ? 0 : double(1) / _ten[n];
       }
@@ -23,7 +18,6 @@ namespace cytnx {
                                 const double &clip) {
       cytnx_float *_ten = (cytnx_float *)ten->data();
 
-#pragma omp parallel for
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _ten[n] = _ten[n] < clip ? 0 : float(1) / _ten[n];
       }
@@ -33,7 +27,6 @@ namespace cytnx {
                                  const double &clip) {
       cytnx_complex128 *_ten = (cytnx_complex128 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _ten[n] =
           std::norm(_ten[n]) < clip ? cytnx_complex128(0, 0) : cytnx_complex128(1., 0) / _ten[n];
@@ -44,7 +37,6 @@ namespace cytnx {
                                  const double &clip) {
       cytnx_complex64 *_ten = (cytnx_complex64 *)ten->data();
 
-#pragma omp parallel for
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _ten[n] =
           std::norm(_ten[n]) < clip ? cytnx_complex64(0, 0) : cytnx_complex64(1., 0) / _ten[n];

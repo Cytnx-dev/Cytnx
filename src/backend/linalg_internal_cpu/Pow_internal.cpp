@@ -1,10 +1,6 @@
 #include "backend/linalg_internal_cpu/Pow_internal.hpp"
 #include "cytnx_error.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace linalg_internal {
 
@@ -14,7 +10,6 @@ namespace cytnx {
       cytnx_double *_out = (cytnx_double *)out->data();
       cytnx_double *_ten = (cytnx_double *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = pow(_ten[n], p);
       }
@@ -26,7 +21,6 @@ namespace cytnx {
       cytnx_float *_out = (cytnx_float *)out->data();
       cytnx_float *_ten = (cytnx_float *)ten->data();
 
-#pragma omp parallel for
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = powf(_ten[n], p);
       }
@@ -38,7 +32,6 @@ namespace cytnx {
       cytnx_complex128 *_out = (cytnx_complex128 *)out->data();
       cytnx_complex128 *_ten = (cytnx_complex128 *)ten->data();
 
-#pragma omp parallel for schedule(dynamic)
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = pow(_ten[n], p);
       }
@@ -50,7 +43,6 @@ namespace cytnx {
       cytnx_complex64 *_out = (cytnx_complex64 *)out->data();
       cytnx_complex64 *_ten = (cytnx_complex64 *)ten->data();
 
-#pragma omp parallel for
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _out[n] = pow(_ten[n], p);
       }

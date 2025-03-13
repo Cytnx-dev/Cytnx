@@ -2,17 +2,12 @@
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   namespace linalg_internal {
 
     template <class T1>
     void Matvec_driver(T1 *out, const T1 *inl, const T1 *inr, const cytnx_int64 &Ml,
                        const cytnx_int64 &Nr) {
-#pragma omp parallel for
       for (cytnx_uint64 n = 0; n < cytnx_uint64(Ml); n++) {
         out[n] = 0;
         for (cytnx_int64 c = 0; c < Nr; c++) {

@@ -4,10 +4,6 @@
 #include "utils/utils.hpp"
 using namespace std;
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
   void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type) {
     cytnx_error_msg(dim == 0, "%s", "[ERROR] Bond_impl cannot have 0 or negative dimension.");
@@ -139,7 +135,6 @@ namespace cytnx {
           new_qnums = std::vector<std::vector<cytnx_int64>>(Dnew_qnums,
                                                             std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(dynamic)
           for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
               if (bd_in->type() != this->type()) {
@@ -167,7 +162,6 @@ namespace cytnx {
         new_qnums =
           std::vector<std::vector<cytnx_int64>>(this->_dim, std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < this->_dim; d++) {
           for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
             if (bd_in->type() != this->type()) {
@@ -248,7 +242,6 @@ namespace cytnx {
           new_qnums = std::vector<std::vector<cytnx_int64>>(Dnew_qnums,
                                                             std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(dynamic)
           for (cytnx_uint64 d = 0; d < new_qnums.size(); d++) {
             for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
               this->_syms[i].combine_rule_(new_qnums[d][i],
@@ -270,7 +263,6 @@ namespace cytnx {
         new_qnums =
           std::vector<std::vector<cytnx_int64>>(this->_dim, std::vector<cytnx_int64>(this->Nsym()));
 
-#pragma omp parallel for schedule(dynamic)
         for (cytnx_uint64 d = 0; d < this->_dim; d++) {
           for (cytnx_uint32 i = 0; i < this->Nsym(); i++) {
             this->_syms[i].combine_rule_(new_qnums[d][i],
@@ -384,43 +376,6 @@ namespace cytnx {
       } else {
         // old format
         if (return_indices) {
-#ifdef UNI_OMP
-          std::vector<cytnx_uint64> tmp_cnts;
-          std::vector<std::vector<cytnx_uint64>> tmp_indices;
-  #pragma omp parallel
-          {
-            if (omp_get_thread_num() == 0) {
-              tmp_cnts.resize(omp_get_num_threads(), 0);
-              tmp_indices.resize(omp_get_num_threads());
-            }
-          }
-
-  #pragma omp parallel for schedule(dynamic)
-          for (cytnx_uint64 i = 0; i < this->_qnums.size(); i++) {
-            if (this->_qnums[i] == qnum) {
-              tmp_cnts[omp_get_thread_num()]++;
-              tmp_indices[omp_get_thread_num()].push_back(i);
-            }
-          }
-
-          // sum over all counts from each thread.
-          cytnx_uint64 cnt = tmp_cnts[0];
-          for (cytnx_uint64 i = 1; i < tmp_cnts.size(); i++) {
-            cnt += tmp_cnts[i];
-            tmp_cnts[i] += tmp_cnts[i - 1];  // tmp_cnts[i-1];
-          }
-          indices.resize(cnt);
-
-          // concate the indices from each thread
-          memcpy(&indices[0], &tmp_indices[0][0], sizeof(cytnx_uint64) * tmp_indices[0].size());
-          for (cytnx_uint64 i = 1; i < tmp_cnts.size(); i++) {
-            memcpy(&indices[tmp_cnts[i - 1]], &tmp_indices[i][0],
-                   sizeof(cytnx_uint64) * tmp_indices[i].size());
-          }
-          std::sort(indices.begin(), indices.end());
-
-          return cnt;
-#else
           cytnx_uint64 cnt = 0;
           indices.clear();
           for (cytnx_uint64 i = 0; i < this->_qnums.size(); i++) {
@@ -431,28 +386,8 @@ namespace cytnx {
           }
           return cnt;
 
-#endif
         } else {
-#ifdef UNI_OMP
-          std::vector<cytnx_uint64> tmp_cnts;
-  #pragma omp parallel
-          {
-            if (omp_get_thread_num() == 0) tmp_cnts.resize(omp_get_num_threads(), 0);
-          }
-
-  #pragma omp parallel for schedule(dynamic)
-          for (cytnx_uint64 i = 0; i < this->_qnums.size(); i++) {
-            if (this->_qnums[i] == qnum) {
-              tmp_cnts[omp_get_thread_num()]++;
-            }
-          }
-
-          for (cytnx_uint64 i = 1; i < tmp_cnts.size(); i++) tmp_cnts[0] += tmp_cnts[i];
-          return tmp_cnts[0];
-#else
           return std::count(this->_qnums.begin(), this->_qnums.end(), qnum);
-
-#endif
         }  // if return indices
       }  // check format.
 
@@ -462,7 +397,6 @@ namespace cytnx {
   std::vector<std::vector<cytnx_int64>> Bond_impl::calc_reverse_qnums() {
     std::vector<std::vector<cytnx_int64>> out(this->_qnums.size(),
                                               std::vector<cytnx_int64>(this->_syms.size()));
-#pragma omp parallel for
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       for (int j = 0; j < out[i].size(); j++) {
         this->_syms[j].reverse_rule_(out[i][j], this->_qnums[i][j]);
