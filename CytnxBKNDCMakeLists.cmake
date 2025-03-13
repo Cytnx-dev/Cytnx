@@ -6,6 +6,7 @@ if (USE_MKL)
   set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
   target_compile_definitions(cytnx PUBLIC UNI_MKL)
   target_compile_definitions(cytnx PUBLIC MKL_ILP64)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 endif() #use_mkl
 
 ######################################################################
@@ -213,72 +214,3 @@ if(USE_HPTT)
     install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
 endif()
 
-
-
-
-
-# ----------------------------------------
-# Find OpenMP
-if(USE_OMP)
-    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OMP")
-
-    # append file for python
-    FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_OMP\n" "")
-
-    if(USE_MKL)
-        # if MKL is used, we don't explicitly link to OpenMP
-        # it's already linked
-        target_compile_definitions(cytnx PRIVATE UNI_OMP)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-
-        message( STATUS " Build OMP Support: YES")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MKL\n" "")
-
-    else()
-        find_package( OpenMP )
-        if ( OPENMP_FOUND )
-            message( STATUS " Build OMP Support: YES")
-            if(NOT TARGET OpenMP::OpenMP_CXX)
-                find_package(Threads REQUIRED)
-                add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-                set_property(TARGET OpenMP::OpenMP_CXX
-                            PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-                # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-                set_property(TARGET OpenMP::OpenMP_CXX
-                            PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
-
-            else()
-                set_property(TARGET OpenMP::OpenMP_CXX
-                            PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-            endif()
-            target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
-            target_compile_definitions(cytnx PRIVATE UNI_OMP)
-        else()
-            message( STATUS " Build OMP Support: NO  (Not found)")
-        endif()
-    endif()
-
-else()
-    message( STATUS " Build OMP Support: NO")
-
-    if(USE_HPTT)
-        find_package( OpenMP )
-        if ( OPENMP_FOUND )
-          if(NOT TARGET OpenMP::OpenMP_CXX)
-            find_package(Threads REQUIRED)
-            add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-            set_property(TARGET OpenMP::OpenMP_CXX
-                        PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-            # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-            set_property(TARGET OpenMP::OpenMP_CXX
-                        PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
-
-          else()
-            set_property(TARGET OpenMP::OpenMP_CXX
-                        PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-          endif()
-          target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
-        endif()
-    endif()
-
-endif()
