@@ -2,8 +2,8 @@ if(BACKEND_TORCH)
 else()
 
 add_executable(
-  bm_test_main
-  bm_test_main.cpp
+  benchmarks_main
+  benchmarks_main.cpp
   Tensor_bm.cpp
   UniTensor_bm.cpp
   algo/Vsplit_bm.cpp
@@ -19,10 +19,10 @@ add_executable(
 
 )
 if(USE_CUDA)
-  target_compile_definitions(bm_test_main PRIVATE UNI_GPU)
+  target_compile_definitions(benchmarks_main PRIVATE UNI_GPU)
 endif()
 
-target_link_libraries(bm_test_main cytnx)
-target_link_libraries(bm_test_main benchmark::benchmark)
+target_link_libraries(benchmarks_main cytnx)
+target_link_libraries(benchmarks_main benchmark::benchmark)
 
 endif()
