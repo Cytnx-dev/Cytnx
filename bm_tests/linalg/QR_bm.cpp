@@ -3,7 +3,7 @@
 
 // Cytnx test
 namespace BMTest_QR {
-  static const int D_test = 1000;
+  static const int D_test = 50;
 
   // QR
   static void BM_Qr(benchmark::State& state) {
