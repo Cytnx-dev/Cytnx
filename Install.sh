@@ -140,12 +140,13 @@ FLAG="${FLAG} -DUSE_OMP=OFF"
 
 
 #=========================================================
-# 10) Run tests
+# 10) Run tests and benchmarks
 #=========================================================
-# [Note] Wheather to run cytnx tests (DEFAULT = OFF)
+# [Note] Wheather to run cytnx tests (DEFAULT = OFF) and benchmarks (DEFAULT = OFF)
 #-----------------------------------
 DRUN_TESTS=OFF
 FLAG="${FLAG} -DRUN_TESTS=${DRUN_TESTS}"
+FLAG="${FLAG} -DRUN_BENCHMARKS=OFF "
 #-----------------------------------
 
 

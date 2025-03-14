@@ -24,16 +24,14 @@ namespace DirectsumTest {
     axes:{1}
   ====================*/
   TEST(Directsum, allDType) {
-    for (auto device : device_list) {  // now only test for cpu device.
-      for (auto dtype1 : dtype_list) {
-        for (auto dtype2 : dtype_list) {
-          Tensor T1 = Tensor({12, 5, 7}, dtype1, device);
-          Tensor T2 = Tensor({12, 5, 8}, dtype2, device);
-          InitTensorUniform(T1, rand_seed1 = 0);
-          InitTensorUniform(T2, rand_seed2 = 1);
-          std::vector<cytnx_uint64> shared_axes = {1};
-          ExcuteDirectsumTest(T1, T2, shared_axes);
-        }
+    for (auto dtype1 : dtype_list) {
+      for (auto dtype2 : dtype_list) {
+        Tensor T1 = Tensor({12, 5, 7}, dtype1);
+        Tensor T2 = Tensor({12, 5, 8}, dtype2);
+        InitTensorUniform(T1, rand_seed1 = 0);
+        InitTensorUniform(T2, rand_seed2 = 1);
+        std::vector<cytnx_uint64> shared_axes = {1};
+        ExcuteDirectsumTest(T1, T2, shared_axes);
       }
     }
   }

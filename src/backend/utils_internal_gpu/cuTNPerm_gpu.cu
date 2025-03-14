@@ -2,9 +2,6 @@
 #include "cuAlloc_gpu.hpp"
 #include "backend/Storage.hpp"
 #include <algorithm>
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
 #ifdef UNI_GPU
   #ifdef UNI_CUTENSOR
