@@ -1,0 +1,170 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "openblas-cpu",
+      "description": "OpenBLAS as the BLAS vendor with CPU-only support.",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/libcytnx",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "OFF",
+        "USE_MKL": "OFF",
+        "BUILD_PYTHON": "ON",
+        "BACKEND_TORCH": "OFF",
+        "USE_HPTT": "ON",
+        "HPTT_ENABLE_FINE_TUNE": "ON",
+        "USE_CUDA": "OFF",
+        "RUN_TESTS": "OFF",
+        "RUN_BENCHMARKS": "OFF",
+        "USE_DEBUG": "OFF",
+        "BUILD_DOC": "OFF",
+        "DEV_MODE": "OFF"
+      }
+    },
+    {
+      "name": "mkl",
+      "hidden": true,
+      "description": "A base preset overriding OpenBLAS variables with MKL variables.",
+      "cacheVariables": {
+        "USE_MKL": "ON"
+      }
+    },
+    {
+      "name": "mkl-cpu",
+      "displayName": "mkl-cpu",
+      "description": "Intel MKL as the BLAS vendor with CPU-only support.",
+      "inherits": ["mkl", "default"]
+    },
+    {
+      "name": "openblas-cuda",
+      "displayName": "openblas-cuda",
+      "description": "OpenBLAS as the BLAS vendor with CUDA support.",
+      "inherits": "default",
+      "cacheVariables": {
+        "USE_CUDA": "ON",
+        "USE_CUTT": "ON",
+        "CUTT_ENABLE_FINE_TUNE": "ON",
+        "USE_CUTENSOR": "ON",
+        "USE_CUQUANTUM": "ON"
+      }
+    },
+    {
+      "name": "mkl-cuda",
+      "displayName": "mkl-cuda",
+      "description": "Intel MKL as the BLAS vendor with CUDA support.",
+      "inherits": ["mkl", "openblas-cuda"]
+    },
+    {
+      "name": "debug",
+      "hidden": true,
+      "description": "A base preset overriding release variables with debug variables.",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "USE_DEBUG": "ON",
+        "RUN_TESTS": "ON",
+        "RUN_BENCHMARKS": "OFF",
+        "BUILD_DOC": "OFF",
+        "DEV_MODE": "OFF"
+      }
+    },
+    {
+      "name": "debug-openblas-cpu",
+      "displayName": "debug-openblas-cpu",
+      "description": "Debug build: OpenBLAS as the BLAS vendor with CPU-only support.",
+      "inherits": ["debug", "default"]
+    },
+    {
+      "name": "debug-mkl-cpu",
+      "displayName": "debug-mkl-cpu",
+      "description": "Debug build: Intel MKL as the BLAS vendor with CPU-only support.",
+      "inherits": ["debug", "mkl-cpu"]
+    },
+    {
+      "name": "debug-openblas-cuda",
+      "displayName": "debug-openblas-cuda",
+      "description": "Debug build: OpenBLAS as the BLAS vendor with CUDA support.",
+      "inherits": ["debug", "openblas-cuda"]
+    },
+    {
+      "name": "debug-mkl-cuda",
+      "displayName": "debug-mkl-cuda",
+      "description": "Debug build: Intel MKL as the BLAS vendor with CUDA support.",
+      "inherits": ["debug", "mkl-cuda"]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "displayName": "openblas-cpu",
+      "description": "Build using OpenBLAS with CPU-only support.",
+      "configurePreset": "default",
+      "targets": ["all", "install"],
+      "jobs": 8
+    },
+    {
+      "name": "openblas-cuda",
+      "description": "Build using OpenBLAS with CUDA support.",
+      "configurePreset": "openblas-cuda",
+      "inherits": "default"
+    },
+    {
+      "name": "mkl-cuda",
+      "description": "Build using Intel MKL with CUDA support.",
+      "configurePreset": "mkl-cuda",
+      "inherits": "default"
+    },
+    {
+      "name": "debug-openblas-cpu",
+      "description": "Debug build using OpenBLAS with CPU-only support.",
+      "configurePreset": "debug",
+      "inherits": "default"
+    },
+    {
+      "name": "debug-mkl-cpu",
+      "description": "Debug build using Intel MKL with CPU-only support.",
+      "configurePreset": "debug-mkl-cpu",
+      "inherits": "default"
+    },
+    {
+      "name": "debug-openblas-cuda",
+      "description": "Debug build using OpenBLAS with CUDA support.",
+      "configurePreset": "debug-openblas-cuda",
+      "inherits": "default"
+    },
+    {
+      "name": "debug-mkl-cuda",
+      "description": "Debug build using Intel MKL with CUDA support.",
+      "configurePreset": "debug-mkl-cuda",
+      "inherits": "default"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "displayName": "cpu-only",
+      "description": "Run tests for CPU-only builds.",
+      "configurePreset": "debug",
+      "output": {
+        "outputOnFailure": true,
+        "verbosity": "verbose"
+      },
+      "execution": {
+        "jobs": 8
+      }
+    },
+    {
+      "name": "cpu-and-cuda",
+      "description": "Run tests for builds with CUDA support.",
+      "configurePreset": "debug-openblas-cuda",
+      "inherits": "default"
+    }
+  ]
+}
