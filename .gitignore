@@ -1,12 +1,22 @@
-*.e
-*.o
-*.so
+# Python
 __pycache__
 .python-version
-/build*
-.cache/
+
+# CMake
+CMakeUserPresets.json
+
+# Visual Studio Code
 .vscode/
+
+# this project
+build/
 Testing/
+
+# need to be cleaned up
+.cache/
 *.swp
 *.swo
 dev_test
+*.e
+*.o
+*.so
