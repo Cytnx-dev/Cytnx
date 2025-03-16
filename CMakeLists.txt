@@ -8,7 +8,7 @@ message(STATUS "")
 # #####################################################################
 # ## CMAKE and CXX VERSION
 # #####################################################################
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_ARCHITECTURES
 
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
