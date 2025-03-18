@@ -212,4 +212,7 @@ if(USE_HPTT)
 
     # relocate hptt
     install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
+
+    # XXX: `cytnx` itself doesn't need this linking flag. Why?
+    target_link_options(cytnx INTERFACE -fopenmp)
 endif()
