@@ -44,11 +44,9 @@ if (USE_HPTT)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
     ExternalProject_Add(hptt
-    PREFIX hptt_src
+    PREFIX hptt
     GIT_REPOSITORY https://github.com/kaihsin/hptt.git
     GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
-    BINARY_DIR hptt_src/build
-    INSTALL_DIR hptt
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
     )
     message( STATUS " Build HPTT Support: YES")
@@ -204,15 +202,25 @@ endif()
 #####################################################################
 if(USE_HPTT)
     ExternalProject_Get_Property(hptt install_dir)
-    include_directories(${install_dir}/include)
+    cmake_path(APPEND install_dir "include" OUTPUT_VARIABLE hptt_include_dir)
+    cmake_path(APPEND install_dir "lib" OUTPUT_VARIABLE hptt_lib_dir)
+    include_directories("${hptt_include_dir}")
     message(STATUS "hptt install dir: ${install_dir}")
+    unset(install_dir)
     add_dependencies(cytnx hptt)
     target_compile_definitions(cytnx PRIVATE UNI_HPTT)
-    target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libhptt.a)
-
-    # relocate hptt
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
+    target_link_libraries(cytnx PUBLIC "${hptt_lib_dir}/libhptt.a")
 
     # XXX: `cytnx` itself doesn't need this linking flag. Why?
     target_link_options(cytnx INTERFACE -fopenmp)
+
+    # Install HPTT to input CMAKE_INSTALL_PREFIX.
+    cmake_path(APPEND CMAKE_INSTALL_INCLUDEDIR "hptt" OUTPUT_VARIABLE hptt_install_include_dir)
+    # Suffix the source folder with / to copy the files and folders in the source folder to the
+    # destination folder instead of copying the source folder itself.
+    # XXX: Do we have to ship the header files of HPTT? Is shipping the static library only enough?
+    install(DIRECTORY "${hptt_include_dir}/" DESTINATION "${hptt_install_include_dir}")
+    # CMake doesn't combine external static libraries into our static library, so we have to
+    # distribute the external static libraries manually.
+    install(DIRECTORY "${hptt_lib_dir}/" TYPE LIB)
 endif()
