@@ -11,21 +11,7 @@
 #include "utils/vec_clone.hpp"
 
 namespace cytnx {
-  ///@cond
-  struct __sym {
-    enum __stype { U = -1, Z = 0 };
-  };
 
-  class SymmetryType_class {
-   public:
-    enum : int {
-      Void = -99,
-      U = -1,
-      Z = 0,
-    };
-    std::string getname(const int &stype);
-  };
-  ///@endcond
   /**
    * @brief Symmetry type.
    * @details It is about the type of the Symmetry object
@@ -39,7 +25,11 @@ namespace cytnx {
    *
    *  @see Symmetry::stype(), Symmetry::stype_str()
    */
-  extern SymmetryType_class SymType;
+  enum SymmetryType : int {
+    Void = -99,
+    U = -1,
+    Z = 0,
+  };
 
   // helper class, has implicitly conversion to vector<int64>!
   class Qs {
@@ -67,8 +57,8 @@ namespace cytnx {
    public:
     int stype_id;
     int n;
-    Symmetry_base() : stype_id(SymType.Void){};
-    Symmetry_base(const int &n) : stype_id(SymType.Void) { this->Init(n); };
+    Symmetry_base() : stype_id(SymmetryType::Void){};
+    Symmetry_base(const int &n) : stype_id(SymmetryType::Void) { this->Init(n); };
     Symmetry_base(const Symmetry_base &rhs);
     Symmetry_base &operator=(const Symmetry_base &rhs);
 
@@ -98,10 +88,10 @@ namespace cytnx {
   ///@cond
   class U1Symmetry : public Symmetry_base {
    public:
-    U1Symmetry() { this->stype_id = SymType.U; };
+    U1Symmetry() { this->stype_id = SymmetryType::U; };
     U1Symmetry(const int &n) { this->Init(n); };
     void Init(const int &n) {
-      this->stype_id = SymType.U;
+      this->stype_id = SymmetryType::U;
       this->n = n;
       if (n != 1) cytnx_error_msg(1, "%s", "[ERROR] U1Symmetry should set n = 1");
     }
@@ -123,10 +113,10 @@ namespace cytnx {
   ///@cond
   class ZnSymmetry : public Symmetry_base {
    public:
-    ZnSymmetry() { this->stype_id = SymType.Z; };
+    ZnSymmetry() { this->stype_id = SymmetryType::Z; };
     ZnSymmetry(const int &n) { this->Init(n); };
     void Init(const int &n) {
-      this->stype_id = SymType.Z;
+      this->stype_id = SymmetryType::Z;
       this->n = n;
       if (n <= 1) cytnx_error_msg(1, "%s", "[ERROR] ZnSymmetry can only have n > 1");
     }
@@ -159,10 +149,10 @@ namespace cytnx {
     };  // default is U1Symmetry
 
     void Init(const int &stype = -1, const int &n = 0) {
-      if (stype == SymType.U) {
+      if (stype == SymmetryType::U) {
         boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(1));
         this->_impl = tmp;
-      } else if (stype == SymType.Z) {
+      } else if (stype == SymmetryType::Z) {
         boost::intrusive_ptr<Symmetry_base> tmp(new ZnSymmetry(n));
         this->_impl = tmp;
       } else {
@@ -205,7 +195,7 @@ namespace cytnx {
     \verbinclude example/Symmetry/U1.py.out
 
     */
-    static Symmetry U1() { return Symmetry(SymType.U, 1); }
+    static Symmetry U1() { return Symmetry(SymmetryType::U, 1); }
 
     /**
     @brief create a Zn descrete symmetry object with \f$n\in\mathbb{N}\f$
@@ -236,7 +226,7 @@ namespace cytnx {
     \verbinclude example/Symmetry/Zn.py.out
 
     */
-    static Symmetry Zn(const int &n) { return Symmetry(SymType.Z, n); }
+    static Symmetry Zn(const int &n) { return Symmetry(SymmetryType::Z, n); }
 
     /**
     @brief return a clone instance of current Symmetry object.
@@ -259,7 +249,7 @@ namespace cytnx {
     }
 
     /**
-    @brief return the symmetry type-id of current Symmetry object, see cytnx::SymType.
+    @brief return the symmetry type-id of current Symmetry object, see cytnx::SymmetryType::
     @return [int]
         the symmetry type-id.
 
@@ -279,13 +269,17 @@ namespace cytnx {
 
     /**
     @brief return the symmetry type name of current Symmetry object in string form, see
-    cytnx::SymType.
+    cytnx::SymmetryType::
     @return [std::string]
         the symmetry type name.
 
     */
     std::string stype_str() const {
-      return SymType.getname(this->_impl->stype_id) + std::to_string(this->_impl->n);
+      if (this->_impl->stype_id == SymmetryType::U) {
+        return "U1";
+      }
+      // TODO: use std::format after applying C++20
+      return std::string("Z") + std::to_string(this->_impl->n);
     }
 
     /**

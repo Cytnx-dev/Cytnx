@@ -71,10 +71,10 @@ namespace CommonDataGen {
     // construct bonds
     std::vector<std::vector<cytnx_int64>> qnums1 = {{0}, {1}, {0}, {1}, {2}};
     std::vector<cytnx_uint64> degs = {1, 2, 3, 4, 5};
-    auto syms = std::vector<Symmetry>(qnums1[0].size(), Symmetry(SymType.U));
+    auto syms = std::vector<Symmetry>(qnums1[0].size(), Symmetry(SymmetryType::U));
     auto bond_ket = Bond(BD_KET, qnums1, degs, syms);
     std::vector<std::vector<cytnx_int64>> qnums2 = {{-1}, {-1}, {0}, {2}, {1}};
-    syms = std::vector<Symmetry>(qnums2[0].size(), Symmetry(SymType.U));
+    syms = std::vector<Symmetry>(qnums2[0].size(), Symmetry(SymmetryType::U));
     auto bond_bra = Bond(BD_BRA, qnums2, degs, syms);
     std::vector<Bond> bonds = {bond_ket, bond_ket, bond_bra, bond_bra};
     for (auto dtype : dtype_list1) {
@@ -95,7 +95,7 @@ namespace CommonDataGen {
     std::vector<std::vector<cytnx_int64>> qnums1 = {{0}, {1}, {0}, {1}};
     std::vector<cytnx_uint64> degs = {1, 2, 3, 4};
     int n;  // Zn
-    auto syms = std::vector<Symmetry>({Symmetry(SymType.Z, n = 2)});  // Z2
+    auto syms = std::vector<Symmetry>({Symmetry(SymmetryType::Z, n = 2)});  // Z2
     auto bond_ket = Bond(BD_KET, qnums1, degs, syms);
     std::vector<std::vector<cytnx_int64>> qnums2 = {{0}, {1}, {1}};
     degs = {2, 1, 3};
@@ -120,7 +120,7 @@ namespace CommonDataGen {
     std::vector<std::vector<cytnx_int64>> qnums1 = {{0}, {1}, {0}, {2}};
     std::vector<cytnx_uint64> degs = {1, 2, 3, 4};
     int n;  // Zn
-    auto syms = std::vector<Symmetry>({Symmetry(SymType.Z, n = 3)});  // Z3
+    auto syms = std::vector<Symmetry>({Symmetry(SymmetryType::Z, n = 3)});  // Z3
     auto bond_ket = Bond(BD_KET, qnums1, degs, syms);
     std::vector<std::vector<cytnx_int64>> qnums2 = {{2}, {1}, {1}};
     degs = {2, 1, 3};
@@ -146,7 +146,7 @@ namespace CommonDataGen {
     std::vector<cytnx_uint64> degs = {1, 2, 3, 4};
     int n;  // Zn
     auto syms = std::vector<Symmetry>(  // U1xZ2
-      {Symmetry(SymType.U), Symmetry(SymType.Z, n = 2)});
+      {Symmetry(SymmetryType::U), Symmetry(SymmetryType::Z, n = 2)});
     auto bond_ket = Bond(BD_KET, qnums1, degs, syms);
     std::vector<std::vector<cytnx_int64>> qnums2 = {{2, 0}, {1, 1}, {1, 1}};
     degs = {2, 1, 3};
@@ -169,7 +169,7 @@ namespace CommonDataGen {
   TEST(CommonDataGen, U1_sym_zeros_gen) {
     std::vector<std::vector<cytnx_int64>> qnums1 = {{0}, {1}, {0}, {2}};
     std::vector<cytnx_uint64> degs = {1, 2, 3, 4};
-    auto syms = std::vector<Symmetry>({Symmetry(SymType.U)});  // U1
+    auto syms = std::vector<Symmetry>({Symmetry(SymmetryType::U)});  // U1
     auto bond_ket = Bond(BD_KET, qnums1, degs, syms);
     std::vector<std::vector<cytnx_int64>> qnums2 = {{2}, {1}, {1}};
     degs = {2, 1, 3};
@@ -186,7 +186,7 @@ namespace CommonDataGen {
   TEST(CommonDataGen, U1_sym_one_elem_gen) {
     std::vector<std::vector<cytnx_int64>> qnums1 = {{0}};
     std::vector<cytnx_uint64> degs = {1};
-    auto syms = std::vector<Symmetry>({Symmetry(SymType.U)});  // U1
+    auto syms = std::vector<Symmetry>({Symmetry(SymmetryType::U)});  // U1
     auto bond_ket = Bond(BD_KET, qnums1, degs, syms);
     std::vector<std::vector<cytnx_int64>> qnums2 = {{0}};
     degs = {1};

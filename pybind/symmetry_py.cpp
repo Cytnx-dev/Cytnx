@@ -18,9 +18,9 @@ using namespace pybind11::literals;
 using namespace cytnx;
 
 void symmetry_binding(py::module &m) {
-  py::enum_<__sym::__stype>(m, "SymType")
-    .value("Z", __sym::__stype::Z)
-    .value("U", __sym::__stype::U)
+  py::enum_<SymmetryType>(m, "SymType")
+    .value("Z", SymmetryType::Z)
+    .value("U", SymmetryType::U)
     .export_values();
 
   py::class_<Qs>(m, "_cQs")
