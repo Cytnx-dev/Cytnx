@@ -1,14 +1,17 @@
 #ifndef CYTNX_SYMMETRY_H_
 #define CYTNX_SYMMETRY_H_
 
-#include "Type.hpp"
+#include <fstream>
+#include <ostream>
+#include <string>
+#include <vector>
+
+#include "boost/smart_ptr/intrusive_ptr.hpp"
+
 #include "cytnx_error.hpp"
 #include "intrusive_ptr_base.hpp"
-#include <string>
-#include <cstdio>
-#include <iostream>
-#include <ostream>
-#include "utils/vec_clone.hpp"
+#include "Type.hpp"
+#include "utils/dynamic_arg_resolver.hpp"
 
 namespace cytnx {
 
@@ -48,7 +51,7 @@ namespace cytnx {
     explicit operator std::vector<cytnx_int64>() const { return this->tmpQs; };
 
     std::pair<std::vector<cytnx_int64>, cytnx_uint64> operator>>(const cytnx_uint64 &dim) {
-      return make_pair(this->tmpQs, dim);
+      return std::make_pair(this->tmpQs, dim);
     }
   };
 

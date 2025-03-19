@@ -1,6 +1,9 @@
 #include "Symmetry.hpp"
-#include <string>
+
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
