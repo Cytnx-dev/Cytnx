@@ -7,7 +7,6 @@
 #include "UniTensor.hpp"
 #include <iostream>
 #include <fstream>
-#include "utils/vec_clone.hpp"
 #include "Accessor.hpp"
 #include <vector>
 #include <initializer_list>

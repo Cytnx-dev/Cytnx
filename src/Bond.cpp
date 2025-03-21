@@ -285,8 +285,7 @@ namespace cytnx {
     vector<vector<cytnx_int64>> tmp_qnums = this->_qnums;
     if (this->_degs.size()) {
       // new format
-      counts = vec_clone(this->_degs);
-
+      counts = this->_degs;
     } else {
       // old format
       std::sort(tmp_qnums.begin(), tmp_qnums.end(), _fx_compare_vec_dec);
