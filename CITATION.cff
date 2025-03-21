@@ -1,6 +1,12 @@
 cff-version: 1.2.0
-message: "If you use this software, please cite it as below."
-title: "The Cytnx Library for Tensor Networks"
-version: v0.9.7
+title: The Cytnx Library for Tensor Networks
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - name: Cytnx
 doi: 10.48550/arXiv.2401.01921
-url: "https://kaihsinwu.gitlab.io/Cytnx_doc/install.html"
+url: 'https://cytnx-dev.github.io/Cytnx_doc'
+version: 1.0.0
+date-released: '2025-01-23'
