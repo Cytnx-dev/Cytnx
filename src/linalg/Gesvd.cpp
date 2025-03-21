@@ -129,11 +129,15 @@ namespace cytnx {
 
       if (is_U) {
         cytnx::UniTensor &Cy_U = outCyT[t];
-        vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
+        cytnx_error_msg(Tin.rowrank() > oldshape.size(),
+                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+                        "contained tensor.%s",
+                        "\n");
+        vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
         shapeU.push_back(-1);
         outT[t].reshape_(shapeU);
         Cy_U.Init(outT[t], false, Tin.rowrank());
-        vector<string> labelU = vec_clone(oldlabel, Tin.rowrank());
+        vector<string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
         labelU.push_back(Cy_S.labels()[0]);
         Cy_U.set_labels(labelU);
         t++;  // U
