@@ -1,5 +1,6 @@
 #include "backend/Storage.hpp"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
@@ -12,7 +13,6 @@
 #include "backend/Scalar.hpp"
 #include "backend/utils_internal_cpu/Alloc_cpu.hpp"
 #include "backend/utils_internal_cpu/Complexmem_cpu.hpp"
-#include "backend/utils_internal_cpu/Fill_cpu.hpp"
 #include "backend/utils_internal_cpu/Movemem_cpu.hpp"
 #include "backend/utils_internal_cpu/SetZeros_cpu.hpp"
 #include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
@@ -744,7 +744,8 @@ namespace cytnx {
       return;
     } else {
       if (this->device_ == Device.cpu) {
-        utils_internal::FillCpu(this->start_, static_cast<DType>(value), this->size_);
+        std::fill_n(reinterpret_cast<DType *>(this->start_), this->size_,
+                    static_cast<DType>(value));
       } else {
 #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(this->device_));
