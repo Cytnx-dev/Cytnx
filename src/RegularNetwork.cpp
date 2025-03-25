@@ -1096,7 +1096,7 @@ namespace cytnx {
       // 2. contract using postorder traversal:
       // cout << this->CtTree.nodes_container.size() << endl;
       stack<std::shared_ptr<Node>> stk;
-      std::shared_ptr<Node> root = std::make_shared<Node>(this->CtTree.nodes_container.back());
+      std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
       root->set_root_ptrs();  // Add this line
       int ly = 0;
       bool ict;
