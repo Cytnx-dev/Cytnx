@@ -12,7 +12,6 @@
 #include "intrusive_ptr_base.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#include "utils/vec_clone.hpp"
 
 #ifdef BACKEND_TORCH
 #else

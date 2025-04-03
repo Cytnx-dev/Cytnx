@@ -9,7 +9,6 @@ target_sources_local(cytnx
     dynamic_arg_resolver.cpp
     utils.cpp
     #utils_internal_interface.cpp
-    vec_clone.cpp
     vec_concatenate.cpp
     vec_erase.cpp
     vec_intersect.cpp
