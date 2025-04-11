@@ -4,6 +4,7 @@
 #include "linalg.hpp"
 #include "Generator.hpp"
 #include <vector>
+#include "utils/vec_clone.hpp"
 #include "utils/vec_print.hpp"
 #include "utils/vec_concatenate.hpp"
 #include <map>
