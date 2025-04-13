@@ -1,6 +1,9 @@
 #include "Symmetry.hpp"
-#include <string>
+
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -11,18 +14,6 @@ namespace cytnx {
   }
   bool cytnx::Symmetry::operator!=(const cytnx::Symmetry &rhs) const { return !(*this == rhs); }
   //=============================
-
-  std::string cytnx::SymmetryType_class::getname(const int &stype_id) {
-    if (stype_id == this->U) {
-      return string("U");
-    } else if (stype_id == this->Z) {
-      return string("Z");
-    } else {
-      cytnx_error_msg(true, "%s", "[ERROR] invalid stype_id");
-      return string("");
-    }
-    // extend more in here!!
-  }
 
   //==============================
 
@@ -213,7 +204,4 @@ namespace cytnx {
     in.print_info();
     return os;
   }
-
-  //++++++++++++++++++++++++
-  SymmetryType_class SymType;
 };  // namespace cytnx
