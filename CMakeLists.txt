@@ -8,7 +8,7 @@ message(STATUS "")
 # #####################################################################
 # ## CMAKE and CXX VERSION
 # #####################################################################
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_ARCHITECTURES
 
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
@@ -17,9 +17,7 @@ message(STATUS ${CMAKE_MODULE_PATH})
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# set(CMAKE_CXX_EXTENSIONS OFF)
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
@@ -74,26 +72,134 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/vinfo.tmp" "${CYTNX_VARIANT_INFO}" "")
 # #####################################################################
 # ## COMMAND LINE OPTIONS
 # #####################################################################
-option(BACKEND_TORCH "Build Cytnx with pytorch backend (requires pytorch)" OFF)
 
-# # the following are only referenced when BACKEND_TORCH=OFF
-option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
-option(BUILD_PYTHON "Build Python wrapper" ON)
-option(USE_MKL "Build using MKL" ON)
-option(USE_OMP "Build Cytnx with OpenMP" OFF)
-option(BUILD_DOC "Build API docuemntation" OFF)
-option(USE_HPTT "Build Cytnx with HPTT" OFF)
+# -----------------------------------------------------------------------------
+# :Function: require_dependent_variable
+#
+# :Description:
+#   Conditionally creates or validates a cache variable based on a set of
+#   dependency conditions.
+#
+#   The dependency conditions are provided in the *depends* parameter as a
+#   semicolon-separated list. The cache variable is required only when all
+#   these conditions evaluate to true.
+#
+# :Parameters:
+#   - **variable**: The name of the variable to set.
+#   - **default**:  The default value for the variable.
+#   - **type**:     The cache type (e.g., STRING, PATH) for the variable.
+#   - **help**:     A descriptive help message for the variable.
+#   - **depends**:  A semicolon-separated list of dependency conditions.
+#                  The variable is required only if all conditions are met.
+#
+# :Behavior:
+#   - Evaluates each dependency condition; if any condition evaluates to false,
+#     will not update the variable.
+#   - If all conditions are met and the variable is not already defined, the
+#     variable is set to the provided default value in the cache using the
+#     specified type and help message.
+#   - If the variable’s value is empty, a fatal error is raised.
+#
+# :Examples:
+#
+#   .. code-block:: cmake
+#
+#      require_dependent_variable(
+#        PACKAGE_INCLUDE_DIRS
+#        "$ENV{PACKAGE_INCLUDE_DIRS}"
+#        PATH
+#        "Path to the include directory of the package."
+#        "USE_A AND (USE_B OR USE_C);USE_D"
+#      )
+#
+#   In this example, if "USE_A AND (USE_B OR USE_C);USE_D" is true, then
+#   PACKAGE_INCLUDE_DIRS must be defined and non-empty. Otherwise, a fatal error
+#   is raised.
+# -----------------------------------------------------------------------------
+function(require_dependent_variable variable default type help depends)
+  # Evaluate each dependency condition; if any condition is false, exit early.
+  # This is copied from the source code of `cmake_dependent_option` function.
+  set(IS_NOT_AVAILABLE 0)
+  foreach(d ${depends})
+    cmake_language(EVAL CODE "
+      if (${d})
+      else()
+        set(IS_NOT_AVAILABLE 1)
+      endif()"
+    )
+  endforeach()
+  if(IS_NOT_AVAILABLE)
+    return()
+  endif()
+
+  if(NOT DEFINED ${variable})
+    set(${variable} "${default}" CACHE ${type} "${help}")
+  endif()
+
+  if("${${variable}}" STREQUAL "")
+    message(FATAL_ERROR "\
+Error: Cache variable '${variable}' is required under dependency conditions \
+(${depends}) but its value is empty.
+${help}
+")
+  endif()
+endfunction()
+
+include(CMakeDependentOption)
+
+set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx" CACHE PATH "the destination path for installation")
+option(BUILD_PYTHON "Build Python API. Require Python and pybind11 installed." ON)
+option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
+cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
+cmake_dependent_option(USE_HPTT "Use HPTT library to accelrate tensor transpose." OFF "NOT BACKEND_TORCH" OFF)
+cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Enable fine tune HPTT for the native hardware." OFF "USE_HPTT" OFF)
+# TODO: use variable instead of option to handle HPTT variant.
+cmake_dependent_option(HPTT_ENABLE_ARM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_AVX "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_IBM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
+cmake_dependent_option(USE_CUDA "Enable CUDA support." OFF "NOT BACKEND_TORCH" OFF)
+cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
+cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
+cmake_dependent_option(USE_CUTENSOR "Enable cuTENSOR." OFF "USE_CUDA" OFF)
+require_dependent_variable(CUTENSOR_ROOT "$ENV{CUTENSOR_ROOT}" PATH
+"Please provide CUTENSOR_ROOT in the environment variables.
+CUTENSOR_ROOT is the path to the folder of cuTENSOR." "USE_CUTENSOR")
+cmake_dependent_option(USE_CUQUANTUM "Enable cuQuantum." OFF "USE_CUDA" OFF)
+require_dependent_variable(CUQUANTUM_ROOT "$ENV{CUQUANTUM_ROOT}" PATH
+"Please provide CUQUANTUM_ROOT in the environment variables.
+CUQUANTUM_ROOT is the path to the folder of cuQuantum." "USE_CUQUANTUM")
 option(RUN_TESTS "Run Cytnx tests" OFF)
-option(USE_CUTT "Build Cytnx with CUTT" OFF)
-option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
-option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
-
+option(RUN_BENCHMARKS "Run Cytnx benchmarks" OFF)
+option(USE_DEBUG "Build in debug more and enable address sanitizer" OFF)
+option(BUILD_DOC "Build API docuemntation" OFF)
 option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 
 # #####################################################################
 # ## PROJECT
 # #####################################################################
 project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+if(USE_CUDA)
+  enable_language(CUDA)
+  # Disable generation of "--option-file" flag in compile_commands.json.
+  # This workaround helps VSCode's cpptools extension correctly locate CUDA
+  # include files.
+  # Refer to: https://discourse.cmake.org/t/cmake-target-include-directories-doesnt-export-to-compile-commands-json-when-using-cuda/10072/10
+  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_INCLUDES 0)
+  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_LIBRARIES 0)
+  set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
+endif()
+
+# C++ uses link-time optimization anyway; this enables additionally -flto=auto,
+# for parallel compilation
+# It cannot enable on MacOS since it causes building errors when linking the library libcytnx.a.
+# Error message: Error running link command: no such file or directory make[2]: *** [CMakeFiles/cytnx.dir/build.make:3109: libcytnx.a]
+IF (APPLE)
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
+ELSE ()
+  set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+ENDIF ()
 
 add_library(cytnx STATIC)
 set_property(TARGET cytnx PROPERTY C_VISIBILITY_PRESET hidden)
@@ -114,20 +220,9 @@ target_include_directories(cytnx SYSTEM
   ${Boost_INCLUDE_DIRS}
 )
 
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -Wno-c++11-narrowing -w")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation -fsanitize=address")
-
 target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
-
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat=0 -w -fsized-deallocation -diag-disable=10441")
-
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_DISABLE_AVAILABILITY")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION")
 target_compile_features(cytnx PUBLIC cxx_std_17)
 
-# target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
-# target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
-# set_property(TARGET cytnx PROPERTY CXX_STANDARD 11)
 add_subdirectory(src)
 
 if(USE_DEBUG)
@@ -137,23 +232,14 @@ if(USE_DEBUG)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
 endif()
 
-if(RUN_TESTS)
-  # Include CTest explicitly to suppress the error that DartConfiguration.tcl
-  # is not found
-  include(CTest)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
-  target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
-  add_subdirectory(tests)
-  #add_subdirectory(bm_tests)
-endif()
-
 include(GNUInstallDirs)
 
 if(USE_ICPC)
   target_compile_definitions(cytnx PUBLIC UNI_ICPC)
   # This option is to disable the warning of icpc
   target_compile_options(cytnx PUBLIC -diag-disable=10441)
-  # This option is to maintain consistency of the floating point operation, also try to improve the performance
+  # This option is to maintain consistency of the floating point operation, also
+  # try to improve the performance
   target_compile_options(cytnx PUBLIC -fp-model consistent -fimf-use-svml)
 endif()
 
@@ -204,36 +290,29 @@ endif() # Backend torch
 # ## Get Gtest & benchmark
 # #####################################################################
 if(RUN_TESTS)
-  find_package(GTest REQUIRED)
-  #find_package(benchmark REQUIRED)
-
-
-  #include(FetchContent)
-  #FetchContent_Declare(
-  #  googletest
-  #  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
-  #)
-
-  # For Windows: Prevent overriding the parent project's compiler/linker settings
+  # Include CTest explicitly to suppress the error that DartConfiguration.tcl
+  # is not found
+  include(CTest)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fprofile-arcs -ftest-coverage")
+  target_link_libraries(cytnx PUBLIC "-lgcov --coverage")
+  # "-fopenmp" flag is appended to CMAKE_CXX_FLAGS in CytnxBKNDCMakeLists.cmake.
+  # To make the executalbe targets defined under tests/ link OpenMP correctly,
+  # tests/ must be added after including CytnxBKNDCMakeLists.cmake.
+  add_subdirectory(tests)
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+endif()
 
-  #FetchContent_Declare(
-  #  googlebenchmark
-  #  GIT_REPOSITORY https://github.com/google/benchmark.git
-  #  GIT_TAG v1.7.1) # need master for benchmark::benchmark
-  #set(BENCHMARK_ENABLE_TESTING off) # to suppress benchmark internal tests
-
-  #FetchContent_MakeAvailable(
-  #  googletest
-  #  googlebenchmark)
+if(RUN_BENCHMARKS)
+  # google benchmark
+  find_package(benchmark REQUIRED)
+  message(STATUS "benchmark found at: ${benchmark_DIR}")
+  add_subdirectory(benchmarks)
 endif()
 
 # #######
 # ## Python wrapper
 # #######
 IF(BUILD_PYTHON)
-  # PythonInterp is removed in newer version of cmake
-  # find_package(PythonInterp REQUIRED)
   find_package (Python COMPONENTS Interpreter Development)
   find_package(pybind11 REQUIRED)
 
@@ -403,7 +482,6 @@ message(STATUS "    CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "    BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS "    Link libraries: ${CYTNX_LINK_Libs}")
 
-# # this need to append into the linkflags.tmp
 FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "${CMAKE_CXX_FLAGS}\n" "")
 

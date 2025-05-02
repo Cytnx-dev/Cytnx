@@ -1,10 +1,6 @@
 #include "cuPow_internal.hpp"
 #include "../utils_internal_interface.hpp"
 
-// #ifdef UNI_OMP
-//     #include <omp.h>
-// #endif
-
 namespace cytnx {
 
   namespace linalg_internal {
@@ -73,8 +69,8 @@ namespace cytnx {
                           const cytnx_double &p) {
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
-      cuPow_internal_kernel_d<<<NBlocks, 512>>>((cytnx_double *)out->Mem, (cytnx_double *)ten->Mem,
-                                                Nelem, p);
+      cuPow_internal_kernel_d<<<NBlocks, 512>>>((cytnx_double *)out->data(),
+                                                (cytnx_double *)ten->data(), Nelem, p);
     }
 
     void cuPow_internal_f(boost::intrusive_ptr<Storage_base> &out,
@@ -82,8 +78,8 @@ namespace cytnx {
                           const cytnx_double &p) {
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
-      cuPow_internal_kernel_f<<<NBlocks, 512>>>((cytnx_float *)out->Mem, (cytnx_float *)ten->Mem,
-                                                Nelem, p);
+      cuPow_internal_kernel_f<<<NBlocks, 512>>>((cytnx_float *)out->data(),
+                                                (cytnx_float *)ten->data(), Nelem, p);
     }
 
     void cuPow_internal_cd(boost::intrusive_ptr<Storage_base> &out,
@@ -91,8 +87,8 @@ namespace cytnx {
                            const cytnx_double &p) {
       cytnx_uint32 NBlocks = Nelem / 256;
       if (Nelem % 256) NBlocks += 1;
-      cuPow_internal_kernel_cd<<<NBlocks, 256>>>((cuDoubleComplex *)out->Mem,
-                                                 (cuDoubleComplex *)ten->Mem, Nelem, p);
+      cuPow_internal_kernel_cd<<<NBlocks, 256>>>((cuDoubleComplex *)out->data(),
+                                                 (cuDoubleComplex *)ten->data(), Nelem, p);
     }
 
     void cuPow_internal_cf(boost::intrusive_ptr<Storage_base> &out,
@@ -100,8 +96,8 @@ namespace cytnx {
                            const cytnx_double &p) {
       cytnx_uint32 NBlocks = Nelem / 256;
       if (Nelem % 256) NBlocks += 1;
-      cuPow_internal_kernel_cf<<<NBlocks, 256>>>((cuFloatComplex *)out->Mem,
-                                                 (cuFloatComplex *)ten->Mem, Nelem, p);
+      cuPow_internal_kernel_cf<<<NBlocks, 256>>>((cuFloatComplex *)out->data(),
+                                                 (cuFloatComplex *)ten->data(), Nelem, p);
     }
 
   }  // namespace linalg_internal

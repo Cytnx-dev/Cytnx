@@ -1,5 +1,5 @@
-#ifndef _H_Tensor_
-#define _H_Tensor_
+#ifndef CYTNX_TENSOR_H_
+#define CYTNX_TENSOR_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -492,6 +492,62 @@ namespace cytnx {
     //   this->Init(storage, shape, dtype, device);
     // }
     //@}
+
+    // This mechanism is to remove the 'void' type from Type_list. Taking advantage of it
+    // appearing first ...
+
+    /// @cond
+    struct internal {
+      template <typename Variant>
+      struct exclude_first;
+
+      template <typename First, typename... Rest>
+      struct exclude_first<std::variant<First, Rest...>> {
+        using type = std::variant<Rest...>;
+      };
+    };  // internal
+        /// @endcond
+
+    // std::variant of pointers to Type_list, without void ....
+    using pointer_types =
+      make_variant_from_transform_t<typename internal::exclude_first<Type_list>::type,
+                                    std::add_pointer>;
+
+    // convert this->_impl->_storage._impl->Mem to a typed variant of pointers, excluding void*
+    pointer_types ptr() const;
+
+    // convert this->_impl->_strorage->Mem to the given pointer type.
+    // Throws an exception if T does not match this->dtype
+    template <typename T>
+    T *ptr_as() const {
+      cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
+                      "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
+                      this->dtype(), Type_class::getname(this->dtype()).c_str(),
+                      Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
+      return static_cast<T *>(this->_impl->_storage._impl->data());
+    }
+
+  #ifdef UNI_GPU
+    // std::variant of pointers to Type_list_gpu, without void ....
+    using gpu_pointer_types =
+      make_variant_from_transform_t<typename internal::exclude_first<Type_list_gpu>::type,
+                                    std::add_pointer>;
+
+    // convert this->_impl->_storage->Mem to a typed variant of pointers, excluding void*
+    gpu_pointer_types gpu_ptr() const;
+
+    // convert this->_impl->_strorage->Mem to the given pointer type.
+    // Throws an exception if T does not match this->dtype
+    template <typename T>
+    T *gpu_ptr_as() const {
+      cytnx_error_msg(
+        this->dtype() != Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>,
+        "[ERROR] Attempt to convert dtype %d (%s) to GPU pointer of type %s", this->dtype(),
+        Type_class::getname(this->dtype()).c_str(),
+        Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
+      return static_cast<T *>(this->_impl->_storage._impl->data());
+    }
+  #endif
 
     /**
     @brief Convert a Storage to Tensor
@@ -1464,7 +1520,7 @@ namespace cytnx {
       this->_impl->_storage.resize(oldsize + in.size());
       memcpy(((char *)this->_impl->_storage.data()) +
                oldsize * Type.typeSize(this->dtype()) / sizeof(char),
-             in._impl->Mem, Type.typeSize(in.dtype()) * in.size());
+             in._impl->data(), Type.typeSize(in.dtype()) * in.size());
     }
     /*
     void append(const Tensor &rhs){
@@ -1659,4 +1715,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_TENSOR_H_

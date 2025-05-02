@@ -9,10 +9,6 @@ using namespace std;
 #ifdef BACKEND_TORCH
 #else
 
-  #ifdef UNI_OMP
-    #include <omp.h>
-  #endif
-
 namespace cytnx {
   namespace linalg {
     cytnx::Tensor Directsum(const cytnx::Tensor &T1, const cytnx::Tensor &T2,

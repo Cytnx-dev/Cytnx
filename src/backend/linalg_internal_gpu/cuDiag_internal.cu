@@ -1,10 +1,6 @@
 #include "cuDiag_internal.hpp"
 #include "../utils_internal_interface.hpp"
 
-// #ifdef UNI_OMP
-//     #include <omp.h>
-// #endif
-
 namespace cytnx {
 
   namespace linalg_internal {
@@ -40,10 +36,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_bool *)out->Mem, (cytnx_bool *)ten->Mem, L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_bool *)out->data(),
+                                                 (cytnx_bool *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_bool *)out->Mem,
-                                                         (cytnx_bool *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_bool *)out->data(),
+                                                         (cytnx_bool *)ten->data(), L);
     }
 
     void cuDiag_internal_i16(boost::intrusive_ptr<Storage_base> &out,
@@ -52,11 +49,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_int16 *)out->Mem, (cytnx_int16 *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_int16 *)out->data(),
+                                                 (cytnx_int16 *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_int16 *)out->Mem,
-                                                         (cytnx_int16 *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_int16 *)out->data(),
+                                                         (cytnx_int16 *)ten->data(), L);
     }
 
     void cuDiag_internal_u16(boost::intrusive_ptr<Storage_base> &out,
@@ -65,11 +62,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_uint16 *)out->Mem, (cytnx_uint16 *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_uint16 *)out->data(),
+                                                 (cytnx_uint16 *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_uint16 *)out->Mem,
-                                                         (cytnx_uint16 *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_uint16 *)out->data(),
+                                                         (cytnx_uint16 *)ten->data(), L);
     }
 
     void cuDiag_internal_i32(boost::intrusive_ptr<Storage_base> &out,
@@ -78,11 +75,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_int32 *)out->Mem, (cytnx_int32 *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_int32 *)out->data(),
+                                                 (cytnx_int32 *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_int32 *)out->Mem,
-                                                         (cytnx_int32 *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_int32 *)out->data(),
+                                                         (cytnx_int32 *)ten->data(), L);
     }
 
     void cuDiag_internal_u32(boost::intrusive_ptr<Storage_base> &out,
@@ -91,11 +88,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_uint32 *)out->Mem, (cytnx_uint32 *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_uint32 *)out->data(),
+                                                 (cytnx_uint32 *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_uint32 *)out->Mem,
-                                                         (cytnx_uint32 *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_uint32 *)out->data(),
+                                                         (cytnx_uint32 *)ten->data(), L);
     }
 
     void cuDiag_internal_i64(boost::intrusive_ptr<Storage_base> &out,
@@ -104,11 +101,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_int64 *)out->Mem, (cytnx_int64 *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_int64 *)out->data(),
+                                                 (cytnx_int64 *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_int64 *)out->Mem,
-                                                         (cytnx_int64 *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_int64 *)out->data(),
+                                                         (cytnx_int64 *)ten->data(), L);
     }
 
     void cuDiag_internal_u64(boost::intrusive_ptr<Storage_base> &out,
@@ -117,11 +114,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_uint64 *)out->Mem, (cytnx_uint64 *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_uint64 *)out->data(),
+                                                 (cytnx_uint64 *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_uint64 *)out->Mem,
-                                                         (cytnx_uint64 *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_uint64 *)out->data(),
+                                                         (cytnx_uint64 *)ten->data(), L);
     }
 
     void cuDiag_internal_d(boost::intrusive_ptr<Storage_base> &out,
@@ -130,11 +127,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_double *)out->Mem, (cytnx_double *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_double *)out->data(),
+                                                 (cytnx_double *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_double *)out->Mem,
-                                                         (cytnx_double *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_double *)out->data(),
+                                                         (cytnx_double *)ten->data(), L);
     }
 
     void cuDiag_internal_f(boost::intrusive_ptr<Storage_base> &out,
@@ -143,11 +140,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 512;
       if (L % 512) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_float *)out->Mem, (cytnx_float *)ten->Mem,
-                                                 L);
+        cuDiag_internal_kernel<<<NBlocks, 512>>>((cytnx_float *)out->data(),
+                                                 (cytnx_float *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_float *)out->Mem,
-                                                         (cytnx_float *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 512>>>((cytnx_float *)out->data(),
+                                                         (cytnx_float *)ten->data(), L);
     }
 
     void cuDiag_internal_cd(boost::intrusive_ptr<Storage_base> &out,
@@ -156,11 +153,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 256;
       if (L % 256) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 256>>>((cuDoubleComplex *)out->Mem,
-                                                 (cuDoubleComplex *)ten->Mem, L);
+        cuDiag_internal_kernel<<<NBlocks, 256>>>((cuDoubleComplex *)out->data(),
+                                                 (cuDoubleComplex *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 256>>>((cuDoubleComplex *)out->Mem,
-                                                         (cuDoubleComplex *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 256>>>((cuDoubleComplex *)out->data(),
+                                                         (cuDoubleComplex *)ten->data(), L);
     }
 
     void cuDiag_internal_cf(boost::intrusive_ptr<Storage_base> &out,
@@ -169,11 +166,11 @@ namespace cytnx {
       cytnx_uint32 NBlocks = L / 256;
       if (L % 256) NBlocks += 1;
       if (isrank2)
-        cuDiag_internal_kernel<<<NBlocks, 256>>>((cuFloatComplex *)out->Mem,
-                                                 (cuFloatComplex *)ten->Mem, L);
+        cuDiag_internal_kernel<<<NBlocks, 256>>>((cuFloatComplex *)out->data(),
+                                                 (cuFloatComplex *)ten->data(), L);
       else
-        cuDiag_internal_getdiag_kernel<<<NBlocks, 256>>>((cuFloatComplex *)out->Mem,
-                                                         (cuFloatComplex *)ten->Mem, L);
+        cuDiag_internal_getdiag_kernel<<<NBlocks, 256>>>((cuFloatComplex *)out->data(),
+                                                         (cuFloatComplex *)ten->data(), L);
     }
 
   }  // namespace linalg_internal

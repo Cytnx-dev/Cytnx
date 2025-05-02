@@ -68,7 +68,6 @@ target_sources_local(cytnx
     iMul_internal.cpp
     Mod_internal.cpp
     Outer_internal.cpp
-    Kron_internal.cpp
     Trace_internal.cpp
     Tridiag_internal.cpp
     Sub_internal.cpp

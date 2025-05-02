@@ -238,9 +238,9 @@ namespace cytnx {
       void *a_array[tmp_a_tensors.size()], *b_array[tmp_b_tensors.size()],
         *c_array[c_tensors.size()];
       for (cytnx_uint64 i = 0; i < a_tensors.size(); i++) {
-        a_array[i] = tmp_a_tensors[i].storage()._impl->Mem;
-        b_array[i] = tmp_b_tensors[i].storage()._impl->Mem;
-        c_array[i] = c_tensors[i].storage()._impl->Mem;
+        a_array[i] = tmp_a_tensors[i].storage()._impl->data();
+        b_array[i] = tmp_b_tensors[i].storage()._impl->data();
+        c_array[i] = c_tensors[i].storage()._impl->data();
       }
       vector<blas_int> ms(vec_cast<cytnx_int64, blas_int>(m_array)),
         ns(vec_cast<cytnx_int64, blas_int>(n_array)), ks(vec_cast<cytnx_int64, blas_int>(k_array));

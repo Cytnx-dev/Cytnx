@@ -1,5 +1,6 @@
-#ifndef _H_algo_internal_interface_
-#define _H_algo_internal_interface_
+#ifndef CYTNX_BACKEND_ALGO_INTERNAL_INTERFACE_H_
+#define CYTNX_BACKEND_ALGO_INTERNAL_INTERFACE_H_
+
 #include <iostream>
 #include <vector>
 
@@ -34,4 +35,5 @@ namespace cytnx {
   }  // namespace algo_internal
 
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_ALGO_INTERNAL_INTERFACE_H_

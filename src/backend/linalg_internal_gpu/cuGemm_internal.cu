@@ -16,9 +16,9 @@ namespace cytnx {
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex128 alpha = complex128(a), beta = complex128(b);
 
-      cuDoubleComplex *_out = (cuDoubleComplex *)out->Mem;
-      cuDoubleComplex *_inl = (cuDoubleComplex *)inl->Mem;
-      cuDoubleComplex *_inr = (cuDoubleComplex *)inr->Mem;
+      cuDoubleComplex *_out = (cuDoubleComplex *)out->data();
+      cuDoubleComplex *_inl = (cuDoubleComplex *)inl->data();
+      cuDoubleComplex *_inr = (cuDoubleComplex *)inr->data();
 
       // query working space :
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;
@@ -38,9 +38,9 @@ namespace cytnx {
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_complex64 alpha = complex64(a), beta = complex64(b);
 
-      cuFloatComplex *_out = (cuFloatComplex *)out->Mem;
-      cuFloatComplex *_inl = (cuFloatComplex *)inl->Mem;
-      cuFloatComplex *_inr = (cuFloatComplex *)inr->Mem;
+      cuFloatComplex *_out = (cuFloatComplex *)out->data();
+      cuFloatComplex *_inl = (cuFloatComplex *)inl->data();
+      cuFloatComplex *_inr = (cuFloatComplex *)inr->data();
 
       // query working space :
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;
@@ -61,9 +61,9 @@ namespace cytnx {
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_double alpha = double(a), beta = double(b);
 
-      cytnx_double *_out = (cytnx_double *)out->Mem;
-      cytnx_double *_inl = (cytnx_double *)inl->Mem;
-      cytnx_double *_inr = (cytnx_double *)inr->Mem;
+      cytnx_double *_out = (cytnx_double *)out->data();
+      cytnx_double *_inl = (cytnx_double *)inl->data();
+      cytnx_double *_inr = (cytnx_double *)inr->data();
 
       // query working space :
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;
@@ -82,9 +82,9 @@ namespace cytnx {
       checkCudaErrors(cublasCreate(&cublasH));
       cytnx_float alpha = float(a), beta = float(b);
 
-      cytnx_float *_out = (cytnx_float *)out->Mem;
-      cytnx_float *_inl = (cytnx_float *)inl->Mem;
-      cytnx_float *_inr = (cytnx_float *)inr->Mem;
+      cytnx_float *_out = (cytnx_float *)out->data();
+      cytnx_float *_inl = (cytnx_float *)inl->data();
+      cytnx_float *_inr = (cytnx_float *)inr->data();
 
       // query working space :
       cytnx_int32 blsMl = Ml, blsNr = Nr, blsComm = Comm;

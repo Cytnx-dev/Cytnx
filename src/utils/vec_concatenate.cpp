@@ -14,15 +14,9 @@ namespace cytnx {
   std::vector<bool> vec_concatenate(const std::vector<bool> &inL, const std::vector<bool> &inR) {
     std::vector<bool> out(inL.size() + inR.size());
     // vector bool does not guarentee concurrent modification
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inL.size(); i++) {
       out[i] = inL[i];
     }
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
 
     return out;
@@ -32,15 +26,9 @@ namespace cytnx {
                                            const std::vector<std::string> &inR) {
     std::vector<std::string> out(inL.size() + inR.size());
     // vector bool does not guarentee concurrent modification
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inL.size(); i++) {
       out[i] = inL[i];
     }
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
 
     return out;
@@ -65,13 +53,7 @@ namespace cytnx {
                     "\n");
     out.resize(inL.size() + inR.size());
     // vector bool does not guarentee concurrent modification
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inL.size(); i++) out[i] = inL[i];
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
   }
   template <>
@@ -83,13 +65,7 @@ namespace cytnx {
                     "\n");
     out.resize(inL.size() + inR.size());
     // vector bool does not guarentee concurrent modification
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inL.size(); i++) out[i] = inL[i];
-    // #ifdef UNI_OMP
-    //   #pragma omp parallel for schedule(dynamic)
-    // #endif
     for (cytnx_uint64 i = 0; i < inR.size(); i++) out[inL.size() + i] = inR[i];
   }
 

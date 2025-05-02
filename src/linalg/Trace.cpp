@@ -1,5 +1,6 @@
 #include "linalg.hpp"
 #include "utils/utils.hpp"
+#include "Device.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 // #include "cytnx.hpp"
@@ -7,10 +8,6 @@
 #ifdef BACKEND_TORCH
 #else
   #include "../backend/linalg_internal_interface.hpp"
-
-  #ifdef UNI_OMP
-    #include <omp.h>
-  #endif
 
 using namespace std;
 namespace cytnx {
@@ -67,18 +64,11 @@ namespace cytnx {
       Tensor out = Tensor({Nelem}, Tn.dtype(), Tn.device());
       out.storage().set_zeros();
 
-      int Nomp = 1;
-  #ifdef UNI_OMP
-    #pragma omp parallel
-      {
-        if (omp_get_thread_num() == 0) Nomp = omp_get_num_threads();
-      }
-  #endif
-
       if (shape.size() == 0) {
         // 2d
         if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](true, out, Tn, Ndiag, Nomp, 0, {}, {}, {}, 0,
+          linalg_internal::lii.Trace_ii[Tn.dtype()](true, out, Tn, Ndiag, Device.Ncpus, 0, {}, {},
+                                                    {}, 0,
                                                     0);  // only the first 4 args will be used.
         else {
           cytnx_error_msg(true, "[ERROR][Trace] GPU is under developing.%s", "\n");
@@ -95,8 +85,8 @@ namespace cytnx {
         }
         // std::cout << "entry Trace" << std::endl;
         if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Ndiag, Nelem, Nomp, accu,
-                                                    remain_rank_id, shape, ax1, ax2);
+          linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Ndiag, Nelem, Device.Ncpus,
+                                                    accu, remain_rank_id, shape, ax1, ax2);
         else {
           cytnx_error_msg(true, "[ERROR][Trace] GPU is under developing.%s", "\n");
         }

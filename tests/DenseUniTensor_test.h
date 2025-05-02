@@ -12,7 +12,7 @@ using namespace std;
 using namespace TestTools;
 class DenseUniTensorTest : public ::testing::Test {
  public:
-  const std::string data_dir = "./test_data_base/common/DenseUniTensor/";
+  std::string data_dir = CYTNX_TEST_DATA_DIR "/common/DenseUniTensor/";
   const std::string temp_file_path = std::tmpnam(nullptr);
 
   UniTensor ut_uninit;

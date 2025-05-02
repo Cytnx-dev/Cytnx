@@ -1,5 +1,5 @@
-#ifndef _H_Normal_cpu_
-#define _H_Normal_cpu_
+#ifndef CYTNX_BACKEND_RANDOM_INTERNAL_CPU_NORMAL_INTERNAL_H_
+#define CYTNX_BACKEND_RANDOM_INTERNAL_CPU_NORMAL_INTERNAL_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -23,4 +23,5 @@ namespace cytnx {
 
   }  // namespace random_internal
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_RANDOM_INTERNAL_CPU_NORMAL_INTERNAL_H_

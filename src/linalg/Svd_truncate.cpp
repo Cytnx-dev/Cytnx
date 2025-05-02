@@ -15,8 +15,15 @@ namespace cytnx {
     typedef Accessor ac;
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err, const bool &is_UvT,
-                                     const unsigned int &return_err, const unsigned int &mindim) {
-      cytnx_error_msg(return_err < 0, "[ERROR] return_err can only be positive int%s", "\n");
+                                     const unsigned int &return_err, const cytnx_uint64 &mindim) {
+      // check input arguments
+      // cytnx_error_msg(mindim < 0, "[ERROR][Svd_truncate] mindim must be >=1.%s", "\n");
+      cytnx_error_msg(keepdim < 1, "[ERROR][Svd_truncate] keepdim must be >=1.%s", "\n");
+      // cytnx_error_msg(return_err < 0, "[ERROR][Svd_truncate] return_err cannot be negative%s",
+      //                 "\n");
+      cytnx_error_msg(Tin.shape().size() != 2,
+                      "[ERROR][Svd_truncate] can only operate on rank-2 Tensor.%s", "\n");
+
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> tmps = Svd(Tin, is_UvT);
 
@@ -24,7 +31,8 @@ namespace cytnx {
 
         // dtype should be that of U (or Vt) here, since S is real and Tin could be Int, Bool etc.
         cytnx::linalg_internal::lii.memcpyTruncation_ii[tmps[1].dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err, mindim);
+          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_UvT, is_UvT, return_err,
+          (mindim < 1 ? 1 : mindim));
 
         std::vector<Tensor> outT;
         outT.push_back(tmps[0]);
@@ -53,8 +61,9 @@ namespace cytnx {
 
         return outT;
   #else
-        cytnx_error_msg(true, "[Svd_truncate] fatal error,%s",
-                        "try to call the gpu section without CUDA support.\n");
+        cytnx_error_msg(
+          true, "[Error][Svd_truncate] Trying to call the gpu section without CUDA support%s",
+          "\n");
         return std::vector<Tensor>();
   #endif
       }
@@ -69,7 +78,7 @@ namespace cytnx {
 
     void _svd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
-                                const unsigned int &return_err, const unsigned int &mindim) {
+                                const unsigned int &return_err, const cytnx_uint64 &mindim) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -110,13 +119,17 @@ namespace cytnx {
       if (is_UvT) {
         cytnx::UniTensor &Cy_U = outCyT[t];
         // shape
-        vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
+        cytnx_error_msg(Tin.rowrank() > oldshape.size(),
+                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+                        "contained tensor.%s",
+                        "\n");
+        vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
         shapeU.push_back(-1);
 
         outT[t].reshape_(shapeU);
 
         Cy_U.Init(outT[t], false, Tin.rowrank());
-        vector<string> labelU = vec_clone(oldlabel, Tin.rowrank());
+        vector<string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
         labelU.push_back(Cy_S.labels()[0]);
         Cy_U.set_labels(labelU);
         t++;  // U
@@ -172,42 +185,38 @@ namespace cytnx {
 
     void _svd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
-                                const int &return_err, const unsigned int &mindim) {
+                                const int &return_err, const cytnx_uint64 &mindim) {
+      // currently, Gesvd is used as a standard for the full SVD before truncation
       cytnx_uint64 keep_dim = keepdim;
 
       outCyT = linalg::Gesvd(Tin, is_UvT, is_UvT);
 
-      // process truncate:
-      // 1) concate all s vals from all blk
+      // process truncation:
+      // 1) concate all S vals from all blk
       Tensor Sall = outCyT[0].get_block_(0);
       for (int i = 1; i < outCyT[0].Nblocks(); i++) {
         Sall = algo::Concatenate(Sall, outCyT[0].get_block_(i));
       }
-      Sall = algo::Sort(Sall);
+      Sall = algo::Sort(Sall);  // all singular values, starting from the smallest
 
-      // 2) get the minimum base on the args input.
+      // 2) get the minimum S value based on the args input.
       Scalar Smin;
       cytnx_uint64 smidx;
-      if (keep_dim < Sall.shape()[0]) {
-        smidx = Sall.shape()[0] - keep_dim;
+      cytnx_uint64 Sshape = Sall.shape()[0];
+      if (keep_dim < Sshape) {
+        smidx = Sshape - keep_dim;
         Smin = Sall.storage()(smidx);
-        while ((Smin < err)) {
-          keep_dim -= 1;
-          if (keep_dim == 0) break;
-          smidx = Sall.shape()[0] - keep_dim;
-          Smin = Sall.storage()(smidx);
-        }
-
       } else {
-        keep_dim = Sall.shape()[0];
-        Smin = Sall.storage()(0);
+        keep_dim = Sshape;
         smidx = 0;
-        while ((Smin < err) and keep_dim - 1 > mindim) {
-          keep_dim -= 1;
-          if (keep_dim == 0) break;
-          smidx = Sall.shape()[0] - keep_dim;
-          Smin = Sall.storage()(smidx);
-        }
+        Smin = Sall.storage()(0);
+      }
+      while ((Smin < err) and (keep_dim > (mindim < 1 ? 1 : mindim))) {
+        // at least one singular value is always kept!
+        keep_dim--;
+        // if (keep_dim == 0) break;
+        smidx++;
+        Smin = Sall.storage()(smidx);
       }
 
       // traversal each block and truncate!
@@ -226,9 +235,9 @@ namespace cytnx {
       for (int b = 0; b < S.Nblocks(); b++) {
         Storage stmp = S.get_block_(b).storage();
         cytnx_int64 kdim = 0;
-        for (int i = stmp.size() - 1; i >= 0; i--) {
-          if (stmp(i) >= Smin) {
-            kdim = i + 1;
+        for (int i = stmp.size(); i > 0; i--) {
+          if (stmp(i - 1) >= Smin) {
+            kdim = i;
             break;
           }
         }
@@ -489,11 +498,17 @@ namespace cytnx {
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
                                                const bool &is_UvT, const unsigned int &return_err,
-                                               const unsigned int &mindim) {
+                                               const cytnx_uint64 &mindim) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg((Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
-                      "[Svd][ERROR] Svd for UniTensor should have rank>1 and rank>rowrank>0%s",
-                      "\n");
+      cytnx_error_msg(
+        (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
+        "[ERROR][Svd_truncate] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s", "\n");
+
+      // check input arguments
+      // cytnx_error_msg(mindim < 0, "[ERROR][Svd_truncate] mindim must be >=1%s", "\n");
+      cytnx_error_msg(keepdim < 1, "[ERROR][Svd_truncate] keepdim must be >=1%s", "\n");
+      // cytnx_error_msg(return_err < 0, "[ERROR][Svd_truncate] return_err cannot be negative%s",
+      //                 "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {

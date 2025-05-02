@@ -1,5 +1,5 @@
-#ifndef _H_UniTensor_
-#define _H_UniTensor_
+#ifndef CYTNX_UNITENSOR_H_
+#define CYTNX_UNITENSOR_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -732,15 +732,6 @@ namespace cytnx {
                                                  const cytnx_uint64 &rowrank = 0);
     boost::intrusive_ptr<UniTensor_base> to_dense();
     void to_dense_();
-    /**
-     * @brief
-     *
-     * @deprecated
-     *
-     * @param indicators
-     * @param force
-     * @param by_label
-     */
     void combineBond(const std::vector<std::string> &indicators, const bool &force = true);
     void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
                       const bool &by_label);
@@ -3179,16 +3170,17 @@ namespace cytnx {
       return *this;
     }
     /**
-    @deprecated
-    @brief Set new labels for all the bonds.
-    @param[in] new_labels the new labels for each bond.
-    @note
-        1. the new assign label cannot be the same as the label of any other bonds in the
-    UniTensor. ( cannot have duplicate labels )
-        2. Compared to relabels(const std::vector<std::string> &new_labels) const, this
-        function set the new label to itself.
+    @deprecated This function is deprecated. Please use \n
+        UniTensor &relabel_(const std::vector<std::string> &old_labels,
+                        const std::vector<std::string> &new_labels)\n
+      instead.
     */
-    UniTensor &relabels_(const std::vector<std::string> &new_labels) {
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::vector<std::string> &old_labels, const "
+      "std::vector<std::string> &new_labels) "
+      "instead.")]] UniTensor &
+      relabels_(const std::vector<std::string> &new_labels) {
       this->_impl->relabels_(new_labels);
       return *this;
     }
@@ -3210,24 +3202,22 @@ namespace cytnx {
       return out;
     }
     /**
-    @deprecated
-    @brief relabels all of the labels in UniTensor.
-    @param[in] new_labels the new labels for each bond.
-    @note
-        1. the new assign label cannot be the same as the label of any other bonds in the
-    UniTensor. ( cannot have duplicate labels )
-
-    @attention This function will return a new UniTensor with the new label, but the data is
-    still shared with the original UniTensor. That is the meta data of the UniTensor is
-    different, but the internal data is still shared.
+    @deprecated This function is deprecated. Please use \n
+    UniTensor relabel(const std::vector<std::string> &new_labels) const\n
+      instead.
      */
-    UniTensor relabels(const std::vector<std::string> &new_labels) const {
+    [[deprecated(
+      "Please use "
+      "UniTensor relabel(const std::vector<std::string> &new_labels) const "
+      "instead.")]] UniTensor
+      relabels(const std::vector<std::string> &new_labels) const {
       UniTensor out;
       out._impl = this->_impl->relabels(new_labels);
       return out;
     }
 
     /**
+    @brief relables all of the labels in UniTensor.
     @see relabel(const std::vector<std::string> &new_labels) const
      */
     UniTensor relabel(const std::initializer_list<char *> &new_labels) const {
@@ -3241,10 +3231,15 @@ namespace cytnx {
       return out;
     }
     /**
-    @deprecated
-    @see relabels(const std::vector<std::string> &new_labels) const
+    @deprecated This function is deprecated. Please use \n
+    UniTensor relabel(const std::initializer_list<char *> &new_labels) const\n
+      instead.
      */
-    UniTensor relabels(const std::initializer_list<char *> &new_labels) const {
+    [[deprecated(
+      "Please use "
+      "UniTensor relabel(const std::initializer_list<char *> &new_labels) const "
+      "instead.")]] UniTensor
+      relabels(const std::initializer_list<char *> &new_labels) const {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
@@ -3267,10 +3262,15 @@ namespace cytnx {
       return *this;
     }
     /**
-    @deprecated
-    @see relabels_(const std::vector<std::string> &new_labels)
+    @deprecated This function is deprecated. Please use \n
+    UniTensor &relabel_(const std::initializer_list<char *> &new_labels)\n
+      instead.
      */
-    UniTensor &relabels_(const std::initializer_list<char *> &new_labels) {
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::initializer_list<char *> &new_labels) "
+      "instead.")]] UniTensor &
+      relabels_(const std::initializer_list<char *> &new_labels) {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
@@ -3294,15 +3294,17 @@ namespace cytnx {
       return out;
     }
     /**
-    @deprecated
-    @brief replace part or all labels by given new labels for the bonds.
-    @param[in] old_labels the old labels for each bond.
-    @param[in] new_labels the new labels for each bond.
-    @note
-        1. the final output UniTensor cannot have duplicate labels.
+    @deprecated This function is deprecated. Please use \n
+    UniTensor relabel(const std::vector<std::string> &old_labels, const std::vector<std::string>
+    &new_labels) const\n instead.
     */
-    UniTensor relabels(const std::vector<std::string> &old_labels,
-                       const std::vector<std::string> &new_labels) const {
+    [[deprecated(
+      "Please use "
+      "UniTensor relabel(const std::vector<std::string> &old_labels, const "
+      "std::vector<std::string> &new_labels) const "
+      "instead.")]] UniTensor
+      relabels(const std::vector<std::string> &old_labels,
+               const std::vector<std::string> &new_labels) const {
       UniTensor out;
       out._impl = this->_impl->relabels(old_labels, new_labels);
       return out;
@@ -3329,23 +3331,17 @@ namespace cytnx {
       return *this;
     }
     /**
-    @deprecated
-    @brief relabels part or all of the labels in UniTensor by given new labels
-    @param[in] old_labels the old labels for each bond.
-    @param[in] new_labels the new labels for each bond.
-    @note
-        1. the final output UniTensor cannot have duplicate labels.
-        2. Compared to relabels(const std::vector<std::string> &old_labels,  const
-    std::vector<std::string> &new_labels) const , this function set the new label(s) to itself.
-
-    @see relabels(const std::vector<std::string> &old_labels, const std::vector<std::string>
-    &new_labels) const
-    @attention This function will return a new UniTensor with the new labels, but the data is
-    still shared with the original UniTensor. That is the meta data of the UniTensor is
-    different, but the internal data is still shared.
+    @deprecated This function is deprecated. Please use \n
+    UniTensor &relabel_(const std::vector<std::string> &old_labels, const std::vector<std::string>
+    &new_labels)\n instead.
      */
-    UniTensor &relabels_(const std::vector<std::string> &old_labels,
-                         const std::vector<std::string> &new_labels) {
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::vector<std::string> &old_labels, const "
+      "std::vector<std::string> &new_labels) "
+      "instead.")]] UniTensor &
+      relabels_(const std::vector<std::string> &old_labels,
+                const std::vector<std::string> &new_labels) {
       this->_impl->relabels_(old_labels, new_labels);
       return *this;
     }
@@ -3370,12 +3366,17 @@ namespace cytnx {
     }
 
     /**
-    @deprecated
-    @see relabels(const std::vector<std::string> &old_labels, const std::vector<std::string>
-    &new_labels) const
+    @deprecated This function is deprecated. Please use \n
+    UniTensor relabel(const std::initializer_list<char *> &old_labels, const
+    std::initializer_list<char *> &new_labels) const \n instead.
      */
-    UniTensor relabels(const std::initializer_list<char *> &old_labels,
-                       const std::initializer_list<char *> &new_labels) const {
+    [[deprecated(
+      "Please use "
+      "UniTensor relabel(const std::initializer_list<char *> &old_labels, const "
+      "std::initializer_list<char *> &new_labels) const "
+      "instead.")]] UniTensor
+      relabels(const std::initializer_list<char *> &old_labels,
+               const std::initializer_list<char *> &new_labels) const {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
@@ -3409,12 +3410,17 @@ namespace cytnx {
       return *this;
     }
     /**
-    @deprecated
-    @see relabels_(const std::vector<std::string> &old_labels, const std::vector<std::string>
-    &new_labels)
+    @deprecated This function is deprecated. Please use \n
+    UniTensor &relabel_(const std::initializer_list<char *> &old_labels, const
+    std::initializer_list<char *> &new_labels)\n instead.
      */
-    UniTensor &relabels_(const std::initializer_list<char *> &old_labels,
-                         const std::initializer_list<char *> &new_labels) {
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::initializer_list<char *> &old_labels, const "
+      "std::initializer_list<char *> &new_labels) "
+      "instead.")]] UniTensor &
+      relabels_(const std::initializer_list<char *> &old_labels,
+                const std::initializer_list<char *> &new_labels) {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
@@ -3552,14 +3558,19 @@ namespace cytnx {
     }
 
     /**
-    @brief permute the legs of the UniTensor, inplacely.
-    @deprecated It is recommended to use \ref
-      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+    @deprecated This function is deprecated. Please use \n
+      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank)\n
+          instead.
+    @brief permute the lags of the UniTensor, inplacely.
     @param[in] mapper the mapper by labels
     @param[in] rowrank the row rank after the permutation
           @warning \p by_label will be deprecated!
     */
-    UniTensor &permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+    [[deprecated(
+      "Please use "
+      "UniTensor &permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) "
+      "instead.")]] UniTensor &
+      permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
       return *this;
     }
@@ -4292,23 +4303,25 @@ namespace cytnx {
      *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
-                      const bool &by_label) {
+    [[deprecated(
+      "Please use "
+      "combineBond(const std::vector<std::string> &indicators, const bool &force) "
+      "instead.")]] void
+      combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
+                   const bool &by_label) {
       this->_impl->combineBonds(indicators, force, by_label);
     }
 
     /**
-    @deprecated
-    @brief Combine several bonds of the UniTensor.
-        @param[in] indicators the labels of the legs you want to combine.
-        @param[in] force If force is true, it will combine the bonds anyway even the direction
-      of the bonds are same. After combining, the direction of the bonds will be set as
-      same as the first bond.
-        @pre
-            1. The size of \p indicators need to >= 2.
-            2. The UniTensor cannot be diagonal form (that means is_diag cannot be true.)
-        */
-    void combineBonds(const std::vector<std::string> &indicators, const bool &force = false) {
+    @deprecated This function is deprecated. Please use \n
+      combineBond(const std::vector<std::string> &indicators, const bool &force) \n
+      instead.
+       */
+    [[deprecated(
+      "Please use "
+      "combineBond(const std::vector<std::string> &indicators, const bool &force) "
+      "instead.")]] void
+      combineBonds(const std::vector<std::string> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
     }
 
@@ -4317,7 +4330,11 @@ namespace cytnx {
      *   combineBond(const std::vector<std::string> &indicators, const bool &force) \n
      *   instead.
      */
-    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
+    [[deprecated(
+      "Please use "
+      "combineBond(const std::vector<std::string> &indicators, const bool &force) "
+      "instead.")]] void
+      combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false) {
       this->_impl->combineBonds(indicators, force);
     }
 
@@ -5552,20 +5569,16 @@ namespace cytnx {
                      const bool &optimal);
 
   /**
-  @deprecated
-  @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
-  operation.
-  @param[in] TNs the Tensors.
-  @param[in] order desired contraction order.
-  @param[in] optimal wheather to find the optimal contraction order automatically.
-  @return
-      [UniTensor]
-
-  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
-
+  @deprecated This function is deprecated. Please use \n
+  UniTensor Contract(const std::vector<UniTensor> &TNs, const std::string &order, const bool
+  &optimal)\n instead.
   */
-  UniTensor Contracts(const std::vector<UniTensor> &TNs, const std::string &order,
-                      const bool &optimal);
+  [[deprecated(
+    "Please use "
+    "UniTensor Contract(const std::vector<UniTensor> &TNs, const std::string &order, const bool "
+    "&optimal) "
+    "instead.")]] UniTensor
+    Contracts(const std::vector<UniTensor> &TNs, const std::string &order, const bool &optimal);
 
   /// @cond
   void _resolve_CT(std::vector<UniTensor> &TNlist);
@@ -5596,20 +5609,18 @@ namespace cytnx {
   }
 
   /**
-  @deprecated
-  @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
-  operation.
-  @param in the Tensors.
-  @param args the Tensors.
-  @return
-      [UniTensor]
-
-  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
-
+  @deprecated This function is deprecated. Please use \n
+  UniTensor Contract(const UniTensor &in, const T &...args, const std::string &order, const bool
+  &optimal)\n instead.
   */
   template <class... T>
-  UniTensor Contracts(const UniTensor &in, const T &...args, const std::string &order,
-                      const bool &optimal) {
+  [[deprecated(
+    "Please use "
+    "UniTensor Contract(const UniTensor &in, const T &...args, const std::string &order, const "
+    "bool &optimal) "
+    "instead.")]] UniTensor
+    Contracts(const UniTensor &in, const T &...args, const std::string &order,
+              const bool &optimal) {
     std::vector<UniTensor> TNlist;
     _resolve_CT(TNlist, in, args...);
     return Contracts(TNlist, order, optimal);
@@ -5619,4 +5630,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_UNITENSOR_H_

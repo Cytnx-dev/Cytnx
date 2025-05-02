@@ -34,7 +34,7 @@ namespace cytnx {
       }
 
       if (Tl.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Norm_ii[_tl.dtype()](out._impl->storage()._impl->Mem,
+        cytnx::linalg_internal::lii.Norm_ii[_tl.dtype()](out._impl->storage()._impl->data(),
                                                          _tl._impl->storage()._impl);
 
         return out;
@@ -42,7 +42,7 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
-        cytnx::linalg_internal::lii.cuNorm_ii[_tl.dtype()](out._impl->storage()._impl->Mem,
+        cytnx::linalg_internal::lii.cuNorm_ii[_tl.dtype()](out._impl->storage()._impl->data(),
                                                            _tl._impl->storage()._impl);
 
         return out;
