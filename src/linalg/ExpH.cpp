@@ -246,7 +246,11 @@ namespace cytnx {
 
         return out;
 
-      } else {
+      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
+        // TODOfermionic: implement
+        cytnx_error_msg(true, "[ERROR] ExpH not implemented for BlockFermionic UniTensors.%s",
+                        "\n");
+      } else if (Tin.uten_type() == UTenType.Sparse) {
         UniTensor out;
 
         if (Tin.is_contiguous())
@@ -257,6 +261,9 @@ namespace cytnx {
         _exph_Sparse_UT(out, Tin, a, b);
 
         return out;
+      } else {
+        cytnx_error_msg(true, "[ERROR] ExpH only supports Dense/Block/BlockFermionic UniTensors.%s",
+                        "\n");
       }
 
     }  // ExpH()
