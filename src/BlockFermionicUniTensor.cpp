@@ -595,7 +595,9 @@ namespace cytnx {
     }
   }
 
-  std::vector<bool> BlockFermionicUniTensor::signflip() const { return this->_signflip; }
+  std::vector<bool> BlockFermionicUniTensor::signflip() const {
+    return this->_signflip;
+  }
 
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
