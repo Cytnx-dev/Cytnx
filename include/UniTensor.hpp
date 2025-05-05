@@ -225,7 +225,8 @@ namespace cytnx {
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
-    virtual std::vector<bool> signflip() const;
+    virtual std::vector<bool> get_signflip() const;
+    virtual std::vector<bool> get_signflip_();
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -1872,8 +1873,9 @@ namespace cytnx {
       return this->_blocks.size();
     };
 
-    std::vector<bool> signflip() const;
-    // std::vector<bool> &signflip_reference() { return this->_signflip; };
+    std::vector<bool> get_signflip() const { return vec_clone(this->_signflip); }
+    const std::vector<bool> &get_signflip_() const { return this->_signflip; }
+    std::vector<bool> &get_signflip_() { return this->_signflip; }
     // const std::vector<bool> &signflip_reference() const { return this->_signflip; };
 
     void to_(const int &device) {
@@ -3114,7 +3116,15 @@ namespace cytnx {
      * the elements of the corresponding block needs to be flipped.
      * @return std::vector<bool>
      */
-    std::vector<bool> signflip() const { return this->_impl->signflip(); }
+    std::vector<bool> get_signflip() const { return this->_impl->get_signflip(); }
+
+    /**
+     * @brief Get the sign information of a fermionic UniTensor.
+     * @details Length is the number of blocks in the UniTensor. If the return is true, the sign of
+     * the elements of the corresponding block needs to be flipped.
+     * @return std::vector<bool>
+     */
+    std::vector<bool> get_signflip_() const { return this->_impl->get_signflip_(); }
 
     /**
      * @brief Check whether the UniTensor is in block form.
@@ -3697,7 +3707,9 @@ namespace cytnx {
     @brief Plot the diagram of the UniTensor.
         @param[in] bond_info whether need to print the information of the bonds of the UniTensor.
     */
-    void print_diagram(const bool &bond_info = false) const { this->_impl->print_diagram(bond_info); }
+    void print_diagram(const bool &bond_info = false) const {
+      this->_impl->print_diagram(bond_info);
+    }
 
     /**
     @brief Print all of the blocks in the UniTensor.
