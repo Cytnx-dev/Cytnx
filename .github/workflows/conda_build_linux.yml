@@ -33,9 +33,8 @@ jobs:
       run: |
         echo "Config Conda---------------------------------"
         conda -h
-        conda info
-        conda help info
-        conda install anaconda-client boa -c conda-forge
+        conda info -h
+        conda install -h
 
     # - name: start building
     #   working-directory: ${{github.workspace}}
