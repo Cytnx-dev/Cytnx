@@ -1,0 +1,177 @@
+-------- start of print ---------
+Tensor name: 
+braket_form : True
+is_diag    : False
+[OVERALL] contiguous : True
+========================
+BLOCK [#0]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                 -----------
+                 |         |
+   [0] U1(1)  -->| 1     1 |-->  [0] U1(2)
+                 |         |
+   [0] U1(1)  -->| 1       |
+                 |         |
+                 -----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
+
+========================
+BLOCK [#1]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [0] U1(1)   -->| 1     1 |-->  [1] U1(0)
+                  |         |
+   [1] U1(-1)  -->| 1       |
+                  |         |
+                  -----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
+
+========================
+BLOCK [#2]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [0] U1(1)   -->| 1     1 |-->  [2] U1(0)
+                  |         |
+   [1] U1(-1)  -->| 1       |
+                  |         |
+                  -----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
+
+========================
+BLOCK [#3]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [1] U1(-1)  -->| 1     1 |-->  [1] U1(0)
+                  |         |
+   [0] U1(1)   -->| 1       |
+                  |         |
+                  -----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
+
+========================
+BLOCK [#4]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [1] U1(-1)  -->| 1     1 |-->  [2] U1(0)
+                  |         |
+   [0] U1(1)   -->| 1       |
+                  |         |
+                  -----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
+
+========================
+BLOCK [#5]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                  -----------
+                  |         |
+   [1] U1(-1)  -->| 1     1 |-->  [3] U1(-2)
+                  |         |
+   [1] U1(-1)  -->| 1       |
+                  |         |
+                  -----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1,1)
+[[[0.00000e+00 ]]]
+
+
+
+-------- start of print ---------
+Tensor name: 
+braket_form : False
+is_diag    : False
+[OVERALL] contiguous : True
+========================
+BLOCK [#0]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                 ----------
+                 |        |
+   [2] U1(2)  -->| 1      |
+                 |        |
+   [2] U1(2) *<--| 1      |
+                 |        |
+                 ----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1)
+[[0.00000e+00 ]]
+
+========================
+BLOCK [#1]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                 ----------
+                 |        |
+   [1] U1(0)  -->| 2      |
+                 |        |
+   [1] U1(0) *<--| 2      |
+                 |        |
+                 ----------
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,2)
+[[0.00000e+00 0.00000e+00 ]
+ [0.00000e+00 0.00000e+00 ]]
+
+========================
+BLOCK [#2]
+ |- []   : Qn index 
+ |- Sym(): Qnum of correspond symmetry
+                  ----------
+                  |        |
+   [0] U1(-2)  -->| 1      |
+                  |        |
+   [0] U1(-2) *<--| 1      |
+                  |        |
+                  ----------
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1,1)
+[[0.00000e+00 ]]
+
+
+

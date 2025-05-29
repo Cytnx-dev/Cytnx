@@ -1,0 +1,13 @@
+==== Network ====
+[o] c0 : t0-c0 t3-c0 
+[o] c1 : t1-c1 t0-c1 
+[o] c2 : t2-c2 t1-c2 
+[o] c3 : t3-c3 t2-c3 
+[o] t0 : t0-c1 w-t0 t0-c0 
+[o] t1 : t1-c2 w-t1 t1-c1 
+[o] t2 : t2-c3 w-t2 t2-c2 
+[o] t3 : t3-c0 w-t3 t3-c3 
+[o] w : w-t0 w-t1 w-t2 w-t3 
+TOUT : ; 
+ORDER : ((((((((c0,t0),c1),t3),w),t1),c3),t2),c2)
+=================

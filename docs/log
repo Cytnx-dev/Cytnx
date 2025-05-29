@@ -1,0 +1,8 @@
+require:
+1. pip install sphinxcontrib-bibtex
+2. https://github.com/myyasuda/sphinxbootstrap4theme
+   pip install sphinxbootstrap4theme
+
+
+c++:
+1. pip install breath

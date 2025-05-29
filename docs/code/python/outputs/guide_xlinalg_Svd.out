@@ -1,0 +1,54 @@
+-----------------------
+tensor Name : 
+tensor Rank : 5
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------     
+         /         \    
+   0 ____| 5     5 |____ 3
+         |         |    
+   1 ____| 5     5 |____ 4
+         |         |    
+   2 ____| 5       |        
+         \         /    
+          ---------     
+-----------------------
+tensor Name : S
+tensor Rank : 2
+block_form  : False
+is_diag     : True
+on device   : cytnx device: CPU
+               -----------     
+              /           \    
+   _aux_L ____| 25     25 |____ _aux_R
+              \           /    
+               -----------     
+-----------------------
+tensor Name : U
+tensor Rank : 4
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ----------     
+         /          \    
+   0 ____| 5     25 |____ _aux_L
+         |          |    
+   1 ____| 5        |        
+         |          |    
+   2 ____| 5        |        
+         \          /    
+          ----------     
+-----------------------
+tensor Name : Vt
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+               ----------     
+              /          \    
+   _aux_R ____| 25     5 |____ 3
+              |          |    
+              |        5 |____ 4
+              \          /    
+               ----------     

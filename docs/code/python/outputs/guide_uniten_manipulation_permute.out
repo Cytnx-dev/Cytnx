@@ -1,0 +1,48 @@
+-----------------------
+tensor Name : symm. tensor
+tensor Rank : 3
+contiguous  : True
+valid blocks : 4
+is diag   : False
+on device   : cytnx device: CPU
+      row           col 
+         -----------    
+         |         |    
+   d  -->| 2     4 |-->  f
+         |         |    
+   e  -->| 2       |        
+         |         |    
+         -----------    
+
+-----------------------
+tensor Name : symm. tensor
+tensor Rank : 3
+contiguous  : False
+valid blocks : 4
+is diag   : False
+on device   : cytnx device: CPU
+      row           col 
+         -----------    
+         |         |    
+   f *<--| 4     2 |<--* e
+         |         |    
+   d  -->| 2       |        
+         |         |    
+         -----------    
+
+-----------------------
+tensor Name : symm. tensor
+tensor Rank : 3
+contiguous  : False
+valid blocks : 4
+is diag   : False
+on device   : cytnx device: CPU
+      row           col 
+         -----------    
+         |         |    
+   f *<--| 4     2 |<--* e
+         |         |    
+   d  -->| 2       |        
+         |         |    
+         -----------    
+
