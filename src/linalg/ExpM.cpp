@@ -237,7 +237,11 @@ namespace cytnx {
 
         return out;
 
-      } else {
+      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
+        // TODOfermionic: implement
+        cytnx_error_msg(true, "[ERROR] ExpM not implemented for BlockFermionic UniTensors.%s",
+                        "\n");
+      } else if (Tin.uten_type() == UTenType.Sparse) {
         // cytnx_error_msg(Tin.is_contiguous()==false, "[ERROR][ExpM] currently ExpM on symmetric
         // UniTensor have to operate on contiguous(). Call contiguous_() or contiguous()
         // first,%s","\n");
@@ -250,6 +254,9 @@ namespace cytnx {
 
         _expm_Sparse_UT(out, Tin, a, b);
         return out;
+      } else {
+        cytnx_error_msg(true, "[ERROR] ExpM only supports Dense/Block/BlockFermionic UniTensors.%s",
+                        "\n");
       }
     }
 

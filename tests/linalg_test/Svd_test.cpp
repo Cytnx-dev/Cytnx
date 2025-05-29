@@ -384,7 +384,7 @@ namespace SvdTest {
     // bool need_U, need_VT;
     bool compute_uv;
     UniTensor src_T = UniTensor::Load(src_file_name);
-    UniTensor ans_T = UniTensor::Load(ans_file_name);  // sigular values UniTensor
+    UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
 
     // Do svd
     std::vector<UniTensor> svds = linalg::Svd(src_T, compute_uv = true);
