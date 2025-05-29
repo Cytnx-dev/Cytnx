@@ -1,4 +1,4 @@
-Storage sA = {3.,4.,5.,6.};
+Storage sA = {3., 4., 5., 6.};
 
 print(sA.dtype_str());
 

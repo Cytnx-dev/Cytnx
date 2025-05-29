@@ -1,1 +1,1 @@
-std::cout<<net.getOrder();
+std::cout << net.getOrder();
