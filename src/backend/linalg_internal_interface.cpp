@@ -12,10 +12,10 @@ namespace cytnx {
 
     int linalg_internal_interface::get_mkl_code() { return this->mkl_code; }
 
-    int linalg_internal_interface::set_mkl_ilp64() {
+    int linalg_internal_interface::set_mkl_lp64() {
       int code = 0;
 #ifdef UNI_MKL
-      code = mkl_set_interface_layer(MKL_INTERFACE_ILP64);
+      code = mkl_set_interface_layer(MKL_INTERFACE_LP64);
       this->mkl_code = code;
       // std::cout << "MKL interface code: " << code;
       // if (code % 2)
@@ -30,7 +30,7 @@ namespace cytnx {
     linalg_internal_interface::linalg_internal_interface() {
       mkl_code = -1;
 #ifdef UNI_MKL
-      this->set_mkl_ilp64();
+      this->set_mkl_lp64();
 #endif
 
       Ari_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type, NULL));

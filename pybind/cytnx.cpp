@@ -79,7 +79,7 @@ PYBIND11_MODULE(cytnx, m) {
 #else
   m.attr("__cytnx_backend__") = std::string("cytnx");
 
-  m.def("set_mkl_ilp64", &cytnx::set_mkl_ilp64);
+  m.def("set_mkl_lp64", &cytnx::set_mkl_lp64);
   m.def("get_mkl_code", &cytnx::get_mkl_code);
 
   // global vars

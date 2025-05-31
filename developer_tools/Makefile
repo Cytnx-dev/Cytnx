@@ -43,7 +43,7 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++17 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_ILP64 #-DUNI_DEBUG -Wno-c++11-narrowing
+  CCFLAGS += -std=c++17 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_LP64 #-DUNI_DEBUG -Wno-c++11-narrowing
   LDFLAGS += $(DOCKER_MKL) -lmkl_rt -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm
 else
   CCFLAGS += -std=c++17 ${OPTIM} -Wformat=0 -fPIC -w -g #-DUNI_DEBUG -Wno-c++11-narrowing
@@ -575,8 +575,6 @@ cuMatmul_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_int
 cuMatmul_dg_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_dg_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_dg_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuMatvec_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatvec_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatvec_internal.hpp
-	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuVectordot_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuVectordot_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuVectordot_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuOuter_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuOuter_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuOuter_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@

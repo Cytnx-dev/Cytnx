@@ -285,7 +285,7 @@ namespace cytnx {
 
       linalg_internal_interface();
       ~linalg_internal_interface();
-      int set_mkl_ilp64();
+      int set_mkl_lp64();
       int get_mkl_code();
     };
     extern linalg_internal_interface lii;
