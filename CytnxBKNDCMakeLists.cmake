@@ -1,4 +1,3 @@
-
 # if (USE_MKL)
 #   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
 #   option(MKL_MLT "Use multi-threading libary. [Default]" ON)
@@ -13,10 +12,9 @@
 ######################################################################
 if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
   if (USE_MKL)
-    #set(BLA_VENDOR Intel10_64ilp)
-    #set(BLA_VENDOR Intel10_64_dyn)
-    #find_package( BLAS REQUIRED)
-    #find_package( LAPACK REQUIRED)
+    message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
+    # Set MKL interface to LP64
+    set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
 
     find_package(MKL CONFIG REQUIRED)
