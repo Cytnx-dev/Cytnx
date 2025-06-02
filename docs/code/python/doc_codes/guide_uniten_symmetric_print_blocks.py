@@ -1,0 +1,1 @@
+Tsymm.print_blocks()

@@ -1,0 +1,12 @@
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 4
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+
+
+dtype : Double (Float64)
+device: cytnx device: CPU
+size  : 5
+[ 0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 5.00000e+02 ]
+
+
