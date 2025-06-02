@@ -10,10 +10,20 @@ source:
 
 build:
   number: 0
+  script_env:
+    # Refer to : https://github.com/ccache/ccache/discussions/821#discussioncomment-521209
+    - CCACHE_NOHASHDIR=1
+    - CCACHE_COMPILERCHECK=content
+    - CCACHE_DIR
+    - CCACHE_MAXSIZE
+    - CMAKE_C_COMPILER_LAUNCHER
+    - CMAKE_CXX_COMPILER_LAUNCHER
+    - CMAKE_CUDA_COMPILER_LAUNCHER
 
 
 requirements:
   build:
+    - ccache
     - "python {{ python }}"
     - "numpy >=1.18"
     - "cmake"
