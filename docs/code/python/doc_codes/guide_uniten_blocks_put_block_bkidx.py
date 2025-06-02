@@ -1,0 +1,5 @@
+B2new = cytnx.ones([1,1,2])
+B2 = Tsymm.get_block_(2)
+print(B2)
+Tsymm.put_block(B2new,2)
+print(Tsymm.get_block_(2))
