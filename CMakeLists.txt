@@ -1,4 +1,3 @@
-
 message(STATUS "")
 message(STATUS "------------------------------------------------------------------------")
 message(STATUS "  Project Cytnx, A Cross-section of Python & C++,Tensor network library ")
@@ -98,7 +97,7 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/vinfo.tmp" "${CYTNX_VARIANT_INFO}" "")
 #   - If all conditions are met and the variable is not already defined, the
 #     variable is set to the provided default value in the cache using the
 #     specified type and help message.
-#   - If the variable’s value is empty, a fatal error is raised.
+#   - If the variable's value is empty, a fatal error is raised.
 #
 # :Examples:
 #
@@ -246,7 +245,7 @@ endif()
 # #####################################################################
 
 # ## Boost
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 target_include_directories(cytnx SYSTEM
   PUBLIC
   ${Boost_INCLUDE_DIRS}
