@@ -1,0 +1,68 @@
+name: Conda Build For Linux (Main)
+
+on:
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  BuildAndTest:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        # Remember to quote this, or YAML will think you want python 3.1 not 3.10
+        python-version: "3.10"
+        # Using miniforge to the enable conda-forge channel only.
+        miniforge-version: latest
+
+    - name: Config Conda
+      shell: bash -l {0}
+      run: |
+        echo "Config Conda---------------------------------"
+        conda info
+        conda config --set anaconda_upload no
+        conda install conda-build
+
+    - name: Cache Ccache Directory
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.ccache
+        key: cmake-build-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          cmake-build-${{ runner.os }}-${{ github.ref_name }}-
+
+    - name: start building
+      shell: bash -l {0}
+      # TODO: Consider to replace conda-build with rattler-build to speed up
+      #   the build process.
+      # Conda build creates different working folder each time, which make
+      # ccache fails to hit the cache. Set `--build-id-pat` to make the build
+      # folder consistent across builds, so that ccache can hit the cache.
+      # See: https://github.com/ccache/ccache/discussions/821#discussioncomment-521209
+      run: |
+        echo "Start building---------------------------------"
+        export CCACHE_DIR="${HOME}/.ccache"
+        conda build conda_build/conda_gen/ --build-id-pat "cytnx"
+
+      env:
+        CMAKE_C_COMPILER_LAUNCHER: ccache
+        CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        CMAKE_CUDA_COMPILER_LAUNCHER: ccache
+        # DO NOT enable this line because the step is not executed in a interactive shell,
+        # and "~" will not be expanded to the home directory. Export CCACHE_DIR in the
+        # run command instead.
+        # CCACHE_DIR: ~/.ccache
+        # The limit of actions/cache is 10GB
+        CCACHE_MAXSIZE: 1G
+        TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
