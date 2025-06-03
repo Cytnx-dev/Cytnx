@@ -17,6 +17,8 @@
 
 namespace cytnx {
   int set_mkl_lp64();
+  int set_mkl_ilp64();
+  int detect_mkl_interface();
   int get_mkl_code();
 
   /**
@@ -1704,8 +1706,8 @@ namespace cytnx {
 
     // Hosvd:
     std::vector<Tensor> Hosvd(
-      const Tensor &Tin, const std::vector<cytnx_uint64> &mode,
-      const bool &is_core = true, const bool &is_Ls = false,
+      const Tensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core = true,
+      const bool &is_Ls = false,
       const std::vector<cytnx_int64> &trucate_dim = std::vector<cytnx_int64>());
 
     // Qr:

@@ -8,6 +8,8 @@
   #include "../backend/linalg_internal_interface.hpp"
 namespace cytnx {
   int set_mkl_lp64() { return cytnx::linalg_internal::lii.set_mkl_lp64(); }
+  int set_mkl_ilp64() { return cytnx::linalg_internal::lii.set_mkl_ilp64(); }
+  int detect_mkl_interface() { return cytnx::linalg_internal::lii.detect_mkl_interface(); }
   int get_mkl_code() { return cytnx::linalg_internal::lii.get_mkl_code(); }
   namespace linalg {
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
