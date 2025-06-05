@@ -424,6 +424,8 @@ namespace cytnx {
     char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
+    sprintf(buffer, "Tensor type: %s\n", this->uten_type_str().c_str());
+    os << std::string(buffer);
     if (this->_is_tag) {
       sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
       os << std::string(buffer);
@@ -447,7 +449,7 @@ namespace cytnx {
     this->print_block(0, full_info);
   }
 
-  void DenseUniTensor::print_diagram(const bool &bond_info) {
+  void DenseUniTensor::print_diagram(const bool &bond_info) const {
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 

@@ -73,17 +73,17 @@ namespace cytnx {
                                      const bool &is_grp) {
     // check:
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with differnet symmetry.");
+                    "[ERROR] cannot combine two Bonds with different symmetry.");
 
     this->_dim *= bd_in->dim();  // update to new total dimension
 
     if (this->Nsym() != 0) {
       cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
-                      "[ERROR] cannot combine two Bonds with differnet symmetry.");
+                      "[ERROR] cannot combine two Bonds with different symmetry.");
 
       // checking the qnum format:
       cytnx_error_msg((this->_degs.size() != 0) ^ (bd_in->_degs.size() != 0), "%s\n",
-                      "[ERROR] cannot combine two symmetry bond with differet format!");
+                      "[ERROR] cannot combine two symmetry bond with different format!");
 
       std::vector<std::vector<cytnx_int64>> new_qnums;
       if (this->_degs.size()) {
@@ -186,17 +186,17 @@ namespace cytnx {
     cytnx_error_msg(this->type() != bd_in->type(), "%s\n",
                     "[ERROR] cannot combine two Bonds with different types.");
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with differnet symmetry.");
+                    "[ERROR] cannot combine two Bonds with different symmetry.");
 
     this->_dim *= bd_in->dim();  // update to new total dimension
 
     if (this->Nsym() != 0) {
       cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
-                      "[ERROR] cannot combine two Bonds with differnet symmetry.");
+                      "[ERROR] cannot combine two Bonds with different symmetry.");
 
       // checking the qnum format:
       cytnx_error_msg((this->_degs.size() != 0) ^ (bd_in->_degs.size() != 0), "%s\n",
-                      "[ERROR] cannot combine two symmetry bond with differet format!");
+                      "[ERROR] cannot combine two symmetry bond with different format!");
 
       std::vector<std::vector<cytnx_int64>> new_qnums;
       if (this->_degs.size()) {
@@ -423,6 +423,26 @@ namespace cytnx {
 
   }
   */
+
+  fparity Bond_impl::get_fparity(const std::vector<cytnx_int64> &qnum) {
+    if (this->_qnums.size() == 0) {
+      return EVEN;
+    } else {
+      cytnx_error_msg(
+        qnum.size() != this->Nsym(),
+        "[ERROR][get_fparity] the qnum specify does not match the number of symmetries.%s", "\n");
+
+      fparity out = EVEN;
+      fparity curr = EVEN;
+      for (cytnx_uint64 i = 0; i < qnum.size(); i++) {
+        out =
+          static_cast<fparity>(out != this->_syms[i].get_fparity(
+                                        qnum[i]));  // false (ODD) if the symmetries are not equal
+      }
+
+      return out;
+    }
+  }
 
   //[done]
   bool Bond::operator==(const Bond &rhs) const {

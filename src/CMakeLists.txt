@@ -17,6 +17,7 @@ target_sources_local(cytnx
 
   # SparseUniTensor.cpp
   BlockUniTensor.cpp
+  BlockFermionicUniTensor.cpp
   Symmetry.cpp
   contraction_tree.cpp
   search_tree.cpp

@@ -12,13 +12,13 @@ namespace cytnx {
     Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj) {
       // checking:
       cytnx_error_msg(Tl.device() != Tr.device(),
-                      "[ERROR] two tensor for Vectordot cannot on different devices.%s", "\n");
+                      "[ERROR] Two tensors for Vectordot cannot be on different devices.%s", "\n");
       cytnx_error_msg(Tl.shape().size() != 1,
-                      "[ERROR][Tl] tensor for Vectordot should be rank-1.%s", "\n");
+                      "[ERROR][Tl] Tensor for Vectordot should be rank-1.%s", "\n");
       cytnx_error_msg(Tr.shape().size() != 1,
-                      "[ERROR][Tr] tensor for Vectordot should be rank-1.%s", "\n");
+                      "[ERROR][Tr] Tensor for Vectordot should be rank-1.%s", "\n");
       cytnx_error_msg(Tr.shape()[0] != Tl.shape()[0],
-                      "[ERROR] two tensor for Vectordot should have same length.%s", "\n");
+                      "[ERROR] Two tensors for Vectordot should have the same length.%s", "\n");
 
       Tensor L, R;
       Tensor out;
