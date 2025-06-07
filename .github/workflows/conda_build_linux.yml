@@ -75,4 +75,3 @@ jobs:
         # home directory. Export CCACHE_DIR in the run command instead.
         # CCACHE_DIR: ~/.ccache
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
-        TOKEN: ${{ secrets.CONDA_UPLOAD_TOKEN }}
