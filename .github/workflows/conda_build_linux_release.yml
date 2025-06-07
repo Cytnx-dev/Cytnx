@@ -1,4 +1,4 @@
-name: Conda Build For Linux (Release)
+name: Conda Build (Release)
 
 on:
   push:
@@ -9,11 +9,16 @@ on:
 
 jobs:
   BuildAndTest:
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        shell: bash -l {0}
+    name: BuildAndTest-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      CONDA_BUILD_RECIPE: >-
+        ${{ matrix.os == 'macos-latest' && 'conda_build/conda_gen_mac/' ||
+            matrix.os == 'ubuntu-latest' && 'conda_build/conda_gen/' ||
+            'conda_build/conda_gen/' }}
 
     steps:
     - uses: actions/checkout@v3
@@ -53,11 +58,11 @@ jobs:
         export CCACHE_DIR="${HOME}/.ccache"
 
         echo "Get Output filename_________________"
-        OUTPUT_FN=$(conda build conda_build/conda_gen/ --build-id-pat "cytnx" --output)
+        OUTPUT_FN=$(conda build "$CONDA_BUILD_RECIPE" --build-id-pat "cytnx" --output)
         echo $OUTPUT_FN
 
         echo "Start building---------------------------------"
-        conda build conda_build/conda_gen/ --build-id-pat "cytnx"
+        conda build "$CONDA_BUILD_RECIPE" --build-id-pat "cytnx"
 
         echo "Upload build---------------------------------"
         anaconda -t $TOKEN upload -u kaihsinwu "$OUTPUT_FN" --force
