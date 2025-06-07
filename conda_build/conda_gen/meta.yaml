@@ -20,67 +20,29 @@ build:
     - CMAKE_CXX_COMPILER_LAUNCHER
     - CMAKE_CUDA_COMPILER_LAUNCHER
 
-
 requirements:
   build:
     - ccache
-    - "python {{ python }}"
-    - "numpy >=1.18"
-    - "cmake"
-    - "make"
-    - "pybind11"
-    - "boost >=1.82.0"
-    # - "libboost"
-    - "mkl >=2019"
-    - "mkl-include >=2019"
-    - "llvm-openmp"
-    - "setuptools"
-    - "python-graphviz"
-    - "graphviz"
-    - "blas * mkl"
-    - "beartype"
-    - "gtest"
-    - '{{ compiler("c")}}'
-    - '{{ compiler("cxx")}}'
-
+    - cmake
+    - make
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
   host:
-    - "python"
-    - "numpy >=1.18"
-    - "boost >=1.82.0"
-    # - "libboost"
-    - "make"
-    - "mkl >=2019"
-    - "mkl-include >=2019"
-    - "mkl-service"
-    - "llvm-openmp"
-    - "setuptools"
-    - "python-graphviz"
-    - "graphviz"
-    - "blas * mkl"
-    - "beartype"
-    - "gtest"
-    - '{{ compiler("c")}}'
-    - '{{ compiler("cxx")}}'
-
+    - python {{ python }}
+    - setuptools
+    - pybind11
+    - boost >=1.82.0
+    - blas=*=mkl
+    - gtest
   run:
-    - "python"
-    - "numpy >=1.18"
-    - "boost >=1.82.0"
-    # - "libboost"
-    - "mkl >=2019"
-    - "mkl-include >=2019"
-    - "mkl-service"
-    - "llvm-openmp"
-    - "setuptools"
-    - "python-graphviz"
-    - "graphviz"
-    - "blas * mkl"
-    - "beartype"
-    - "cmake"
-    - "make"
-    - "pybind11"
-    - "gtest"
-    - '{{ compiler("c")}}'
-    - '{{ compiler("cxx")}}'
+    - python
+    - numpy >=1.18
+    - boost >=1.82.0
+    - python-graphviz
+    - graphviz
+    - blas=*=mkl
+    - beartype
 
-about:
+test:
+  requires:
+    - gtest
