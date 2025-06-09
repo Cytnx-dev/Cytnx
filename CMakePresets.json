@@ -120,6 +120,12 @@
       "inherits": "default"
     },
     {
+      "name": "mkl-cpu",
+      "description": "Build using Intel MKL with CPU-only support.",
+      "configurePreset": "mkl-cpu",
+      "inherits": "default"
+    },
+    {
       "name": "mkl-cuda",
       "description": "Build using Intel MKL with CUDA support.",
       "configurePreset": "mkl-cuda",
