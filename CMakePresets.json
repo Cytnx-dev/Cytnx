@@ -13,7 +13,6 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/libcytnx",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "OFF",
         "USE_MKL": "OFF",
         "BUILD_PYTHON": "ON",
