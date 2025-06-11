@@ -47,11 +47,11 @@ Device
 
 .. py:function:: .to(device)
 
-	move the current Storage, Tensor or UniTensor to different deivce.
+	move the current Storage, Tensor or UniTensor to different device.
 
 .. py:function:: .to_(device)
 
-    move a new Storage, Tensor or UniTensor with same content as current object on different deivce.
+    move a new Storage, Tensor or UniTensor with same content as current object on different device.
 
 See:
     :ref:`Creating a Storage`

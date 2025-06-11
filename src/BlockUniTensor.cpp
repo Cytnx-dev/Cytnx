@@ -87,7 +87,7 @@ namespace cytnx {
     } else {
       // check bonds & labels dim
       cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
-                      "[ERROR] labels must have same lenth as # of bonds.");
+                      "[ERROR] labels must have same length as # of bonds.");
 
       std::vector<string> tmp = vec_unique(in_labels);
       cytnx_error_msg(tmp.size() != in_labels.size(),
@@ -418,9 +418,9 @@ namespace cytnx {
     // std::cout << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
     std::cout << std::string(buffer);
-    sprintf(buffer, "valid blocks : %d\n", this->_blocks.size());
+    sprintf(buffer, "valid blocks: %d\n", this->_blocks.size());
     std::cout << std::string(buffer);
-    sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
+    sprintf(buffer, "is diag     : %s\n", this->is_diag() ? "True" : "False");
     std::cout << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
     std::cout << std::string(buffer);
@@ -562,6 +562,7 @@ namespace cytnx {
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+
     // checking:
     for (int i = 0; i < mapper_u64.size(); i++) {
       cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",
