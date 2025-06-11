@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
+#include "backend/arpack_wrapper.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -44,6 +45,79 @@ namespace ArnoldiTest {
     std::vector<Tensor> arnoldi_eigs = linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k);
     bool is_pass = CheckResult(H, arnoldi_eigs, which, k);
     EXPECT_TRUE(is_pass);
+  }
+  void matvec(const std::complex<double>* v, std::complex<double>* w) {
+    w[0] = std::complex<double>(1, 1) * v[0] + std::complex<double>(2, 0) * v[1];
+    w[1] = std::complex<double>(2, 0) * v[0] + std::complex<double>(3, -1) * v[1];
+  }
+
+  TEST(Arpack, arpack_test) {
+    int dim = 25;
+    int nev = 2;
+    int ncv = 5;  // Must be > nev
+    int ldv = dim;
+    int lworkl = 3 * ncv * ncv + 6 * ncv;
+
+    int ido = 0, info = 0;
+    char bmat = 'I';
+    char which[] = "LM";
+    double tol = 0.0;
+    std::complex<double>* resid = new std::complex<double>[dim];
+    std::complex<double>* v = new std::complex<double>[dim * ncv];
+    std::complex<double>* workd = new std::complex<double>[3 * dim];
+    std::complex<double>* workl = new std::complex<double>[lworkl];
+    double* rwork = new double[ncv];
+    int iparam[11] = {1, 0, 300, 1, 0, 0, 1};  // Only first 7 are used
+    int ipntr[14];
+
+    while (true) {
+      znaupd_(&ido, &bmat, &dim, &which[0], &nev, &tol, resid, &ncv, v, &ldv, iparam, ipntr, workd,
+              workl, &lworkl, rwork, &info);
+
+      if (ido == -1 || ido == 1) {
+        const std::complex<double>* vin = &workd[ipntr[0] - 1];
+        std::complex<double>* vout = &workd[ipntr[1] - 1];
+        matvec(vin, vout);
+      } else {
+        break;
+      }
+    }
+
+    if (info != 0) {
+      std::cerr << "Error in znaupd_: info = " << info << "\n";
+      return;
+    }
+
+    int rvec = 1;
+    char howmny[] = "A";
+    int* select = new int[ncv];
+    std::complex<double>* d = new std::complex<double>[nev];
+    std::complex<double>* z = new std::complex<double>[dim * nev];
+    std::complex<double> sigma = 0.0;
+    std::complex<double>* workev = new std::complex<double>[2 * ncv];
+
+    zneupd_(&rvec, howmny, select, d, z, &dim, &sigma, workev, &bmat, &dim, which, &nev, &tol,
+            resid, &ncv, v, &ldv, iparam, ipntr, workd, workl, &lworkl, rwork, &info);
+
+    if (info != 0) {
+      std::cerr << "Error in zneupd_: info = " << info << "\n";
+      return;
+    }
+
+    std::cout << "Computed Eigenvalues:\n";
+    for (int i = 0; i < nev; ++i) std::cout << "  lambda[" << i << "] = " << d[i] << "\n";
+
+    delete[] resid;
+    delete[] v;
+    delete[] workd;
+    delete[] workl;
+    delete[] rwork;
+    delete[] select;
+    delete[] d;
+    delete[] z;
+    delete[] workev;
+
+    return;
   }
 
   // corrected test
