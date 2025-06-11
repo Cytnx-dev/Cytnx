@@ -1,6 +1,4 @@
-Dim = 10 |type: |IN (KET)>     
+Dim = 10 |type: |IN (KET)>
 
 
-Dim = 10 |type: < OUT (BRA)    
-
-
+Dim = 10 |type: < OUT (BRA)

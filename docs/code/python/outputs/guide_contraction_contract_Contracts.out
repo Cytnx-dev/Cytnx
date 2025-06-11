@@ -1,19 +1,19 @@
 -----------------------
-tensor Name : 
+tensor Name :
 tensor Rank : 6
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-           ---------     
-          /         \    
+           ---------
+          /         \
    v1 ____| 8     8 |____ v2
-          |         |    
+          |         |
           |       4 |____ v3
-          |         |    
+          |         |
           |       4 |____ v4
-          |         |    
+          |         |
           |       8 |____ v5
-          |         |    
+          |         |
           |       8 |____ v6
-          \         /    
-           ---------     
+          \         /
+           ---------

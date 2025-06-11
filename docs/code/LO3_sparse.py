@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../../Cytnx")
 import cytnx
-import numpy as np 
+import numpy as np
 
 
 class Oper(cytnx.LinOp):
@@ -30,4 +30,3 @@ y = A.matvec(x)
 
 print(x[1].item(),x[100].item())
 print(y[1].item(),y[100].item())
-

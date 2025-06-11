@@ -2,14 +2,14 @@ Scalar
 ==========
 [v0.7+][C++ only]
 
-Scalar is a generic data type which can hold various data types in C++.  
+Scalar is a generic data type which can hold various data types in C++.
 
-In Python, the data type of any variable is dynamic, i.e. it can be changed at any time. In contrast to this, C++ data types are static and cannot be changed once they are declared. In the C++/Python cross-platform library Cytnx, we provide a generic data type Scalar on the C++ side which allows variables to be used like dynamic data types in Python, with all the convenience and advantages related to this. 
+In Python, the data type of any variable is dynamic, i.e. it can be changed at any time. In contrast to this, C++ data types are static and cannot be changed once they are declared. In the C++/Python cross-platform library Cytnx, we provide a generic data type Scalar on the C++ side which allows variables to be used like dynamic data types in Python, with all the convenience and advantages related to this.
 
 
 Define/Declare a Scalar
 *************************
-Defining a Scalar is straight forward. One can convert directly from a supported standard C++ Type to a Scalar. 
+Defining a Scalar is straight forward. One can convert directly from a supported standard C++ Type to a Scalar.
 
 Currently, the following standard C++ data types are supported by Cytnx Scalar:
 
@@ -67,10 +67,10 @@ Output:
 
 
 .. Note::
-    
-    1. We can also just assign a C++ type to Scalar as in the case of **A2**. 
 
-    2. In the case of variable **A3**, the assigned value *10* by default in C++ is an integer type. If we want the Scalar to be of type *double*, we can pass an additional dtype to further specify the type explicitly. 
+    1. We can also just assign a C++ type to Scalar as in the case of **A2**.
+
+    2. In the case of variable **A3**, the assigned value *10* by default in C++ is an integer type. If we want the Scalar to be of type *double*, we can pass an additional dtype to further specify the type explicitly.
 
 * 3. Convert to a C++ data type:
 
@@ -93,7 +93,7 @@ Output:
 
 Change data type
 ******************
-    To change the data type of a Scalar, use **.astype()**. 
+    To change the data type of a Scalar, use **.astype()**.
 
 .. literalinclude:: ../../../code/cplusplus/doc_codes/guide_basic_obj_Scalar_astype.cpp
     :language: c++
@@ -132,9 +132,8 @@ Output:
     }
 
 
-This way, the user can dynamically decide which types of variables to pass to the function. 
+This way, the user can dynamically decide which types of variables to pass to the function.
 
 
 .. toctree::
     :maxdepth: 1
-

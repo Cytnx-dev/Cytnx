@@ -4,13 +4,13 @@ tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
+          ---------
+         /         \
    a ____| 2     3 |____ b
-         |         |    
+         |         |
          |       4 |____ c
-         \         /    
-          ---------     
+         \         /
+          ---------
 -----------------------
 tensor Name : symm. tensor
 tensor Rank : 3
@@ -18,14 +18,14 @@ contiguous  : True
 valid blocks : 4
 is diag   : False
 on device   : cytnx device: CPU
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    d  -->| 2     4 |-->  f
-         |         |    
-   e  -->| 2       |        
-         |         |    
-         -----------    
+         |         |
+   e  -->| 2       |
+         |         |
+         -----------
 
 -----------------------
 tensor Name : diag tensor
@@ -34,9 +34,9 @@ block_form  : False
 is_diag     : True
 on device   : cytnx device: CPU
 braket_form : False
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    g *<--| 2     2 |<--* h
-         |         |    
-         -----------    
+         |         |
+         -----------

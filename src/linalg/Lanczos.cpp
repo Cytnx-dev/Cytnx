@@ -46,7 +46,7 @@ namespace cytnx {
                               const cytnx_uint32 &max_krydim, const bool &verbose) {
       if (method.compare("ER") == 0) {
         cytnx_error_msg(
-          1, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");
+          1, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under development!.%s", "\n");
         return vector<UniTensor>();
       } else if (method.compare("Gnd") == 0) {
         cytnx_error_msg(k > 1, "[ERROR][Lanczos] Only k = 1 is supported for 'Gnd' method.%s",

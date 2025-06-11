@@ -4,7 +4,7 @@ Cyntx provides a way to save/read UniTensors to/from a file.
 
 Save a UniTensor
 *****************
-To save a Tensor to a file, simply call **UniTensor.Save(filepath)**. 
+To save a Tensor to a file, simply call **UniTensor.Save(filepath)**.
 
 * In Python:
 
@@ -17,7 +17,7 @@ This will save UniTensors *T1* and *T2* to the current directory as **Untagged_u
 
 Load a UniTensor
 ******************
-Now, let's load the UniTensor from the file. 
+Now, let's load the UniTensor from the file.
 
 .. literalinclude:: ../../../code/python/doc_codes/guide_uniten_io_Load.py
     :language: python

@@ -56,8 +56,8 @@ Note that currently there is no API for splitting a bond, since the way to split
 Let's see the complete function usage for combining bonds:
 
 
-.. py:function:: UniTensor.combineBonds(indicators, force)	
-     
+.. py:function:: UniTensor.combineBonds(indicators, force)
+
     :param list indicators: A list of **integer** indicating the indices of bonds to be combined. If a list of **string** is passed the bonds with those string labels will be combined.
     :param bool force: If set to **True** the bonds will be combined regardless the direction or type of the bonds, otherwise the bond types will be checked. The default is **False**.
 
@@ -139,7 +139,7 @@ Output >>
     :language: text
 
 
-We see that for the tagged UniTensor the rowrank (and the row/column space the legs belong to) is not changed, instead the .Transpose() **inverted the direction of each bond**. 
+We see that for the tagged UniTensor the rowrank (and the row/column space the legs belong to) is not changed, instead the .Transpose() **inverted the direction of each bond**.
 
 .. Note::
 

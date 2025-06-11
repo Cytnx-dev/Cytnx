@@ -18,4 +18,3 @@ lb.put_block(cytnx.ones(chi))
 
 la.print_diagram()
 lb.print_diagram()
-

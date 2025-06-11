@@ -1,6 +1,6 @@
 HOTRG
 ------------
-Higher order tensor renormalization group for classical system. 
+Higher order tensor renormalization group for classical system.
 :cite:`hotrg-xie`
 
 Further reading:
@@ -9,5 +9,3 @@ Further reading:
 
 .. bibliography:: ref.hotrg.bib
     :cited:
-
-

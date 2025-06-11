@@ -2,22 +2,22 @@ iDMRG
 ------------
 **By : Hsu Ke, Kai-Hsin Wu**
 
-In the previous example we demostrated how the finite size DMRG is implemented, 
+In the previous example we demostrated how the finite size DMRG is implemented,
 Here we present the infinite system size DMRG (iDMRG) scheme which consider the system with *infinite boundary condition*:cite:`ibdry`,
 where the bondaries (enviroments) are grows the lattice by one or more sites each iteration,
 at the fixed point, a translationally invariant wavefunction is produced.
 
 In another algorithm of infinite size simulation, iTEBD, a properly converged state requires careful scaling of the time-step to zero,
 a DMRG approach where an efficient local eigensolver is used to find a variationally optimal state ought to be much more robust and efficient.
-There are also disadavatages for iDMRG, we recommend the interested reader to refer to the paper of iDMRG or benchmarks made in the relevant papers. 
+There are also disadavatages for iDMRG, we recommend the interested reader to refer to the paper of iDMRG or benchmarks made in the relevant papers.
 
-Here, we use a 1D transverse field Ising model (TFIM) as a simple example to show how to implement iDMRG algorithm in Cytnx and get the infinite system size (variational) ground state. 
+Here, we use a 1D transverse field Ising model (TFIM) as a simple example to show how to implement iDMRG algorithm in Cytnx and get the infinite system size (variational) ground state.
 
 .. math::
 
     H = J\sum_{ij} \sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i
 
-where :math:`\sigma^{x,z}` are the pauli matrices. 
+where :math:`\sigma^{x,z}` are the pauli matrices.
 The infinite size ground state can be represent by MPS as variational ansatz, refer to the previous examples.
 
 The MPO is constucted as following:
@@ -49,7 +49,7 @@ The initailzation of MPO is much the same as we did in the previous DMRG example
 
     J  = 1.0
     Hx = 1.0
-    
+
     d = 2
     sx = cytnx.physics.pauli("x").real()
     sz = cytnx.physics.pauli("z").real()
@@ -59,7 +59,7 @@ The initailzation of MPO is much the same as we did in the previous DMRG example
     M[0,1] = M[1,2] = sz
     M[0,2] = 2*Hx*sx
     M = cytnx.UniTensor(M,rowrank=0)
-    
+
     L0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),rowrank=0) #Left boundary
     R0 = cytnx.UniTensor(cytnx.zeros([3,1,1]),rowrank=0) #Right boundary
     L0.get_block_()[0,0,0] = 1.; R0.get_block_()[2,0,0] = 1.;
@@ -84,37 +84,37 @@ Let's implement the function solving eigenvalue problem using in-built Lanczos m
     :linenos:
 
     class Projector(cytnx.LinOp):
-    
-    
+
+
         def __init__(self,L,M1,M2,R,psi_dim,psi_dtype,psi_device):
             cytnx.LinOp.__init__(self,"mv",psi_dim,psi_dtype,psi_device)
-    
+
             self.anet = cytnx.Network("projector.net")
             self.anet.PutUniTensor("M2",M2)
             self.anet.PutUniTensors(["L","M1","R"],[L,M1,R])
             self.psi_shape = [L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]]
-    
+
         def matvec(self,psi):
-    
+
             psi_p = cytnx.UniTensor(psi.clone(),rowrank=0)  ## clone here
             psi_p.reshape_(*self.psi_shape)
-    
+
             self.anet.PutUniTensor("psi",psi_p)
             H_psi = self.anet.Launch().get_block_() # get_block_ without copy
-    
+
             H_psi.flatten_()
             return H_psi
-    
-    
-    
+
+
+
     def eig_Lanczos(psivec, functArgs, Cvgcrit=1.0e-15,maxit=100000):
         """ Lanczos method for finding smallest algebraic eigenvector of linear \
         operator defined as a function"""
         #print(eig_Lanczos)
-    
+
         Hop = Projector(*functArgs,psivec.shape()[0],psivec.dtype(),psivec.device())
         gs_energy ,psivec = cytnx.linalg.Lanczos(Hop,Tin=psivec,method="Gnd",CvgCrit=Cvgcrit,Maxiter=maxit)
-    
+
         return psivec, gs_energy.item()
 
 Now do the optimization and SVD task:
@@ -130,12 +130,12 @@ Now do the optimization and SVD task:
     psi_T, Entemp = eig_Lanczos(psi_T, (L,M,M,R), maxit=maxit);
     psi_T.reshape_(*shp)
     psi = cytnx.UniTensor(psi_T,rowrank=2)
-    
+
     s0,A,B = cytnx.linalg.Svd_truncate(psi,min(chi,d)) ## Svd
     s0/=s0.get_block_().Norm().item() ## normalize
 
 .. Note::
-    
+
     we are using a unit cell of two sites, however the unit cell can be any size, including a single site.
 
 we performed SVD and use the left and right basis to update the environment for effective hamitonian, these procedure and network will always be the same in the future interations
@@ -192,7 +192,7 @@ followed by another environment update:
     anet.PutUniTensors(["R","B","B_Conj","M"],[R,B,B.Conj(),M]);
     R = anet.Launch()
 
-The next few steps involve "rotate" the center of our state to the left and right: 
+The next few steps involve "rotate" the center of our state to the left and right:
 
 .. image:: image/idmrg_rotate.png
     :width: 500
@@ -204,7 +204,7 @@ which is done by the straightforward contraction and re-SVD:
 
 .. code-block:: python
     :linenos:
-    
+
     A.set_rowrank_(1)
     # set the label '_aux_R' to another to avoid Svd error
     sR,_,A = cytnx.linalg.Svd(cytnx.Contract(A, s1).relabel_(2, "-2"))
@@ -293,7 +293,7 @@ also rememeber to update the environment using the SVD result.
 
 .. code-block:: python
     :linenos:
-    
+
     anet = cytnx.Network("L_AMAH.net")
     anet.PutUniTensors(["L","A","A_Conj","M"],[L,A,A.Conj(),M]);
     L = anet.Launch()
