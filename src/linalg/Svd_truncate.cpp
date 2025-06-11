@@ -424,13 +424,13 @@ namespace cytnx {
       S.bonds()[1] = S.bonds()[0].redirect();
       // to access _signflip in the tensor, a typecast is needed
       cytnx_error_msg(true, "[Svdtruncate][ERROR] Svdtruncate still under development%s", "\n");
-      // boost:intrusive_ptr<cytnx::BlockFermionicUniTensor> Sfermionic = boost:static_pointer_cast<cytnx::BlockFermionicUniTensor>(S._impl);
-      // BlockFermionicUniTensor &Sfermionic = boost::dynamic_pointer_cast<cytnx::BlockFermionicUniTensor&>(S._impl);
+      // boost:intrusive_ptr<cytnx::BlockFermionicUniTensor> Sfermionic =
+      // boost:static_pointer_cast<cytnx::BlockFermionicUniTensor>(S._impl); BlockFermionicUniTensor
+      // &Sfermionic = boost::dynamic_pointer_cast<cytnx::BlockFermionicUniTensor&>(S._impl);
       // Sfermionic.print_diagram();
       // Sfermionic._signflip = signs;
       // S.print_diagram();
       // cytnx_error_msg(true, "[Svdtruncate][ERROR] Svdtruncate still under development%s", "\n");
-
 
       int t = 1;
       if (is_UvT) {

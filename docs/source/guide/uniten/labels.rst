@@ -6,7 +6,7 @@ To change the label associated to a certain leg of a UniTensor, one can use:
 
 .. py:function:: UniTensor.relabel_(index, new_label)
 
-    :param [int] index: the index (order) of the bond in the UniTensor  
+    :param [int] index: the index (order) of the bond in the UniTensor
     :param [string] new_label: the new label that you want to change to
 
 
@@ -14,7 +14,7 @@ Alternatively, if we don't know the index of the target bond in the current orde
 
 .. py:function:: UniTensor.relabel_(old_label, new_label)
 
-    :param [string] old_label: the current label of the bond 
+    :param [string] old_label: the current label of the bond
     :param [string] new_label: the new label that you want to change to
 
 
@@ -22,14 +22,14 @@ If we wish to change the labels of all legs, we can use:
 
 .. py:function:: UniTensor.relabels_( new_labels)
 
-    :param List[string] new_labels: a list of new labels 
+    :param List[string] new_labels: a list of new labels
 
 or
 
 .. py:function:: UniTensor.relabels_(old_labels, new_labels)
 
-    :param List[string] old_labels: a list of current labels 
-    :param List[string] new_labels: a list of the corresponding new labels 
+    :param List[string] old_labels: a list of current labels
+    :param List[string] new_labels: a list of the corresponding new labels
 
 For example:
 
@@ -45,14 +45,14 @@ Output >>
     :language: text
 
 
-.. note:: 
+.. note::
 
-    One cannot have duplicate labels *within* the same UniTensor! 
+    One cannot have duplicate labels *within* the same UniTensor!
 
 
 .. warning::
-    
-    The previously provided method set_label(s) is deprecated and should be replaced by relabel(s)_. 
+
+    The previously provided method set_label(s) is deprecated and should be replaced by relabel(s)_.
 
 
 Creating UniTensors with different labels that share data

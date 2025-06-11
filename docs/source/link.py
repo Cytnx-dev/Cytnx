@@ -14,4 +14,4 @@ extlinks = {'splo':("https://docs.scipy.org/doc/scipy/reference/generated/scipy.
             'wsl':("https://docs.microsoft.com/en-us/windows/wsl/install-win10%s",None),\
             #'cytnx_namespace':("https://kaihsinwu.gitlab.io/cytnx_api/"+ _version + "/namespacecytnx.html%s",None),\
             #'cytnx_linalg':("https://kaihsinwu.gitlab.io/cytnx_api/" + _version + "/namespacecytnx_1_1linalg.html%s",None)\
-            } 
+            }

@@ -1,7 +1,7 @@
 # Creating A1, A2, M
 A1 = cytnx.UniTensor(
     cytnx.random.normal(
-        [2,8,8], mean=0., std=1., 
+        [2,8,8], mean=0., std=1.,
         dtype=cytnx.Type.ComplexDouble))
 
 A2 = A1.Conj()

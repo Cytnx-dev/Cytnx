@@ -33,13 +33,13 @@ Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_print_print_diagram.out
     :language: text
-    
+
 
 The information provided by the output is explained in the following:
 
-1. **Bonds:** They are attached to the left side and/or right side of the center square. Now you might wonder why there are Bonds going to two sides? In Cytnx, we use a property called **rowrank** which defines this. The first *rowrank* Bonds will be considered to direct to the left and the rest will be on the right. When the left and right indices are combined, a tensor can be brought into matrix form, which is particularly useful for linear algebra operations. We will get back to this property in the following sections, particularly in :ref:`rowrank`. For now, let's just assume that rowrank takes an arbitrary integer 0 < rowrank < rank. The number of Bonds indicates the rank of the UniTensor, which is also printed in the second line as *tensor Rank*. 
+1. **Bonds:** They are attached to the left side and/or right side of the center square. Now you might wonder why there are Bonds going to two sides? In Cytnx, we use a property called **rowrank** which defines this. The first *rowrank* Bonds will be considered to direct to the left and the rest will be on the right. When the left and right indices are combined, a tensor can be brought into matrix form, which is particularly useful for linear algebra operations. We will get back to this property in the following sections, particularly in :ref:`rowrank`. For now, let's just assume that rowrank takes an arbitrary integer 0 < rowrank < rank. The number of Bonds indicates the rank of the UniTensor, which is also printed in the second line as *tensor Rank*.
 
-    **Examples:** 
+    **Examples:**
         * **uT** has three Bonds, indicating it is a rank-3 UniTensor
         * **Tsymm** has rank-3 as well
         * **Tdiag** has rank-2.
@@ -49,7 +49,7 @@ The information provided by the output is explained in the following:
     **Example uT:**
         * The bond on the left side   has dimension=2 and label="a".
         * The bond on the upper-right has dimension=3 and label="b".
-        * The bond on the lower-right has dimension=4 and label="c". 
+        * The bond on the lower-right has dimension=4 and label="c".
 
 
 .. note::
@@ -63,8 +63,8 @@ The information provided by the output is explained in the following:
 
 
 1. **tensor name:** The name (alias) of the UniTensor.
-   
-   **Examples:** 
+
+   **Examples:**
         * **uT** has the name **untagged tensor**
         * **Tsymm** has the name **symm. tensor**
         * **Tdiag** has the name **diag tensor**.
@@ -86,12 +86,12 @@ Output >>
 
 .. tip::
 
-    You can use **UniTensor.name()** to get the name property of the UniTensor.  
+    You can use **UniTensor.name()** to get the name property of the UniTensor.
 
 
 4. **block_form/valid blocks:** UniTensors have different ways in which the data is stored. A normal tensor without symmetries is just a dense Tensor and can be seen as a cytnx.Tensor with additional metadata. In this case **block_form : False** will be displayed. For UniTensors with symmetries, only certain index combinations lead to entries that fulfill the symmetry properties. Only this data is stored in the UniTensor. Therefore, the data can be split into several valid blocks. With **UniTensor.is_blockform()** one can check whether a UniTensor is of this form. If so, the number of blocks in the UniTensor is displayed by *print_diagram()*.
 
-    **Examples:** 
+    **Examples:**
         * **uT** has **uT.is_blockform() == False**
         * **Tsymm** has **Tsymm.is_blockform() == True** and contains four valid blocks
         * **Tdiag** has **Tdiag.is_blockform() == True** and contains one valid block.
@@ -104,15 +104,15 @@ Output >>
 
 .. tip::
 
-    Similar to **cytnx.Tensor**, one can use **.to()** to move a UniTensor between devices! 
+    Similar to **cytnx.Tensor**, one can use **.to()** to move a UniTensor between devices!
 
 
 .. note::
-    
-    The dtype and device of a UniTensor depends on the underlying *block* (data) of the UniTensor. 
+
+    The dtype and device of a UniTensor depends on the underlying *block* (data) of the UniTensor.
 
 7. The UniTensors **Tsymm** and **Tdiag** have **directional Bonds**. The direction of the Bonds is indicated by **arrows** in the output of *print_diagram()*. This way, incoming/Ket- and outgoing/Bra-Bonds can be distinguished graphically. If all indices on the left are incoming and all indices on the right outgoing, the UniTensor is in **braket_form**. Directed Bonds that violate this form are marked with a **'*'**. This is the case for both indices of the UniTensor *Tdiag*.
-   
+
 8.  A **tagged UniTensor**, that is a UniTensor with directed Bonds, is represented by a **rectangular box**. See *Tsymm* and *Tdiag* in the above example. An **untagged UniTensor** like *uT* is printed with **rounded corners**.
 
 print() and print_blocks()
@@ -130,7 +130,7 @@ Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_print_print_block.out
     :language: text
-    
+
 Similarly to *print_diagram()*, the properties *name*, *is_diag* and *cytnx device* are provided. Additionally, one can see the **shape** and **total number of elements**, as well as the **data type**. Furthermore, the **contiguous** status is displayed, see :ref:`Contiguous` for details.
 
 Finally, the data is printed. In the case of a dense tensor like *uT*, the elements are given as a nested list with brackets **[]** combining the elements according to the shape. In the case of a diagonal matrix like *Udiag*, the diagonal entries are printed as a vector.
@@ -166,4 +166,3 @@ Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_print_sym_print_block.out
     :language: text
-

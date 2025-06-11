@@ -1,16 +1,16 @@
 import sys
 sys.path.append("../../Cytnx")
 import cytnx
-import numpy as np 
+import numpy as np
 
 class MyOp(cytnx.LinOp):
     AddConst = 1# class member.
 
     def __init__(self,aconst):
-        # here, we fix nx=4, dtype=double on CPU, 
+        # here, we fix nx=4, dtype=double on CPU,
         # so the constructor only take external argument 'aconst'
 
-        ## Remember to init the mother class. 
+        ## Remember to init the mother class.
         ## Here, we don't specify the custom_f!
         cytnx.LinOp.__init__(self,"mv",4,cytnx.Type.Double,\
                                    cytnx.Device.cpu )
@@ -30,4 +30,3 @@ y = myop.matvec(x)
 
 print(x)
 print(y)
-

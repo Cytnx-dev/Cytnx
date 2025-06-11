@@ -3697,7 +3697,9 @@ namespace cytnx {
     @brief Plot the diagram of the UniTensor.
         @param[in] bond_info whether need to print the information of the bonds of the UniTensor.
     */
-    void print_diagram(const bool &bond_info = false) const { this->_impl->print_diagram(bond_info); }
+    void print_diagram(const bool &bond_info = false) const {
+      this->_impl->print_diagram(bond_info);
+    }
 
     /**
     @brief Print all of the blocks in the UniTensor.

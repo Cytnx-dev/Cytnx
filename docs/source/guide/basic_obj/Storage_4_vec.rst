@@ -1,6 +1,6 @@
 From/To C++.vector
 --------------------
-Cytnx provides a way to convert directly between a C++ *vector* and a Storage instance. 
+Cytnx provides a way to convert directly between a C++ *vector* and a Storage instance.
 
 
 To convert a C++ vector to a Storage, use **Storage::from_vector**:
@@ -27,11 +27,11 @@ Output >>
 
 .. Note::
 
-    You can also specify the device upon calling *from_vector*. 
+    You can also specify the device upon calling *from_vector*.
 
 .. Tip::
 
-    Cytnx overloads the **operator<<** for C++ vectors. You can directly print any vector when **using namespace cytnx;**.  
+    Cytnx overloads the **operator<<** for C++ vectors. You can directly print any vector when **using namespace cytnx;**.
     Alternatively, you can also use the **print()** function just like in Python.
 
 
@@ -53,7 +53,7 @@ Output >>
 
 .. Note::
 
-    The type T has to match the dtype of the Storage, otherwise an error will be raised. 
+    The type T has to match the dtype of the Storage, otherwise an error will be raised.
 
 
 .. toctree::

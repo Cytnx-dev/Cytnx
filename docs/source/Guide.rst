@@ -1,6 +1,6 @@
 User Guide
 =================================
-To use the library, simply include/import cytnx. 
+To use the library, simply include/import cytnx.
 
 * In Python, using import:
 
@@ -18,9 +18,9 @@ To use the library, simply include/import cytnx.
 
 
 .. Note::
-    In C++, there is a namespace **cytnx**. 
+    In C++, there is a namespace **cytnx**.
 
-Aliases in Python modules and C++ namespaces can be used equivalently, for example if we want to alias cytnx as cy, 
+Aliases in Python modules and C++ namespaces can be used equivalently, for example if we want to alias cytnx as cy,
 
 * In Python:
 
@@ -38,7 +38,7 @@ This is equivalent in C++ to:
 
     #include "cytnx.hpp";
     namespace cy=cytnx;
-    
+
 
 **Now we are ready to start using cytnx!**
 
