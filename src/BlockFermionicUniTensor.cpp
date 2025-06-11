@@ -864,10 +864,10 @@ namespace cytnx {
         this->_inner_to_outer_idx[b];  // quantum indices for each block
       // std::cout << "Block " << b << " qnums: " << qindices << std::endl;
       // find the fermion parity for each quantum index
-      std::vector<fparity> parities(qindices.size());
+      std::vector<fermionParity> parities(qindices.size());
       for (cytnx_int64 qnum = 0; qnum < qindices.size(); qnum++) {
-        parities[qnum] =
-          this->_bonds[qnum]._impl->get_fparity(this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
         // std::cout << "Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] << " Qnums
         // = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity: " <<
         // parities[qnum] << endl;
@@ -876,7 +876,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> permutation =
         std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
       cytnx_int64 actind;
-      fparity actparity;
+      fermionParity actparity;
       for (cytnx_int64 qnum = 0; qnum < qindices.size(); qnum++) {
         // cout << "permutation[" << qnum << "] = " << permutation[qnum] << endl;
         while (permutation[qnum] != qnum) {  // exchange until the correct qindex is here
@@ -937,10 +937,10 @@ namespace cytnx {
         this->_inner_to_outer_idx[b];  // quantum indices for each block
       // std::cout << "[DEBUG] Block " << b << " qnums: " << qindices << std::endl;
       // find the fermion parity for each quantum index
-      std::vector<fparity> parities(qindices.size());
+      std::vector<fermionParity> parities(qindices.size());
       for (cytnx_uint64 qnum = 0; qnum < qindices.size(); qnum++) {
-        parities[qnum] =
-          this->_bonds[qnum]._impl->get_fparity(this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
         // std::cout << "[DEBUG] Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] <<
         // " Qnums = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity:
         // " << parities[qnum] << endl;
@@ -948,7 +948,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> permutation =
         std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
       cytnx_uint64 actind;
-      fparity actparity;
+      fermionParity actparity;
       // cout << "[DEBUG] permutation = " << permutation << endl;
       // cout << "[DEBUG] parities = " << parities << endl;
       // permute; we exchange i with permutation[i], until permutation[i] == i
@@ -1036,10 +1036,10 @@ namespace cytnx {
         this->_inner_to_outer_idx[b];  // quantum indices for each block
       // std::cout << "[DEBUG] Block " << b << " qnums: " << qindices << std::endl;
       // find the fermion parity for each quantum index
-      std::vector<fparity> parities(qindices.size());
+      std::vector<fermionParity> parities(qindices.size());
       for (cytnx_int64 qnum = 0; qnum < qindices.size(); qnum++) {
-        parities[qnum] =
-          this->_bonds[qnum]._impl->get_fparity(this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
         // std::cout << "[DEBUG] Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] <<
         // " Qnums = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity:
         // " << parities[qnum] << endl;
@@ -1047,7 +1047,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> permutation =
         std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
       cytnx_int64 actind;
-      fparity actparity;
+      fermionParity actparity;
       // cout << "[DEBUG] permutation = " << permutation << endl;
       // cout << "[DEBUG] parities = " << parities << endl;
       // sign flips for reversed order
@@ -1146,10 +1146,10 @@ namespace cytnx {
         this->_inner_to_outer_idx[b];  // quantum indices for each block
       // std::cout << "[DEBUG] Block " << b << " qnums: " << qindices << std::endl;
       // find the fermion parity for each quantum index
-      std::vector<fparity> parities(qindices.size());
+      std::vector<fermionParity> parities(qindices.size());
       for (cytnx_uint64 qnum = 0; qnum < qindices.size(); qnum++) {
-        parities[qnum] =
-          this->_bonds[qnum]._impl->get_fparity(this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
         // std::cout << "[DEBUG] Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] <<
         // " Qnums = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity:
         // " << parities[qnum] << endl;
@@ -1157,7 +1157,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> permutation =
         std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
       cytnx_uint64 actind;
-      fparity actparity;
+      fermionParity actparity;
       // cout << "[DEBUG] permutation = " << permutation << endl;
       // cout << "[DEBUG] parities = " << parities << endl;
       // sign flips for reversed order

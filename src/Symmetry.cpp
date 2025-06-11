@@ -70,7 +70,9 @@ namespace cytnx {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
-  fparity cytnx::Symmetry_base::get_fparity(const cytnx_int64 &in_qnum) { return EVEN; }
+  fermionParity cytnx::Symmetry_base::get_fermion_parity(const cytnx_int64 &in_qnum) const {
+    return EVEN;
+  }
 
   void cytnx::Symmetry_base::print_info() const {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
@@ -207,8 +209,8 @@ namespace cytnx {
     out = -in + 2;
   }
 
-  fparity cytnx::FermionParitySymmetry::get_fparity(const cytnx_int64 &in_qnum) {
-    // vector<fparity> out(this->n);
+  fermionParity cytnx::FermionParitySymmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
+    // vector<fermionParity> out(this->n);
     if (in_qnum == 0)
       return EVEN;
     else if (in_qnum == 1)
@@ -255,8 +257,8 @@ namespace cytnx {
     out = in * -1;
   }
 
-  fparity cytnx::FermionNumberSymmetry::get_fparity(const cytnx_int64 &in_qnum) {
-    // vector<fparity> out(this->n);
+  fermionParity cytnx::FermionNumberSymmetry::get_fermion_parity(const cytnx_int64 &in_qnum) const {
+    // vector<fermionParity> out(this->n);
     if (in_qnum % 2 == 0)
       return EVEN;
     else

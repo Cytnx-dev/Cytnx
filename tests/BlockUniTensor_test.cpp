@@ -1034,9 +1034,3 @@ TEST_F(BlockUniTensorTest, get_bond_ref) {
   EXPECT_EQ(ut1.bonds()[0].qnums(), std::vector<std::vector<cytnx_int64>>({{1}, {0}, {0}}));
   EXPECT_EQ(ut1.bonds()[1].qnums(), std::vector<std::vector<cytnx_int64>>({{1}, {0}, {0}}));
 }
-
-// TEST_F(BlockUniTensorTest, fparity_boson) {
-//   bool par;
-
-//   EXPECT_EQ(par, false);
-// }

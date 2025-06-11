@@ -40,15 +40,12 @@ namespace cytnx {
   extern SymmetryType_class SymType;
 
   /**
-   * @brief fparity
+   * @brief fermionParity
    * @details the parity of fermionis
    * EVEN For bosons or an even number of fermions
    * ODD  For an even number of fermions
    */
-  enum fparity : bool { EVEN = false, ODD = true };
-  // fparity operator+ (fparity const& lhs, fparity const& rhs) {
-  //   return static_cast<fparity>(static_cast<bool>(lhs) != static_cast<bool>(rhs));
-  // }
+  enum fermionParity : bool { EVEN = false, ODD = true };
 
   // helper class, has implicitly conversion to vector<int64>!
   class Qs {
@@ -98,8 +95,8 @@ namespace cytnx {
     virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                                const bool &is_reverse);
     virtual void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    virtual fparity get_fparity(const cytnx_int64 &in_qnum);
-    virtual bool is_fermionic() { return false; };
+    virtual fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const;
+    virtual bool is_fermionic() const { return false; };
 
     virtual void print_info() const;
     virtual std::string stype_str() const {
@@ -178,10 +175,10 @@ namespace cytnx {
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    fparity get_fparity(const cytnx_int64 &in_qnum);
-    virtual bool is_fermionic() { return true; };
+    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
+    bool is_fermionic() const override { return true; };
     void print_info() const;
-    std::string stype_str() const { return "fP"; }
+    std::string stype_str() const override { return "fP"; }
   };
   ///@endcond
 
@@ -203,10 +200,10 @@ namespace cytnx {
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    fparity get_fparity(const cytnx_int64 &in_qnum);
-    virtual bool is_fermionic() { return true; };
+    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
+    bool is_fermionic() const override { return true; };
     void print_info() const;
-    std::string stype_str() const { return "f#"; }
+    std::string stype_str() const override { return "f#"; }
   };
   ///@endcond
 
@@ -491,13 +488,15 @@ namespace cytnx {
     @param[in] in_qnum quantum number
     @return parity of the quantum number; false for bosonic degree of freedom, true for fermionic
     */
-    fparity get_fparity(const cytnx_int64 &in_qnum) { return this->_impl->get_fparity(in_qnum); }
+    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const {
+      return this->_impl->get_fermion_parity(in_qnum);
+    }
 
     /**
     @brief check if the Symmetry is fermionic or not
     @return true if Symmetry is fermionic
     */
-    bool is_fermionic() { return this->_impl->is_fermionic(); }
+    bool is_fermionic() const { return this->_impl->is_fermionic(); }
 
     /**
      * @brief Save the current Symmetry object to a file.

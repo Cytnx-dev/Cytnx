@@ -147,7 +147,7 @@ namespace cytnx {
     std::vector<cytnx_uint64> &getDegeneracies() { return this->_degs; };
     const std::vector<cytnx_uint64> &getDegeneracies() const { return this->_degs; };
 
-    fparity get_fparity(const std::vector<cytnx_int64> &qnum);
+    fermionParity get_fermion_parity(const std::vector<cytnx_int64> &qnum);
 
     std::vector<cytnx_uint64> group_duplicates_();
 
@@ -775,8 +775,8 @@ namespace cytnx {
     @param[in] in_qnum quantum number
     @return parity of the quantum number; EVEN for bosonic degree of freedom, ODD for fermionic
     */
-    fparity get_fparity(const std::vector<cytnx_int64> &qnum) {
-      return this->_impl->get_fparity(qnum);
+    fermionParity get_fermion_parity(const std::vector<cytnx_int64> &qnum) {
+      return this->_impl->get_fermion_parity(qnum);
     }
 
     /**

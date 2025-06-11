@@ -424,20 +424,21 @@ namespace cytnx {
   }
   */
 
-  fparity Bond_impl::get_fparity(const std::vector<cytnx_int64> &qnum) {
+  fermionParity Bond_impl::get_fermion_parity(const std::vector<cytnx_int64> &qnum) {
     if (this->_qnums.size() == 0) {
       return EVEN;
     } else {
       cytnx_error_msg(
         qnum.size() != this->Nsym(),
-        "[ERROR][get_fparity] the qnum specify does not match the number of symmetries.%s", "\n");
+        "[ERROR][get_fermion_parity] the qnum specify does not match the number of symmetries.%s",
+        "\n");
 
-      fparity out = EVEN;
-      fparity curr = EVEN;
+      fermionParity out = EVEN;
+      fermionParity curr = EVEN;
       for (cytnx_uint64 i = 0; i < qnum.size(); i++) {
-        out =
-          static_cast<fparity>(out != this->_syms[i].get_fparity(
-                                        qnum[i]));  // false (ODD) if the symmetries are not equal
+        out = static_cast<fermionParity>(
+          out != this->_syms[i].get_fermion_parity(
+                   qnum[i]));  // false (ODD) if the symmetries are not equal
       }
 
       return out;

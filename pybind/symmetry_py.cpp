@@ -25,9 +25,9 @@ void symmetry_binding(py::module &m) {
     .value("fNum", __sym::__stype::fNum)
     .export_values();
 
-  py::enum_<fparity>(m, "fparity")
-    .value("EVEN", fparity::EVEN)
-    .value("ODD", fparity::ODD)
+  py::enum_<fermionParity>(m, "fermionParity")
+    .value("EVEN", fermionParity::EVEN)
+    .value("ODD", fermionParity::ODD)
     .export_values();
 
   py::class_<Qs>(m, "_cQs")
@@ -62,7 +62,7 @@ void symmetry_binding(py::module &m) {
     .def(
       "reverse_rule", [](Symmetry &self, const cytnx_int64 &qin) { return self.reverse_rule(qin); },
       py::arg("qin"))
-    .def("get_fparity", &Symmetry::get_fparity, py::arg("qnum"))
+    .def("get_fermion_parity", &Symmetry::get_fermion_parity, py::arg("qnum"))
     .def("is_fermionic", &Symmetry::is_fermionic)
 
     .def(
