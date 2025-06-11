@@ -1,0 +1,38 @@
+-------- start of print ---------
+Tensor name: 
+is_diag    : True
+contiguous : True
+
+Total elem: 25
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (25)
+[5.59017e+01 4.65490e-15 9.57650e-46 3.07595e-77 8.59824e-108 6.24040e-138 1.64397e-168 2.17184e-199 6.65227e-230 2.54214e-261 8.00572e-292 1.46017e-308 5.43472e-323 5.43472e-323 5.43472e-323 4.94066e-323 4.94066e-323 4.94066e-323 4.94066e-323 4.94066e-323 4.94066e-323 4.94066e-323 4.94066e-323 4.94066e-323 4.94066e-323 ]
+
+
+
+
+-------- start of print ---------
+Tensor name: 
+is_diag    : True
+contiguous : True
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1)
+[5.59017e+01 ]
+
+
+
+
+-------- start of print ---------
+Tensor name: 
+is_diag    : False
+contiguous : True
+
+Total elem: 1
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (1)
+[4.65490e-15 ]

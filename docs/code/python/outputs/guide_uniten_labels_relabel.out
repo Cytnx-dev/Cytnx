@@ -1,0 +1,27 @@
+-----------------------
+tensor Name : 
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------     
+         /         \    
+   a ____| 2     3 |____ b
+         |         |    
+         |       4 |____ c
+         \         /    
+          ---------     
+-----------------------
+tensor Name : 
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+           ---------     
+          /         \    
+   xx ____| 2     3 |____ b
+          |         |    
+          |       4 |____ c
+          \         /    
+           ---------     
+True

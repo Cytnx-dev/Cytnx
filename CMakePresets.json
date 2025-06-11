@@ -8,12 +8,11 @@
   "configurePresets": [
     {
       "name": "default",
-      "displayName": "openblas-cpu",
-      "description": "OpenBLAS as the BLAS vendor with CPU-only support.",
+      "hidden": true,
+      "description": "Base preset for all configurations.",
       "binaryDir": "${sourceDir}/build/${presetName}",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/libcytnx",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "OFF",
         "USE_MKL": "OFF",
         "BUILD_PYTHON": "ON",
@@ -29,6 +28,11 @@
       }
     },
     {
+      "name": "openblas-cpu",
+      "description": "OpenBLAS as the BLAS vendor with CPU-only support.",
+      "inherits": ["default"]
+    },
+    {
       "name": "mkl",
       "hidden": true,
       "description": "A base preset overriding OpenBLAS variables with MKL variables.",
@@ -38,13 +42,11 @@
     },
     {
       "name": "mkl-cpu",
-      "displayName": "mkl-cpu",
       "description": "Intel MKL as the BLAS vendor with CPU-only support.",
       "inherits": ["mkl", "default"]
     },
     {
       "name": "openblas-cuda",
-      "displayName": "openblas-cuda",
       "description": "OpenBLAS as the BLAS vendor with CUDA support.",
       "inherits": "default",
       "cacheVariables": {
@@ -57,7 +59,6 @@
     },
     {
       "name": "mkl-cuda",
-      "displayName": "mkl-cuda",
       "description": "Intel MKL as the BLAS vendor with CUDA support.",
       "inherits": ["mkl", "openblas-cuda"]
     },
@@ -77,25 +78,21 @@
     },
     {
       "name": "debug-openblas-cpu",
-      "displayName": "debug-openblas-cpu",
       "description": "Debug build: OpenBLAS as the BLAS vendor with CPU-only support.",
       "inherits": ["debug", "default"]
     },
     {
       "name": "debug-mkl-cpu",
-      "displayName": "debug-mkl-cpu",
       "description": "Debug build: Intel MKL as the BLAS vendor with CPU-only support.",
       "inherits": ["debug", "mkl-cpu"]
     },
     {
       "name": "debug-openblas-cuda",
-      "displayName": "debug-openblas-cuda",
       "description": "Debug build: OpenBLAS as the BLAS vendor with CUDA support.",
       "inherits": ["debug", "openblas-cuda"]
     },
     {
       "name": "debug-mkl-cuda",
-      "displayName": "debug-mkl-cuda",
       "description": "Debug build: Intel MKL as the BLAS vendor with CUDA support.",
       "inherits": ["debug", "mkl-cuda"]
     }
@@ -103,16 +100,28 @@
   "buildPresets": [
     {
       "name": "default",
-      "displayName": "openblas-cpu",
-      "description": "Build using OpenBLAS with CPU-only support.",
+      "hidden": true,
+      "description": "Default build preset.",
       "configurePreset": "default",
       "targets": ["all", "install"],
       "jobs": 8
     },
     {
+      "name": "openblas-cpu",
+      "description": "Build using OpenBLAS with CPU-only support.",
+      "configurePreset": "openblas-cpu",
+      "inherits": "default"
+    },
+    {
       "name": "openblas-cuda",
       "description": "Build using OpenBLAS with CUDA support.",
       "configurePreset": "openblas-cuda",
+      "inherits": "default"
+    },
+    {
+      "name": "mkl-cpu",
+      "description": "Build using Intel MKL with CPU-only support.",
+      "configurePreset": "mkl-cpu",
       "inherits": "default"
     },
     {
@@ -124,7 +133,7 @@
     {
       "name": "debug-openblas-cpu",
       "description": "Debug build using OpenBLAS with CPU-only support.",
-      "configurePreset": "debug",
+      "configurePreset": "debug-openblas-cpu",
       "inherits": "default"
     },
     {
@@ -148,10 +157,9 @@
   ],
   "testPresets": [
     {
-      "name": "default",
-      "displayName": "cpu-only",
+      "name": "cpu-only",
       "description": "Run tests for CPU-only builds.",
-      "configurePreset": "debug",
+      "configurePreset": "debug-openblas-cpu",
       "output": {
         "outputOnFailure": true,
         "verbosity": "verbose"
@@ -164,7 +172,7 @@
       "name": "cpu-and-cuda",
       "description": "Run tests for builds with CUDA support.",
       "configurePreset": "debug-openblas-cuda",
-      "inherits": "default"
+      "inherits": "cpu-only"
     }
   ]
 }
