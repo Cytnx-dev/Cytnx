@@ -29,13 +29,7 @@ namespace cytnx {
    *
    *  @see Symmetry::stype(), Symmetry::stype_str()
    */
-  enum SymmetryType : int {
-    Void = -99,
-    U = -1,
-    Z = 0,
-    fPar = -2,
-    fNum = -3
-  };
+  enum SymmetryType : int { Void = -99, U = -1, Z = 0, fPar = -2, fNum = -3 };
 
   /**
    * @brief fermionParity
@@ -97,9 +91,7 @@ namespace cytnx {
     virtual bool is_fermionic() const { return false; };
 
     virtual void print_info() const;
-    virtual std::string stype_str() const {
-      return SymmetryType::getname(this->stype_id) + std::to_string(this->n);
-    }
+    virtual std::string stype_str() const;
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
     // std::vector<cytnx_int64> &inR);
   };
@@ -128,6 +120,7 @@ namespace cytnx {
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
     std::string stype_str() const override { return "U1"; };
+  };
   ///@endcond
 
   ///@cond
@@ -152,9 +145,8 @@ namespace cytnx {
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
-    std::string stype_str() const override {
-      return "Z" + std::to_string(this->n);
-    };
+    std::string stype_str() const override { return "Z" + std::to_string(this->n); };
+  };
   ///@endcond
 
   ///@cond
@@ -258,9 +250,9 @@ namespace cytnx {
 
     ###description:
         create a new U1 symmetry object that serves as a generator.
-        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
-    the symmetry of the quantum number set, as well as providing the combining rule for the quantum
-    number when Bonds are combined.
+        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to
+    identify the symmetry of the quantum number set, as well as providing the combining rule for
+    the quantum number when Bonds are combined.
 
     ## Example:
     ### c++ API:
@@ -287,10 +279,10 @@ namespace cytnx {
         (Q + Q)%n
 
     ###description:
-        create a new Zn discrete symmetry object with integer \f$ n \f$ that serves as a generator.
-        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
-    the symmetry of the quantum number set, as well as providing the combining rule for the quantum
-    number when Bonds are combined.
+        create a new Zn discrete symmetry object with integer \f$ n \f$ that serves as a
+    generator. The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used
+    to identify the symmetry of the quantum number set, as well as providing the combining rule
+    for the quantum number when Bonds are combined.
 
 
     ## Example:
@@ -320,9 +312,9 @@ namespace cytnx {
 
     ###description:
         create a new fermionic parity symmetry object that serves as a generator.
-        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
-    the symmetry of the quantum number set, as well as providing the combining rule for the quantum
-    number when Bonds are combined.
+        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to
+    identify the symmetry of the quantum number set, as well as providing the combining rule for
+    the quantum number when Bonds are combined.
 
     */
     static Symmetry FermionParity() { return Symmetry(SymmetryType::fPar); }
@@ -340,11 +332,10 @@ namespace cytnx {
 
     ###description:
         create a new fermionic occupation number object that serves as a generator. This is a U1
-        symmetry with parity defined as EVEN for even occupation numbers and ODD for odd occupation
-        numbers.
-        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
-    the symmetry of the quantum number set, as well as providing the combining rule for the quantum
-    number when Bonds are combined.
+        symmetry with parity defined as EVEN for even occupation numbers and ODD for odd
+    occupation numbers. The symmetry object is a property of \link cytnx::Bond Bond \endlink. It
+    is used to identify the symmetry of the quantum number set, as well as providing the
+    combining rule for the quantum number when Bonds are combined.
 
     */
     static Symmetry FermionNumber() { return Symmetry(SymmetryType::fNum); }
@@ -463,8 +454,8 @@ namespace cytnx {
     }
 
     /**
-    @brief Apply reverse rule of current symmetry to a given quantum number and store in parameter
-    \p out.
+    @brief Apply reverse rule of current symmetry to a given quantum number and store in
+    parameter \p out.
     @details that means, \f$ o = -i \f$, where \f$ o \f$ is the output quantum number \p out,
     and \f$ i \f$ is the input quantum number \p in.
     @param[out] out the output quantum number.
@@ -475,7 +466,8 @@ namespace cytnx {
     }
 
     /**
-    @brief Apply reverse rule of current symmetry to a given quantum number and return the result.
+    @brief Apply reverse rule of current symmetry to a given quantum number and return the
+    result.
     @details that means, \f$ o = -i \f$, where \f$ o \f$ is the reverse quantum number,
     and \f$ i \f$ is the input quantum number \p in.
     @param[in] in the input quantum number.
@@ -486,7 +478,8 @@ namespace cytnx {
     /**
     @brief fermionic parity for a given quantum number
     @param[in] in_qnum quantum number
-    @return parity of the quantum number; false for bosonic degree of freedom, true for fermionic
+    @return parity of the quantum number; false for bosonic degree of freedom, true for
+    fermionic
     */
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const {
       return this->_impl->get_fermion_parity(in_qnum);
@@ -542,12 +535,11 @@ namespace cytnx {
      * @brief the inequality operator of the Symmetry object.
      */
     bool operator!=(const Symmetry &rhs) const;
-  };
+  };  // Symmetry
 
   /// @cond
   std::ostream &operator<<(std::ostream &os, const Symmetry &in);
   /// @endcond
 
-}  // namespace cytnx
-
+};  // namespace cytnx
 #endif  // CYTNX_SYMMETRY_H_

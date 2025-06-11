@@ -63,6 +63,10 @@ namespace cytnx {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
+  std::string cytnx::Symmetry_base::stype_str() const {
+    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+  }
+
   ///=========================
   bool cytnx::U1Symmetry::check_qnum(const cytnx_int64 &qnum) { return true; }
   bool cytnx::U1Symmetry::check_qnums(const std::vector<cytnx_int64> &qnums) { return true; }
