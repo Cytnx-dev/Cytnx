@@ -1,0 +1,51 @@
+cff-version: 1.2.0
+title: The Cytnx library for tensor networks
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Kai-Hsin
+    family-names: Wu
+    email: kaihsinwu@gmail.com
+    affiliation: Boston University
+    orcid: 'https://orcid.org/0000-0001-9126-5300'
+  - given-names: Chang-Teng
+    family-names: Lin
+    email: jeffry1829@gmail.com
+    affiliation: National Taiwan University
+  - given-names: Ke
+    family-names: Hsu
+    affiliation: National Taiwan University
+    orcid: 'https://orcid.org/0000-0001-5716-0230'
+  - given-names: Hao-Ti
+    family-names: Hung
+    affiliation: National Taiwan University
+    email: hunghaoti852@gmail.com
+  - given-names: Manuel
+    family-names: Schneider
+    affiliation: National Yang Ming Chiao Tung University
+    orcid: 'https://orcid.org/0000-0001-9348-8700'
+    email: manuel.schneider@nycu.edu.tw
+  - given-names: Chia-Min
+    family-names: Chung
+    orcid: 'https://orcid.org/0000-0002-6396-0784'
+    affiliation: National Sun Yat-sen University
+    email: chiaminchung@gmail.com
+  - given-names: Ying-Jer
+    family-names: Kao
+    affiliation: National Taiwan University
+    orcid: 'https://orcid.org/0000-0002-3329-6018'
+    email: yjkao@phys.ntu.edu.tw
+  - given-names: Pochung
+    family-names: Chen
+    email: pcchen@phys.nthu.edu.tw
+    affiliation: National Tsing Hua University
+    orcid: 'https://orcid.org/0000-0002-8092-7177'
+identifiers:
+  - type: doi
+    value: 10.21468/SciPostPhysCodeb.53
+url: 'https://cytnx-dev.github.io/Cytnx_doc'
+license: Apache-2.0
+version: 1.0.0
+date-released: '2025-03-13'

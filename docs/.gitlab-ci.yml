@@ -1,0 +1,12 @@
+image: alpine
+
+pages:
+  script:
+
+  - mv build/html/ public/
+  artifacts:
+    paths:
+    - public
+
+  only:
+  - master

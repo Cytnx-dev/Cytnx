@@ -558,6 +558,7 @@ void unitensor_binding(py::module &m) {
     .def("bond", [](UniTensor &self, const cytnx_uint64 &idx){return self.bond(idx);} ,py::arg("idx"))
     .def("bond", [](UniTensor &self, const std::string &label){return self.bond(label);} ,py::arg("label"))
     .def("shape", &UniTensor::shape)
+    .def("signflip", &UniTensor::signflip)
     .def("to_", &UniTensor::to_)
     .def(
       "to_different_device",
@@ -591,9 +592,7 @@ void unitensor_binding(py::module &m) {
 
     // [Deprecated by_label!]
     .def("permute_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
-
                         return &self.permute_(mapper,rowrank);
-
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
@@ -601,13 +600,26 @@ void unitensor_binding(py::module &m) {
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
-
                         return self.permute(mapper,rowrank);
-
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
                         return self.permute(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+     .def("permute_nosignflip", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
+                        return self.permute_nosignflip(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+    .def("permute_nosignflip", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
+                        return self.permute_nosignflip(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+     .def("permute_nosignflip_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
+                        self.permute_nosignflip_(mapper,rowrank);
+                },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
+
+    .def("permute_nosignflip_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
+                        self.permute_nosignflip_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
 
@@ -755,7 +767,7 @@ void unitensor_binding(py::module &m) {
 
 
 
-    .def("contract", &UniTensor::contract)
+    .def("contract", &UniTensor::contract, py::arg("inR"), py::arg("mv_elem_self")=false, py::arg("mv_elem_rhs")=false)
 
     .def("getTotalQnums", &UniTensor::getTotalQnums, py::arg("physical")=false)
 

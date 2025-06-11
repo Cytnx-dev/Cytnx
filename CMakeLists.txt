@@ -15,7 +15,7 @@ include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
 message(STATUS ${CMAKE_MODULE_PATH})
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
@@ -72,20 +72,106 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/vinfo.tmp" "${CYTNX_VARIANT_INFO}" "")
 # #####################################################################
 # ## COMMAND LINE OPTIONS
 # #####################################################################
-option(BACKEND_TORCH "Build Cytnx with pytorch backend (requires pytorch)" OFF)
 
-# # the following are only referenced when BACKEND_TORCH=OFF
-option(USE_CUDA "Build using Nvidia CUDA for GPU library" OFF)
-option(BUILD_PYTHON "Build Python wrapper" ON)
-option(USE_MKL "Build using MKL" ON)
-option(BUILD_DOC "Build API docuemntation" OFF)
-option(USE_HPTT "Build Cytnx with HPTT" OFF)
+# -----------------------------------------------------------------------------
+# :Function: require_dependent_variable
+#
+# :Description:
+#   Conditionally creates or validates a cache variable based on a set of
+#   dependency conditions.
+#
+#   The dependency conditions are provided in the *depends* parameter as a
+#   semicolon-separated list. The cache variable is required only when all
+#   these conditions evaluate to true.
+#
+# :Parameters:
+#   - **variable**: The name of the variable to set.
+#   - **default**:  The default value for the variable.
+#   - **type**:     The cache type (e.g., STRING, PATH) for the variable.
+#   - **help**:     A descriptive help message for the variable.
+#   - **depends**:  A semicolon-separated list of dependency conditions.
+#                  The variable is required only if all conditions are met.
+#
+# :Behavior:
+#   - Evaluates each dependency condition; if any condition evaluates to false,
+#     will not update the variable.
+#   - If all conditions are met and the variable is not already defined, the
+#     variable is set to the provided default value in the cache using the
+#     specified type and help message.
+#   - If the variable’s value is empty, a fatal error is raised.
+#
+# :Examples:
+#
+#   .. code-block:: cmake
+#
+#      require_dependent_variable(
+#        PACKAGE_INCLUDE_DIRS
+#        "$ENV{PACKAGE_INCLUDE_DIRS}"
+#        PATH
+#        "Path to the include directory of the package."
+#        "USE_A AND (USE_B OR USE_C);USE_D"
+#      )
+#
+#   In this example, if "USE_A AND (USE_B OR USE_C);USE_D" is true, then
+#   PACKAGE_INCLUDE_DIRS must be defined and non-empty. Otherwise, a fatal error
+#   is raised.
+# -----------------------------------------------------------------------------
+function(require_dependent_variable variable default type help depends)
+  # Evaluate each dependency condition; if any condition is false, exit early.
+  # This is copied from the source code of `cmake_dependent_option` function.
+  set(IS_NOT_AVAILABLE 0)
+  foreach(d ${depends})
+    cmake_language(EVAL CODE "
+      if (${d})
+      else()
+        set(IS_NOT_AVAILABLE 1)
+      endif()"
+    )
+  endforeach()
+  if(IS_NOT_AVAILABLE)
+    return()
+  endif()
+
+  if(NOT DEFINED ${variable})
+    set(${variable} "${default}" CACHE ${type} "${help}")
+  endif()
+
+  if("${${variable}}" STREQUAL "")
+    message(FATAL_ERROR "\
+Error: Cache variable '${variable}' is required under dependency conditions \
+(${depends}) but its value is empty.
+${help}
+")
+  endif()
+endfunction()
+
+include(CMakeDependentOption)
+
+set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx" CACHE PATH "the destination path for installation")
+option(BUILD_PYTHON "Build Python API. Require Python and pybind11 installed." ON)
+option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
+cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
+cmake_dependent_option(USE_HPTT "Use HPTT library to accelrate tensor transpose." OFF "NOT BACKEND_TORCH" OFF)
+cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Enable fine tune HPTT for the native hardware." OFF "USE_HPTT" OFF)
+# TODO: use variable instead of option to handle HPTT variant.
+cmake_dependent_option(HPTT_ENABLE_ARM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_AVX "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
+cmake_dependent_option(HPTT_ENABLE_IBM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
+cmake_dependent_option(USE_CUDA "Enable CUDA support." OFF "NOT BACKEND_TORCH" OFF)
+cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
+cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
+cmake_dependent_option(USE_CUTENSOR "Enable cuTENSOR." OFF "USE_CUDA" OFF)
+require_dependent_variable(CUTENSOR_ROOT "$ENV{CUTENSOR_ROOT}" PATH
+"Please provide CUTENSOR_ROOT in the environment variables.
+CUTENSOR_ROOT is the path to the folder of cuTENSOR." "USE_CUTENSOR")
+cmake_dependent_option(USE_CUQUANTUM "Enable cuQuantum." OFF "USE_CUDA" OFF)
+require_dependent_variable(CUQUANTUM_ROOT "$ENV{CUQUANTUM_ROOT}" PATH
+"Please provide CUQUANTUM_ROOT in the environment variables.
+CUQUANTUM_ROOT is the path to the folder of cuQuantum." "USE_CUQUANTUM")
 option(RUN_TESTS "Run Cytnx tests" OFF)
 option(RUN_BENCHMARKS "Run Cytnx benchmarks" OFF)
-option(USE_CUTT "Build Cytnx with CUTT" OFF)
-option(USE_CUTENSOR "Build Cytnx with CuTensor (requires CUDA)" ON)
-option(USE_CUQUANTUM "Build Cytnx with CUQuantum (requires CUDA)" ON)
-
+option(USE_DEBUG "Build in debug more and enable address sanitizer" OFF)
+option(BUILD_DOC "Build API docuemntation" OFF)
 option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 
 # #####################################################################
@@ -128,15 +214,12 @@ target_include_directories(cytnx
 )
 
 target_compile_definitions(cytnx PUBLIC _LIBCPP_DISABLE_AVAILABILITY)
-target_compile_definitions(cytnx PUBLIC _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
 target_include_directories(cytnx SYSTEM
   PUBLIC
   ${Boost_INCLUDE_DIRS}
 )
 
 target_compile_options(cytnx PUBLIC -Wformat=0 -w -fsized-deallocation)
-target_compile_features(cytnx PUBLIC cxx_std_17)
-
 add_subdirectory(src)
 
 if(USE_DEBUG)

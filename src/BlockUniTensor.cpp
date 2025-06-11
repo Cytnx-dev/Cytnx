@@ -4,6 +4,7 @@
 #include "linalg.hpp"
 #include "Generator.hpp"
 #include <vector>
+#include "utils/vec_clone.hpp"
 #include "utils/vec_print.hpp"
 #include "utils/vec_concatenate.hpp"
 #include <map>
@@ -58,9 +59,10 @@ namespace cytnx {
     }
 
     // check rowrank:
-    cytnx_error_msg((N_ket < 1) || (N_ket > bonds.size() - 1),
-                    "[ERROR][BlockUniTensor] must have at least one ket-bond and one bra-bond.%s",
-                    "\n");
+    // cytnx_error_msg((N_ket < 1) || (N_ket > bonds.size() - 1),
+    //                 "[ERROR][BlockUniTensor] must have at least one ket-bond and one
+    //                 bra-bond.%s",
+    //                 "\n");
 
     if (rowrank == -1) {
       this->_rowrank = N_ket;
@@ -85,7 +87,7 @@ namespace cytnx {
     } else {
       // check bonds & labels dim
       cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
-                      "[ERROR] labels must have same lenth as # of bonds.");
+                      "[ERROR] labels must have same length as # of bonds.");
 
       std::vector<string> tmp = vec_unique(in_labels);
       cytnx_error_msg(tmp.size() != in_labels.size(),
@@ -356,6 +358,8 @@ namespace cytnx {
     char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
+    sprintf(buffer, "Tensor type: %s\n", this->uten_type_str().c_str());
+    os << std::string(buffer);
     if (this->_is_tag)
       sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
     os << std::string(buffer);
@@ -400,7 +404,7 @@ namespace cytnx {
     free(buffer);
   }
 
-  void BlockUniTensor::print_diagram(const bool &bond_info) {
+  void BlockUniTensor::print_diagram(const bool &bond_info) const {
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
@@ -414,9 +418,9 @@ namespace cytnx {
     // std::cout << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
     std::cout << std::string(buffer);
-    sprintf(buffer, "valid blocks : %d\n", this->_blocks.size());
+    sprintf(buffer, "valid blocks: %d\n", this->_blocks.size());
     std::cout << std::string(buffer);
-    sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
+    sprintf(buffer, "is diag     : %s\n", this->is_diag() ? "True" : "False");
     std::cout << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
     std::cout << std::string(buffer);
@@ -557,9 +561,8 @@ namespace cytnx {
     BlockUniTensor *out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
-    std::vector<cytnx_uint64> mapper_u64;
+    std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
 
-    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
     // checking:
     for (int i = 0; i < mapper_u64.size(); i++) {
       cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",
@@ -585,9 +588,8 @@ namespace cytnx {
       }
 
       if (rowrank >= 0) {
-        cytnx_error_msg((rowrank >= out_raw->_bonds.size()) || (rowrank < 1),
-                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, "
-                        "and should be >=1.%s",
+        cytnx_error_msg((rowrank > out_raw->_bonds.size()),
+                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
                         "\n");
         out_raw->_rowrank = rowrank;
       }
@@ -644,9 +646,8 @@ namespace cytnx {
       }
 
       if (rowrank >= 0) {
-        cytnx_error_msg((rowrank >= this->_bonds.size()) || (rowrank < 1),
-                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor-1, "
-                        "and should be >=1.%s",
+        cytnx_error_msg((rowrank > this->_bonds.size()),
+                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
                         "\n");
         this->_rowrank = rowrank;
       }

@@ -2,7 +2,6 @@ target_sources_local(cytnx
   PRIVATE
     Alloc_cpu.hpp
     Cast_cpu.hpp
-    Fill_cpu.hpp
     GetElems_cpu.hpp
     GetElems_contiguous_cpu.hpp
     Movemem_cpu.hpp

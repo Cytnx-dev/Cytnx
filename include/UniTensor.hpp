@@ -33,13 +33,8 @@ namespace cytnx {
   /// @cond
   class UniTensorType_class {
    public:
-    enum : int {
-      Void = -99,
-      Dense = 0,
-      Sparse = 1,
-      Block = 2,
-    };
-    std::string getname(const int &ut_type);
+    enum : int { Void = -99, Dense = 0, Sparse = 1, Block = 2, BlockFermionic = 3 };
+    std::string getname(const int &ut_type) const;
   };
   /// @endcond
   /**
@@ -47,12 +42,13 @@ namespace cytnx {
    * @details It is about the type of the UniTensor.\n
    *     The supported enumerations are as following:
    *
-   *  enumeration  |  description
-   * --------------|--------------------
-   *  Void         |  -1, void UniTensor
-   *  Dense        |  0, dense UniTensor
-   *  Sparse       |  1, sparse UniTensor (deprecated)
-   *  Block        |  2, block UniTensor
+   *  enumeration    |  description
+   * ----------------|--------------------
+   *  Void           |  -1, void UniTensor
+   *  Dense          |  0, dense UniTensor
+   *  Sparse         |  1, sparse UniTensor (deprecated)
+   *  Block          |  2, block UniTensor
+   *  BlockFermionic |  3, fermionic UniTensor (block form)
    *
    *  @warning the type \em Sparse is deprecated. Use \em Block instead.
    *  @see UniTensor::uten_type(), UniTensor::uten_type_str()
@@ -96,6 +92,7 @@ namespace cytnx {
     friend class DenseUniTensor;
     // friend class SparseUniTensor;
     friend class BlockUniTensor;
+    friend class BlockFermionicUniTensor;
 
     UniTensor_base()
         : _is_tag(false),
@@ -115,7 +112,7 @@ namespace cytnx {
     const bool &is_tag() const { return this->_is_tag; }
     const std::vector<std::string> &labels() const { return this->_labels; }
     /**
-     * @brief Get the index of an desired label string
+     * @brief Get the index of a desired label (string)
      *
      * @param label Label you want to find
      * @return The index of the label. If not found, return -1
@@ -149,13 +146,14 @@ namespace cytnx {
     void set_name(const std::string &in) { this->_name = in; }
 
     /**
-     * @brief Set the label object
-     * @details Replace the old label by new label.
+     * @brief Set a label
+     * @details Replace the old label by a new label.
      * @param[in] oldlabel The old label you want to replace.
-     * @param[in] new_lable The label you want to replace with.
+     * @param[in] new_label The new label.
      * @pre
-     * 1. \p oldlabel should be exist in this UniTensor.
-     * 2. The new label \p new_label cannot set as others exit labels (cannot be duplicated.)
+     * 1. \p oldlabel should exist in this UniTensor.
+     * 2. The new label \p new_label cannot be the same as other existing labels (no duplicate
+     * labels allowed).
      * @see set_label(const cytnx_int64 &inx, const std::string &new_label)
      */
     void set_label(const std::string &oldlabel, const std::string &new_label) {
@@ -213,7 +211,7 @@ namespace cytnx {
     }
 
     int uten_type() { return this->uten_type_id; }
-    std::string uten_type_str() { return UTenType.getname(this->uten_type_id); }
+    std::string uten_type_str() const { return UTenType.getname(this->uten_type_id); }
 
     /// VIRTUAL FUNCTIONS:
 
@@ -227,6 +225,7 @@ namespace cytnx {
     virtual void Init_by_Tensor(const Tensor &in, const bool &is_diag = false,
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
+    virtual std::vector<bool> signflip() const;
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -249,11 +248,20 @@ namespace cytnx {
     virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     virtual void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
 
+    virtual boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    virtual boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    virtual void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                                     const cytnx_int64 &rowrank = -1);
+    virtual void permute_nosignflip_(const std::vector<std::string> &mapper,
+                                     const cytnx_int64 &rowrank = -1);
+
     // virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank =
     // -1);
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
-    virtual void print_diagram(const bool &bond_info = false);
+    virtual void print_diagram(const bool &bond_info = false) const;
     virtual void print_blocks(const bool &full_info = true) const;
     virtual void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
 
@@ -362,7 +370,7 @@ namespace cytnx {
 
     virtual void tag();
 
-    virtual void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
+    virtual void truncate_(const std::string &label, const cytnx_uint64 &dim);
     virtual void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
 
     virtual bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
@@ -553,7 +561,7 @@ namespace cytnx {
      *
      *
      *
-     * @param inx
+     * @param inx / old_label
      * @param new_label
      *
      * @return boost::intrusive_ptr<UniTensor_base>
@@ -592,7 +600,7 @@ namespace cytnx {
         return out;
       }
     }
-    void print_diagram(const bool &bond_info = false);
+    void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
     Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_block.clone(); }
@@ -995,7 +1003,7 @@ namespace cytnx {
      *
      */
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
-    void truncate_(const std::string &bond_idx, const cytnx_uint64 &dim);
+    void truncate_(const std::string &label, const cytnx_uint64 &dim);
 
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
@@ -1034,7 +1042,8 @@ namespace cytnx {
   class BlockUniTensor : public UniTensor_base {
    protected:
    public:
-    std::vector<std::vector<cytnx_uint64>> _inner_to_outer_idx;
+    std::vector<std::vector<cytnx_uint64>>
+      _inner_to_outer_idx;  // stores the qindices for each block
     std::vector<Tensor> _blocks;
     Tensor NullRefTensor;  // this returns when access block is not exists!
 
@@ -1364,7 +1373,7 @@ namespace cytnx {
 
     boost::intrusive_ptr<UniTensor_base> contiguous();
 
-    void print_diagram(const bool &bond_info = false);
+    void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
 
@@ -1659,7 +1668,7 @@ namespace cytnx {
     void _load_dispatch(std::fstream &f);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
-    void truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index);
+    void truncate_(const std::string &label, const cytnx_uint64 &q_index);
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index);
 
     void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -1739,6 +1748,818 @@ namespace cytnx {
     vec2d<cytnx_uint64> &get_itoi() { return this->_inner_to_outer_idx; }
   };
   /// @endcond
+
+  //======================================================================
+  /// @cond
+  class BlockFermionicUniTensor : public UniTensor_base {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally sign flips are stored as
+    //_signflip and taken care of in all the methods
+   public:
+    std::vector<std::vector<cytnx_uint64>>
+      _inner_to_outer_idx;  // stores the qindices for each block
+    std::vector<Tensor> _blocks;
+    Tensor NullRefTensor;  // this returns when accessed block does not exists!
+    // additional informaiton for fermions:
+    std::vector<cytnx_bool>
+      _signflip;  // if true, the sign of the corresponding block needs to be flipped
+
+    // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums
+    // calculated from Symm object! this assume 1. symmetry are the same for each bond!
+    //             2. total_qns are feeded with size len(symmetry)
+    void _fx_get_total_fluxs(std::vector<cytnx_uint64> &loc, const std::vector<Symmetry> &syms,
+                             std::vector<cytnx_int64> &total_qns) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      memset(&total_qns[0], 0, sizeof(cytnx_int64) * total_qns.size());
+
+      for (cytnx_int32 i = 0; i < syms.size(); i++) {
+        if (this->_bonds[0].type() == BD_BRA)
+          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+        else
+          total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
+
+        for (auto j = 1; j < loc.size(); j++) {
+          if (this->_bonds[j].type() == BD_BRA)
+            total_qns[i] = syms[i].combine_rule(
+              total_qns[i], syms[i].reverse_rule(this->_bonds[j]._impl->_qnums[loc[j]][i]));
+          else {
+            total_qns[i] =
+              syms[i].combine_rule(total_qns[i], this->_bonds[j]._impl->_qnums[loc[j]][i]);
+          }
+        }
+      }
+    }
+
+    void _fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
+                         const std::vector<cytnx_uint64> &locator) const;
+
+    // internal function, grouping all duplicate qnums in all bonds
+    void _fx_group_duplicates(const std::vector<cytnx_uint64> &dup_bond_idxs,
+                              const std::vector<std::vector<cytnx_uint64>> &idx_mappers);
+
+    void set_meta(BlockFermionicUniTensor *tmp, const bool &inner, const bool &outer) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, _signflip is set
+      // outer meta
+      if (outer) {
+        tmp->_bonds = vec_clone(this->_bonds);
+        tmp->_labels = this->_labels;
+        tmp->_is_braket_form = this->_is_braket_form;
+        tmp->_rowrank = this->_rowrank;
+        tmp->_name = this->_name;
+        // tmp->_signflip = vec_clone(this->_signflip);
+        tmp->_signflip = this->_signflip;
+      }
+
+      tmp->_is_diag = this->_is_diag;
+
+      // inner meta
+      if (inner) {
+        tmp->_inner_to_outer_idx = this->_inner_to_outer_idx;
+      }
+    }
+
+    BlockFermionicUniTensor *clone_meta(const bool &inner, const bool &outer) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
+      this->set_meta(tmp, inner, outer);
+      return tmp;
+    };
+
+    friend class UniTensor;
+    BlockFermionicUniTensor() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      this->uten_type_id = UTenType.BlockFermionic;
+      this->_is_tag = true;
+    }
+
+    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+              const int &device = Device.cpu, const bool &is_diag = false,
+              const bool &no_alloc = false, const std::string &name = "");
+
+    void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
+                        const cytnx_int64 &rowrank = -1, const std::string &name = "") {
+      cytnx_error_msg(true,
+                      "[ERROR][BlockFermionicUniTensor] cannot use Init_by_tensor() on a "
+                      "BlockFermionicUniTensor.%s",
+                      "\n");
+    }
+
+    std::vector<cytnx_uint64> shape() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      std::vector<cytnx_uint64> out(this->_bonds.size());
+      for (cytnx_uint64 i = 0; i < out.size(); i++) {
+        out[i] = this->_bonds[i].dim();
+      }
+      return out;
+    }
+
+    bool is_blockform() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return true;
+    }
+
+    bool is_contiguous() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      bool out = true;
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        out &= this->_blocks[i].is_contiguous();
+      }
+      return out;
+    };
+
+    cytnx_uint64 Nblocks() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_blocks.size();
+    };
+
+    std::vector<bool> signflip() const;
+    // std::vector<bool> &signflip_reference() { return this->_signflip; };
+    // const std::vector<bool> &signflip_reference() const { return this->_signflip; };
+
+    void to_(const int &device) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      for (cytnx_uint64 i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].to_(device);
+      }
+    };
+
+    boost::intrusive_ptr<UniTensor_base> to(const int &device) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      if (this->device() == device) {
+        return this;
+      } else {
+        boost::intrusive_ptr<UniTensor_base> out = this->clone();
+        out->to_(device);
+        return out;
+      }
+    };
+
+    boost::intrusive_ptr<UniTensor_base> clone() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; changed to BlockFermionicUniTensor as
+      // output
+      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks = vec_clone(this->_blocks);
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
+    };
+
+    unsigned int dtype() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks.size() < 1 ? Type.Void : this->_blocks[0].dtype();
+    };
+    int device() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks.size() < 1 ? -404 : this->_blocks[0].device();
+    };
+    std::string dtype_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks.size() < 1 ? "Void, no valid blocks" : this->_blocks[0].dtype_str();
+    };
+    std::string device_str() const {
+        //[21 Aug 2024] This is a copy from BlockUniTensor;
+  #ifdef UNI_DEBUG
+      cytnx_error_msg(this->_blocks.size() == 0, "[ERROR][internal] empty blocks for blockform.%s",
+                      "\n");
+  #endif
+      return this->_blocks.size() < 1 ? "None, no valid blocks" : this->_blocks[0].device_str();
+    };
+
+    Tensor get_block(const cytnx_uint64 &idx = 0) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      return this->_blocks[idx].clone();
+    };
+
+    // this one for Block will return the indicies!!
+    Tensor get_block(const std::vector<cytnx_int64> &indices, const bool &force_return) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (force_return) {
+          return NullRefTensor;
+        } else {
+          cytnx_error_msg(true,
+                          "[ERROR][get_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "force_return=false, so "
+                          "error throws. \n    If you want to return an empty block without "
+                          "error when block is "
+                          "not avaliable, set force_return=True.%s",
+                          "\n");
+        }
+      } else {
+        return this->_blocks[b].clone();
+      }
+    }
+
+    const Tensor &get_block_(const cytnx_uint64 &idx = 0) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      return this->_blocks[idx];
+    };
+
+    Tensor &get_block_(const cytnx_uint64 &idx = 0) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      return this->_blocks[idx];
+    };
+
+    const Tensor &get_block_(const std::vector<cytnx_int64> &indices,
+                             const bool &force_return) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (force_return) {
+          return this->NullRefTensor;
+        } else {
+          cytnx_error_msg(true,
+                          "[ERROR][get_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "force_return=false, so "
+                          "error throws. \n    If you want to return an empty block without "
+                          "error when block is "
+                          "not avaliable, set force_return=True.%s",
+                          "\n");
+        }
+      } else {
+        return this->_blocks[b];
+      }
+    }
+
+    Tensor &get_block_(const std::vector<cytnx_int64> &indices, const bool &force_return) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][get_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (force_return) {
+          return this->NullRefTensor;
+        } else {
+          cytnx_error_msg(true,
+                          "[ERROR][get_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "force_return=false, so "
+                          "error throws. \n    If you want to return an empty block without "
+                          "error when block is "
+                          "not avaliable, set force_return=True.%s",
+                          "\n");
+        }
+      } else {
+        return this->_blocks[b];
+      }
+    }
+
+    std::vector<Tensor> get_blocks() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return vec_clone(this->_blocks);
+    }
+    const std::vector<Tensor> &get_blocks_(const bool &) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_blocks;
+    }
+    std::vector<Tensor> &get_blocks_(const bool &) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_blocks;
+    }
+
+    bool same_data(const boost::intrusive_ptr<UniTensor_base> &rhs) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; changed to BlockFermionic UTenType
+      if (rhs->uten_type() != UTenType.BlockFermionic) return false;
+      if (rhs->get_blocks_(1).size() != this->get_blocks_(1).size()) return false;
+
+      for (int i = 0; i < rhs->get_blocks_(1).size(); i++)
+        if (this->get_blocks_(1)[i].same_data(rhs->get_blocks_(1)[i]) == false) return false;
+
+      return true;
+    }
+
+    void set_rowrank_(const cytnx_uint64 &new_rowrank) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        new_rowrank > this->rank(),
+        "[ERROR][BlockFermionicUniTensor] rowrank should be [>=0] and [<=UniTensor.rank].%s", "\n");
+      if (this->is_diag()) {
+        cytnx_error_msg(
+          new_rowrank != 1,
+          "[ERROR][BlockFermionicUniTensor] rowrank should be [==1] when is_diag =true!.%s", "\n");
+      }
+      this->_rowrank = new_rowrank;
+      this->_is_braket_form = this->_update_braket();
+    }
+
+    boost::intrusive_ptr<UniTensor_base> set_rowrank(const cytnx_uint64 &new_rowrank) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; output type changed to
+      // BlockFermionicUniTensor
+      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks = this->_blocks;
+      tmp->set_rowrank_(new_rowrank);
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<cytnx_int64> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
+                                                 const cytnx_int64 &rowrank = -1);
+
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<cytnx_int64> &mapper,
+                                                            const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<std::string> &mapper,
+                                                            const cytnx_int64 &rowrank = -1);
+    void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                             const cytnx_int64 &rowrank = -1);
+    void permute_nosignflip_(const std::vector<std::string> &mapper,
+                             const cytnx_int64 &rowrank = -1);
+
+    // Helper function; implements the sign flips when permuting indices
+    std::vector<bool> _swapsigns_(const std::vector<cytnx_int64> &mapper) const;
+    std::vector<bool> _lhssigns_(const std::vector<cytnx_int64> &mapper,
+                                 const cytnx_int64 contrno) const;
+    std::vector<bool> _swapsigns_(const std::vector<cytnx_uint64> &mapper) const;
+    std::vector<bool> _lhssigns_(const std::vector<cytnx_uint64> &mapper,
+                                 const cytnx_uint64 contrno) const;
+
+    boost::intrusive_ptr<UniTensor_base> contiguous_() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
+      return boost::intrusive_ptr<UniTensor_base>(this);
+    }
+
+    boost::intrusive_ptr<UniTensor_base> contiguous();
+
+    void print_diagram(const bool &bond_info = false) const;
+    void print_blocks(const bool &full_info = true) const;
+    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+
+    boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
+                                                  const bool &mv_elem_self = false,
+                                                  const bool &mv_elem_rhs = false);
+
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &new_labels);
+    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
+
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &old_labels,
+                                                 const std::vector<std::string> &new_labels);
+    boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &old_labels,
+                                                  const std::vector<std::string> &new_labels);
+
+    boost::intrusive_ptr<UniTensor_base> relabel(const std::string &old_label,
+                                                 const std::string &new_label);
+    boost::intrusive_ptr<UniTensor_base> relabel(const cytnx_int64 &inx,
+                                                 const std::string &new_label);
+    std::vector<Symmetry> syms() const;
+
+    void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
+      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+    }
+    boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
+                                                 const cytnx_uint64 &rowrank = 0) {
+      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+      return nullptr;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
+      BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+      tmp->_blocks.resize(this->_blocks.size());
+      for (cytnx_int64 blk = 0; blk < this->_blocks.size(); blk++) {
+        tmp->_blocks[blk] = this->_blocks[blk].astype(dtype);
+      }
+      boost::intrusive_ptr<UniTensor_base> out(tmp);
+      return out;
+    };
+
+    // this will only work on non-symm tensor (DenseUniTensor)
+    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
+      cytnx_error_msg(
+        true,
+        "[ERROR][BlockFermionicUniTensor][get] cannot use get on a UniTensor with "
+        "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+        "\n");
+      return nullptr;
+    }
+
+    // this will only work on non-symm tensor (DenseUniTensor)
+    void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        true,
+        "[ERROR][BlockFermionicUniTensor][get] cannot use get on a UniTensor with "
+        "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
+        "\n");
+    }
+
+    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      cytnx_error_msg(
+        in.shape() != this->_blocks[idx].shape(),
+        "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+        "of block @ idx=%d\n",
+        idx);
+
+      this->_blocks[idx] = in.clone();
+    }
+    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(idx >= this->_blocks.size(),
+                      "[ERROR][BlockFermionicUniTensor] index out of range%s", "\n");
+      cytnx_error_msg(
+        in.shape() != this->_blocks[idx].shape(),
+        "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+        "of block @ idx=%d\n",
+        idx);
+
+      this->_blocks[idx] = in;
+    }
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][put_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (check) {
+          cytnx_error_msg(true,
+                          "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "check=true, so error throws. \n    If you want without error when block "
+                          "is not avaliable, set check=false.%s",
+                          "\n");
+        }
+      } else {
+        cytnx_error_msg(
+          in.shape() != this->_blocks[b].shape(),
+          "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+          "of block @ idx=%d\n",
+          b);
+
+        this->_blocks[b] = in.clone();
+      }
+    }
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(in.dtype() != this->dtype(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "\n");
+      cytnx_error_msg(in.device() != this->device(),
+                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "match.%s",
+                      "\n");
+      // We shouldn't check the contiguous
+      // cytnx_error_msg(!in.contiguous());
+      cytnx_error_msg(
+        indices.size() != this->rank(),
+        "[ERROR][put_block][BlockFermionicUniTensor] len(indices) must be the same as the "
+        "Tensor rank (number of legs).%s",
+        "\n");
+
+      std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
+
+      // find if the indices specify exists!
+      cytnx_int64 b = -1;
+      for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
+        if (inds == this->_inner_to_outer_idx[i]) {
+          b = i;
+          break;
+        }
+      }
+
+      if (b < 0) {
+        if (check) {
+          cytnx_error_msg(true,
+                          "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists, "
+                          "check=true, so error throws. \n    If you want without error when block "
+                          "is not avaliable, set check=false.%s",
+                          "\n");
+        }
+      } else {
+        cytnx_error_msg(
+          in.shape() != this->_blocks[b].shape(),
+          "[ERROR][BlockFermionicUniTensor] the shape of input tensor does not match the shape "
+          "of block @ idx=%d\n",
+          b);
+        this->_blocks[b] = in;
+      }
+    }
+
+    void tag() {
+      // no-use!
+    }
+
+    boost::intrusive_ptr<UniTensor_base> Conj() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Conj_();
+      return out;
+    }
+
+    void Conj_() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].Conj_();
+      }
+    };
+
+    // Transpose(_) changes the index order without sign flips and reverses the bond directions for
+    // fermionic tensors
+    void Transpose_();
+    boost::intrusive_ptr<UniTensor_base> Transpose() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Transpose_();
+      return out;
+    }
+
+    void normalize_();
+    boost::intrusive_ptr<UniTensor_base> normalize() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->normalize_();
+      return out;
+    }
+
+    boost::intrusive_ptr<UniTensor_base> Dagger() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      boost::intrusive_ptr<UniTensor_base> out = this->Conj();
+      out->Transpose_();
+      return out;
+    }
+    void Dagger_() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      this->Conj_();
+      this->Transpose_();
+    }
+
+    void Trace_(const std::string &a, const std::string &b);
+    void Trace_(const cytnx_int64 &a, const cytnx_int64 &b);
+
+    boost::intrusive_ptr<UniTensor_base> Trace(const std::string &a, const std::string &b) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      if (out->rank() == 0) {
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockFermionicUniTensor *)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
+      return out;
+    }
+    boost::intrusive_ptr<UniTensor_base> Trace(const cytnx_int64 &a, const cytnx_int64 &b) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Trace_(a, b);
+      if (out->rank() == 0) {
+        DenseUniTensor *tmp = new DenseUniTensor();
+        tmp->_block = ((BlockFermionicUniTensor *)out.get())->_blocks[0];
+        out = boost::intrusive_ptr<UniTensor_base>(tmp);
+      }
+      return out;
+    }
+
+    Tensor Norm() const;
+
+    bool elem_exists(const std::vector<cytnx_uint64> &locator) const;
+
+    const Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator) const;
+    const cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                          const cytnx_complex128 &aux) const;
+    const cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                         const cytnx_complex64 &aux) const;
+    const cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_double &aux) const;
+    const cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_float &aux) const;
+    const cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint64 &aux) const;
+    const cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int64 &aux) const;
+    const cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint32 &aux) const;
+    const cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int32 &aux) const;
+    const cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                      const cytnx_uint16 &aux) const;
+    const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                     const cytnx_int16 &aux) const;
+
+    Scalar::Sproxy at_for_sparse(const std::vector<cytnx_uint64> &locator);
+    cytnx_complex128 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                    const cytnx_complex128 &aux);
+    cytnx_complex64 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                   const cytnx_complex64 &aux);
+    cytnx_double &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_double &aux);
+    cytnx_float &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_float &aux);
+    cytnx_uint64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux);
+    cytnx_int64 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux);
+    cytnx_uint32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux);
+    cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
+    cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
+    cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
+
+    void _save_dispatch(std::fstream &f) const;
+    void _load_dispatch(std::fstream &f);
+
+    // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
+    void truncate_(const std::string &label, const cytnx_uint64 &q_index);
+    void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index);
+
+    void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    void Add_(const Scalar &rhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+
+    void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    void Mul_(const Scalar &rhs);
+
+    void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs);
+    void Sub_(const Scalar &rhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+    void lSub_(const Scalar &lhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+
+    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+    void Div_(const Scalar &rhs);
+    void lDiv_(const Scalar &lhs) {
+      cytnx_error_msg(
+        true,
+        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
+        "BlockFermionicUniTensor.\n %s "
+        "\n",
+        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "operation on the block(s).");
+    }
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
+
+    void group_basis_();
+
+    void combineBond(const std::vector<std::string> &indicators, const bool &force = false);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force = false);
+    void combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
+                      const bool &by_label);
+    void combineBonds(const std::vector<std::string> &indicators, const bool &force = false);
+
+    const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        bidx >= this->Nblocks(),
+        "[ERROR][BlockFermionicUniTensor] bidx out of bound! only %d blocks in current UTen.\n",
+        this->Nblocks());
+      return this->_inner_to_outer_idx[bidx];
+    }
+    std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      cytnx_error_msg(
+        bidx >= this->Nblocks(),
+        "[ERROR][BlockFermionicUniTensor] bidx out of bound! only %d blocks in current UTen.\n",
+        this->Nblocks());
+      return this->_inner_to_outer_idx[bidx];
+    }
+
+    const vec2d<cytnx_uint64> &get_itoi() const {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_inner_to_outer_idx;
+    }
+    vec2d<cytnx_uint64> &get_itoi() {
+      //[21 Aug 2024] This is a copy from BlockUniTensor;
+      return this->_inner_to_outer_idx;
+    }
+
+    void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
+                            const std::vector<cytnx_uint64> &qn_indices,
+                            const std::vector<Bond> &bonds, const Tensor &block) const;
+  };
+  /// @endcond
+
   //======================================================================
 
   /// @cond
@@ -1807,24 +2628,24 @@ namespace cytnx {
     /**
     @brief Construct a UniTensor from a cytnx::Tensor.
     @param[in] in_tensor a cytnx::Tensor
-    @param[in] is_diag Whether the input Tensor \p in_tensor is a diagonal Tensor.
-                     This will requires that the input of \p in_tensor to be 1D.
-    @param[in] rowrank the rowrank of the outcome UniTensor
+    @param[in] is_diag whether the input Tensor \p in_tensor is a diagonal Tensor;
+                     this requires the input \p in_tensor to be 1D.
+    @param[in] rowrank the rowrank of the resulting UniTensor
 
     @note
-        1. The constructed UniTensor will have same rank as the input Tensor, with default labels,
-    and a shared view (shared instance) of interal block as the input Tensor.
+        1. The constructed UniTensor will have the same rank as the input Tensor, with default
+    labels, and a shared view (shared instance) of interal block as the input Tensor.
         2. The constructed UniTensor is always untagged.
-    @attention The internal block of UniTensor is a referece of input Tensor. That is, they
-    share the same memory. All the change afterward on UniTensor block will change in input Tensor
-    as well. Use Tensor.clone() if a shared view is not the case.
+    @attention The internal block of the UniTensor is a referece to the input Tensor. That is, they
+    share the same memory. If the elements of the UniTensor are changed, the original Tensor is also
+    changed and vice-versa. Use Tensor.clone() if a shared view is not desired.
 
     ## Example:
-    ### c++ API:
+    ### C++ API:
     \include example/UniTensor/fromTensor.cpp
     #### output>
     \verbinclude example/UniTensor/fromTensor.cpp.out
-    ### python API:
+    ### Python API:
     \include example/UniTensor/fromTensor.py
     #### output>
     \verbinclude example/UniTensor/fromTensor.py.out
@@ -1837,20 +2658,20 @@ namespace cytnx {
       this->Init(in_tensor, is_diag, rowrank, in_labels, name);
     }
     /**
-    @brief Initialize a UniTensor with cytnx::Tensor.
+    @brief Initialize a UniTensor from a cytnx::Tensor.
     @param[in] in_tensor a cytnx::Tensor
-    @param[in] is_diag Whether the input Tensor \p in_tensor is a diagonal Tensor.
-                     This will requires that the input of \p in_tensor to be 1D.
-    @param[in] rowrank the rowrank of the outcome UniTensor.
-    @param[in] name user specified name of the UniTensor.
+    @param[in] is_diag whether the input Tensor \p in_tensor is a diagonal Tensor.
+                     this requires the input \p in_tensor to be 1D.
+    @param[in] rowrank the rowrank of the resulting UniTensor.
+    @param[in] name user-specified name of the UniTensor.
 
     @note
-        1. The constructed UniTensor will have same rank as the input Tensor, with default labels,
-    and a shared view (shared instance) of interal block as the input Tensor.
+        1. The constructed UniTensor will have the same rank as the input Tensor, with default
+    labels, and a shared view (shared instance) of interal block as the input Tensor.
         2. The constructed UniTensor is always untagged.
-    @attention The internal block of UniTensor is a referece of input Tensor. That is, they
-    share the same memory. All the change afterward on UniTensor block will change in input Tensor
-    as well. Use Tensor.clone() if a shared view is not the case.
+    @attention The internal block of the UniTensor is a referece to the input Tensor. That is, they
+    share the same memory. If the elements of the UniTensor are changed, the original Tensor is also
+    changed and vice-versa. Use Tensor.clone() if a shared view is not desired.
         @see UniTensor(const Tensor &, const bool &, const cytnx_int64 &)
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false, const cytnx_int64 &rowrank = -1,
@@ -1939,6 +2760,7 @@ namespace cytnx {
       // checking type:
       bool is_sym = false;
       int sym_fver = -1;
+      bool fermionic = false;
 
       for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
         // check
@@ -1950,9 +2772,15 @@ namespace cytnx {
             // std::cout << sym_fver << " " <<
             // bonds[i]._impl->_degs.size() << std::endl;
             cytnx_error_msg((bool(sym_fver) ^ bool(bonds[i]._impl->_degs.size())),
-                            "[ERROR] All the Bond when init a UniTensor with symmetric must be in "
-                            "the same format!%s",
+                            "[ERROR] When initializing a UniTensor with symmetries, all Bonds must "
+                            "be in the same format!%s",
                             "\n");
+          }
+          if (!fermionic) {
+            std::vector<Symmetry> symms = bonds[i].syms();
+            for (cytnx_uint64 i = 0; i < symms.size(); i++) {
+              if (symms[i].is_fermionic()) fermionic = true;
+            }
           }
         } else
           cytnx_error_msg(
@@ -1979,8 +2807,13 @@ namespace cytnx {
                           "properly determined!%s",
                           "\n");
         } else {
-          boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
-          this->_impl = out;
+          if (fermionic) {
+            boost::intrusive_ptr<UniTensor_base> out(new BlockFermionicUniTensor());
+            this->_impl = out;
+          } else {
+            boost::intrusive_ptr<UniTensor_base> out(new BlockUniTensor());
+            this->_impl = out;
+          }
         }
       } else {
         boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
@@ -1990,7 +2823,7 @@ namespace cytnx {
     }
 
     /**
-    @brief Set the name of the UniTensor.
+    @brief Set the name of a UniTensor.
         @details You can use this function to give a name for the UniTensor.
     @param[in] in Input the name you want to set for the UniTensor. It should be a string.
         @return UniTensor
@@ -2007,7 +2840,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabel(const cytnx_int64 &idx, const std::string &new_label) const,
+        2. Compared to relabel(const cytnx_int64 &idx, const std::string &new_label) const,
         this function set the new label and return self.
     */
     UniTensor &set_label(const cytnx_int64 &idx, const std::string &new_label) {
@@ -2030,7 +2863,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabel(const std::string &old_label, const std::string &new_label) const,
+        2. Compared to relabel(const std::string &old_label, const std::string &new_label) const,
         this function set the new label and return self.
     */
     UniTensor &set_label(const std::string &old_label, const std::string &new_label) {
@@ -2075,7 +2908,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabels(const std::vector<std::string> &new_labels) const, this
+        2. Compared to relabels(const std::vector<std::string> &new_labels) const, this
         function set the new label and return self.
     */
     UniTensor &set_labels(const std::vector<std::string> &new_labels) {
@@ -2098,7 +2931,7 @@ namespace cytnx {
     }
 
     /**
-    @brief Set the row rank of the UniTensor.
+    @brief Set the rowrank of the UniTensor.
         @details You can use this function to set the row rank of the UniTensor. The row rank is
           important if you want to use the linear algebra process.
     @param[in] new_rowrank the new row rank of the UniTensor
@@ -2276,6 +3109,14 @@ namespace cytnx {
     std::vector<cytnx_uint64> shape() const { return this->_impl->shape(); }
 
     /**
+     * @brief Get the sign information of a fermionic UniTensor.
+     * @details Length is the number of blocks in the UniTensor. If the return is true, the sign of
+     * the elements of the corresponding block needs to be flipped.
+     * @return std::vector<bool>
+     */
+    std::vector<bool> signflip() const { return this->_impl->signflip(); }
+
+    /**
      * @brief Check whether the UniTensor is in block form.
      * @details This function will check whether the UniTensor is in block form. That is,
      * the uten_type() is UTenType::Block.
@@ -2321,7 +3162,7 @@ namespace cytnx {
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
     UniTensor. ( cannot have duplicate labels )
-        2. Compare to relabel(const std::vector<std::string> &new_labels) const, this
+        2. Compared to relabel(const std::vector<std::string> &new_labels) const, this
         function set the new label to itself.
     */
     UniTensor &relabel_(const std::vector<std::string> &new_labels) {
@@ -2345,7 +3186,7 @@ namespace cytnx {
     }
 
     /**
-    @brief relable all of the labels in UniTensor.
+    @brief relabel all of the labels in UniTensor.
     @param[in] new_labels the new labels for each bond.
     @note
         1. the new assign label cannot be the same as the label of any other bonds in the
@@ -2470,12 +3311,12 @@ namespace cytnx {
     }
 
     /**
-    @brief relable part or all of the labels in UniTensor by given new labels
+    @brief relabel part or all of the labels in UniTensor by given new labels
     @param[in] old_labels the old labels for each bond.
     @param[in] new_labels the new labels for each bond.
     @note
         1. the final output UniTensor cannot have duplicate labels.
-        2. Compare to relabel(const std::vector<std::string> &old_labels,  const
+        2. Compared to relabel(const std::vector<std::string> &old_labels,  const
     std::vector<std::string> &new_labels) const , this function set the new label(s) to itself.
 
     @see relabel(const std::vector<std::string> &old_labels, const std::vector<std::string>
@@ -2595,11 +3436,11 @@ namespace cytnx {
     }
 
     /**
-    @brief rebable the lags in the UniTensor by given index.
-    @details This function will relabel the lags in the UniTensor by a given index.
+    @brief rebabel the legs in the UniTensor by given index.
+    @details This function will relabel the legs in the UniTensor by a given index.
     This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor (that is if you use same_data() to check,
-    it will return true). Compare to set_label(), this function will return a new
+    it will return true). Compared to set_label(), this function will return a new
     UniTensor object with different meta data.
         @param[in] inx a given index
         @param[in] new_label the new label of the UniTensor in the index \p inx
@@ -2614,8 +3455,8 @@ namespace cytnx {
       return out;
     }
     /**
-    @brief rebable the lags in the UniTensor by given index.
-    @details This function will relabel the lags in the UniTensor by a given index.
+    @brief rebable the legs in the UniTensor by given index.
+    @details This function will relabel the legs in the UniTensor by a given index.
     This function will alter the label of the UniTensor directly.
         @param[in] inx a given index
         @param[in] new_label the new label of the UniTensor in the index \p inx
@@ -2627,8 +3468,8 @@ namespace cytnx {
     }
 
     /**
-    @brief relabel the lags in the UniTensor by a given label.
-    @details This function will relabel the lags in the UniTensor by a given label.
+    @brief relabel the legs in the UniTensor by a given label.
+    @details This function will relabel the legs in the UniTensor by a given label.
     This function will alter the label of the UniTensor directly.
           @param[in] old_label original label you want to replace
           @param[in] new_label the new label
@@ -2640,11 +3481,11 @@ namespace cytnx {
     }
 
     /**
-    @brief relabel the lags in the UniTensor by a given label.
-    @details This function will relabel the lags in the UniTensor by a given label.
+    @brief relabel the legs in the UniTensor by a given label.
+    @details This function will relabel the legs in the UniTensor by a given label.
     This function will return a new UniTensor with the new label, but the data is
     still shared with the original UniTensor (that is if you use same_data() to check,
-    it will return true). Compare to set_label(), this function will return a new
+    it will return true). Compared to set_label(), this function will return a new
     UniTensor object with different meta data.
           @param[in] old_label original label you want to replace
           @param[in] new_label the new label
@@ -2676,7 +3517,7 @@ namespace cytnx {
     }
 
     /**
-     * @brief permute the lags of the UniTensor
+     * @brief permute the legs of the UniTensor
      * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
      *    \p by_label is false, otherwise it is mapped by bond label.
      * @param[in] rowrank the new rowrank after the permutation
@@ -2691,7 +3532,7 @@ namespace cytnx {
     }
 
     /**
-     * @brief permute the lags of the UniTensor by labels
+     * @brief permute the legs of the UniTensor by labels
      * @param[in] mapper the mapper by babels
      * @param[in] rowrank the row rank
      * @return UniTensor
@@ -2735,7 +3576,7 @@ namespace cytnx {
     }
 
     /**
-    @brief permute the lags of the UniTensor, inplacely.
+    @brief permute the legs of the UniTensor, inplacely.
     @param[in] mapper the mapper by labels
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
@@ -2743,6 +3584,84 @@ namespace cytnx {
     UniTensor &permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
       return *this;
+    }
+
+    /**
+     * @brief permute the legs of the UniTensor without sign flips
+     * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+     * usually not intended, since fermionic permutations create sign flips! This should typically
+     * only be used to compare tensors in different sign conventions with each other.
+     * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
+     *    \p by_label is false, otherwise it is mapped by bond label.
+     * @param[in] rowrank the new rowrank after the permutation
+     * @return UniTensor
+     * @warning \p by_label will be deprecated!
+     */
+    UniTensor permute_nosignflip(const std::vector<cytnx_int64> &mapper,
+                                 const cytnx_int64 &rowrank = -1) const {
+      UniTensor out;
+      out._impl = this->_impl->permute_nosignflip(mapper, rowrank);
+      return out;
+    }
+
+    /**
+     * @brief permute the legs of the UniTensor by labels without sign flips
+     * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+     * usually not intended, since fermionic permutations create sign flips! This should typically
+     * only be used to compare tensors in different sign conventions with each other.
+     * @param[in] mapper the mapper by babels
+     * @param[in] rowrank the row rank
+     * @return UniTensor
+     */
+    UniTensor permute_nosignflip(const std::vector<std::string> &mapper,
+                                 const cytnx_int64 &rowrank = -1) const {
+      UniTensor out;
+      out._impl = this->_impl->permute_nosignflip(mapper, rowrank);
+      return out;
+    }
+
+    /**
+        @see permute_nosignflip(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank
+       = -1)
+        */
+    UniTensor permute_nosignflip(const std::initializer_list<char *> &mapper,
+                                 const cytnx_int64 &rowrank = -1) const {
+      std::vector<char *> mprs = mapper;
+      std::vector<std::string> vs(mprs.size());
+      transform(mprs.begin(), mprs.end(), vs.begin(),
+                [](char *x) -> std::string { return std::string(x); });
+
+      return this->permute_nosignflip(vs, rowrank);
+    }
+
+    /**
+    @brief permute the legs of the UniTensor without fermionic sign flips, inplacely.
+    @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+    usually not intended, since fermionic permutations create sign flips! This should typically only
+    be used to compare tensors in different sign conventions with each other.
+    @deprecated It is recommended to use \ref
+      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+    @param[in] mapper the mapper by labels
+    @param[in] rowrank the row rank after the permutation
+          @warning \p by_label will be deprecated!
+    */
+    void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                             const cytnx_int64 &rowrank = -1) {
+      this->_impl->permute_nosignflip_(mapper, rowrank);
+    }
+
+    /**
+    @brief permute the legs of the UniTensor without fermionic sign flips, inplacely.
+    @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
+    usually not intended, since fermionic permutations create sign flips! This should typically only
+    be used to compare tensors in different sign conventions with each other.
+    @param[in] mapper the mapper by labels
+    @param[in] rowrank the row rank after the permutation
+        @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+    */
+    void permute_nosignflip_(const std::vector<std::string> &mapper,
+                             const cytnx_int64 &rowrank = -1) {
+      this->_impl->permute_nosignflip_(mapper, rowrank);
     }
 
     // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
@@ -2778,7 +3697,9 @@ namespace cytnx {
     @brief Plot the diagram of the UniTensor.
         @param[in] bond_info whether need to print the information of the bonds of the UniTensor.
     */
-    void print_diagram(const bool &bond_info = false) { this->_impl->print_diagram(bond_info); }
+    void print_diagram(const bool &bond_info = false) const {
+      this->_impl->print_diagram(bond_info);
+    }
 
     /**
     @brief Print all of the blocks in the UniTensor.
@@ -2817,7 +3738,7 @@ namespace cytnx {
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator) {
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
@@ -2843,7 +3764,7 @@ namespace cytnx {
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
       // std::cout << "at " << this->is_blockform()  << std::endl;
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
         return this->_impl->at_for_sparse(locator, aux);
@@ -2910,7 +3831,7 @@ namespace cytnx {
     @details see more information at user guide 6.3.5.
     */
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
       } else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
@@ -2929,7 +3850,7 @@ namespace cytnx {
     @details see more information at user guide 6.3.5.
     */
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         return this->_impl->at_for_sparse(locator);
       } else if (this->uten_type() == UTenType.Sparse) {
         if (this->_impl->elem_exists(locator)) {
@@ -3435,7 +4356,7 @@ namespace cytnx {
 
     /**
     @brief Contract the UniTensor with common labels.
-          @details This function contract the UniTensor lags with common labels.
+          @details This function contract the UniTensor legs with common labels.
           @param[in] inR The UniTensor you want to contract with.
           @param[in] mv_elem_self Whether the self UniTensor need to do contiguous()
         after the contraction.
@@ -3502,7 +4423,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Add(const UniTensor&)const, this is an inplace function.
+        @note Compared to Add(const UniTensor&)const, this is an inplace function.
         @see Add_(const Scalar&), Add(const UniTensor&)const, Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -3523,7 +4444,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Mul(const UniTensor&)const, this is an inplace function.
+        @note Compared to Mul(const UniTensor&)const, this is an inplace function.
         @see Mul_(const Scalar&), Mul(const UniTensor&)const, Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -3544,7 +4465,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Sub(const UniTensor&)const, this is an inplace function.
+        @note Compared to Sub(const UniTensor&)const, this is an inplace function.
         @see Sub_(const Scalar&), Sub(const UniTensor&)const, Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -3565,7 +4486,7 @@ namespace cytnx {
         @return UniTensor&
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Div(const UniTensor&)const, this is an inplace function.
+        @note Compared to Div(const UniTensor&)const, this is an inplace function.
         @see Div_(const Scalar&), Div(const UniTensor&)const, Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -3580,7 +4501,7 @@ namespace cytnx {
             in UniTensor with this Scalar \p rhs.
         @param[in] rhs a Scalar you want to add in the UniTensor.
         @return UniTensor&
-        @note Compare to Add(const Scalar&)const, this is an inplace function.
+        @note Compared to Add(const Scalar&)const, this is an inplace function.
         @see Add_(const UniTensor&), Add(const UniTensor&)const, Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -3595,7 +4516,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to multiplicate in the UniTensor.
         @return UniTensor&
-        @note Compare to Mul(const Scalar&)const, this is an inplace function.
+        @note Compared to Mul(const Scalar&)const, this is an inplace function.
         @see Mul_(const UniTensor&), Mul(const UniTensor&)const, Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -3610,7 +4531,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to subtract in the UniTensor.
         @return UniTensor&
-        @note Compare to Sub(const Scalar&)const, this is an inplace function.
+        @note Compared to Sub(const Scalar&)const, this is an inplace function.
         @see Sub_(const UniTensor&), Sub(const UniTensor&)const, Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -3625,7 +4546,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to divide in the UniTensor.
         @return UniTensor&
-        @note Compare to Sub(const Scalar&)const, this is an inplace function.
+        @note Compared to Sub(const Scalar&)const, this is an inplace function.
         @see Div_(const UniTensor&), Div(const UniTensor&)const, Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -3646,7 +4567,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Add_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Add_(const UniTensor&), this function will create a new UniTensor.
         @see Add_(const UniTensor&), Add_(const Scalar&), Add(const Scalar&)const ,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -3658,7 +4579,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to add in the UniTensor.
         @return UniTensor
-        @note Compare to Add_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Add_(const Scalar&), this function will create a new UniTensor.
         @see Add_(const Scalar&), Add_(const UniTensor&), Add(const UniTensor&)const,
         operator+=(const UniTensor&), operator+=(const Scalar&), \ref operator+
         */
@@ -3676,7 +4597,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Mul_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Mul_(const UniTensor&), this function will create a new UniTensor.
         @see Mul_(const UniTensor&), Mul_(const Scalar&), Mul(const Scalar&)const ,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -3688,7 +4609,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to multiply in the UniTensor.
         @return UniTensor
-        @note Compare to Mul_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Mul_(const Scalar&), this function will create a new UniTensor.
         @see Mul_(const Scalar&), Mul_(const UniTensor&), Mul(const UniTensor&)const,
         operator*=(const UniTensor&), operator*=(const Scalar&), \ref operator*
         */
@@ -3706,7 +4627,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Div_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Div_(const UniTensor&), this function will create a new UniTensor.
         @see Div_(const UniTensor&), Div_(const Scalar&), Div(const Scalar&)const ,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -3718,7 +4639,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs a scalar you want to divide in the UniTensor.
         @return UniTensor
-        @note Compare to Div_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Div_(const Scalar&), this function will create a new UniTensor.
         @see Div_(const Scalar&), Div_(const UniTensor&), Div(const UniTensor&)const,
         operator/=(const UniTensor&), operator/=(const Scalar&), \ref operator/
         */
@@ -3736,7 +4657,7 @@ namespace cytnx {
         @return UniTensor
         @pre
         The two UniTensor need to have same structure.
-        @note Compare to Sub_(const UniTensor&), this function will create a new UniTensor.
+        @note Compared to Sub_(const UniTensor&), this function will create a new UniTensor.
         @see Sub_(const UniTensor&), Sub_(const Scalar&), Sub(const Scalar&)const ,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -3748,7 +4669,7 @@ namespace cytnx {
             in UniTensor with this scalar \p rhs.
         @param[in] rhs the subtrahend
         @return UniTensor
-        @note Compare to Sub_(const Scalar&), this function will create a new UniTensor.
+        @note Compared to Sub_(const Scalar&), this function will create a new UniTensor.
         @see Sub_(const Scalar&), Sub_(const UniTensor&), Sub(const UniTensor&)const,
         operator-=(const UniTensor&), operator-=(const Scalar&), \ref operator-
         */
@@ -3908,7 +4829,7 @@ namespace cytnx {
     @brief Apply complex conjugate on each entry of the UniTensor.
         @details Conj() apply complex conjugate on each entry of the UniTensor.
         @return UniTensor
-    @note Compare to Conj_(), this fucntion will create a new object UniTensor.
+    @note Compared to Conj_(), this function will create a new object UniTensor.
         @see Conj_()
         */
     UniTensor Conj() const {
@@ -3921,7 +4842,7 @@ namespace cytnx {
     @brief Apply complex conjugate on each entry of the UniTensor.
         @details Conj_() apply complex conjugate on each entry of the UniTensor, inplacely.
         @return UniTensor
-    @note Compare to Conj(), this fucntion is inplace function.
+    @note Compared to Conj(), this function is an inplace function.
         @see Conj()
         */
     UniTensor &Conj_() {
@@ -3935,8 +4856,10 @@ namespace cytnx {
       tagged (i.e. the Bonds are directional), it will swap the direction of the Bonds but
       the rowrank will not change. If the UniTensor is untagged (i.e. the Bonds are
       BondType::BD_REG), it will change the rowrank to the opposite side.
+      For fermionic UniTensors, the index order will be reversed without sign flips, and the
+    direction of all Bonds will swapped.
         @return UniTensor
-    @note Compare to Transpose_(), this fucntion will return new UniTensor object.
+    @note Compared to Transpose_(), this function will return new UniTensor object.
         @see Transpose_()
         */
     UniTensor Transpose() const {
@@ -3948,7 +4871,7 @@ namespace cytnx {
     /**
     @brief Take the transpose of the UniTensor, inplacely.
         @return UniTensor
-    @note Compare to Transpose(), this fucntion is inplace function.
+    @note Compared to Transpose(), this function is an inplace function.
         @see Transpose()
         */
     UniTensor &Transpose_() {
@@ -3959,7 +4882,7 @@ namespace cytnx {
     /**
     @brief normalize the current UniTensor instance with 2-norm.
         @return UniTensor
-    @note Compare to normalize_(), this fucntion will return new UniTensor object.
+    @note Compared to normalize_(), this function will return new UniTensor object.
         @see normalize_()
         */
     UniTensor normalize() const {
@@ -3971,7 +4894,7 @@ namespace cytnx {
     /**
     @brief normalize the UniTensor, inplacely.
         @return UniTensor
-    @note Compare to normalize(), this fucntion is inplace function.
+    @note Compared to normalize(), this function is inplace function.
         @see normalize()
         */
     UniTensor &normalize_() {
@@ -3980,12 +4903,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor.
+    @brief Take the partial trace of the UniTensor.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor
-    @note Compare to Trace_(), this fucntion will return a new UniTensor object.
+    @note Compared to Trace_(), this function will return a new UniTensor object.
         @see Trace_()
         */
     UniTensor Trace(const std::string &a, const std::string &b) const {
@@ -3995,12 +4918,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor.
+    @brief Take the partial trace of the UniTensor.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor
-    @note Compare to Trace_(), this fucntion will return a new UniTensor object.
+    @note Compared to Trace_(), this function will return a new UniTensor object.
         @see Trace_()
         */
     UniTensor Trace(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) const {
@@ -4010,17 +4933,17 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor, inplacely.
+    @brief Take the partial trace of the UniTensor, inplacely.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor&
-    @note Compare to Trace(), this is an inplace function.
+    @note Compared to Trace(), this is an inplace function.
         @see Trace()
         */
     UniTensor &Trace_(const std::string &a, const std::string &b) {
       this->_impl->Trace_(a, b);
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // handle if no leg left case for BlockUniTensor.
         if (this->rank() == 0) {
           DenseUniTensor *tmp = new DenseUniTensor();
@@ -4032,17 +4955,17 @@ namespace cytnx {
     }
 
     /**
-    @brief Take the partial trance to the UniTensor, inplacely.
+    @brief Take the partial trace of the UniTensor, inplacely.
         @details Take the partial trace to the UniTensor with the give two labels.
         @param[in] a label 1
         @param[in] b label 2
         @return UniTensor&
-    @note Compare to Trace(), this is an inplace function.
+    @note Compared to Trace(), this is an inplace function.
         @see Trace()
         */
     UniTensor &Trace_(const cytnx_int64 &a = 0, const cytnx_int64 &b = 1) {
       this->_impl->Trace_(a, b);
-      if (this->uten_type() == UTenType.Block) {
+      if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // handle if no leg left case for BlockUniTensor.
         if (this->rank() == 0) {
           DenseUniTensor *tmp = new DenseUniTensor();
@@ -4056,7 +4979,7 @@ namespace cytnx {
     /**
     @brief Take the conjugate transpose to the UniTensor.
         @return UniTensor
-    @note Compare to Dagger_(), this function will create a new UniTensor ojbect.
+    @note Compared to Dagger_(), this function will create a new UniTensor ojbect.
         @see Dagger_(), Transpose()
         */
     UniTensor Dagger() const {
@@ -4068,7 +4991,7 @@ namespace cytnx {
     /**
     @brief Take the conjugate transpose to the UniTensor, inplacely.
         @return UniTensor&
-    @note Compare to Dagger(), this is an inplace function.
+    @note Compared to Dagger(), this is an inplace function.
         @see Dagger()
         */
     UniTensor &Dagger_() {
@@ -4094,7 +5017,7 @@ namespace cytnx {
         @details Take power \p p on all the elements in the UniTensor.
         @param p power
         @return UniTensor
-    @note Compare to Pow_(), this function will create a new UniTensor ojbect.
+    @note Compared to Pow_(), this function will create a new UniTensor ojbect.
         @see Pow_()
         */
     UniTensor Pow(const double &p) const;
@@ -4104,7 +5027,7 @@ namespace cytnx {
         @details Take power \p p on all the elements in the UniTensor, inplacely.
         @param p power
         @return UniTensor&
-    @note Compare to Pow(), this function is an inplacely function.
+    @note Compared to Pow(), this function is an inplacely function.
         @see Pow()
         */
     UniTensor &Pow_(const double &p);
@@ -4181,7 +5104,7 @@ namespace cytnx {
      * @param[in] label the bond label.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate(const std::string &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate(const std::string &bond_idx, const cytnx_uint64 &dim),
      *   this is inplace function and will modify the current UniTensor object.
      */
     UniTensor &truncate_(const std::string &label, const cytnx_uint64 &dim) {
@@ -4194,7 +5117,7 @@ namespace cytnx {
      * @param[in] bond_idx the bond index.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
      *  this is inplace function and will modify the current UniTensor object.
      */
     UniTensor &truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) {
@@ -4207,7 +5130,7 @@ namespace cytnx {
      * @param[in] label the bond label.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate_(const std::string &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate_(const std::string &bond_idx, const cytnx_uint64 &dim),
      *   this function will return a new UniTensor object.
      * @see UniTensor::truncate_(const std::string &bond_idx, const cytnx_uint64 &dim)
      */
@@ -4222,7 +5145,7 @@ namespace cytnx {
      * @param[in] bond_idx the bond index.
      * @param[in] dim the dimension to be truncated.
      * @return [UniTensor]
-     * @note compare to truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
+     * @note Compared to truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim),
      *  this function will return a new UniTensor object.
      * @see UniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim)
      */
