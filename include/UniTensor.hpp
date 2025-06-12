@@ -226,6 +226,7 @@ namespace cytnx {
                                 const cytnx_int64 &rowrank = -1, const std::string &name = "");
     virtual std::vector<cytnx_uint64> shape() const;
     virtual std::vector<bool> signflip() const;
+    virtual std::vector<bool> &signflip_();
     virtual bool is_blockform() const;
     virtual bool is_contiguous() const;
     virtual void to_(const int &device);
@@ -1872,9 +1873,8 @@ namespace cytnx {
       return this->_blocks.size();
     };
 
-    std::vector<bool> signflip() const;
-    // std::vector<bool> &signflip_reference() { return this->_signflip; };
-    // const std::vector<bool> &signflip_reference() const { return this->_signflip; };
+    std::vector<bool> signflip() const override { return this->_signflip; };
+    std::vector<bool> &signflip_() override { return this->_signflip; };
 
     void to_(const int &device) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
@@ -3115,6 +3115,16 @@ namespace cytnx {
      * @return std::vector<bool>
      */
     std::vector<bool> signflip() const { return this->_impl->signflip(); }
+
+    /**
+     * @brief Get reference to the sign information of a fermionic UniTensor.
+     * @details Length is the number of blocks in the UniTensor. If the return is true, the sign of
+     * the elements of the corresponding block needs to be flipped.
+     * @warning This is an inline version which returns a reference. Changes to the reference affect
+     * the tensor!
+     * @return std::vector<bool> &
+     */
+    std::vector<bool> &signflip_() { return this->_impl->signflip_(); }
 
     /**
      * @brief Check whether the UniTensor is in block form.
