@@ -776,14 +776,6 @@ namespace cytnx {
         auto IDL = vec_argwhere(this->_inner_to_outer_idx, Lidx);
         auto IDR = vec_argwhere(Rtn->_inner_to_outer_idx, Ridx);
 
-        /*
-        cout << b << endl;
-        //vec_print_simple(std::cout,tmp->_inner_to_outer_idx[b]);
-        //vec_print_simple(std::cout,Lidx);
-        //vec_print_simple(std::cout,Ridx);
-        vec_print_simple(std::cout,IDL);
-        vec_print_simple(std::cout,IDR);
-        */
         if (User_debug) {
           if (IDL.size() == IDR.size()) {
             cytnx_error_msg(IDL.size() > 1,
@@ -864,8 +856,6 @@ namespace cytnx {
               else
                 tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
                                                  Rperm_raw->_blocks[a].flatten());
-
-              // std::cout << b << " " << a << endl;
             }
           }
         }
@@ -1799,23 +1789,9 @@ namespace cytnx {
           if (mask[a] == 1) continue;
           if (tmp_inner_to_outer_idx[a] == tmp_inner_to_outer_idx[b]) {
             // need to combine two!
-            // checking which bonds does not need to combine!
+            // checking which bonds do not need to be combined!
             mask[a] = 1;
-            /*
-            std::cout << "CALL DS:\n";
-            std::cout << no_combine << std::endl;
-            std::cout << "targ: old/new itoi:\n";
-            std::cout << this->_inner_to_outer_idx[b] << std::endl;
-            std::cout << tmp_inner_to_outer_idx[b] << std::endl;
-            std::cout << "----------\n" << std::endl;
-            std::cout << "src: old/new itoi:\n";
-            std::cout << this->_inner_to_outer_idx[a] << std::endl;
-            std::cout << tmp_inner_to_outer_idx[a] << std::endl;
-            std::cout << "----------\n" << std::endl;
-            std::cout << new_blocks.back().shape() << std::endl;
-            std::cout << this->_blocks[a].shape() << std::endl;
-            std::cout << "=============\n" << std::endl;
-            */
+
             new_blocks.back() = linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
           }
         }

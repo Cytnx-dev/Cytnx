@@ -254,9 +254,9 @@ namespace cytnx {
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
-      // ->a initialize an empty shell of UniTensor!
+      // ->a initialize an empty shell of UniTensors!
       vec2d<cytnx_int64> aux_qnums;  // for sharing bond
-      std::vector<cytnx_uint64> aux_degs;  // forsharing bond
+      std::vector<cytnx_uint64> aux_degs;  // for sharing bond
       std::vector<Tensor> S_blocks;
 
       vec2d<cytnx_uint64> U_itoi;  // for U
@@ -415,7 +415,7 @@ namespace cytnx {
 
     void _svd_BlockFermionic_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const bool &compute_uv) {
-      //[8 Oct 2024] This is a copy from BlockUniTensor; signflips in U
+      //[8 Oct 2024] This is a copy from BlockUniTensor; signflips included
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
@@ -473,9 +473,9 @@ namespace cytnx {
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
-      // ->a initialize an empty shell of UniTensor!
+      // ->a initialize an empty shell of UniTensors!
       vec2d<cytnx_int64> aux_qnums;  // for sharing bond
-      std::vector<cytnx_uint64> aux_degs;  // forsharing bond
+      std::vector<cytnx_uint64> aux_degs;  // for sharing bond
       std::vector<Tensor> S_blocks;
 
       vec2d<cytnx_uint64> U_itoi;  // for U

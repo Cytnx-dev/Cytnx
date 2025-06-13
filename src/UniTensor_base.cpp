@@ -67,6 +67,16 @@ namespace cytnx {
                     "\n");
     return std::vector<bool>();
   }
+
+  std::vector<bool> &UniTensor_base::signflip_() {
+    cytnx_error_msg(true,
+                    "[ERROR] fatal internal, signflip is only defined for BlockFermionicUniTensor, "
+                    "not for bosonic UniTensors. Cannot use signflip_().%s",
+                    "\n");
+    std::vector<bool> t;
+    return t;
+  }
+
   void UniTensor_base::set_rowrank_(const cytnx_uint64 &new_rowrank) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
