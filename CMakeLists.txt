@@ -147,7 +147,7 @@ endfunction()
 
 include(CMakeDependentOption)
 
-set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx" CACHE PATH "the destination path for installation")
+set(CMAKE_INSTALL_PREFIX "/home/manuel/cytnx/Cytnx_lib" CACHE PATH "the destination path for installation")
 option(BUILD_PYTHON "Build Python API. Require Python and pybind11 installed." ON)
 option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
 cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
