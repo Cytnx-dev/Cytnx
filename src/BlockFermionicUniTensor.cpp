@@ -1232,6 +1232,30 @@ namespace cytnx {
     return signs;
   }
 
+  void BlockFermionicUniTensor::twist_(const cytnx_int64 &idx) {
+    // apply fermion twist on bond with given index; this means that the signs of all blocks with
+    // negative parity for this index are swapped
+    Bond bnd = this->_bonds[idx];
+
+    for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
+      // this->_inner_to_outer_idx[blockindex][bondindex] contains the quantum index for the given
+      // indices bnd.qnums()[quantum index] or bnd._impl->_qnums[quantum index] gives the quantum
+      // number for a given quantum index
+      // bnd.get_fermion_parity(qnum) contains the fermion parity
+      if (bnd.get_fermion_parity(bnd._impl->_qnums[this->_inner_to_outer_idx[b][idx]]))
+        this->_signflip[b] = !this->_signflip[b];
+    }
+  }
+
+  void BlockFermionicUniTensor::fermion_twists_() {
+    // apply fermion twists on all bra bonds (bond index >= rowrank), which are of type BD_KET
+    for (cytnx_int64 idx = this->_rowrank; idx < this->_bonds.size(); idx++) {
+      if (this->_bonds[idx]._impl->_type == BD_KET) {
+        this->twist_(idx);
+      }
+    }
+  }
+
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
     //[21 Aug 2024] This is a copy from BlockUniTensor; creates a BlockFermionicUniTensor
     const std::vector<string> &new_labels) {

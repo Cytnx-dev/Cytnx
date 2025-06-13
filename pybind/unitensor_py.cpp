@@ -623,7 +623,10 @@ void unitensor_binding(py::module &m) {
                         self.permute_nosignflip_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
-
+     .def("twist_", [](UniTensor &self, const cytnx_int64 &idx){
+                        self.twist_(idx);
+                },py::arg("idx"))
+     .def("fermion_twists_", [](UniTensor &self){ self.fermion_twists_(); })
 
 
     .def("make_contiguous", &UniTensor::contiguous)

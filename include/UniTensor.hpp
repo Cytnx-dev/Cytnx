@@ -257,9 +257,12 @@ namespace cytnx {
                                      const cytnx_int64 &rowrank = -1);
     virtual void permute_nosignflip_(const std::vector<std::string> &mapper,
                                      const cytnx_int64 &rowrank = -1);
-
     // virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank =
     // -1);
+
+    virtual void twist_(const cytnx_int64 &idx);
+    virtual void fermion_twists_();
+
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual void print_diagram(const bool &bond_info = false) const;
@@ -2120,17 +2123,20 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                  const cytnx_int64 &rowrank = -1);
 
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
-    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) override;
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) override;
 
-    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<cytnx_int64> &mapper,
-                                                            const cytnx_int64 &rowrank = -1);
-    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<std::string> &mapper,
-                                                            const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) override;
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) override;
     void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
-                             const cytnx_int64 &rowrank = -1);
+                             const cytnx_int64 &rowrank = -1) override;
     void permute_nosignflip_(const std::vector<std::string> &mapper,
-                             const cytnx_int64 &rowrank = -1);
+                             const cytnx_int64 &rowrank = -1) override;
+
+    void twist_(const cytnx_int64 &idx) override;
+    void fermion_twists_() override;
 
     // Helper function; implements the sign flips when permuting indices
     std::vector<bool> _swapsigns_(const std::vector<cytnx_int64> &mapper) const;
@@ -3691,6 +3697,32 @@ namespace cytnx {
     // void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
     //   this->_impl->permute_(mapper, rowrank);
     // }
+
+    /**
+    @brief Apply a twist (or self-swap) operation to a given bond; No effect for bosonic tensors;
+    for a fermionic tensor, this means that a signflip occurs for all blocks where the bond has odd
+    fermion parity
+    @param[in] idx bond index on which the twist shall be applied
+    @note This always applies the twist to the bond, ignoring its direction or weather they are
+    incoming or outgoing bonds.
+    */
+    void twist_(const cytnx_int64 &idx) { this->_impl->twist_(idx); }
+
+    /**
+    @brief Apply twists to all bra bonds with type BD_KET
+    @details For bosonic tensors, nothing changes. For fermions, this makes sure that bra- and
+    ket-states can be contracted correctly. For example, a scalar product <A|B> between ket states A
+    and B represented by fermionic tensors with incoming and outgoing legs, can be calculated
+    correctly by contract(Adag.fermion_twists_(), B). This example asumes that Adag is the dagger of
+    A and has rowrank=0, while B has maximal rowrank. Applying fermion_twists_ to B would have no
+    effect in this case and is thus safe to do. Similarly, this can be applied to linear operators.
+    If M is an operator, then its first rowrank indices correspond to ket bonds and are not affected
+    by fermion_twists_. For the remaining bonds, a twist is applied if they are not of type BD_BRA.
+    The combination of this method to bra states, ket states and linear operators in a Hilbert
+    space, together with contractions, ensures that scalar products can be executed as desired.
+    @warning The rowrank must be set correctly before applying this method.
+    */
+    void fermion_twists_() { this->_impl->fermion_twists_(); }
 
     /**
     @brief Make the UniTensor contiguous by coalescing the memory (storage).
