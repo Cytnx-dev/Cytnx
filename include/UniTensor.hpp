@@ -552,6 +552,15 @@ namespace cytnx {
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
 
+    void twist_(const cytnx_int64 &idx) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+    void fermion_twists_() override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+
     boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
 
@@ -1369,6 +1378,15 @@ namespace cytnx {
 
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
+    void twist_(const cytnx_int64 &idx) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+    void fermion_twists_() override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
       for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
@@ -3698,15 +3716,28 @@ namespace cytnx {
     //   this->_impl->permute_(mapper, rowrank);
     // }
 
+    // /**
+    // @brief Apply a twist (or braids/self-swap) operation to a given bond; No effect for bosonic
+    // tensors; for a fermionic tensor, this means that a signflip occurs for all blocks where the
+    // bond has odd fermion parity
+    // @param[in] idx bond index on which the twist shall be applied
+    // @note This always applies the twist to the bond, ignoring its direction or weather they are
+    // incoming or outgoing bonds.
+    // */
+    // UniTensor twist(const cytnx_int64 &idx) {
+    //   UniTensor out;
+    //   out._impl = this->_impl->twist(idx);
+    //   return out;
+    // }
+
     /**
-    @brief Apply a twist (or self-swap) operation to a given bond; No effect for bosonic tensors;
-    for a fermionic tensor, this means that a signflip occurs for all blocks where the bond has odd
-    fermion parity
-    @param[in] idx bond index on which the twist shall be applied
-    @note This always applies the twist to the bond, ignoring its direction or weather they are
-    incoming or outgoing bonds.
+    @brief Inline version
+    @see twist(const cytnx_int64 &idx)
     */
-    void twist_(const cytnx_int64 &idx) { this->_impl->twist_(idx); }
+    UniTensor &twist_(const cytnx_int64 &idx) {
+      this->_impl->twist_(idx);
+      return *this;
+    }
 
     /**
     @brief Apply twists to all bra bonds with type BD_KET
