@@ -626,6 +626,9 @@ void unitensor_binding(py::module &m) {
      .def("twist_", [](UniTensor &self, const cytnx_int64 &idx){
                         self.twist_(idx);
                 },py::arg("idx"))
+     .def("twist_", [](UniTensor &self, const std::string label){
+                        self.twist_(label);
+                },py::arg("label"))
      .def("fermion_twists_", [](UniTensor &self){ self.fermion_twists_(); })
 
 

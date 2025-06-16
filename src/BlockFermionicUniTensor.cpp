@@ -1235,6 +1235,11 @@ namespace cytnx {
   void BlockFermionicUniTensor::twist_(const cytnx_int64 &idx) {
     // apply fermion twist on bond with given index; this means that the signs of all blocks with
     // negative parity for this index are swapped
+
+    // Check for invalid index
+    cytnx_error_msg(idx >= this->_labels.size() || idx < 0,
+                    "[ERROR][BlockFermionicUniTensor::twist_] index %d out of bounds [0, %d].\n",
+                    idx, this->_labels.size() - 1);
     Bond bnd = this->_bonds[idx];
 
     for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
@@ -1245,6 +1250,13 @@ namespace cytnx {
       if (bnd.get_fermion_parity(bnd._impl->_qnums[this->_inner_to_outer_idx[b][idx]]))
         this->_signflip[b] = !this->_signflip[b];
     }
+  }
+  void BlockFermionicUniTensor::twist_(const std::string label) {
+    std::vector<std::string>::iterator it;
+    it = std::find(this->_labels.begin(), this->_labels.end(), label);
+    cytnx_error_msg(it == this->_labels.end(),
+                    "[ERROR] label %d does not exist in current UniTensor.\n", label.c_str());
+    this->twist_(std::distance(this->_labels.begin(), it));
   }
 
   void BlockFermionicUniTensor::fermion_twists_() {
@@ -2397,10 +2409,10 @@ namespace cytnx {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         blockrhs = (b + a) % Rtn->_blocks.size();
         if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
-          if (Rtn->_signflip[blockrhs])
-            this->_blocks[b] -= Rtn->_blocks[blockrhs];
-          else
+          if (Rtn->_signflip[blockrhs] == this->_signflip[b])
             this->_blocks[b] += Rtn->_blocks[blockrhs];
+          else
+            this->_blocks[b] -= Rtn->_blocks[blockrhs];
           break;
         }
       }
@@ -2480,10 +2492,10 @@ namespace cytnx {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         blockrhs = (b + a) % Rtn->_blocks.size();
         if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
-          if (Rtn->_signflip[blockrhs])
-            this->_blocks[b] += Rtn->_blocks[blockrhs];
-          else
+          if (Rtn->_signflip[blockrhs] == this->_signflip[b])
             this->_blocks[b] -= Rtn->_blocks[blockrhs];
+          else
+            this->_blocks[b] += Rtn->_blocks[blockrhs];
           break;
         }
       }

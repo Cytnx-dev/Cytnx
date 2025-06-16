@@ -261,6 +261,7 @@ namespace cytnx {
     // -1);
 
     virtual void twist_(const cytnx_int64 &idx);
+    virtual void twist_(const std::string label);
     virtual void fermion_twists_();
 
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
@@ -556,6 +557,11 @@ namespace cytnx {
       // do nothing for bosonic UniTensor
       return;
     }
+    void twist_(const std::string label) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+
     void fermion_twists_() override {
       // do nothing for bosonic UniTensor
       return;
@@ -1387,6 +1393,10 @@ namespace cytnx {
       // do nothing for bosonic UniTensor
       return;
     }
+    void twist_(const std::string label) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
 
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
       for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
@@ -2154,6 +2164,7 @@ namespace cytnx {
                              const cytnx_int64 &rowrank = -1) override;
 
     void twist_(const cytnx_int64 &idx) override;
+    void twist_(const std::string label) override;
     void fermion_twists_() override;
 
     // Helper function; implements the sign flips when permuting indices
@@ -3726,7 +3737,7 @@ namespace cytnx {
     // */
     // UniTensor twist(const cytnx_int64 &idx) {
     //   UniTensor out;
-    //   out._impl = this->_impl->twist(idx);
+    //   out._impl = this->_impl->twist_(idx);
     //   return out;
     // }
 
@@ -3736,6 +3747,14 @@ namespace cytnx {
     */
     UniTensor &twist_(const cytnx_int64 &idx) {
       this->_impl->twist_(idx);
+      return *this;
+    }
+    /**
+    @brief Inline version
+    @see twist(const std::string label)
+    */
+    UniTensor &twist_(const std::string label) {
+      this->_impl->twist_(label);
       return *this;
     }
 
