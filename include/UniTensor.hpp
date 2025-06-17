@@ -3174,7 +3174,10 @@ namespace cytnx {
             any device defined in cytnx::Device.
         @see to_(const int &device)
     */
-    void to_(const int &device) { this->_impl->to_(device); }
+    UniTensor &to_(const int &device) {
+      this->_impl->to_(device);
+      return *this;
+    }
 
     /**
     @brief move the current UniTensor to the assigned device.
@@ -3693,9 +3696,10 @@ namespace cytnx {
     @warning Usually, the signs should change when permuting a fermionic UniTensor. Use permute_
     instead, unless you are really sure you want to permute without signflips!
     */
-    void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
-                             const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                                   const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_nosignflip_(mapper, rowrank);
+      return *this;
     }
 
     /**
@@ -3709,9 +3713,10 @@ namespace cytnx {
     @warning Usually, the signs should change when permuting a fermionic UniTensor. Use permute
     instead, unless you are really sure you want to permute without signflips!
     */
-    void permute_nosignflip_(const std::vector<std::string> &mapper,
-                             const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_nosignflip_(const std::vector<std::string> &mapper,
+                                   const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_nosignflip_(mapper, rowrank);
+      return *this;
     }
 
     // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
@@ -3727,34 +3732,48 @@ namespace cytnx {
     //   this->_impl->permute_(mapper, rowrank);
     // }
 
-    // /**
-    // @brief Apply a twist (or braids/self-swap) operation to a given bond; No effect for bosonic
-    // tensors; for a fermionic tensor, this means that a signflip occurs for all blocks where the
-    // bond has odd fermion parity
-    // @param[in] idx bond index on which the twist shall be applied
-    // @note This always applies the twist to the bond, ignoring its direction or weather they are
-    // incoming or outgoing bonds.
-    // */
-    // UniTensor twist(const cytnx_int64 &idx) {
-    //   UniTensor out;
-    //   out._impl = this->_impl->twist_(idx);
-    //   return out;
-    // }
-
     /**
-    @brief Inline version
-    @see twist(const cytnx_int64 &idx)
+    @brief Apply a twist (or braids/self-swap) operation to a given bond; No effect for bosonic
+    tensors; for a fermionic tensor, this means that a signflip occurs for all blocks where the
+    bond has odd fermion parity
+    @param[in] label bond label on which the twist shall be applied
+    @note This always applies the twist to the bond, ignoring its direction or weather they are
+    incoming or outgoing bonds.
     */
-    UniTensor &twist_(const cytnx_int64 &idx) {
-      this->_impl->twist_(idx);
-      return *this;
+    UniTensor twist(const std::string label) const {
+      UniTensor out = this->clone();
+      out._impl->twist_(label);
+      return out;
+    }
+    /**
+    @brief Apply a twist (or braids/self-swap) operation to a given bond; No effect for bosonic
+    tensors; for a fermionic tensor, this means that a signflip occurs for all blocks where the
+    bond has odd fermion parity
+    @param[in] idx bond index on which the twist shall be applied
+    @note This always applies the twist to the bond, ignoring its direction or weather they are
+    incoming or outgoing bonds.
+    */
+    UniTensor twist(const cytnx_int64 &idx) const {
+      UniTensor out = this->clone();
+      out._impl->twist_(idx);
+      return out;
     }
     /**
     @brief Inline version
+    @param[in] label bond label on which the twist shall be applied
     @see twist(const std::string label)
     */
     UniTensor &twist_(const std::string label) {
       this->_impl->twist_(label);
+      return *this;
+    }
+    /**
+    @brief Inline version
+    @param[in] idx bond index on which the twist shall be applied
+    @see twist(const cytnx_int64 &idx)
+    */
+    UniTensor &twist_(const cytnx_int64 &idx) {
+      this->_impl->twist_(idx);
       return *this;
     }
 
@@ -3772,7 +3791,20 @@ namespace cytnx {
     space, together with contractions, ensures that scalar products can be executed as desired.
     @warning The rowrank must be set correctly before applying this method.
     */
-    void fermion_twists_() { this->_impl->fermion_twists_(); }
+    UniTensor fermion_twists() const {
+      UniTensor out = this->clone();
+      out._impl->fermion_twists_();
+      return out;
+    }
+    /**
+    @brief Inline version
+    @see fermion_twists()
+    @warning The rowrank must be set correctly before applying this method.
+    */
+    UniTensor &fermion_twists_() {
+      this->_impl->fermion_twists_();
+      return *this;
+    }
 
     /**
     @brief Make the UniTensor contiguous by coalescing the memory (storage).
@@ -3788,7 +3820,10 @@ namespace cytnx {
     @brief Make the UniTensor contiguous by coalescing the memory (storage), inplacely.
         @see contiguous()
     */
-    void contiguous_() { this->_impl = this->_impl->contiguous_(); }
+    UniTensor &contiguous_() {
+      this->_impl = this->_impl->contiguous_();
+      return *this;
+    }
 
     /**
     @brief Plot the diagram of the UniTensor.
