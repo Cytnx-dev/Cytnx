@@ -1877,6 +1877,7 @@ namespace cytnx {
       idxorder[i] = idxnum - i;
     }
     this->permute_nosignflip_(idxorder);
+    this->_rowrank = this->_bonds.size() - this->_rowrank;
   };
 
   void BlockFermionicUniTensor::normalize_() {
