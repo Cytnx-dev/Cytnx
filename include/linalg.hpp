@@ -701,6 +701,26 @@ namespace cytnx {
     std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_UvT = true);
 
     /**
+    @brief Perform randomized Singular-Value decomposition on a UniTensor using ?gesvd method.
+    @details A randomized SVD of a matrix Tin
+    1) Generate Gaussian random matrix X
+    2) Y = Tin * X
+    3) QR factorization:  Y = Q * R
+    4) [U', S, vT] = SVD(Qdag * Tom) where Qdag is the hermitian conjugate of Q
+    5) U = Q * U'
+    The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
+    refer to the documentation of the function Gesvd(const Tensor &Tin, const bool &is_UvT).
+    @param[in] Tin a BlockUniTensor, with the correct rowrank set to interpret it as a matrix
+    @param[in] keepdim the number of singular values to keep. Note that this is the size of the
+    subspace, and the smallest singular values are less reliable. Use truncation with oversampling.
+    @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
+    @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
+    @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
+    */
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
+                                       const bool &is_U = true, const bool &is_vT = true);
+
+    /**
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
     @details This function performs the Singular-Value decomposition on a UniTensor \p Tin.
     The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
@@ -1602,6 +1622,27 @@ namespace cytnx {
     const bool &is_U, const bool &is_vT, const unsigned int &return_err, const cytnx_uint64& mindim)
     */
     std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
+
+    /**
+    @brief Perform randomized Singular-Value decomposition on a rank-2 Tensor (a @em matrix) using
+    the ?gesvd method.
+    @details A randomized SVD of a matrix Tin
+    1) Generate Gaussian random matrix X
+    2) Y = Tin * X
+    3) QR factorization:  Y = Q * R
+    4) [U', S, vT] = SVD(Qdag * Tom) where Qdag is the hermitian conjugate of Q
+    5) U = Q * U'
+    The result will depend on the rowrank of the UniTensor \p Tin. For more details, please
+    refer to the documentation of the function Gesvd(const Tensor &Tin, const bool &is_UvT).
+    @param[in] Tin a Tensor, it should be a rank-2 tensor (matrix)
+    @param[in] keepdim the number of singular values to keep. Note that this is the size of the
+    subspace, and the smallest singular values are less reliable. Use truncation with oversampling.
+    @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
+    @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
+    @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
+    */
+    std::vector<Tensor> Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim,
+                             const bool &is_U = true, const bool &is_vT = true);
 
     // Svd_truncate:
     //==================================================

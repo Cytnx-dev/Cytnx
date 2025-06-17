@@ -51,6 +51,7 @@ target_sources_local(cytnx
     iSub.cpp
     Svd.cpp
     Gesvd.cpp
+    Rsvd.cpp
     Svd_truncate.cpp
     Gesvd_truncate.cpp
     Gemm.cpp

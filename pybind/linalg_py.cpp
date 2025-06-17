@@ -47,6 +47,18 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
 
   m_linalg.def(
+    "Rsvd",
+    [](const cytnx::Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT) {
+      return cytnx::linalg::Rsvd(Tin, keepdim, is_U, is_vT);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("is_U") = true, py::arg("is_vT") = true);
+  m_linalg.def(
+    "Rsvd",
+    [](const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
+       const bool &is_vT) { return cytnx::linalg::Rsvd(Tin, keepdim, is_U, is_vT); },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("is_U") = true, py::arg("is_vT") = true);
+
+  m_linalg.def(
     "Gesvd_truncate",
     [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_double &err, const bool &is_U,
        const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim) {
