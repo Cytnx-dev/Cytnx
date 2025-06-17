@@ -6,6 +6,7 @@
 #include "Type.hpp"
 #include "UniTensor.hpp"
 #include "cytnx_error.hpp"
+#include "random.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -724,11 +725,13 @@ namespace cytnx {
     @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
     @param[in] power_iteration number of iterations for the power method: Y = (A *
     Adag)^power_iteration * A * Tin
+    @param[in] seed the seed for the random generator. [Default] Using device entropy.
     @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
     */
     std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
                                        const bool &is_U = true, const bool &is_vT = true,
-                                       const cytnx_uint64 &power_iteration = 0);
+                                       const cytnx_uint64 &power_iteration = 0,
+                                       const unsigned int &seed = random::__static_random_device());
 
     /**
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
@@ -1658,11 +1661,13 @@ namespace cytnx {
     @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
     @param[in] power_iteration number of iterations for the power method: Y = (A *
     Adag)^power_iteration * A * Tin
+    @param[in] seed the seed for the random generator. [Default] Using device entropy.
     @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
     */
     std::vector<Tensor> Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim,
                              const bool &is_U = true, const bool &is_vT = true,
-                             const cytnx_uint64 &power_iteration = 0);
+                             const cytnx_uint64 &power_iteration = 0,
+                             const unsigned int &seed = random::__static_random_device());
 
     // Svd_truncate:
     //==================================================
