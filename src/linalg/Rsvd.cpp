@@ -35,7 +35,8 @@ namespace cytnx {
                       "\n");
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Rsvd_truncate] can only operate on rank-2 Tensor.%s", "\n");
-      cytnx_uint64 samplenum = oversampling_factor * keepdim + oversampling_summand;
+      cytnx_uint64 samplenum =
+        (oversampling_factor + cytnx_uint64(1)) * keepdim + oversampling_summand;
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
       Tensor Q;
       if (Tin.device() == Device.cpu) {
@@ -109,7 +110,6 @@ namespace cytnx {
         } else {
           tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
-        std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
         Tensor terr({1}, Tin.dtype(), Tin.device());
 
         cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[Tin.dtype()](
@@ -135,20 +135,15 @@ namespace cytnx {
         return std::vector<Tensor>();
   #endif
       }
-    }
-  }  // namespace linalg
-}  // namespace cytnx
+    }  // Rsvd_truncate(Tensor)
 
-namespace cytnx {
-  namespace linalg {
     std::vector<Tensor> Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
                              const bool &is_vT, const cytnx_uint64 &power_iteration,
                              const unsigned int &seed) {
       std::vector<cytnx_uint64> shape = Tin.shape();
-      cytnx_error_msg(shape.size() != 2,
-                      "[Gesvd] error, Gesvd can only operate on rank-2 Tensor.%s", "\n");
-      cytnx_error_msg(keepdim < 1, "[ERROR][_rsvd_Dense_UT] Keepdim must be > 0, but is %d.\n",
-                      keepdim);
+      cytnx_error_msg(shape.size() != 2, "[Rsvd] error, Rsvd can only operate on rank-2 Tensor.%s",
+                      "\n");
+      cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd] Keepdim must be > 0, but is %d.\n", keepdim);
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
@@ -217,17 +212,9 @@ namespace cytnx {
         return std::vector<Tensor>();
   #endif
       }
-    }
+    }  // Rsvd(Tensor)
 
-  }  // namespace linalg
-
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
-
-    // actual impls:
-    void _rsvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+    void _Rsvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                         const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT,
                         const cytnx_uint64 &power_iteration, const unsigned int &seed) {
       //[Note] outCyT must be empty!
@@ -329,7 +316,7 @@ namespace cytnx {
         }
 
       }  // if tag
-    }  // _rsvd_Dense_UT
+    }  // _Rsvd_Dense_UT
 
     std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
                                        const bool &is_U, const bool &is_vT,
@@ -346,12 +333,12 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _rsvd_Dense_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
+        _Rsvd_Dense_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
         // } else if (Tin.uten_type() == UTenType.Block) {
-        //   _rsvd_Block_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
+        //   _Rsvd_Block_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
 
         // } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        //   _rsvd_BlockFermionic_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
+        //   _Rsvd_BlockFermionic_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
       } else {
         cytnx_error_msg(true, "[ERROR] Rsvd currently only supports Dense UniTensors.%s", "\n");
 
@@ -361,15 +348,7 @@ namespace cytnx {
 
     }  // Rsvd
 
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
-    using namespace std;
-    typedef Accessor ac;
-
-    void _rsvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+    void _Rsvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
                                  const bool &is_vT, const unsigned int &return_err,
                                  const cytnx_uint64 &mindim,
@@ -479,11 +458,10 @@ namespace cytnx {
       }  // if tag
 
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
-    };  // svdt Dense
+    };  // _Rsvd_truncate_Dense_UT
 
     std::vector<cytnx::UniTensor> Rsvd_truncate(
-      const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
-      const std::vector<cytnx_uint64> min_blockdim, const double &err, const bool &is_U,
+      const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
       const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim,
       const cytnx_uint64 &oversampling_summand, const cytnx_uint64 &oversampling_factor,
       const cytnx_uint64 &power_iteration, const unsigned int &seed) {
@@ -500,14 +478,10 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        cytnx_error_msg(
-          min_blockdim.size() != 1,
-          "[ERROR][Rsvd_truncate] min_blockdim must have one element for dense UniTensor%s", "\n");
-        _rsvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
-                                max(mindim, min_blockdim[0]), oversampling_summand,
-                                oversampling_factor, power_iteration, seed);
+        _Rsvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+                                oversampling_summand, oversampling_factor, power_iteration, seed);
         // } else if (Tin.uten_type() == UTenType.Block) {
-        //   _rsvd_truncate_Block_UT(outCyT, Tin, keepdim, min_blockdim, err, is_U, is_vT,
+        //   _Rsvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT,
         //   return_err, mindim);
       } else {
         cytnx_error_msg(true, "[ERROR][Rsvd_truncate] only Dense UniTensors are supported.%s",
