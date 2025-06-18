@@ -23,7 +23,20 @@ using namespace cytnx;
 
 void linalg_binding(py::module &m) {
   // [Submodule linalg]
+
   pybind11::module m_linalg = m.def_submodule("linalg", "linear algebra related.");
+  m_linalg.def(
+    "Rand_isometry",
+    [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_uint64 &power_iteration,
+       int64_t &seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      return cytnx::linalg::Rand_isometry(Tin, keepdim, power_iteration, seed);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("power_iteration") = 2, py::arg("seed") = -1);
+
   m_linalg.def(
     "Svd",
     [](const cytnx::Tensor &Tin, const bool &is_UvT) { return cytnx::linalg::Svd(Tin, is_UvT); },
@@ -45,7 +58,6 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Gesvd(Tin, is_U, is_vT);
     },
     py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
-
   m_linalg.def(
     "Rsvd",
     [](const cytnx::Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT,
@@ -57,7 +69,7 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Rsvd(Tin, keepdim, is_U, is_vT, power_iteration, seed);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("is_U") = true, py::arg("is_vT") = true,
-    py::arg("power_iteration") = 0, py::arg("seed") = -1);
+    py::arg("power_iteration") = 2, py::arg("seed") = -1);
   m_linalg.def(
     "Rsvd",
     [](const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
@@ -69,7 +81,7 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Rsvd(Tin, keepdim, is_U, is_vT, power_iteration, seed);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("is_U") = true, py::arg("is_vT") = true,
-    py::arg("power_iteration") = 0, py::arg("seed") = -1);
+    py::arg("power_iteration") = 2, py::arg("seed") = -1);
 
   m_linalg.def(
     "Gesvd_truncate",

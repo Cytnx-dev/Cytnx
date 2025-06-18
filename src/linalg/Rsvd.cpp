@@ -6,7 +6,6 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 #include "linalg.hpp"
-#include "random.hpp"
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -15,38 +14,21 @@ using namespace std;
 
 namespace cytnx {
   namespace linalg {
-
     std::vector<Tensor> Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
                              const bool &is_vT, const cytnx_uint64 &power_iteration,
                              const unsigned int &seed) {
-      cytnx_error_msg(Tin.shape().size() != 2,
+      std::vector<cytnx_uint64> shape = Tin.shape();
+      cytnx_error_msg(shape.size() != 2,
                       "[Gesvd] error, Gesvd can only operate on rank-2 Tensor.%s", "\n");
       cytnx_error_msg(keepdim < 1, "[ERROR][_rsvd_Dense_UT] Keepdim must be > 0, but is %d.\n",
                       keepdim);
-
-      std::vector<cytnx_uint64> shape = Tin.shape();
 
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
       // form isometry Q[0] and apply Q.Dagger * in
-      cytnx_int64 truncdim = std::min({keepdim, shape[0], shape[1]});
-      shape[0] = shape[1];
-      shape[1] = truncdim;
-      Tensor randmat = random::normal(shape[0] * shape[1], 0., 1., in.device(), seed, in.dtype());
-      randmat.reshape_(shape);
-      randmat = Matmul(in, randmat);
-      std::vector<Tensor> Q = Qr(randmat, false);
-      if (power_iteration > 0) {
-        Tensor dag = in.Conj().permute_({1, 0});
-        for (int pit = 0; pit < power_iteration; pit++) {
-          randmat = Matmul(dag, Q[0]);
-          Q = Qr(randmat, false);
-          randmat = Matmul(in, Q[0]);
-          Q = Qr(randmat, false);
-        }
-      }
-      in = Matmul(Q[0].Conj().permute_({1, 0}), in);
+      Tensor Q = Rand_isometry(Tin, keepdim, power_iteration, seed);
+      in = Matmul(Q.Conj().permute_({1, 0}), in);
 
       shape = in.shape();
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(shape[0], shape[1]));
@@ -75,7 +57,7 @@ namespace cytnx {
         std::vector<Tensor> out;
         out.push_back(S);
         if (is_U) {
-          U = Matmul(Q[0], U);
+          U = Matmul(Q, U);
           out.push_back(U);
         }
         if (is_vT) {
@@ -94,7 +76,7 @@ namespace cytnx {
         std::vector<Tensor> out;
         out.push_back(S);
         if (is_U) {
-          U = Matmul(Q[0], U);
+          U = Matmul(Q, U);
           out.push_back(U);
         }
         if (is_vT) {
