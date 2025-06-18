@@ -559,6 +559,7 @@ void unitensor_binding(py::module &m) {
     .def("bond", [](UniTensor &self, const std::string &label){return self.bond(label);} ,py::arg("label"))
     .def("shape", &UniTensor::shape)
     .def("signflip", &UniTensor::signflip)
+//     .def("signflip_", &UniTensor::signflip_)
     .def("to_", &UniTensor::to_)
     .def(
       "to_different_device",

@@ -12,10 +12,10 @@ namespace cytnx {
 
     void iAdd(Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[iAdd] error, two tensor cannot on different devices.%s", "\n");
+                      "[iAdd]  error, the two tensors have to be on the same device.%s", "\n");
       if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[iAdd] error, the two tensor does not have the same shape. Lt rank: [%d] "
+                        "[iAdd] error, the two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
