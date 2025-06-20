@@ -1,0 +1,55 @@
+[build-system]
+requires = ["scikit-build-core >=0.11", "pybind11 >=2.6"]
+build-backend = "scikit_build_core.build"
+
+[project]
+dynamic = ["version"]
+name = "cytnx"
+maintainers = [
+    { name = "Kai-Hsin Wu", email = "kaihsinwu@gmail.com" },
+    { name = "Chang-Teng Lin" },
+    { name = "Hsu Ke" },
+]
+description = "A tensor network library"
+
+readme = "Readme.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+keywords = ["tensor", "network", "physics"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+]
+
+dependencies = ["numpy >=1.18", "graphviz", "beartype"]
+
+[project.urls]
+Documentation = "https://cytnx-dev.github.io/Cytnx_doc"
+Repository = "https://github.com/Cytnx-dev/Cytnx.git"
+Issues = "https://github.com/Cytnx-dev/Cytnx/issues"
+
+[tool.scikit-build]
+minimum-version = "0.11"
+wheel.packages = ["cytnx"]
+cmake.args = [
+    # Use the default preset defined in CMakePresets.json
+    "--preset=openblas-cpu",
+    # TODO: Remove setting of generator to support builuding on Windows.
+    # scikit-build uses Ninja as the default cmake generator. However, Ninja
+    # conflicts against the build process of HPTT.
+    "-G Unix Makefiles",
+]
+
+[tool.scikit-build.metadata.version]
+provider = "scikit_build_core.metadata.regex"
+input = "version.cmake"
+regex = '''
+set\(\w+?VERSION_MAJOR\s+(?P<major>\d+)\)
+set\(\w+?VERSION_MINOR\s+(?P<minor>\d+)\)
+set\(\w+?VERSION_PATCH\s+(?P<patch>\d+)\)
+'''
+result = "{major}.{minor}.{patch}"
