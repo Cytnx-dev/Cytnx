@@ -18,11 +18,11 @@ using namespace pybind11::literals;
 using namespace cytnx;
 
 void symmetry_binding(py::module &m) {
-  py::enum_<__sym::__stype>(m, "SymType")
-    .value("Z", __sym::__stype::Z)
-    .value("U", __sym::__stype::U)
-    .value("fPar", __sym::__stype::fPar)
-    .value("fNum", __sym::__stype::fNum)
+  py::enum_<SymmetryType>(m, "SymType")
+    .value("Z", SymmetryType::Z)
+    .value("U", SymmetryType::U)
+    .value("fPar", SymmetryType::fPar)
+    .value("fNum", SymmetryType::fNum)
     .export_values();
 
   py::enum_<fermionParity>(m, "fermionParity")
