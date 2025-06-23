@@ -25,7 +25,7 @@ namespace cytnx {
                                       const double &err, const bool &is_U, const bool &is_vT,
                                       const unsigned int &return_err, const cytnx_uint64 &mindim,
                                       const cytnx_uint64 &oversampling_summand,
-                                      const cytnx_uint64 &oversampling_factor,
+                                      const double &oversampling_factor,
                                       const cytnx_uint64 &power_iteration,
                                       const unsigned int &seed) {
       // check input arguments
@@ -36,7 +36,8 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Rsvd_truncate] can only operate on rank-2 Tensor.%s", "\n");
       cytnx_uint64 samplenum =
-        (oversampling_factor + cytnx_uint64(1)) * keepdim + oversampling_summand;
+        (cytnx_uint64)((std::max(0., oversampling_factor) + 1.) * (double)keepdim) +
+        oversampling_summand;
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
       Tensor Q;
       if (Tin.device() == Device.cpu) {
@@ -142,7 +143,7 @@ namespace cytnx {
                                  const bool &is_vT, const unsigned int &return_err,
                                  const cytnx_uint64 &mindim,
                                  const cytnx_uint64 &oversampling_summand,
-                                 const cytnx_uint64 &oversampling_factor,
+                                 const double &oversampling_factor,
                                  const cytnx_uint64 &power_iteration, const unsigned int &seed) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
@@ -252,7 +253,7 @@ namespace cytnx {
     std::vector<cytnx::UniTensor> Rsvd_truncate(
       const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
       const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim,
-      const cytnx_uint64 &oversampling_summand, const cytnx_uint64 &oversampling_factor,
+      const cytnx_uint64 &oversampling_summand, const double &oversampling_factor,
       const cytnx_uint64 &power_iteration, const unsigned int &seed) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(

@@ -75,12 +75,12 @@ namespace cytnx {
 
         return out;
     #else
-        cytnx_error_msg(true, "[QR] fatal error,%s",
+        cytnx_error_msg(true, "[QR] fatal error, %s",
                         "try to call the cuQuantum section without cuQuantum support.\n");
         return std::vector<Tensor>();
     #endif
   #else
-        cytnx_error_msg(true, "[QR] fatal error,%s",
+        cytnx_error_msg(true, "[QR] fatal error, %s",
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
   #endif

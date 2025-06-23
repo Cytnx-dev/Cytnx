@@ -893,7 +893,7 @@ namespace cytnx {
       const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err = 0.,
       const bool &is_U = true, const bool &is_vT = true, const unsigned int &return_err = 0,
       const cytnx_uint64 &mindim = 1, const cytnx_uint64 &oversampling_summand = 10,
-      const cytnx_uint64 &oversampling_factor = 2, const cytnx_uint64 &power_iteration = 2,
+      const double &oversampling_factor = 1., const cytnx_uint64 &power_iteration = 2,
       const unsigned int &seed = random::__static_random_device());
 
     std::vector<cytnx::UniTensor> Hosvd(
@@ -1844,7 +1844,7 @@ namespace cytnx {
                                       const bool &is_vT = true, const unsigned int &return_err = 0,
                                       const cytnx_uint64 &mindim = 1,
                                       const cytnx_uint64 &oversampling_summand = 10,
-                                      const cytnx_uint64 &oversampling_factor = 1,
+                                      const double &oversampling_factor = 1.,
                                       const cytnx_uint64 &power_iteration = 2,
                                       const unsigned int &seed = random::__static_random_device());
     // Gesvd_truncate:

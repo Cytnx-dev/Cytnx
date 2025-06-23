@@ -87,7 +87,7 @@ void linalg_binding(py::module &m) {
     "Rsvd_truncate",
     [](const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
        const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim,
-       const cytnx_uint64 &oversampling_summand, const cytnx_uint64 &oversampling_factor,
+       const cytnx_uint64 &oversampling_summand, const double &oversampling_factor,
        const cytnx_uint64 &power_iteration, int64_t &seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
@@ -99,15 +99,14 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
-    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1,
+    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
     py::arg("power_iteration") = 2, py::arg("seed") = -1);
   m_linalg.def(
     "Rsvd_truncate",
     [](const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err,
        const bool &is_U, const bool &is_vT, const unsigned int &return_err,
        const cytnx_uint64 &mindim, const cytnx_uint64 &oversampling_summand,
-       const cytnx_uint64 &oversampling_factor, const cytnx_uint64 &power_iteration,
-       int64_t &seed) {
+       const double &oversampling_factor, const cytnx_uint64 &power_iteration, int64_t &seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -118,7 +117,7 @@ void linalg_binding(py::module &m) {
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
-    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1,
+    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
     py::arg("power_iteration") = 2, py::arg("seed") = -1);
 
   m_linalg.def(
