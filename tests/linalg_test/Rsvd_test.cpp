@@ -10,7 +10,8 @@ namespace RsvdTest {
 
   static TestFailMsg fail_msg;
 
-  bool CheckResult(const std::string& case_name, const cytnx_uint64 &keepdim, const cytnx_uint64 &power_iteration);
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                   const cytnx_uint64& power_iteration);
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
@@ -35,7 +36,7 @@ namespace RsvdTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, -10, 0, 0);
-    std::vector<UniTensor> Rsvds = linalg::Rsvd(T,1);
+    std::vector<UniTensor> Rsvds = linalg::Rsvd(T, 1);
     EXPECT_TRUE(CheckLabels(T, Rsvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Rsvds)) << fail_msg.TraceFailMsgs();
     EXPECT_EQ(Rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
@@ -76,7 +77,7 @@ namespace RsvdTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd(T,2); }, std::logic_error);
+    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd(T, 2); }, std::logic_error);
   }
 
   /*=====test info=====
@@ -87,7 +88,8 @@ namespace RsvdTest {
     is_VT:true
   ====================*/
   TEST(Rsvd, dense_exp_svals_test) {
-    std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128", "dense_nondiag_exp_Svals_F64"};
+    std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                          "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
@@ -96,14 +98,12 @@ namespace RsvdTest {
   }
 
   /*=====test info=====
-  describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration in Rsvd.
-  input:
-    T:Dense UniTensor with real or complex real type.
-    is_U:true
-    is_VT:true
+  describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration in
+  Rsvd. input: T:Dense UniTensor with real or complex real type. is_U:true is_VT:true
   ====================*/
   TEST(Rsvd, dense_exp_svals_no_power_iteration_test) {
-    std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128", "dense_nondiag_exp_Svals_F64"};
+    std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                          "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
@@ -191,7 +191,8 @@ namespace RsvdTest {
     auto UUD = Contract(U, UD);
   }
 
-  bool CheckResult(const std::string& case_name, const cytnx_uint64 &keepdim, const cytnx_uint64 &power_iteration) {
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                   const cytnx_uint64& power_iteration) {
     // test data source file
     std::string src_file_name = src_data_root + case_name + ".cytnx";
     // anscer file

@@ -10,7 +10,9 @@ namespace SvdTruncateTest {
 
   static TestFailMsg fail_msg;
 
-  bool CheckResult(const std::string& case_name, const cytnx_uint64 &keepdim);
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim);
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                   const std::vector<cytnx_uint64> min_blockdim);
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
@@ -35,7 +37,7 @@ namespace SvdTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, -10, 0, 0);
-    std::vector<UniTensor> Svds = linalg::Svd_truncate(T,1);
+    std::vector<UniTensor> Svds = linalg::Svd_truncate(T, 1);
     EXPECT_TRUE(CheckLabels(T, Svds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Svds)) << fail_msg.TraceFailMsgs();
     EXPECT_EQ(Svds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
@@ -76,7 +78,7 @@ namespace SvdTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Svds = linalg::Svd_truncate(T,2); }, std::logic_error);
+    EXPECT_THROW({ std::vector<UniTensor> Svds = linalg::Svd_truncate(T, 2); }, std::logic_error);
   }
 
   /*=====test info=====
@@ -87,11 +89,28 @@ namespace SvdTruncateTest {
     is_VT:true
   ====================*/
   TEST(Svd_truncate, dense_exp_svals_test) {
-    std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128", "dense_nondiag_exp_Svals_F64"};
+    std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                          "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
       EXPECT_TRUE(CheckResult(case_name, 5)) << fail_msg.TraceFailMsgs();
+    }
+  }
+
+  /*=====test info=====
+  describe:Test U(1) UniTensor with exponentially decaying singular values and use of min_blockdim;
+  input:
+    T:U(1) UniTensor with real or complex real type.
+    is_U:true
+    is_VT:true
+  ====================*/
+  TEST(Svd_truncate, U1_exp_svals_minblockdim_test) {
+    std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128", "sym_UT_U1_exp_Svals_F64"};
+    for (const auto& case_name : case_list) {
+      std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+      fail_msg.Init(test_case_name + ", " + case_name);
+      EXPECT_TRUE(CheckResult(case_name, 5, {1, 1, 0, 2, 0})) << fail_msg.TraceFailMsgs();
     }
   }
 
@@ -175,7 +194,7 @@ namespace SvdTruncateTest {
     auto UUD = Contract(U, UD);
   }
 
-  bool CheckResult(const std::string& case_name, const cytnx_uint64 &keepdim) {
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim) {
     // test data source file
     std::string src_file_name = src_data_root + case_name + ".cytnx";
     // anscer file
@@ -202,7 +221,52 @@ namespace SvdTruncateTest {
       fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
       return false;
     }
-    
+
+    // check recompose [M - USV*]
+    if (!ReComposeCheck(rec_T, Svds)) {
+      fail_msg.AppendMsg(
+        "The result is wrong after recomposing. "
+        "That's mean T not equal USV* ",
+        __func__, __LINE__);
+      return false;
+    }
+
+    return true;
+  }
+
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                   const std::vector<cytnx_uint64> min_blockdim) {
+    // test data source file
+    std::string src_file_name = src_data_root + case_name + ".cytnx";
+    // anscer file
+    std::string ans_file_name = ans_data_root + case_name + "_minblockdim.cytnx";
+    // reconstructed matrix file
+    std::string rec_file_name = ans_data_root + case_name + "_minblockdim_reconstructed.cytnx";
+    // bool need_U, need_VT;
+    bool compute_uv;
+    UniTensor src_T = UniTensor::Load(src_file_name);
+    UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
+    UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
+
+    // Do Svd_truncate
+    std::vector<UniTensor> Svds = linalg::Svd_truncate(src_T, keepdim, min_blockdim, 0., true, 0);
+
+    // check labels
+    if (!(CheckLabels(src_T, Svds))) {
+      fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
+      return false;
+    }
+
+    ans_T.print_diagram();
+    Svds[0].print_diagram();
+    // check answer
+    if (!(SingularValsCorrect(Svds[0], ans_T))) {
+      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
+      return false;
+    }
+    Svds[1].print_diagram();
+    Svds[2].print_diagram();
+
     // check recompose [M - USV*]
     if (!ReComposeCheck(rec_T, Svds)) {
       fail_msg.AppendMsg(

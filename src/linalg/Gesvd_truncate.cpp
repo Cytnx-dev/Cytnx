@@ -529,10 +529,11 @@ namespace cytnx {
         (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
         "[ERROR][Gesvd_truncate] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s", "\n");
 
-      cytnx_error_msg(Tin.is_diag(),
-                      "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
-                      "\n");
+      cytnx_error_msg(
+        Tin.is_diag(),
+        "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
+        "support. Use other manipulation.%s",
+        "\n");
 
       // check input arguments
       cytnx_error_msg(mindim < 0, "[ERROR][Gesvd_truncate] mindim must be >=1%s", "\n");
@@ -774,10 +775,11 @@ namespace cytnx {
         (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
         "[ERROR][Gesvd_truncate] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s", "\n");
 
-      cytnx_error_msg(Tin.is_diag(),
-                      "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
-                      "\n");
+      cytnx_error_msg(
+        Tin.is_diag(),
+        "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
+        "support. Use other manipulation.%s",
+        "\n");
 
       // check input arguments
       // cytnx_error_msg(mindim < 0, "[ERROR][Gesvd_truncate] mindim must be >=1%s", "\n");
