@@ -641,7 +641,7 @@ namespace cytnx {
                       "\n");
 
       cytnx_error_msg(Tin.is_diag(),
-                      "[Gesvd][ERROR] Gesvd for diagonal UniTensor is trivial and currently not "
+                      "[Gesvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
                       "support. Use other manipulation.%s",
                       "\n");
 
