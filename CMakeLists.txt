@@ -9,16 +9,6 @@ message(STATUS "")
 # #####################################################################
 cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_ARCHITECTURES
 
-# Check for CMake version compatibility with third-party modules
-if(CMAKE_VERSION VERSION_LESS 3.24)
-  message(FATAL_ERROR "CMake 3.24 or higher is required. Current version: ${CMAKE_VERSION}")
-endif()
-
-# Warn about potential compatibility issues with third-party modules
-if(CMAKE_VERSION VERSION_LESS 3.25)
-  message(WARNING "Some third-party modules may have compatibility issues with CMake ${CMAKE_VERSION}. Consider upgrading to CMake 3.25+ for best compatibility.")
-endif()
-
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
@@ -172,25 +162,16 @@ cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the nati
 cmake_dependent_option(USE_CUTENSOR "Enable cuTENSOR." OFF "USE_CUDA" OFF)
 require_dependent_variable(CUTENSOR_ROOT "$ENV{CUTENSOR_ROOT}" PATH
 "Please provide CUTENSOR_ROOT in the environment variables.
-CUTENSOR_ROOT is the path to the folder of cuTENSOR.
-Example: export CUTENSOR_ROOT=/path/to/cutensor
-Note: cuTENSOR is optional. Set USE_CUTENSOR=OFF to skip this dependency." "USE_CUTENSOR")
+CUTENSOR_ROOT is the path to the folder of cuTENSOR." "USE_CUTENSOR")
 cmake_dependent_option(USE_CUQUANTUM "Enable cuQuantum." OFF "USE_CUDA" OFF)
 require_dependent_variable(CUQUANTUM_ROOT "$ENV{CUQUANTUM_ROOT}" PATH
 "Please provide CUQUANTUM_ROOT in the environment variables.
-CUQUANTUM_ROOT is the path to the folder of cuQuantum.
-Example: export CUQUANTUM_ROOT=/path/to/cuquantum
-Note: cuQuantum is optional. Set USE_CUQUANTUM=OFF to skip this dependency." "USE_CUQUANTUM")
+CUQUANTUM_ROOT is the path to the folder of cuQuantum." "USE_CUQUANTUM")
 option(RUN_TESTS "Run Cytnx tests." OFF)
 option(RUN_BENCHMARKS "Run Cytnx benchmarks." OFF)
 option(USE_DEBUG "Build in debug mode and enable address sanitizer." OFF)
 option(BUILD_DOC "Build API documentation." OFF)
 option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
-
-# Additional build configuration options
-option(ENABLE_WARNINGS "Enable compiler warnings" ON)
-option(ENABLE_PEDANTIC "Enable pedantic compiler flags" OFF)
-option(BUILD_SHARED_LIBS "Build shared libraries instead of static" OFF)
 
 # #####################################################################
 # ## PROJECT
@@ -498,39 +479,6 @@ message(STATUS "    CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "    BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS "    Link libraries: ${CYTNX_LINK_Libs}")
 
-# Configuration summary
-message(STATUS "")
-message(STATUS "=== Cytnx Configuration Summary ===")
-message(STATUS "Version: ${CYTNX_VERSION}")
-message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "Install Prefix: ${CMAKE_INSTALL_PREFIX}")
-message(STATUS "Python API: ${BUILD_PYTHON}")
-message(STATUS "CUDA Support: ${USE_CUDA}")
-message(STATUS "MKL Support: ${USE_MKL}")
-message(STATUS "HPTT Support: ${USE_HPTT}")
-if(USE_CUDA)
-  message(STATUS "cuTENSOR: ${USE_CUTENSOR}")
-  message(STATUS "cuQuantum: ${USE_CUQUANTUM}")
-  message(STATUS "CUTT: ${USE_CUTT}")
-endif()
-message(STATUS "Tests: ${RUN_TESTS}")
-message(STATUS "Benchmarks: ${RUN_BENCHMARKS}")
-message(STATUS "Documentation: ${BUILD_DOC}")
-message(STATUS "=====================================")
-message(STATUS "")
-
-# Helpful next steps
-if(BUILD_PYTHON)
-  message(STATUS "Next steps:")
-  message(STATUS "  1. Run: make -j$(nproc)")
-  message(STATUS "  2. Run: make install")
-  message(STATUS "  3. Test: python -c 'import cytnx; print(cytnx.__version__)'")
-else()
-  message(STATUS "Next steps:")
-  message(STATUS "  1. Run: make -j$(nproc)")
-  message(STATUS "  2. Run: make install")
-endif()
-
 FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "${CMAKE_CXX_FLAGS}\n" "")
 
@@ -547,11 +495,3 @@ if(BUILD_PACKAGES)
   include("Package.cmake")
   include(CPack)
 endif()
-
-# Set default build type if not specified
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type (Debug, Release, RelWithDebInfo, MinSizeRel)" FORCE)
-endif()
-
-# Provide build type options
-set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
