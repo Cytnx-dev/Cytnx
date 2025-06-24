@@ -93,6 +93,7 @@ endif()
 if(USE_CUDA)
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
+    
     enable_language(CUDA)
     find_package(CUDAToolkit REQUIRED)
     if(NOT DEFINED CMAKE_CUDA_STANDARD)
@@ -116,7 +117,6 @@ if(USE_CUDA)
     #      -gencode=arch=compute_70,code=sm_70 \
     #      -gencode=arch=compute_75,code=sm_75 \
     #      -gencode=arch=compute_75,code=compute_75 ")
-    set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES native)
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
@@ -166,7 +166,6 @@ if(USE_CUDA)
         message(STATUS "cutt install dir: ${install_dir}")
         add_dependencies(cytnx cutt)
         # set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
-        set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES native)
         target_compile_definitions(cytnx PRIVATE UNI_CUTT)
         target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libcutt.a)
         # relocate cutt
