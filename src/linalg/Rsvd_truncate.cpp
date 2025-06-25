@@ -80,7 +80,7 @@ namespace cytnx {
         terr.Init({1}, in.dtype(), in.device());
         if (samplenum < n_singlu) {
           Q = linalg::Rand_isometry(Tin, samplenum, power_iteration, seed);
-          in = Matmul(Q.Conj().permute_({1, 0}), in)
+          in = Matmul(Q.Conj().permute_({1, 0}), in);
         }
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
                                                                   S, vT, terr);
