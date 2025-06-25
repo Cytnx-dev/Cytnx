@@ -20,7 +20,6 @@
 
 namespace cytnx {
   namespace linalg {
-    typedef Accessor ac;
     std::vector<Tensor> Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
                              const bool &is_vT, const cytnx_uint64 &power_iteration,
                              const unsigned int &seed) {

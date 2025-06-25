@@ -61,7 +61,7 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Rsvd",
     [](const cytnx::Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT,
-       const cytnx_uint64 &power_iteration = 0, int64_t & seed) {
+       const cytnx_uint64 &power_iteration, int64_t &seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -73,7 +73,7 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Rsvd",
     [](const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
-       const bool &is_vT, const cytnx_uint64 &power_iteration = 0, int64_t & seed) {
+       const bool &is_vT, const cytnx_uint64 &power_iteration, int64_t &seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -100,7 +100,7 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
     py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
-    py::arg("power_iteration") = 2, py::arg("seed") = -1);
+    py::arg("power_iteration") = 0, py::arg("seed") = -1);
   m_linalg.def(
     "Rsvd_truncate",
     [](const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err,
@@ -118,7 +118,7 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
     py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
     py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
-    py::arg("power_iteration") = 2, py::arg("seed") = -1);
+    py::arg("power_iteration") = 0, py::arg("seed") = -1);
 
   m_linalg.def(
     "Gesvd_truncate",

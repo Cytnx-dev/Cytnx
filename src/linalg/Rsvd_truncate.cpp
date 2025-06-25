@@ -20,7 +20,6 @@
 
 namespace cytnx {
   namespace linalg {
-    typedef Accessor ac;
     std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                       const double &err, const bool &is_U, const bool &is_vT,
                                       const unsigned int &return_err, const cytnx_uint64 &mindim,
