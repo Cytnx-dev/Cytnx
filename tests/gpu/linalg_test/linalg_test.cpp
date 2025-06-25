@@ -75,10 +75,13 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
 // }
 
 TEST_F(linalg_Test, gpu_BkUt_Qr1) {
+#ifdef UNI_CUQUANTUM
+  GTEST_SKIP() << "QR decomposition is currently only supported if cuQuantum is available.";
+#else
   auto res = linalg::Qr(H);
   auto Q = res[0];
   auto R = res[1];
-  for (size_t i = 0; i < 27; i++)
+  for (size_t i = 0; i < 27; i++) {
     for (size_t j = 0; j < 27; j++) {
       if (R.elem_exists({i, j})) {
         EXPECT_TRUE(abs((double)(R.at({i, j}).real()) - (double)(Qr_Rans.at({i, j}).real())) <
@@ -91,6 +94,8 @@ TEST_F(linalg_Test, gpu_BkUt_Qr1) {
         // EXPECT_EQ((double)(Q.at({i,j}).real()),(double)(Qr_Qans.at({i,j}).real()));
       }
     }
+  }
+#endif
 }
 
 TEST_F(linalg_Test, gpu_BkUt_expH) {
