@@ -137,7 +137,7 @@ namespace cytnx {
       }
     }  // Rsvd_truncate(Tensor)
 
-    void _Rsvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+    void _rsvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
                                  const bool &is_vT, const unsigned int &return_err,
                                  const cytnx_uint64 &mindim,
@@ -151,9 +151,7 @@ namespace cytnx {
       // if(Tin.is_contiguous()) tmp = Tin.get_block_();
       // else{ tmp = Tin.get_block(); tmp.contiguous_();}
 
-      std::vector<cytnx_uint64> tmps = tmp.shape();
-      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
-      tmps.clear();
+      std::vector<cytnx_uint64> oldshape = tmp.shape();
       std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
@@ -247,7 +245,7 @@ namespace cytnx {
       }  // if tag
 
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
-    };  // _Rsvd_truncate_Dense_UT
+    };  // _rsvd_truncate_Dense_UT
 
     std::vector<cytnx::UniTensor> Rsvd_truncate(
       const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
@@ -273,10 +271,10 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _Rsvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+        _rsvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
                                 oversampling_summand, oversampling_factor, power_iteration, seed);
         // } else if (Tin.uten_type() == UTenType.Block) {
-        //   _Rsvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT,
+        //   _rsvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT,
         //   return_err, mindim);
       } else {
         cytnx_error_msg(true, "[ERROR][Rsvd_truncate] only Dense UniTensors are supported.%s",

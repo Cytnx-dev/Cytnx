@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "backend/lapack_wrapper.hpp"
-#include "backebackend/utils_internal_interface.hpp"
+#include "backend/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
 
 namespace cytnx {
