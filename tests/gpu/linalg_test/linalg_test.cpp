@@ -75,7 +75,7 @@ TEST_F(linalg_Test, gpu_BkUt_Svd_truncate3) {
 // }
 
 TEST_F(linalg_Test, gpu_BkUt_Qr1) {
-#ifdef UNI_CUQUANTUM
+#ifndef UNI_CUQUANTUM
   GTEST_SKIP() << "QR decomposition is currently only supported if cuQuantum is available.";
 #else
   auto res = linalg::Qr(H);
