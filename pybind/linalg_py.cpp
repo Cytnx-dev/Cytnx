@@ -60,8 +60,8 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
   m_linalg.def(
     "Rsvd",
-    [](const cytnx::Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT,
-       const cytnx_uint64 &power_iteration, int64_t &seed) {
+    [](const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
+       cytnx_uint64 power_iteration, int64_t seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -72,8 +72,8 @@ void linalg_binding(py::module &m) {
     py::arg("power_iteration") = 2, py::arg("seed") = -1);
   m_linalg.def(
     "Rsvd",
-    [](const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
-       const bool &is_vT, const cytnx_uint64 &power_iteration, int64_t &seed) {
+    [](const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
+       cytnx_uint64 power_iteration, int64_t seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -85,10 +85,9 @@ void linalg_binding(py::module &m) {
 
   m_linalg.def(
     "Rsvd_truncate",
-    [](const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-       const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim,
-       const cytnx_uint64 &oversampling_summand, const double &oversampling_factor,
-       const cytnx_uint64 &power_iteration, int64_t &seed) {
+    [](const Tensor &Tin, cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
+       unsigned int return_err, cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+       double oversampling_factor, cytnx_uint64 power_iteration, int64_t seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -103,10 +102,9 @@ void linalg_binding(py::module &m) {
     py::arg("power_iteration") = 0, py::arg("seed") = -1);
   m_linalg.def(
     "Rsvd_truncate",
-    [](const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-       const bool &is_U, const bool &is_vT, const unsigned int &return_err,
-       const cytnx_uint64 &mindim, const cytnx_uint64 &oversampling_summand,
-       const double &oversampling_factor, const cytnx_uint64 &power_iteration, int64_t &seed) {
+    [](const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
+       unsigned int return_err, cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+       double oversampling_factor, cytnx_uint64 power_iteration, int64_t seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();

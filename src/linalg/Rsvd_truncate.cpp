@@ -20,13 +20,11 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                      const double &err, const bool &is_U, const bool &is_vT,
-                                      const unsigned int &return_err, const cytnx_uint64 &mindim,
-                                      const cytnx_uint64 &oversampling_summand,
-                                      const double &oversampling_factor,
-                                      const cytnx_uint64 &power_iteration,
-                                      const unsigned int &seed) {
+    std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, cytnx_uint64 keepdim, double err,
+                                      bool is_U, bool is_vT, unsigned int return_err,
+                                      cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+                                      double oversampling_factor, cytnx_uint64 power_iteration,
+                                      unsigned int seed) {
       // check input arguments
       cytnx_error_msg(mindim < 0, "[ERROR][Rsvd_truncate] mindim must be >=1.%s", "\n");
       cytnx_error_msg(keepdim < 1, "[ERROR][Rsvd_truncate] keepdim must be >=1.%s", "\n");
@@ -138,12 +136,10 @@ namespace cytnx {
     }  // Rsvd_truncate(Tensor)
 
     void _rsvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                 const bool &is_vT, const unsigned int &return_err,
-                                 const cytnx_uint64 &mindim,
-                                 const cytnx_uint64 &oversampling_summand,
-                                 const double &oversampling_factor,
-                                 const cytnx_uint64 &power_iteration, const unsigned int &seed) {
+                                 cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
+                                 unsigned int return_err, cytnx_uint64 mindim,
+                                 cytnx_uint64 oversampling_summand, double oversampling_factor,
+                                 cytnx_uint64 power_iteration, unsigned int seed) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -247,11 +243,12 @@ namespace cytnx {
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
     };  // _rsvd_truncate_Dense_UT
 
-    std::vector<cytnx::UniTensor> Rsvd_truncate(
-      const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-      const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim,
-      const cytnx_uint64 &oversampling_summand, const double &oversampling_factor,
-      const cytnx_uint64 &power_iteration, const unsigned int &seed) {
+    std::vector<cytnx::UniTensor> Rsvd_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                                double err, bool is_U, bool is_vT,
+                                                unsigned int return_err, cytnx_uint64 mindim,
+                                                cytnx_uint64 oversampling_summand,
+                                                double oversampling_factor,
+                                                cytnx_uint64 power_iteration, unsigned int seed) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(
         (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),

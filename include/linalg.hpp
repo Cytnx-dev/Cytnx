@@ -717,10 +717,10 @@ namespace cytnx {
     &power_iteration, const unsigned int &seed)
     @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
     */
-    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
-                                       const bool &is_U = true, const bool &is_vT = true,
-                                       const cytnx_uint64 &power_iteration = 2,
-                                       const unsigned int &seed = random::__static_random_device());
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                       bool is_U = true, bool is_vT = true,
+                                       cytnx_uint64 power_iteration = 2,
+                                       unsigned int seed = random::__static_random_device());
 
     /**
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
@@ -890,11 +890,10 @@ namespace cytnx {
     @note Uses a full Gesvd if keepdim is as large as the rank of the tensor
     */
     std::vector<cytnx::UniTensor> Rsvd_truncate(
-      const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err = 0.,
-      const bool &is_U = true, const bool &is_vT = true, const unsigned int &return_err = 0,
-      const cytnx_uint64 &mindim = 1, const cytnx_uint64 &oversampling_summand = 10,
-      const double &oversampling_factor = 1., const cytnx_uint64 &power_iteration = 0,
-      const unsigned int &seed = random::__static_random_device());
+      const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err = 0., bool is_U = true,
+      bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1,
+      cytnx_uint64 oversampling_summand = 10, double oversampling_factor = 1.,
+      cytnx_uint64 power_iteration = 0, unsigned int seed = random::__static_random_device());
 
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
@@ -1734,10 +1733,9 @@ namespace cytnx {
     &power_iteration, const unsigned int &seed)
     @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
     */
-    std::vector<Tensor> Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                             const bool &is_U = true, const bool &is_vT = true,
-                             const cytnx_uint64 &power_iteration = 2,
-                             const unsigned int &seed = random::__static_random_device());
+    std::vector<Tensor> Rsvd(const Tensor &Tin, cytnx_uint64 keepdim, bool is_U = true,
+                             bool is_vT = true, cytnx_uint64 power_iteration = 2,
+                             unsigned int seed = random::__static_random_device());
 
     // Svd_truncate:
     //==================================================
@@ -1839,14 +1837,13 @@ namespace cytnx {
     bool &is_U, const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim);
     @note Uses a full Gesvd if keepdim is as large as the rank of the tensor
     */
-    std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                      const double &err = 0., const bool &is_U = true,
-                                      const bool &is_vT = true, const unsigned int &return_err = 0,
-                                      const cytnx_uint64 &mindim = 1,
-                                      const cytnx_uint64 &oversampling_summand = 10,
-                                      const double &oversampling_factor = 1.,
-                                      const cytnx_uint64 &power_iteration = 0,
-                                      const unsigned int &seed = random::__static_random_device());
+    std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, cytnx_uint64 keepdim, double err = 0.,
+                                      bool is_U = true, bool is_vT = true,
+                                      unsigned int return_err = 0, cytnx_uint64 mindim = 1,
+                                      cytnx_uint64 oversampling_summand = 10,
+                                      double oversampling_factor = 1.,
+                                      cytnx_uint64 power_iteration = 0,
+                                      unsigned int seed = random::__static_random_device());
     // Gesvd_truncate:
     //==================================================
     /**

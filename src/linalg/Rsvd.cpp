@@ -20,9 +20,8 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
-                             const bool &is_vT, const cytnx_uint64 &power_iteration,
-                             const unsigned int &seed) {
+    std::vector<Tensor> Rsvd(const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
+                             cytnx_uint64 power_iteration, unsigned int seed) {
       std::vector<cytnx_uint64> shape = Tin.shape();
       cytnx_error_msg(shape.size() != 2, "[Rsvd] error, Rsvd can only operate on rank-2 Tensor.%s",
                       "\n");
@@ -98,8 +97,8 @@ namespace cytnx {
     }  // Rsvd(Tensor)
 
     void _Rsvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                        const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT,
-                        const cytnx_uint64 &power_iteration, const unsigned int &seed) {
+                        cytnx_uint64 keepdim, bool is_U, bool is_vT, cytnx_uint64 power_iteration,
+                        unsigned int seed) {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
@@ -201,10 +200,9 @@ namespace cytnx {
       }  // if tag
     }  // _Rsvd_Dense_UT
 
-    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
-                                       const bool &is_U, const bool &is_vT,
-                                       const cytnx_uint64 &power_iteration,
-                                       const unsigned int &seed) {
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U,
+                                       bool is_vT, cytnx_uint64 power_iteration,
+                                       unsigned int seed) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
                       "[Rsvd][ERROR] Rsvd for UniTensor should have rank>1 and rowrank>0%s", "\n");
