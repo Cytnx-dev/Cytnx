@@ -2760,7 +2760,7 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void _BKF_from_DN(BlockFermionicUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
+  void _bkf_from_dn(BlockFermionicUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
     if (!force) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
@@ -2799,11 +2799,11 @@ namespace cytnx {
     }
   }
 
-  void _BKF_from_BK(BlockFermionicUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
+  void _bkf_from_bk(BlockFermionicUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
     cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockUT not implemented.%s", "\n");
   }
 
-  void _BKF_from_BKF(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
+  void _bkf_from_bkF(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
                      const bool &force) {
     cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockFermionicUT not implemented.%s", "\n");
   }
@@ -2814,11 +2814,11 @@ namespace cytnx {
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
-      _BKF_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
+      _bkf_from_dn(this, (DenseUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.Block) {
-      _BKF_from_BK(this, (BlockUniTensor *)(rhs.get()), force);
+      _bkf_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.BlockFermionic) {
-      _BKF_from_BKF(this, (BlockFermionicUniTensor *)(rhs.get()), force);
+      _bkf_from_bkF(this, (BlockFermionicUniTensor *)(rhs.get()), force);
     } else {
       cytnx_error_msg(
         true, "[ERROR] unsupport conversion of UniTensor from %s => BlockFermionicUniTensor\n",
