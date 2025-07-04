@@ -26,6 +26,7 @@ add_executable(
   linalg_test/sum_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
+  algo_test/Sort_test.cpp
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
   random_test/uniform_test.cpp

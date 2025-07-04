@@ -3,10 +3,12 @@
 #include <exception>
 #include <iostream>
 #include <limits>
+#include <random>
 #include <string>
 #include <vector>
 
 #include "backend/Storage.hpp"
+#include "cytnx_error.hpp"
 #include "random.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
@@ -476,6 +478,54 @@ namespace cytnx {
       }
       UT = tmp.astype(dtype);
     }  // func:InitTensUniform
+
+    std::vector<std::vector<cytnx_uint64>> GenerateTestShapes(
+      cytnx_uint64 dim, cytnx_uint64 min_size, cytnx_uint64 max_size, cytnx_uint64 num_shapes,
+      cytnx_bool include_edge_case, cytnx_uint32 seed) {
+      // Check params
+      cytnx_error_msg(dim < 1 || dim > 4,
+                      "[GenerateTestShapes] Invalid dimension: must be 1-4, got %llu", dim);
+      cytnx_error_msg(min_size < 1, "[GenerateTestShapes] min_size must be >= 1, got %llu",
+                      min_size);
+      cytnx_error_msg(min_size > max_size,
+                      "[GenerateTestShapes] min_size must be <= max_size, got min=%llu, max=%llu",
+                      min_size, max_size);
+      cytnx_error_msg(num_shapes == 0, "[GenerateTestShapes] num_shapes must be > 0, got %llu",
+                      num_shapes);
+
+      std::vector<std::vector<cytnx_uint64>> shapes;
+      if (include_edge_case) {
+        shapes.push_back(std::vector<cytnx_uint64>(dim, min_size));
+        if (min_size != max_size) {
+          shapes.push_back(std::vector<cytnx_uint64>(dim, max_size));
+        }
+      }
+
+      // Set up random number generator
+      std::mt19937 gen(seed == 0 ? std::random_device{}() : seed);
+      std::uniform_int_distribution<cytnx_uint64> size_dist(min_size, max_size);
+
+      // Generate random shapes to reach num_shapes
+      while (shapes.size() < num_shapes) {
+        std::vector<cytnx_uint64> shape(dim);
+        for (cytnx_uint64 i = 0; i < dim; ++i) {
+          shape[i] = size_dist(gen);
+        }
+        // Avoid duplicate shapes
+        bool is_duplicate = false;
+        for (const auto& existing_shape : shapes) {
+          if (shape == existing_shape) {
+            is_duplicate = true;
+            break;
+          }
+        }
+        if (!is_duplicate) {
+          shapes.push_back(shape);
+        }
+      }
+
+      return shapes;
+    }
 
   }  // namespace TestTools
 }  // namespace cytnx
