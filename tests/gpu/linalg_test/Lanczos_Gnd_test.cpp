@@ -3,7 +3,7 @@
 
 class MyOp : public LinOp {
  public:
-  MyOp() : LinOp("mv", 4) {}
+  MyOp() : LinOp("mv", 27) {}
 
   UniTensor matvec(const UniTensor& v) override {
     Tensor tA = arange(27 * 27).reshape(27, 27).to(cytnx::Device.cuda);

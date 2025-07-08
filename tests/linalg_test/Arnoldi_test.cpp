@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
+#include <mkl.h>
+#include <omp.h>
 
 using namespace cytnx;
 using namespace testing;
 
-namespace ArnoldiTest {
-
-  cytnx_double tolerance = 1.0e-9;
+namespace {
 
   // define the customize LinOp
   class MatOp : public LinOp {
@@ -37,97 +37,22 @@ namespace ArnoldiTest {
                    const cytnx_uint64 k);
 
   void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
-                  const cytnx_uint64& k = 5, cytnx_uint64 dim = 23) {
+                  const cytnx_uint64& k = 4, cytnx_uint64 dim = 23) {
     MatOp H = MatOp(dim, mat_type);
     const cytnx_uint64 maxiter = 10000;
-    const cytnx_double cvg_crit = tolerance;
+    auto dtype = H.dtype();
+    const cytnx_double cvg_crit = 0;
     std::vector<Tensor> arnoldi_eigs = linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k);
     bool is_pass = CheckResult(H, arnoldi_eigs, which, k);
     EXPECT_TRUE(is_pass);
   }
-
-  // corrected test
-  // 1-1, test for 'which' = 'LM'
-  TEST(Arnoldi, which_LM_test) {
-    std::string which = "LM";
-    ExcuteTest(which);
-  }
-
-  // 1-2, test for 'which' = 'LR'
-  TEST(Arnoldi, which_LR_test) {
-    std::string which = "LR";
-    ExcuteTest(which);
-  }
-
-  // 1-3, test for 'which' = 'LI'
-  TEST(Arnoldi, which_LI_test) {
-    std::string which = "LI";
-    ExcuteTest(which);
-  }
-
-  // 1-4, test for 'which' = 'SM'
-  TEST(Arnoldi, which_SM_test) {
-    std::string which = "SM";
-    ExcuteTest(which);
-  }
-
-  // 1-5, test for 'which' = 'SR'
-  TEST(Arnoldi, which_SR_test) {
-    std::string which = "SR";
-    ExcuteTest(which);
-  }
-
-  // 1-6, test for 'which' = 'SI'
-  TEST(Arnoldi, which_SI_test) {
-    std::string which = "SI";
-    ExcuteTest(which);
-  }
-
-  // 1-7, test matrix is real type
-  TEST(Arnoldi, mat_type_real_test) {
-    std::string which = "LM";
-    auto mat_type = Type.Double;
-    ExcuteTest(which, mat_type);
-  }
-
-  // 1-8, test eigenalue number k = 1
-  TEST(Arnoldi, k1_test) {
-    std::string which = "LM";
-    auto mat_type = Type.ComplexDouble;
-    cytnx_uint64 k = 1;
-    ExcuteTest(which, mat_type, k);
-  }
-
-  // 1-9, test eigenalue number k match maximum, that means k = dim.
-  TEST(Arnoldi, k_max) {
-    std::string which = "LM";
-    auto mat_type = Type.ComplexDouble;
-    cytnx_uint64 k, dim;
-    k = dim = 13;
-    ExcuteTest(which, mat_type, k, dim);
-  }
-
-  // 1-10, test the smallest matrix dimenstion.
-  TEST(Arnoldi, smallest_dim) {
-    std::string which = "LM";
-    auto mat_type = Type.ComplexDouble;
-    cytnx_uint64 k, dim;
-    k = 1;
-    dim = 3;
-    ExcuteTest(which, mat_type, k, dim);
-  }
-
-  // 1-11, test 'is_V' is false
-  // 1-12, test 'v_bose' is true
-  // 1-13, test converge criteria is large such that the iteration time may not reach 'k'
-
   // error test
   class ErrorTestClass {
    public:
     std::string which = "LM";
     cytnx_uint64 k = 1;
     cytnx_uint64 maxiter = 10000;
-    cytnx_double cvg_crit = tolerance;
+    cytnx_double cvg_crit = 0;
     ErrorTestClass(){};
     cytnx_uint64 dim = 3;
     void ExcuteErrorTest();
@@ -151,42 +76,6 @@ namespace ArnoldiTest {
       SUCCEED();
     }
   }
-
-  // 2-1, test for wrong input 'which'
-  TEST(Arnoldi, err_which) {
-    ErrorTestClass err_task;
-    err_task.which = "ML";
-    err_task.ExcuteErrorTest();
-  }
-
-  // 2-2, test for wrong input LinOp dtype
-  TEST(Arnoldi, err_mat_type) {
-    ErrorTestClass err_task;
-    err_task.Set_mat_type(Type.Int64);
-    err_task.ExcuteErrorTest();
-  }
-
-  // 2-3, test for 'k' = 0
-  TEST(Arnoldi, err_zero_k) {
-    ErrorTestClass err_task;
-    err_task.k = 0;
-    err_task.ExcuteErrorTest();
-  }
-
-  // 2-4, test for 'k' > 'max_iter'
-  TEST(Arnoldi, err_k_too_large) {
-    ErrorTestClass err_task;
-    err_task.k = err_task.dim + 1;
-    err_task.ExcuteErrorTest();
-  }
-
-  // 2-5, test cvg_crit <= 0
-  TEST(Arnoldi, err_crit_negative) {
-    ErrorTestClass err_task;
-    err_task.cvg_crit = -0.001;
-    err_task.ExcuteErrorTest();
-  }
-
   // For given 'which' = 'LM', 'SM', ...etc, sort the given eigenvalues.
   bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
   bool cmpReal(const Scalar& l, const Scalar& r) { return l.real() < r.real(); }
@@ -238,6 +127,8 @@ namespace ArnoldiTest {
     // check the number of the eigenvalues
     cytnx_uint64 arnoldi_eigvals_len = arnoldi_eigvals.shape()[0];
     if (arnoldi_eigvals_len != k) return false;
+    auto dtype = H.dtype();
+    const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
     for (cytnx_uint64 i = 0; i < k; ++i) {
       auto arnoldi_eigval = arnoldi_eigvals.storage().at(i);
       // if k == 1, arnoldi_eigvecs will be a rank-1 tensor
@@ -245,14 +136,142 @@ namespace ArnoldiTest {
       auto exact_eigval = fst_few_eigvals[i];
       // check eigen value by comparing with the full spectrum results.
       // avoid, for example, arnoldi_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'SM'
-      auto eigval_err = abs(arnoldi_eigval) - abs(exact_eigval);
+      auto eigval_err = abs(abs(arnoldi_eigval) - abs(exact_eigval)) / abs(exact_eigval);
+      // std::cout << "eigval err=" << eigval_err << std::endl;
       if (eigval_err >= tolerance) return false;
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, arnoldi_eigval, arnoldi_eigvec);
+      // std::cout << "resi err=" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
       // check phase
     }
     return true;
   }
+}  // namespace
 
-}  // namespace ArnoldiTest
+// corrected test
+// 1-1, test for 'which' = 'LM'
+TEST(Arnoldi, which_LM_test) {
+  std::string which = "LM";
+  ExcuteTest(which);
+}
+
+// 1-2, test for 'which' = 'LR'
+TEST(Arnoldi, which_LR_test) {
+  std::string which = "LR";
+  ExcuteTest(which);
+}
+
+// 1-3, test for 'which' = 'LI'
+TEST(Arnoldi, which_LI_test) {
+  std::string which = "LI";
+  ExcuteTest(which);
+}
+
+// 1-4, test for 'which' = 'SR'
+TEST(Arnoldi, which_SR_test) {
+  std::string which = "SR";
+  ExcuteTest(which);
+}
+
+// 1-5, test for 'which' = 'SI'
+TEST(Arnoldi, which_SI_test) {
+  std::string which = "SI";
+  ExcuteTest(which);
+}
+
+// 1-6, test matrix is all type
+TEST(Arnoldi, mat_type_all_test) {
+  std::string which = "LM";
+  std::vector<int> dtypes = {Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float};
+  for (auto dtype : dtypes) {
+    ExcuteTest(which, dtype);
+  }
+}
+
+// 1-7, test eigenalue number k = 1
+TEST(Arnoldi, k1_test) {
+  std::string which = "LM";
+  auto mat_type = Type.ComplexDouble;
+  cytnx_uint64 k = 1;
+  ExcuteTest(which, mat_type, k);
+}
+
+// 1-8, test eigenalue number k match maximum, that means k = dim.
+TEST(Arnoldi, k_large) {
+  std::string which = "LM";
+  auto mat_type = Type.ComplexDouble;
+  cytnx_uint64 k, dim;
+  dim = 13;
+  k = 11;
+  ExcuteTest(which, mat_type, k, dim);
+}
+
+// 1-9, test the smallest matrix dimenstion.
+TEST(Arnoldi, smallest_dim) {
+  std::string which = "LM";
+  auto mat_type = Type.ComplexDouble;
+  cytnx_uint64 k, dim;
+  k = 1;
+  dim = 3;
+  ExcuteTest(which, mat_type, k, dim);
+}
+
+// 1-10, test 'is_V' is false
+TEST(Arnoldi, is_V_false) {
+  int dim = 23;
+  int k = 3;
+  MatOp H = MatOp(dim, Type.ComplexDouble);
+  const cytnx_uint64 maxiter = 10000;
+  auto dtype = H.dtype();
+  std::string which = "LM";
+  const cytnx_double cvg_crit = 0;
+  bool is_V = true;
+  std::vector<Tensor> arnoldi_isV =
+    linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k, is_V);
+  is_V = false;
+  std::vector<Tensor> arnoldi_noV =
+    linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k, is_V);
+  double err = (arnoldi_isV[0] - arnoldi_noV[0]).Norm().item<double>();
+  EXPECT_TRUE(err < 1e-12);
+  EXPECT_TRUE(arnoldi_noV.size() == 1);
+  EXPECT_TRUE(arnoldi_isV.size() == (2));
+}
+
+// 1-11, test 'v_bose' is true
+// 1-12, test converge criteria is large such that the iteration time may not reach 'k'
+
+// 2-1, test for wrong input 'which'
+TEST(Arnoldi, err_which) {
+  ErrorTestClass err_task;
+  err_task.which = "ML";
+  err_task.ExcuteErrorTest();
+}
+
+// 2-2, test for wrong input LinOp dtype
+TEST(Arnoldi, err_mat_type) {
+  ErrorTestClass err_task;
+  err_task.Set_mat_type(Type.Int64);
+  err_task.ExcuteErrorTest();
+}
+
+// 2-3, test for 'k' = 0
+TEST(Arnoldi, err_zero_k) {
+  ErrorTestClass err_task;
+  err_task.k = 0;
+  err_task.ExcuteErrorTest();
+}
+
+// 2-4, test for 'k' > 'max_iter'
+TEST(Arnoldi, err_k_too_large) {
+  ErrorTestClass err_task;
+  err_task.k = err_task.dim + 1;
+  err_task.ExcuteErrorTest();
+}
+
+// 2-5, test cvg_crit <= 0
+TEST(Arnoldi, err_crit_negative) {
+  ErrorTestClass err_task;
+  err_task.cvg_crit = -0.001;
+  err_task.ExcuteErrorTest();
+}

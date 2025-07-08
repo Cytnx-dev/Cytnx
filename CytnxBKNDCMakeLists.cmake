@@ -93,7 +93,7 @@ endif()
 if(USE_CUDA)
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
-    
+
     enable_language(CUDA)
     find_package(CUDAToolkit REQUIRED)
     if(NOT DEFINED CMAKE_CUDA_STANDARD)

@@ -3,7 +3,6 @@
 #include "cytnx.hpp"
 #include "../test_tools.h"
 
-
 using namespace cytnx;
 using namespace testing;
 
@@ -19,12 +18,12 @@ namespace {
     friend class CheckOp;
   };
   MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype, const int& in_device)
-	  : LinOp("mv", in_nx, in_dtype, in_device) {
+      : LinOp("mv", in_nx, in_dtype, in_device) {
     opMat = zeros({in_nx, in_nx}, this->dtype(), this->device());
     if (Type.is_float(this->dtype())) {
       random::normal_(opMat, 0.0, 1.0, 0);
     }
-    opMat += opMat.permute({1,0}).Conj(); //Hermitian
+    opMat += opMat.permute({1, 0}).Conj();  // Hermitian
     InitVec();
   }
   void MatOp::InitVec() {
@@ -39,8 +38,7 @@ namespace {
     Tensor opMat;
     Tensor T_init;
     MatOp* op;
-    CheckOp(MatOp* in_op) : op(in_op),
-	    LinOp("mv", in_op->nx(), in_op->dtype(), Device.cpu) {
+    CheckOp(MatOp* in_op) : op(in_op), LinOp("mv", in_op->nx(), in_op->dtype(), Device.cpu) {
       opMat = op->opMat.to(Device.cpu);
       T_init = op->T_init.to(Device.cpu);
     }
@@ -48,23 +46,23 @@ namespace {
   };
 
   // the function to check the answer
-  bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda, 
-		   const std::vector<Tensor>& lanczos_eigs_cpu);
+  bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda,
+                   const std::vector<Tensor>& lanczos_eigs_cpu);
 
   void ExcuteTest(const std::string& which, const int& mat_type = Type.Double,
                   const cytnx_uint64& k = 5, cytnx_uint64 dim = 23) {
-    MatOp H= MatOp(dim, mat_type, Device.cuda);
-    CheckOp H_check= CheckOp(&H);
+    MatOp H = MatOp(dim, mat_type, Device.cuda);
+    CheckOp H_check = CheckOp(&H);
     const cytnx_uint64 maxiter = 10000;
     auto dtype = H.dtype();
     const cytnx_double cvg_crit = 0;
-    std::vector<Tensor> lanczos_eigs_cuda = 
-	    linalg::Lanczos(&H, H.T_init, which, maxiter, cvg_crit, k);
+    std::vector<Tensor> lanczos_eigs_cuda =
+      linalg::Lanczos(&H, H.T_init, which, maxiter, cvg_crit, k);
     for (auto& lanczos_eig : lanczos_eigs_cuda) {
       EXPECT_EQ(lanczos_eig.device(), Device.cuda);
     }
-    std::vector<Tensor> lanczos_eigs_cpu = 
-	    linalg::Lanczos(&H_check, H_check.T_init, which, maxiter, cvg_crit, k);
+    std::vector<Tensor> lanczos_eigs_cpu =
+      linalg::Lanczos(&H_check, H_check.T_init, which, maxiter, cvg_crit, k);
     bool is_pass = CheckResult(H_check, lanczos_eigs_cuda, lanczos_eigs_cpu);
     EXPECT_TRUE(is_pass);
   }
@@ -76,13 +74,12 @@ namespace {
     return resi;
   }
 
-  bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda, 
-		   const std::vector<Tensor>& lanczos_eigs_cpu) {
+  bool CheckResult(CheckOp& H, const std::vector<Tensor>& lanczos_eigs_cuda,
+                   const std::vector<Tensor>& lanczos_eigs_cpu) {
     auto dtype = H.dtype();
-    const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float) ?
-          1.0e-4 : 1.0e-4;
+    const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-4;
 
-    //Check eigenvalues copmared with the results from cpu.
+    // Check eigenvalues copmared with the results from cpu.
     if (lanczos_eigs_cuda.size() != lanczos_eigs_cpu.size()) {
       return false;
     }
@@ -93,7 +90,8 @@ namespace {
       return false;
     }
 
-    // Check eigenvectors. We have not compare the eigenvector directly since they may have different phase.
+    // Check eigenvectors. We have not compare the eigenvector directly since they may have
+    // different phase.
     Tensor lanczos_eigvecs = lanczos_eigs_cuda[1].to(Device.cpu);
 
     // check the number of the eigenvalues
@@ -104,12 +102,12 @@ namespace {
       auto lanczos_eigval = eigval_cuda_to_cpu.at({i});
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
-      //std::cout << "resi err=" << resi_err << std::endl;
+      // std::cout << "resi err=" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
     }
     return true;
   }
-} // namespace
+}  // namespace
 
 // corrected test
 // 1-1, test for 'which' = 'LM'
@@ -133,8 +131,7 @@ TEST(Lanczos, gpu_which_SR_test) {
 // 1-4, test matrix is all type
 TEST(Lanczos, gpu_mat_type_all_test) {
   std::string which = "LM";
-  std::vector<int>  dtypes =
-    {Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float};
+  std::vector<int> dtypes = {Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float};
   for (auto dtype : dtypes) {
     ExcuteTest(which, dtype);
   }
@@ -167,4 +164,3 @@ TEST(Lanczos, gpu_smallest_dim) {
   dim = 3;
   ExcuteTest(which, mat_type, k, dim);
 }
-

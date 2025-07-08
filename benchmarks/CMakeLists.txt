@@ -10,6 +10,7 @@ add_executable(
   algo/Vstack_bm.cpp
   algo/Hsplit_bm.cpp
   algo/Hstack_bm.cpp
+  linalg/Arnoldi_bm.cpp
   linalg/Directsum_bm.cpp
   linalg/Svd_bm.cpp
   linalg/Svd_truncate_bm.cpp

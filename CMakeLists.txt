@@ -283,6 +283,12 @@ else()
   include(CytnxBKNDCMakeLists.cmake)
 endif() # Backend torch
 
+#ARPACK
+find_library(ARPACK_LIB arpack REQUIRED)
+message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
+target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
+
+
 # #####################################################################
 # ## Get Gtest & benchmark
 # #####################################################################

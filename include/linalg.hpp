@@ -2335,7 +2335,8 @@ namespace cytnx {
     std::vector<Tensor> Arnoldi(LinOp *Hop, const Tensor &Tin = Tensor(),
                                 const std::string which = "LM", const cytnx_uint64 &maxiter = 10000,
                                 const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
-                                const bool &is_V = true, const bool &verbose = false);
+                                const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                const bool &verbose = false);
 
     // Arnoldi:
     //===========================================
@@ -2376,7 +2377,8 @@ namespace cytnx {
                                    const std::string which = "LM",
                                    const cytnx_uint64 &maxiter = 10000,
                                    const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
-                                   const bool &is_V = true, const bool &verbose = false);
+                                   const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                   const bool &verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2415,6 +2417,17 @@ namespace cytnx {
                                 const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
                                 const bool &is_V = true, const bool &is_row = false,
                                 const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
+    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(),
+                                const std::string which = "SA", const cytnx_uint64 &maxiter = 10000,
+                                const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
+                                const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                const bool &verbose = false);
+    std::vector<UniTensor> Lanczos(LinOp *Hop, const cytnx::UniTensor &Tin,
+                                   const std::string which = "SA",
+                                   const cytnx_uint64 &maxiter = 10000,
+                                   const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
+                                   const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                   const bool &verbose = false);
 
     // Lanczos:
     //===========================================

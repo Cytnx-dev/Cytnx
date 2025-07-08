@@ -4,7 +4,6 @@
 #include <mkl.h>
 #include <omp.h>
 
-
 using namespace cytnx;
 using namespace testing;
 
@@ -23,7 +22,7 @@ namespace {
     if (Type.is_float(this->dtype())) {
       random::Make_normal(opMat, 0.0, 1.0, 0);
     }
-	opMat += opMat.permute({1,0}).Conj();
+    opMat += opMat.permute({1, 0}).Conj();
     InitVec();
   }
   void MatOp::InitVec() {
@@ -78,7 +77,6 @@ namespace {
     }
   }
 
-
   // For given 'which' = 'LM', 'SM', ...etc, sort the given eigenvalues.
   bool cmpNorm(const Scalar& l, const Scalar& r) { return abs(l) < abs(r); }
   bool cmpAlgebra(const Scalar& l, const Scalar& r) { return l < r; }
@@ -93,7 +91,8 @@ namespace {
       cmpFncPtr = cmpNorm;
     } else if (metric_type == 'A') {
       cmpFncPtr = cmpAlgebra;
-    } else {}
+    } else {
+    }
     // sort eigenvalues
     if (small_or_large == 'S') {
       std::stable_sort(ordered_eigvals.begin(), ordered_eigvals.end(), cmpFncPtr);
@@ -121,9 +120,8 @@ namespace {
       std::vector<Scalar>(ordered_eigvals.begin(), ordered_eigvals.begin() + k);
     Tensor lanczos_eigvals = lanczos_eigs[0];
     Tensor lanczos_eigvecs = lanczos_eigs[1];
-	auto dtype = H.dtype();
-    const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float) ?
-         1.0e-4 : 1.0e-12;
+    auto dtype = H.dtype();
+    const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
     // check the number of the eigenvalues
     cytnx_uint64 lanczos_eigvals_len = lanczos_eigvals.shape()[0];
     if (lanczos_eigvals_len != k) return false;
@@ -135,18 +133,18 @@ namespace {
       // check eigen value by comparing with the full spectrum results.
       // avoid, for example, lanczos_eigval = 1 + 3j, exact_eigval = 1 - 3j, which = 'SM'
       // check the is the eigenvector correct
-      auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval))/abs(exact_eigval);
-	  //std::cout << "eigval err=" << eigval_err << std::endl;
+      auto eigval_err = abs(abs(lanczos_eigval) - abs(exact_eigval)) / abs(exact_eigval);
+      // std::cout << "eigval err=" << eigval_err << std::endl;
       if (eigval_err >= tolerance) return false;
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, lanczos_eigval, lanczos_eigvec);
-	  //std::cout << "resi err=" << resi_err << std::endl;
+      // std::cout << "resi err=" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
       // check phase
     }
     return true;
   }
-} // namespace
+}  // namespace
 
 // corrected test
 // 1-1, test for 'which' = 'LM'
@@ -170,8 +168,7 @@ TEST(Lanczos, which_SR_test) {
 // 1-4, test matrix is all type
 TEST(Lanczos, mat_type_all_test) {
   std::string which = "LM";
-  std::vector<int>  dtypes =
-    {Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float};
+  std::vector<int> dtypes = {Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float};
   for (auto dtype : dtypes) {
     ExcuteTest(which, dtype);
   }

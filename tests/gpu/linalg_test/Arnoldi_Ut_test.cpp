@@ -20,8 +20,8 @@ namespace {
    public:
     UniTensor A, B;
     UniTensor T_init;
-    TMOp(const int& d, const int& D, const cytnx_uint64& nx,
-         const unsigned int& dtype, const int& device);
+    TMOp(const int& d, const int& D, const cytnx_uint64& nx, const unsigned int& dtype,
+         const int& device);
     UniTensor matvec(const UniTensor& l) override {
       auto tmp = Contracts({A, l, B}, "", true);
       tmp.relabels_(l.labels()).set_rowrank(l.rowrank());
@@ -57,8 +57,7 @@ namespace {
     UniTensor A, B;
     UniTensor T_init;
     TMOp* op;
-    CheckOp(TMOp* in_op) : op(in_op),
-	    LinOp("mv", in_op->nx(), in_op->dtype(), Device.cpu) {
+    CheckOp(TMOp* in_op) : op(in_op), LinOp("mv", in_op->nx(), in_op->dtype(), Device.cpu) {
       A = op->A.to(Device.cpu);
       B = op->B.to(Device.cpu);
       T_init = op->T_init.to(Device.cpu);
@@ -71,15 +70,15 @@ namespace {
   };
 
   // the function to check the answer
-  bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda, 
-		   const std::vector<UniTensor>& arnoldi_eigs_cpu);
+  bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda,
+                   const std::vector<UniTensor>& arnoldi_eigs_cpu);
 
   void ExcuteTest(const std::string& which, const int& mat_type = Type.ComplexDouble,
                   const cytnx_uint64& k = 3) {
     int D = 5, d = 2;
     int dim = D * D;
     TMOp H = TMOp(d, D, dim, mat_type, Device.cuda);
-    CheckOp H_check= CheckOp(&H);
+    CheckOp H_check = CheckOp(&H);
     const cytnx_uint64 maxiter = 10000;
     const cytnx_double cvg_crit = 0;
     std::vector<UniTensor> arnoldi_eigs_cuda =
@@ -87,8 +86,8 @@ namespace {
     for (auto& arnoldi_eig : arnoldi_eigs_cuda) {
       EXPECT_EQ(arnoldi_eig.device(), Device.cuda);
     }
-    std::vector<UniTensor> arnoldi_eigs_cpu = 
-	    linalg::Arnoldi(&H_check, H_check.T_init, which, maxiter, cvg_crit, k);
+    std::vector<UniTensor> arnoldi_eigs_cpu =
+      linalg::Arnoldi(&H_check, H_check.T_init, which, maxiter, cvg_crit, k);
     bool is_pass = CheckResult(H_check, arnoldi_eigs_cuda, arnoldi_eigs_cpu);
     EXPECT_TRUE(is_pass);
   }
@@ -101,42 +100,42 @@ namespace {
   }
 
   // compare the arnoldi results with full spectrum (calculated by the function Eig.)
-  bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda, 
-		   const std::vector<UniTensor>& arnoldi_eigs_cpu) {
+  bool CheckResult(CheckOp& H, const std::vector<UniTensor>& arnoldi_eigs_cuda,
+                   const std::vector<UniTensor>& arnoldi_eigs_cpu) {
     auto dtype = H.dtype();
-    const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float) ?
-          1.0e-4 : 1.0e-12;
+    const double tolerance = (dtype == Type.ComplexFloat || dtype == Type.Float) ? 1.0e-4 : 1.0e-12;
 
-    //Check eigenvalues copmared with the results from cpu.
+    // Check eigenvalues copmared with the results from cpu.
     if (arnoldi_eigs_cuda.size() != arnoldi_eigs_cpu.size()) {
       return false;
     }
     UniTensor eigval_cuda_to_cpu = arnoldi_eigs_cuda[0].to(Device.cpu);
     UniTensor eigval_cpu = arnoldi_eigs_cpu[0];
-    bool is_same_eigval = TestTools::AreNearlyEqUniTensor(eigval_cuda_to_cpu, eigval_cpu, tolerance);
+    bool is_same_eigval =
+      TestTools::AreNearlyEqUniTensor(eigval_cuda_to_cpu, eigval_cpu, tolerance);
     if (!is_same_eigval) {
       return false;
     }
 
-    // Check eigenvectors. We have not compare the eigenvector directly since they may have different phase.
+    // Check eigenvectors. We have not compare the eigenvector directly since they may have
+    // different phase.
     UniTensor arnoldi_eigvecs = arnoldi_eigs_cuda[1].to(Device.cpu);
 
     // check the number of the eigenvalues
     int k = eigval_cpu.shape()[0];
     for (cytnx_uint64 i = 0; i < k; ++i) {
       // if k == 1, arnoldi_eigvecs will be a rank-1 tensor
-      auto arnoldi_eigvec = arnoldi_eigs_cuda[i+1].to(Device.cpu);
+      auto arnoldi_eigvec = arnoldi_eigs_cuda[i + 1].to(Device.cpu);
       auto arnoldi_eigval = eigval_cuda_to_cpu.at({i});
       // check the is the eigenvector correct
       auto resi_err = GetResidue(H, arnoldi_eigval, arnoldi_eigvec);
-      //std::cout << "resi err=" << resi_err << std::endl;
+      // std::cout << "resi err=" << resi_err << std::endl;
       if (resi_err >= tolerance) return false;
     }
     return true;
   }
 
-  
-} //namespace
+}  // namespace
 
 // corrected test
 // 1-1, test for 'which' = 'LM'
@@ -174,7 +173,7 @@ TEST(Arnoldi_Ut, gpu_which_SI_test) {
 /*
 TEST(Arnoldi_Ut, gpu_all_dtype_test) {
   std::string which = "LM";
-  std::vector<int>  dtypes = 
+  std::vector<int>  dtypes =
   {Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float};
   for (auto dtype : dtypes) {
     ExcuteTest(which, dtype);
@@ -195,7 +194,7 @@ TEST(Arnoldi_Ut, gpu_k_large) {
   std::string which = "LM";
   auto mat_type = Type.ComplexDouble;
   cytnx_uint64 k;
-  k = 23; //dim = 25
+  k = 23;  // dim = 25
   ExcuteTest(which, mat_type, k);
 }
 
@@ -207,4 +206,3 @@ TEST(Arnoldi_Ut, gpu_smallest_dim) {
   k = 1;
   ExcuteTest(which, mat_type, k);
 }
-

@@ -519,12 +519,14 @@ namespace cytnx {
     // convert this->_impl->_strorage->Mem to the given pointer type.
     // Throws an exception if T does not match this->dtype
     template <typename T>
-    T *ptr_as() const {
-      cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
-                      "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
-                      this->dtype(), Type_class::getname(this->dtype()).c_str(),
-                      Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
-      return static_cast<T *>(this->_impl->_storage._impl->data());
+    T *ptr_as(bool check_type = true) const {
+      if (check_type) {
+        cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
+                        "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
+                        this->dtype(), Type_class::getname(this->dtype()).c_str(),
+                        Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
+      }
+      return reinterpret_cast<T *>(this->_impl->_storage._impl->data());
     }
 
   #ifdef UNI_GPU
@@ -539,13 +541,15 @@ namespace cytnx {
     // convert this->_impl->_strorage->Mem to the given pointer type.
     // Throws an exception if T does not match this->dtype
     template <typename T>
-    T *gpu_ptr_as() const {
-      cytnx_error_msg(
-        this->dtype() != Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>,
-        "[ERROR] Attempt to convert dtype %d (%s) to GPU pointer of type %s", this->dtype(),
-        Type_class::getname(this->dtype()).c_str(),
-        Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
-      return static_cast<T *>(this->_impl->_storage._impl->data());
+    T *gpu_ptr_as(bool check_type = true) const {
+      if (check_type) {
+        cytnx_error_msg(
+          this->dtype() != Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>,
+          "[ERROR] Attempt to convert dtype %d (%s) to GPU pointer of type %s", this->dtype(),
+          Type_class::getname(this->dtype()).c_str(),
+          Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
+      }
+      return reinterpret_cast<T *>(this->_impl->_storage._impl->data());
     }
   #endif
 
