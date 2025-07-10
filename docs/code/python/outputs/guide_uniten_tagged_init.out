@@ -5,14 +5,14 @@ block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
 braket_form : True
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    a  -->| 3     3 |-->  c
-         |         |    
-   b  -->| 3       |        
-         |         |    
-         -----------    
+         |         |
+   b  -->| 3       |
+         |         |
+         -----------
 -----------------------
 tensor Name : Tb
 tensor Rank : 3
@@ -20,14 +20,14 @@ block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
 braket_form : True
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    c  -->| 3     3 |-->  d
-         |         |    
+         |         |
          |       3 |-->  e
-         |         |    
-         -----------    
+         |         |
+         -----------
 -----------------------
 tensor Name : Tc
 tensor Rank : 3
@@ -35,11 +35,11 @@ block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
 braket_form : False
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    c *<--| 3     3 |-->  d
-         |         |    
+         |         |
          |       3 |-->  e
-         |         |    
-         -----------    
+         |         |
+         -----------

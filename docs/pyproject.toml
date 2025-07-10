@@ -32,4 +32,3 @@ packages = ["src/cytnx_doc"]
 dev-dependencies = [
     "rust-just>=1.36.0",
 ]
-

@@ -4,7 +4,7 @@ We can save/read a Storage instance to/from a file.
 
 Save a Storage
 *****************
-To save a Storage to file, simply call **Storage.Save(filepath)**. 
+To save a Storage to file, simply call **Storage.Save(filepath)**.
 
 * In Python:
 
@@ -23,7 +23,7 @@ This will save Storage *A* to the current directory as **T1.cyst**, with extensi
 
 Load a Storage
 ******************
-Now, let's load the Storage from the file. 
+Now, let's load the Storage from the file.
 
 * In Python:
 
@@ -64,7 +64,7 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_basic_obj_Storage_5_io_from_to_file.out
     :language: text
 
-.. Note:: 
+.. Note::
 
     You can also choose to load a part of the file with an additional argument *count* when using **Fromfile**
 

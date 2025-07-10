@@ -6,7 +6,7 @@ Generally, the function naming scheme in Cytnx follows the rules:
 1. If the function is **acting on objects** (taking object as arguments), they will start with the first letter being **capical**. Examples are the linalg functions, Contract etc...
 
     .. code-block:: python
-        
+
         cytnx.linalg.Svd(A)
         cytnx.linalg.Qr(A)
         cytnx.linalg.Sum(A)
@@ -43,7 +43,7 @@ Generally, the function naming scheme in Cytnx follows the rules:
 
         A.contiguous_() # A gets changed
         B = A.contiguous() # A is not changed, but return a copy B (see Tensor for further info)
-        
+
         A.permute_(0,2,1) # A gets changed
         C = A.permute(0,2,1) # A is not changed but return a new B as A's permute
 
@@ -52,7 +52,7 @@ Generally, the function naming scheme in Cytnx follows the rules:
 
 
 
-    
+
 
 
 
@@ -60,4 +60,3 @@ Generally, the function naming scheme in Cytnx follows the rules:
 
 
 .. toctree::
-

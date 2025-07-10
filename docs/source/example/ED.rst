@@ -2,26 +2,26 @@
 
 Exact Diagonalization
 ----------------------
-Consider the example of a 1D transverse field Ising model with Hamiltonain defines as 
+Consider the example of a 1D transverse field Ising model with Hamiltonain defines as
 
 .. math::
 
     H = J\sum_{\left<ij\right>}\sigma^{z}_i\sigma^{z}_j - H_x\sum_i \sigma^{x}_i
 
-where :math:`\left<ij\right>` denotes nearest neighbor interaction, and :math:`\sigma^{x,z}` is the pauli-matrices. 
+where :math:`\left<ij\right>` denotes nearest neighbor interaction, and :math:`\sigma^{x,z}` is the pauli-matrices.
 
 The model undergoes a phase transition  at :math:`H_x^c/J = 1` with avoid level crossing. For further information, see *insert url!*
 
 Here, we are interesting to observe this avoid level crossing where the gap closes with increasing system size. For this, we want to get the low-level energy spectrums.
 
-Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. However, the size of this many-body Hamiltonian growth exponentially with size of chain :math:`L` as :math:`2^{L}`. It is not pratical to store this large Hamiltonain. 
+Generally, the native way to calculate the energy specturm of this Hamiltonian is through the product of local pauli-matrices. However, the size of this many-body Hamiltonian growth exponentially with size of chain :math:`L` as :math:`2^{L}`. It is not pratical to store this large Hamiltonain.
 
-Notice that this many-body Hamiltonain is very sparse, with lots of elements equal to zero. Thus it is very useful to use LinOp to represent this Hamiltonain, and call **Lanczos_ER** to get the low-level energies. 
+Notice that this many-body Hamiltonain is very sparse, with lots of elements equal to zero. Thus it is very useful to use LinOp to represent this Hamiltonain, and call **Lanczos_ER** to get the low-level energies.
 
 Bit representation of basis states
 ************************************
 
-First thing we want to do is to represent the basis states using bit-representation. 
+First thing we want to do is to represent the basis states using bit-representation.
 Here, let's choose the :math:`z` -basis.
 For example:
 
@@ -31,7 +31,7 @@ For example:
 
     | \uparrow\uparrow\uparrow \cdots \downarrow\downarrow > = \mathrm{bit}(000...11) = \mathrm{int}(3)
 
-This each configuration (basis state) can be identify with a integer ID. 
+This each configuration (basis state) can be identify with a integer ID.
 
 
 Now, since we want to consider the Hamiltonian as *operation* that acting on the input vector and mapping to the output vector, we can think of pauli-matrices :math:`\sigma^{x,z}` acting on the basis state, and map from input state to output state with coefficient :math:`c` as :math:`c|\psi_{out}> = \sigma^{x,z}|\psi_{in}>` .
@@ -40,15 +40,15 @@ For example:
 
 .. math::
 
-    J\sigma_0^{z}\sigma_1^{z} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow > = -J | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow > 
+    J\sigma_0^{z}\sigma_1^{z} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow > = -J | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow >
 
-    H_x\sigma_0^{x} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow > = H_x | \uparrow\uparrow\uparrow \cdots \uparrow\uparrow > 
+    H_x\sigma_0^{x} | \uparrow\uparrow\uparrow \cdots \uparrow\downarrow > = H_x | \uparrow\uparrow\uparrow \cdots \uparrow\uparrow >
 
 
 The first example, :math:`J\sigma_0^{z}\sigma_1^{z}` map from basis with ID=1 to ID=1 with coefficient :math:`-J`, which is a diagonal elements in the many body Hamiltonian.
 The second example which :math:`H_x\sigma_0^{x}` operate on state with ID=1 resulting as a state with ID=0 and corresponding coefficient :math:`H_x`, which is a off-diagonal elements in the many-body Hamiltonian.
 
-With aformentioned rule, we are now ready to implement the TFIM Hamiltonian using **LinOp** class. 
+With aformentioned rule, we are now ready to implement the TFIM Hamiltonian using **LinOp** class.
 
 
 Implementation
@@ -91,7 +91,7 @@ Implementation
                     oid,amp = self.Sx(i,a)
                     out[oid] += amp*(-self.Hx)*v[a]
             return out
- 
+
 
 * In C++:
 
@@ -143,20 +143,20 @@ Implementation
         }
     };
 
- 
-Note that here, we defone two member functions **SzSz()** and  **Sx()** that operate on site :math:`i,j` with basis ID :math:`ipt_id` and return the output basis ID and corresponding coefficients. 
 
-Inside the overload **matvec**, we then traversal all the basis states coefficients in input vector **v**, and using **SzSz()** and **Sx()** to calculate the mapping to the output vector **out**. 
+Note that here, we defone two member functions **SzSz()** and  **Sx()** that operate on site :math:`i,j` with basis ID :math:`ipt_id` and return the output basis ID and corresponding coefficients.
+
+Inside the overload **matvec**, we then traversal all the basis states coefficients in input vector **v**, and using **SzSz()** and **Sx()** to calculate the mapping to the output vector **out**.
 
 The class constructor takes three arguments: **L**, the size of ising chain; **J**, the ZZ coupling and **Hx**, the transverse field.
 
 
 .. Hint::
 
-    Here, we consider periodic boundary condition, you can modify the boundary condition or adding additional terms by properly modify the **matvec**. 
+    Here, we consider periodic boundary condition, you can modify the boundary condition or adding additional terms by properly modify the **matvec**.
 
 
-2. Now, we can then using Lanczos method to get the low-level energy spectrum of this Hamiltonian. Since we are interesting in the property of avoid level crossing, let's get the lowest 3 energy states. 
+2. Now, we can then using Lanczos method to get the low-level energy spectrum of this Hamiltonian. Since we are interesting in the property of avoid level crossing, let's get the lowest 3 energy states.
 
 * In Python:
 
@@ -225,11 +225,9 @@ Simulation Results
     :align: center
 
 The :math:`L` here is the system size.
-    
+
 
 
 .. Hint::
-    
+
     The complete example code can be found in Github repo under example/ED folder.
-
-

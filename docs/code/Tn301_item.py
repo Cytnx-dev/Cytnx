@@ -7,4 +7,3 @@ B = A[0,0,1]
 C = B.item()
 print(B)
 print(C)
-

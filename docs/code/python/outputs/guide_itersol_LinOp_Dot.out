@@ -25,6 +25,3 @@ type  : Double (Float64)
 cytnx device: CPU
 Shape : (4)
 [6.00000e+00 2.20000e+01 3.80000e+01 5.40000e+01 ]
-
-
-

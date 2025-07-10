@@ -1,12 +1,12 @@
 Device
 --------------
 
-In Cytnx, all the Device properties are handled by **cytnx.Device**. 
+In Cytnx, all the Device properties are handled by **cytnx.Device**.
 
 
 Number of threads
 ********************
-To check how many threads can be used in your current program by Cytnx, you can use **Device.Ncpus**. 
+To check how many threads can be used in your current program by Cytnx, you can use **Device.Ncpus**.
 
 * In Python:
 
@@ -25,26 +25,26 @@ If Cytnx is not compiled with OpenMP avaliable, the Device.Ncpus will always ret
 
 .. Note::
 
-    For parallel computing with OpenMP, by default mkl uses all the available threads. 
-    However, any Cytnx internal function that utilizes OpenMP may or may not automatically use all threads, depending on your current environment configuration. 
+    For parallel computing with OpenMP, by default mkl uses all the available threads.
+    However, any Cytnx internal function that utilizes OpenMP may or may not automatically use all threads, depending on your current environment configuration.
 
 
-If OpenMP is enabled and you want to set a restriction on how many threads you want your program to use, this can be done by simply changing an environment variable before you execute your program. For example, the following line will make mkl as well as Cytnx internal functions use 16 threads in all places where they are parallelizable. 
+If OpenMP is enabled and you want to set a restriction on how many threads you want your program to use, this can be done by simply changing an environment variable before you execute your program. For example, the following line will make mkl as well as Cytnx internal functions use 16 threads in all places where they are parallelizable.
 
 .. code-block:: console
-    
+
     export OMP_NUM_THREADS=16
 
 
 
 .. Warning::
 
-    Do not change this value manually! 
+    Do not change this value manually!
 
 
 Number of GPUs
 ********************
-To check how many GPUs can be used in your current program by Cytnx, you can use **Device.Ngpus**. 
+To check how many GPUs can be used in your current program by Cytnx, you can use **Device.Ngpus**.
 
 * In Python:
 
@@ -63,7 +63,7 @@ If Cytnx is not compiled with CUDA available, the Device.Ngpus will always retur
 
 .. Warning::
 
-    Do not change this value manually! 
+    Do not change this value manually!
 
 
 GPU status
@@ -78,7 +78,7 @@ Output example>>
 1. Executed on a node with 4 GPUs installed with peer-access available between gpu-id=0 <-> gpu-id=2:
 
 .. code-block:: text
-    
+
     === CUDA support ===
     \: Peer PCIE Access\:
          0  1  2  3
@@ -89,7 +89,7 @@ Output example>>
      3|  0  0  0  x
     --------------------
 
-    
+
 2. Executed when Cytnx is not compiled with CUDA:
 
 .. code-block:: text
@@ -99,5 +99,3 @@ Output example>>
 Initializing tensors on GPU
 ******************************
 How a tensor is created on the GPU is explained in :ref:`Tensor with different dtype and device`. A tensor can also be moved between devices, see :ref:`Transfer between devices`.
-
-

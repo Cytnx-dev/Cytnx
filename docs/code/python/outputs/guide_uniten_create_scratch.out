@@ -4,13 +4,13 @@ tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
+          ---------
+         /         \
    a ____| 2     3 |____ b
-         |         |    
+         |         |
          |       4 |____ c
-         \         /    
-          ---------     
+         \         /
+          ---------
 -------- start of print ---------
 Tensor name: uT2 scratch
 is_diag    : False
@@ -26,7 +26,3 @@ Shape : (2,3,4)
  [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
   [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
-
-
-
-

@@ -5,11 +5,11 @@ Storage is a low-level container which handles the allocation and freeing of mem
 Typically, users won't directly interact with this object, but there may be instances where it proves useful, especially in C++.
 
 .. Note::
-    
-    In contrast to a Tensor, the memory layout of Storage is always contiguous. 
+
+    In contrast to a Tensor, the memory layout of Storage is always contiguous.
 
 
-In the following, let's see how to use Storage: 
+In the following, let's see how to use Storage:
 
 .. toctree::
     :maxdepth: 1

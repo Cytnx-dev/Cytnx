@@ -12,11 +12,11 @@ namespace cytnx {
 
     void iSub(Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[iSub] error, two tensor cannot on different devices.%s", "\n");
+                      "[iSub] error, the two tensors have to be on the same device.%s", "\n");
 
       if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[iSub] error, the two tensor does not have the same shape. Lt rank: [%d] "
+                        "[iSub] error, the two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
@@ -52,7 +52,7 @@ namespace cytnx {
           if (Lt.dtype() > Rt.dtype()) Lt = tmpo;
 
   #else
-          cytnx_error_msg(true, "[Sub] fatal error, the tensor is on GPU without CUDA support.%s",
+          cytnx_error_msg(true, "[Sub] fatal error, the tensors are on GPU without CUDA support.%s",
                           "\n");
   #endif
         }

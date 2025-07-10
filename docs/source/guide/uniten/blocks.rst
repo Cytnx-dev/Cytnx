@@ -39,7 +39,7 @@ Let's use the same example of a UniTensor with *U1* symmetry that we introduced 
     :language: python
     :linenos:
 
-There are two ways to get a certain block from a UniTensor. 
+There are two ways to get a certain block from a UniTensor.
 
 **1. Getting a block by its quantum number indices**
 
@@ -55,7 +55,7 @@ The quantum number indices (*qindices*) need to be given in the same order as th
 because the quantum numbers were created in this order. Similarly for *bond\_d* and *bond\_e: *U1(1)* has quantum number index 0 and *U1(-1)* has quantum number index 2.
 
 
-As an example, we want to access the block with quantum numbers [Qs(1),Qs(-1),Qs(0)]. In the above convention, this corresponds to the quantum number indices [0,1,1]: 
+As an example, we want to access the block with quantum numbers [Qs(1),Qs(-1),Qs(0)]. In the above convention, this corresponds to the quantum number indices [0,1,1]:
 
 * In Python:
 
@@ -70,7 +70,7 @@ Output >>
 
 
 **2. Getting a block by its block index**
-   
+
 .. py:function:: UniTensor.get_block(blockindex)
 
     :param [int] blockindex: the index of the block in the UniTensor
@@ -125,7 +125,7 @@ We might want to do some manipulations to an individual block that we got from *
 
     :param List[int] qindices: list of integers specifying the indices of quantum numbers on each bond
 
-We can, for example, put the block to the location in the UniTensor with quantum numbers [Qs(1),Qs(-1),Qs(0)], corresponding to quantum number indices [0,1,1]: 
+We can, for example, put the block to the location in the UniTensor with quantum numbers [Qs(1),Qs(-1),Qs(0)], corresponding to quantum number indices [0,1,1]:
 
 * In Python:
 
@@ -143,7 +143,7 @@ Output >>
 
 
 **2. Putting a block by its block index**
-   
+
 .. py:function:: UniTensor.put_block(Tn, blockindex)
 
     :param [int] blockindex: the index of the blocks in the UniTensor
@@ -160,4 +160,3 @@ Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_blocks_put_block_bkidx.out
     :language: text
-

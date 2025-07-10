@@ -9,7 +9,7 @@ from scipy import linalg
 ##
 
 
-#Example of 1D Ising model 
+#Example of 1D Ising model
 ## iTEBD
 ##-------------------------------------
 
@@ -28,7 +28,7 @@ Sx = cytnx.zeros([2,2])
 Sx[0,1] = Sx[1,0] = Hx
 
 I = Sz.clone()
-I[1,1] = 1 
+I[1,1] = 1
 
 #print(Sz,Sx)
 
@@ -36,7 +36,7 @@ I[1,1] = 1
 TFterm = cytnx.linalg.Kron(Sx,I) + cytnx.linalg.Kron(I,Sx)
 ZZterm = cytnx.linalg.Kron(Sz,Sz)
 
-H = Hx*TFterm + J*ZZterm 
+H = Hx*TFterm + J*ZZterm
 del TFterm, ZZterm
 
 eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
@@ -55,13 +55,13 @@ H.print_diagram()
 
 ## Create MPS:
 #
-#     |    |     
-#   --A-la-B-lb-- 
+#     |    |
+#   --A-la-B-lb--
 #
-A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2]); 
-B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);                                
-cytnx.random.Make_normal(B.get_block_(),0,0.2); 
-cytnx.random.Make_normal(A.get_block_(),0,0.2); 
+A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2]);
+B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);
+cytnx.random.Make_normal(B.get_block_(),0,0.2);
+cytnx.random.Make_normal(A.get_block_(),0,0.2);
 A.print_diagram()
 B.print_diagram()
 #print(A)
@@ -92,8 +92,8 @@ for i in range(10000):
 
     ## X =
     #           (0)  (1)
-    #            |    |     
-    #  (-4) --lb-A-la-B-lb-- (-5) 
+    #            |    |
+    #  (-4) --lb-A-la-B-lb-- (-5)
     #
     #X.print_diagram()
 
@@ -118,9 +118,9 @@ for i in range(10000):
     XeH = cyx.Contract(X,eH)
     XeH.permute_([-4,2,3,-5],by_label=True)
     #XeH.print_diagram()
-    
+
     ## Do Svd + truncate
-    ## 
+    ##
     #        (2)   (3)                   (2)                                    (3)
     #         |     |          =>         |         +   (-6)--s--(-7)  +         |
     #  (-4) --= XeH =-- (-5)        (-4)--U--(-6)                          (-7)--Vt--(-5)
@@ -133,14 +133,14 @@ for i in range(10000):
     #A.print_diagram()
     #la.print_diagram()
     #B.print_diagram()
-         
 
-    # de-contract the lb tensor , so it returns to 
-    #             
-    #            |     |     
-    #       --lb-A'-la-B'-lb-- 
+
+    # de-contract the lb tensor , so it returns to
     #
-    # again, but A' and B' are updated 
+    #            |     |
+    #       --lb-A'-la-B'-lb--
+    #
+    # again, but A' and B' are updated
     A.set_labels([-1,0,-2]); A.set_rowrank(1);
     B.set_labels([-3,1,-4]); B.set_rowrank(1);
 
@@ -157,7 +157,3 @@ for i in range(10000):
     # translation symmetry, exchange A and B site
     A,B = B,A
     la,lb = lb,la
-
-
-        
-

@@ -12,5 +12,3 @@ print(A)
 
 A.contiguous_()
 print(A.is_contiguous())
-
-
