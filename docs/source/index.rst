@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 .. image:: Icon_small.png
-    :width: 350    
+    :width: 350
 
 Cytnx user guide and examples
 =================================
@@ -27,8 +27,8 @@ Cytnx user guide and examples
    Perf_tune.rst
 
 .. toctree::
-    API Documentation <https://kaihsinwu.gitlab.io/cytnx_api/>   
-    Github <https://github.com/kaihsin/Cytnx>   
+    API Documentation <https://kaihsinwu.gitlab.io/cytnx_api/>
+    Github <https://github.com/kaihsin/Cytnx>
     5-mins Blitz intro slide <https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing>
 
 .. toctree::

@@ -13,16 +13,12 @@
 namespace cytnx {
   ///@cond
   struct __sym {
-    enum __stype { U = -1, Z = 0 };
+    enum __stype { U = -1, Z = 0, fPar = -2, fNum = -3 };
   };
 
   class SymmetryType_class {
    public:
-    enum : int {
-      Void = -99,
-      U = -1,
-      Z = 0,
-    };
+    enum : int { Void = -99, U = -1, Z = 0, fPar = -2, fNum = -3 };
     std::string getname(const int &stype);
   };
   ///@endcond
@@ -35,11 +31,21 @@ namespace cytnx {
    * --------------|--------------------
    *  Void         |  -99, void type (that means not initialized)
    *  U            |  -1, U1 symmetry
-   *  Z            |  0, Zn symmetry
+   *  Z            |   0, Zn symmetry
+   *  fPar         |  -2, fermionParity symmetry
+   *  fNum         |  -3, fermionNumber symmetry
    *
    *  @see Symmetry::stype(), Symmetry::stype_str()
    */
   extern SymmetryType_class SymType;
+
+  /**
+   * @brief fermionParity
+   * @details the parity of fermionis
+   * EVEN For bosons or an even number of fermions
+   * ODD  For an even number of fermions
+   */
+  enum fermionParity : bool { EVEN = false, ODD = true };
 
   // helper class, has implicitly conversion to vector<int64>!
   class Qs {
@@ -89,7 +95,13 @@ namespace cytnx {
     virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                                const bool &is_reverse);
     virtual void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+    virtual fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const;
+    virtual bool is_fermionic() const { return false; };
+
     virtual void print_info() const;
+    virtual std::string stype_str() const {
+      return SymType.getname(this->stype_id) + std::to_string(this->n);
+    }
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
     // std::vector<cytnx_int64> &inR);
   };
@@ -145,6 +157,56 @@ namespace cytnx {
   };
   ///@endcond
 
+  ///@cond
+  class FermionParitySymmetry : public Symmetry_base {
+   public:
+    FermionParitySymmetry() {
+      this->stype_id = SymType.fPar;
+      this->n = -2;
+    };
+    boost::intrusive_ptr<Symmetry_base> clone() {
+      boost::intrusive_ptr<Symmetry_base> out(new FermionParitySymmetry());
+      return out;
+    }
+    bool check_qnum(const cytnx_int64 &in_qnum);
+    bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
+    void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
+                       const std::vector<cytnx_int64> &inR);
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
+                       const bool &is_reverse);
+    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
+    bool is_fermionic() const override { return true; };
+    void print_info() const;
+    std::string stype_str() const override { return "fP"; }
+  };
+  ///@endcond
+
+  ///@cond
+  class FermionNumberSymmetry : public Symmetry_base {
+   public:
+    FermionNumberSymmetry() {
+      this->stype_id = SymType.fNum;
+      this->n = -1;
+    };
+    boost::intrusive_ptr<Symmetry_base> clone() {
+      boost::intrusive_ptr<Symmetry_base> out(new FermionNumberSymmetry());
+      return out;
+    }
+    bool check_qnum(const cytnx_int64 &in_qnum);
+    bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
+    void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
+                       const std::vector<cytnx_int64> &inR);
+    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
+                       const bool &is_reverse);
+    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
+    bool is_fermionic() const override { return true; };
+    void print_info() const;
+    std::string stype_str() const override { return "f#"; }
+  };
+  ///@endcond
+
   //=====================================
   // this is API
   ///@brief the symmetry object
@@ -164,6 +226,12 @@ namespace cytnx {
         this->_impl = tmp;
       } else if (stype == SymType.Z) {
         boost::intrusive_ptr<Symmetry_base> tmp(new ZnSymmetry(n));
+        this->_impl = tmp;
+      } else if (stype == SymType.fPar) {
+        boost::intrusive_ptr<Symmetry_base> tmp(new FermionParitySymmetry());
+        this->_impl = tmp;
+      } else if (stype == SymType.fNum) {
+        boost::intrusive_ptr<Symmetry_base> tmp(new FermionNumberSymmetry());
         this->_impl = tmp;
       } else {
         cytnx_error_msg(1, "%s", "[ERROR] invalid symmetry type.");
@@ -189,7 +257,7 @@ namespace cytnx {
         Q + Q
 
     ###description:
-        create a new U1 symmetry object that serive as a generator.
+        create a new U1 symmetry object that serves as a generator.
         The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
     the symmetry of the quantum number set, as well as providing the combining rule for the quantum
     number when Bonds are combined.
@@ -208,7 +276,7 @@ namespace cytnx {
     static Symmetry U1() { return Symmetry(SymType.U, 1); }
 
     /**
-    @brief create a Zn descrete symmetry object with \f$n\in\mathbb{N}\f$
+    @brief create a Zn discrete symmetry object with \f$n\in\mathbb{N}\f$
 
     ###valid qnum value range:
 
@@ -219,7 +287,7 @@ namespace cytnx {
         (Q + Q)%n
 
     ###description:
-        create a new Zn descrete symmetry object with integer \f$ n \f$ that serive as a generator.
+        create a new Zn discrete symmetry object with integer \f$ n \f$ that serves as a generator.
         The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
     the symmetry of the quantum number set, as well as providing the combining rule for the quantum
     number when Bonds are combined.
@@ -237,6 +305,49 @@ namespace cytnx {
 
     */
     static Symmetry Zn(const int &n) { return Symmetry(SymType.Z, n); }
+
+    /**
+    @brief create a fermionic parity symmetry object
+
+    ###valid qnum value range:
+
+        \f$[0 , 1]\f$
+      where 0 corresponds to even parity and 1 to odd parity;
+
+    ###combine rule:
+
+        (Q + Q)%2
+
+    ###description:
+        create a new fermionic parity symmetry object that serves as a generator.
+        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
+    the symmetry of the quantum number set, as well as providing the combining rule for the quantum
+    number when Bonds are combined.
+
+    */
+    static Symmetry FermionParity() { return Symmetry(SymType.fPar); }
+
+    /**
+    @brief create a fermionic occupation number symmetry object
+
+    ###valid qnum value range:
+
+        \f$(-\infty , \infty)\f$
+
+    ###combine rule:
+
+        Q + Q
+
+    ###description:
+        create a new fermionic occupation number object that serves as a generator. This is a U1
+        symmetry with parity defined as EVEN for even occupation numbers and ODD for odd occupation
+        numbers.
+        The symmetry object is a property of \link cytnx::Bond Bond \endlink. It is used to identify
+    the symmetry of the quantum number set, as well as providing the combining rule for the quantum
+    number when Bonds are combined.
+
+    */
+    static Symmetry FermionNumber() { return Symmetry(SymType.fNum); }
 
     /**
     @brief return a clone instance of current Symmetry object.
@@ -267,12 +378,12 @@ namespace cytnx {
     int stype() const { return this->_impl->stype_id; }
 
     /**
-    @brief return the descrete n of current Symmetry object.
+    @brief return the discrete n of current Symmetry object.
     @return [int]
 
     @note
         1. for U1, n=1 will be returned.
-        2. for Zn, n is the descrete symmetry number. (ex: Z2, n=2)
+        2. for Zn, n is the discrete symmetry number. (ex: Z2, n=2)
 
     */
     int &n() const { return this->_impl->n; }
@@ -284,9 +395,7 @@ namespace cytnx {
         the symmetry type name.
 
     */
-    std::string stype_str() const {
-      return SymType.getname(this->_impl->stype_id) + std::to_string(this->_impl->n);
-    }
+    std::string stype_str() const { return this->_impl->stype_str(); }
 
     /**
     @brief check the quantum number \p qnum is within the valid value range of current Symmetry.
@@ -373,6 +482,21 @@ namespace cytnx {
     @return the reverse quantum number.
     */
     cytnx_int64 reverse_rule(const cytnx_int64 &in) const { return this->_impl->reverse_rule(in); }
+
+    /**
+    @brief fermionic parity for a given quantum number
+    @param[in] in_qnum quantum number
+    @return parity of the quantum number; false for bosonic degree of freedom, true for fermionic
+    */
+    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const {
+      return this->_impl->get_fermion_parity(in_qnum);
+    }
+
+    /**
+    @brief check if the Symmetry is fermionic or not
+    @return true if Symmetry is fermionic
+    */
+    bool is_fermionic() const { return this->_impl->is_fermionic(); }
 
     /**
      * @brief Save the current Symmetry object to a file.

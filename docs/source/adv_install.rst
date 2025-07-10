@@ -111,6 +111,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
     3. After the installation, an automated test based on gtest and benchmark can be run. This option needs to be activated in the install script. In this case, gtest needs to be installed as well:
 
+
         .. code-block:: shell
 
             $conda install gtest benchmark

@@ -46,8 +46,8 @@ def itebd_tfim_tag(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
                         cytnx.Bond(chi,BD_OUT)],labels=['a','0','b']);
     B = cytnx.UniTensor(A.bonds(),rowrank=1,labels=['c','1','d']);
 
-    cytnx.random.normal_(B.get_block_(),0,0.2);
-    cytnx.random.normal_(A.get_block_(),0,0.2);
+    cytnx.random.normal_(B.get_block_(), mean=0, std=0.2, seed=0);
+    cytnx.random.normal_(A.get_block_(), mean=0, std=0.2, seed=0);
     A.print_diagram()
     B.print_diagram()
     #print(A)

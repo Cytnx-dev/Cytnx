@@ -1,8 +1,8 @@
 Bond
 =======
-A **Bond** is an object that represents the legs or indices of a tensor. It carries information such as the direction, dimension and quantum numbers (if symmetries given). 
+A **Bond** is an object that represents the legs or indices of a tensor. It carries information such as the direction, dimension and quantum numbers (if symmetries given).
 
-There are in general two types of Bonds: **directional** and **undirectional**, depending on whether the bond has a direction (pointing inward or outward with respect to the tensor) or not. The inward Bond is also defined as **Ket**/**In** type, while the outward Bond is defined as **Bra**/**Out** type as in the *Braket* notation in the quantum mechanics: 
+There are in general two types of Bonds: **directional** and **undirectional**, depending on whether the bond has a direction (pointing inward or outward with respect to the tensor) or not. The inward Bond is also defined as **Ket**/**In** type, while the outward Bond is defined as **Bra**/**Out** type as in the *Braket* notation in the quantum mechanics:
 
 .. image:: image/bond.png
     :width: 400
@@ -11,7 +11,7 @@ There are in general two types of Bonds: **directional** and **undirectional**, 
 The API for constructing a simple Bond (with or without direction) is:
 
 .. py:function:: Bond(dim, bd_type)
-     
+
     :param int dim: The dimension of the bond.
     :param bondType bd_type: The type (direction) of the bond, can be BD_REG--undirectional, BD_KET--inward (same as BD_IN), BD.BRA--outward (same as BD_OUT)
 
@@ -77,14 +77,14 @@ In order to implement symmetries on the level of tensors, we assign a quantum nu
 To construct a Bond with symmetries and associate quantum numbers, the following API can be used:
 
 .. py:function:: Bond(bd_type, qnums_list , degeneracies, sym_list)
-     
-    :param bondType bd_type: type (direction) of the bond, this can ONLY be BD_KET--inward (BD_IN) or BD_BRA--outward (BD_OUT) when quantum numbers are used 
-    :param list qnums_list: quantum number list 
-    :param list degeneracies: degeneracies (dimensions) of the qnums 
+
+    :param bondType bd_type: type (direction) of the bond, this can ONLY be BD_KET--inward (BD_IN) or BD_BRA--outward (BD_OUT) when quantum numbers are used
+    :param list qnums_list: quantum number list
+    :param list degeneracies: degeneracies (dimensions) of the qnums
     :param list sym_list: list of Symmetry objects that define the symmetry of each qnum
 
 
-    
+
 The two arguments *qnums_list* and *degeneracies* can be combined into a single argument by using the following API:
 
 .. py:function:: Bond(bd_type, qnums_degeneracy_pair, sym_list)
@@ -154,12 +154,12 @@ Here, we can observe the quantum numbers of **bd_sym_u1_a** combine with **bd_sy
 
 .. warning::
 
-    When no symmetry argument is given in the creation of a Bond with quantum numbers, *U1* is assumed by default as the symmetry group. 
+    When no symmetry argument is given in the creation of a Bond with quantum numbers, *U1* is assumed by default as the symmetry group.
 
 
 .. tip::
-    
-    Using **combineBond_()** (with underscore) will modify the instance directly (as the general convention with underscore indicates inplace). 
+
+    Using **combineBond_()** (with underscore) will modify the instance directly (as the general convention with underscore indicates inplace).
 
 By default, *combineBond* will group any quantum numbers of the same type together. If one wants to keep the order instead, similarly to *Kron*, one can set the additional argument **is_grp = False**:
 
@@ -182,4 +182,3 @@ Output >>
 
 
 .. toctree::
-

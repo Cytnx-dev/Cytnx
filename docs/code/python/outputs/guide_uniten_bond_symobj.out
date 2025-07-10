@@ -2,7 +2,7 @@
 [Symmetry]
 type : Abelian, U1
 combine rule : Q1 + Q2
-reverse rule : Q*(-1) 
+reverse rule : Q*(-1)
 --------------------
 
 
@@ -10,7 +10,5 @@ reverse rule : Q*(-1)
 [Symmetry]
 type : Abelian, Z(2)
 combine rule : (Q1 + Q2)%2
-reverse rule : Q*(-1) 
+reverse rule : Q*(-1)
 --------------------
-
-

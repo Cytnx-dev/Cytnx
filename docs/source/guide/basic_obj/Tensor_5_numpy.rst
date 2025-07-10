@@ -1,6 +1,6 @@
 To/From numpy.array
 ----------------------
-Cytnx also provides conversion from and to numpy.array in the Python API. 
+Cytnx also provides conversion from and to numpy.array in the Python API.
 
 * To convert from Cytnx Tensor to numpy array, use **Tensor.numpy()**
 

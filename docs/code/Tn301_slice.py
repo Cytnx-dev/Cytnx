@@ -8,8 +8,5 @@ print(A)
 B = A[0,:,1:4:2]
 print(B)
 
-C = A[:,1]    
+C = A[:,1]
 print(C)
-
-
-

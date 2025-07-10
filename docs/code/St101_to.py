@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../../Cytnx")
 import cytnx
-import numpy as np 
+import numpy as np
 
 
 A = cytnx.Storage(4)
@@ -12,4 +12,3 @@ print(B.device_str())
 
 A.to_(cytnx.Device.cuda)
 print(A.device_str())
-

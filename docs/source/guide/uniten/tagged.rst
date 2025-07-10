@@ -21,7 +21,7 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_tagged_init.out
     :language: text
 
-            
+
 In this example, the UniTensors **Ta** and  **Tb**  are created to be in the **braket form (braket_form : True)**. This means that all bonds in the rowspace are Kets (inward) and all the bonds in the colspace are Bras(outward), which can be seen in the diagram as well. The property rowrank of a UniTensor defines these spaces: the first bonds are part of rowspace, and rowspace contains *rowrank* bonds.
 
 Two bonds can only be contracted when one of them corresponds to a Ket state (living in a vector space) and the other is Bra state (living in the dual space). Therefore, **two bonds with conflicting directions cannot be contract with each other**. While this is certainly a constraint, this condition makes the implementation of tensor network algorithms less error-prone since incompatible bond directions will not be contracted.
@@ -35,7 +35,7 @@ To demonstrate this, we use :ref:`contract` and try:
 
 While the first contraction works well, the second one throws a RuntimeError stating "BRA-KET mismatch":
 
-Output >> 
+Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_tagged_contract.out
     :language: text

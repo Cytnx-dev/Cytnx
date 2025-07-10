@@ -5,7 +5,7 @@ is_diag    : False
 [OVERALL] contiguous : True
 ========================
 BLOCK [#0]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                  -----------
                  |         |
@@ -23,7 +23,7 @@ Shape : (1,1,1)
 
 ========================
 BLOCK [#1]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                   -----------
                   |         |
@@ -41,7 +41,7 @@ Shape : (1,1,2)
 
 ========================
 BLOCK [#2]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                   -----------
                   |         |
@@ -59,7 +59,7 @@ Shape : (1,1,2)
 
 ========================
 BLOCK [#3]
- |- []   : Qn index 
+ |- []   : Qn index
  |- Sym(): Qnum of correspond symmetry
                   -----------
                   |         |
@@ -74,4 +74,3 @@ type  : Double (Float64)
 cytnx device: CPU
 Shape : (1,1,1)
 [[[0.00000e+00 ]]]
-

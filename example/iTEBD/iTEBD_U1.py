@@ -47,9 +47,9 @@ def itebd_heisenberg(chi = 32, J  = 1.0, dt = 0.1, CvgCrit = 1.0e-12):
     B = cytnx.UniTensor([bd_mid,bdi,bdo],labels=['c','1','d']);
 
     for b in range(len(B.get_blocks_())):
-        cytnx.random.normal_(B.get_block_(b),0,0.2);
+        cytnx.random.normal_(B.get_block_(b), mean=0, std=0.2, seed=0);
     for a in range(len(A.get_blocks_())):
-        cytnx.random.normal_(A.get_block_(a),0,0.2);
+        cytnx.random.normal_(A.get_block_(a), mean=0, std=0.2, seed=0);
 
     A.print_diagram()
     B.print_diagram()

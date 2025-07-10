@@ -18,7 +18,7 @@ print(Sx)
 ## Construct the local Hamiltonian
 TFterm = cytnx.linalg.Kron(Sx,I) + cytnx.linalg.Kron(I,Sx)
 ZZterm = cytnx.linalg.Kron(Sz,Sz)
-H = Hx*TFterm + J*ZZterm 
+H = Hx*TFterm + J*ZZterm
 print(H)
 
 
@@ -27,5 +27,3 @@ eH = cytnx.linalg.ExpH(H,-dt) ## or equivantly ExpH(-dt*H)
 eH.reshape_(2,2,2,2)
 eH = cyx.CyTensor(eH,2)
 eH.print_diagram()
-
-

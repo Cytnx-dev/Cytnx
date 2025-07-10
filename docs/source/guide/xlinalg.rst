@@ -66,7 +66,7 @@ We note that the singular values obtained by doing **Svd_truncate()** is truncat
 
 .. Note::
     The **Svd()** and **Svd_truncate()** calls xgesdd routines from LAPACKE internally, for other algorithms like xgesvd routines one may consider  **Gesvd()** and **Gesvd_truncate()** functions.
-    
+
 
 
 Eigenvalue decomposition
@@ -84,7 +84,7 @@ QR decomposition
 The **QR decomposition** decomposes a matrix *M* to the form *M = QR*, where *Q* is an orthogonal matrix (*Q Q^T = I*), and *R* is a upper-right triangular matrix. One can perform a QR decomposition by using **Qr()**.
 
 .. py:function:: Qr(Tin, is_tau)
-     
+
     :param cytnx.UniTensor Tin: input tensor
     :param bool is_tau: If *is_tau=True*, the function returns an additional one-dimensional tensor *tau* that contains the scaling factors of the Householder reflectors that generate *Q* along with *R*. See :cite:`LAPACK` for details. Default: *is_tau=False*
 

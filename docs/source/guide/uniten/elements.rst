@@ -30,7 +30,7 @@ Output >>
 
 .. Note::
 
-    Note that in Python, adding *.value* is necessary! 
+    Note that in Python, adding *.value* is necessary!
 
 
 The proxy returned by **at** also serves as reference, so we can directly assign or modify the value:
@@ -52,7 +52,7 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_elements_at_set.out
     :language: text
 
-    
+
 UniTensor with symmetries
 *****************************
 
@@ -86,7 +86,7 @@ An existing element (here: at [0,0,0]) can be accessed as in the case without sy
     :linenos:
 
     print(Tsymm.at({0,0,0}));
-        
+
 Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_elements_at_qidx.out
@@ -133,7 +133,7 @@ To avoid this error, we can check if the element is valid before accessing it. T
     }
 
 
-This will set the element at [0,0,0] to 8 while ignoring the [0,0,1] element that does not exist. 
+This will set the element at [0,0,0] to 8 while ignoring the [0,0,1] element that does not exist.
 
 
 .. toctree::

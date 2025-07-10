@@ -1,11 +1,11 @@
 Set same value for all blocks in UniTensor with Symmetry
--------------------------------------------------------------- 
+--------------------------------------------------------------
 
 Consider a UniTensor with Symmetry **Tsymm**. The following code provide example code to set all elements to be the same value (1.0 in this case) for all the blocks
 
 * In Python:
 
-     
+
 .. code-block:: python
     :linenos:
 
@@ -18,7 +18,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
     for block in Tsymm.get_blocks_():
         block.fill(1.0)
 
-    
+
 * In C++:
 
 .. code-block:: c++
@@ -31,7 +31,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
 **Output (before) >>**
 
 .. code-block:: text
-    
+
     -------- start of print ---------
     Tensor name: Td
     braket_form : True
@@ -39,7 +39,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
     [OVERALL] contiguous : True
     ========================
     BLOCK [#0]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                      -----------
                      |         |
@@ -57,7 +57,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
 
     ========================
     BLOCK [#1]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                       -----------
                       |         |
@@ -75,7 +75,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
 
     ========================
     BLOCK [#2]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                       -----------
                       |         |
@@ -93,7 +93,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
 
     ========================
     BLOCK [#3]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                       -----------
                       |         |
@@ -121,7 +121,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
     [OVERALL] contiguous : True
     ========================
     BLOCK [#0]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                      -----------
                      |         |
@@ -139,7 +139,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
 
     ========================
     BLOCK [#1]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                       -----------
                       |         |
@@ -157,7 +157,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
 
     ========================
     BLOCK [#2]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                       -----------
                       |         |
@@ -175,7 +175,7 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
 
     ========================
     BLOCK [#3]
-     |- []   : Qn index 
+     |- []   : Qn index
      |- Sym(): Qnum of correspond symmetry
                       -----------
                       |         |
@@ -190,7 +190,3 @@ Consider a UniTensor with Symmetry **Tsymm**. The following code provide example
     cytnx device: CPU
     Shape : (1,1,1)
     [[[1.00000e+00 ]]]
-
-
-
-

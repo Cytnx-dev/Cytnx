@@ -10,4 +10,3 @@ print(B)
 
 C = A * B
 print(C)
-

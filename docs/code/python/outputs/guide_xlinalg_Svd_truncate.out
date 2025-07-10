@@ -1,5 +1,5 @@
 -------- start of print ---------
-Tensor name: 
+Tensor name:
 is_diag    : True
 contiguous : True
 
@@ -13,7 +13,7 @@ Shape : (25)
 
 
 -------- start of print ---------
-Tensor name: 
+Tensor name:
 is_diag    : True
 contiguous : True
 
@@ -27,7 +27,7 @@ Shape : (1)
 
 
 -------- start of print ---------
-Tensor name: 
+Tensor name:
 is_diag    : False
 contiguous : True
 
