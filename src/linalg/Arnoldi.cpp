@@ -530,6 +530,7 @@ namespace cytnx {
       for (cytnx_int32 ik = 0; ik < nconv; ++ik) {
         d[ik].real(dr[ik]);
         d[ik].imag(di[ik]);
+        std::cout << dr[ik] << "," << di[ik] << std::endl;
       }
       auto sorted_idx = sort_metric_indices<std::complex<T>, T>(d.data(), which, nconv);
       std::complex<T>* eigvals = get_obj_data_ptr<std::complex<T>, T_ten>(out[0]);
@@ -744,18 +745,12 @@ namespace cytnx {
         "\n");
 
       // check which
-      std::vector<std::string> accept_which = {"LM", "LR", "LI", "SM", "SR", "SI"};
+      std::vector<std::string> accept_which = {"LM", "LR", "LI", "SR", "SI"};
       if (std::find(accept_which.begin(), accept_which.end(), which) == accept_which.end()) {
         cytnx_error_msg(true,
                         "[ERROR][Arnoldi] 'which' should be 'LM', 'LR, 'LI'"
                         ", 'SR', 'SI'",
                         "\n");
-      }
-      //'SM' is not support since it might have convergence problem for arpack.
-      if (which == "SM") {
-        cytnx_error_msg(true,
-                        "[ERROR][Arnoldi] 'which' cannot be 'SM', this function not support to ",
-                        "simulate the smallest magnitude. \n");
       }
 
       /// check k
@@ -782,6 +777,10 @@ namespace cytnx {
       }
 
       cytnx_error_msg(cvg_crit < 0, "[ERROR][Arnoldi] cvg_crit should be >= 0%s", "\n");
+      cytnx_error_msg((ncv != 0) && ((ncv < 2 + k) || ncv > Hop->nx()),
+                      "[ERROR][Arnoldi] ncv should "
+                      "be 2+k<=ncv<=nx%s",
+                      "\n");
       cytnx_uint64 output_size = is_V ? 2 : 1;
       auto out = std::vector<Tensor>(output_size, Tensor());
       _Arnoldi(out, Hop, _T_init, which, maxiter, cvg_crit, k, is_V, ncv, verbose);
@@ -799,18 +798,12 @@ namespace cytnx {
         "\n");
 
       // check which
-      std::vector<std::string> accept_which = {"LM", "LR", "LI", "SM", "SR", "SI"};
+      std::vector<std::string> accept_which = {"LM", "LR", "LI", "SR", "SI"};
       if (std::find(accept_which.begin(), accept_which.end(), which) == accept_which.end()) {
         cytnx_error_msg(true,
                         "[ERROR][Arnoldi] 'which' should be 'LM', 'LR, 'LI'"
                         ", 'SR', 'SI'",
                         "\n");
-      }
-      //'SM' is not support since it might have convergence problem for arpack.
-      if (which == "SM") {
-        cytnx_error_msg(true,
-                        "[ERROR][Arnoldi] 'which' cannot be 'SM', this function not support to ",
-                        "simulate the smallest magnitude. \n");
       }
 
       /// check k
@@ -833,6 +826,10 @@ namespace cytnx {
       }
 
       cytnx_error_msg(cvg_crit < 0, "[ERROR][Arnoldi] cvg_crit should be >= 0%s", "\n");
+      cytnx_error_msg((ncv != 0) && ((ncv < 2 + k) || ncv > Hop->nx()),
+                      "[ERROR][Arnoldi] ncv should "
+                      "be 2+k<=ncv<=nx%s",
+                      "\n");
       auto out = std::vector<UniTensor>();
       _Arnoldi(out, Hop, UT_init, which, maxiter, cvg_crit, k, is_V, ncv, verbose);
       return out;

@@ -1,8 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
-#include <mkl.h>
-#include <omp.h>
 
 using namespace cytnx;
 using namespace testing;
@@ -54,7 +52,9 @@ namespace {
     cytnx_uint64 maxiter = 10000;
     cytnx_double cvg_crit = 0;
     ErrorTestClass(){};
-    cytnx_uint64 dim = 3;
+    cytnx_uint64 dim = 25;
+    bool is_V = true;
+    cytnx_int32 ncv = 0;
     void ExcuteErrorTest();
     // set
     void Set_mat_type(const int _mat_type) {
@@ -68,7 +68,7 @@ namespace {
   };
   void ErrorTestClass::ExcuteErrorTest() {
     try {
-      auto lanczos_eigs = linalg::Lanczos(&H, H.T_init, which, maxiter, cvg_crit, k);
+      auto lanczos_eigs = linalg::Lanczos(&H, H.T_init, which, maxiter, cvg_crit, k, is_V, ncv);
       FAIL();
     } catch (const std::exception& ex) {
       auto err_msg = ex.what();
@@ -238,5 +238,14 @@ TEST(Lanczos, err_k_too_large) {
 TEST(Lanczos, err_crit_negative) {
   ErrorTestClass err_task;
   err_task.cvg_crit = -0.001;
+  err_task.ExcuteErrorTest();
+}
+
+// 2-6, test ncv is out of allowd range
+TEST(Lanczos, err_ncv_out_of_range) {
+  ErrorTestClass err_task;
+  err_task.ncv = err_task.k + 1;
+  err_task.ExcuteErrorTest();
+  err_task.ncv = err_task.dim + 1;
   err_task.ExcuteErrorTest();
 }

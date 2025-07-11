@@ -1,5 +1,10 @@
-#include "Lanczos_Gnd_test.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include "cytnx.hpp"
 #include "../test_tools.h"
+
+using namespace cytnx;
+using namespace testing;
 
 class MyOp : public LinOp {
  public:

@@ -1,4 +1,9 @@
-#include "Lanczos_Gnd_test.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include "cytnx.hpp"
+
+using namespace cytnx;
+using namespace testing;
 
 namespace {
   class OneSiteOp : public LinOp {
@@ -133,8 +138,10 @@ namespace {
     std::string which = "LM";
     cytnx_uint64 k = 1;
     cytnx_uint64 maxiter = 10;
-    int d = 2, D = 5, dw = 3;
+    cytnx_int32 d = 2, D = 5, dw = 3;
     cytnx_double cvg_crit = 0;
+    bool is_V = true;
+    cytnx_int32 ncv = 0;
     ErrorTestClass(){};
     void ExcuteErrorTest();
     // set
@@ -149,7 +156,7 @@ namespace {
   };
   void ErrorTestClass::ExcuteErrorTest() {
     try {
-      auto lanczos_eigs = linalg::Lanczos(&op, op.UT_init, which, maxiter, cvg_crit, k);
+      auto lanczos_eigs = linalg::Lanczos(&op, op.UT_init, which, maxiter, cvg_crit, k, is_V, ncv);
       FAIL();
     } catch (const std::exception& ex) {
       auto err_msg = ex.what();
@@ -348,6 +355,16 @@ TEST(Lanczos_Ut, nx_not_match) {
     std::cerr << err_msg << std::endl;
     SUCCEED();
   }
+}
+
+// 2-8, test ncv is out of allowd range
+TEST(Lanczos_Ut, err_ncv_out_of_range) {
+  ErrorTestClass err_task;
+  err_task.ncv = err_task.k + 1;
+  err_task.ExcuteErrorTest();
+  auto dim = err_task.D * err_task.D * err_task.d;
+  err_task.ncv = dim + 1;
+  err_task.ExcuteErrorTest();
 }
 
 TEST(Lanczos_Gnd, Lanczos_Gnd_test) {

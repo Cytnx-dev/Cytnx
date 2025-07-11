@@ -294,8 +294,10 @@ class ErrorTestClass {
   std::string which = "LM";
   cytnx_uint64 k = 1;
   cytnx_uint64 maxiter = 10;
-  int d = 2, D = 5;
+  cytnx_int32 d = 2, D = 5;
   cytnx_double cvg_crit = 0;
+  bool is_V = true;
+  cytnx_int32 ncv = 0;
   ErrorTestClass(){};
   void ExcuteErrorTest();
   cytnx_uint64 dim = D * D;
@@ -315,7 +317,7 @@ class ErrorTestClass {
 };
 void ErrorTestClass::ExcuteErrorTest() {
   try {
-    auto arnoldi_eigs = linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k);
+    auto arnoldi_eigs = linalg::Arnoldi(&H, H.T_init, which, maxiter, cvg_crit, k, is_V, ncv);
     FAIL();
   } catch (const std::exception& ex) {
     auto err_msg = ex.what();
@@ -370,5 +372,15 @@ TEST(Arnoldi_Ut, err_crit_negative) {
 TEST(Arnoldi_Ut, nx_not_match) {
   ErrorTestClass err_task;
   err_task.Set_dim(5);
+  err_task.ExcuteErrorTest();
+}
+
+// 2-8, test ncv is out of allowd range
+TEST(Arnoldi_Ut, err_ncv_out_of_range) {
+  ErrorTestClass err_task;
+  err_task.ncv = err_task.k + 1;
+  err_task.ExcuteErrorTest();
+  auto dim = err_task.D * err_task.D * err_task.d;
+  err_task.ncv = dim + 1;
   err_task.ExcuteErrorTest();
 }

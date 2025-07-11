@@ -433,15 +433,9 @@ namespace cytnx {
         "\n");
 
       // check which
-      std::vector<std::string> accept_which = {"LM", "SM", "LA", "SA"};
+      std::vector<std::string> accept_which = {"LM", "LA", "SA"};
       if (std::find(accept_which.begin(), accept_which.end(), which) == accept_which.end()) {
         cytnx_error_msg(true, "[ERROR][Lanczos] 'which' should be 'LM', 'LA', 'SA'", "\n");
-      }
-      //'SM' is not support since it might have convergence problem for arpack.
-      if (which == "SM") {
-        cytnx_error_msg(true,
-                        "[ERROR][Lanczos] 'which' cannot be 'SM', this function not support to ",
-                        "simulate the smallest magnitude. \n");
       }
       if (Type.is_complex(Hop->dtype())) {
         try {
@@ -480,7 +474,10 @@ namespace cytnx {
       }
 
       cytnx_error_msg(cvg_crit < 0, "[ERROR][Lanczos] cvg_crit should be >= 0%s", "\n");
-      double _cvgcrit = cvg_crit;
+      cytnx_error_msg((ncv != 0) && ((ncv < 2 + k) || ncv > Hop->nx()),
+                      "[ERROR][Lanczos] ncv should "
+                      "be 2+k<=ncv<=nx%s",
+                      "\n");
       cytnx_uint64 output_size = is_V ? 2 : 1;
       auto out = std::vector<Tensor>(output_size, Tensor());
       _Lanczos(out, Hop, _T_init, which, maxiter, cvg_crit, k, is_V, ncv, verbose);
@@ -498,15 +495,9 @@ namespace cytnx {
         "\n");
 
       // check which
-      std::vector<std::string> accept_which = {"LM", "SM", "LA", "SA"};
+      std::vector<std::string> accept_which = {"LM", "LA", "SA"};
       if (std::find(accept_which.begin(), accept_which.end(), which) == accept_which.end()) {
         cytnx_error_msg(true, "[ERROR][Lanczos] 'which' should be 'LM', 'LA', 'SA'", "\n");
-      }
-      //'SM' is not support since it might have convergence problem for arpack.
-      if (which == "SM") {
-        cytnx_error_msg(true,
-                        "[ERROR][Lanczos] 'which' cannot be 'SM', this function not support to ",
-                        "simulate the smallest magnitude. \n");
       }
 
       // If the operator is complex hermaitian, just call Arnoldi algorthm since there is no
@@ -546,7 +537,10 @@ namespace cytnx {
       }
 
       cytnx_error_msg(cvg_crit < 0, "[ERROR][Lanczos] cvg_crit should be >= 0%s", "\n");
-      double _cvgcrit = cvg_crit;
+      cytnx_error_msg((ncv != 0) && ((ncv < 2 + k) || ncv > Hop->nx()),
+                      "[ERROR][Lanczos] ncv should "
+                      "be 2+k<=ncv<=nx%s",
+                      "\n");
       auto out = std::vector<UniTensor>();
       _Lanczos(out, Hop, UT_init, which, maxiter, cvg_crit, k, is_V, ncv, verbose);
       return out;
