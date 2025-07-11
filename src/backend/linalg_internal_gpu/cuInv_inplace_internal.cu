@@ -1,5 +1,5 @@
 #include "cuInv_inplace_internal.hpp"
-#include "../utils_internal_interface.hpp"
+#include "backend/utils_internal_interface.hpp"
 
 namespace cytnx {
 

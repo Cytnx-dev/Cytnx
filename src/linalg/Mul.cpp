@@ -4,7 +4,7 @@
 
 #ifdef BACKEND_TORCH
 #else
-  #include "../backend/linalg_internal_interface.hpp"
+  #include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {

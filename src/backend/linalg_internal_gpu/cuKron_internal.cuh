@@ -1,9 +1,9 @@
 #ifndef CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUKRON_INTERNAL_H_
 #define CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUKRON_INTERNAL_H_
 
-#include "../utils_internal_interface.hpp"
+#include "backend/utils_internal_interface.hpp"
 #include "utils/utils.hpp"
-#include "../utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
 #include <algorithm>
 
 #include "cytnx_error.hpp"
