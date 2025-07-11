@@ -15,6 +15,11 @@ namespace cytnx {
       else
         out = Tin.contiguous();
 
+      // Handle edge case: if last dimension is 0, there's nothing to sort
+      // Note: This branch may never be reached as exception is thrown when creating tensor with 0
+      // dim
+      if (Tin.shape().back() == 0) return out;
+
       if (Tin.device() == Device.cpu) {
         cytnx::algo_internal::aii.Sort_ii[out.dtype()](out._impl->storage()._impl,
                                                        out.shape().back(), out.storage().size());
