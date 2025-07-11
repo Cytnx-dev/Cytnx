@@ -16,7 +16,9 @@
   #include "backend/Storage.hpp"
 
 namespace cytnx {
+  int set_mkl_lp64();
   int set_mkl_ilp64();
+  int detect_mkl_interface();
   int get_mkl_code();
 
   /**
@@ -1643,11 +1645,11 @@ namespace cytnx {
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see Svd(const Tensor &Tin, const bool &is_UvT)
-    @note The truncated bond dimension can be larger than \p keepdim for degenerate singular values:
-    if the largest \f$ n \f$ truncated singular values would be exactly equal to the smallest kept
-    singular value, then the bond dimension is enlarged to \p keepdim \f$ + n \f$. Example: if the
-    singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension will be 5 in order
-    to keep all the degenerate singular values.
+    @note The truncated bond dimension can be larger than \p keepdim for degenerate singular
+    values: if the largest \f$ n \f$ truncated singular values would be exactly equal to the
+    smallest kept singular value, then the bond dimension is enlarged to \p keepdim \f$ + n \f$.
+    Example: if the singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension
+    will be 5 in order to keep all the degenerate singular values.
     */
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err = 0., const bool &is_UvT = true,
@@ -2302,79 +2304,112 @@ namespace cytnx {
     // Arnoldi:
     //===========================================
     /**
-    @brief perform Arnoldi for matrices or linear function.
-    @details This function calculate the eigen value problem using Arnoldi algorithm.
-    @param[in] Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
-    @param[in] Tin the initial vector, this should be rank-1.
+    @brief Performs Arnoldi iteration for matrices or linear functions.
+    @details This function calculates the eigenvalue problem using the Arnoldi algorithm. It calls
+    ARPACK routines.
+    @param[in] Hop The Linear Operator defined by the LinOp class or its inheritance (see LinOp).
+    @param[in] Tin The initial vector; this should be a rank-1 Tensor.
     @param[in] which
     @parblock
-    which order eigenvlues and corresponding eigenvectors should be find, the supported
-    options are:
-
-    <b>'LM'</b> : largest magnitude
-    <b>'LR'</b> : largest real part
-    <b>'LI'</b> : largest imaginary part
-    <b>'SM'</b> : smallest magnitude
-    <b>'SR'</b> : smallest real part
-    <b>'SI'</b> : smallest imaginary part
-
+    Specifies the order in which eigenvalues and corresponding eigenvectors should be found. The
+    supported options are:
+    - "LM": Largest Magnitude
+    - "LR": Largest Real part
+    - "SR": Smallest Real part
+    - "LI": Largest Imaginary part
+    - "SI": Smallest Imaginary part
     @endparblock
-    @param[in] maxiter the maximum interation steps for each k.
-    @param[in] cvg_crit the convergence criterion of the energy.
-    @param[in] k the number of lowest k eigen values.
-    @param[in] is_V if set to true, the eigen vectors will be returned.
-    @param[in] verbose print out iteration info.
-    @return
-        [eigvals (Tensor), eigvecs (Tensor)(option)]
+    @param[in] maxiter The maximum number of iteration steps.
+    @param[in] cvg_crit The convergence criterion of the energy. If set to 0, it reaches machine
+    precision.
+    @param[in] k The number of eigenvalues to compute.
+    @param[in] is_V If set to true, the eigenvectors will be returned.
+    @param[in] ncv Related to number of Arnoldi Vectors generated (the Krylov subspace). If `0`
+    (default), the value is typically determined automatically as `min(2*k+10, dim)`, where `dim` is
+    the dimension of the linear operator (e.g., `nx` in LinOp).
+    @param[in] verbose Prints out iteration information.
+    @return A `std::vector<Tensor>` containing: The first `Tensor` holds the computed eigenvalues.
+    If `is_V` is true, subsequent `Tensor` objects contain the corresponding eigenvectors.
+    @pre
+    1. The data type of LinOp should be float and same as input inital vector.
+    2. 1 <= `k` <= nx. Where nx is the dimension of the vector.
+    3. `Tin` should be a rank-1 Tensor, and the dimension need to same as LinOp->nx().
+    4. If `ncv` \f$ \neq 0\f$, then k+2<= `ncv`<= dim, where dim = LinOp->nx().
     @note
-        To use, define a linear operator with LinOp class either by assign a custom function or
-    create a class that inherit LinOp (see LinOp for further details)
+    1. To use, define a linear operator with LinOp class either by assigning a custom function or
+    creating a class that inherits LinOp (see LinOp for further details).
+    2. If k is close to the dimension of the vector, the routine may return error (arpack routine
+    -3). In such cases, it is recommended to use the linalg::Eig function directly.
+    @attention
+    For the `which` equal to `SI` or `LI`, and the data type of LinOp is real rather than complex,
+    the output
+    * of eigenvectors are same as `ARPACK`. For example, if the full spectrum is \f$[1.0+0i,
+    0.7+0.1i, 0.7-0.1i, 0.2+0.2i, 0.2-0.2i]\f$, and you choose `which="LI"`, `k=2`, then the output
+    eigenvalues are \f$[0.2+0.2i, 0.2-0.2i]\f$ rather than \f$[0.2+0.2i, 0.7+0.1i]\f$ (as ARPACK
+    prioritizes returning complete complex conjugate pairs for real operators).
     */
     std::vector<Tensor> Arnoldi(LinOp *Hop, const Tensor &Tin = Tensor(),
                                 const std::string which = "LM", const cytnx_uint64 &maxiter = 10000,
-                                const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
-                                const bool &is_V = true, const bool &verbose = false);
+                                const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
+                                const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                const bool &verbose = false);
 
     // Arnoldi:
     //===========================================
     /**
-    @brief perform Arnoldi for matrices or linear function.
-    @details This function calculate the eigen value problem using Arnoldi algorithm.
-    @param[in] Hop the Linear Operator defined by LinOp class or it's inheritance (see LinOp).
-    @param[in] Tin the initial UniTensor.
-    @param[in] which
-    @parblock
-    which order eigenvlues and corresponding eigenvectors should be find, the supported
-    options are:
-
-    <b>'LM'</b> : largest magnitude
-    <b>'LR'</b> : largest real part
-    <b>'LI'</b> : largest imaginary part
-    <b>'SR'</b> : smallest real part
-    <b>'SI'</b> : smallest imaginary part
-
-    @endparblock
-    @param[in] maxiter the maximum interation steps for each k.
-    @param[in] cvg_crit the convergence criterion of the energy.
-    @param[in] k the number of lowest k eigen values.
-    @param[in] is_V if set to true, the eigen vectors will be returned.
-    @param[in] verbose print out iteration info.
+  @brief Performs Arnoldi iteration for matrices or linear functions.
+  @details This function calculates the eigenvalue problem using the Arnoldi algorithm. It calls
+ ARPACK routines.
+  @param[in] Hop The Linear Operator defined by the LinOp class or its inheritance (see LinOp).
+  @param[in] Tin the initial UniTensor.
+  @param[in] which
+  @parblock
+  Specifies the order in which eigenvalues and corresponding eigenvectors should be found. The
+ supported options are:
+  - "LM": Largest Magnitude
+  - "LR": Largest Real part
+  - "SR": Smallest Real part
+  - "LI": Largest Imaginary part
+  - "SI": Smallest Imaginary part
+  @endparblock
+  @param[in] maxiter The maximum number of iteration steps.
+  @param[in] cvg_crit The convergence criterion of the energy. If set to 0, it reaches machine
+ precision.
+  @param[in] k The number of eigenvalues to compute.
+  @param[in] is_V If set to true, the eigenvectors will be returned.
+  @param[in] ncv Related to number of Arnoldi Vectors generated (the Krylov subspace). If `0`
+ (default), the value is typically determined automatically as `min(2*k+10, dim)`, where `dim` is
+ the dimension of the linear operator (e.g., `nx` in LinOp).
+  @param[in] verbose Prints out iteration information.
     @return
         [eigvals (UniTensor), eigvec_1, eivec_2, ..., eigvec_k].
                 The first UniTensor contains eigenvalues.
-    @note
-        To use, define a linear operator with LinOp class either by assign a custom function or
-    create a class that inherit LinOp (see LinOp for further details)
 
-    @pre
-        1. The initial UniTensor cannot be empty.
-        2. The UniTensor version of the Arnoldi not support \p which = 'SM'.
+  @pre
+   1. The initial UniTensor cannot be empty.
+   2. The data type of LinOp should be float and same as input inital vector.
+   3. 1 <= `k` <= nx. Where nx is the dimension of the vector.
+   4. `Tin` should be a rank-1 Tensor, and the dimension need to same as LinOp->nx().
+   5. If `ncv` \f$ \neq 0\f$, then k+2<= `ncv`<= dim, where dim = LinOp->nx().
+  @note
+  1. To use, define a linear operator with LinOp class either by assigning a custom function or
+  creating a class that inherits LinOp (see LinOp for further details).
+  2. If k is close to the dimension of the vector, the routine may return error (arpack routine -3).
+ In such cases, it is recommended to use the linalg::Eig function directly.
+  @attention
+  For the `which` equal to `SI` or `LI`, and the data type of LinOp is real rather than complex, the
+ output
+ * of eigenvectors are same as `ARPACK`. For example, if the full spectrum is \f$[1.0+0i, 0.7+0.1i,
+ 0.7-0.1i, 0.2+0.2i, 0.2-0.2i]\f$, and you choose `which="LI"`, `k=2`, then the output eigenvalues
+ are \f$[0.2+0.2i, 0.2-0.2i]\f$ rather than \f$[0.2+0.2i, 0.7+0.1i]\f$ (as ARPACK prioritizes
+ returning complete complex conjugate pairs for real operators).
     */
     std::vector<UniTensor> Arnoldi(LinOp *Hop, const cytnx::UniTensor &Tin,
                                    const std::string which = "LM",
                                    const cytnx_uint64 &maxiter = 10000,
                                    const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
-                                   const bool &is_V = true, const bool &verbose = false);
+                                   const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                   const bool &verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2404,15 +2439,108 @@ namespace cytnx {
     @param[in] verbose print out iteration info.
     @return
         [eigvals (Tensor), eigvecs (Tensor)(option)]
-    @note
-    To use, define a linear operator with LinOp class either by assign a custom function or
-    create a class that inherit LinOp (see LinOp for further details)
+  @note
+  To use, define a linear operator with LinOp class either by assigning a custom function or
+  creating a class that inherits LinOp (see LinOp for further details).
     */
     std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(),
                                 const std::string method = "Gnd", const double &CvgCrit = 1.0e-14,
                                 const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
                                 const bool &is_V = true, const bool &is_row = false,
                                 const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
+    /**
+  @brief Performs Lanczos iteration for matrices or linear functions.
+  @details This function calculates the eigenvalue problem using the Lanczos algorithm. It calls
+  ARPACK routines.
+  @param[in] Hop The Linear Operator defined by the LinOp class or its inheritance (see LinOp).
+    @param[in] Tin the initial vector, this should be rank-1.
+  @param[in] which
+  @parblock
+  Specifies the order in which eigenvalues and corresponding eigenvectors should be found. The
+  supported options are:
+  - "LM": Largest Magnitude
+  - "LA": Largest algebraic
+  - "SA": Smallest algebraic
+  @endparblock
+  @param[in] maxiter The maximum number of iteration steps.
+  @param[in] cvg_crit The convergence criterion of the energy. If set to 0, it reaches machine
+  precision.
+  @param[in] k The number of eigenvalues to compute.
+  @param[in] is_V If set to true, the eigenvectors will be returned.
+  @param[in] ncv Related to number of Arnoldi Vectors generated (the Krylov subspace). If `0`
+  (default), the value is typically determined automatically as `min(2*k+10, dim)`, where `dim` is
+  the dimension of the linear operator (e.g., `nx` in LinOp).
+  @param[in] verbose Prints out iteration information.
+    @return
+        [eigvals (Tensor), eigvecs (Tensor)(option)]
+
+  @pre
+   1. The data type of LinOp should be float and same as input inital vector.
+   2. 1 <= `k` <= nx. Where nx is the dimension of the vector.
+   3. `Tin` should be a rank-1 Tensor, and the dimension need to same as LinOp->nx().
+   4. If `ncv` \f$ \neq 0\f$, then k+2<= `ncv`<= dim, where dim = LinOp->nx().
+  @note
+  1. To use, define a linear operator with LinOp class either by assigning a custom function or
+  creating a class that inherits LinOp (see LinOp for further details).
+  2. If k is close to the dimension of the vector, the routine may return error (arpack routine -3).
+  In such cases, it is recommended to use the linalg::Eigh function directly.
+  @attention
+  The input operator in LinOp must be Hermitian; otherwise, the simulation results will be
+  incorrect.
+    */
+    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(),
+                                const std::string which = "SA", const cytnx_uint64 &maxiter = 10000,
+                                const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
+                                const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                const bool &verbose = false);
+    /**
+  @brief Performs Lanczos iteration for matrices or linear functions.
+  @details This function calculates the eigenvalue problem using the Lanczos algorithm. It calls
+  ARPACK routines.
+  @param[in] Hop The Linear Operator defined by the LinOp class or its inheritance (see LinOp).
+  @param[in] Tin the initial UniTensor.
+  @param[in] which
+  @parblock
+  Specifies the order in which eigenvalues and corresponding eigenvectors should be found. The
+  supported options are:
+  - "LM": Largest Magnitude
+  - "LA": Largest algebraic
+  - "SA": Smallest algebraic
+  @endparblock
+  @param[in] maxiter The maximum number of iteration steps.
+  @param[in] cvg_crit The convergence criterion of the energy. If set to 0, it reaches machine
+  precision.
+  @param[in] k The number of eigenvalues to compute.
+  @param[in] is_V If set to true, the eigenvectors will be returned.
+  @param[in] ncv Related to number of Arnoldi Vectors generated (the Krylov subspace). If `0`
+  (default), the value is typically determined automatically as `min(2*k+10, dim)`, where `dim` is
+  the dimension of the linear operator (e.g., `nx` in LinOp).
+  @param[in] verbose Prints out iteration information.
+    @return
+        [eigvals (UniTensor), eigvec_1, eivec_2, ..., eigvec_k].
+                The first UniTensor contains eigenvalues.
+
+  @pre
+   1. The initial UniTensor cannot be empty.
+   2. The data type of LinOp should be float and same as input inital vector.
+   3. 1 <= `k` <= nx. Where nx is the dimension of the vector.
+   4. `Tin` should be a rank-1 Tensor, and the dimension need to same as LinOp->nx().
+   5. If `ncv` \f$ \neq 0\f$, then k+2<= `ncv`<= dim, where dim = LinOp->nx().
+  @note
+  1. To use, define a linear operator with LinOp class either by assigning a custom function or
+  creating a class that inherits LinOp (see LinOp for further details).
+  2. If k is close to the dimension of the vector, the routine may return error (arpack routine -3).
+  In such cases, it is recommended to use the linalg::Eigh function directly.
+  @attention
+  The input operator in LinOp must be Hermitian; otherwise, the simulation results will be
+  incorrect.
+    */
+    std::vector<UniTensor> Lanczos(LinOp *Hop, const cytnx::UniTensor &Tin,
+                                   const std::string which = "SA",
+                                   const cytnx_uint64 &maxiter = 10000,
+                                   const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
+                                   const bool &is_V = true, const cytnx_int32 &ncv = 0,
+                                   const bool &verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2445,6 +2573,9 @@ namespace cytnx {
     @note
     To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
+    @attention
+    The input operator in LinOp must be Hermitian; otherwise, the simulation results will be
+    incorrect.
     */
     std::vector<UniTensor> Lanczos(LinOp *Hop, const cytnx::UniTensor &Tin = UniTensor(),
                                    const std::string method = "Gnd",
@@ -2575,11 +2706,11 @@ namespace cytnx {
     @details
         Computes the vector x that approximatively solves the equation A @ x = b. The equation may
     be under-, well-, or over-determined independent columns. If a is square and of full rank, then
-    x (but for round-off error) is the “exact” solution of the equation. Else, x minimizes the
+    x (but for round-off error) is the "exact" solution of the equation. Else, x minimizes the
     Euclidean 2-norm \f$ || b - a x ||_2 \f$.
 
-    @param[in] A “Coefficient” matrix, must be two-dimensional.
-    @param[in] b Ordinate or “dependent variable” values, must be two-dimensional, the least-squares
+    @param[in] A "Coefficient" matrix, must be two-dimensional.
+    @param[in] b Ordinate or "dependent variable" values, must be two-dimensional, the least-squares
     solution is calculated for each of the K columns of b.
     @param[in] rcond Cut-off ratio for small singular values of a. For the purposes of rank
     determination, singular values are treated as zero if they are smaller than rcond times the

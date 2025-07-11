@@ -97,7 +97,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
 .. code-block:: shell
 
-    $conda install cmake make boost libboost git compilers numpy openblas pybind11 beartype
+    $conda install cmake make boost libboost git compilers numpy openblas arpack pybind11 beartype
 
 
 .. Note::
@@ -107,13 +107,14 @@ There are two methods how you can set-up all the dependencies before starting th
 
         .. code-block:: shell
 
-            $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service pybind11 libblas=*=*mkl beartype
+            $conda install cmake make boost libboost git compilers numpy mkl mkl-include mkl-service arpack pybind11 libblas=*=*mkl beartype
 
-    3. After the installation, an automated test based on gtest can be run. This option needs to be activated in the install script. In this case, gtest needs to be installed as well:
+    3. After the installation, an automated test based on gtest and benchmark can be run. This option needs to be activated in the install script. In this case, gtest needs to be installed as well:
+
 
         .. code-block:: shell
 
-            $conda install gtest
+            $conda install gtest benchmark
 
 
 .. Hint::

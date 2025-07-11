@@ -106,7 +106,7 @@ namespace cytnx {
       // checkCudaErrors(cublasSgemv(cublasH, CUBLAS_OP_T, blsMl, blsNr, &alpha, _inr, blsMl, _inl,
       // 1,
       //                             &beta, _out, 1));
-      checkCudaErrors(cublasSgemv(cublasH, CUBLAS_OP_T, blsNr, blsMl, &alpha, _inr, blsMl, _inl, 1,
+      checkCudaErrors(cublasSgemv(cublasH, CUBLAS_OP_T, blsNr, blsMl, &alpha, _inl, blsNr, _inr, 1,
                                   &beta, _out, 1));
 
       cublasDestroy(cublasH);

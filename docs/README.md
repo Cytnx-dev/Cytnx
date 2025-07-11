@@ -9,7 +9,7 @@ Use uv (or other python package management system that support pyproject.toml)
 # build locally for preview
 ```bash
    $uv sync
-   $uv run just build-doc
+   $uv run just doc
 ```
 
 

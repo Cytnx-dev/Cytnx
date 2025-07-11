@@ -49,6 +49,7 @@ requirements:
     - "blas * mkl"
     - "beartype"
     - "gtest"
+    - "arpack"
     - '{{ compiler("c")}}'
     - '{{ compiler("cxx")}}'
 
@@ -67,6 +68,7 @@ requirements:
     - "blas * mkl"
     - "beartype"
     - "gtest"
+    - "arpack"
     - "cmake"
     - "make"
     - "pybind11"
