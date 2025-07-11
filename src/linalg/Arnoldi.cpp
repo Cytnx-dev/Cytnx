@@ -530,7 +530,6 @@ namespace cytnx {
       for (cytnx_int32 ik = 0; ik < nconv; ++ik) {
         d[ik].real(dr[ik]);
         d[ik].imag(di[ik]);
-        std::cout << dr[ik] << "," << di[ik] << std::endl;
       }
       auto sorted_idx = sort_metric_indices<std::complex<T>, T>(d.data(), which, nconv);
       std::complex<T>* eigvals = get_obj_data_ptr<std::complex<T>, T_ten>(out[0]);
