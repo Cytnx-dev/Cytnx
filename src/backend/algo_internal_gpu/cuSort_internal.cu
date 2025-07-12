@@ -1,102 +1,57 @@
 #include "cuSort_internal.hpp"
-#include "backend/algo_internal_interface.hpp"
-#include <iostream>
+
 #include <algorithm>
+#include <iostream>
+
 #include <thrust/sort.h>
+
+#include "backend/algo_internal_interface.hpp"
+
+// Macro to generate complex number sorting functions.
+// Creates a comparison function and sort implementation for complex types.
+#define CYTNX_INTERNAL_COMPLEX_SORT(Device, DType, CytnxDType)                                \
+  bool Device##_compare_##DType(CytnxDType a, CytnxDType b) {                                 \
+    if (real(a) == real(b)) return imag(a) < imag(b);                                         \
+    return real(a) < real(b);                                                                 \
+  }                                                                                           \
+  void Device##Sort_internal_##DType(boost::intrusive_ptr<Storage_base>& out,                 \
+                                     const cytnx_uint64& stride, const cytnx_uint64& Nelem) { \
+    auto* p = reinterpret_cast<CytnxDType*>(out->data());                                     \
+    cytnx_uint64 num_iterations = Nelem / stride;                                             \
+    for (cytnx_uint64 i = 0; i < num_iterations; ++i) {                                       \
+      thrust::sort(p + i * stride, p + i * stride + stride, Device##_compare_##DType);        \
+    }                                                                                         \
+  }
+
+// Macro to generate standard sorting functions.
+#define CYTNX_INTERNAL_SORT(Device, DType, CytnxDType)                                        \
+  void Device##Sort_internal_##DType(boost::intrusive_ptr<Storage_base>& out,                 \
+                                     const cytnx_uint64& stride, const cytnx_uint64& Nelem) { \
+    auto* p = reinterpret_cast<CytnxDType*>(out->data());                                     \
+    cytnx_uint64 num_iterations = Nelem / stride;                                             \
+    for (cytnx_uint64 i = 0; i < num_iterations; ++i) {                                       \
+      thrust::sort(p + i * stride, p + i * stride + stride);                                  \
+    }                                                                                         \
+  }
 
 namespace cytnx {
 
   namespace algo_internal {
 
-    bool cu_compare_c128(cytnx_complex128 a, cytnx_complex128 b) {
-      if (real(a) == real(b)) return imag(a) < imag(b);
-      return real(a) < real(b);
-    }
-    void cuSort_internal_cd(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                            const cytnx_uint64 &Nelem) {
-      cytnx_complex128 *p = (cytnx_complex128 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride, cu_compare_c128);
-    }
-    bool cu_compare_c64(cytnx_complex64 a, cytnx_complex64 b) {
-      if (real(a) == real(b)) return imag(a) < imag(b);
-      return real(a) < real(b);
-    }
-    void cuSort_internal_cf(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                            const cytnx_uint64 &Nelem) {
-      cytnx_complex64 *p = (cytnx_complex64 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride, cu_compare_c64);
-    }
+    // Generate sorting functions for all supported data types.
+    CYTNX_INTERNAL_COMPLEX_SORT(cuda, ComplexDouble, cytnx_complex128)
+    CYTNX_INTERNAL_COMPLEX_SORT(cuda, ComplexFloat, cytnx_complex64)
+    CYTNX_INTERNAL_SORT(cuda, Double, double)
+    CYTNX_INTERNAL_SORT(cuda, Float, float)
+    CYTNX_INTERNAL_SORT(cuda, Uint64, cytnx_uint64)
+    CYTNX_INTERNAL_SORT(cuda, Int64, cytnx_int64)
+    CYTNX_INTERNAL_SORT(cuda, Uint32, cytnx_uint32)
+    CYTNX_INTERNAL_SORT(cuda, Int32, cytnx_int32)
+    CYTNX_INTERNAL_SORT(cuda, Uint16, cytnx_uint16)
+    CYTNX_INTERNAL_SORT(cuda, Int16, cytnx_int16)
 
-    void cuSort_internal_d(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                           const cytnx_uint64 &Nelem) {
-      double *p = (double *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_f(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                           const cytnx_uint64 &Nelem) {
-      float *p = (float *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_u64(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                             const cytnx_uint64 &Nelem) {
-      cytnx_uint64 *p = (cytnx_uint64 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_i64(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                             const cytnx_uint64 &Nelem) {
-      cytnx_int64 *p = (cytnx_int64 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_u32(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                             const cytnx_uint64 &Nelem) {
-      cytnx_uint32 *p = (cytnx_uint32 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_i32(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                             const cytnx_uint64 &Nelem) {
-      cytnx_int32 *p = (cytnx_int32 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_u16(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                             const cytnx_uint64 &Nelem) {
-      cytnx_uint16 *p = (cytnx_uint16 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_i16(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                             const cytnx_uint64 &Nelem) {
-      cytnx_int16 *p = (cytnx_int16 *)out->data();
-      cytnx_uint64 Niter = Nelem / stride;
-      for (cytnx_uint64 i = 0; i < Niter; i++)
-        thrust::sort(p + i * stride, p + i * stride + stride);
-    }
-
-    void cuSort_internal_b(boost::intrusive_ptr<Storage_base> &out, const cytnx_uint64 &stride,
-                           const cytnx_uint64 &Nelem) {
+    void cudaSort_internal_Bool(boost::intrusive_ptr<Storage_base>& out, const cytnx_uint64& stride,
+                                const cytnx_uint64& Nelem) {
       /*
       cytnx_bool *p = (cytnx_bool*)out->Mem;
       cytnx_uint64 Niter = Nelem/stride;

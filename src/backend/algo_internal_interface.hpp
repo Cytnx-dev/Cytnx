@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <functional>
 
 #include "Type.hpp"
 #include "backend/Storage.hpp"
@@ -19,8 +20,8 @@
 namespace cytnx {
 
   namespace algo_internal {
-    typedef void (*Sort_internal_ii)(boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
-                                     const cytnx_uint64 &);
+    using Sort_internal_ii = std::function<void(boost::intrusive_ptr<Storage_base> &,
+                                                const cytnx_uint64 &, const cytnx_uint64 &)>;
     class algo_internal_interface {
      public:
       std::vector<Sort_internal_ii> Sort_ii;

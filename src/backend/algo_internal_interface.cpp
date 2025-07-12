@@ -1,6 +1,22 @@
 #include "algo_internal_interface.hpp"
 
-using namespace std;
+// Macro to assign a device-specific sort function to a function table.
+#define CYTNX_ASSIGN_SORT_FUNC(Device, Table, DataType) \
+  Table[Type.DataType] = Device##Sort_internal_##DataType
+
+// Macro to assign all supported data type sort functions for a specific device.
+#define CYTNX_ASSIGN_ALL_DTYPE_SORT_FUNC(Device, Table) \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, ComplexDouble); \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, ComplexFloat);  \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Double);        \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Float);         \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Uint64);        \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Int64);         \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Uint32);        \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Int32);         \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Uint16);        \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Int16);         \
+  CYTNX_ASSIGN_SORT_FUNC(Device, Table, Bool);
 
 namespace cytnx {
   namespace algo_internal {
@@ -8,35 +24,14 @@ namespace cytnx {
     algo_internal_interface aii;
 
     algo_internal_interface::algo_internal_interface() {
-      Sort_ii.assign(N_Type, NULL);
+      Sort_ii.assign(N_Type, nullptr);
 #ifdef UNI_GPU
-      cuSort_ii.assign(N_Type, NULL);
+      cuSort_ii.assign(N_Type, nullptr);
 #endif
-
-      Sort_ii[Type.ComplexDouble] = Sort_internal_cd;
-      Sort_ii[Type.ComplexFloat] = Sort_internal_cf;
-      Sort_ii[Type.Double] = Sort_internal_d;
-      Sort_ii[Type.Float] = Sort_internal_f;
-      Sort_ii[Type.Uint64] = Sort_internal_u64;
-      Sort_ii[Type.Int64] = Sort_internal_i64;
-      Sort_ii[Type.Uint32] = Sort_internal_u32;
-      Sort_ii[Type.Int32] = Sort_internal_i32;
-      Sort_ii[Type.Uint16] = Sort_internal_u16;
-      Sort_ii[Type.Int16] = Sort_internal_i16;
-      Sort_ii[Type.Bool] = Sort_internal_b;
+      CYTNX_ASSIGN_ALL_DTYPE_SORT_FUNC(/*cpu*/, Sort_ii)
 
 #ifdef UNI_GPU
-      cuSort_ii[Type.ComplexDouble] = cuSort_internal_cd;
-      cuSort_ii[Type.ComplexFloat] = cuSort_internal_cf;
-      cuSort_ii[Type.Double] = cuSort_internal_d;
-      cuSort_ii[Type.Float] = cuSort_internal_f;
-      cuSort_ii[Type.Uint64] = cuSort_internal_u64;
-      cuSort_ii[Type.Int64] = cuSort_internal_i64;
-      cuSort_ii[Type.Uint32] = cuSort_internal_u32;
-      cuSort_ii[Type.Int32] = cuSort_internal_i32;
-      cuSort_ii[Type.Uint16] = cuSort_internal_u16;
-      cuSort_ii[Type.Int16] = cuSort_internal_i16;
-      cuSort_ii[Type.Bool] = cuSort_internal_b;
+      CYTNX_ASSIGN_ALL_DTYPE_SORT_FUNC(cuda, cuSort_ii)
 #endif
     }
 
