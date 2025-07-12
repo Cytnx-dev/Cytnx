@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "../test_tools.h"
+#include "gpu_test_tools.h"
 #include "cytnx.hpp"
 
 namespace SortTest {

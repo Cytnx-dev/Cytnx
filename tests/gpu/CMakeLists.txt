@@ -1,6 +1,6 @@
 add_executable(
   gpu_test_main
-  test_tools.cpp
+  gpu_test_tools.cpp
   common_data_generator.cpp
   Bond_test.cpp
   Network_test.cpp
@@ -32,6 +32,11 @@ add_executable(
   random_test/uniform_test.cpp
 )
 
+target_include_directories(
+  gpu_test_main
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
+)
 target_link_libraries(
   gpu_test_main
   gtest_main
