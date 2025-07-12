@@ -1,5 +1,5 @@
 #include "Lanczos_Gnd_test.h"
-#include "../test_tools.h"
+#include "gpu_test_tools.h"
 
 class MyOp : public LinOp {
  public:

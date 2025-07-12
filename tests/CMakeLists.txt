@@ -50,6 +50,11 @@ if(USE_CUDA)
       add_subdirectory(gpu)
 endif()
 
+target_include_directories(
+  test_main
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
+)
 target_link_libraries(
   test_main
   gtest_main
