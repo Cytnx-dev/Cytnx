@@ -21,14 +21,25 @@ namespace cytnx {
       if (Tin.shape().back() == 0) return out;
 
       if (Tin.device() == Device.cpu) {
-        cytnx::algo_internal::aii.Sort_ii[out.dtype()](out._impl->storage()._impl,
-                                                       out.shape().back(), out.storage().size());
+        std::visit(
+          [&](auto ptr) {
+            using out_type = std::remove_pointer_t<decltype(ptr)>;
+            static_assert(!std::is_same_v<out_type, void>);
+            cytnx::algo_internal::SortInternalImpl<out_type>(
+              out._impl->storage()._impl, out.shape().back(), out.storage().size());
+          },
+          out.ptr());
 
       } else {
   #ifdef UNI_GPU
-        cytnx::algo_internal::aii.cuSort_ii[out.dtype()](out._impl->storage()._impl,
-                                                         out.shape().back(), out.storage().size());
-          // cytnx_error_msg(true, "[Developing] Sort.%s", "\n");
+        std::visit(
+          [&](auto ptr) {
+            using out_type = std::remove_pointer_t<decltype(ptr)>;
+            static_assert(!std::is_same_v<out_type, void>);
+            cytnx::algo_internal::cuSortInternalImpl<out_type>(
+              out._impl->storage()._impl, out.shape().back(), out.storage().size());
+          },
+          out.gpu_ptr());
   #else
         cytnx_error_msg(true, "[Svd] fatal error,%s",
                         "try to call the gpu section without CUDA support.\n");
