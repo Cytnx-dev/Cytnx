@@ -142,7 +142,6 @@ ifeq ($(GPU_Enable),1)
 endif
 
 ## Algo_internal
-OBJS += algo_internal_interface.o
 OBJS += Sort_internal.o Split_internal.o Concate_internal.o
 
 
@@ -341,9 +340,6 @@ ComplexDoubleStorage.o: $(CytnxPATH)/src/backend/ComplexDoubleStorage.cpp $(Cytn
 
 ## algo_internal
 ##########################
-algo_internal_interface.o : $(CytnxPATH)/src/algo/algo_internal_interface.cpp $(CytnxPATH)/src/algo/algo_internal_interface.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
 Sort_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 Concate_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.hpp
