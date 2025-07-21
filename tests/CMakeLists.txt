@@ -40,6 +40,7 @@ add_executable(
   linalg_test/GeSvd_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/sum_test.cpp
+  linalg_test/Vectordot_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp
