@@ -630,8 +630,8 @@ namespace cytnx {
         cscal(&N, _Rin, _out, &ONE);
       } else {
         if (shape.size() == 0) {
-          for(unsigned long long i=0;i<len;i++){
-              _out[i] = _Lin[i] * _Rin[i];
+          for (unsigned long long i = 0; i < len; i++) {
+            _out[i] = _Lin[i] * _Rin[i];
           }
         } else {
           /// handle non-contiguous:
