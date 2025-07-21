@@ -1,26 +1,38 @@
-
-if (USE_MKL)
-  option(MKL_SDL "Link to a single MKL dynamic libary." ON)
-  option(MKL_MLT "Use multi-threading libary. [Default]" ON)
-  mark_as_advanced(MKL_SDL MKL_MLT)
-  set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
-  target_compile_definitions(cytnx PUBLIC UNI_MKL)
-  target_compile_definitions(cytnx PUBLIC MKL_ILP64)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-endif() #use_mkl
+# if (USE_MKL)
+#   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
+#   option(MKL_MLT "Use multi-threading libary. [Default]" ON)
+#   mark_as_advanced(MKL_SDL MKL_MLT)
+#   target_compile_definitions(cytnx PUBLIC UNI_MKL)
+#   target_compile_definitions(cytnx PUBLIC MKL_LP64)
+#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+# endif() #use_mkl
 
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
 if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
   if (USE_MKL)
-    #set(BLA_VENDOR Intel10_64ilp)
+    #message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
+    # Set MKL interface to LP64 by default, but allow ILP64
+    set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
+    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
     set(BLA_VENDOR Intel10_64_dyn)
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
-    #find_package(MKL REQUIRED)
+    #find_package(MKL CONFIG REQUIRED)
+    #Provides available list of targets based on input
+    #message(STATUS "MKL_IMPORTED_TARGETS: ${MKL_IMPORTED_TARGETS}")
+  #  target_compile_options(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>)
+  #  target_include_directories(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
+  #  target_link_libraries(cytnx PUBLIC  $<LINK_ONLY:MKL::MKL>)
+  #  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
-    message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
+    target_compile_definitions(cytnx PUBLIC UNI_MKL)
+    if(MKL_INTERFACE STREQUAL "ilp64")
+      target_compile_definitions(cytnx PUBLIC MKL_ILP64)
+    else()
+      target_compile_definitions(cytnx PUBLIC MKL_LP64)
+    endif()
   else()
     set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
@@ -81,6 +93,7 @@ endif()
 if(USE_CUDA)
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
+    
     enable_language(CUDA)
     find_package(CUDAToolkit REQUIRED)
     if(NOT DEFINED CMAKE_CUDA_STANDARD)
@@ -104,7 +117,6 @@ if(USE_CUDA)
     #      -gencode=arch=compute_70,code=sm_70 \
     #      -gencode=arch=compute_75,code=sm_75 \
     #      -gencode=arch=compute_75,code=compute_75 ")
-    set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES native)
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
@@ -154,7 +166,6 @@ if(USE_CUDA)
         message(STATUS "cutt install dir: ${install_dir}")
         add_dependencies(cytnx cutt)
         # set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
-        set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES native)
         target_compile_definitions(cytnx PRIVATE UNI_CUTT)
         target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libcutt.a)
         # relocate cutt
