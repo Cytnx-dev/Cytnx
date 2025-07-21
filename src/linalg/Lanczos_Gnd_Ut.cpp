@@ -131,7 +131,7 @@ namespace cytnx {
 
       }  // iteration
 
-      if (cvg_fin == false) {
+      if (cvg_fin == false && verbose) {
         cytnx_warning_msg(true,
                           "[WARNING] iteration not converge after Maxiter!.\n :: Note :: ignore if "
                           " this is intended %s",

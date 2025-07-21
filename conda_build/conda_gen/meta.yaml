@@ -34,6 +34,7 @@ requirements:
     - boost >=1.82.0
     - blas=*=mkl
     - gtest
+    - arpack
   run:
     - python
     - numpy >=1.18
@@ -42,6 +43,7 @@ requirements:
     - graphviz
     - blas=*=mkl
     - beartype
+    - arpack
 
 test:
   requires:

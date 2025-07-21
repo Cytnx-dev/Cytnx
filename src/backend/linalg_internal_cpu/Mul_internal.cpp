@@ -626,19 +626,13 @@ namespace cytnx {
         memcpy(_out, _Rin, sizeof(cytnx_complex64) * len);
         cscal(&N, _Lin, _out, &ONE);
       } else if (Rin->size() == 1) {
-        for (unsigned long long i = 0; i < len; i++) {
-          _out[i] = _Lin[i] * _Rin[0];
-        }
+        memcpy(_out, _Lin, sizeof(cytnx_complex128) * len);
+        cscal(&N, _Rin, _out, &ONE);
       } else {
         if (shape.size() == 0) {
-          /*
-
-          for(unsigned long long i=0;i<len;i++){
-              _out[i] = _Lin[i] * _Rin[i];
+          for (unsigned long long i = 0; i < len; i++) {
+            _out[i] = _Lin[i] * _Rin[i];
           }
-          */
-          memcpy(_out, _Lin, sizeof(cytnx_complex64) * len);
-          cscal(&N, _Rin, _out, &ONE);
         } else {
           /// handle non-contiguous:
           std::vector<cytnx_uint64> accu_shape(shape.size());
