@@ -1,7 +1,6 @@
 #ifndef CYTNX_BACKEND_ALGO_INTERNAL_GPU_CUSPLIT_INTERNAL_H_
 #define CYTNX_BACKEND_ALGO_INTERNAL_GPU_CUSPLIT_INTERNAL_H_
 
-#include "backend/algo_internal_interface.hpp"
 #include <assert.h>
 #include <iostream>
 #include <iomanip>

@@ -1,5 +1,5 @@
-{% set data = load_setup_py_data() %}
-{% set version = data.get('version') %}
+{% set data = load_file_data('pyproject.toml') %}
+{% set version = data.get('project').get('version') %}
 
 package:
   name: cytnx
@@ -29,7 +29,7 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - python {{ python }}
-    - setuptools
+    - scikit-build-core
     - pybind11
     - boost >=1.82.0
     - blas=*=mkl

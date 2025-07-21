@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
-#include "../test_tools.h"
+#include "gpu_test_tools.h"
 
 using namespace cytnx;
 using namespace testing;
