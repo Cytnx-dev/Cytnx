@@ -32,10 +32,7 @@ namespace cytnx {
       } else {
         blas_int MAXX = INT_MAX;
         while (remain != 0) {
-          if (remain >= INT_MAX)
-            MAXX = INT_MAX;
-          else
-            MAXX = remain;
+          MAXX = remain >= INT_MAX ? INT_MAX : remain;
 
           if (is_conj)
             zdotc(&acres, &MAXX, &_Lin[bias], &ONE, &_Rin[bias], &ONE);

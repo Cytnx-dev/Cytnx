@@ -26,13 +26,34 @@ namespace cytnx {
       typedef cuda::std::complex<DType> type;
     };
 
+    template <>
+    struct ToCudaDType<cytnx_complex128> {
+      typedef cuda::std::complex<double> type;
+    };
+
+    template <>
+    struct ToCudaDType<cytnx_complex64> {
+      typedef cuda::std::complex<float> type;
+    };
+
     template <typename DType>
     void FillGpu(void* first, const DType& value, cytnx_uint64 count) {
       using CudaDType = typename ToCudaDType<DType>::type;
 
       CudaDType* typed_first = reinterpret_cast<CudaDType*>(first);
       cytnx_uint64 block_count = (count + 1023) / 1024;
-      FillGpuKernel<<<block_count, 1024>>>(typed_first, static_cast<CudaDType>(value), count);
+
+      // Manual conversion for complex types
+      CudaDType cuda_value;
+      if constexpr (std::is_same_v<DType, cytnx_complex128>) {
+        cuda_value = cuda::std::complex<double>(value.real(), value.imag());
+      } else if constexpr (std::is_same_v<DType, cytnx_complex64>) {
+        cuda_value = cuda::std::complex<float>(value.real(), value.imag());
+      } else {
+        cuda_value = static_cast<CudaDType>(value);
+      }
+
+      FillGpuKernel<<<block_count, 1024>>>(typed_first, cuda_value, count);
     }
 
     template void FillGpu<cytnx_complex128>(void*, const cytnx_complex128&, cytnx_uint64);
