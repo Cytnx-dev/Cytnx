@@ -25,9 +25,23 @@ namespace cytnx {
         out.storage() = Storage(Tin.storage().size(), Tin.dtype(), Tin.device());
 
       if (Tin.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Abs_ii[Tin.dtype()](out._impl->storage()._impl,
-                                                        Tin._impl->storage()._impl,
-                                                        out._impl->storage()._impl->size());
+        std::visit(
+          [&](auto out_ptr) {
+            using out_type = std::remove_pointer_t<decltype(out_ptr)>;
+            static_assert(!std::is_same_v<out_type, void>);
+
+            std::visit(
+              [&](auto in_ptr) {
+                using in_type = std::remove_pointer_t<decltype(in_ptr)>;
+                static_assert(!std::is_same_v<in_type, void>);
+
+                cytnx::linalg_internal::AbsInternalImpl<in_type, out_type>(
+                  out._impl->storage()._impl, Tin._impl->storage()._impl,
+                  out._impl->storage()._impl->size());
+              },
+              Tin.ptr());
+          },
+          out.ptr());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(out.device()));

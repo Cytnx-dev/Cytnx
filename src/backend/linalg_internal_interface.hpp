@@ -223,7 +223,6 @@ namespace cytnx {
       std::vector<Conjinplacefunc_oii> Conj_inplace_ii;
       std::vector<Expfunc_oii> Exp_ii;
       std::vector<Powfunc_oii> Pow_ii;
-      std::vector<Absfunc_oii> Abs_ii;
       std::vector<Diagfunc_oii> Diag_ii;
       std::vector<Matmulfunc_oii> Matmul_ii;
       std::vector<Gemmfunc_oii> Gemm_ii;

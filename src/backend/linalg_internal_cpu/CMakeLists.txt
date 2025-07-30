@@ -77,7 +77,6 @@ target_sources_local(cytnx
     Vectordot_internal.cpp
     Norm_internal.cpp
     Pow_internal.cpp
-    Abs_internal.cpp
     QR_internal.cpp
     MaxMin_internal.cpp
     Sum_internal.cpp

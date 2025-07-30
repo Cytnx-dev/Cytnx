@@ -2207,33 +2207,6 @@ src/linalg/Vectordot.cpp.s:
 	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/linalg/Vectordot.cpp.s
 .PHONY : src/linalg/Vectordot.cpp.s
 
-src/backend/linalg_internal_cpu/Abs_internal.o: src/backend/linalg_internal_cpu/Abs_internal.cpp.o
-
-.PHONY : src/backend/linalg_internal_cpu/Abs_internal.o
-
-# target to build an object file
-src/backend/linalg_internal_cpu/Abs_internal.cpp.o:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Abs_internal.cpp.o
-.PHONY : src/backend/linalg_internal_cpu/Abs_internal.cpp.o
-
-src/backend/linalg_internal_cpu/Abs_internal.i: src/backend/linalg_internal_cpu/Abs_internal.cpp.i
-
-.PHONY : src/backend/linalg_internal_cpu/Abs_internal.i
-
-# target to preprocess a source file
-src/backend/linalg_internal_cpu/Abs_internal.cpp.i:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Abs_internal.cpp.i
-.PHONY : src/backend/linalg_internal_cpu/Abs_internal.cpp.i
-
-src/backend/linalg_internal_cpu/Abs_internal.s: src/backend/linalg_internal_cpu/Abs_internal.cpp.s
-
-.PHONY : src/backend/linalg_internal_cpu/Abs_internal.s
-
-# target to generate assembly for a file
-src/backend/linalg_internal_cpu/Abs_internal.cpp.s:
-	$(MAKE) -f CMakeFiles/cytnx.dir/build.make CMakeFiles/cytnx.dir/src/backend/linalg_internal_cpu/Abs_internal.cpp.s
-.PHONY : src/backend/linalg_internal_cpu/Abs_internal.cpp.s
-
 src/backend/linalg_internal_cpu/Add_internal.o: src/backend/linalg_internal_cpu/Add_internal.cpp.o
 
 .PHONY : src/backend/linalg_internal_cpu/Add_internal.o
@@ -5011,9 +4984,6 @@ help:
 	@echo "... src/linalg/Vectordot.o"
 	@echo "... src/linalg/Vectordot.i"
 	@echo "... src/linalg/Vectordot.s"
-	@echo "... src/backend/linalg_internal_cpu/Abs_internal.o"
-	@echo "... src/backend/linalg_internal_cpu/Abs_internal.i"
-	@echo "... src/backend/linalg_internal_cpu/Abs_internal.s"
 	@echo "... src/backend/linalg_internal_cpu/Add_internal.o"
 	@echo "... src/backend/linalg_internal_cpu/Add_internal.i"
 	@echo "... src/backend/linalg_internal_cpu/Add_internal.s"
