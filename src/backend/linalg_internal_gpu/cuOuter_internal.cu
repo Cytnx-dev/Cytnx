@@ -2,7 +2,7 @@
 #include <device_launch_parameters.h>
 #include "cuOuter_internal.hpp"
 #include "cuGer_internal.hpp"
-#include "../utils_internal_interface.hpp"
+#include "backend/utils_internal_interface.hpp"
 #include "utils/cucomplex_arithmetic.hpp"
 
 namespace cytnx {

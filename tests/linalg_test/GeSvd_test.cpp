@@ -251,7 +251,7 @@ namespace GesvdTest {
   }
 
   /*=====test info=====
-  describe:eror test. Test input the symmetric UniTensor with dtype is bool type.
+  describe:error test. Test input the symmetric UniTensor with dtype is bool type.
   input:
     T:bool type symmetric UniTensor.
     is_U:true
@@ -284,7 +284,7 @@ namespace GesvdTest {
   }
 
   /*=====test info=====
-  describe:eror test. Test input Void type UniTensor.
+  describe:error test. Test input Void type UniTensor.
   input:
     T:Void UniTensor.
   ====================*/

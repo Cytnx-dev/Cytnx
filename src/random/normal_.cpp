@@ -3,7 +3,7 @@
 #ifdef BACKEND_TORCH
 #else
 
-  #include "../backend/random_internal_interface.hpp"
+  #include "backend/random_internal_interface.hpp"
 
 namespace cytnx {
   namespace random {

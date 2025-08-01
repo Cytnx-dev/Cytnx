@@ -23,7 +23,20 @@ using namespace cytnx;
 
 void linalg_binding(py::module &m) {
   // [Submodule linalg]
+
   pybind11::module m_linalg = m.def_submodule("linalg", "linear algebra related.");
+  m_linalg.def(
+    "Rand_isometry",
+    [](const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_uint64 &power_iteration,
+       int64_t &seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      return cytnx::linalg::Rand_isometry(Tin, keepdim, power_iteration, seed);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("power_iteration") = 2, py::arg("seed") = -1);
+
   m_linalg.def(
     "Svd",
     [](const cytnx::Tensor &Tin, const bool &is_UvT) { return cytnx::linalg::Svd(Tin, is_UvT); },
@@ -45,6 +58,65 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::Gesvd(Tin, is_U, is_vT);
     },
     py::arg("Tin"), py::arg("is_U") = true, py::arg("is_vT") = true);
+  m_linalg.def(
+    "Rsvd",
+    [](const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
+       cytnx_uint64 power_iteration, int64_t seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      return cytnx::linalg::Rsvd(Tin, keepdim, is_U, is_vT, power_iteration, seed);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("is_U") = true, py::arg("is_vT") = true,
+    py::arg("power_iteration") = 2, py::arg("seed") = -1);
+  m_linalg.def(
+    "Rsvd",
+    [](const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
+       cytnx_uint64 power_iteration, int64_t seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      return cytnx::linalg::Rsvd(Tin, keepdim, is_U, is_vT, power_iteration, seed);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("is_U") = true, py::arg("is_vT") = true,
+    py::arg("power_iteration") = 2, py::arg("seed") = -1);
+
+  m_linalg.def(
+    "Rsvd_truncate",
+    [](const Tensor &Tin, cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
+       unsigned int return_err, cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+       double oversampling_factor, cytnx_uint64 power_iteration, int64_t seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      return cytnx::linalg::Rsvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+                                          oversampling_summand, oversampling_factor,
+                                          power_iteration, seed);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
+    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
+    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
+    py::arg("power_iteration") = 0, py::arg("seed") = -1);
+  m_linalg.def(
+    "Rsvd_truncate",
+    [](const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
+       unsigned int return_err, cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
+       double oversampling_factor, cytnx_uint64 power_iteration, int64_t seed) {
+      if (seed == -1) {
+        // If user doesn't specify seed argument
+        seed = cytnx::random::__static_random_device();
+      }
+      return cytnx::linalg::Rsvd_truncate(Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+                                          oversampling_summand, oversampling_factor,
+                                          power_iteration, seed);
+    },
+    py::arg("Tin"), py::arg("keepdim"), py::arg("err") = double(0), py::arg("is_U") = true,
+    py::arg("is_vT") = true, py::arg("return_err") = (unsigned int)(0), py::arg("mindim") = 1,
+    py::arg("oversampling_summand") = 20, py::arg("oversampling_factor") = 1.,
+    py::arg("power_iteration") = 0, py::arg("seed") = -1);
 
   m_linalg.def(
     "Gesvd_truncate",
