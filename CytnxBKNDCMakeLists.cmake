@@ -10,7 +10,11 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
     set(MKL_ROOT $ENV{MKLROOT})
-    set(BLA_VENDOR Intel10_64_dyn) #Single dynamic library
+    if(MKL_INTERFACE STREQUAL "ilp64")
+      set(BLA_VENDOR Intel10_64ilp) 
+    else()
+      set(BLA_VENDOR Intel10_64lp) 
+    endif()
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
 
