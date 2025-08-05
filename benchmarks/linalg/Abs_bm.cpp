@@ -5,53 +5,6 @@
 
 #include "cytnx.hpp"
 
-namespace {
-  cytnx::cytnx_size_t getElemSize(unsigned int dtype) {
-    cytnx::cytnx_size_t element_size = 0;
-    switch (dtype) {
-      case cytnx::Type.Int16:
-        element_size = sizeof(cytnx::cytnx_int16);
-        break;
-      case cytnx::Type.Int32:
-        element_size = sizeof(cytnx::cytnx_int32);
-        break;
-      case cytnx::Type.Int64:
-        element_size = sizeof(cytnx::cytnx_int64);
-        break;
-      case cytnx::Type.Uint16:
-        element_size = sizeof(cytnx::cytnx_uint16);
-        break;
-      case cytnx::Type.Uint32:
-        element_size = sizeof(cytnx::cytnx_uint32);
-        break;
-      case cytnx::Type.Uint64:
-        element_size = sizeof(cytnx::cytnx_uint64);
-        break;
-      case cytnx::Type.Float:
-        element_size = sizeof(cytnx::cytnx_float);
-        break;
-      case cytnx::Type.Double:
-        element_size = sizeof(cytnx::cytnx_double);
-        break;
-      case cytnx::Type.ComplexFloat:
-        element_size = sizeof(cytnx::cytnx_complex64);
-        break;
-      case cytnx::Type.ComplexDouble:
-        element_size = sizeof(cytnx::cytnx_complex128);
-        break;
-      case cytnx::Type.Bool:
-        cytnx_error_msg(true, "[ERROR][BMTest_Abs::getElemSize] Unsupport data type: bool %s",
-                        "\n");
-        break;
-      default:
-        cytnx_error_msg(true, "[ERROR][BMTest_Abs::getElemSize] No such data type: %s (dtype=%d)\n",
-                        cytnx::Type.getname(dtype).c_str(), dtype);
-        break;
-    }
-    return element_size;
-  }
-}  // namespace
-
 namespace BMTest_Abs {
 
   template <unsigned int dtype, cytnx::cytnx_int32 device = cytnx::Device.cpu>
@@ -67,7 +20,7 @@ namespace BMTest_Abs {
       benchmark::DoNotOptimize(result);
     }
     state.SetBytesProcessed(static_cast<int64_t>(state.iterations()) * size * size *
-                            ::getElemSize(dtype));
+                            cytnx::Type.typeSize(dtype));
   }
 
   template <unsigned int dtype, cytnx::cytnx_int32 device = cytnx::Device.cpu>
@@ -84,7 +37,7 @@ namespace BMTest_Abs {
       benchmark::DoNotOptimize(tensor_copy);
     }
     state.SetBytesProcessed(static_cast<int64_t>(state.iterations()) * size * size *
-                            ::getElemSize(dtype));
+                            cytnx::Type.typeSize(dtype));
   }
 
   template <unsigned int dtype, cytnx::cytnx_int32 device = cytnx::Device.cpu>
@@ -98,7 +51,8 @@ namespace BMTest_Abs {
       auto result = cytnx::linalg::Abs(tensor_a);
       benchmark::DoNotOptimize(result);
     }
-    state.SetBytesProcessed(static_cast<int64_t>(state.iterations()) * size * ::getElemSize(dtype));
+    state.SetBytesProcessed(static_cast<int64_t>(state.iterations()) * size *
+                            cytnx::Type.typeSize(dtype));
   }
 
 // Macro to register 2D Abs benchmarks for a specific type
