@@ -1,7 +1,7 @@
 import sys
 sys.path.append("../../Cytnx")
 import cytnx
-import numpy as np 
+import numpy as np
 
 def myfunc(v):
     out = v.clone()
@@ -21,4 +21,3 @@ x = cytnx.arange(4)
 y = H.matvec(x)
 print(x)
 print(y)
-

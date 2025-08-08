@@ -4,7 +4,7 @@ Cyntx provides a way to save/read Tensors to/from a file.
 
 Save a Tensor
 *****************
-To save a Tensor to a file, simply call **Tensor.Save(filepath)**. 
+To save a Tensor to a file, simply call **Tensor.Save(filepath)**.
 
 * In Python:
 
@@ -23,7 +23,7 @@ This will save Tensor *A* to the current directory as **T1.cytn**, with *.cytn* 
 
 Load a Tensor
 ******************
-Now, let's load the Tensor from the file. 
+Now, let's load the Tensor from the file.
 
 * In Python:
 

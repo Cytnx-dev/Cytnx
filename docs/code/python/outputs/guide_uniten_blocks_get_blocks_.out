@@ -7,7 +7,7 @@ Shape : (1,1,1)
 [[[0.00000e+00 ]]]
 
 
- 
+
 Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
@@ -15,7 +15,7 @@ Shape : (1,1,2)
 [[[0.00000e+00 0.00000e+00 ]]]
 
 
- 
+
 Total elem: 2
 type  : Double (Float64)
 cytnx device: CPU
@@ -23,12 +23,9 @@ Shape : (1,1,2)
 [[[0.00000e+00 0.00000e+00 ]]]
 
 
- 
+
 Total elem: 1
 type  : Double (Float64)
 cytnx device: CPU
 Shape : (1,1,1)
 [[[0.00000e+00 ]]]
-
-
-

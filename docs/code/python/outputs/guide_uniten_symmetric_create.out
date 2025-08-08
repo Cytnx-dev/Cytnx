@@ -5,12 +5,11 @@ contiguous  : True
 valid blocks : 4
 is diag   : False
 on device   : cytnx device: CPU
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    d  -->| 2     4 |-->  f
-         |         |    
-   e  -->| 2       |        
-         |         |    
-         -----------    
-
+         |         |
+   e  -->| 2       |
+         |         |
+         -----------

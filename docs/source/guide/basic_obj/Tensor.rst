@@ -1,6 +1,6 @@
 Tensor
 ==========
-Tensor is the basic building block of Cytnx. 
+Tensor is the basic building block of Cytnx.
 In fact, the API of Tensor in Cytnx is very similar to :torch-tn:`torch.tensor <>` (and to numpy.array, since they are also similar to each other).
 
 

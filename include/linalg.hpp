@@ -17,7 +17,6 @@
 
 namespace cytnx {
 
-
   /**
    * @brief The addition operator between two UniTensor.
    * @details This is the addition function for UniTensor. It will call the

@@ -11,11 +11,8 @@ namespace cytnx {
 
     linalg_internal_interface lii;
 
- 
     linalg_internal_interface::~linalg_internal_interface() {}
     linalg_internal_interface::linalg_internal_interface() {
-
-
       Ari_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type, NULL));
 
       Ari_ii[Type.ComplexDouble][Type.ComplexDouble] = Arithmetic_internal_cdtcd;

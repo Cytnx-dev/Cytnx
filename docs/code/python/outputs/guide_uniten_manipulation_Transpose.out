@@ -1,28 +1,28 @@
 -----------------------
-tensor Name : 
+tensor Name :
 tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
+          ---------
+         /         \
    a ____| 5     5 |____ c
-         |         |    
-   b ____| 5       |        
-         \         /    
-          ---------     
+         |         |
+   b ____| 5       |
+         \         /
+          ---------
 Rowrank of T =  2
 -----------------------
-tensor Name : 
+tensor Name :
 tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-          ---------     
-         /         \    
+          ---------
+         /         \
    c ____| 5     5 |____ a
-         |         |    
+         |         |
          |       5 |____ b
-         \         /    
-          ---------     
+         \         /
+          ---------
 Rowrank of transposed T =  1

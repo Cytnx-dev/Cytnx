@@ -1,15 +1,15 @@
 -----------------------
-tensor Name : 
+tensor Name :
 tensor Rank : 3
 block_form  : False
 is_diag     : False
 on device   : cytnx device: CPU
-         --------     
-        /        \    
+         --------
+        /        \
         |      2 |____ 0
-        |        |    
+        |        |
         |      3 |____ 1
-        |        |    
+        |        |
         |      2 |____ 2
-        \        /    
-         --------     
+        \        /
+         --------

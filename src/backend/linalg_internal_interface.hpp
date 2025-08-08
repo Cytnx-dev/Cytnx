@@ -283,7 +283,6 @@ namespace cytnx {
 
       linalg_internal_interface();
       ~linalg_internal_interface();
-  
     };
     extern linalg_internal_interface lii;
   }  // namespace linalg_internal

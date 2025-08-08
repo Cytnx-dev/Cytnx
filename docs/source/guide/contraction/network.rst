@@ -25,13 +25,13 @@ We implement the diagram as a .net file to represent the contraction task:
 Note that:
 
 1. The labels above correspond to the diagram you draw, not the label attribute of UniTensor objects. Both label conventions can, but do not have to be the same.
-   
+
 2. Labels should be separated by ' , '.
-   
+
 3. In TOUT, a ' ; ' separates the labels in rowspace and colspace, note that it is optional, if there is no ' ; ' specified, all label will be put in colspace.
-   
+
 4. TOUT specifies the output configuration, in this case we leave it blank since the result will be a scalar.
-   
+
 5. ORDER is optional and used to specify the contraction order manually.
 
 
@@ -56,7 +56,7 @@ To perform the contraction and get the outcome, we use the **.Launch()**:
 
 Network from string
 --------------------------
-Alternatively, we can implement the contraction directly in the program with FromString(): 
+Alternatively, we can implement the contraction directly in the program with FromString():
 
 * In Python:
 
@@ -139,7 +139,7 @@ So when calling `PutUniTensor()` we add the third argument which is a labels ord
 Set the contraction order
 --------------------------
 
-To set or find the optimal contraction order of our tensor network, we provide **.setOrder(optimal, contract_order)** function, by passing true for the first argument, the Network will find an optimal contraction order for us and store it: 
+To set or find the optimal contraction order of our tensor network, we provide **.setOrder(optimal, contract_order)** function, by passing true for the first argument, the Network will find an optimal contraction order for us and store it:
 
 * In Python:
 
@@ -154,7 +154,7 @@ To set or find the optimal contraction order of our tensor network, we provide *
     :linenos:
 
 .. Note::
-    
+
     Although Network does cache the optimal contraction order once it is found, the optimal order finding rountine will still be executed everytime we call the .setOrder(optimal= true), it is suggested that one store the optimal order and specify it manually in some situaitions to prevent the overhead of re-finding optimal order.
 
 
@@ -173,7 +173,7 @@ We can also pass the string specifying our desired contraction order in the seco
     :linenos:
 
 .. Note::
-    
+
     By default the **optimal = False** , so for python case we can ignore the optimal argument and just pass the order. Note that if one pass **optimal = True** while specifying the order at the same time, Network will find and use the optimal order.
 
 
@@ -195,5 +195,3 @@ Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_contraction_network_getOrder.out
     :language: text
-
-

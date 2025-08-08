@@ -19,12 +19,12 @@ ExternalProject_Add(cytnx
   GIT_REPOSITORY https://github.com/Cytnx-dev/Cytnx.git
   BINARY_DIR cytnx_src/build
   INSTALL_DIR cytnx_install
-  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DUSE_MKL=ON -DBUILD_PYTHON=ON 
+  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DUSE_MKL=ON -DBUILD_PYTHON=ON
   -DUSE_HPTT=ON -DHPTT_ENABLE_FINE_TUNE=ON -DHPTT_ENABLE_AVX=ON
   -DUSE_CUDA=${USE_CUDA}
-#-DUSE_MAGMA=OFF -DMAGMA_ROOT=/home/hunghaoti/MAGMA 
-#-DUSE_CUTENSOR=OFF -DCUTENSOR_ROOT=/home/hunghaoti/CUTENSOR 
-#-DUSE_CUQUANTUM=OFF -DCUQUANTUM_ROOT=/home/hunghaoti/CUQUANTUM 
+#-DUSE_MAGMA=OFF -DMAGMA_ROOT=/home/hunghaoti/MAGMA
+#-DUSE_CUTENSOR=OFF -DCUTENSOR_ROOT=/home/hunghaoti/CUTENSOR
+#-DUSE_CUQUANTUM=OFF -DCUQUANTUM_ROOT=/home/hunghaoti/CUQUANTUM
   -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DUSE_OMP=OFF -DRUN_TESTS=OFF
 )
 
@@ -57,7 +57,7 @@ target_include_directories(
   PRIVATE
   ${install_dir}/include
   ../code/cplusplus/doc_codes
-) 
+)
 if(USE_CUDA)
   target_compile_definitions(test_doc_cplusplus PRIVATE UNI_GPU)
 endif()

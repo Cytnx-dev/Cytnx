@@ -1,6 +1,6 @@
 Tensordot with input cache
 *****************************
-Starting from v0.6.4a, **linalg::Tensordot** provides an additional option *cache* for both input tensors. The feature provides user flexibility to minimize the redundant move of elements when the tensordot is repeatly called on two same Tensors. 
+Starting from v0.6.4a, **linalg::Tensordot** provides an additional option *cache* for both input tensors. The feature provides user flexibility to minimize the redundant move of elements when the tensordot is repeatly called on two same Tensors.
 
 To show how this makes difference, let's consider a scenario where we contract two *A* and *B* Tensors N times:
 
@@ -16,16 +16,16 @@ To show how this makes difference, let's consider a scenario where we contract t
     for i in range(20):
         C = cy.linalg.Tensordot(A,B,[0,2],[1,0])
 
-    
+
 
 In the above code, we see that **Tensordot** on *A* and *B* are repeatly evaluated where no change is made on *A* and *B*. Now, inside **Tensordot**, both Tensor *A* and *B* will be first contiguous-permuted to shapes with
 
 .. math::
 
-    A: (0,1,2,3) \rightarrow (1,3,\mathbf{0},\mathbf{2}) 
+    A: (0,1,2,3) \rightarrow (1,3,\mathbf{0},\mathbf{2})
 
 .. math::
-    
+
     B: (0,1,2,3) \rightarrow (\mathbf{1},\mathbf{0},2,3)
 
 
@@ -51,7 +51,7 @@ We can clearly see the downside of this: every time **Tensordot()** is called, w
 
 * In Python:
 
-.. code-block:: python 
+.. code-block:: python
     :linenos:
     :emphasize-lines: 6
 
@@ -67,17 +67,14 @@ We can clearly see the downside of this: every time **Tensordot()** is called, w
 
     1. Here, we use the word "memorize". Technically, we just move the internal data to it's direct gemm place, and modify the meta data of Tensor to be the same as original input. Note that this will put the *A* and *B* in their non-contiguous status. In terms of user's perspective point of view,  there is no differece of using API than we used to do without cache.
 
-    2. The two input Tensors cannot have same_data()=True. This will be check inside **Tensordot**. 
+    2. The two input Tensors cannot have same_data()=True. This will be check inside **Tensordot**.
 
 .. Tip::
-    
-    You can also choose to only cache either one of the tensor, for example, setting *cacheL=True* and *cacheR=False* will only cache *A* Tensor. 
+
+    You can also choose to only cache either one of the tensor, for example, setting *cacheL=True* and *cacheR=False* will only cache *A* Tensor.
 
 In the following we show the performance benchmark with the above code running with Nloop=4000 and average over 10 times of runs.
 
 .. image:: image/cachetd.png
     :width: 500
     :align: center
-
-
-
