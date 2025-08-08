@@ -16,10 +16,7 @@
   #include "backend/Storage.hpp"
 
 namespace cytnx {
-  int set_mkl_lp64();
-  int set_mkl_ilp64();
-  int detect_mkl_interface();
-  int get_mkl_code();
+
 
   /**
    * @brief The addition operator between two UniTensor.

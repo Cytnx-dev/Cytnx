@@ -247,8 +247,6 @@ namespace cytnx {
 
       std::vector<memcpyTruncation_oii> memcpyTruncation_ii;
 
-      int mkl_code;
-
 #ifdef UNI_GPU
       std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
       std::vector<Svdfunc_oii> cuSvd_ii;
@@ -285,10 +283,7 @@ namespace cytnx {
 
       linalg_internal_interface();
       ~linalg_internal_interface();
-      int set_mkl_lp64();
-      int set_mkl_ilp64();
-      int detect_mkl_interface();
-      int get_mkl_code();
+  
     };
     extern linalg_internal_interface lii;
   }  // namespace linalg_internal
