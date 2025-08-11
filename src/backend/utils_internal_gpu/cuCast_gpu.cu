@@ -1,8 +1,5 @@
 #include "cuCast_gpu.hpp"
 #include "backend/Storage.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
 using namespace std;
 namespace cytnx {
@@ -53,8 +50,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_complex128) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_complex128) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
 
     void cuCast_gpu_cdtcf(const boost::intrusive_ptr<Storage_base>& in,
@@ -65,8 +62,8 @@ namespace cytnx {
         out->Init(len_in, alloc_device);
       }
 
-      cuDoubleComplex* _in = static_cast<cuDoubleComplex*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
+      cuDoubleComplex* _in = static_cast<cuDoubleComplex*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -80,8 +77,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cuFloatComplex* _in = static_cast<cuFloatComplex*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
+      cuFloatComplex* _in = static_cast<cuFloatComplex*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -95,8 +92,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_complex64) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_complex64) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
 
     //-----------------------------
@@ -107,9 +104,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -123,9 +120,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -139,8 +136,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_double) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_double) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_dtf(const boost::intrusive_ptr<Storage_base>& in,
                         boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
@@ -149,8 +146,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -163,8 +160,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2r<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -176,8 +173,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -190,8 +187,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -204,8 +201,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -218,8 +215,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -232,8 +229,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -246,8 +243,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_double* _in = static_cast<cytnx_double*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_double* _in = static_cast<cytnx_double*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -261,9 +258,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -276,9 +273,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -290,8 +287,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -304,8 +301,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_float) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_float) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_fti64(const boost::intrusive_ptr<Storage_base>& in,
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
@@ -314,8 +311,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -328,8 +325,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -342,8 +339,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -356,8 +353,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -370,8 +367,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -384,8 +381,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -398,8 +395,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_float* _in = static_cast<cytnx_float*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_float* _in = static_cast<cytnx_float*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -414,9 +411,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -428,9 +425,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -443,8 +440,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -457,8 +454,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -471,8 +468,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_int64) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_int64) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_i64tu64(const boost::intrusive_ptr<Storage_base>& in,
                             boost::intrusive_ptr<Storage_base>& out,
@@ -481,8 +478,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -495,8 +492,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -509,8 +506,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -523,8 +520,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -537,8 +534,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -551,8 +548,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int64* _in = static_cast<cytnx_int64*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_int64* _in = static_cast<cytnx_int64*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -567,9 +564,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -581,9 +578,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -595,8 +592,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -609,8 +606,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -623,8 +620,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -637,8 +634,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_uint64) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_uint64) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_u64ti32(const boost::intrusive_ptr<Storage_base>& in,
                             boost::intrusive_ptr<Storage_base>& out,
@@ -647,8 +644,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -661,8 +658,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -675,8 +672,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -689,8 +686,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -703,8 +700,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_uint64* _in = static_cast<cytnx_uint64*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -719,9 +716,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -733,9 +730,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -747,8 +744,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -761,8 +758,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -775,8 +772,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -789,8 +786,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -803,8 +800,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_int32) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_int32) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_i32tu32(const boost::intrusive_ptr<Storage_base>& in,
                             boost::intrusive_ptr<Storage_base>& out,
@@ -813,8 +810,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -827,8 +824,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -841,8 +838,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -855,8 +852,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int32* _in = static_cast<cytnx_int32*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_int32* _in = static_cast<cytnx_int32*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -870,9 +867,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -884,9 +881,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -898,8 +895,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -912,8 +909,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -926,8 +923,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -940,8 +937,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -954,8 +951,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -968,8 +965,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_uint32) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_uint32) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_u32tu16(const boost::intrusive_ptr<Storage_base>& in,
                             boost::intrusive_ptr<Storage_base>& out,
@@ -978,8 +975,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -992,8 +989,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1006,8 +1003,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_uint32* _in = static_cast<cytnx_uint32*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1021,9 +1018,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -1035,9 +1032,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -1049,8 +1046,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1063,8 +1060,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1077,8 +1074,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1091,8 +1088,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1105,8 +1102,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1119,8 +1116,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1133,8 +1130,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_uint16) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_uint16) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_u16ti16(const boost::intrusive_ptr<Storage_base>& in,
                             boost::intrusive_ptr<Storage_base>& out,
@@ -1143,8 +1140,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1157,8 +1154,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_uint16* _in = static_cast<cytnx_uint16*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1172,9 +1169,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -1186,9 +1183,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -1200,8 +1197,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1214,8 +1211,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1228,8 +1225,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1242,8 +1239,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1256,8 +1253,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1270,8 +1267,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1284,8 +1281,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1298,8 +1295,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_int16) * len_in, cudaMemcpyDeviceToDevice));
+      checkCudaErrors(cudaMemcpy(out->data(), in->data(), sizeof(cytnx_int16) * len_in,
+                                 cudaMemcpyDeviceToDevice));
     }
     void cuCast_gpu_i16tb(const boost::intrusive_ptr<Storage_base>& in,
                           boost::intrusive_ptr<Storage_base>& out, const unsigned long long& len_in,
@@ -1308,8 +1305,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new BoolStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_int16* _in = static_cast<cytnx_int16*>(in->Mem);
-      cytnx_bool* _out = static_cast<cytnx_bool*>(out->Mem);
+      cytnx_int16* _in = static_cast<cytnx_int16*>(in->data());
+      cytnx_bool* _out = static_cast<cytnx_bool*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1323,9 +1320,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexDoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuDoubleComplex) * len_in);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cuDoubleComplex* _out = static_cast<cuDoubleComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuDoubleComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cd<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -1337,9 +1334,9 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new ComplexFloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->Mem);
-      cudaMemset(out->Mem, 0, sizeof(cuFloatComplex) * len_in);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cuFloatComplex* _out = static_cast<cuFloatComplex*>(out->data());
+      cudaMemset(out->data(), 0, sizeof(cuFloatComplex) * len_in);
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
       cuCastElem_kernel_r2cf<<<NBlocks, 512>>>(_in, _out, len_in);
@@ -1351,8 +1348,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new DoubleStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_double* _out = static_cast<cytnx_double*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_double* _out = static_cast<cytnx_double*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1365,8 +1362,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new FloatStorage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_float* _out = static_cast<cytnx_float*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_float* _out = static_cast<cytnx_float*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1379,8 +1376,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_int64* _out = static_cast<cytnx_int64*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_int64* _out = static_cast<cytnx_int64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1393,8 +1390,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint64Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_uint64* _out = static_cast<cytnx_uint64*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1407,8 +1404,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_int32* _out = static_cast<cytnx_int32*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_int32* _out = static_cast<cytnx_int32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1421,8 +1418,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint32Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_uint32* _out = static_cast<cytnx_uint32*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1435,8 +1432,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Uint16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_uint16* _out = static_cast<cytnx_uint16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1449,8 +1446,8 @@ namespace cytnx {
         out = boost::intrusive_ptr<Storage_base>(new Int16Storage());
         out->Init(len_in, alloc_device);
       }
-      cytnx_bool* _in = static_cast<cytnx_bool*>(in->Mem);
-      cytnx_int16* _out = static_cast<cytnx_int16*>(out->Mem);
+      cytnx_bool* _in = static_cast<cytnx_bool*>(in->data());
+      cytnx_int16* _out = static_cast<cytnx_int16*>(out->data());
 
       cytnx_uint64 NBlocks = len_in / 512;
       if (len_in % 512) NBlocks += 1;
@@ -1464,7 +1461,7 @@ namespace cytnx {
         out->Init(len_in, alloc_device);
       }
       checkCudaErrors(
-        cudaMemcpy(out->Mem, in->Mem, sizeof(cytnx_bool) * len_in, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(out->data(), in->data(), sizeof(cytnx_bool) * len_in, cudaMemcpyDeviceToDevice));
     }
 
   }  // namespace utils_internal

@@ -4,10 +4,6 @@
 #include "utils/complex_arithmetic.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 // change to *ger
 
 namespace cytnx {
@@ -19,13 +15,10 @@ namespace cytnx {
                        const boost::intrusive_ptr<Storage_base> &Lin,
                        const boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &j1,
                        const cytnx_uint64 &j2) {
-      TO *_out = (TO *)out->Mem;
-      T1 *_Lin = (T1 *)Lin->Mem;
-      T2 *_Rin = (T2 *)Rin->Mem;
+      TO *_out = (TO *)out->data();
+      T1 *_Lin = (T1 *)Lin->data();
+      T2 *_Rin = (T2 *)Rin->data();
 
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
       for (unsigned long long r = 0; r < j1 * j2; r++) {
         _out[r] = _Lin[cytnx_uint64(r / j2)] * _Rin[(r % j2)];
       }

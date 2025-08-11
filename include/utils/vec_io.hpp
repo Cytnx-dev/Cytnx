@@ -1,5 +1,5 @@
-#ifndef __H_vec_io_
-#define __H_vec_io_
+#ifndef CYTNX_UTILS_VEC_IO_H_
+#define CYTNX_UTILS_VEC_IO_H_
 
 #include <vector>
 #include <cstring>
@@ -46,4 +46,5 @@ namespace cytnx {
   }
 
 };  // namespace cytnx
-#endif
+
+#endif  // CYTNX_UTILS_VEC_IO_H_

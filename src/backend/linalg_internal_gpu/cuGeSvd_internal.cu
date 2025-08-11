@@ -15,8 +15,8 @@ namespace cytnx {
       using d_data_type = cuDoubleComplex;
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -28,21 +28,21 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -57,7 +57,7 @@ namespace cytnx {
       cytnx_int32 lwork = 0;
       void *d_work = nullptr;
       checkCudaErrors(cusolverDnZgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA, (cytnx_double *)S->Mem,
+        cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA, (cytnx_double *)S->data(),
         (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params));
 
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
@@ -67,10 +67,10 @@ namespace cytnx {
       checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
 
       checkCudaErrors(cusolverDnZgesvdj(cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA,
-                                        (cytnx_double *)S->Mem, (d_data_type *)vTMem, ldu,
+                                        (cytnx_double *)S->data(), (d_data_type *)vTMem, ldu,
                                         (d_data_type *)UMem, ldvT, (d_data_type *)d_work, lwork,
                                         devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cd(U, M * min);
       }
@@ -85,10 +85,10 @@ namespace cytnx {
 
       checkCudaErrors(cudaFree(d_work));
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));
@@ -103,8 +103,8 @@ namespace cytnx {
       using d_data_type = cuFloatComplex;
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -116,21 +116,21 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -145,7 +145,7 @@ namespace cytnx {
       cytnx_int32 lwork = 0;
       void *d_work = nullptr;
       checkCudaErrors(cusolverDnCgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA, (cytnx_float *)S->Mem,
+        cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA, (cytnx_float *)S->data(),
         (d_data_type *)vTMem, ldu, (d_data_type *)UMem, ldvT, &lwork, gesvdj_params));
 
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
@@ -155,10 +155,10 @@ namespace cytnx {
       checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
 
       checkCudaErrors(cusolverDnCgesvdj(cusolverH, jobz, econ, N, M, (d_data_type *)Mij, ldA,
-                                        (cytnx_float *)S->Mem, (d_data_type *)vTMem, ldu,
+                                        (cytnx_float *)S->data(), (d_data_type *)vTMem, ldu,
                                         (d_data_type *)UMem, ldvT, (d_data_type *)d_work, lwork,
                                         devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
         linalg_internal::cuConj_inplace_internal_cf(U, M * min);
       }
@@ -173,10 +173,10 @@ namespace cytnx {
 
       checkCudaErrors(cudaFree(d_work));
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));
@@ -190,8 +190,8 @@ namespace cytnx {
       using data_type = cytnx_double;
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -203,21 +203,21 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -232,8 +232,8 @@ namespace cytnx {
       cytnx_int32 lwork = 0;
       void *d_work = nullptr;
       checkCudaErrors(cusolverDnDgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->Mem, (data_type *)vTMem,
-        ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params));
+        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->data(),
+        (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params));
 
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
 
@@ -241,10 +241,11 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnDgesvdj(
-        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->Mem, (data_type *)vTMem,
-        ldu, (data_type *)UMem, ldvT, (data_type *)d_work, lwork, devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      checkCudaErrors(cusolverDnDgesvdj(cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA,
+                                        (data_type *)S->data(), (data_type *)vTMem, ldu,
+                                        (data_type *)UMem, ldvT, (data_type *)d_work, lwork,
+                                        devinfo, gesvdj_params));
+      if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
       }
 
@@ -258,10 +259,10 @@ namespace cytnx {
 
       checkCudaErrors(cudaFree(d_work));
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));
@@ -275,8 +276,8 @@ namespace cytnx {
       using data_type = cytnx_float;
       cusolverEigMode_t jobz;
       // if U and vT are NULL ptr, then it will not be computed.
-      jobz = (U->dtype == Type.Void and vT->dtype == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
-                                                                : CUSOLVER_EIG_MODE_VECTOR;
+      jobz = (U->dtype() == Type.Void and vT->dtype() == Type.Void) ? CUSOLVER_EIG_MODE_NOVECTOR
+                                                                    : CUSOLVER_EIG_MODE_VECTOR;
 
       // const int econ = 0; /* i.e. 'A' in gesvd  */
       cytnx_int32 econ = 1; /* i.e. 'S' in gesvd  */
@@ -288,21 +289,21 @@ namespace cytnx {
       cuDoubleComplex *Mij;
       checkCudaErrors(cudaMalloc((void **)&Mij, M * N * sizeof(data_type)));
       checkCudaErrors(
-        cudaMemcpy(Mij, in->Mem, sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
+        cudaMemcpy(Mij, in->data(), sizeof(data_type) * M * N, cudaMemcpyDeviceToDevice));
 
       cytnx_int64 min = std::min(M, N);
       cytnx_int64 max = std::max(M, N);
       cytnx_int64 ldA = N, ldu = N, ldvT = M;
 
       void *UMem = nullptr, *vTMem = nullptr;
-      if (U->Mem) {
-        UMem = U->Mem;
+      if (U->data()) {
+        UMem = U->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&UMem, max * max * sizeof(data_type)));
       }
-      if (vT->Mem) {
-        vTMem = vT->Mem;
+      if (vT->data()) {
+        vTMem = vT->data();
       } else {
         if (jobz == CUSOLVER_EIG_MODE_VECTOR)
           checkCudaErrors(cudaMalloc(&vTMem, max * max * sizeof(data_type)));
@@ -317,8 +318,8 @@ namespace cytnx {
       cytnx_int32 lwork = 0;
       void *d_work = nullptr;
       checkCudaErrors(cusolverDnSgesvdj_bufferSize(
-        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->Mem, (data_type *)vTMem,
-        ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params));
+        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->data(),
+        (data_type *)vTMem, ldu, (data_type *)UMem, ldvT, &lwork, gesvdj_params));
 
       checkCudaErrors(cudaMalloc(reinterpret_cast<void **>(&d_work), sizeof(data_type) * lwork));
 
@@ -326,10 +327,11 @@ namespace cytnx {
       checkCudaErrors(cudaMalloc((void **)&devinfo, sizeof(cytnx_int32)));
       checkCudaErrors(cudaMemset(devinfo, 0, sizeof(cytnx_int32)));
 
-      checkCudaErrors(cusolverDnSgesvdj(
-        cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA, (data_type *)S->Mem, (data_type *)vTMem,
-        ldu, (data_type *)UMem, ldvT, (data_type *)d_work, lwork, devinfo, gesvdj_params));
-      if (jobz == CUSOLVER_EIG_MODE_VECTOR) {
+      checkCudaErrors(cusolverDnSgesvdj(cusolverH, jobz, econ, N, M, (data_type *)Mij, ldA,
+                                        (data_type *)S->data(), (data_type *)vTMem, ldu,
+                                        (data_type *)UMem, ldvT, (data_type *)d_work, lwork,
+                                        devinfo, gesvdj_params));
+      if (U->data() and jobz == CUSOLVER_EIG_MODE_VECTOR) {
         U->Move_memory_({(cytnx_uint64)min, (cytnx_uint64)M}, {1, 0}, {1, 0});
       }
 
@@ -343,10 +345,10 @@ namespace cytnx {
 
       checkCudaErrors(cudaFree(d_work));
       checkCudaErrors(cudaFree(Mij));
-      if (UMem != nullptr and U->dtype == Type.Void) {
+      if (UMem != nullptr and U->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(UMem));
       }
-      if (vTMem != nullptr and vT->dtype == Type.Void) {
+      if (vTMem != nullptr and vT->dtype() == Type.Void) {
         checkCudaErrors(cudaFree(vTMem));
       }
       checkCudaErrors(cudaFree(devinfo));

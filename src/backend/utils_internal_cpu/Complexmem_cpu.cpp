@@ -2,10 +2,6 @@
 #include "backend/Storage.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 #ifdef UNI_MKL
   #define __Cpt_dbl cytnx_complex128 *
   #define __Cpt_flt cytnx_complex64 *
@@ -24,16 +20,10 @@ namespace cytnx {
       cytnx_complex128 *src = static_cast<cytnx_complex128 *>(in);
 
       if (get_real) {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].real();
         }
       } else {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].imag();
         }
@@ -45,16 +35,10 @@ namespace cytnx {
       cytnx_complex64 *src = static_cast<cytnx_complex64 *>(in);
 
       if (get_real) {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].real();
         }
       } else {
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
         for (cytnx_uint64 n = 0; n < Nelem; n++) {
           des[n] = src[n].imag();
         }

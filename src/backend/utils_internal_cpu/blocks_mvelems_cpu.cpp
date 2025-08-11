@@ -55,9 +55,6 @@ namespace cytnx {
       std::vector<cytnx_uint64> tfidx(acc_in_old.size() + acc_out_old.size());
 
       for (unsigned int b = 0; b < src_blocks.size(); b++) {
-        // #ifdef UNI_OMP
-        // #pragma omp parallel for schedule(dynamic)
-        // #endif
         for (unsigned int elem = 0; elem < src_blocks[b].storage().size(); elem++) {
           unsigned int i = elem / src_blocks[b].shape()[1];
           unsigned int j = elem % src_blocks[b].shape()[1];
@@ -103,8 +100,8 @@ namespace cytnx {
           }
 
           auto dest_mem =
-            dest_blocks[dest_outer2inner_row[new_row].first]._impl->storage()._impl->Mem;
-          auto src_mem = src_blocks[b]._impl->storage()._impl->Mem;
+            dest_blocks[dest_outer2inner_row[new_row].first]._impl->storage()._impl->data();
+          auto src_mem = src_blocks[b]._impl->storage()._impl->data();
           cytnx_int64 dest_idx = (dest_outer2inner_row[new_row].second) *
                                    (dest_blocks[dest_outer2inner_row[new_row].first].shape()[1]) +
                                  dest_outer2inner_col[new_col].second;

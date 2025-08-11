@@ -1,5 +1,5 @@
-#ifndef _H_Normal_gpu_
-#define _H_Normal_gpu_
+#ifndef CYTNX_BACKEND_RANDOM_INTERNAL_GPU_CUNORMAL_INTERNAL_H_
+#define CYTNX_BACKEND_RANDOM_INTERNAL_GPU_CUNORMAL_INTERNAL_H_
 
 #include <cstdio>
 #include <cstdlib>
@@ -23,4 +23,5 @@ namespace cytnx {
 
   }  // namespace random_internal
 }  // namespace cytnx
-#endif
+
+#endif  // CYTNX_BACKEND_RANDOM_INTERNAL_GPU_CUNORMAL_INTERNAL_H_

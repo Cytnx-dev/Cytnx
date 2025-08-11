@@ -5,10 +5,6 @@
 #include "../utils_internal_interface.hpp"
 #include "utils/cucomplex_arithmetic.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
 
   namespace linalg_internal {
@@ -31,11 +27,11 @@ namespace cytnx {
                          const boost::intrusive_ptr<Storage_base> &Lin,
                          const boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &j1,
                          const cytnx_uint64 &j2) {
-      T1 *_out = (T1 *)out->Mem;
-      T2 *_Lin = (T2 *)Lin->Mem;
-      T3 *_Rin = (T3 *)Rin->Mem;
+      T1 *_out = (T1 *)out->data();
+      T2 *_Lin = (T2 *)Lin->data();
+      T3 *_Rin = (T3 *)Rin->data();
 
-      cytnx_uint64 Nelem = Lin->len * Rin->len;
+      cytnx_uint64 Nelem = Lin->size() * Rin->size();
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
 

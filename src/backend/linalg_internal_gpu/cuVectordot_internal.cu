@@ -15,9 +15,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cuDoubleComplex *_out = (cuDoubleComplex *)out->Mem;
-      cuDoubleComplex *_Lin = (cuDoubleComplex *)Lin->Mem;
-      cuDoubleComplex *_Rin = (cuDoubleComplex *)Rin->Mem;
+      cuDoubleComplex *_out = (cuDoubleComplex *)out->data();
+      cuDoubleComplex *_Lin = (cuDoubleComplex *)Lin->data();
+      cuDoubleComplex *_Rin = (cuDoubleComplex *)Rin->data();
 
       //_out[0] = make_cuDoubleComplex(0.,0.);
       unsigned long long remain = len;
@@ -51,8 +51,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_cd((cytnx_complex128 *)_out, (cytnx_complex128 *)dacres,
-                                        TotSeg);
+        utils_internal::cuReduce_gpu((cytnx_complex128 *)_out, (cytnx_complex128 *)dacres, TotSeg);
       }
       /*
       cytnx_complex128 *hacres = (cytnx_complex128*)malloc(sizeof(cytnx_complex128)*TotSeg);
@@ -76,9 +75,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cuFloatComplex *_out = (cuFloatComplex *)out->Mem;
-      cuFloatComplex *_Lin = (cuFloatComplex *)Lin->Mem;
-      cuFloatComplex *_Rin = (cuFloatComplex *)Rin->Mem;
+      cuFloatComplex *_out = (cuFloatComplex *)out->data();
+      cuFloatComplex *_Lin = (cuFloatComplex *)Lin->data();
+      cuFloatComplex *_Rin = (cuFloatComplex *)Rin->data();
 
       //_out[0] = make_cuFloatComplex(0.,0.);
       unsigned long long remain = len;
@@ -111,7 +110,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_cf((cytnx_complex64 *)_out, (cytnx_complex64 *)dacres, TotSeg);
+        utils_internal::cuReduce_gpu((cytnx_complex64 *)_out, (cytnx_complex64 *)dacres, TotSeg);
       }
       /*
       cytnx_complex64 *hacres = (cytnx_complex64*)malloc(sizeof(cytnx_complex64)*TotSeg);
@@ -135,9 +134,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cytnx_double *_out = (cytnx_double *)out->Mem;
-      cytnx_double *_Lin = (cytnx_double *)Lin->Mem;
-      cytnx_double *_Rin = (cytnx_double *)Rin->Mem;
+      cytnx_double *_out = (cytnx_double *)out->data();
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       //_out[0] = 0;
       unsigned long long remain = len;
@@ -169,7 +168,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_d(_out, dacres, TotSeg);
+        utils_internal::cuReduce_gpu(_out, dacres, TotSeg);
       }
       // std::cout << "done" << std::endl;
       /*
@@ -192,9 +191,9 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      cytnx_float *_out = (cytnx_float *)out->Mem;
-      cytnx_float *_Lin = (cytnx_float *)Lin->Mem;
-      cytnx_float *_Rin = (cytnx_float *)Rin->Mem;
+      cytnx_float *_out = (cytnx_float *)out->data();
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cytnx_float *_Rin = (cytnx_float *)Rin->data();
 
       //_out[0] = 0;
       unsigned long long remain = len;
@@ -224,7 +223,7 @@ namespace cytnx {
       if (TotSeg == 1) {
         _out[0] = dacres[0];
       } else {
-        utils_internal::cuReduce_gpu_f(_out, dacres, TotSeg);
+        utils_internal::cuReduce_gpu(_out, dacres, TotSeg);
       }
       /*
       cytnx_float *hacres = (cytnx_float*)malloc(sizeof(cytnx_float)*TotSeg);

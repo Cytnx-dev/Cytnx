@@ -6,6 +6,7 @@ if (USE_MKL)
   set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
   target_compile_definitions(cytnx PUBLIC UNI_MKL)
   target_compile_definitions(cytnx PUBLIC MKL_ILP64)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
 endif() #use_mkl
 
 ######################################################################
@@ -43,11 +44,9 @@ if (USE_HPTT)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
     ExternalProject_Add(hptt
-    PREFIX hptt_src
+    PREFIX hptt
     GIT_REPOSITORY https://github.com/kaihsin/hptt.git
     GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
-    BINARY_DIR hptt_src/build
-    INSTALL_DIR hptt
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
     )
     message( STATUS " Build HPTT Support: YES")
@@ -154,7 +153,8 @@ if(USE_CUDA)
         include_directories(${install_dir}/include)
         message(STATUS "cutt install dir: ${install_dir}")
         add_dependencies(cytnx cutt)
-        set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
+        # set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
+        set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES native)
         target_compile_definitions(cytnx PRIVATE UNI_CUTT)
         target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libcutt.a)
         # relocate cutt
@@ -168,26 +168,6 @@ if(USE_CUDA)
 
     endif()
 
-    if(USE_MAGMA)
-        find_package( MAGMA REQUIRED)
-        if(NOT MAGMA_FOUND)
-            message(FATAL_ERROR "MAGMA not found!")
-        endif()
-        message(STATUS "^^^magma root aft: ${MAGMA_ROOT}")
-        message(STATUS "^^^magma inc dr: ${MAGMA_INCLUDE_DIRS}")
-        message(STATUS "^^^magma lib dr: ${MAGMA_LIBRARY_DIRS}")
-        message(STATUS "^^^magma libs: ${MAGMA_LIBRARIES}")
-        #add_dependencies(cytnx magma)
-        target_include_directories(cytnx PRIVATE ${MAGMA_INCLUDE_DIRS})
-        target_compile_definitions(cytnx PRIVATE UNI_MAGMA)
-        target_link_libraries(cytnx PUBLIC ${MAGMA_LIBRARIES})
-
-        message( STATUS "Build with MAGMA: YES")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MAGMA\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-I${MAGMA_INCLUDE_DIRS}\n" "")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${MAGMA_LIBRARIES} -ldl\n" "") # use > to indicate special rt processing
-        message( STATUS "MAGMA: libdir:${MAGMA_LIBRARY_DIRS} incdir:${MAGMA_INCLUDE_DIRS} libs:${MAGMA_LIBRARIES}")
-    endif()
 
     message( STATUS " Build CUDA Support: YES")
     message( STATUS "  - CUDA Version: ${CUDA_VERSION_STRING}")
@@ -222,86 +202,25 @@ endif()
 #####################################################################
 if(USE_HPTT)
     ExternalProject_Get_Property(hptt install_dir)
-    include_directories(${install_dir}/include)
+    cmake_path(APPEND install_dir "include" OUTPUT_VARIABLE hptt_include_dir)
+    cmake_path(APPEND install_dir "lib" OUTPUT_VARIABLE hptt_lib_dir)
+    include_directories("${hptt_include_dir}")
     message(STATUS "hptt install dir: ${install_dir}")
+    unset(install_dir)
     add_dependencies(cytnx hptt)
     target_compile_definitions(cytnx PRIVATE UNI_HPTT)
-    target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libhptt.a)
+    target_link_libraries(cytnx PUBLIC "${hptt_lib_dir}/libhptt.a")
 
-    # relocate hptt
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/hptt DESTINATION ${CMAKE_INSTALL_PREFIX})
-endif()
+    # XXX: `cytnx` itself doesn't need this linking flag. Why?
+    target_link_options(cytnx INTERFACE -fopenmp)
 
-
-
-
-
-# ----------------------------------------
-# Find OpenMP
-if(USE_OMP)
-    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OMP")
-
-    # append file for python
-    FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_OMP\n" "")
-
-    if(USE_MKL)
-        # if MKL is used, we don't explicitly link to OpenMP
-        # it's already linked
-        target_compile_definitions(cytnx PRIVATE UNI_OMP)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-
-        message( STATUS " Build OMP Support: YES")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_MKL\n" "")
-
-    else()
-        find_package( OpenMP )
-        if ( OPENMP_FOUND )
-            message( STATUS " Build OMP Support: YES")
-            if(NOT TARGET OpenMP::OpenMP_CXX)
-                find_package(Threads REQUIRED)
-                add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-                set_property(TARGET OpenMP::OpenMP_CXX
-                            PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-                # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-                set_property(TARGET OpenMP::OpenMP_CXX
-                            PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
-
-            else()
-                set_property(TARGET OpenMP::OpenMP_CXX
-                            PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-            endif()
-            target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
-            target_compile_definitions(cytnx PRIVATE UNI_OMP)
-        else()
-            message( STATUS " Build OMP Support: NO  (Not found)")
-        endif()
-    endif()
-
-else()
-    message( STATUS " Build OMP Support: NO")
-
-    if(USE_MKL)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-    endif()
-
-    if(USE_HPTT)
-        find_package( OpenMP )
-        if ( OPENMP_FOUND )
-          if(NOT TARGET OpenMP::OpenMP_CXX)
-            find_package(Threads REQUIRED)
-            add_library(OpenMP::OpenMP_CXX IMPORTED INTERFACE)
-            set_property(TARGET OpenMP::OpenMP_CXX
-                        PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-            # Only works if the same flag is passed to the linker; use CMake 3.9+ otherwise (Intel, AppleClang)
-            set_property(TARGET OpenMP::OpenMP_CXX
-                        PROPERTY INTERFACE_LINK_LIBRARIES "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>" Threads::Threads)
-
-          else()
-            set_property(TARGET OpenMP::OpenMP_CXX
-                        PROPERTY INTERFACE_COMPILE_OPTIONS "$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CXX>>:${OpenMP_CXX_FLAGS}>$<$<BUILD_INTERFACE:$<COMPILE_LANGUAGE:CUDA>>:-Xcompiler=${OpenMP_CXX_FLAGS}>")
-          endif()
-          target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
-        endif()
-    endif()
-
+    # Install HPTT to input CMAKE_INSTALL_PREFIX.
+    cmake_path(APPEND CMAKE_INSTALL_INCLUDEDIR "hptt" OUTPUT_VARIABLE hptt_install_include_dir)
+    # Suffix the source folder with / to copy the files and folders in the source folder to the
+    # destination folder instead of copying the source folder itself.
+    # XXX: Do we have to ship the header files of HPTT? Is shipping the static library only enough?
+    install(DIRECTORY "${hptt_include_dir}/" DESTINATION "${hptt_install_include_dir}")
+    # CMake doesn't combine external static libraries into our static library, so we have to
+    # distribute the external static libraries manually.
+    install(DIRECTORY "${hptt_lib_dir}/" TYPE LIB)
 endif()

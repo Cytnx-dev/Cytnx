@@ -1,13 +1,62 @@
-v0.7.8
+v1.0.0
+1. [Important] This is the first stable release of the project.
+2. [Change] Merge Contract and Contracts into Contract, and Contract_ and Contracts_ ito Contract_.
+3. [Change] Merge relabel and relabels into relabel, and relabel_ and relabels_ into relabel_.
+4. [New] Add an optional argument min_blockdim to svd_truncate to define a minimum dimension for each block.
+5. [New] Add Eig/Eigh functions for Block UniTensor.
+6. [New] Add Lancos-like algoirthm, Lanczos_Exp, to approximate exponential operator acting on a state.
+7. [Change] Migrate cuTENSOR APIs to the version 2.
+8. [Change] reshape_ and permute_ to return the object itself instead of None.
+9. [Change] Remove the magma dependency.
+10. [Enhance] Optimize the contraction order finding algorithm.
 
+v0.9.7
+1. [New] Add the identity/eye functions for UniTensor to generate an identity UniTensor.
+
+v0.9.6
+1. [Fix] Resolve an issue where Trace did not work for is_diag=True.
+2. [New] Add support for the UniTensor type for linear algebra function Eig, Eigh and InvM.
+3. [Fix] Fix incoorected behavior in uniform random and isub.
+4. [New] Add beartype checking for ovld warpper.
+5. [Fix] Fix CICD tools.
+
+v0.9.5
+Same content as 094, fix CD to conda-forge
+
+v0.9.4
+This has the same content as v0.9.3
+
+v0.9.3
+1. improvements of GPUs, integrated with cutensor/cuquantum.
+2. extra Svd methods for both CPU and GPU.
+3. Other improvements of user API including conversion between symmetric and non-sym UniTensors.
+
+v0.9.2
+1. [Important] [Change] Remove all deprecated APIs and old SparseUniTensor data structure
+2. [Fix] Bugs when batch_matmul when no MKL
+3. [Update] Update examples to match new APIs
+4. [New] add labels options when creating UniTensor from Tensor.
+5. [New] change MKL to mkl_rt instead of fixed interface ilp64/lp64
+
+v0.9.1
+1. [New] Add additional argument share_mem for Tensor.numpy() python API.
+2. [Fix] UniTensor.at() python API not properly wrapped.
+3. [Fix] Bug in testing for BlockUniTensor.
+4. [Fix] Bug in UniTensor print info (duplicate name, is_diag=true BlockUniTensor dimension display)
+5. [Change] Svd now using gesdd instead of gesvd.
+6. [New] Add linalg.Gesvd function, along with Gesvd_truncate.
+7. [Fix] Strict casting rule cause compiling fail when compile with icpc
+8. [New] Add additional argument for Network.PutUniTensor to match the label.
+9. [Fix] Network TOUT string lbl bug
+10. [Fix] #156 storage python wrapper cause not return.
+11. [Add] linalg.Gemm/Gemm_()
+12. [Add] UniTensor.normalize()/normalize_()
 
 v0.7.7
 1. [Enhance][WARNING] rowrank option now has default value when converting from Tensor. Which is half number of the bonds. Notice that the order of argument are changed between (rowrank) and (is_diag)!
 2. [Fix] Svd will have issue associate to changing of rowrank/is_diag order.
 3. [Enhance] Internal Syntax format change to clang format.
 4. [Change] USE_OMP option gives openmp access only for in-house implementation. Any linalg funciton calling MKL will be parallel.
-
-
 
 v0.7.6
 1. [Enhance] Adding alias BD_IN=BD_KET, BD_BRA=BD_OUT, BD_NONE=BD_REG.
@@ -89,7 +138,6 @@ v0.7.4
 55. [Enhance] Add additional feature Svd_truncate with truncation_err (err) and return_err option for DUTen
 56. [Enhance] Add python dmrg example for using tn_algo
 
-
 v0.7.3
 1. [Fix] bug for Get slice does not reduce when dim=1.
 2. [Enhance] checking the memory alloc failing for EL.
@@ -123,12 +171,10 @@ v0.7.2
 4. [Fix] bug for set partial elements on Tensor with slicing issue.
 5. [Fix][DenseUniTensor] set_rowrank cannot set full rank issue #24
 
-
 v0.7.1
 1. [Enhance] Finish UniTensor arithmetic.
 2. [Fix] bug when using Tensor.get() accessing only single element
 3. [Enhance] Add default argument is_U = True and is_vT = True for Svd_truncate() python API
-
 
 v0.7
 1. [Enhance] add binary op. -Tensor.
@@ -218,7 +264,6 @@ v0.6.0
 6. [Fix] reshape() does not share memory
 7. [Fix] BoolStorage print_elem does not show the first element in shape
 
-
 v0.5.6a
 1. [Enhance] change linalg::QR -> linalg::Qr for unify the function call
 2. Fix bug in UniTensor Qr, R UniTensor labels bug.
@@ -238,7 +283,6 @@ v0.5.5a
 5. [Major] Remove cytnx_extension class, rename CyTensor->UniTensor
 6. Fix small bug in return ref of Tproxy
 7. Fix bug in buffer size allocation in Svd_internal
-
 
 v0.5.4a-build1
 1. [Important] Fix Subtraction real - complex bug.
@@ -273,12 +317,10 @@ v0.5.3a
 15. Fix bug in diagonal CyTensor reshape/reshape_ cause mismatch.
 16. Add a is_diag option for convert Tensor to CyTensor.
 
-
 v0.5.2a-build1
 1. example/iTEBD, please modify the argument rowrank->Rowrank if you encounter error in running them.
 2. Fix bug in cytnx.linalg.Abs truncate floating point part. ---> v0.5.2a-build1
 3. Fix bug in mkl blas package import bug with numpy.        ---> v0.5.2a-build1
-
 
 v0.5.2a
 1. add Trace and Trace_ for CyTensor.
@@ -334,7 +376,6 @@ v0.5.2a
 51. Add Pow, Pow_ for CyTensor.
 52. Add Symmetry.Save/Load
 53. Symmetry/Tensor/Storage/Bond/CyTensor Save/Load re-invented for more simple usage
-
 
 v0.5.1a
 1. add Norm() for CPU and GPU, add to call by Tn

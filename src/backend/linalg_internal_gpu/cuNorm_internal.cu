@@ -4,10 +4,6 @@
 #include "cytnx_error.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
 
   namespace linalg_internal {
@@ -18,7 +14,7 @@ namespace cytnx {
       checkCudaErrors(cublasCreate(&cublasH));
 
       checkCudaErrors(
-        cublasDznrm2(cublasH, Rin->len, (cuDoubleComplex *)Rin->Mem, 1, (double *)out));
+        cublasDznrm2(cublasH, Rin->size(), (cuDoubleComplex *)Rin->data(), 1, (double *)out));
 
       cublasDestroy(cublasH);
     }
@@ -26,7 +22,8 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      checkCudaErrors(cublasScnrm2(cublasH, Rin->len, (cuComplex *)Rin->Mem, 1, (float *)out));
+      checkCudaErrors(
+        cublasScnrm2(cublasH, Rin->size(), (cuComplex *)Rin->data(), 1, (float *)out));
 
       cublasDestroy(cublasH);
     }
@@ -34,14 +31,14 @@ namespace cytnx {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
 
-      checkCudaErrors(cublasDnrm2(cublasH, Rin->len, (double *)Rin->Mem, 1, (double *)out));
+      checkCudaErrors(cublasDnrm2(cublasH, Rin->size(), (double *)Rin->data(), 1, (double *)out));
 
       cublasDestroy(cublasH);
     }
     void cuNorm_internal_f(void *out, const boost::intrusive_ptr<Storage_base> &Rin) {
       cublasHandle_t cublasH = NULL;
       checkCudaErrors(cublasCreate(&cublasH));
-      checkCudaErrors(cublasSnrm2(cublasH, Rin->len, (float *)Rin->Mem, 1, (float *)out));
+      checkCudaErrors(cublasSnrm2(cublasH, Rin->size(), (float *)Rin->data(), 1, (float *)out));
       cublasDestroy(cublasH);
     }
 

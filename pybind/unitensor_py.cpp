@@ -33,7 +33,7 @@ class cHclass {
   }
 
   bool exists() const { return this->proxy.exists(); }
-  int dtype() const { return this->proxy._insimpl->dtype; }
+  int dtype() const { return this->proxy._insimpl->dtype(); }
 
   cytnx_double get_elem_d() const { return cytnx_double(Scalar(this->proxy)); }
   cytnx_float get_elem_f() const { return cytnx_float(Scalar(this->proxy)); }
@@ -227,7 +227,7 @@ void unitensor_binding(py::module &m) {
              if (kwargs.contains("rowrank")) rowrank = kwargs["rowrank"].cast<cytnx::cytnx_int64>();
            }
 
-           self.reshape_(c_args, rowrank);
+           return &self.reshape_(c_args, rowrank);
          })
     .def("elem_exists", &UniTensor::elem_exists)
     .def("item",
@@ -592,12 +592,12 @@ void unitensor_binding(py::module &m) {
     // [Deprecated by_label!]
     .def("permute_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
 
-                        self.permute_(mapper,rowrank);
+                        return &self.permute_(mapper,rowrank);
 
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
-                        self.permute_(mapper,rowrank);
+                        return &self.permute_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){

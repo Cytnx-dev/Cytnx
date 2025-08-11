@@ -22,7 +22,7 @@ class linalg_Test : public ::testing::Test {
   Tensor eye3x3cd = eye(3, Type.ComplexDouble).to(cytnx::Device.cuda);
   Tensor zeros3x3cd = zeros(9, Type.ComplexDouble).reshape(3, 3).to(cytnx::Device.cuda);
 
-  std::string data_dir = "../../../tests/test_data_base/linalg/";
+  std::string data_dir = CYTNX_TEST_DATA_DIR "/linalg/";
   // ==================== svd_truncate ===================
   Bond svd_I = Bond(BD_OUT, {Qs(1), Qs(-1)}, {1, 1});
   Bond svd_J =

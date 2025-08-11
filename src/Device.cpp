@@ -1,17 +1,13 @@
 #include "Device.hpp"
-#include "cytnx_error.hpp"
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
 
-#ifdef UNI_MAGMA
-  #include "magma_v2.h"
-#endif
+#include <thread>
+
+#include "cytnx_error.hpp"
 
 using namespace std;
 namespace cytnx {
 
-  Device_class::Device_class() : Ngpus(0), Ncpus(1) {
+  Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
     // cout << "init_device class!" << endl;
 #ifdef UNI_GPU
 
@@ -42,31 +38,11 @@ namespace cytnx {
         }
       }
     }
-
-    // #ifdef UNI_MAGMA
-    //     int magma_status = magma_init();
-    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot
-    //     initialize!%s","\n");
-    // #endif
-
-#endif
-
-#ifdef UNI_OMP
-  #pragma omp parallel
-    {
-      if (omp_get_thread_num() == 0) {
-        Ncpus = omp_get_num_threads();
-      }
-    }
-#endif
+#endif  // UNI_GPU
   };
 
   Device_class::~Device_class(){
-    // #ifdef UNI_MAGMA
-    //     int magma_status = magma_finalize();
-    //     cytnx_error_msg(magma_status!=MAGMA_SUCCESS,"[ERROR] magma system cannot
-    //     finalize!%s","\n");
-    // #endif
+
   };
 
   string Device_class::getname(const int& device_id) {

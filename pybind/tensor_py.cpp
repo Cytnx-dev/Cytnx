@@ -129,21 +129,20 @@ void tensor_binding(py::module &m) {
           cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s", "\n");
         }
 
-        npbuf = py::buffer_info(tmpIN.storage()._impl->Mem,  // ptr
+        npbuf = py::buffer_info(tmpIN.storage()._impl->data(),  // ptr
                                 Type.typeSize(tmpIN.dtype()),  // size of elem
                                 chr_dtype,  // pss format
                                 tmpIN.rank(),  // rank
                                 shape,  // shape
                                 stride  // stride
         );
-        py::array out(npbuf);
-        // delegate numpy array with it's ptr, and swap a auxiliary ptr for intrusive_ptr to
-        // free.
-        if (share_mem == false) {
-          void *pswap = malloc(sizeof(bool));
-          tmpIN.storage()._impl->Mem = pswap;
+
+        if (!share_mem) {
+          // Avoid the memory passed to numpy being freed.
+          tmpIN.storage().release();
         }
-        return out;
+
+        return py::array(npbuf);
       },
       py::arg("share_mem") = false)
     // construction
@@ -184,7 +183,7 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, py::args args) {
            std::vector<cytnx::cytnx_uint64> c_args = args.cast<std::vector<cytnx::cytnx_uint64>>();
            // std::cout << c_args.size() << std::endl;
-           self.permute_(c_args);
+           return &self.permute_(c_args);
          })
     .def("permute",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {
@@ -200,7 +199,7 @@ void tensor_binding(py::module &m) {
     .def("reshape_",
          [](cytnx::Tensor &self, py::args args) {
            std::vector<cytnx::cytnx_int64> c_args = args.cast<std::vector<cytnx::cytnx_int64>>();
-           self.reshape_(c_args);
+           return &self.reshape_(c_args);
          })
     .def("reshape",
          [](cytnx::Tensor &self, py::args args) -> cytnx::Tensor {

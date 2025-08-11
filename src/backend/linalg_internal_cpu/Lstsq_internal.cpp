@@ -13,8 +13,8 @@ namespace cytnx {
       lda = N;
       ldb = nrhs;
       info = LAPACKE_dgelsd(LAPACK_ROW_MAJOR, (lapack_int)M, (lapack_int)N, (lapack_int)nrhs,
-                            (double *)in->Mem, lda, (double *)b->Mem, ldb, (double *)s->Mem,
-                            (double)rcond, (lapack_int *)r->Mem);
+                            (double *)in->data(), lda, (double *)b->data(), ldb,
+                            (double *)s->data(), (double)rcond, (lapack_int *)r->data());
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'dgelsd': Lapack INFO = ", info);
     }
@@ -28,8 +28,8 @@ namespace cytnx {
       lda = N;
       ldb = nrhs;
       info = LAPACKE_sgelsd(LAPACK_ROW_MAJOR, (lapack_int)M, (lapack_int)N, (lapack_int)nrhs,
-                            (float *)in->Mem, lda, (float *)b->Mem, ldb, (float *)s->Mem,
-                            (float)rcond, (lapack_int *)r->Mem);
+                            (float *)in->data(), lda, (float *)b->data(), ldb, (float *)s->data(),
+                            (float)rcond, (lapack_int *)r->data());
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'sgelsd': Lapack INFO = ", info);
     }
@@ -43,9 +43,10 @@ namespace cytnx {
       lapack_int info, lda, ldb;
       lda = N;
       ldb = nrhs;
-      info = LAPACKE_cgelsd(LAPACK_ROW_MAJOR, (lapack_int)M, (lapack_int)N, (lapack_int)nrhs,
-                            (lapack_complex_float *)in->Mem, lda, (lapack_complex_float *)b->Mem,
-                            ldb, (float *)s->Mem, (float)rcond, (lapack_int *)r->Mem);
+      info =
+        LAPACKE_cgelsd(LAPACK_ROW_MAJOR, (lapack_int)M, (lapack_int)N, (lapack_int)nrhs,
+                       (lapack_complex_float *)in->data(), lda, (lapack_complex_float *)b->data(),
+                       ldb, (float *)s->data(), (float)rcond, (lapack_int *)r->data());
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'cgelsd': Lapack INFO = ", info);
     }
@@ -59,9 +60,10 @@ namespace cytnx {
       lapack_int info, lda, ldb;
       lda = N;
       ldb = nrhs;
-      info = LAPACKE_zgelsd(LAPACK_ROW_MAJOR, (lapack_int)M, (lapack_int)N, (lapack_int)nrhs,
-                            (lapack_complex_double *)in->Mem, lda, (lapack_complex_double *)b->Mem,
-                            ldb, (double *)s->Mem, (double)rcond, (lapack_int *)r->Mem);
+      info =
+        LAPACKE_zgelsd(LAPACK_ROW_MAJOR, (lapack_int)M, (lapack_int)N, (lapack_int)nrhs,
+                       (lapack_complex_double *)in->data(), lda, (lapack_complex_double *)b->data(),
+                       ldb, (double *)s->data(), (double)rcond, (lapack_int *)r->data());
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'zgelsd': Lapack INFO = ", info);
     }

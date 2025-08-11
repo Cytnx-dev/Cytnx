@@ -1,10 +1,6 @@
 #include "cuInv_inplace_internal.hpp"
 #include "../utils_internal_interface.hpp"
 
-// #ifdef UNI_OMP
-//     #include <omp.h>
-// #endif
-
 namespace cytnx {
 
   namespace linalg_internal {
@@ -62,28 +58,28 @@ namespace cytnx {
                                   const cytnx_uint64 &Nelem, const double &clip) {
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
-      cuInv_internal_kernel_d<<<NBlocks, 512>>>((cytnx_double *)ten->Mem, Nelem, clip);
+      cuInv_internal_kernel_d<<<NBlocks, 512>>>((cytnx_double *)ten->data(), Nelem, clip);
     }
 
     void cuInv_inplace_internal_f(boost::intrusive_ptr<Storage_base> &ten,
                                   const cytnx_uint64 &Nelem, const double &clip) {
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
-      cuInv_internal_kernel_f<<<NBlocks, 512>>>((cytnx_float *)ten->Mem, Nelem, clip);
+      cuInv_internal_kernel_f<<<NBlocks, 512>>>((cytnx_float *)ten->data(), Nelem, clip);
     }
 
     void cuInv_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten,
                                    const cytnx_uint64 &Nelem, const double &clip) {
       cytnx_uint32 NBlocks = Nelem / 256;
       if (Nelem % 256) NBlocks += 1;
-      cuInv_internal_kernel_cd<<<NBlocks, 256>>>((cuDoubleComplex *)ten->Mem, Nelem, clip);
+      cuInv_internal_kernel_cd<<<NBlocks, 256>>>((cuDoubleComplex *)ten->data(), Nelem, clip);
     }
 
     void cuInv_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten,
                                    const cytnx_uint64 &Nelem, const double &clip) {
       cytnx_uint32 NBlocks = Nelem / 256;
       if (Nelem % 256) NBlocks += 1;
-      cuInv_internal_kernel_cf<<<NBlocks, 256>>>((cuFloatComplex *)ten->Mem, Nelem, clip);
+      cuInv_internal_kernel_cf<<<NBlocks, 256>>>((cuFloatComplex *)ten->data(), Nelem, clip);
     }
 
   }  // namespace linalg_internal

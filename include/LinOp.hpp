@@ -1,5 +1,5 @@
-#ifndef _H_LinOp_
-#define _H_LinOp_
+#ifndef CYTNX_LINOP_H_
+#define CYTNX_LINOP_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -12,7 +12,6 @@
 #include "intrusive_ptr_base.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
-#include "utils/vec_clone.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -62,10 +61,6 @@ namespace cytnx {
     examples for how to use them.
 
     ## Example:
-    ### c++ API:
-    \include example/LinOp/init.cpp
-    #### output>
-    \verbinclude example/LinOp/init.cpp.out
     ### python API:
     \include example/LinOp/init.py
     #### output>
@@ -180,4 +175,4 @@ namespace cytnx {
 
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_LINOP_H_

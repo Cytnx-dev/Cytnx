@@ -3,10 +3,6 @@
 #include <iostream>
 #include <algorithm>
 
-#ifdef UNI_OMP
-  #include <omp.h>
-#endif
-
 namespace cytnx {
 
   namespace algo_internal {
@@ -18,7 +14,7 @@ namespace cytnx {
       // 2. out is properly allocated!
       // 4. checking bool type!!
 
-      // cytnx_uint64 ElemSize = Type.typeSize(out->dtype);
+      // cytnx_uint64 ElemSize = Type.typeSize(out->dtype());
       cytnx_uint64 offs = 0;
       // char *out_ptr = (char*)out->Mem;
 

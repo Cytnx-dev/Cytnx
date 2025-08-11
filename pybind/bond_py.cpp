@@ -100,14 +100,26 @@ void bond_binding(py::module &m) {
     .def("clone", &Bond::clone)
     .def("__copy__", &Bond::clone)
     .def("__deepcopy__", &Bond::clone)
-    .def("combineBond", [](Bond &self, const Bond &bd,
-                           bool is_grp = true) { return self.combineBond(bd, is_grp); })
-    .def("combineBond", [](Bond &self, const std::vector<Bond> &bds,
-                           bool is_grp = true) { return self.combineBonds(bds, is_grp); })
-    .def("combineBond_", [](Bond &self, const Bond &bd,
-                            bool is_grp = true) { return self.combineBond_(bd, is_grp); })
-    .def("combineBond_", [](Bond &self, const std::vector<Bond> &bds,
-                            bool is_grp = true) { return self.combineBonds_(bds, is_grp); })
+    .def(
+      "combineBond",
+      [](Bond &self, const Bond &bd, bool is_grp) { return self.combineBond(bd, is_grp); },
+      py::arg("bd"), py::arg("is_grp") = true)
+    .def(
+      "combineBond",
+      [](Bond &self, const std::vector<Bond> &bds, bool is_grp) {
+        return self.combineBonds(bds, is_grp);
+      },
+      py::arg("bds"), py::arg("is_grp") = true)
+    .def(
+      "combineBond_",
+      [](Bond &self, const Bond &bd, bool is_grp) { return self.combineBond_(bd, is_grp); },
+      py::arg("bd"), py::arg("is_grp") = true)
+    .def(
+      "combineBond_",
+      [](Bond &self, const std::vector<Bond> &bds, bool is_grp) {
+        return self.combineBonds_(bds, is_grp);
+      },
+      py::arg("bds"), py::arg("is_grp") = true)
     // .def("combineBond", &Bond::combineBond, py::arg("bd"), py::arg("is_grp") = true)
     // .def("combineBond_", &Bond::combineBond_, py::arg("bd"), py::arg("is_grp") = true)
     .def("combineBonds", &Bond::combineBonds, py::arg("bds"), py::arg("is_grp") = true)

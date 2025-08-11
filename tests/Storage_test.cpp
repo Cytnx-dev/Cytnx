@@ -1,6 +1,11 @@
 #include "Storage_test.h"
-#include "test_tools.h"
+
+#include <tuple>
+#include <type_traits>
+#include <utility>
 #include <vector>
+
+#include "test_tools.h"
 
 TEST_F(StorageTest, dtype_str) {
   std::vector<cytnx_complex128> vcd = {cytnx_complex128(1, 2), cytnx_complex128(3, 4),
@@ -96,7 +101,7 @@ TEST_F(StorageTest, from_vec_cf) {
 
 // create suite for all real types (exclude bool)
 using vector_typelist = testing::Types<cytnx_int64, cytnx_uint64, cytnx_int32, cytnx_uint32,
-                                       cytnx_double, cytnx_float, cytnx_uint16, cytnx_int64>;
+                                       cytnx_double, cytnx_float, cytnx_uint16, cytnx_int16>;
 template <class>
 struct vector_suite : testing::Test {};
 TYPED_TEST_SUITE(vector_suite, vector_typelist);
@@ -128,129 +133,101 @@ TYPED_TEST(vector_suite, storage_cpu_to_cpu) {
   EXPECT_EQ(is(tar_sd, sd), true);
 }
 
-TYPED_TEST(vector_suite, storage_fill_d) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
+using TestingValueDTypes =
+  std::tuple<Scalar, cytnx_complex128, cytnx_complex64, cytnx_double, cytnx_float, cytnx_uint64,
+             cytnx_int64, cytnx_uint32, cytnx_int32, cytnx_uint16, cytnx_int16, cytnx_bool>;
 
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
+using TestingStorageDTypes =
+  std::tuple<cytnx_complex128, cytnx_complex64, cytnx_double, cytnx_float, cytnx_uint64,
+             cytnx_int64, cytnx_uint32, cytnx_int32, cytnx_uint16, cytnx_int16, cytnx_bool>;
 
-  auto fille = double(10);
-  sd.fill(fille);
+using TestingPutValueTypes =
+  TestTools::TestTypeCombinations<TestingStorageDTypes, TestingValueDTypes>;
 
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
+template <class TypeParam>
+struct StoragePutValue : testing::Test {
+  using StorageDType = typename TypeParam::first_type;
+  using ValueDType = typename TypeParam::second_type;
+
+  /**
+   * Try to convert the given value to the data type of the storage.
+   *
+   * @return `std::false_type{}` if the given value cannot be converted to the data type of the
+   * storage, otherwise, return the converted value
+   */
+  auto TryConvertToStorageDType(const ValueDType& value) {
+    if constexpr (is_complex_v<ValueDType> && is_complex_v<StorageDType>) {
+      using ValueDTypeInComplex = typename ValueDType::value_type;
+      using StorageDTypeInComplex = typename StorageDType::value_type;
+      if constexpr (is_convertible_v<ValueDTypeInComplex, StorageDTypeInComplex>) {
+        return StorageDType{StorageDTypeInComplex(value.real()),
+                            StorageDTypeInComplex(value.imag())};
+      } else {
+        return std::false_type{};
+      }
+    } else if constexpr (std::is_same_v<ValueDType, Scalar> &&
+                         std::is_same_v<StorageDType, cytnx_complex128>) {
+      // There is no conversion function for converting a value from Scalar to complex types.
+      return complex128(value);
+    } else if constexpr (std::is_same_v<ValueDType, Scalar> &&
+                         std::is_same_v<StorageDType, cytnx_complex64>) {
+      return complex64(value);
+    } else if constexpr (std::is_constructible_v<StorageDType, ValueDType>) {
+      // handle both implicit conversion and explicit conversion
+      return StorageDType(value);
+    } else {
+      return std::false_type{};
+    }
+  }
+};
+TYPED_TEST_SUITE(StoragePutValue, TestingPutValueTypes);
+
+TYPED_TEST(StoragePutValue, Fill) {
+  using StorageDType = typename TestFixture::StorageDType;
+  using ValueDType = typename TestFixture::ValueDType;
+  if constexpr (std::is_same_v<ValueDType, Scalar>) {
+    GTEST_SKIP() << "Filling a storage with a Scalar is not supported.";
+  } else {
+    auto element1 = StorageDType(2);
+    auto element2 = StorageDType(7);
+
+    std::vector<StorageDType> v = {element1, element2};
+    Storage storage = Storage::from_vector(v);
+
+    auto value_to_fill = ValueDType(10);
+    auto value_in_storage_dtype = this->TryConvertToStorageDType(value_to_fill);
+    if constexpr (std::is_same_v<decltype(value_in_storage_dtype), std::false_type>) {
+      EXPECT_THROW(storage.fill(value_to_fill), std::logic_error);
+    } else {
+      storage.fill(value_to_fill);
+      EXPECT_EQ(storage.at<StorageDType>(0), StorageDType(value_to_fill));
+      EXPECT_EQ(storage.at<StorageDType>(1), StorageDType(value_to_fill));
+    }
+  }
 }
 
-TYPED_TEST(vector_suite, storage_fill_f) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
+TYPED_TEST(StoragePutValue, AppendWithReallocation) {
+  using StorageDType = typename TestFixture::StorageDType;
+  using ValueDType = typename TestFixture::ValueDType;
 
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
+  auto element1 = StorageDType(2);
+  auto element2 = StorageDType(7);
 
-  auto fille = float(10);
-  sd.fill(fille);
-  cout << sd << endl;
+  std::vector<StorageDType> v = {element1, element2};
+  Storage storage = Storage::from_vector(v);
 
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
-}
+  ASSERT_EQ(storage.dtype(), Type.cy_typeid(element1));
+  ASSERT_EQ(storage.size(), storage.capacity());
 
-TYPED_TEST(vector_suite, storage_fill_i64) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
-
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
-
-  auto fille = cytnx_int64(10);
-  sd.fill(fille);
-
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
-}
-
-TYPED_TEST(vector_suite, storage_fill_u64) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
-
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
-
-  auto fille = cytnx_uint64(10);
-  sd.fill(fille);
-
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
-}
-
-TYPED_TEST(vector_suite, storage_fill_i32) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
-
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
-
-  auto fille = cytnx_int32(10);
-  sd.fill(fille);
-
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
-}
-
-TYPED_TEST(vector_suite, storage_fill_u32) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
-
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
-
-  auto fille = cytnx_uint32(10);
-  sd.fill(fille);
-
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
-}
-
-TYPED_TEST(vector_suite, storage_fill_i16) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
-
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
-
-  auto fille = cytnx_int16(10);
-  sd.fill(fille);
-
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
-}
-
-TYPED_TEST(vector_suite, storage_fill_u16) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
-
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
-
-  auto fille = cytnx_uint16(10);
-  sd.fill(fille);
-
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
-}
-
-TYPED_TEST(vector_suite, storage_fill_b) {
-  auto e1 = TypeParam(2);
-  auto e2 = TypeParam(7);
-
-  std::vector<TypeParam> v = {e1, e2};
-  Storage sd = Storage::from_vector(v);
-
-  auto fille = true;
-  sd.fill(fille);
-
-  EXPECT_EQ(sd.at<TypeParam>(0), TypeParam(fille));
-  EXPECT_EQ(sd.at<TypeParam>(1), TypeParam(fille));
+  auto value_to_append = ValueDType(10);
+  auto value_in_storage_dtype = this->TryConvertToStorageDType(value_to_append);
+  constexpr bool is_not_convertible =
+    std::is_same_v<decltype(value_in_storage_dtype), std::false_type>;
+  if constexpr (is_not_convertible) {
+    EXPECT_THROW(storage.append(value_to_append), std::logic_error);
+  } else {
+    storage.append(value_to_append);
+    EXPECT_GE(storage.capacity(), storage.size());
+    EXPECT_EQ(storage.size(), 3);
+  }
 }

@@ -1,5 +1,5 @@
-#ifndef _H_contraction_tree_
-#define _H_contraction_tree_
+#ifndef CYTNX_CONTRACTION_TREE_H_
+#define CYTNX_CONTRACTION_TREE_H_
 
 #include "Type.hpp"
 #include "cytnx_error.hpp"
@@ -8,100 +8,145 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 
 #ifdef BACKEND_TORCH
 #else
 namespace cytnx {
   /// @cond
-  class Node {
+  class Node : public std::enable_shared_from_this<Node> {
    public:
-    UniTensor utensor;  // don't worry about copy, because everything are references in cytnx!
+    UniTensor utensor;
     bool is_assigned;
-    Node *left;
-    Node *right;
+    std::shared_ptr<Node> left;
+    std::shared_ptr<Node> right;
+    std::weak_ptr<Node> root;
     std::string name;
-    Node *root;
 
-    Node() : is_assigned(false), left(nullptr), right(nullptr), root(nullptr){};
-    Node(const Node &rhs) {
-      this->left = rhs.left;
-      this->right = rhs.right;
-      this->root = rhs.root;
-      this->utensor = rhs.utensor;
-      this->is_assigned = rhs.is_assigned;
+    Node() : is_assigned(false) {}
+
+    Node(const Node& rhs)
+        : utensor(rhs.utensor),
+          is_assigned(rhs.is_assigned),
+          left(rhs.left),
+          right(rhs.right),
+          name(rhs.name) {
+      // Only copy root if it exists
+      if (auto r = rhs.root.lock()) {
+        root = r;
+      }
     }
-    Node &operator==(const Node &rhs) {
-      this->left = rhs.left;
-      this->right = rhs.right;
-      this->root = rhs.root;
-      this->utensor = rhs.utensor;
-      this->is_assigned = rhs.is_assigned;
+
+    Node& operator=(const Node& rhs) {
+      if (this != &rhs) {
+        utensor = rhs.utensor;
+        is_assigned = rhs.is_assigned;
+        left = rhs.left;
+        right = rhs.right;
+        name = rhs.name;
+        if (auto r = rhs.root.lock()) {
+          root = r;
+        }
+      }
       return *this;
     }
-    Node(Node *in_left, Node *in_right, const UniTensor &in_uten = UniTensor())
-        : is_assigned(false), left(nullptr), right(nullptr), root(nullptr) {
-      this->left = in_left;
-      this->right = in_right;
-      in_left->root = this;
-      in_right->root = this;
-      if (in_uten.uten_type() != UTenType.Void) this->utensor = in_uten;
+
+    Node(std::shared_ptr<Node> in_left, std::shared_ptr<Node> in_right,
+         const UniTensor& in_uten = UniTensor())
+        : is_assigned(false), left(in_left), right(in_right) {
+      // Set name based on children
+      if (left && right) {
+        name = "(" + left->name + "," + right->name + ")";
+      }
+
+      if (in_uten.uten_type() != UTenType.Void) {
+        utensor = in_uten;
+      }
     }
-    void assign_utensor(const UniTensor &in_uten) {
-      this->utensor = in_uten;
-      this->is_assigned = true;
+
+    void set_root_ptrs() {
+      try {
+        auto self = shared_from_this();
+
+        if (left) {
+          left->root = self;
+          left->set_root_ptrs();
+        }
+
+        if (right) {
+          right->root = self;
+          right->set_root_ptrs();
+        }
+      } catch (const std::bad_weak_ptr& e) {
+        std::cerr << "Failed to set root ptrs for node " << name << ": " << e.what() << std::endl;
+        throw;
+      }
     }
+
     void clear_utensor() {
-      this->is_assigned = false;
-      this->utensor = UniTensor();
+      if (left) {
+        left->clear_utensor();
+        left->root.reset();
+      }
+      if (right) {
+        right->clear_utensor();
+        right->root.reset();
+      }
+      is_assigned = false;
+      utensor = UniTensor();
+    }
+
+    void assign_utensor(const UniTensor& in_uten) {
+      utensor = in_uten;
+      is_assigned = true;
     }
   };
 
   class ContractionTree {
    public:
-    std::vector<Node> nodes_container;  // this contains intermediate layer.
-    std::vector<Node> base_nodes;  // this is the button layer.
+    std::vector<std::shared_ptr<Node>> nodes_container;  // intermediate layer
+    std::vector<std::shared_ptr<Node>> base_nodes;  // bottom layer
 
-    ContractionTree(){};
-    ContractionTree(const ContractionTree &rhs) {
-      this->nodes_container = rhs.nodes_container;
-      this->base_nodes = rhs.base_nodes;
-    }
-    ContractionTree &operator==(const ContractionTree &rhs) {
-      this->nodes_container = rhs.nodes_container;
-      this->base_nodes = rhs.base_nodes;
-      return *this;
-    }
+    ContractionTree() = default;
+    ContractionTree(const ContractionTree&) = default;
+    ContractionTree& operator=(const ContractionTree&) = default;
 
-    // clear all the elements in the whole tree.
     void clear() {
       nodes_container.clear();
       base_nodes.clear();
-      // nodes_container.reserve(1024);
     }
-    // clear all the intermediate layer, leave all the base_nodes intact.
-    // and reset the root pointer on the base ondes
+
     void reset_contraction_order() {
+      // First clear all root pointers
+      for (auto& node : base_nodes) {
+        if (node) node->root.reset();
+      }
+      // Then clear the container
       nodes_container.clear();
-      for (cytnx_uint64 i = 0; i < base_nodes.size(); i++) {
-        base_nodes[i].root = nullptr;
-      }
-      // nodes_container.reserve(1024);
     }
+
     void reset_nodes() {
-      // reset all nodes but keep the skeleton
-      for (cytnx_uint64 i = 0; i < this->nodes_container.size(); i++) {
-        this->nodes_container[i].clear_utensor();
+      // Clear from root down if we have nodes
+      if (!nodes_container.empty() && nodes_container.back()) {
+        nodes_container.back()->clear_utensor();
       }
-      for (cytnx_uint64 i = 0; i < this->base_nodes.size(); i++) {
-        this->base_nodes[i].clear_utensor();
+      nodes_container.clear();
+
+      // Reset base nodes
+      for (auto& node : base_nodes) {
+        if (node) {
+          node->is_assigned = false;
+          node->utensor = UniTensor();
+        }
       }
     }
+
     void build_default_contraction_tree();
-    void build_contraction_tree_by_tokens(const std::map<std::string, cytnx_uint64> &name2pos,
-                                          const std::vector<std::string> &tokens);
+    void build_contraction_tree_by_tokens(const std::map<std::string, cytnx_uint64>& name2pos,
+                                          const std::vector<std::string>& tokens);
   };
   /// @endcond
 }  // namespace cytnx
 #endif  // BACKEND_TORCH
 
-#endif
+#endif  // CYTNX_CONTRACTION_TREE_H_

@@ -1,10 +1,11 @@
-#include "linalg.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
+
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include <iostream>
-#include <vector>
-#include <string>
+#include "linalg.hpp"
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -129,7 +130,7 @@ namespace cytnx {
       cytnx::Bond newBond(outT[t].shape()[0]);
 
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-                Device.cpu, true);  // it is just reference so no hurt to alias ^^
+                Tin.device(), true);  // it is just reference so no hurt to alias ^^
 
       // cout << "[AFTER INIT]" << endl;
       Cy_S.put_block_(outT[t]);
@@ -137,11 +138,15 @@ namespace cytnx {
 
       if (compute_uv) {
         cytnx::UniTensor &Cy_U = outCyT[t];
-        vector<cytnx_int64> shapeU = vec_clone(oldshape, Tin.rowrank());
+        cytnx_error_msg(Tin.rowrank() > oldshape.size(),
+                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+                        "contained tensor.%s",
+                        "\n");
+        vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
         shapeU.push_back(-1);
         outT[t].reshape_(shapeU);
         Cy_U.Init(outT[t], false, Tin.rowrank());
-        vector<string> labelU = vec_clone(oldlabel, Tin.rowrank());
+        vector<string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
         labelU.push_back(Cy_S.labels()[0]);
         Cy_U.set_labels(labelU);
         t++;  // U

@@ -4,6 +4,7 @@
 #include "linalg.hpp"
 #include "Generator.hpp"
 #include <vector>
+#include "utils/vec_clone.hpp"
 #include "utils/vec_print.hpp"
 #include "utils/vec_concatenate.hpp"
 #include <map>
@@ -14,9 +15,6 @@ using namespace std;
 #ifdef BACKEND_TORCH
 #else
 
-  #ifdef UNI_OMP
-    #include <omp.h>
-  #endif
 namespace cytnx {
   typedef Accessor ac;
   void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
@@ -912,7 +910,6 @@ namespace cytnx {
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
 
-        // these two cannot omp parallel, due to intrusive_ptr
         for (cytnx_uint64 i = 0; i < non_comm_idx1.size(); i++)
           out_bonds.push_back(this->_bonds[non_comm_idx1[i]].clone());
         for (cytnx_uint64 i = 0; i < non_comm_idx2.size(); i++)
@@ -1104,9 +1101,9 @@ namespace cytnx {
                 ms[binx] = this->_blocks[a].shape()[0];
                 ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
                 ks[binx] = comm_dim;
-                LMems[binx] = this->_blocks[a].storage()._impl->Mem;
-                RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->Mem;
-                CMems[binx] = tmp->_blocks[targ_b].storage()._impl->Mem;
+                LMems[binx] = this->_blocks[a].storage()._impl->data();
+                RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
+                CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
               } else {
                 tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
                                           .reshape(tmp->_blocks[targ_b].shape());

@@ -35,14 +35,14 @@ namespace cytnx {
                                     const cytnx_uint64 &Nelem) {
       cytnx_uint32 NBlocks = Nelem / 256;
       if (Nelem % 256) NBlocks += 1;
-      cuConj_inplace_kernel<<<NBlocks, 256>>>((cuDoubleComplex *)ten->Mem, Nelem);
+      cuConj_inplace_kernel<<<NBlocks, 256>>>((cuDoubleComplex *)ten->data(), Nelem);
     }
 
     void cuConj_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten,
                                     const cytnx_uint64 &Nelem) {
       cytnx_uint32 NBlocks = Nelem / 512;
       if (Nelem % 512) NBlocks += 1;
-      cuConj_inplace_kernel<<<NBlocks, 512>>>((cuFloatComplex *)ten->Mem, Nelem);
+      cuConj_inplace_kernel<<<NBlocks, 512>>>((cuFloatComplex *)ten->data(), Nelem);
     }
 
   }  // namespace linalg_internal

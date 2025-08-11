@@ -965,7 +965,6 @@ namespace cytnx {
       // process meta
       vec_concatenate_(tmp->_labels, this->labels(), rhs->labels());
 
-      // these two cannot omp parallel, due to intrusive_ptr
       for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++)
         tmp->_bonds.push_back(this->_bonds[i].clone());
       for (cytnx_uint64 i = 0; i < rhs->_bonds.size(); i++)
@@ -1030,7 +1029,6 @@ namespace cytnx {
       vec_concatenate_(tmp->_labels, vec_clone(this->_labels, non_comm_idx1),
                        vec_clone(rhs->_labels, non_comm_idx2));
 
-      // these two cannot omp parallel, due to intrusive_ptr
       for (cytnx_uint64 i = 0; i < non_comm_idx1.size(); i++)
         tmp->_bonds.push_back(this->_bonds[non_comm_idx1[i]].clone());
       for (cytnx_uint64 i = 0; i < non_comm_idx2.size(); i++)
