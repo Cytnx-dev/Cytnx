@@ -3,7 +3,7 @@
 #include "cuda_runtime_api.h"
 #include "gtest/gtest.h"
 
-#include "../test_tools.h"
+#include "gpu_test_tools.h"
 #include "cytnx_error.hpp"
 #include "linalg.hpp"
 #include "Tensor.hpp"

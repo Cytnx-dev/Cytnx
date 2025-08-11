@@ -17,10 +17,12 @@ using namespace std;
 
 namespace cytnx {
   typedef Accessor ac;
-  void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
-                            const cytnx_int64 &rowrank, const unsigned int &dtype,
-                            const int &device, const bool &is_diag, const bool &no_alloc,
-                            const std::string &name) {
+  void BlockFermionicUniTensor::Init(const std::vector<Bond> &bonds,
+                                     const std::vector<string> &in_labels,
+                                     const cytnx_int64 &rowrank, const unsigned int &dtype,
+                                     const int &device, const bool &is_diag, const bool &no_alloc,
+                                     const std::string &name) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor
     this->_name = name;
     // the entering is already check all the bonds have symmetry.
     //  need to check:
@@ -34,46 +36,51 @@ namespace cytnx {
     cytnx_uint32 N_ket = 0;
     for (cytnx_uint64 i = 0; i < bonds.size(); i++) {
       // check
-      cytnx_error_msg(
-        bonds[i].type() == BD_REG,
-        "[ERROR][BlockUniTensor] All bonds must be tagged for UniTensor with symmetries.%s", "\n");
+      cytnx_error_msg(bonds[i].type() == BD_REG,
+                      "[ERROR][BlockFermionicUniTensor] All bonds must be tagged for UniTensor "
+                      "with symmetries.%s",
+                      "\n");
 
-      cytnx_error_msg(
-        bonds[i]._impl->_degs.size() == 0,
-        "[ERROR][BlockUniTensor] All bonds must be in new format for BlockUniTensor!.%s", "\n");
+      cytnx_error_msg(bonds[i]._impl->_degs.size() == 0,
+                      "[ERROR][BlockFermionicUniTensor] All bonds must be in new format for "
+                      "BlockFermionicUniTensor!.%s",
+                      "\n");
 
       // check rank-0 bond:
       cytnx_error_msg(bonds[i].dim() == 0,
-                      "[ERROR][BlockUniTensor] All bonds must have dimension >=1%s", "\n");
+                      "[ERROR][BlockFermionicUniTensor] All bonds must have dimension >=1%s", "\n");
       // check symmetry and type:
-      cytnx_error_msg(bonds[i].Nsym() != N_symmetry,
-                      "[ERROR][BlockUniTensor] inconsistant # of symmetry at bond: %d. # of "
-                      "symmetry should be %d\n",
-                      i, N_symmetry);
+      cytnx_error_msg(
+        bonds[i].Nsym() != N_symmetry,
+        "[ERROR][BlockFermionicUniTensor] inconsistant # of symmetry at bond: %d. # of "
+        "symmetry should be %d\n",
+        i, N_symmetry);
       for (cytnx_uint32 n = 0; n < N_symmetry; n++) {
-        cytnx_error_msg(bonds[i].syms()[n] != tmpSyms[n],
-                        "[ERROR][BlockUniTensor] symmetry mismatch at bond: %d, %s != %s\n", n,
-                        bonds[i].syms()[n].stype_str().c_str(), tmpSyms[n].stype_str().c_str());
+        cytnx_error_msg(
+          bonds[i].syms()[n] != tmpSyms[n],
+          "[ERROR][BlockFermionicUniTensor] symmetry mismatch at bond: %d, %s != %s\n", n,
+          bonds[i].syms()[n].stype_str().c_str(), tmpSyms[n].stype_str().c_str());
       }
       N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
     }
 
     // check rowrank:
-    // cytnx_error_msg((N_ket < 1) || (N_ket > bonds.size() - 1),
-    //                 "[ERROR][BlockUniTensor] must have at least one ket-bond and one
-    //                 bra-bond.%s",
-    //                 "\n");
+    // cytnx_error_msg(
+    //   (N_ket < 1) || (N_ket > bonds.size() - 1),
+    //   "[ERROR][BlockFermionicUniTensor] must have at least one ket-bond and one bra-bond.%s",
+    //   "\n");
 
     if (rowrank == -1) {
       this->_rowrank = N_ket;
       // this->_inner_rowrank = N_ket;
     } else {
       if (is_diag) {
-        cytnx_error_msg(rowrank != 1,
-                        "[ERROR][BlockUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
+        cytnx_error_msg(
+          rowrank != 1,
+          "[ERROR][BlockFermionicUniTensor] rowrank must be = 1 when is_diag = true.%s", "\n");
       } else {
         cytnx_error_msg((rowrank < 0) || (rowrank > bonds.size()),
-                        "[ERROR][BlockUniTensor] rowrank must be >=0 and <=rank.%s", "\n");
+                        "[ERROR][BlockFermionicUniTensor] rowrank must be >=0 and <=rank.%s", "\n");
       }
       this->_rowrank = rowrank;
       // this->_inner_rowrank = rowrank;
@@ -95,23 +102,27 @@ namespace cytnx {
       this->_labels = in_labels;
     }
 
-    // cytnx_error_msg(is_diag,"[ERROR][BlockUniTensor] Cannot set is_diag=true when the UniTensor
-    // is with symmetry.%s","\n");
+    // cytnx_error_msg(is_diag,"[ERROR][BlockFermionicUniTensor] Cannot set is_diag=true when the
+    // UniTensor is with symmetry.%s","\n");
     if (is_diag) {
-      cytnx_error_msg(bonds.size() != 2,
-                      "[ERROR][BlockUniTensor] is_diag = true must be rank-2 with one in-bond and "
-                      "one out-bond.%s",
-                      "\n");
+      cytnx_error_msg(
+        bonds.size() != 2,
+        "[ERROR][BlockFermionicUniTensor] is_diag = true must be rank-2 with one in-bond and "
+        "one out-bond.%s",
+        "\n");
       cytnx_error_msg(
         bonds[0].type() == bonds[1].type(),
-        "[ERROR][BlockUniTensor] is_diag=true must have one in-bond and oue out-bond.%s", "\n");
-      if (rowrank != 1, "[ERROR][BlockUniTensor] is_diag = true must have rowrank=1.%s", "\n")
+        "[ERROR][BlockFermionicUniTensor] is_diag=true must have one in-bond and oue out-bond.%s",
+        "\n");
+      if (rowrank != 1, "[ERROR][BlockFermionicUniTensor] is_diag = true must have rowrank=1.%s",
+          "\n")
         ;
 
       // checking basis!
-      cytnx_error_msg(
-        bonds[0].redirect() != bonds[1],
-        "[ERROR][BlockUniTensor] is_diag=true the in-bond and out-bond basis must match!%s", "\n");
+      cytnx_error_msg(bonds[0].redirect() != bonds[1],
+                      "[ERROR][BlockFermionicUniTensor] is_diag=true the in-bond and out-bond "
+                      "basis must match!%s",
+                      "\n");
     }
     this->_is_diag = is_diag;
 
@@ -210,11 +221,18 @@ namespace cytnx {
       //   }
       // }
     }  // is_diag?
+
+    // fermionic part: set signflips to false
+    std::vector<bool> signflip(_blocks.size(), false);
+    this->_signflip = signflip;
   }
 
-  void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
-                          const std::vector<cytnx_uint64> &qn_indices,
-                          const std::vector<Bond> &bonds, const Tensor &block) {
+  void BlockFermionicUniTensor::beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin,
+                                                   const cytnx_uint64 &Nout,
+                                                   const std::vector<cytnx_uint64> &qn_indices,
+                                                   const std::vector<Bond> &bonds,
+                                                   const Tensor &block) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor
     cytnx_uint64 Total_line = Nin < Nout ? Nout : Nin;
 
     std::vector<std::string> Lside(Total_line);
@@ -303,7 +321,9 @@ namespace cytnx {
 
     os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
   }
-  void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+
+  void BlockFermionicUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; sign structure is printed additionally
     cytnx_error_msg(
       (idx < 0) || (idx >= this->_blocks.size()),
       "[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n", idx,
@@ -314,6 +334,7 @@ namespace cytnx {
     os << "========================\n";
     if (this->_is_diag) os << " *is_diag: True\n";
     os << "BLOCK [#" << idx << "]\n";
+    os << "fermionic sign = " << (this->_signflip[idx] ? -1 : +1) << "\n";
     /*
     os << "  |-Qn indices for each axis:\n   {\t";
     for(int s=0;s<this->_inner_to_outer_idx[idx].size();s++){
@@ -337,8 +358,8 @@ namespace cytnx {
     */
     os << " |- []   : Qn index \n";
     os << " |- Sym(): Qnum of correspond symmetry\n";
-    beauty_print_block(os, this->_rowrank, this->_labels.size() - this->_rowrank,
-                       this->_inner_to_outer_idx[idx], this->_bonds, this->_blocks[idx]);
+    this->beauty_print_block(os, this->_rowrank, this->_labels.size() - this->_rowrank,
+                             this->_inner_to_outer_idx[idx], this->_bonds, this->_blocks[idx]);
 
     if (full_info)
       os << this->_blocks[idx];
@@ -351,7 +372,8 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::print_blocks(const bool &full_info) const {
+  void BlockFermionicUniTensor::print_blocks(const bool &full_info) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; sign structure is printed additionally
     std::ostream &os = std::cout;
 
     os << "-------- start of print ---------\n";
@@ -367,6 +389,14 @@ namespace cytnx {
     os << std::string(buffer);
     sprintf(buffer, "[OVERALL] contiguous : %s\n", this->is_contiguous() ? "True" : "False");
     os << std::string(buffer);
+    sprintf(buffer, "fermion sign:");
+    os << buffer;
+    for (int i = 0; i < this->_signflip.size(); i++) {
+      sprintf(buffer, this->_signflip[i] ? " -1" : " +1");
+      os << buffer;
+    }
+    sprintf(buffer, "\n");
+    os << buffer;
 
     /*
     os << "Symmetries: ";
@@ -404,11 +434,13 @@ namespace cytnx {
     free(buffer);
   }
 
-  void BlockUniTensor::print_diagram(const bool &bond_info) const {
+  void BlockFermionicUniTensor::print_diagram(const bool &bond_info) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, 'f' symbols in the corners of
+    // the diagram are shown, and the sign structure is printed
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
-    sprintf(buffer, "-----------------------%s", "\n");
+    sprintf(buffer, "--fermionic UniTensor---%s", "\n");
     std::cout << std::string(buffer);
     sprintf(buffer, "tensor Name : %s\n", this->_name.c_str());
     std::cout << std::string(buffer);
@@ -423,6 +455,12 @@ namespace cytnx {
     sprintf(buffer, "is diag     : %s\n", this->is_diag() ? "True" : "False");
     std::cout << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
+    std::cout << std::string(buffer);
+    sprintf(buffer, "fermion sign:");
+    for (int i = 0; i < this->_signflip.size(); i++) {
+      sprintf(buffer + strlen(buffer), this->_signflip[i] ? " -1" : " +1");
+    }
+    sprintf(buffer + strlen(buffer), "\n");
     std::cout << std::string(buffer);
 
     cytnx_uint64 Nin = this->_rowrank;
@@ -460,7 +498,7 @@ namespace cytnx {
     std::string tmpss;
     sprintf(buffer, "%s row %s col %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
     std::cout << std::string(buffer);
-    sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
+    sprintf(buffer, "%s    f%sf    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
     std::cout << std::string(buffer);
     for (cytnx_uint64 i = 0; i < vl; i++) {
       sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
@@ -512,7 +550,7 @@ namespace cytnx {
     }
     sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
     std::cout << std::string(buffer);
-    sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
+    sprintf(buffer, "%s    f%sf    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
     std::cout << std::string(buffer);
     sprintf(buffer, "%s", "\n");
     std::cout << std::string(buffer);
@@ -534,12 +572,13 @@ namespace cytnx {
     free(buffer);
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contiguous() {
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::contiguous() {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     if (this->is_contiguous()) {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     } else {
-      BlockUniTensor *tmp = new BlockUniTensor();
+      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
       tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (unsigned int b = 0; b < this->_blocks.size(); b++) {
@@ -554,29 +593,36 @@ namespace cytnx {
     }
   }
 
-  std::vector<Symmetry> BlockUniTensor::syms() const { return this->_bonds[0].syms(); }
+  std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    return this->_bonds[0].syms();
+  }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute(
     const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, _swapsigns_ is called to
+    // update the sign struture
+    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
 
     // checking:
     for (int i = 0; i < mapper_u64.size(); i++) {
-      cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",
-                      mapper_u64[i]);
+      cytnx_error_msg(mapper_u64[i] >= this->rank(),
+                      "[ERROR][BlockFermionicUniTensor] index %d out of bound!\n", mapper_u64[i]);
     }
 
+    out_raw->_signflip = this->_swapsigns_(mapper);
     out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
     out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
 
     if (out_raw->_is_diag) {
-      // cytnx_error_msg(true,"[ERROR][BlockUniTensor] currently do not support permute for
-      // is_diag=true for BlockUniTensor!%s","\n");
+      // cytnx_error_msg(true,"[ERROR][BlockFermionicUniTensor] currently does not support permute
+      // for is_diag=true for BlockFermionicUniTensor!%s","\n");
       if (rowrank >= 0)
-        cytnx_error_msg(rowrank != 1, "[ERROR][BlockUniTensor] is_diag=true must have rowrank=1.%s",
+        cytnx_error_msg(rowrank != 1,
+                        "[ERROR][BlockFermionicUniTensor] is_diag=true must have rowrank=1.%s",
                         "\n");
       out_raw->_is_braket_form = out_raw->_update_braket();
 
@@ -588,9 +634,9 @@ namespace cytnx {
       }
 
       if (rowrank >= 0) {
-        cytnx_error_msg((rowrank > out_raw->_bonds.size()),
-                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
-                        "\n");
+        cytnx_error_msg(
+          (rowrank > out_raw->_bonds.size()),
+          "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of UniTensor.%s", "\n");
         out_raw->_rowrank = rowrank;
       }
       out_raw->_is_braket_form = out_raw->_update_braket();
@@ -600,9 +646,11 @@ namespace cytnx {
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute(
     const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    //[21 Aug 2024] This is a copy from BlockUniTensor; calls permute(std::vector<cytnx_int64>)
+    // which takes care of the fermionic sign struture
+    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -618,23 +666,26 @@ namespace cytnx {
     return this->permute(mapper_i64, rowrank);
   }
 
-  void BlockUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
-                                const cytnx_int64 &rowrank) {
-    std::vector<cytnx_uint64> mapper_u64;
-
-    mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+  void BlockFermionicUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
+                                         const cytnx_int64 &rowrank) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, _swapsigns_ is called to
+    // update the sign struture
+    std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
     // checking:
     for (int i = 0; i < mapper_u64.size(); i++) {
       cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",
                       mapper_u64[i]);
     }
 
+    this->_signflip = this->_swapsigns_(mapper);
+
     this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
     this->_labels = vec_map(this->labels(), mapper_u64);
 
     if (this->_is_diag) {
       if (rowrank >= 0)
-        cytnx_error_msg(rowrank != 1, "[ERROR][BlockUniTensor] is_diag=true must have rowrank=1.%s",
+        cytnx_error_msg(rowrank != 1,
+                        "[ERROR][BlockFermionicUniTensor] is_diag=true must have rowrank=1.%s",
                         "\n");
       this->_is_braket_form = this->_update_braket();
 
@@ -647,7 +698,8 @@ namespace cytnx {
 
       if (rowrank >= 0) {
         cytnx_error_msg((rowrank > this->_bonds.size()),
-                        "[ERROR][BlockUniTensor] rowrank cannot exceed the rank of UniTensor.%s",
+                        "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of "
+                        "UniTensor.%s",
                         "\n");
         this->_rowrank = rowrank;
       }
@@ -655,8 +707,10 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::permute_(const std::vector<std::string> &mapper,
-                                const cytnx_int64 &rowrank) {
+  void BlockFermionicUniTensor::permute_(const std::vector<std::string> &mapper,
+                                         const cytnx_int64 &rowrank) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; calls permute_(std::vector<cytnx_int64>)
+    // which takes care of the fermionic sign struture
     std::vector<cytnx_int64> mapper_i64;
     // cytnx_error_msg(true,"[Developing!]%s","\n");
     std::vector<std::string>::iterator it;
@@ -666,75 +720,594 @@ namespace cytnx {
                       "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
       mapper_i64.push_back(std::distance(this->_labels.begin(), it));
     }
-
     this->permute_(mapper_i64, rowrank);
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute_nosignflip(
+    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
+    // this is usually not what you want!!!
+    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    out_raw->_blocks.resize(this->_blocks.size());
+
+    // based on BlockUniTensor.permute but calls _swapsigns_
+    std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+
+    // checking:
+    for (int i = 0; i < mapper_u64.size(); i++) {
+      cytnx_error_msg(mapper_u64[i] >= this->rank(),
+                      "[ERROR][BlockFermionicUniTensor] index %d out of bound!\n", mapper_u64[i]);
+    }
+
+    // out_raw->_signflip = this->_swapsigns_(mapper);
+    out_raw->_bonds = vec_map(vec_clone(out_raw->bonds()), mapper_u64);  // this will check validity
+    out_raw->_labels = vec_map(out_raw->labels(), mapper_u64);
+
+    if (out_raw->_is_diag) {
+      // cytnx_error_msg(true,"[ERROR][BlockFermionicUniTensor] currently does not support permute
+      // for is_diag=true for BlockFermionicUniTensor!%s","\n");
+      if (rowrank >= 0)
+        cytnx_error_msg(rowrank != 1,
+                        "[ERROR][BlockFermionicUniTensor] is_diag=true must have rowrank=1.%s",
+                        "\n");
+      out_raw->_is_braket_form = out_raw->_update_braket();
+
+    } else {
+      // inner_to_outer permute!
+      for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
+        out_raw->_inner_to_outer_idx[b] = vec_map(out_raw->_inner_to_outer_idx[b], mapper_u64);
+        out_raw->_blocks[b] = this->_blocks[b].permute(mapper_u64);
+      }
+
+      if (rowrank >= 0) {
+        cytnx_error_msg(
+          (rowrank > out_raw->_bonds.size()),
+          "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of UniTensor.%s", "\n");
+        out_raw->_rowrank = rowrank;
+      }
+      out_raw->_is_braket_form = out_raw->_update_braket();
+    }
+    boost::intrusive_ptr<UniTensor_base> out(out_raw);
+
+    return out;
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::permute_nosignflip(
+    const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
+    // this is usually not what you want!!!
+    BlockFermionicUniTensor *out_raw = this->clone_meta(true, true);
+    out_raw->_blocks.resize(this->_blocks.size());
+
+    std::vector<cytnx_int64> mapper_i64;
+    // cytnx_error_msg(true,"[Developing!]%s","\n");
+    std::vector<string>::iterator it;
+    for (cytnx_int64 i = 0; i < mapper.size(); i++) {
+      it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
+      cytnx_error_msg(it == out_raw->_labels.end(),
+                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
+      mapper_i64.push_back(std::distance(out_raw->_labels.begin(), it));
+    }
+    cout << "Mapper: " << mapper_i64 << endl;
+    cout << "labels: " << _labels << endl;
+
+    return this->permute_nosignflip(mapper_i64, rowrank);
+  }
+
+  void BlockFermionicUniTensor::permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                                                    const cytnx_int64 &rowrank) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
+    // this is usually not what you want!!!
+    std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+    // checking:
+    for (int i = 0; i < mapper_u64.size(); i++) {
+      cytnx_error_msg(mapper_u64[i] >= this->rank(), "[ERROR] index %d out of bound!\n",
+                      mapper_u64[i]);
+    }
+
+    // this->_signflip = this->_swapsigns_(mapper);
+
+    this->_bonds = vec_map(vec_clone(this->bonds()), mapper_u64);  // this will check validity
+    this->_labels = vec_map(this->labels(), mapper_u64);
+
+    if (this->_is_diag) {
+      if (rowrank >= 0)
+        cytnx_error_msg(rowrank != 1,
+                        "[ERROR][BlockFermionicUniTensor] is_diag=true must have rowrank=1.%s",
+                        "\n");
+      this->_is_braket_form = this->_update_braket();
+
+    } else {
+      // inner_to_outer permute!
+      for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
+        this->_inner_to_outer_idx[b] = vec_map(this->_inner_to_outer_idx[b], mapper_u64);
+        this->_blocks[b].permute_(mapper_u64);
+      }
+
+      if (rowrank >= 0) {
+        cytnx_error_msg((rowrank > this->_bonds.size()),
+                        "[ERROR][BlockFermionicUniTensor] rowrank cannot exceed the rank of "
+                        "UniTensor.%s",
+                        "\n");
+        this->_rowrank = rowrank;
+      }
+      this->_is_braket_form = this->_update_braket();
+    }
+  }
+
+  void BlockFermionicUniTensor::permute_nosignflip_(const std::vector<std::string> &mapper,
+                                                    const cytnx_int64 &rowrank) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; no sign flips are applied. Use with caution,
+    // this is usually not what you want!!!
+    std::vector<cytnx_int64> mapper_i64;
+    // cytnx_error_msg(true,"[Developing!]%s","\n");
+    std::vector<std::string>::iterator it;
+    for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
+      it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
+      cytnx_error_msg(it == this->_labels.end(),
+                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
+      mapper_i64.push_back(std::distance(this->_labels.begin(), it));
+    }
+    this->permute_nosignflip_(mapper_i64, rowrank);
+  }
+
+  std::vector<bool> BlockFermionicUniTensor::_swapsigns_(
+    const std::vector<cytnx_int64> &mapper) const {
+    // Implements the sign flips when permuting indices; cytnx_int64 version
+
+    std::vector<bool> signs = this->_signflip;
+
+    for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
+      std::vector<cytnx::cytnx_uint64> qindices =
+        this->_inner_to_outer_idx[b];  // quantum indices for each block
+      // std::cout << "Block " << b << " qnums: " << qindices << std::endl;
+      // find the fermion parity for each quantum index
+      std::vector<fermionParity> parities(qindices.size());
+      for (cytnx_int64 qnum = 0; qnum < qindices.size(); qnum++) {
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        // std::cout << "Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] << " Qnums
+        // = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity: " <<
+        // parities[qnum] << endl;
+      }
+      // permute; we exchange i with permutation[i], until permutation[i] == i
+      std::vector<cytnx_uint64> permutation =
+        std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+      cytnx_int64 actind;
+      fermionParity actparity;
+      for (cytnx_int64 qnum = 0; qnum < qindices.size(); qnum++) {
+        // cout << "permutation[" << qnum << "] = " << permutation[qnum] << endl;
+        while (permutation[qnum] != qnum) {  // exchange until the correct qindex is here
+          actind = permutation[qnum];
+          actparity = parities[qnum];
+          // find the sign flips of the exchange, depending on the statistics of qnum and actind
+          if (actparity == ODD) {
+            if (parities[actind] == ODD) {  // both fermionic, one sign flip
+              signs[b] = !signs[b];
+              // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << endl;
+            } else {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_int64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << endl;
+                }
+              }
+            }
+          } else {
+            if (parities[actind] ==
+                ODD) {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_int64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << endl;
+                }
+              }
+            }
+            // else{  //both bosonic, do nothing
+            // }
+          }
+          // cout << "permutation before permute: " << endl << permutation << "; signs before
+          // permute: " << endl << parities << endl; cout << "qnum = " << qnum << "; actind = " <<
+          // actind << "; permutation[actind] = " << permutation[actind] << endl;
+          // exchange the sites
+          permutation[qnum] = permutation[actind];
+          permutation[actind] = actind;
+          parities[qnum] = parities[actind];
+          parities[actind] = actparity;
+          // cout << "permutation after permute: " << endl << permutation << "; signs after permute:
+          // " << endl <<  parities << endl; cout << "signflip = " << signs[b] << endl;
+        }
+      }
+      // this->_signflip[b] = signflip;
+    }
+    return signs;
+  }
+
+  std::vector<bool> BlockFermionicUniTensor::_swapsigns_(
+    const std::vector<cytnx_uint64> &mapper) const {
+    // Implements the sign flips when permuting indices; cytnx_uint64 version
+
+    std::vector<bool> signs = this->_signflip;
+
+    for (cytnx_uint64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
+      // find parities
+      std::vector<cytnx::cytnx_uint64> qindices =
+        this->_inner_to_outer_idx[b];  // quantum indices for each block
+      // std::cout << "[DEBUG] Block " << b << " qnums: " << qindices << std::endl;
+      // find the fermion parity for each quantum index
+      std::vector<fermionParity> parities(qindices.size());
+      for (cytnx_uint64 qnum = 0; qnum < qindices.size(); qnum++) {
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        // std::cout << "[DEBUG] Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] <<
+        // " Qnums = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity:
+        // " << parities[qnum] << endl;
+      }
+      std::vector<cytnx_uint64> permutation =
+        std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+      cytnx_uint64 actind;
+      fermionParity actparity;
+      // cout << "[DEBUG] permutation = " << permutation << endl;
+      // cout << "[DEBUG] parities = " << parities << endl;
+      // permute; we exchange i with permutation[i], until permutation[i] == i
+      for (cytnx_uint64 qnum = 0; qnum < qindices.size(); qnum++) {
+        // cout << "[DEBUG] permutation[" << qnum << "] = " << permutation[qnum] << endl;
+        // cout << "[DEBUG] parity[" << qnum << "] = " << parities[qnum] << endl;
+        while (permutation[qnum] != qnum) {  // exchange until the correct qindex is here
+          actind = permutation[qnum];
+          actparity = parities[permutation[actind]];
+          // cout << "[DEBUG] parities[" << permutation[actind] << "] = " << actparity << ";
+          // parities[" << actind << "] = " << parities[actind] << endl; find the sign flips of the
+          // exchange, depending on the statistics of qnum and actind
+          if (actparity == ODD) {
+            if (parities[actind] == ODD) {  // both fermionic, one sign flip
+              signs[b] = !signs[b];
+              // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+              // parities[" << permutation[actind] << "] = ODD and parities[" << actind << "] = ODD"
+              // << endl;
+            } else {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_uint64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                // cout << "[DEBUG] intqnum = " << intqnum << "; permutation[intqnum] = " <<
+                // permutation[intqnum] << "; parity = " << parities[permutation[intqnum]] << endl;
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+                  // parities[" << permutation[actind] << "] = ODD and parities[" <<
+                  // permutation[intqnum] << "] = ODD" << endl;
+                }
+              }
+            }
+          } else {  // actparity == EVEN
+            if (parities[actind] ==
+                ODD) {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_uint64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                // cout << "[DEBUG] intqnum = " << intqnum << "; permutation[intqnum] = " <<
+                // permutation[intqnum] << "; parity = " << parities[permutation[intqnum]] << endl;
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+                  // parities[" << permutation[actind] << "] = ODD and parities[" <<
+                  // permutation[intqnum] << "] = ODD" << endl;
+                }
+              }
+            }
+            // else{  //both bosonic, do nothing
+            // }
+          }
+          // cout << "[DEBUG] permutation before permute: " << endl << permutation << "; signs
+          // before permute: " << endl << parities << endl; cout << "qnum = " << qnum << "; actind =
+          // " << actind << "; permutation[actind] = " << permutation[actind] << endl; exchange the
+          // sites
+          permutation[qnum] = permutation[actind];
+          permutation[actind] = actind;
+          // parities[qnum] = parities[actind];
+          // parities[actind] = actparity;
+          // cout << "[DEBUG] permutation after permute: " << endl << permutation << "; signs after
+          // permute: " << endl <<  parities << endl; cout << "signflip = " << signs[b] << endl;
+        }
+      }
+      // this->_signflip[b] = signflip;
+    }
+    return signs;
+  }
+
+  std::vector<bool> BlockFermionicUniTensor::_lhssigns_(const std::vector<cytnx_int64> &mapper,
+                                                        const cytnx_int64 contrno) const {
+    // Implements the sign flips for the lhs of a contraction
+    // explicitly, the signs for permutation and for reversed bonds are included
+    // note that the order of the indices needs to be inversed compared to the rhs!
+    // contrno: number of indices that are contracted; only the last contrno indices will lead to a
+    // signflip if they are of type BD_KET
+    // this is a copy of _swapsigns_ with signflips for BD_KET bonds.
+    cytnx_error_msg((this->_bonds.size() < contrno),
+                    "[ERROR][BlockFermionicUniTensor] The number of tensors to be contracted "
+                    "cannot be larger than the number of bonds.%s",
+                    "\n");
+    cytnx_uint64 firstcontr = this->_bonds.size() - contrno;
+    // cout << "[DEBUG] contrno = " << contrno << "; firstcontr = " << firstcontr << endl;
+
+    std::vector<bool> signs = this->_signflip;
+
+    for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
+      // find parities
+      std::vector<cytnx::cytnx_uint64> qindices =
+        this->_inner_to_outer_idx[b];  // quantum indices for each block
+      // std::cout << "[DEBUG] Block " << b << " qnums: " << qindices << std::endl;
+      // find the fermion parity for each quantum index
+      std::vector<fermionParity> parities(qindices.size());
+      for (cytnx_int64 qnum = 0; qnum < qindices.size(); qnum++) {
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        // std::cout << "[DEBUG] Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] <<
+        // " Qnums = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity:
+        // " << parities[qnum] << endl;
+      }
+      std::vector<cytnx_uint64> permutation =
+        std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+      cytnx_int64 actind;
+      fermionParity actparity;
+      // cout << "[DEBUG] permutation = " << permutation << endl;
+      // cout << "[DEBUG] parities = " << parities << endl;
+      // sign flips for reversed order
+      for (cytnx_int64 qnum = firstcontr; qnum < qindices.size(); qnum++) {
+        actind = permutation[qnum];
+        if (parities[actind] == ODD && this->_bonds[actind]._impl->_type == BD_KET) {
+          signs[b] = !signs[b];
+          // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << endl;
+          // cout << "[DEBUG] Block " << b << " has a sign flip because a bond is of type  BD_KET;
+          // previous index = " << qnum << "; permuted index = " << actind << endl; cout << "[DEBUG]
+          // parities[" << actind << "] = " << parities[actind] << endl;
+        }
+      }
+      // permute; we exchange i with permutation[i], until permutation[i] == i
+      for (cytnx_int64 qnum = 0; qnum < qindices.size(); qnum++) {
+        // cout << "[DEBUG] permutation[" << qnum << "] = " << permutation[qnum] << endl;
+        // cout << "[DEBUG] parity[" << qnum << "] = " << parities[qnum] << endl;
+        while (permutation[qnum] != qnum) {  // exchange until the correct qindex is here
+          actind = permutation[qnum];
+          actparity = parities[permutation[actind]];
+          // cout << "[DEBUG] parities[" << permutation[actind] << "] = " << actparity << ";
+          // parities[" << actind << "] = " << parities[actind] << endl; find the sign flips of the
+          // exchange, depending on the statistics of qnum and actind
+          if (actparity == ODD) {
+            if (parities[actind] == ODD) {  // both fermionic, one sign flip
+              signs[b] = !signs[b];
+              // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+              // parities[" << permutation[actind] << "] = ODD and parities[" << actind << "] = ODD"
+              // << endl;
+            } else {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_int64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                // cout << "[DEBUG] intqnum = " << intqnum << "; permutation[intqnum] = " <<
+                // permutation[intqnum] << "; parity = " << parities[permutation[intqnum]] << endl;
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+                  // parities[" << permutation[actind] << "] = ODD and parities[" <<
+                  // permutation[intqnum] << "] = ODD" << endl;
+                }
+              }
+            }
+          } else {  // actparity == EVEN
+            if (parities[actind] ==
+                ODD) {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_int64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                // cout << "[DEBUG] intqnum = " << intqnum << "; permutation[intqnum] = " <<
+                // permutation[intqnum] << "; parity = " << parities[permutation[intqnum]] << endl;
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+                  // parities[" << permutation[actind] << "] = ODD and parities[" <<
+                  // permutation[intqnum] << "] = ODD" << endl;
+                }
+              }
+            }
+            // else{  //both bosonic, do nothing
+            // }
+          }
+          // cout << "[DEBUG] permutation before permute: " << endl << permutation << "; signs
+          // before permute: " << endl << parities << endl; cout << "qnum = " << qnum << "; actind =
+          // " << actind << "; permutation[actind] = " << permutation[actind] << endl; exchange the
+          // sites
+          permutation[qnum] = permutation[actind];
+          permutation[actind] = actind;
+          // parities[qnum] = parities[actind];
+          // parities[actind] = actparity;
+          // cout << "[DEBUG] permutation after permute: " << endl << permutation << "; signs after
+          // permute: " << endl <<  parities << endl; cout << "signflip = " << signs[b] << endl;
+        }
+      }
+      // this->_signflip[b] = signflip;
+    }
+    return signs;
+  }
+
+  std::vector<bool> BlockFermionicUniTensor::_lhssigns_(const std::vector<cytnx_uint64> &mapper,
+                                                        const cytnx_uint64 contrno) const {
+    // Implements the sign flips for the lhs of a contraction
+    // explicitly, the signs for permutation and for reversed bonds are included
+    // note that the order of the indices needs to be inversed compared to the rhs!
+    // contrno: number of indices that are contracted; only the last contrno indices will lead to a
+    // signflip if they are of type BD_KET
+    // this is a copy of _swapsigns_ with signflips for BD_KET bonds.
+    cytnx_error_msg((this->_bonds.size() < contrno),
+                    "[ERROR][BlockFermionicUniTensor] The number of tensors to be contracted "
+                    "cannot be larger than the number of bonds.%s",
+                    "\n");
+    cytnx_uint64 firstcontr = this->_bonds.size() - contrno;
+    // cout << "[DEBUG] contrno = " << contrno << "; firstcontr = " << firstcontr << endl;
+
+    std::vector<bool> signs = this->_signflip;
+
+    for (cytnx_uint64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
+      // find parities
+      std::vector<cytnx::cytnx_uint64> qindices =
+        this->_inner_to_outer_idx[b];  // quantum indices for each block
+      // std::cout << "[DEBUG] Block " << b << " qnums: " << qindices << std::endl;
+      // find the fermion parity for each quantum index
+      std::vector<fermionParity> parities(qindices.size());
+      for (cytnx_uint64 qnum = 0; qnum < qindices.size(); qnum++) {
+        parities[qnum] = this->_bonds[qnum]._impl->get_fermion_parity(
+          this->_bonds[qnum]._impl->_qnums[qindices[qnum]]);
+        // std::cout << "[DEBUG] Block " << b << ", Qindex[" << qnum << "] = " << qindices[qnum] <<
+        // " Qnums = " << this->_bonds[qnum]._impl->_qnums[qindices[qnum]] << endl; cout << "Parity:
+        // " << parities[qnum] << endl;
+      }
+      std::vector<cytnx_uint64> permutation =
+        std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
+      cytnx_uint64 actind;
+      fermionParity actparity;
+      // cout << "[DEBUG] permutation = " << permutation << endl;
+      // cout << "[DEBUG] parities = " << parities << endl;
+      // sign flips for reversed order
+      for (cytnx_uint64 qnum = firstcontr; qnum < qindices.size(); qnum++) {
+        actind = permutation[qnum];
+        if (parities[actind] == ODD && this->_bonds[actind]._impl->_type == BD_KET) {
+          signs[b] = !signs[b];
+          // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << endl;
+          // cout << "[DEBUG] Block " << b << " has a sign flip because a bond is of type  BD_KET;
+          // previous index = " << qnum << "; permuted index = " << actind << endl; cout << "[DEBUG]
+          // parities[" << actind << "] = " << parities[actind] << endl;
+        }
+      }
+      // permute; we exchange i with permutation[i], until permutation[i] == i
+      for (cytnx_uint64 qnum = 0; qnum < qindices.size(); qnum++) {
+        // cout << "[DEBUG] permutation[" << qnum << "] = " << permutation[qnum] << endl;
+        // cout << "[DEBUG] parity[" << qnum << "] = " << parities[qnum] << endl;
+        while (permutation[qnum] != qnum) {  // exchange until the correct qindex is here
+          actind = permutation[qnum];
+          actparity = parities[permutation[actind]];
+          // cout << "[DEBUG] parities[" << permutation[actind] << "] = " << actparity << ";
+          // parities[" << actind << "] = " << parities[actind] << endl; find the sign flips of the
+          // exchange, depending on the statistics of qnum and actind
+          if (actparity == ODD) {
+            if (parities[actind] == ODD) {  // both fermionic, one sign flip
+              signs[b] = !signs[b];
+              // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+              // parities[" << permutation[actind] << "] = ODD and parities[" << actind << "] = ODD"
+              // << endl;
+            } else {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_uint64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                // cout << "[DEBUG] intqnum = " << intqnum << "; permutation[intqnum] = " <<
+                // permutation[intqnum] << "; parity = " << parities[permutation[intqnum]] << endl;
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+                  // parities[" << permutation[actind] << "] = ODD and parities[" <<
+                  // permutation[intqnum] << "] = ODD" << endl;
+                }
+              }
+            }
+          } else {  // actparity == EVEN
+            if (parities[actind] ==
+                ODD) {  // one fermionic, sign flip for each intermediate fermion
+              for (cytnx_uint64 intqnum = qnum + 1; intqnum < actind; intqnum++) {
+                // cout << "[DEBUG] intqnum = " << intqnum << "; permutation[intqnum] = " <<
+                // permutation[intqnum] << "; parity = " << parities[permutation[intqnum]] << endl;
+                if (parities[permutation[intqnum]] == ODD) {
+                  signs[b] = !signs[b];
+                  // cout << "[DEBUG] signs[" << b << "] flipped to " << signs[b] << " because
+                  // parities[" << permutation[actind] << "] = ODD and parities[" <<
+                  // permutation[intqnum] << "] = ODD" << endl;
+                }
+              }
+            }
+            // else{  //both bosonic, do nothing
+            // }
+          }
+          // cout << "[DEBUG] permutation before permute: " << endl << permutation << "; signs
+          // before permute: " << endl << parities << endl; cout << "qnum = " << qnum << "; actind =
+          // " << actind << "; permutation[actind] = " << permutation[actind] << endl; exchange the
+          // sites
+          permutation[qnum] = permutation[actind];
+          permutation[actind] = actind;
+          // parities[qnum] = parities[actind];
+          // parities[actind] = actparity;
+          // cout << "[DEBUG] permutation after permute: " << endl << permutation << "; signs after
+          // permute: " << endl <<  parities << endl; cout << "signflip = " << signs[b] << endl;
+        }
+      }
+      // this->_signflip[b] = signflip;
+    }
+    return signs;
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     const std::vector<string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabel_(old_labels, new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     const std::vector<string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabels(
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabels_(old_labels, new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
-                                                               const string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(const cytnx_int64 &inx,
+                                                                        const string &new_label) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string &inx,
-                                                               const string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::relabel(const string &inx,
+                                                                        const string &new_label) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contract(
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::contract(
     const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
     const bool &mv_elem_rhs) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, the signs of the blocks, from
+    // permutations, and from BD_KET indices on the lhs are taken into account
+
     // checking type
-    cytnx_error_msg(
-      rhs->uten_type() != UTenType.Block,
-      "[ERROR] cannot contract symmetry-block UniTensor with other type of UniTensor%s", "\n");
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
+                    "[ERROR][BlockFermionicUniTensors] Cannot contract BlockFermionicUniTensor "
+                    "with other type of UniTensor%s",
+                    "\n");
 
     // checking symmetry:
     cytnx_error_msg(this->syms() != rhs->syms(),
-                    "[ERROR] two UniTensor have different symmetry type cannot contract.%s", "\n");
+                    "[ERROR][BlockFermionicUniTensors] Two BlockFermionicUniTensors have different "
+                    "symmetry types and cannot be contracted.%s",
+                    "\n");
 
     // get common labels:
     std::vector<string> comm_labels;
@@ -743,8 +1316,8 @@ namespace cytnx {
 
     if (comm_idx1.size() == 0) {
       // output instance;
-      BlockUniTensor *tmp = new BlockUniTensor();
-      BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+      BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
+      BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
       std::vector<string> out_labels;
       std::vector<Bond> out_bonds;
       cytnx_int64 out_rowrank;
@@ -767,6 +1340,7 @@ namespace cytnx {
       // check each valid block:
       std::vector<cytnx_uint64> Lidx(this->_bonds.size());  // buffer
       std::vector<cytnx_uint64> Ridx(rhs->_bonds.size());  // buffer
+      std::vector<bool> signfliprhs = rhs->signflip();
       for (cytnx_int32 b = 0; b < tmp->_blocks.size(); b++) {
         memcpy(&Lidx[0], &tmp->_inner_to_outer_idx[b][0],
                sizeof(cytnx_uint64) * this->_bonds.size());
@@ -786,12 +1360,12 @@ namespace cytnx {
         */
         if (User_debug) {
           if (IDL.size() == IDR.size()) {
-            cytnx_error_msg(IDL.size() > 1,
-                            "[ERROR][BlockUniTensor] IDL has more than two ambiguous location!%s",
-                            "\n");
-            cytnx_error_msg(IDR.size() > 1,
-                            "[ERROR][BlockUniTensor] IDL has more than two ambiguous location!%s",
-                            "\n");
+            cytnx_error_msg(
+              IDL.size() > 1,
+              "[ERROR][BlockFermionicUniTensor] IDL has more than two ambiguous location!%s", "\n");
+            cytnx_error_msg(
+              IDR.size() > 1,
+              "[ERROR][BlockFermionicUniTensor] IDL has more than two ambiguous location!%s", "\n");
 
           } else {
             cytnx_error_msg(true, "[ERROR] duplication, something wrong!%s", "\n");
@@ -809,6 +1383,7 @@ namespace cytnx {
           cytnx_error_msg(Ott.shape() != tmp->_blocks[b].shape(), "[ERROR] mismatching shape!%s",
                           "\n");
           tmp->_blocks[b] = Ott;
+          tmp->_signflip[b] = (this->_signflip[b] == signfliprhs[b]) ? EVEN : ODD;
         }
       }
 
@@ -839,33 +1414,55 @@ namespace cytnx {
 
       if ((non_comm_idx1.size() == 0) && (non_comm_idx2.size() == 0)) {
         std::vector<cytnx_int64> _shadow_comm_idx1(comm_idx1.size()),
-          _shadow_comm_idx2(comm_idx2.size());
+          _shadow_comm_idx2(comm_idx2.size()), _shadow_comm_idx1_reversed(comm_idx2.size());
         memcpy(_shadow_comm_idx1.data(), comm_idx1.data(), sizeof(cytnx_int64) * comm_idx1.size());
         memcpy(_shadow_comm_idx2.data(), comm_idx2.data(), sizeof(cytnx_int64) * comm_idx2.size());
+        std::reverse(comm_idx1.begin(), comm_idx1.end());
+        memcpy(_shadow_comm_idx1_reversed.data(), comm_idx1.data(),
+               sizeof(cytnx_int64) * comm_idx1.size());
         // All the legs are contracted, the return will be a scalar
 
         // output instance;
         DenseUniTensor *tmp = new DenseUniTensor();
 
-        boost::intrusive_ptr<UniTensor_base> Lperm = this->permute(_shadow_comm_idx1);
+        // sign flip for this tensor is computed explictly, then a permutation without signflip is
+        // performed; sign flip of rhs is accounted for in usual permutation
+        // std::cout << "[DEBUG] Contract; signs of lhs before lhssigns: " << this->_signflip
+        // << std::endl;
+        std::vector<bool> signfliplhs =
+          this->_lhssigns_(_shadow_comm_idx1_reversed, comm_idx1.size());
+        // std::cout << "[DEBUG] Contract; signs of lhs after  lhssigns: " << this->_signflip
+        //           << std::endl;
+
+        boost::intrusive_ptr<UniTensor_base> Lperm = this->permute_nosignflip(_shadow_comm_idx1);
         boost::intrusive_ptr<UniTensor_base> Rperm = rhs->permute(_shadow_comm_idx2);
 
-        BlockUniTensor *Lperm_raw = (BlockUniTensor *)Lperm.get();
-        BlockUniTensor *Rperm_raw = (BlockUniTensor *)Rperm.get();
+        BlockFermionicUniTensor *Lperm_raw = (BlockFermionicUniTensor *)Lperm.get();
+        BlockFermionicUniTensor *Rperm_raw = (BlockFermionicUniTensor *)Rperm.get();
 
         // pair the block and contract using vectordot!
         //  naive way!
+        std::vector<bool> signfliprhs = Rperm_raw->_signflip;
+        // cout << "Lsigns = " << Lsigns << "; Rsigns = " << Rsigns << endl;
         for (unsigned int b = 0; b < Lperm_raw->_blocks.size(); b++) {
           for (unsigned int a = 0; a < Rperm_raw->_blocks.size(); a++) {
             if (Lperm_raw->_inner_to_outer_idx[b] == Rperm_raw->_inner_to_outer_idx[a]) {
-              if (tmp->_block.dtype() == Type.Void)
-                tmp->_block = linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                Rperm_raw->_blocks[a].flatten());
-              else
-                tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
-                                                 Rperm_raw->_blocks[a].flatten());
-
-              // std::cout << b << " " << a << endl;
+              if (signfliplhs[b] != signfliprhs[a]) {  // sign flip
+                if (tmp->_block.dtype() == Type.Void)
+                  tmp->_block = -linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
+                                                   Rperm_raw->_blocks[a].flatten());
+                else
+                  tmp->_block -= linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
+                                                   Rperm_raw->_blocks[a].flatten());
+              } else {  // no sign flip
+                if (tmp->_block.dtype() == Type.Void)
+                  tmp->_block = linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
+                                                  Rperm_raw->_blocks[a].flatten());
+                else
+                  tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
+                                                   Rperm_raw->_blocks[a].flatten());
+              }
+              // std::cout << "b=" << b << "; a=" << a << "; sum=" << tmp->_block.at({0}) << endl;
             }
           }
         }
@@ -887,7 +1484,7 @@ namespace cytnx {
         }
 
         if(mv_elem_rhs){
-            BlockUniTensor *Rtn = (BlockUniTensor*)rhs.get();
+            BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor*)rhs.get();
             // calculate reverse mapper:
             std::vector<cytnx_uint64> inv_mapperR(comm_idx2.size());
             for (int i = 0; i < comm_idx2.size(); i++) {
@@ -904,8 +1501,8 @@ namespace cytnx {
         return out;
 
       } else {
-        BlockUniTensor *tmp = new BlockUniTensor();
-        BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+        BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
+        BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
         std::vector<string> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
@@ -971,9 +1568,11 @@ namespace cytnx {
         for (cytnx_int64 a = 0; a < tmp->_blocks.size(); a++) {
           oldshapeC.push_back(tmp->_blocks[a].shape());
         }
-        std::vector<cytnx_uint64> mapperL, inv_mapperL(this->rank());
+        std::vector<cytnx_uint64> mapperL, mapperL_reversed, inv_mapperL(this->rank());
         std::vector<cytnx_uint64> mapperR, inv_mapperR(rhs->rank());
         vec_concatenate_(mapperL, non_comm_idx1, comm_idx1);
+        std::reverse(comm_idx1.begin(), comm_idx1.end());
+        vec_concatenate_(mapperL_reversed, non_comm_idx1, comm_idx1);
         vec_concatenate_(mapperR, comm_idx2, non_comm_idx2);
         for (int aa = 0; aa < mapperL.size(); aa++) {
           inv_mapperL[mapperL[aa]] = aa;
@@ -981,6 +1580,16 @@ namespace cytnx {
         for (int aa = 0; aa < mapperR.size(); aa++) {
           inv_mapperR[mapperR[aa]] = aa;
         }
+
+        // fermion signs
+        // std::cout << "[DEBUG] Contract; signs of lhs before lhssigns: " << this->_signflip
+        //           << std::endl;
+        std::vector<bool> signfliplhs = this->_lhssigns_(mapperL_reversed, comm_idx1.size());
+        // std::cout << "[DEBUG] Contract; signs of lhs after  lhssigns: " << signfliplhs <<
+        // std::endl;
+        std::vector<bool> signfliprhs = Rtn->_swapsigns_(mapperR);
+
+        // cout << "signfliplhs = " << signfliplhs << "; signfliprhs = " << signfliprhs << endl;
 
         if (this->is_diag() != Rtn->is_diag()) {
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -997,8 +1606,14 @@ namespace cytnx {
                   Rtn->_inner_to_outer_idx[b][non_comm_idx2[cc - non_comm_idx1.size()]];
               }
               cytnx_int64 targ_b = mpC[Lgbuffer];
-              tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
-                                                           comm_idx1, comm_idx2, this->is_diag());
+              // fermionic signs included here
+              if (signfliplhs[a] != signfliprhs[b]) {
+                tmp->_blocks[targ_b] -= linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
+                                                             comm_idx1, comm_idx2, this->is_diag());
+              } else {
+                tmp->_blocks[targ_b] += linalg::Tensordot_dg(this->_blocks[a], Rtn->_blocks[b],
+                                                             comm_idx1, comm_idx2, this->is_diag());
+              }
             }
           }
         } else {
@@ -1011,7 +1626,7 @@ namespace cytnx {
           std::vector<Scalar> alphas(Rtn->_blocks.size(), 1.0);
           std::vector<Scalar> betas(Rtn->_blocks.size(), 0.0);
 
-          BlockUniTensor *tmp_Rtn = Rtn;
+          BlockFermionicUniTensor *tmp_Rtn = Rtn;
 
           // check if all sub-tensor are same dtype and device
           if (User_debug) {
@@ -1047,7 +1662,7 @@ namespace cytnx {
   #ifdef UNI_MKL
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
           if (this->dtype() != Rtn->dtype()) {
-            BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
+            BlockFermionicUniTensor *tmpp = Rtn->clone_meta(true, true);
             tmpp->_blocks.resize(Rtn->_blocks.size());
             for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
               tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(this->dtype());
@@ -1105,8 +1720,14 @@ namespace cytnx {
                 RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
                 CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
               } else {
-                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                          .reshape(tmp->_blocks[targ_b].shape());
+                // fermionic signs included here
+                if (signfliplhs[a] != signfliprhs[b]) {
+                  tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
+                                            .reshape(tmp->_blocks[targ_b].shape());
+                } else {
+                  tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
+                                            .reshape(tmp->_blocks[targ_b].shape());
+                }
               }
             }
             // mkl_set_interface_layer(MKL_INTERFACE_ILP64);
@@ -1116,9 +1737,15 @@ namespace cytnx {
                 (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
                  tmp_Rtn->dtype() != Type.Void)) {
               group_size.resize(group_count, 1);
-              linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(),
-                                   (const void **)RMems.data(), betas, (void **)CMems.data(),
-                                   group_count, group_size, this->dtype(), tmp->device());
+              // TODOfermions: alphas need to include sign factors!
+              cytnx_error_msg(true,
+                              "[ERROR] Fermionic sign flips not implemented yet in Gemm_Batch "
+                              "contracition. One needs to change the signs of the alphas.%s",
+                              "\n")
+                linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas,
+                                     (const void **)LMems.data(), (const void **)RMems.data(),
+                                     betas, (void **)CMems.data(), group_count, group_size,
+                                     this->dtype(), tmp->device());
             }
             // restore the shape&permutation of this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
@@ -1178,8 +1805,14 @@ namespace cytnx {
               }
               // target block index
               cytnx_int64 targ_b = mpC[Lgbuffer];
-              tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
-                                        .reshape(tmp->_blocks[targ_b].shape());
+              // fermionic signs included here
+              if (signfliplhs[a] != signfliprhs[b]) {
+                tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
+                                          .reshape(tmp->_blocks[targ_b].shape());
+              } else {
+                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], Rtn->_blocks[b])
+                                          .reshape(tmp->_blocks[targ_b].shape());
+              }
             }
             // restore the shape&permutation of this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
@@ -1213,15 +1846,22 @@ namespace cytnx {
     }  // does it contract all the bond?
   };
 
-  void BlockUniTensor::Transpose_() {
+  void BlockFermionicUniTensor::Transpose_() {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     // modify tag
-    for (int i = 0; i < this->bonds().size(); i++) {
+    // The index order is reversed without any sign flips!
+    std::vector<cytnx_int64> idxorder(this->_bonds.size());
+    std::size_t idxnum = this->bonds().size() - 1;
+    for (int i = 0; i <= idxnum; i++) {
       this->bonds()[i].redirect_();
       // this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
+      idxorder[i] = idxnum - i;
     }
+    this->permute_nosignflip_(idxorder);
   };
 
-  void BlockUniTensor::normalize_() {
+  void BlockFermionicUniTensor::normalize_() {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     Scalar out(0, this->dtype());
     for (auto &block : this->_blocks) {
       out += Scalar(linalg::Pow(linalg::Norm(block), 2).item());
@@ -1232,7 +1872,8 @@ namespace cytnx {
     }
   };
 
-  void BlockUniTensor::Trace_(const std::string &a, const std::string &b) {
+  void BlockFermionicUniTensor::Trace_(const std::string &a, const std::string &b) {
+    // [21 Aug 2024] This is a copy from BlockUniTensor;
     // 1) from label to indx.
     cytnx_int64 ida, idb;
 
@@ -1241,7 +1882,10 @@ namespace cytnx {
 
     this->Trace_(ida, idb);
   }
-  void BlockUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b) {
+  void BlockFermionicUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODOfermions: sign structure needs to be incorporated, and supertrace needs to be avoided!
+    cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Trace_] not implemented yet.%s", "\n");
     cytnx_int64 ida = a;
     cytnx_int64 idb = b;
 
@@ -1249,25 +1893,26 @@ namespace cytnx {
     cytnx_error_msg(a < 0 || b < 0, "[ERROR] invalid index a, b%s", "\n");
     cytnx_error_msg(a >= this->rank() || b >= this->rank(), "[ERROR] index out of bound%s", "\n");
 
-    cytnx_error_msg(ida == idb,
-                    "[ERROR][BlockUniTensor::Trace_] index a and index b should not be the same.%s",
-                    "\n");
+    cytnx_error_msg(
+      ida == idb,
+      "[ERROR][BlockFermionicUniTensor::Trace_] index a and index b should not be the same.%s",
+      "\n");
 
     // check if two bonds type are contractable:
     cytnx_error_msg(this->_bonds[ida].type() == this->_bonds[idb].type(),
                     "[ERROR] BD_BRA/BD_OUT can only contract with BD_KET/BD_IN%s", "\n");
 
     // check if two bonds dimension matches:
-    cytnx_error_msg(
-      this->_bonds[ida]._impl->_degs != this->_bonds[idb]._impl->_degs,
-      "[ERROR][BlockUniTensor::Trace_] The dimension of two bond for trace does not match!%s",
-      "\n");
+    cytnx_error_msg(this->_bonds[ida]._impl->_degs != this->_bonds[idb]._impl->_degs,
+                    "[ERROR][BlockFermionicUniTensor::Trace_] The dimension of two bond for trace "
+                    "does not match!%s",
+                    "\n");
 
     // check if two bonds qnum matches:
-    cytnx_error_msg(
-      this->_bonds[ida]._impl->_qnums != this->_bonds[idb]._impl->_qnums,
-      "[ERROR][BlockUniTensor::Trace_] The quantum numbers of two bond for trace does not match!%s",
-      "\n");
+    cytnx_error_msg(this->_bonds[ida]._impl->_qnums != this->_bonds[idb]._impl->_qnums,
+                    "[ERROR][BlockFermionicUniTensor::Trace_] The quantum numbers of two bond for "
+                    "trace does not match!%s",
+                    "\n");
 
     // update rowrank:
     cytnx_int64 tmpRk = this->_rowrank;
@@ -1286,7 +1931,7 @@ namespace cytnx {
     vec2d<cytnx_uint64> new_itoi;
     if (this->_labels.size() == 0) {
       // if there is no leg left, leaving only one block, and let API to handle the
-      // BlockUniTensor->DenseUniTensor!
+      // BlockFermionicUniTensor->DenseUniTensor!
       new_blocks.push_back(zeros(1, this->dtype(), this->device()));
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
@@ -1322,7 +1967,8 @@ namespace cytnx {
     this->_inner_to_outer_idx = new_itoi;
   }
 
-  Tensor BlockUniTensor::Norm() const {
+  Tensor BlockFermionicUniTensor::Norm() const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     Scalar t;
     if (this->_blocks.size()) {
       t = linalg::Norm(this->_blocks[0]).item();
@@ -1344,15 +1990,18 @@ namespace cytnx {
   }
 
   // helper function:
-  void BlockUniTensor::_fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
-                                       const std::vector<cytnx_uint64> &locator) const {
+  void BlockFermionicUniTensor::_fx_locate_elem(cytnx_int64 &bidx,
+                                                std::vector<cytnx_uint64> &loc_in_T,
+                                                const std::vector<cytnx_uint64> &locator) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
 
     for (int i = 0; i < this->_bonds.size(); i++) {
-      cytnx_error_msg(locator[i] >= this->_bonds[i].dim(),
-                      "[ERROR][BlockUniTensor][elem_exists] locator @index: %d out of range.\n", i);
+      cytnx_error_msg(
+        locator[i] >= this->_bonds[i].dim(),
+        "[ERROR][BlockFermionicUniTensor][elem_exists] locator @index: %d out of range.\n", i);
     }
 
     // 2. calculate the location is in which qindices:
@@ -1403,7 +2052,8 @@ namespace cytnx {
     }
   }
 
-  bool BlockUniTensor::elem_exists(const std::vector<cytnx_uint64> &locator) const {
+  bool BlockFermionicUniTensor::elem_exists(const std::vector<cytnx_uint64> &locator) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -1412,7 +2062,9 @@ namespace cytnx {
 
   //-------------------------------------------
   // at_for_sparse
-  Scalar::Sproxy BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator) {
+  Scalar::Sproxy BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODOfermions: one might want to store the sign in Sproxy as well in the future
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -1422,79 +2074,92 @@ namespace cytnx {
       return this->_blocks[bidx].at(loc_in_T);
     }
   }
-  cytnx_complex128 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                  const cytnx_complex128 &aux) {
+  cytnx_complex128 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                           const cytnx_complex128 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex128>(loc_in_T);
   }
-  cytnx_complex64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                 const cytnx_complex64 &aux) {
+  cytnx_complex64 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                          const cytnx_complex64 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex64>(loc_in_T);
   }
-  cytnx_double &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_double &aux) {
+  cytnx_double &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                       const cytnx_double &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_double>(loc_in_T);
   }
-  cytnx_float &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_float &aux) {
+  cytnx_float &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                      const cytnx_float &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_float>(loc_in_T);
   }
-  cytnx_uint64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_uint64 &aux) {
+  cytnx_uint64 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                       const cytnx_uint64 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint64>(loc_in_T);
   }
-  cytnx_int64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_int64 &aux) {
+  cytnx_int64 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                      const cytnx_int64 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int64>(loc_in_T);
   }
-  cytnx_uint32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_uint32 &aux) {
+  cytnx_uint32 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                       const cytnx_uint32 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint32>(loc_in_T);
   }
-  cytnx_int32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_int32 &aux) {
+  cytnx_int32 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                      const cytnx_int32 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int32>(loc_in_T);
   }
-  cytnx_uint16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_uint16 &aux) {
+  cytnx_uint16 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                       const cytnx_uint16 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint16>(loc_in_T);
   }
-  cytnx_int16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_int16 &aux) {
+  cytnx_int16 &BlockFermionicUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
+                                                      const cytnx_int16 &aux) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
-  const Scalar::Sproxy BlockUniTensor::at_for_sparse(
+  const Scalar::Sproxy BlockFermionicUniTensor::at_for_sparse(
     const std::vector<cytnx_uint64> &locator) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODO: one might want to store the sign in Sproxy as well in the future (here and in other
+    // instances)
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -1504,80 +2169,89 @@ namespace cytnx {
       return this->_blocks[bidx].at(loc_in_T);
     }
   }
-  const cytnx_complex128 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                        const cytnx_complex128 &aux) const {
+  const cytnx_complex128 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_complex128 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex128>(loc_in_T);
   }
-  const cytnx_complex64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                       const cytnx_complex64 &aux) const {
+  const cytnx_complex64 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_complex64 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex64>(loc_in_T);
   }
-  const cytnx_double &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_double &aux) const {
+  const cytnx_double &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_double &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_double>(loc_in_T);
   }
-  const cytnx_float &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_float &aux) const {
+  const cytnx_float &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_float &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_float>(loc_in_T);
   }
-  const cytnx_uint64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_uint64 &aux) const {
+  const cytnx_uint64 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_uint64 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint64>(loc_in_T);
   }
-  const cytnx_int64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_int64 &aux) const {
+  const cytnx_int64 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_int64 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int64>(loc_in_T);
   }
-  const cytnx_uint32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_uint32 &aux) const {
+  const cytnx_uint32 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_uint32 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint32>(loc_in_T);
   }
-  const cytnx_int32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_int32 &aux) const {
+  const cytnx_int32 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int32>(loc_in_T);
   }
-  const cytnx_uint16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_uint16 &aux) const {
+  const cytnx_uint16 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint16>(loc_in_T);
   }
-  const cytnx_int16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_int16 &aux) const {
+  const cytnx_int16 &BlockFermionicUniTensor::at_for_sparse(
+    const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; signflip not included in any way!
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
-  void BlockUniTensor::_save_dispatch(std::fstream &f) const {
-    // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
-
+  void BlockFermionicUniTensor::_save_dispatch(std::fstream &f) const {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; saves signs as well
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -1585,14 +2259,21 @@ namespace cytnx {
     for (unsigned int b = 0; b < Nblocks; b++) {
       f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
     }
-    for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i]._Save(f);
+
+    for (unsigned int b = 0; b < Nblocks; b++) {
+      this->_blocks[b]._Save(f);
+    }
+
+    // Saving signs; each sign is saved as a char
+    char tmp;
+    for (unsigned int b = 0; b < Nblocks; b++) {
+      tmp = this->_signflip[b] ? 1 : 0;
+      f.write((char *)&tmp, sizeof(char));
     }
   }
 
-  void BlockUniTensor::_load_dispatch(std::fstream &f) {
-    // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
-
+  void BlockFermionicUniTensor::_load_dispatch(std::fstream &f) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; reads signs as well
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -1602,28 +2283,41 @@ namespace cytnx {
     for (unsigned int b = 0; b < Nblocks; b++) {
       f.read((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
     }
-    this->_blocks.resize(Nblocks);
 
+    this->_blocks.resize(Nblocks);
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i]._Load(f);
     }
+
+    // Loading signs; each sign is assumed to be saved as a char, with 0 being false
+    char tmp = 2;
+    this->_signflip = std::vector<cytnx_bool>(Nblocks);
+    for (unsigned int b = 0; b < Nblocks; b++) {
+      f.read((char *)&tmp, sizeof(char));
+      this->_signflip[b] = (tmp == 0 ? false : true);
+    }
   }
 
-  void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index) {
+  void BlockFermionicUniTensor::truncate_(const cytnx_int64 &bond_idx,
+                                          const cytnx_uint64 &q_index) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; erases _signflip entries as well
     cytnx_error_msg(
       this->is_diag(),
-      "[ERROR][BlockUniTensor][truncate_] cannot use truncate_ when is_diag() = true.%s", "\n");
+      "[ERROR][BlockFermionicUniTensor][truncate_] cannot use truncate_ when is_diag() = true.%s",
+      "\n");
     cytnx_int64 bidx = bond_idx;
 
     cytnx_error_msg((bidx >= this->_labels.size()) || (bidx < 0),
-                    "[ERROR][BlockUniTensor][truncate_] bond_idx out of bound.%s", "\n");
+                    "[ERROR][BlockFermionicUniTensor][truncate_] bond_idx out of bound.%s", "\n");
     cytnx_error_msg(
       q_index >= this->_bonds[bidx].qnums().size(),
-      "[ERROR][BlockUniTensor][truncate_] q_index out of bound @ specify Bond @[%d].\n", bidx);
+      "[ERROR][BlockFermionicUniTensor][truncate_] q_index out of bound @ specify Bond @[%d].\n",
+      bidx);
 
     cytnx_error_msg(
       this->_bonds[bidx].qnums().size() == 1,
-      "[ERROR][BlockUniTensor][truncate_] cannot remove the only qnums on a given Bond!%s", "\n");
+      "[ERROR][BlockFermionicUniTensor][truncate_] cannot remove the only qnums on a given Bond!%s",
+      "\n");
 
     this->_bonds[bidx]._impl->_rm_qnum(q_index);
 
@@ -1636,8 +2330,12 @@ namespace cytnx {
     // remove!
     vec_erase_(this->_inner_to_outer_idx, locs);
     vec_erase_(this->_blocks, locs);
+    vec_erase_(this->_signflip, locs);
   }
-  void BlockUniTensor::truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index) {
+  void BlockFermionicUniTensor::truncate_(const std::string &bond_idx,
+                                          const cytnx_uint64 &q_index) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; erases _signflip entries as well by calling
+    // truncate_
     auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_idx);
     cytnx_error_msg(it == this->_labels.end(),
                     "[ERROR] label [%s] does not exist in current UniTensor.\n", bond_idx.c_str());
@@ -1646,7 +2344,8 @@ namespace cytnx {
     this->truncate_(idx, q_index);
   }
 
-  void BlockUniTensor::Mul_(const Scalar &rhs) {
+  void BlockFermionicUniTensor::Mul_(const Scalar &rhs) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
@@ -1654,7 +2353,8 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::Div_(const Scalar &rhs) {
+  void BlockFermionicUniTensor::Div_(const Scalar &rhs) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
@@ -1662,16 +2362,18 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void BlockFermionicUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
+    cytnx_int64 blockrhs;
     // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] cannot add two BlockUniTensor with different rank!%s", "\n");
+                    "[ERROR] cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
     for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(
         this->_bonds[i] != Rtn->_bonds[i],
@@ -1679,32 +2381,37 @@ namespace cytnx {
         i);
     }
 
-    cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
-                    "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
-                    "\n");
+    cytnx_error_msg(
+      this->is_diag() != Rtn->is_diag(),
+      "[ERROR] cannot add BlockFermionicUniTensor with is_diag=true and is_diag=false.%s", "\n");
 
     // 2) finding the blocks (they might be not in the same order!
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
-        if (this->_inner_to_outer_idx[b] ==
-            Rtn->_inner_to_outer_idx[(b + a) % Rtn->_blocks.size()]) {
-          this->_blocks[b] += Rtn->_blocks[(b + a) % Rtn->_blocks.size()];
+        blockrhs = (b + a) % Rtn->_blocks.size();
+        if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
+          if (Rtn->_signflip[blockrhs])
+            this->_blocks[b] -= Rtn->_blocks[blockrhs];
+          else
+            this->_blocks[b] += Rtn->_blocks[blockrhs];
           break;
         }
       }
     }
   }
 
-  void BlockUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void BlockFermionicUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
     // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+    cytnx_int64 blockrhs;
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] cannot add two BlockUniTensor with different rank!%s", "\n");
+                    "[ERROR] cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
     for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(
         this->_bonds[i] != Rtn->_bonds[i],
@@ -1712,32 +2419,44 @@ namespace cytnx {
         i);
     }
 
-    cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
-                    "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
-                    "\n");
+    cytnx_error_msg(
+      this->is_diag() != Rtn->is_diag(),
+      "[ERROR] cannot add BlockFermionicUniTensor with is_diag=true and is_diag=false.%s", "\n");
 
     // 2) finding the blocks (they might be not in the same order!
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
-        if (this->_inner_to_outer_idx[b] ==
-            Rtn->_inner_to_outer_idx[(b + a) % Rtn->_blocks.size()]) {
-          this->_blocks[b] *= Rtn->_blocks[(b + a) % Rtn->_blocks.size()];
+        blockrhs = (b + a) % Rtn->_blocks.size();
+        if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
+          this->_blocks[b] *= Rtn->_blocks[blockrhs];
+          if (Rtn->_signflip[blockrhs]) {
+            // 3 possibilities:
+            // 1) easy way: multiply by scalar -1
+            this->_blocks[b] = -this->_blocks[b];
+            // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
+            // could depend on the block and are not aware of this sign flip!
+            //  this->_signflip[b] = this->_signflip[b] ? true : false;
+            // 3) fast way: TODOfermion: implement Tensor.negmul, which does the multiplication and
+            // sign flip in one step
+          }
           break;
         }
       }
     }
   }
 
-  void BlockUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void BlockFermionicUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; additionally, sign of rhs is included
+    cytnx_int64 blockrhs;
     // checking Type:
-    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] cannot add two BlockUniTensor with different rank!%s", "\n");
+                    "[ERROR] cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
     for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(
         this->_bonds[i] != Rtn->_bonds[i],
@@ -1745,25 +2464,34 @@ namespace cytnx {
         i);
     }
 
-    cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
-                    "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
-                    "\n");
+    cytnx_error_msg(
+      this->is_diag() != Rtn->is_diag(),
+      "[ERROR] cannot add BlockFermionicUniTensor with is_diag=true and is_diag=false.%s", "\n");
 
     // 2) finding the blocks (they might be not in the same order!
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
-        if (this->_inner_to_outer_idx[b] ==
-            Rtn->_inner_to_outer_idx[(b + a) % Rtn->_blocks.size()]) {
-          this->_blocks[b] -= Rtn->_blocks[(b + a) % Rtn->_blocks.size()];
+        blockrhs = (b + a) % Rtn->_blocks.size();
+        if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
+          if (Rtn->_signflip[blockrhs])
+            this->_blocks[b] += Rtn->_blocks[blockrhs];
+          else
+            this->_blocks[b] -= Rtn->_blocks[blockrhs];
           break;
         }
       }
     }
   }
 
-  void BlockUniTensor::_fx_group_duplicates(
+  void BlockFermionicUniTensor::_fx_group_duplicates(
     const std::vector<cytnx_uint64> &dup_bond_idxs,
     const std::vector<std::vector<cytnx_uint64>> &idx_mappers) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor; adds signflips by taking -Tensor; might be
+    // more effiecent if it is done in the contiguous() step.
+    // cytnx_error_msg(
+    //   true, "[ERROR][BlockFermionicUniTensor][_fx_group_duplicates] not implemented yet.%s",
+    //   "\n");
+
     // checking the bonds that are duplicates
     // auto mod_idxs = dup_bond_idxs; std::sort(mod_idx.begin(),mod_idx.end());
 
@@ -1784,6 +2512,7 @@ namespace cytnx {
       std::vector<int> mask(this->_blocks.size());
       std::vector<Tensor> new_blocks;
       std::vector<std::vector<cytnx_uint64>> new_inner_to_outer_idx;
+      std::vector<cytnx_bool> new_signs;
 
       std::vector<cytnx_uint64> no_combine;  // same for each bond!
       for (cytnx_uint64 i = 0; i < this->rank(); i++) {
@@ -1795,6 +2524,7 @@ namespace cytnx {
         mask[b] = 1;
         new_blocks.push_back(this->_blocks[b]);
         new_inner_to_outer_idx.push_back(tmp_inner_to_outer_idx[b]);
+        new_signs.push_back(this->_signflip[b]);
         for (cytnx_int64 a = b + 1; a < this->_blocks.size(); a++) {
           if (mask[a] == 1) continue;
           if (tmp_inner_to_outer_idx[a] == tmp_inner_to_outer_idx[b]) {
@@ -1816,17 +2546,22 @@ namespace cytnx {
             std::cout << this->_blocks[a].shape() << std::endl;
             std::cout << "=============\n" << std::endl;
             */
-            new_blocks.back() = linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
+            new_blocks.back() = linalg::Directsum(
+              new_signs.back() ? -new_blocks.back() : new_blocks.back(),
+              this->_signflip[a] ? -this->_blocks[a] : this->_blocks[a], no_combine);
+            new_signs.back() = false;
           }
         }
       }  // traversal each block!
 
       this->_blocks = new_blocks;
       this->_inner_to_outer_idx = new_inner_to_outer_idx;
+      this->_signflip = new_signs;
     }
   }
 
-  void BlockUniTensor::group_basis_() {
+  void BlockFermionicUniTensor::group_basis_() {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     std::vector<cytnx_uint64> has_dup;
     std::vector<std::vector<cytnx_uint64>> idx_mappers;
     for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
@@ -1841,9 +2576,15 @@ namespace cytnx {
   }
 
   // Deprecated, internal use only
-  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force) {
+  void BlockFermionicUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
+                                             const bool &force) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
+    // TODOfermion: signflips need to be included!!!
+    cytnx_error_msg(
+      true, "[ERROR][BlockFermionicUniTensor][_fx_group_duplicates] not implemented yet.%s", "\n");
     cytnx_error_msg(this->is_diag(),
-                    "[ERROR][BlockUniTensor] cannot combineBonds when is_diag = true!%s", "\n");
+                    "[ERROR][BlockFermionicUniTensor] cannot combineBonds when is_diag = true!%s",
+                    "\n");
 
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
@@ -1855,11 +2596,12 @@ namespace cytnx {
 
     // idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
 
-    cytnx_error_msg(this->_is_diag,
-                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
-                    "UniTensor.to_dense()/to_dense_() first.%s [NOTE] this is BlockUniTensor, so "
-                    "currently under developing!\n",
-                    "\n");
+    cytnx_error_msg(
+      this->_is_diag,
+      "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
+      "UniTensor.to_dense()/to_dense_() first.%s [NOTE] this is BlockFermionicUniTensor, so "
+      "currently under developing!\n",
+      "\n");
 
     // get the mapper:
     int cnt = 0;
@@ -1972,7 +2714,9 @@ namespace cytnx {
     this->group_basis_();
   }
 
-  void BlockUniTensor::combineBond(const std::vector<std::string> &indicators, const bool &force) {
+  void BlockFermionicUniTensor::combineBond(const std::vector<std::string> &indicators,
+                                            const bool &force) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -1987,13 +2731,16 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+  void BlockFermionicUniTensor::combineBonds(const std::vector<std::string> &indicators,
+                                             const bool &force) {
+    //[4 Oct 2024] This is a copy from BlockUniTensor;
     this->combineBond(indicators, force);
   }
 
   // Deprecated
-  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
-                                    const bool &by_label) {
+  void BlockFermionicUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
+                                             const bool &force, const bool &by_label) {
+    //[21 Aug 2024] This is a copy from BlockUniTensor;
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -2013,7 +2760,7 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void _BK_from_DN(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
+  void _BKF_from_DN(BlockFermionicUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
     if (!force) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
@@ -2029,6 +2776,7 @@ namespace cytnx {
     cytnx_uint64 total_elem = rhs->_block.storage().size();
 
     std::vector<cytnx_uint64> stride_rhs(rhs->shape().size(), 1);
+    ths->_signflip = std::vector<bool>(rhs->shape().size(), EVEN);
     for (int i = (rhs->rank() - 2); i >= 0; i--) {
       stride_rhs[i] = stride_rhs[i + 1] * rhs->shape()[i + 1];
     }
@@ -2051,21 +2799,30 @@ namespace cytnx {
     }
   }
 
-  void _BK_from_BK(BlockUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
-    cytnx_error_msg(true, "[ERROR] BlockUT-> BlockUT not implemented.%s", "\n");
+  void _BKF_from_BK(BlockFermionicUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
+    cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockUT not implemented.%s", "\n");
   }
 
-  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
+  void _BKF_from_BKF(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
+                     const bool &force) {
+    cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockFermionicUT not implemented.%s", "\n");
+  }
+
+  void BlockFermionicUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs,
+                                      const bool &force) {
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
-      _BK_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
+      _BKF_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.Block) {
-      _BK_from_BK(this, (BlockUniTensor *)(rhs.get()), force);
+      _BKF_from_BK(this, (BlockUniTensor *)(rhs.get()), force);
+    } else if (rhs->uten_type() == UTenType.BlockFermionic) {
+      _BKF_from_BKF(this, (BlockFermionicUniTensor *)(rhs.get()), force);
     } else {
-      cytnx_error_msg(true, "[ERROR] unsupport conversion of UniTensor from %s => BlockUniTensor\n",
-                      UTenType.getname(rhs->uten_type()).c_str());
+      cytnx_error_msg(
+        true, "[ERROR] unsupport conversion of UniTensor from %s => BlockFermionicUniTensor\n",
+        UTenType.getname(rhs->uten_type()).c_str());
     }
   }
 

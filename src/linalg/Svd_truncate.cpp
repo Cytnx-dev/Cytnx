@@ -183,10 +183,12 @@ namespace cytnx {
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
     };  // svdt Dense
 
-    void _svd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
-                                const int &return_err, const cytnx_uint64 &mindim) {
+    void _svd_truncate_Block_UTs(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
+                                 const int &return_err, const cytnx_uint64 &mindim) {
       // currently, Gesvd is used as a standard for the full SVD before truncation
+      // handles BlockFermionicUniTensor as well: elements of _signflip are removed if blocks are
+      // erased
       cytnx_uint64 keep_dim = keepdim;
 
       outCyT = linalg::Gesvd(Tin, is_UvT, is_UvT);
@@ -259,14 +261,20 @@ namespace cytnx {
       // remove:
       // vec_erase_(S.get_itoi(),to_be_remove);
       S.get_itoi() = new_itoi;
-      vec_erase_(S.get_blocks_(), to_be_remove);
-      vec_erase_(S.bonds()[0].qnums(), to_be_remove);
+      if (!to_be_remove.empty()) {
+        vec_erase_(S.get_blocks_(), to_be_remove);
+        vec_erase_(S.bonds()[0].qnums(), to_be_remove);
+        if (Tin.uten_type() == UTenType.BlockFermionic) {
+          vec_erase_(S.signflip_(), to_be_remove);
+        }
+      }
       S.bonds()[0]._impl->_degs = new_dims;
       S.bonds()[0]._impl->_dim = tot_dim;
       S.bonds()[1] = S.bonds()[0].redirect();
 
       int t = 1;
       if (is_UvT) {
+        // depends on S.bonds()[1], keep_dims, new_qid
         UniTensor &U = outCyT[t];
         to_be_remove.clear();
         U.bonds().back() = S.bonds()[1].clone();
@@ -287,8 +295,13 @@ namespace cytnx {
             U.get_qindices(b).back() = new_qid[U.get_qindices(b).back()];
           }
         }
-        vec_erase_(U.get_itoi(), to_be_remove);
-        vec_erase_(U.get_blocks_(), to_be_remove);
+        if (!to_be_remove.empty()) {
+          vec_erase_(U.get_itoi(), to_be_remove);
+          vec_erase_(U.get_blocks_(), to_be_remove);
+          if (Tin.uten_type() == UTenType.BlockFermionic) {
+            vec_erase_(U.signflip_(), to_be_remove);
+          }
+        }
 
         t++;
       }
@@ -313,8 +326,14 @@ namespace cytnx {
             vT.get_qindices(b)[0] = new_qid[vT.get_qindices(b)[0]];
           }
         }
-        vec_erase_(vT.get_itoi(), to_be_remove);
-        vec_erase_(vT.get_blocks_(), to_be_remove);
+        if (!to_be_remove.empty()) {
+          vec_erase_(vT.get_itoi(), to_be_remove);
+          vec_erase_(vT.get_blocks_(), to_be_remove);
+          if (Tin.uten_type() == UTenType.BlockFermionic) {
+            vec_erase_(vT.signflip_(), to_be_remove);
+          }
+        }
+
         t++;
       }
 
@@ -325,7 +344,7 @@ namespace cytnx {
       } else if (return_err) {
         outCyT.push_back(UniTensor(Sall.get({ac::tilend(smidx)})));
       }
-    }  // _svd_truncate_Block_UT
+    }  // _svd_truncate_Block_UTs
 
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim, const double &err,
@@ -346,22 +365,26 @@ namespace cytnx {
       if (Tin.uten_type() == UTenType.Dense) {
         _svd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
 
-      } else if (Tin.uten_type() == UTenType.Block) {
-        _svd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
-
+      } else if ((Tin.uten_type() == UTenType.Block) ||
+                 (Tin.uten_type() == UTenType.BlockFermionic)) {
+        _svd_truncate_Block_UTs(outCyT, Tin, keepdim, err, is_UvT, return_err, mindim);
       } else {
-        cytnx_error_msg(true, "[ERROR][Svd_truncate] only Dense/Block UniTensors are supported.%s",
-                        "\n");
+        cytnx_error_msg(
+          true, "[ERROR] Svd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",
+          "\n");
       }
       return outCyT;
 
     }  // Svd_truncate
 
-    void _svd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                const cytnx_uint64 &keepdim, std::vector<cytnx_uint64> min_blockdim,
-                                const double &err, const bool &is_UvT, const int &return_err,
-                                const cytnx_uint64 &mindim) {
+    void _svd_truncate_Block_UTs(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+                                 const cytnx_uint64 &keepdim,
+                                 std::vector<cytnx_uint64> min_blockdim, const double &err,
+                                 const bool &is_UvT, const int &return_err,
+                                 const cytnx_uint64 &mindim) {
       // currently, Gesvd is used as a standard for the full SVD before truncation
+      // handles BlockFermionicUniTensor as well: elements of _signflip are removed if blocks are
+      // erased
       cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                        // negative!
       cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
@@ -500,8 +523,13 @@ namespace cytnx {
         // remove:
         // vec_erase_(S.get_itoi(),to_be_remove);
         S.get_itoi() = new_itoi;
-        vec_erase_(S.get_blocks_(), to_be_remove);
-        vec_erase_(S.bonds()[0].qnums(), to_be_remove);
+        if (!to_be_remove.empty()) {
+          vec_erase_(S.get_blocks_(), to_be_remove);
+          vec_erase_(S.bonds()[0].qnums(), to_be_remove);
+          if (Tin.uten_type() == UTenType.BlockFermionic) {
+            vec_erase_(S.signflip_(), to_be_remove);
+          }
+        }
         S.bonds()[0]._impl->_degs = new_dims;
         S.bonds()[0]._impl->_dim = tot_dim;
         S.bonds()[1] = S.bonds()[0].redirect();
@@ -528,8 +556,13 @@ namespace cytnx {
               U.get_qindices(b).back() = new_qid[U.get_qindices(b).back()];
             }
           }
-          vec_erase_(U.get_itoi(), to_be_remove);
-          vec_erase_(U.get_blocks_(), to_be_remove);
+          if (!to_be_remove.empty()) {
+            vec_erase_(U.get_itoi(), to_be_remove);
+            vec_erase_(U.get_blocks_(), to_be_remove);
+            if (Tin.uten_type() == UTenType.BlockFermionic) {
+              vec_erase_(U.signflip_(), to_be_remove);
+            }
+          }
 
           t++;
         }
@@ -554,12 +587,18 @@ namespace cytnx {
               vT.get_qindices(b)[0] = new_qid[vT.get_qindices(b)[0]];
             }
           }
-          vec_erase_(vT.get_itoi(), to_be_remove);
-          vec_erase_(vT.get_blocks_(), to_be_remove);
+          if (!to_be_remove.empty()) {
+            vec_erase_(vT.get_itoi(), to_be_remove);
+            vec_erase_(vT.get_blocks_(), to_be_remove);
+            if (Tin.uten_type() == UTenType.BlockFermionic) {
+              vec_erase_(vT.signflip_(), to_be_remove);
+            }
+          }
+
           t++;
         }
       }
-    }  // _svd_truncate_Block_UT
+    }  // _svd_truncate_Block_UTs
 
     std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
                                                const cytnx_uint64 &keepdim,
@@ -586,12 +625,14 @@ namespace cytnx {
         _svd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_UvT, return_err,
                                max(mindim, min_blockdim[0]));
 
-      } else if (Tin.uten_type() == UTenType.Block) {
-        _svd_truncate_Block_UT(outCyT, Tin, keepdim, min_blockdim, err, is_UvT, return_err, mindim);
-
+      } else if ((Tin.uten_type() == UTenType.Block) ||
+                 (Tin.uten_type() == UTenType.BlockFermionic)) {
+        _svd_truncate_Block_UTs(outCyT, Tin, keepdim, min_blockdim, err, is_UvT, return_err,
+                                mindim);
       } else {
-        cytnx_error_msg(true, "[ERROR][Svd_truncate] only Dense/Block UniTensors are supported.%s",
-                        "\n");
+        cytnx_error_msg(
+          true, "[ERROR] Svd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",
+          "\n");
       }
       return outCyT;
 

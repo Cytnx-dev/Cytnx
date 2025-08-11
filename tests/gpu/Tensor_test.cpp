@@ -1,5 +1,5 @@
 #include "Tensor_test.h"
-#include "test_tools.h"
+#include "gpu_test_tools.h"
 
 TEST_F(TensorTest, gpu_Constructor) {
   Tensor D({3, 4, 5}, Type.Double, Device.cuda);

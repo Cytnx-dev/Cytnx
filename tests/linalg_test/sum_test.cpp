@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "../test_tools.h"
+#include "test_tools.h"
 #include "linalg.hpp"
 #include "Tensor.hpp"
 #include "Type.hpp"

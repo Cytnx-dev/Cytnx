@@ -1,6 +1,7 @@
+#include "gtest/gtest.h"
+
+#include "test_tools.h"
 #include "cytnx.hpp"
-#include <gtest/gtest.h>
-#include "../test_tools.h"
 
 using namespace cytnx;
 using namespace testing;

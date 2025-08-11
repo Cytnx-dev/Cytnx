@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <random>
 
 #include "gtest/gtest.h"
 
@@ -110,6 +111,11 @@ namespace cytnx {
       return ::testing::internal::EqFailure(expr1, expr2, value1_stream.str(), value2_stream.str(),
                                             false);
     }
+
+    std::vector<std::vector<cytnx_uint64>> GenerateTestShapes(
+      cytnx_uint64 dim, cytnx_uint64 min_size = 1, cytnx_uint64 max_size = 1024,
+      cytnx_uint64 num_shapes = 10, cytnx_bool include_edge_case = true, cytnx_uint32 seed = 0);
+
   }  // namespace TestTools
 }  // namespace cytnx
 

@@ -8,6 +8,7 @@ Data type
 ************
 
 .. py:function:: .dtype()
+.. py:function:: .dtype()
 
     The dtype-id of current Storage, Tensor or UniTensor.
 
@@ -47,7 +48,7 @@ Device
 
 .. py:function:: .to(device)
 
-	move the current Storage, Tensor or UniTensor to different deivce.
+	move the current Storage, Tensor or UniTensor to different device.
 
 .. py:function:: .to_(device)
 
@@ -64,6 +65,7 @@ Save & Load
 ************
 
 .. py:function:: .Save(name)
+.. py:function:: .Save(name)
 
     Save current Storage, Tensor or UniTensor to file.
 
@@ -71,6 +73,7 @@ Save & Load
 
  	Load a Storage, Tensor or UniTensor from file.
 
+.. py:function:: .Tofile(name)
 .. py:function:: .Tofile(name)
 
     Save current Storage or Tensor to binary file without any additional header information.

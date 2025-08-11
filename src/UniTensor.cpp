@@ -35,7 +35,7 @@ namespace cytnx {
   void UniTensor::_Save(std::fstream &f) const {
     cytnx_error_msg(!f.is_open(), "[ERROR][UniTensor] invalid fstream!.%s", "\n");
     cytnx_error_msg(this->_impl->uten_type_id == UTenType.Void,
-                    "[ERROR][UniTensor] cannot save an uninitialize UniTensor.%s", "\n");
+                    "[ERROR][UniTensor] cannot save an uninitialized UniTensor.%s", "\n");
 
     // temporary disable:
     // cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for SparseUniTensor
@@ -105,6 +105,8 @@ namespace cytnx {
                       "\n");
     } else if (utentype == UTenType.Block) {
       this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
+    } else if (utentype == UTenType.BlockFermionic) {
+      this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockFermionicUniTensor());
     } else {
       cytnx_error_msg(true, "[ERROR] Unknown UniTensor type!%s", "\n");
     }
@@ -222,7 +224,8 @@ namespace cytnx {
   void UniTensor::normal_(const double &mean, const double &std, const unsigned int &seed) {
     if (this->uten_type() == UTenType.Dense) {
       cytnx::random::normal_(this->get_block_(), mean, std, seed);
-    } else if (this->uten_type() == UTenType.Block) {
+    } else if (this->uten_type() == UTenType.Block ||
+               this->uten_type() == UTenType.BlockFermionic) {
       for (auto &blk : this->get_blocks_()) {
         cytnx::random::normal_(blk, mean, std, seed);
       }
@@ -237,7 +240,8 @@ namespace cytnx {
   void UniTensor::uniform_(const double &low, const double &high, const unsigned int &seed) {
     if (this->uten_type() == UTenType.Dense) {
       cytnx::random::uniform_(this->get_block_(), low, high, seed);
-    } else if (this->uten_type() == UTenType.Block) {
+    } else if (this->uten_type() == UTenType.Block ||
+               this->uten_type() == UTenType.BlockFermionic) {
       for (auto &blk : this->get_blocks_()) {
         cytnx::random::uniform_(blk, low, high, seed);
       }
