@@ -19,4 +19,19 @@ namespace BMTest_Tensor {
   }
   BENCHMARK(BM_ones)->Args({5, 3})->Args({10, 9});
 
+  static void BM_Tensor_contiguous(benchmark::State& state) {
+    int D = state.range(0);
+    auto A = cytnx::UniTensor(cytnx::random::uniform({D, D}, -1.0, 1.0, cytnx::Device.cpu, 0));
+    A.permute_(std::vector<long int>({1, 0}), 1);
+    for (auto _ : state) {
+      auto tmp = A.clone();
+      tmp.contiguous_();
+    }
+  }
+  BENCHMARK(BM_Tensor_contiguous)
+    ->Args({100})
+    ->Args({1000})
+    ->Args({10000})
+    ->Unit(benchmark::kMillisecond);
+
 }  // namespace BMTest_Tensor

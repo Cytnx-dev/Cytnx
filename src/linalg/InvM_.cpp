@@ -78,10 +78,7 @@ namespace cytnx {
         _InvM_inplace_Dense_UT(Tin);
 
       } else {
-        cytnx_error_msg(true,
-                        "[ERROR] InvM_, unsupported type of UniTensor only support (Dense). "
-                        "something wrong internal%s",
-                        "\n");
+        cytnx_error_msg(true, "[ERROR] InvM_ only supports Dense UniTensors.%s", "\n");
       }
     }
 

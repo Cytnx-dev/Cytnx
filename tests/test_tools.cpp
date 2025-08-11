@@ -429,7 +429,7 @@ namespace cytnx {
         }
       }
       // block
-      else if (Ut1.uten_type() == UTenType.Block) {
+      else if (Ut1.uten_type() == UTenType.Block || Ut1.uten_type() == UTenType.BlockFermionic) {
         const std::vector<Tensor>& blocks1 = Ut1.get_blocks_();
         const std::vector<Tensor>& blocks2 = Ut2.get_blocks_();
         if (blocks1.size() != blocks2.size()) {

@@ -1,0 +1,86 @@
+name: Conda Build (Test build)
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  BuildAndTest:
+    name: BuildAndTest-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    env:
+      CONDA_BUILD_RECIPE: >-
+        ${{ matrix.os == 'macos-latest' && 'conda_build/conda_gen_mac/' ||
+            matrix.os == 'ubuntu-latest' && 'conda_build/conda_gen/' ||
+            'conda_build/conda_gen/' }}
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        # Remember to quote this, or YAML will think you want python 3.1 not 3.10
+        python-version: "3.10"
+        # Using miniforge to the enable conda-forge channel only.
+        miniforge-version: latest
+
+    - name: Config Conda
+      run: |
+        echo "Config Conda---------------------------------"
+        conda info
+        conda config --set anaconda_upload no
+        conda install conda-build
+
+    - name: Cache Ccache Directory (push)
+      if: ${{ github.event_name == 'push' }}
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.ccache
+        key: ccache-${{ runner.os }}-${{ github.ref_name }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ runner.os }}-${{ github.ref_name }}-
+
+    - name: Cache Ccache Directory (pull_request)
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.ccache
+        key: ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
+          ccache-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
+
+    - name: start building
+      # TODO: Consider to replace conda-build with rattler-build to speed up
+      #   the build process.
+      # Conda build creates different working folder each time, which make
+      # ccache fails to hit the cache. Set `--build-id-pat` to make the build
+      # folder consistent across builds, so that ccache can hit the cache.
+      # See: https://github.com/ccache/ccache/discussions/821#discussioncomment-521209
+      run: |
+        echo "Start building---------------------------------"
+        export CCACHE_DIR="${HOME}/.ccache"
+        conda build "$CONDA_BUILD_RECIPE" --build-id-pat "cytnx"
+      env:
+        CMAKE_C_COMPILER_LAUNCHER: ccache
+        CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        CMAKE_CUDA_COMPILER_LAUNCHER: ccache
+        # DO NOT enable this line because the script for conda build is not
+        # executed in a interactive shell, and "~" will not be expanded to the
+        # home directory. Export CCACHE_DIR in the run command instead.
+        # CCACHE_DIR: ~/.ccache
+        CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
