@@ -19,7 +19,6 @@
 
 namespace cytnx {
   namespace linalg {
-    typedef Accessor ac;
     std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                        const double &err, const bool &is_U, const bool &is_vT,
                                        const unsigned int &return_err, const cytnx_uint64 &mindim) {
@@ -284,7 +283,7 @@ namespace cytnx {
           new_dims.push_back(kdim);
           tot_dim += kdim;
           if (kdim != S.get_blocks_()[b].shape()[0])
-            S.get_blocks_()[b] = S.get_blocks_()[b].get({ac::range(0, kdim)});
+            S.get_blocks_()[b] = S.get_blocks_()[b].get({Accessor::range(0, kdim)});
         }
       }
 
@@ -303,7 +302,7 @@ namespace cytnx {
         to_be_removed.clear();
         U.bonds().back() = S.bonds()[1].clone();
         std::vector<Accessor> acs(U.rank());
-        for (int i = 0; i < U.rowrank(); i++) acs[i] = ac::all();
+        for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
 
         for (int b = 0; b < U.Nblocks(); b++) {
           if (keep_dims[U.get_qindices(b).back()] == 0)
@@ -311,7 +310,7 @@ namespace cytnx {
           else {
             /// process blocks:
             if (keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()) {
-              acs.back() = ac::range(0, keep_dims[U.get_qindices(b).back()]);
+              acs.back() = Accessor::range(0, keep_dims[U.get_qindices(b).back()]);
               U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
             }
 
@@ -330,7 +329,7 @@ namespace cytnx {
         to_be_removed.clear();
         vT.bonds().front() = S.bonds()[0].clone();
         std::vector<Accessor> acs(vT.rank());
-        for (int i = 1; i < vT.rank(); i++) acs[i] = ac::all();
+        for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
 
         for (int b = 0; b < vT.Nblocks(); b++) {
           if (keep_dims[vT.get_qindices(b)[0]] == 0)
@@ -338,7 +337,7 @@ namespace cytnx {
           else {
             /// process blocks:
             if (keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]) {
-              acs[0] = ac::range(0, keep_dims[vT.get_qindices(b)[0]]);
+              acs[0] = Accessor::range(0, keep_dims[vT.get_qindices(b)[0]]);
               vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
             }
             // change to new qindices:
@@ -355,7 +354,7 @@ namespace cytnx {
         outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
         outCyT.back().get_block_().storage().at(0) = Smin;
       } else if (return_err) {
-        outCyT.push_back(UniTensor(Sall.get({ac::tilend(smidx)})));
+        outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
       }
     }  // _gesvd_truncate_Block_UT
 
@@ -439,7 +438,7 @@ namespace cytnx {
           new_dims.push_back(kdim);
           tot_dim += kdim;
           if (kdim != S.get_blocks_()[b].shape()[0])
-            S.get_blocks_()[b] = S.get_blocks_()[b].get({ac::range(0, kdim)});
+            S.get_blocks_()[b] = S.get_blocks_()[b].get({Accessor::range(0, kdim)});
         }
       }
 
@@ -460,7 +459,7 @@ namespace cytnx {
         to_be_removed.clear();
         U.bonds().back() = S.bonds()[1].clone();
         std::vector<Accessor> acs(U.rank());
-        for (int i = 0; i < U.rowrank(); i++) acs[i] = ac::all();
+        for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
 
         for (int b = 0; b < U.Nblocks(); b++) {
           if (keep_dims[U.get_qindices(b).back()] == 0)
@@ -468,7 +467,7 @@ namespace cytnx {
           else {
             /// process blocks:
             if (keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()) {
-              acs.back() = ac::range(0, keep_dims[U.get_qindices(b).back()]);
+              acs.back() = Accessor::range(0, keep_dims[U.get_qindices(b).back()]);
               U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
             }
 
@@ -488,7 +487,7 @@ namespace cytnx {
         to_be_removed.clear();
         vT.bonds().front() = S.bonds()[0].clone();
         std::vector<Accessor> acs(vT.rank());
-        for (int i = 1; i < vT.rank(); i++) acs[i] = ac::all();
+        for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
 
         for (int b = 0; b < vT.Nblocks(); b++) {
           if (keep_dims[vT.get_qindices(b)[0]] == 0)
@@ -496,7 +495,7 @@ namespace cytnx {
           else {
             /// process blocks:
             if (keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]) {
-              acs[0] = ac::range(0, keep_dims[vT.get_qindices(b)[0]]);
+              acs[0] = Accessor::range(0, keep_dims[vT.get_qindices(b)[0]]);
               vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
             }
             // change to new qindices:
@@ -515,7 +514,7 @@ namespace cytnx {
         outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
         outCyT.back().get_block_().storage().at(0) = Smin;
       } else if (return_err) {
-        outCyT.push_back(UniTensor(Sall.get({ac::tilend(smidx)})));
+        outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
       }
     }  // _gesvd_truncate_BlockFermionic_UT
 
@@ -528,6 +527,12 @@ namespace cytnx {
       cytnx_error_msg(
         (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
         "[ERROR][Gesvd_truncate] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s", "\n");
+
+      cytnx_error_msg(
+        Tin.is_diag(),
+        "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
+        "support. Use other manipulation.%s",
+        "\n");
 
       // check input arguments
       cytnx_error_msg(mindim < 0, "[ERROR][Gesvd_truncate] mindim must be >=1%s", "\n");
@@ -594,7 +599,7 @@ namespace cytnx {
           // remove first min_blockdim[b] values since they are saved anyways and do not need to be
           // included in Sall
           blockdim = outCyT[0].get_block_(b).shape()[0];
-          Block = outCyT[0].get_block_(b).get({ac::range(min_blockdim[b], blockdim)});
+          Block = outCyT[0].get_block_(b).get({Accessor::range(min_blockdim[b], blockdim)});
           keep_dim -= min_blockdim[b];
           min_dim -= min_blockdim[b];
         }
@@ -643,7 +648,7 @@ namespace cytnx {
             outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
             outCyT.back().get_block_().storage().at(0) = Smin;
           } else if (return_err) {
-            outCyT.push_back(UniTensor(Sall.get({ac::tilend(smidx)})));
+            outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
           }
         } else {
           if (return_err >= 1) {
@@ -690,7 +695,7 @@ namespace cytnx {
             new_dims.push_back(kdim);
             tot_dim += kdim;
             if (kdim != S.get_blocks_()[b].shape()[0])
-              S.get_blocks_()[b] = S.get_blocks_()[b].get({ac::range(0, kdim)});
+              S.get_blocks_()[b] = S.get_blocks_()[b].get({Accessor::range(0, kdim)});
           }
         }
 
@@ -709,7 +714,7 @@ namespace cytnx {
           to_be_remove.clear();
           U.bonds().back() = S.bonds()[1].clone();
           std::vector<Accessor> acs(U.rank());
-          for (int i = 0; i < U.rowrank(); i++) acs[i] = ac::all();
+          for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
 
           for (int b = 0; b < U.Nblocks(); b++) {
             if (keep_dims[U.get_qindices(b).back()] == 0)
@@ -717,7 +722,7 @@ namespace cytnx {
             else {
               /// process blocks:
               if (keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()) {
-                acs.back() = ac::range(0, keep_dims[U.get_qindices(b).back()]);
+                acs.back() = Accessor::range(0, keep_dims[U.get_qindices(b).back()]);
                 U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
               }
 
@@ -736,7 +741,7 @@ namespace cytnx {
           to_be_remove.clear();
           vT.bonds().front() = S.bonds()[0].clone();
           std::vector<Accessor> acs(vT.rank());
-          for (int i = 1; i < vT.rank(); i++) acs[i] = ac::all();
+          for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
 
           for (int b = 0; b < vT.Nblocks(); b++) {
             if (keep_dims[vT.get_qindices(b)[0]] == 0)
@@ -744,7 +749,7 @@ namespace cytnx {
             else {
               /// process blocks:
               if (keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]) {
-                acs[0] = ac::range(0, keep_dims[vT.get_qindices(b)[0]]);
+                acs[0] = Accessor::range(0, keep_dims[vT.get_qindices(b)[0]]);
                 vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
               }
               // change to new qindices:
@@ -768,6 +773,12 @@ namespace cytnx {
       cytnx_error_msg(
         (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
         "[ERROR][Gesvd_truncate] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s", "\n");
+
+      cytnx_error_msg(
+        Tin.is_diag(),
+        "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
+        "support. Use other manipulation.%s",
+        "\n");
 
       // check input arguments
       // cytnx_error_msg(mindim < 0, "[ERROR][Gesvd_truncate] mindim must be >=1%s", "\n");

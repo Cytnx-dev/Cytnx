@@ -5,7 +5,7 @@
 #ifdef BACKEND_TORCH
 #else
 
-  #include "../backend/linalg_internal_interface.hpp"
+  #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   int set_mkl_ilp64() { return cytnx::linalg_internal::lii.set_mkl_ilp64(); }
   int get_mkl_code() { return cytnx::linalg_internal::lii.get_mkl_code(); }

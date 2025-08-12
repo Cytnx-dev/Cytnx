@@ -37,6 +37,10 @@ add_executable(
   linalg_test/Arnoldi_Ut_test.cpp
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
+  linalg_test/Rsvd_test.cpp
+  linalg_test/Svd_truncate_test.cpp
+  linalg_test/Gesvd_truncate_test.cpp
+  linalg_test/Rsvd_truncate_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/sum_test.cpp
   algo_test/Hsplit_test.cpp
