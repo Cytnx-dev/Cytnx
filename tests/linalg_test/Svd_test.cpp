@@ -239,7 +239,7 @@ namespace SvdTest {
   TEST(Svd, err_sym_diag_test) {
     std::vector<std::vector<cytnx_int64>> qnums = {{0}, {1}, {0}, {1}, {2}};
     std::vector<cytnx_uint64> degs = {1, 2, 3, 4, 5};
-    auto syms = std::vector<Symmetry>(qnums[0].size(), Symmetry(SymType.U));
+    auto syms = std::vector<Symmetry>(qnums[0].size(), Symmetry(SymmetryType::U));
     auto bond_ket = Bond(BD_KET, qnums, degs, syms);
     auto bond_bra = Bond(BD_BRA, qnums, degs, syms);
     std::vector<Bond> bonds = {bond_ket, bond_bra};
@@ -261,10 +261,10 @@ namespace SvdTest {
   TEST(Svd, err_bool_type_UT) {
     std::vector<std::vector<cytnx_int64>> qnums1 = {{0}, {1}, {0}, {1}, {2}};
     std::vector<cytnx_uint64> degs = {1, 2, 3, 4, 5};
-    auto syms = std::vector<Symmetry>(qnums1[0].size(), Symmetry(SymType.U));
+    auto syms = std::vector<Symmetry>(qnums1[0].size(), Symmetry(SymmetryType::U));
     auto bond_ket = Bond(BD_KET, qnums1, degs, syms);
     std::vector<std::vector<cytnx_int64>> qnums2 = {{-1}, {-1}, {0}, {2}, {1}};
-    syms = std::vector<Symmetry>(qnums2[0].size(), Symmetry(SymType.U));
+    syms = std::vector<Symmetry>(qnums2[0].size(), Symmetry(SymmetryType::U));
     auto bond_bra = Bond(BD_BRA, qnums2, degs, syms);
     std::vector<Bond> bonds = {bond_ket, bond_ket, bond_bra, bond_bra};
     cytnx_int64 row_rank = -1;
