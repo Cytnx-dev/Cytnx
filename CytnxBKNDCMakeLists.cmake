@@ -43,10 +43,11 @@ if (USE_HPTT)
     option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
+    # TODO: Build HPTT from the submodule in the thirdparty folder.
     ExternalProject_Add(hptt
     PREFIX hptt
-    GIT_REPOSITORY https://github.com/kaihsin/hptt.git
-    GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
+    GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
+    GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
     )
     message( STATUS " Build HPTT Support: YES")

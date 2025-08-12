@@ -1,6 +1,7 @@
 [submodule "thirdparty/hptt"]
 	path = thirdparty/hptt
-	url = https://github.com/kaihsin/hptt.git
+	url = https://github.com/Cytnx-dev/hptt.git
+	branch = main
 [submodule "thirdparty/cutt"]
 	path = thirdparty/cutt
 	url = https://github.com/kaihsin/cutt.git
