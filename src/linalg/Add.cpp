@@ -7,7 +7,6 @@
 
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
-
   namespace linalg {
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),

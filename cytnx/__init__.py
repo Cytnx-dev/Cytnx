@@ -9,6 +9,7 @@ if cytnx.__cytnx_backend__ == "torch":
 
 else:
 
+
     # #1) check if numpy is previous imported, if it is, pop warning:
 
     # ## [NOTE!!] These part has to execute first before import numpy!

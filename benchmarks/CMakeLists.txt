@@ -10,10 +10,12 @@ add_executable(
   algo/Vstack_bm.cpp
   algo/Hsplit_bm.cpp
   algo/Hstack_bm.cpp
+  linalg/Arnoldi_bm.cpp
   linalg/Abs_bm.cpp
   linalg/Directsum_bm.cpp
   linalg/Svd_bm.cpp
   linalg/Svd_truncate_bm.cpp
+  linalg/Vectordot_bm.cpp
   linalg/Lanczos_bm.cpp
   linalg/linalg_basic_bm.cpp
   linalg/QR_bm.cpp

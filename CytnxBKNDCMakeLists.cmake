@@ -9,6 +9,7 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     # Set MKL interface to LP64 by default, but allow ILP64
     set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
+
     set(MKL_ROOT $ENV{MKLROOT})
     message(STATUS "MKL_ROOT: ${MKL_ROOT}")
     message(STATUS "MKL_INTERFACE: ${MKL_INTERFACE}")
@@ -36,6 +37,7 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
       target_compile_definitions(cytnx PUBLIC MKL_ILP64)
     else()
       target_compile_definitions(cytnx PUBLIC MKL_LP64)
+
     endif()
 
   else()

@@ -283,6 +283,12 @@ else()
   include(CytnxBKNDCMakeLists.cmake)
 endif() # Backend torch
 
+#ARPACK
+find_library(ARPACK_LIB arpack REQUIRED)
+message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
+target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
+
+
 # #####################################################################
 # ## Get Gtest & benchmark
 # #####################################################################
@@ -478,6 +484,18 @@ message(STATUS "    CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "    CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "    BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS "    Link libraries: ${CYTNX_LINK_Libs}")
+
+get_target_property(LINK_LIBS_PROP cytnx LINK_LIBRARIES)
+message(STATUS "LINK_LIBRARIES for cytnx: ${LINK_LIBS_PROP}")
+
+get_target_property(LINK_INTERFACE_LIBS_PROP cytnx INTERFACE_LINK_LIBRARIES)
+message(STATUS "INTERFACE_LINK_LIBRARIES for cytnx: ${LINK_INTERFACE_LIBS_PROP}")
+
+get_target_property(LINK_OPTIONS_PROP cytnx LINK_OPTIONS)
+message(STATUS "LINK_OPTIONS for cytnx: ${LINK_OPTIONS_PROP}")
+
+get_target_property(LINK_FLAGS_PROP cytnx LINK_FLAGS)
+message(STATUS "LINK_FLAGS for cytnx: ${LINK_FLAGS_PROP}")
 
 FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "${CMAKE_CXX_FLAGS}\n" "")
