@@ -17,8 +17,6 @@
   #include "backend/Storage.hpp"
 
 namespace cytnx {
-  int set_mkl_ilp64();
-  int get_mkl_code();
 
   /**
    * @brief The addition operator between two UniTensor.
@@ -1777,11 +1775,11 @@ namespace cytnx {
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see Svd(const Tensor &Tin, const bool &is_UvT)
-    @note The truncated bond dimension can be larger than \p keepdim for degenerate singular values:
-    if the largest \f$ n \f$ truncated singular values would be exactly equal to the smallest kept
-    singular value, then the bond dimension is enlarged to \p keepdim \f$ + n \f$. Example: if the
-    singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension will be 5 in order
-    to keep all the degenerate singular values.
+    @note The truncated bond dimension can be larger than \p keepdim for degenerate singular
+    values: if the largest \f$ n \f$ truncated singular values would be exactly equal to the
+    smallest kept singular value, then the bond dimension is enlarged to \p keepdim \f$ + n \f$.
+    Example: if the singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension
+    will be 5 in order to keep all the degenerate singular values.
     */
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err = 0., const bool &is_UvT = true,
@@ -2752,11 +2750,11 @@ namespace cytnx {
     @details
         Computes the vector x that approximatively solves the equation A @ x = b. The equation may
     be under-, well-, or over-determined independent columns. If a is square and of full rank, then
-    x (but for round-off error) is the “exact” solution of the equation. Else, x minimizes the
+    x (but for round-off error) is the "exact" solution of the equation. Else, x minimizes the
     Euclidean 2-norm \f$ || b - a x ||_2 \f$.
 
-    @param[in] A “Coefficient” matrix, must be two-dimensional.
-    @param[in] b Ordinate or “dependent variable” values, must be two-dimensional, the least-squares
+    @param[in] A "Coefficient" matrix, must be two-dimensional.
+    @param[in] b Ordinate or "dependent variable" values, must be two-dimensional, the least-squares
     solution is calculated for each of the K columns of b.
     @param[in] rcond Cut-off ratio for small singular values of a. For the purposes of rank
     determination, singular values are treated as zero if they are smaller than rcond times the

@@ -4,10 +4,10 @@
 #   find_package(CUQUANTUM [REQUIRED] [QUIET] )
 #
 # It sets the following variables:
-#   CUQUANTUM_FOUND               ... true if cutensor is found on the system
-#   CUQUANTUM_LIBRARY_DIRS        ... full path to cutensor library
-#   CUQUANTUM_INCLUDE_DIRS        ... cutensor include directory
-#   CUQUANTUM_LIBRARIES           ... cutensor libraries
+#   CUQUANTUM_FOUND               ... true if cuquantum is found on the system
+#   CUQUANTUM_LIBRARY_DIRS        ... full path to cuquantum library
+#   CUQUANTUM_INCLUDE_DIRS        ... cuquantum include directory
+#   CUQUANTUM_LIBRARIES           ... cuquantum libraries
 #
 #   CUQUANTUM_ROOT                this is required to set!
 #
@@ -20,7 +20,7 @@ else()
   if(DEFINED ENV{CUQUANTUM_ROOT})
     set(CUQUANTUM_ROOT "$ENV{CUQUANTUM_ROOT}")
   endif()
-  message("-- Looking for cuTENSOR in ${CUQUANTUM_ROOT}")
+  message("-- Looking for cuQuantum in ${CUQUANTUM_ROOT}")
   if(NOT EXISTS ${CUQUANTUM_ROOT})
     message(FATAL_ERROR "Cannot find CUQUANTUM_ROOT")
   endif()
@@ -34,19 +34,21 @@ set(CUQUANTUM_INCLUDE_DIRS ${CUQUANTUM_ROOT}/include)
 
 # set libs:
 find_library(
-    CUQUANTUM_LIB
+    CUQUANTUM_TENSORNET_LIB
     NAMES "cutensornet"
     PATHS ${CUQUANTUM_ROOT}
     PATH_SUFFIXES ${CUTNLIB_DIR}
     NO_DEFAULT_PATH
 )
 find_library(
-    CUQUANTUMMg_LIB
+    CUQUANTUM_CUSTATEVEC_LIB
     NAMES "custatevec"
     PATHS ${CUQUANTUM_ROOT}
     PATH_SUFFIXES ${CUTNLIB_DIR}
     NO_DEFAULT_PATH
 )
-set(CUQUANTUM_LIBRARIES "${CUQUANTUM_LIB};${CUQUANTUMMg_LIB}")
+message(STATUS "CUQUANTUM_TENSORNET_LIB: ${CUQUANTUM_TENSORNET_LIB}")
+message(STATUS "CUQUANTUM_CUSTATEVEC_LIB: ${CUQUANTUM_CUSTATEVEC_LIB}")
+set(CUQUANTUM_LIBRARIES "${CUQUANTUM_TENSORNET_LIB};${CUQUANTUM_CUSTATEVEC_LIB}")
 message(STATUS "ok")
 set(CUQUANTUM_FOUND TRUE)
