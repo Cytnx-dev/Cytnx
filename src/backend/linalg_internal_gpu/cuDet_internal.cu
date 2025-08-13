@@ -3,7 +3,7 @@
 #include "Type.hpp"
 #include "backend/lapack_wrapper.hpp"
 
-#include "../utils_internal_gpu/cuAlloc_gpu.hpp"
+#include "backend/utils_internal_gpu/cuAlloc_gpu.hpp"
 
 namespace cytnx {
 

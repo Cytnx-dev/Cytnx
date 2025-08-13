@@ -1,6 +1,9 @@
 #include "Symmetry.hpp"
-#include <string>
+
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
 
 using namespace std;
 
@@ -11,24 +14,6 @@ namespace cytnx {
   }
   bool cytnx::Symmetry::operator!=(const cytnx::Symmetry &rhs) const { return !(*this == rhs); }
   //=============================
-
-  std::string cytnx::SymmetryType_class::getname(const int &stype_id) {
-    if (stype_id == this->U) {
-      return string("U");
-    } else if (stype_id == this->Z) {
-      return string("Z");
-    } else if (stype_id == this->fPar) {
-      return string("FermionParity");
-    } else if (stype_id == this->fNum) {
-      return string("FermionNumber");
-    } else {
-      cytnx_error_msg(true, "%s", "[ERROR] invalid stype_id");
-      return string("");
-    }
-    // extend more in here!!
-  }
-
-  //==============================
 
   std::vector<cytnx_int64> Symmetry_base::combine_rule(const std::vector<cytnx_int64> &inL,
                                                        const std::vector<cytnx_int64> &inR) {
@@ -75,6 +60,10 @@ namespace cytnx {
   }
 
   void cytnx::Symmetry_base::print_info() const {
+    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+  }
+
+  std::string cytnx::Symmetry_base::stype_str() const {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
@@ -344,7 +333,4 @@ namespace cytnx {
     in.print_info();
     return os;
   }
-
-  //++++++++++++++++++++++++
-  SymmetryType_class SymType;
 };  // namespace cytnx

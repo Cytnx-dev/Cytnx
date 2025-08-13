@@ -6,4 +6,5 @@ target_sources_local(cytnx
     uniform_.cpp
     normal.cpp
     uniform.cpp
+    random_tensor.cpp
 )

@@ -1,11 +1,4 @@
-# if (USE_MKL)
-#   option(MKL_SDL "Link to a single MKL dynamic libary." ON)
-#   option(MKL_MLT "Use multi-threading libary. [Default]" ON)
-#   mark_as_advanced(MKL_SDL MKL_MLT)
-#   target_compile_definitions(cytnx PUBLIC UNI_MKL)
-#   target_compile_definitions(cytnx PUBLIC MKL_LP64)
-#   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-# endif() #use_mkl
+
 
 ######################################################################
 ### Find BLAS and LAPACK
@@ -16,9 +9,21 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     # Set MKL interface to LP64 by default, but allow ILP64
     set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
-    set(BLA_VENDOR Intel10_64_dyn)
+
+    set(MKL_ROOT $ENV{MKLROOT})
+    message(STATUS "MKL_ROOT: ${MKL_ROOT}")
+    message(STATUS "MKL_INTERFACE: ${MKL_INTERFACE}")
+    if(MKL_INTERFACE STREQUAL "ilp64")
+        set(BLA_VENDOR Intel10_64ilp)
+    else()
+        set(BLA_VENDOR Intel10_64lp)
+    endif()
+    message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
+
+    message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
+
     #find_package(MKL CONFIG REQUIRED)
     #Provides available list of targets based on input
     #message(STATUS "MKL_IMPORTED_TARGETS: ${MKL_IMPORTED_TARGETS}")
@@ -32,8 +37,9 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
       target_compile_definitions(cytnx PUBLIC MKL_ILP64)
     else()
       target_compile_definitions(cytnx PUBLIC MKL_LP64)
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lmkl_intel_lp64 -lmkl_gnu_thread -lmkl_core -liomp5")
+
     endif()
+
   else()
     set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
@@ -56,10 +62,11 @@ if (USE_HPTT)
     option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
+    # TODO: Build HPTT from the submodule in the thirdparty folder.
     ExternalProject_Add(hptt
     PREFIX hptt
-    GIT_REPOSITORY https://github.com/kaihsin/hptt.git
-    GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
+    GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
+    GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
     )
     message( STATUS " Build HPTT Support: YES")

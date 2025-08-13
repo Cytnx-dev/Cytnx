@@ -2013,7 +2013,7 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void _BK_from_DN(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
+  void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
     if (!force) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
@@ -2051,7 +2051,7 @@ namespace cytnx {
     }
   }
 
-  void _BK_from_BK(BlockUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
+  void _bk_from_bk(BlockUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
     cytnx_error_msg(true, "[ERROR] BlockUT-> BlockUT not implemented.%s", "\n");
   }
 
@@ -2060,9 +2060,9 @@ namespace cytnx {
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
-      _BK_from_DN(this, (DenseUniTensor *)(rhs.get()), force);
+      _bk_from_dn(this, (DenseUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.Block) {
-      _BK_from_BK(this, (BlockUniTensor *)(rhs.get()), force);
+      _bk_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
     } else {
       cytnx_error_msg(true, "[ERROR] unsupport conversion of UniTensor from %s => BlockUniTensor\n",
                       UTenType.getname(rhs->uten_type()).c_str());
