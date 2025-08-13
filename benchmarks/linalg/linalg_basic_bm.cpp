@@ -5,25 +5,6 @@
 namespace BMTest_linalg_basic {
   static const int D_test = 1000;
 
-  // Abs
-  static void BM_linalg_basic_Abs(benchmark::State& state) {
-    auto D = state.range(0);
-    const double low = -1;
-    const double high = 1;
-    const int device = cytnx::Device.cpu;
-    const unsigned int seed = 0;
-    auto dtype = state.range(1);
-    auto A = cytnx::random::uniform({D, D}, low, high, device, seed, dtype);
-    for (auto _ : state) {
-      cytnx::linalg::Abs(A);
-    }
-  }
-  BENCHMARK(BM_linalg_basic_Abs)
-    ->Args({D_test, cytnx::Type.Float})
-    ->Args({D_test, cytnx::Type.Double})
-    ->Args({D_test, cytnx::Type.ComplexDouble})
-    ->Unit(benchmark::kMillisecond);
-
   // Add
   static void BM_linalg_basic_Add(benchmark::State& state) {
     auto D = state.range(0);
@@ -318,7 +299,7 @@ namespace BMTest_linalg_basic {
     ->Args({D_test, cytnx::Type.ComplexDouble})
     ->Unit(benchmark::kMillisecond);
 
-  // Abs
+  // Qr
   static void BM_linalg_basic_Qr(benchmark::State& state) {
     auto D = state.range(0);
     const double low = -1;

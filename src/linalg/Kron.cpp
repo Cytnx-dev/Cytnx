@@ -7,10 +7,10 @@
 #ifdef BACKEND_TORCH
 #else
 
-  #include "../backend/linalg_internal_cpu/Kron_internal.hpp"
+  #include "backend/linalg_internal_cpu/Kron_internal.hpp"
 
   #ifdef UNI_GPU
-    #include "../backend/linalg_internal_gpu/cuKron_internal.cuh"
+    #include "backend/linalg_internal_gpu/cuKron_internal.cuh"
   #endif
 
 namespace cytnx {

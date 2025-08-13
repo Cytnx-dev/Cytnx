@@ -31,14 +31,20 @@ add_executable(
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
+  linalg_test/Lanczos_test.cpp
   linalg_test/Lanczos_Exp_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Arnoldi_test.cpp
   linalg_test/Arnoldi_Ut_test.cpp
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
+  linalg_test/Rsvd_test.cpp
+  linalg_test/Svd_truncate_test.cpp
+  linalg_test/Gesvd_truncate_test.cpp
+  linalg_test/Rsvd_truncate_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/sum_test.cpp
+  linalg_test/Vectordot_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
   algo_test/Vsplit_test.cpp

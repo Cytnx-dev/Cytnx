@@ -197,6 +197,23 @@ namespace cytnx {
                    const unsigned int &dtype = Type.Double);
     //@}
 
+    /**
+    @brief create a Tensor with random values for any data type
+    @param[in] shape the shape of the Tensor
+    @param[in] low the lower-bound of range (inclusive for integers)
+    @param[in] high the upper-bound of range (inclusive for integers, exclusive for floats)
+    @param[in] device the device that the Tensor is put on. It can be any device defined in
+    cytnx::Device
+    @param[in] seed the seed for the random generator. [Default] using device entropy
+    @param[in] dtype the data type of the Tensor.
+    @return
+        [Tensor]
+    */
+    Tensor random_tensor(const std::vector<cytnx_uint64> &shape, const double &low = -10.0,
+                         const double &high = 10.0, const int &device = Device.cpu,
+                         const unsigned int &seed = __static_random_device(),
+                         const unsigned int &dtype = Type.Double);
+
     ///@cond
     // this is going to deprecated:
     template <class T>

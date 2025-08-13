@@ -10,7 +10,7 @@ using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
-  #include "../backend/linalg_internal_interface.hpp"
+  #include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -647,7 +647,7 @@ namespace cytnx {
                       "[Svd][ERROR] Svd for UniTensor should have rank>1 and rowrank>0%s", "\n");
 
       cytnx_error_msg(Tin.is_diag(),
-                      "[Svd][ERROR] Svd for diagonal UniTensor is trivial and currently not "
+                      "[Svd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
                       "supported. Use other manipulations.%s",
                       "\n");
 

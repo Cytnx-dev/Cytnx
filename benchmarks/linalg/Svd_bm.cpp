@@ -128,7 +128,7 @@ namespace BMTest_Svd {
   static void BM_bkUT_U1_Svd_F64(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
-    UniTensor bkUT = ConstructBkUT(D, Type.Double, SymType.U);
+    UniTensor bkUT = ConstructBkUT(D, Type.Double, SymmetryType::U);
 
     // start test here
     for (auto _ : state) {
@@ -140,7 +140,7 @@ namespace BMTest_Svd {
   static void BM_bkUT_U1_Svd_C128(benchmark::State& state) {
     // prepare data
     auto D = state.range(0);
-    UniTensor bkUT = ConstructBkUT(D, Type.ComplexDouble, SymType.U);
+    UniTensor bkUT = ConstructBkUT(D, Type.ComplexDouble, SymmetryType::U);
 
     // start test here
     for (auto _ : state) {

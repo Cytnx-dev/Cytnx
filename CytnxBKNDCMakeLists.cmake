@@ -9,6 +9,7 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     # Set MKL interface to LP64 by default, but allow ILP64
     set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
+
     set(MKL_ROOT $ENV{MKLROOT})
     message(STATUS "MKL_ROOT: ${MKL_ROOT}")
     message(STATUS "MKL_INTERFACE: ${MKL_INTERFACE}")
@@ -36,6 +37,7 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
       target_compile_definitions(cytnx PUBLIC MKL_ILP64)
     else()
       target_compile_definitions(cytnx PUBLIC MKL_LP64)
+
     endif()
 
   else()
@@ -74,10 +76,11 @@ if (USE_HPTT)
     endif()
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
+    # TODO: Build HPTT from the submodule in the thirdparty folder.
     ExternalProject_Add(hptt
     PREFIX hptt
-    GIT_REPOSITORY https://github.com/kaihsin/hptt.git
-    GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
+    GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
+    GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
     )
     message( STATUS " Build HPTT Support: YES")
