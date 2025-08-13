@@ -84,7 +84,6 @@ PYBIND11_MODULE(cytnx, m) {
   // m.def("detect_mkl_interface", &cytnx::detect_mkl_interface);
   // m.def("get_mkl_code", &cytnx::get_mkl_code);
 
-
   // global vars
   // m.attr("cytnxdevice") = cytnx::cytnxdevice;
   // m.attr("Type")   = py::cast(cytnx::Type);
