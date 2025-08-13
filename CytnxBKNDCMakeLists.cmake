@@ -56,9 +56,23 @@ endif()
 
 if (USE_HPTT)
     option(HPTT_ENABLE_ARM "HPTT option ARM" OFF)
-    option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
     option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
+    option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
+    if(APPLE AND CMAKE_SYSTEM_PROCESSOR MATCHES "arm64")
+      set(HPTT_ENABLE_ARM "ON")
+    endif()
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "x86_64")
+      set(HPTT_ENABLE_AVX "ON")
+    endif()
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le")
+      set(HPTT_ENABLE_IBM "ON")
+    endif()
+
+    if(HPTT_ENABLE_ARM OR HPTT_ENABLE_AVX OR HPTT_ENABLE_IBM)
+      set(HPTT_ENABLE_FINE_TUNE "ON")
+    endif()
+
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
     ExternalProject_Add(hptt
     PREFIX hptt
@@ -228,7 +242,7 @@ if(USE_HPTT)
     target_link_libraries(cytnx PUBLIC "${hptt_lib_dir}/libhptt.a")
 
     # XXX: `cytnx` itself doesn't need this linking flag. Why?
-    target_link_options(cytnx INTERFACE -fopenmp)
+    #target_link_options(cytnx INTERFACE -fopenmp)
 
     # Install HPTT to input CMAKE_INSTALL_PREFIX.
     cmake_path(APPEND CMAKE_INSTALL_INCLUDEDIR "hptt" OUTPUT_VARIABLE hptt_install_include_dir)
