@@ -2013,7 +2013,8 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
+  void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force,
+                   const cytnx_double &tol) {
     if (!force) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
@@ -2041,7 +2042,7 @@ namespace cytnx {
         elem = rhs->_block.at(cart);
       } else {
         if (!force)
-          if (abs(Scalar(rhs->_block.at(cart))) > 1e-14) {
+          if (abs(Scalar(rhs->_block.at(cart))) > tol) {
             cytnx_error_msg(true,
                             "[ERROR] force = false, trying to convert DenseUT to BlockUT that "
                             "violate the symmetry structure.%s",
@@ -2055,12 +2056,13 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] BlockUT-> BlockUT not implemented.%s", "\n");
   }
 
-  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force) {
+  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
+                             const cytnx_double &tol) {
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
-      _bk_from_dn(this, (DenseUniTensor *)(rhs.get()), force);
+      _bk_from_dn(this, (DenseUniTensor *)(rhs.get()), force, tol);
     } else if (rhs->uten_type() == UTenType.Block) {
       _bk_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
     } else {
