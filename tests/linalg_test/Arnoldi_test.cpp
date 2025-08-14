@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include "cytnx.hpp"
-#include <mkl.h>
+#ifdef UNI_MKL
+  #include <mkl.h>
+#endif
 #include <omp.h>
 
 using namespace cytnx;
