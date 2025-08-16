@@ -206,6 +206,7 @@ namespace cytnx {
       } else if (metric_type == 'A') {
         for (cytnx_int32 i = 0; i < k; ++i) metric[i] = d[i];
       } else {
+		std::cout << "test which" << which << std::endl;
         cytnx_error_msg(true, "[ERROR][Lanczos], Not supprted 'which'.%s", "\n");
       }  // never
 

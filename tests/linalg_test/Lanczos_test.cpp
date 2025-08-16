@@ -170,6 +170,7 @@ TEST(Lanczos, mat_type_all_test) {
   std::string which = "LM";
   std::vector<int> dtypes = {Type.ComplexDouble, Type.ComplexFloat, Type.Double, Type.Float};
   for (auto dtype : dtypes) {
+	std::cout << "input which" << which << std::endl;
     ExcuteTest(which, dtype);
   }
 }
