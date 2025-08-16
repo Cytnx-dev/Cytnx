@@ -344,7 +344,7 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR][Lanczos], Error: d(s)seupd_ INFO = %d\n", info);
       }
 
-      auto sorted_idx = sort_indices<T>(d, which, k);
+      auto sorted_idx = sort_indices<T>(d, which_str, k);
       T *eigvals_data = get_obj_data_ptr<T, T_ten>(out[0]);
       for (cytnx_int32 ik = 0; ik < k; ++ik) {
         eigvals_data[ik] = d[sorted_idx[ik]];
