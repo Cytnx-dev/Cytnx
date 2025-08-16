@@ -1,5 +1,5 @@
-{% set data = load_setup_py_data() %}
-{% set version = data.get('version') %}
+{% set data = load_file_data('pyproject.toml') %}
+{% set version = data.get('project').get('version') %}
 
 package:
   name: cytnx
@@ -10,69 +10,41 @@ source:
 
 build:
   number: 0
-
+  script_env:
+    # Refer to : https://github.com/ccache/ccache/discussions/821#discussioncomment-521209
+    - CCACHE_NOHASHDIR=1
+    - CCACHE_COMPILERCHECK=content
+    - CCACHE_DIR
+    - CCACHE_MAXSIZE
+    - CMAKE_C_COMPILER_LAUNCHER
+    - CMAKE_CXX_COMPILER_LAUNCHER
+    - CMAKE_CUDA_COMPILER_LAUNCHER
 
 requirements:
   build:
-    - "python {{ python }}"
-    - "numpy >=1.18"
-    - "cmake"
-    - "make"
-    - "pybind11"
-    - "boost"
-    # - "libboost"
-    - "mkl >=2019"
-    - "mkl-include >=2019"
-    - "llvm-openmp"
-    - "setuptools"
-    - "python-graphviz"
-    - "graphviz"
-    - "blas * mkl"
-    - "beartype"
-    - "gtest"
-    - '{{ compiler("c")}}'
-    - '{{ compiler("cxx")}}'
-
+    - ccache
+    - cmake
+    - make
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
   host:
-    - "python"
-    - "numpy >=1.18"
-    - "boost"
-    # - "libboost"
-    - "make"
-    - "mkl >=2019"
-    - "mkl-include >=2019"
-    - "mkl-service"
-    - "llvm-openmp"
-    - "setuptools"
-    - "python-graphviz"
-    - "graphviz"
-    - "blas * mkl"
-    - "beartype"
-    - "gtest"
-    - "arpack"
-    - '{{ compiler("c")}}'
-    - '{{ compiler("cxx")}}'
-
+    - python {{ python }}
+    - scikit-build-core
+    - pybind11
+    - boost >=1.82.0
+    - blas=*=openblas
+    - gtest
+    - arpack
   run:
-    - "python"
-    - "numpy >=1.18"
-    - "boost"
-    # - "libboost"
-    - "mkl >=2019"
-    - "mkl-include >=2019"
-    - "mkl-service"
-    - "llvm-openmp"
-    - "setuptools"
-    - "python-graphviz"
-    - "graphviz"
-    - "blas * mkl"
-    - "beartype"
-    - "gtest"
-    - "arpack"
-    - "cmake"
-    - "make"
-    - "pybind11"
-    - '{{ compiler("c")}}'
-    - '{{ compiler("cxx")}}'
+    - python
+    - numpy >=1.18
+    - boost >=1.82.0
+    - python-graphviz
+    - graphviz
+    - blas=*=openblas
+    - beartype
+    - arpack
 
-about:
+test:
+  requires:
+    - gtest

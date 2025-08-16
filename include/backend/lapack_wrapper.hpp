@@ -780,4 +780,27 @@ inline void cdotu(std::complex<float> *res, const blas_int *n, const std::comple
 
 #endif
 
+// Additional LAPACKE functions not in standard LAPACKE
+inline int LAPACKE_zlacp2(int matrix_order, char uplo, int m, int n, const double *a, int lda,
+                          lapack_complex_double *b, int ldb) {
+  // Simple copy from real to complex matrix
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < n; j++) {
+      b[i * ldb + j] = a[i * lda + j];
+    }
+  }
+  return 0;
+}
+
+inline int LAPACKE_clacp2(int matrix_order, char uplo, int m, int n, const float *a, int lda,
+                          lapack_complex_float *b, int ldb) {
+  // Simple copy from real to complex matrix
+  for (int i = 0; i < m; i++) {
+    for (int j = 0; j < n; j++) {
+      b[i * ldb + j] = a[i * lda + j];
+    }
+  }
+  return 0;
+}
+
 #endif  // CYTNX_BACKEND_LAPACK_WRAPPER_H_

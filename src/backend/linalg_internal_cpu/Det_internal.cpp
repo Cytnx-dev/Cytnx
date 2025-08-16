@@ -41,7 +41,7 @@ namespace cytnx {
         if constexpr (std::is_same_v<std::complex<double>, decltype(x)>) {
           return static_cast<cytnx_complex128>(x);
         } else if constexpr (std::is_same_v<double _Complex, decltype(x)>) {
-          return cytnx_complex128{creal(x), cimag(x)};
+          return cytnx_complex128{__real__(x), __imag__(x)};
         } else {
           assert(false);
         }
@@ -85,7 +85,7 @@ namespace cytnx {
         if constexpr (std::is_same_v<std::complex<float>, decltype(x)>) {
           return static_cast<cytnx_complex64>(x);
         } else if constexpr (std::is_same_v<float _Complex, decltype(x)>) {
-          return cytnx_complex64{crealf(x), cimagf(x)};
+          return cytnx_complex64{__real__(x), __imag__(x)};
         } else {
           assert(false);
         }
