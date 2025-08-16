@@ -44,8 +44,12 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
     set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
+    find_package( LAPACKE REQUIRED)
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+    set(LAPACKE_INCLUDE_DIRS ${LAPACKE_DIR_FOUND}/include)
+    target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
+    message( STATUS "LAPACKE found: ${LAPACKE_INCLUDE_DIRS}" )
   endif()
 
 else()
@@ -233,7 +237,10 @@ if(USE_HPTT)
     target_link_libraries(cytnx PUBLIC "${hptt_lib_dir}/libhptt.a")
 
     # XXX: `cytnx` itself doesn't need this linking flag. Why?
-    target_link_options(cytnx INTERFACE -fopenmp)
+    #target_link_options(cytnx INTERFACE -fopenmp)
+    #Find OpenMP for HPTT
+    find_package(OpenMP REQUIRED)
+    target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
 
     # Install HPTT to input CMAKE_INSTALL_PREFIX.
     cmake_path(APPEND CMAKE_INSTALL_INCLUDEDIR "hptt" OUTPUT_VARIABLE hptt_install_include_dir)
