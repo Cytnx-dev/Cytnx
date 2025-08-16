@@ -194,8 +194,7 @@ namespace cytnx {
 
     // sort eignvalues, it seems that arpack will not sort it...
     template <typename T>
-    std::vector<cytnx_int32> sort_indices(const T *d, const std::string &which,
-                                          const cytnx_int32 k) {
+    std::vector<cytnx_int32> sort_indices(const T *d, const char *which, const cytnx_int32 k) {
       char large_or_small = which[0];  //'S' or 'L'
       char metric_type = which[1];  //'M', or 'A'
 
