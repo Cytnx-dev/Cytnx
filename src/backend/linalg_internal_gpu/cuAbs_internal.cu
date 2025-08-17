@@ -13,7 +13,6 @@ namespace cytnx {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCabs(ptr[blockIdx.x * blockDim.x + threadIdx.x]);
       }
-      __syncthreads();
     }
     __global__ void cuAbs_kernel(cytnx_float *out, const cuFloatComplex *ptr,
                                  const cytnx_uint64 Nelem) {
@@ -21,21 +20,18 @@ namespace cytnx {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           cuCabsf(ptr[blockIdx.x * blockDim.x + threadIdx.x]);
       }
-      __syncthreads();
     }
     __global__ void cuAbs_kernel(cytnx_double *out, const double *ptr, const cytnx_uint64 Nelem) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           fabs(ptr[blockIdx.x * blockDim.x + threadIdx.x]);
       }
-      __syncthreads();
     }
     __global__ void cuAbs_kernel(cytnx_float *out, const float *ptr, const cytnx_uint64 Nelem) {
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           fabsf(ptr[blockIdx.x * blockDim.x + threadIdx.x]);
       }
-      __syncthreads();
     }
     // [NOTE] no unsigned version!
     __global__ void cuAbs_kernel(cytnx_int64 *out, const cytnx_int64 *ptr,
@@ -44,7 +40,6 @@ namespace cytnx {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           llabs(ptr[blockIdx.x * blockDim.x + threadIdx.x]);
       }
-      __syncthreads();
     }
     __global__ void cuAbs_kernel(cytnx_int32 *out, const cytnx_int32 *ptr,
                                  const cytnx_uint64 Nelem) {
@@ -52,7 +47,6 @@ namespace cytnx {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           labs(ptr[blockIdx.x * blockDim.x + threadIdx.x]);
       }
-      __syncthreads();
     }
     __global__ void cuAbs_kernel(cytnx_int16 *out, const cytnx_int16 *ptr,
                                  const cytnx_uint64 Nelem) {
@@ -60,7 +54,6 @@ namespace cytnx {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           labs(ptr[blockIdx.x * blockDim.x + threadIdx.x]);
       }
-      __syncthreads();
     }
 
     void cuAbs_internal_cd(boost::intrusive_ptr<Storage_base> &out,
