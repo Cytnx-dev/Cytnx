@@ -31,8 +31,7 @@ INCFLAGS +=-I$(CONDA_PREFIX)/include/
 
 
 HPTT_PATH=$(CytnxPATH)/thirdparty/hptt
-CUTT_PATH=$(CytnxPATH)/thirdparty/cutt
-MAGMA_PATH?=
+
 
 ifeq ($(ICPC_Enable),1)
   CC:= $(ICPC)
@@ -77,11 +76,11 @@ endif
 
 ALL_CCFLAGS :=
 ifeq ($(GPU_Enable),1)
-  ifeq ($(CUTT_Enable),1)
-   CCFLAGS += -DUNI_CUTT
-   INCFLAGS+= -I$(CUTT_PATH)/include
-   LDFLAGS+= $(CUTT_PATH)/lib/libcutt.a
-  endif
+#   ifeq ($(CUTT_Enable),1)
+#    CCFLAGS += -DUNI_CUTT
+#    INCFLAGS+= -I$(CUTT_PATH)/include
+#    LDFLAGS+= $(CUTT_PATH)/lib/libcutt.a
+#   endif
 
   ifeq ($(CUTN_Enable),1)
    CCFLAGS += -DUNI_CUTENSOR

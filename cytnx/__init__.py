@@ -92,14 +92,6 @@ def _find_hptt__():
 
     return hptt_path
 
-def _find_cutt__():
-    cutt_path = None
-    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cutt")):
-        cutt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"cutt")
-    elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"cutt")):
-        cutt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"cutt")
-
-    return cutt_path
 
 
 def _get_version__():

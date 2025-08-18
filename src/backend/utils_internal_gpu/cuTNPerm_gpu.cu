@@ -33,19 +33,7 @@ namespace cytnx {
       dtmp = (cuDoubleComplex *)cuMalloc_gpu(sizeof(cuDoubleComplex) * in->cap);
       cytnx_uint64 Nelem = in->len;
 
-  #ifdef UNI_CUTT
-      std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
-
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cuDoubleComplex), 0);
-      cuttExecute(plan, in->Mem, dtmp);
-
-      cuttDestroy(plan);
-
-  #elif defined(UNI_CUTENSOR)
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int64_t> size(old_shape.begin(), old_shape.end());
       std::vector<int> ori(perm.size());
@@ -91,8 +79,8 @@ namespace cytnx {
         cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
 
       cuDoubleComplex one = make_cuDoubleComplex(1, 0);
-      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<cuDoubleComplex *>(in->Mem),
-                                      dtmp, 0 /* stream */));
+      checkCudaErrors(cutensorPermute(
+        handle, plan, &one, reinterpret_cast<cuDoubleComplex *>(in->Mem), dtmp, 0 /* stream */));
 
       checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
       checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
@@ -183,19 +171,7 @@ namespace cytnx {
       dtmp = (cuFloatComplex *)cuMalloc_gpu(sizeof(cuFloatComplex) * in->cap);
       cytnx_uint64 Nelem = in->len;
 
-  #ifdef UNI_CUTT
-      std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
-
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cuFloatComplex), 0);
-      cuttExecute(plan, in->Mem, dtmp);
-
-      cuttDestroy(plan);
-
-  #elif defined(UNI_CUTENSOR)
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int64_t> size(old_shape.begin(), old_shape.end());
       std::vector<int> ori(perm.size());
@@ -241,8 +217,8 @@ namespace cytnx {
         cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
 
       cuFloatComplex one = make_cuFloatComplex(1, 0);
-      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<cuFloatComplex *>(in->Mem),
-                                      dtmp, 0 /* stream */));
+      checkCudaErrors(cutensorPermute(
+        handle, plan, &one, reinterpret_cast<cuFloatComplex *>(in->Mem), dtmp, 0 /* stream */));
 
       checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
       checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
@@ -332,19 +308,7 @@ namespace cytnx {
       dtmp = (double *)cuMalloc_gpu(sizeof(double) * in->cap);
       cytnx_uint64 Nelem = in->len;
 
-  #ifdef UNI_CUTT
-      std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
-
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(double), 0);
-      cuttExecute(plan, in->Mem, dtmp);
-
-      cuttDestroy(plan);
-
-  #elif defined(UNI_CUTENSOR)
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int64_t> size(old_shape.begin(), old_shape.end());
       std::vector<int> ori(perm.size());
@@ -390,8 +354,8 @@ namespace cytnx {
         cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
 
       double one = 1.0;
-      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<double *>(in->Mem),
-                                      dtmp, 0 /* stream */));
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<double *>(in->Mem), dtmp,
+                                      0 /* stream */));
 
       checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
       checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
@@ -482,19 +446,7 @@ namespace cytnx {
       dtmp = (float *)cuMalloc_gpu(sizeof(float) * in->cap);
       cytnx_uint64 Nelem = in->len;
 
-  #ifdef UNI_CUTT
-
-      std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
-
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(float), 0);
-      cuttExecute(plan, in->Mem, dtmp);
-      cuttDestroy(plan);
-
-  #elif defined(UNI_CUTENSOR)
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
       std::vector<int64_t> size(old_shape.begin(), old_shape.end());
       std::vector<int> ori(perm.size());
@@ -540,8 +492,8 @@ namespace cytnx {
         cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
 
       float one = 1.0f;
-      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<float *>(in->Mem),
-                                      dtmp, 0 /* stream */));
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<float *>(in->Mem), dtmp,
+                                      0 /* stream */));
 
       checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
       checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
@@ -629,17 +581,60 @@ namespace cytnx {
       dtmp = (cytnx_int64 *)cuMalloc_gpu(sizeof(cytnx_int64) * in->cap);
       cytnx_uint64 Nelem = in->len;
 
-  #ifdef UNI_CUTT
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+      std::vector<int64_t> size(old_shape.begin(), old_shape.end());
+      std::vector<int> ori(perm.size());
+      for (int i = 0; i < ori.size(); i++) ori[i] = i;
 
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_int64), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      std::vector<int64_t> new_size(perm.size());
+      for (int i = 0; i < new_size.size(); i++) {
+        new_size[i] = size[perm[i]];
+      }
+      std::reverse(size.begin(), size.end());  // matching API
+      std::reverse(perm.begin(), perm.end());  // matching API
+      std::reverse(new_size.begin(), new_size.end());  // matching API
+      std::reverse(ori.begin(), ori.end());  // matching API
 
-      cuttDestroy(plan);
+      cutensorHandle_t handle;
+      checkCudaErrors(cutensorCreate(&handle));
+
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
+      cutensorTensorDescriptor_t descA;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, CUTENSOR_R_64F,
+                                                     defaultAlignment));
+
+      cutensorTensorDescriptor_t descC;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */,
+                                                     CUTENSOR_R_64F, defaultAlignment));
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                CUTENSOR_COMPUTE_DESC_64F));
+
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      double one = 1.0;
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<double *>(in->Mem),
+                                      reinterpret_cast<double *>(dtmp), 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
   #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
@@ -720,17 +715,60 @@ namespace cytnx {
       cytnx_uint64 *dtmp;
       dtmp = (cytnx_uint64 *)cuMalloc_gpu(sizeof(cytnx_uint64) * in->cap);
       cytnx_uint64 Nelem = in->len;
-  #ifdef UNI_CUTT
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+      std::vector<int64_t> size(old_shape.begin(), old_shape.end());
+      std::vector<int> ori(perm.size());
+      for (int i = 0; i < ori.size(); i++) ori[i] = i;
 
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_uint64), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      std::vector<int64_t> new_size(perm.size());
+      for (int i = 0; i < new_size.size(); i++) {
+        new_size[i] = size[perm[i]];
+      }
+      std::reverse(size.begin(), size.end());  // matching API
+      std::reverse(perm.begin(), perm.end());  // matching API
+      std::reverse(new_size.begin(), new_size.end());  // matching API
+      std::reverse(ori.begin(), ori.end());  // matching API
 
-      cuttDestroy(plan);
+      cutensorHandle_t handle;
+      checkCudaErrors(cutensorCreate(&handle));
+
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
+      cutensorTensorDescriptor_t descA;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, CUTENSOR_R_64F,
+                                                     defaultAlignment));
+
+      cutensorTensorDescriptor_t descC;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */,
+                                                     CUTENSOR_R_64F, defaultAlignment));
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                CUTENSOR_COMPUTE_DESC_64F));
+
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      double one = 1.0;
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<double *>(in->Mem),
+                                      reinterpret_cast<double *>(dtmp), 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
   #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
@@ -811,17 +849,60 @@ namespace cytnx {
       cytnx_int32 *dtmp;
       dtmp = (cytnx_int32 *)cuMalloc_gpu(sizeof(cytnx_int32) * in->cap);
       cytnx_uint64 Nelem = in->len;
-  #ifdef UNI_CUTT
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+      std::vector<int64_t> size(old_shape.begin(), old_shape.end());
+      std::vector<int> ori(perm.size());
+      for (int i = 0; i < ori.size(); i++) ori[i] = i;
 
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_int32), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      std::vector<int64_t> new_size(perm.size());
+      for (int i = 0; i < new_size.size(); i++) {
+        new_size[i] = size[perm[i]];
+      }
+      std::reverse(size.begin(), size.end());  // matching API
+      std::reverse(perm.begin(), perm.end());  // matching API
+      std::reverse(new_size.begin(), new_size.end());  // matching API
+      std::reverse(ori.begin(), ori.end());  // matching API
 
-      cuttDestroy(plan);
+      cutensorHandle_t handle;
+      checkCudaErrors(cutensorCreate(&handle));
+
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
+      cutensorTensorDescriptor_t descA;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, CUTENSOR_R_32F,
+                                                     defaultAlignment));
+
+      cutensorTensorDescriptor_t descC;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */,
+                                                     CUTENSOR_R_32F, defaultAlignment));
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                CUTENSOR_COMPUTE_DESC_32F));
+
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      float one = 1.0f;
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<float *>(in->Mem),
+                                      reinterpret_cast<float *>(dtmp), 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
   #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
@@ -904,17 +985,60 @@ namespace cytnx {
       cytnx_uint32 *dtmp;
       dtmp = (cytnx_uint32 *)cuMalloc_gpu(sizeof(cytnx_uint32) * in->cap);
       cytnx_uint64 Nelem = in->len;
-  #ifdef UNI_CUTT
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+      std::vector<int64_t> size(old_shape.begin(), old_shape.end());
+      std::vector<int> ori(perm.size());
+      for (int i = 0; i < ori.size(); i++) ori[i] = i;
 
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_uint32), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      std::vector<int64_t> new_size(perm.size());
+      for (int i = 0; i < new_size.size(); i++) {
+        new_size[i] = size[perm[i]];
+      }
+      std::reverse(size.begin(), size.end());  // matching API
+      std::reverse(perm.begin(), perm.end());  // matching API
+      std::reverse(new_size.begin(), new_size.end());  // matching API
+      std::reverse(ori.begin(), ori.end());  // matching API
 
-      cuttDestroy(plan);
+      cutensorHandle_t handle;
+      checkCudaErrors(cutensorCreate(&handle));
+
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
+      cutensorTensorDescriptor_t descA;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, CUTENSOR_R_32F,
+                                                     defaultAlignment));
+
+      cutensorTensorDescriptor_t descC;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */,
+                                                     CUTENSOR_R_32F, defaultAlignment));
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                CUTENSOR_COMPUTE_DESC_32F));
+
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      float one = 1.0f;
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<float *>(in->Mem),
+                                      reinterpret_cast<float *>(dtmp), 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
   #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
@@ -995,17 +1119,60 @@ namespace cytnx {
       cytnx_uint16 *dtmp;
       dtmp = (cytnx_uint16 *)cuMalloc_gpu(sizeof(cytnx_uint16) * in->cap);
       cytnx_uint64 Nelem = in->len;
-  #ifdef UNI_CUTT
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+      std::vector<int64_t> size(old_shape.begin(), old_shape.end());
+      std::vector<int> ori(perm.size());
+      for (int i = 0; i < ori.size(); i++) ori[i] = i;
 
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_uint16), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      std::vector<int64_t> new_size(perm.size());
+      for (int i = 0; i < new_size.size(); i++) {
+        new_size[i] = size[perm[i]];
+      }
+      std::reverse(size.begin(), size.end());  // matching API
+      std::reverse(perm.begin(), perm.end());  // matching API
+      std::reverse(new_size.begin(), new_size.end());  // matching API
+      std::reverse(ori.begin(), ori.end());  // matching API
 
-      cuttDestroy(plan);
+      cutensorHandle_t handle;
+      checkCudaErrors(cutensorCreate(&handle));
+
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
+      cutensorTensorDescriptor_t descA;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, CUTENSOR_R_16F,
+                                                     defaultAlignment));
+
+      cutensorTensorDescriptor_t descC;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */,
+                                                     CUTENSOR_R_16F, defaultAlignment));
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                CUTENSOR_COMPUTE_DESC_16F));
+
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      half one = __float2half(1.0f);
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<half *>(in->Mem),
+                                      reinterpret_cast<half *>(dtmp), 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
   #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
@@ -1085,17 +1252,60 @@ namespace cytnx {
       cytnx_int16 *dtmp;
       dtmp = (cytnx_int16 *)cuMalloc_gpu(sizeof(cytnx_int16) * in->cap);
       cytnx_uint64 Nelem = in->len;
-  #ifdef UNI_CUTT
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+      std::vector<int64_t> size(old_shape.begin(), old_shape.end());
+      std::vector<int> ori(perm.size());
+      for (int i = 0; i < ori.size(); i++) ori[i] = i;
 
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_int16), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      std::vector<int64_t> new_size(perm.size());
+      for (int i = 0; i < new_size.size(); i++) {
+        new_size[i] = size[perm[i]];
+      }
+      std::reverse(size.begin(), size.end());  // matching API
+      std::reverse(perm.begin(), perm.end());  // matching API
+      std::reverse(new_size.begin(), new_size.end());  // matching API
+      std::reverse(ori.begin(), ori.end());  // matching API
 
-      cuttDestroy(plan);
+      cutensorHandle_t handle;
+      checkCudaErrors(cutensorCreate(&handle));
+
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
+      cutensorTensorDescriptor_t descA;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, CUTENSOR_R_16F,
+                                                     defaultAlignment));
+
+      cutensorTensorDescriptor_t descC;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */,
+                                                     CUTENSOR_R_16F, defaultAlignment));
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                CUTENSOR_COMPUTE_DESC_16F));
+
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      half one = __float2half(1.0f);
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<half *>(in->Mem),
+                                      reinterpret_cast<half *>(dtmp), 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
   #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
@@ -1176,17 +1386,60 @@ namespace cytnx {
       cytnx_bool *dtmp;
       dtmp = (cytnx_bool *)cuMalloc_gpu(sizeof(cytnx_bool) * in->cap);
       cytnx_uint64 Nelem = in->len;
-  #ifdef UNI_CUTT
+  #ifdef UNI_CUTENSOR
       std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
+      std::vector<int64_t> size(old_shape.begin(), old_shape.end());
+      std::vector<int> ori(perm.size());
+      for (int i = 0; i < ori.size(); i++) ori[i] = i;
 
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cytnx_bool), 0);
-      cuttExecute(plan, in->Mem, dtmp);
+      std::vector<int64_t> new_size(perm.size());
+      for (int i = 0; i < new_size.size(); i++) {
+        new_size[i] = size[perm[i]];
+      }
+      std::reverse(size.begin(), size.end());  // matching API
+      std::reverse(perm.begin(), perm.end());  // matching API
+      std::reverse(new_size.begin(), new_size.end());  // matching API
+      std::reverse(ori.begin(), ori.end());  // matching API
 
-      cuttDestroy(plan);
+      cutensorHandle_t handle;
+      checkCudaErrors(cutensorCreate(&handle));
+
+      // This is the default alignment of cudaMalloc() and may also be the default alignment of
+      // cudaMallocManaged()
+      cytnx_uint64 defaultAlignment = 256;
+      cutensorTensorDescriptor_t descA;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descA, size.size(), size.data(),
+                                                     NULL /* stride */, CUTENSOR_R_8I,
+                                                     defaultAlignment));
+
+      cutensorTensorDescriptor_t descC;
+      checkCudaErrors(cutensorCreateTensorDescriptor(handle, &descC, new_size.size(),
+                                                     new_size.data(), NULL /* stride */,
+                                                     CUTENSOR_R_8I, defaultAlignment));
+      cutensorOperationDescriptor_t desc;
+      checkCudaErrors(cutensorCreatePermutation(handle, &desc, descA, ori.data(),
+                                                CUTENSOR_OP_IDENTITY, descC, perm.data(),
+                                                CUTENSOR_COMPUTE_DESC_32F));
+
+      const cutensorAlgo_t algo = CUTENSOR_ALGO_DEFAULT;
+
+      cutensorPlanPreference_t planPref;
+      checkCudaErrors(
+        cutensorCreatePlanPreference(handle, &planPref, algo, CUTENSOR_JIT_MODE_NONE));
+
+      cutensorPlan_t plan;
+      checkCudaErrors(
+        cutensorCreatePlan(handle, &plan, desc, planPref, 0 /* workspaceSizeLimit */));
+
+      int8_t one = 1;
+      checkCudaErrors(cutensorPermute(handle, plan, &one, reinterpret_cast<int8_t *>(in->Mem),
+                                      reinterpret_cast<int8_t *>(dtmp), 0 /* stream */));
+
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descA));
+      checkCudaErrors(cutensorDestroyTensorDescriptor(descC));
+      checkCudaErrors(cutensorDestroyPlanPreference(planPref));
+      checkCudaErrors(cutensorDestroyPlan(plan));
+      checkCudaErrors(cutensorDestroy(handle));
 
   #else
       std::vector<cytnx_uint64> newshape(old_shape.size());
