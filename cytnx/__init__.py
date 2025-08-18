@@ -130,9 +130,7 @@ def _resolve_cpp_linkflags__():
     if not hptt_path is None:
         out += os.path.join(hptt_path,"lib/libhptt.a")
 
-    cutt_path = _find_cutt__()
-    if not cutt_path is None:
-        out += " " + os.path.join(cutt_path,"lib/libcutt.a")
+
 
 
     f.close()
