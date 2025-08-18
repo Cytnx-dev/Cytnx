@@ -2,9 +2,6 @@
 	path = thirdparty/hptt
 	url = https://github.com/Cytnx-dev/hptt.git
 	branch = main
-[submodule "thirdparty/cutt"]
-	path = thirdparty/cutt
-	url = https://github.com/kaihsin/cutt.git
 [submodule "thirdparty/doxygen-awesome-css"]
 	path = thirdparty/doxygen-awesome-css
 	url = https://github.com/jothepro/doxygen-awesome-css.git
