@@ -12,9 +12,6 @@
 #include "Type.hpp"
 
 #ifdef UNI_GPU
-  #ifdef UNI_CUTT
-    #include "cutt.h"
-  #endif
 
   #ifdef UNI_CUTENSOR
     #include "cutensor.h"
@@ -180,51 +177,6 @@ namespace cytnx {
       }
     }
 
-  #ifdef UNI_CUTT
-    template <class T>
-    boost::intrusive_ptr<Storage_base> cuMovemem_cutt_gpu(
-      boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape,
-      const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper,
-      const bool is_inplace) {
-      using cuT = ToCudaType<T>;
-      T proxy;
-      unsigned int dtype_T = Type_class::cy_typeid(proxy);
-    #ifdef UNI_DEBUG
-      cytnx_error_msg(
-        in->dtype() != dtype_T,
-        "[DEBUG][internal error] in.dtype_str is [%s] but call cuMovemem_cutt with type %s",
-        in->dtype_str().c_str(), Type.getname(dtype_T));
-      cytnx_error_msg(in->device() == Device.cpu, "%s",
-                      "[DEBUG][internal error] in.device is on cpu but all cuda function.");
-    #endif
-
-      cuT *dtmp;
-      dtmp = (cuT *)cuMalloc_gpu(sizeof(cuT) * in->capacity());
-      cytnx_uint64 Nelem = in->size();
-      std::vector<int> perm(mapper.begin(), mapper.end());
-      std::vector<int> size(old_shape.begin(), old_shape.end());
-      std::reverse(size.begin(), size.end());  // matching API CUTT
-      reverse_perm(perm.begin(), perm.end(), perm.size());  // matching API CUTT
-
-      cuttHandle plan;
-      cuttPlan(&plan, perm.size(), size.data(), perm.data(), sizeof(cuT), 0);
-      cuttExecute(plan, in->data(), dtmp);
-
-      cuttDestroy(plan);
-
-      boost::intrusive_ptr<Storage_base> out = __SII.USIInit[dtype_T]();
-      if (is_inplace) {
-        /// cpy back:
-        checkCudaErrors(cudaMemcpy(in->data(), dtmp, sizeof(T) * Nelem, cudaMemcpyDeviceToDevice));
-        cudaFree(dtmp);
-        return in;
-      } else {
-        out->_Init_byptr(dtmp, Nelem, in->device(), true, in->capacity());
-        return out;
-      }
-    }
-  #endif
-
   #ifdef UNI_CUTENSOR
     template <class DType>
     boost::intrusive_ptr<Storage_base> cuMovemem_cutensor_gpu(
@@ -345,8 +297,6 @@ namespace cytnx {
       if constexpr (is_complex_v<DType> || std::is_floating_point_v<DType>) {
   #if defined(UNI_CUTENSOR)
         return cuMovemem_cutensor_gpu<DType>(in, old_shape, mapper, invmapper, is_inplace);
-  #elif defined(UNI_CUTT)
-        return cuMovemem_cutt_gpu<DType>(in, old_shape, mapper, invmapper, is_inplace);
   #else
         return cuMovemem_gpu_general<DType>(in, old_shape, mapper, invmapper, is_inplace);
   #endif

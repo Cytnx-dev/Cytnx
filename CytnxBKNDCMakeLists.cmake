@@ -73,7 +73,7 @@ if (USE_HPTT)
     PREFIX hptt
     GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
     GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
-    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
     )
     message( STATUS " Build HPTT Support: YES")
     message( STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")
@@ -83,22 +83,6 @@ if (USE_HPTT)
     FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_HPTT\n" "")
 endif() #use_HPTT
 
-if (USE_CUDA)
-    if (USE_CUTT)
-      option(CUTT_ENABLE_FINE_TUNE "CUTT option FINE_TUNE" OFF)
-      option(CUTT_ENABLE_NVTOOLS "CUTT option NVTOOLS" OFF)
-      option(CUTT_NO_ALIGN_ALLOC "CUTT option NO_ALIGN_ALLIC" OFF)
-      set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUTT")
-      ExternalProject_Add(cutt
-        PREFIX cutt_src
-        GIT_REPOSITORY https://github.com/kaihsin/cutt.git
-        GIT_TAG 27ed59a42f2610923084c4687327d00f4c2d1d2d
-        BINARY_DIR cutt_src/build
-        INSTALL_DIR cutt
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release -DNO_ALIGN_ALLOC=${CUTT_NO_ALIGN_ALLOC} -DENABLE_NVTOOLS=${CUTT_ENABLE_NVTOOLS} -DFINE_TUNE=${CUTT_ENABLE_FINE_TUNE} -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-      )
-    endif()
-endif()
 
 
 #####################################################################
@@ -174,24 +158,7 @@ if(USE_CUDA)
     endif()
 
 
-    if(USE_CUTT)
-        ExternalProject_Get_Property(cutt install_dir)
-        include_directories(${install_dir}/include)
-        message(STATUS "cutt install dir: ${install_dir}")
-        add_dependencies(cytnx cutt)
-        # set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
-        target_compile_definitions(cytnx PRIVATE UNI_CUTT)
-        target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libcutt.a)
-        # relocate cutt
-        install(DIRECTORY ${CMAKE_BINARY_DIR}/cutt DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-        message( STATUS " Build CUTT Support: YES")
-        message( STATUS " --CUTT option FINE_TUNE: ${CUTT_ENABLE_FINE_TUNE}")
-        message( STATUS " --CUTT option NVTOOLS: ${CUTT_ENABLE_NVTOOLS}")
-        message( STATUS " --CUTT option NO_ALIGN_ALLOC: ${HPTT_NO_ALIGN_ALLOC}")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTT\n" "")
-
-    endif()
 
 
     message( STATUS " Build CUDA Support: YES")

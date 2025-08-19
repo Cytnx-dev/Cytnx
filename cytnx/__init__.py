@@ -92,14 +92,6 @@ def _find_hptt__():
 
     return hptt_path
 
-def _find_cutt__():
-    cutt_path = None
-    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cutt")):
-        cutt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"cutt")
-    elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"cutt")):
-        cutt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"cutt")
-
-    return cutt_path
 
 
 def _get_version__():
@@ -138,9 +130,7 @@ def _resolve_cpp_linkflags__():
     if not hptt_path is None:
         out += os.path.join(hptt_path,"lib/libhptt.a")
 
-    cutt_path = _find_cutt__()
-    if not cutt_path is None:
-        out += " " + os.path.join(cutt_path,"lib/libcutt.a")
+
 
 
     f.close()

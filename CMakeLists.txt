@@ -157,8 +157,8 @@ cmake_dependent_option(HPTT_ENABLE_ARM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENA
 cmake_dependent_option(HPTT_ENABLE_AVX "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
 cmake_dependent_option(HPTT_ENABLE_IBM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
 cmake_dependent_option(USE_CUDA "Enable CUDA support." OFF "NOT BACKEND_TORCH" OFF)
-cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
-cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
+# cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
+# cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
 cmake_dependent_option(USE_CUTENSOR "Enable cuTENSOR." OFF "USE_CUDA" OFF)
 require_dependent_variable(CUTENSOR_ROOT "$ENV{CUTENSOR_ROOT}" PATH
 "Please provide CUTENSOR_ROOT in the environment variables.
