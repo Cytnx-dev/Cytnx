@@ -17,11 +17,6 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-    env:
-      CONDA_BUILD_RECIPE: >-
-        ${{ matrix.os == 'macos-latest' && 'conda_build/conda_gen_mac/' ||
-            matrix.os == 'ubuntu-latest' && 'conda_build/conda_gen/' ||
-            'conda_build/conda_gen/' }}
     defaults:
       run:
         shell: bash -l {0}
@@ -74,7 +69,7 @@ jobs:
       run: |
         echo "Start building---------------------------------"
         export CCACHE_DIR="${HOME}/.ccache"
-        conda build "$CONDA_BUILD_RECIPE" --build-id-pat "cytnx"
+        conda build conda_build/ --build-id-pat "cytnx"
       env:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache

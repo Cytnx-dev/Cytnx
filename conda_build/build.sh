@@ -9,7 +9,7 @@ start_time=$(date +%s)
 # only one value in the list is changed.
 $PYTHON -m pip install . -vv --no-deps --ignore-installed \
   --config-settings skbuild.build-dir=build \
-  --config-settings skbuild.cmake.args=--preset=mkl-cpu \
+  --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
   --config-settings "skbuild.cmake.args=-G Unix Makefiles"
 
 end_time=$(date +%s)
