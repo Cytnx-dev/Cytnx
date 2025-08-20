@@ -6,11 +6,3 @@ python:
   - 3.13
 pin_run_as_build:
   python: x.x
-# Please consult conda-forge/core before doing this
-MACOSX_DEPLOYMENT_TARGET:  # [osx and x86_64]
-  - "15.3"                # [osx and x86_64]
-MACOSX_SDK_VERSION:        # [osx and x86_64]
-  - "15.3"                # [osx and x86_64]
-requirements:
-  run:
-    - __osx >={{ MACOSX_DEPLOYMENT_TARGET|default("15.3") }}  # [osx and x86_64]
