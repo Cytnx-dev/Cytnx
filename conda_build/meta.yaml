@@ -6,7 +6,7 @@ package:
   version: {{ version }}
 
 source:
-  path: ../../
+  path: ../
 
 build:
   number: 0
@@ -19,6 +19,8 @@ build:
     - CMAKE_C_COMPILER_LAUNCHER
     - CMAKE_CXX_COMPILER_LAUNCHER
     - CMAKE_CUDA_COMPILER_LAUNCHER
+    - CMAKE_PRESET=mkl-cpu            # [x86]
+    - CMAKE_PRESET=openblas-cpu       # [not x86]
 
 requirements:
   build:
@@ -32,7 +34,8 @@ requirements:
     - scikit-build-core
     - pybind11
     - boost >=1.82.0
-    - blas=*=openblas
+    - blas=*=mkl            # [x86]
+    - blas=*=openblas       # [not x86]
     - gtest
     - arpack
   run:
@@ -41,7 +44,8 @@ requirements:
     - boost >=1.82.0
     - python-graphviz
     - graphviz
-    - blas=*=openblas
+    - blas=*=mkl            # [x86]
+    - blas=*=openblas       # [not x86]
     - beartype
     - arpack
 
