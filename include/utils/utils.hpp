@@ -18,6 +18,7 @@
 #include "vec_argsort.hpp"
 #include "vec_sort.hpp"
 #include "dynamic_arg_resolver.hpp"
+#include "type_priority.hpp"
 
 #include "complex_arithmetic.hpp"
 #include "cucomplex_arithmetic.hpp"
