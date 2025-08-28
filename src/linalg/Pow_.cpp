@@ -59,17 +59,10 @@ namespace cytnx {
     void Pow_(UniTensor &Tin, const double &p) {
       if (Tin.uten_type() == UTenType.Dense) {
         Tin.get_block_().Pow_(p);
-      } else if (Tin.uten_type() == UTenType.Block) {
-        cytnx_error_msg(true,
-                        "[Pow_][BlockUniTensor] Powers of BlockUniTensors cannot be calculated. "
-                        "This would destroy the Symmetry structure and is thus not implemented.%s",
-                        "\n");
-      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        cytnx_error_msg(
-          true,
-          "[Pow_][BlockFermionicUniTensor] Powers of BlockFermionicUniTensors cannot be "
-          "calculated. This would destroy the Symmetry structure and is thus not implemented.%s",
-          "\n");
+      } else if (Tin.uten_type() == UTenType.Block || Tin.uten_type() == UTenType.BlockFermionic) {
+        for (auto &blk : Tin.get_blocks_()) {
+          blk.Pow_(p);
+        }
       } else {
         // cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
         auto tmp = Tin.get_blocks_();
