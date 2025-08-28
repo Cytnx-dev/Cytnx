@@ -2390,10 +2390,10 @@ namespace cytnx {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         blockrhs = (b + a) % Rtn->_blocks.size();
         if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
-          if (Rtn->_signflip[blockrhs])
-            this->_blocks[b] -= Rtn->_blocks[blockrhs];
-          else
+          if (Rtn->_signflip[blockrhs] == this->_signflip[b])
             this->_blocks[b] += Rtn->_blocks[blockrhs];
+          else
+            this->_blocks[b] -= Rtn->_blocks[blockrhs];
           break;
         }
       }
@@ -2473,10 +2473,10 @@ namespace cytnx {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         blockrhs = (b + a) % Rtn->_blocks.size();
         if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
-          if (Rtn->_signflip[blockrhs])
-            this->_blocks[b] += Rtn->_blocks[blockrhs];
-          else
+          if (Rtn->_signflip[blockrhs] == this->_signflip[b])
             this->_blocks[b] -= Rtn->_blocks[blockrhs];
+          else
+            this->_blocks[b] += Rtn->_blocks[blockrhs];
           break;
         }
       }
@@ -2486,11 +2486,7 @@ namespace cytnx {
   void BlockFermionicUniTensor::_fx_group_duplicates(
     const std::vector<cytnx_uint64> &dup_bond_idxs,
     const std::vector<std::vector<cytnx_uint64>> &idx_mappers) {
-    //[21 Aug 2024] This is a copy from BlockUniTensor; adds signflips by taking -Tensor; might be
-    // more effiecent if it is done in the contiguous() step.
-    // cytnx_error_msg(
-    //   true, "[ERROR][BlockFermionicUniTensor][_fx_group_duplicates] not implemented yet.%s",
-    //   "\n");
+    //[21 Aug 2024] This is a copy from BlockUniTensor; adds signflips by taking -Tensor
 
     // checking the bonds that are duplicates
     // auto mod_idxs = dup_bond_idxs; std::sort(mod_idx.begin(),mod_idx.end());
@@ -2580,8 +2576,8 @@ namespace cytnx {
                                              const bool &force) {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     // TODOfermion: signflips need to be included!!!
-    cytnx_error_msg(
-      true, "[ERROR][BlockFermionicUniTensor][_fx_group_duplicates] not implemented yet.%s", "\n");
+    cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][combineBonds] not implemented yet.%s",
+                    "\n");
     cytnx_error_msg(this->is_diag(),
                     "[ERROR][BlockFermionicUniTensor] cannot combineBonds when is_diag = true!%s",
                     "\n");
@@ -2803,7 +2799,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockUT not implemented.%s", "\n");
   }
 
-  void _bkf_from_bkF(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
+  void _bkf_from_bkf(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
                      const bool &force) {
     cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockFermionicUT not implemented.%s", "\n");
   }
@@ -2818,7 +2814,7 @@ namespace cytnx {
     } else if (rhs->uten_type() == UTenType.Block) {
       _bkf_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.BlockFermionic) {
-      _bkf_from_bkF(this, (BlockFermionicUniTensor *)(rhs.get()), force);
+      _bkf_from_bkf(this, (BlockFermionicUniTensor *)(rhs.get()), force);
     } else {
       cytnx_error_msg(
         true, "[ERROR] unsupport conversion of UniTensor from %s => BlockFermionicUniTensor\n",

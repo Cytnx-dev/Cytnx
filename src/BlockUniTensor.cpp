@@ -1307,7 +1307,7 @@ namespace cytnx {
           s.erase(s.begin() + idb);
           s.erase(s.begin() + ida);
           auto itr = tmap.find(s);
-          if (itr != tmap.end())
+          if (itr != tmap.end())  // itr already exists in tmap
             new_blocks[itr->second] += this->_blocks[i].Trace(ida, idb);
           else {
             tmap[s] = new_blocks.size();
