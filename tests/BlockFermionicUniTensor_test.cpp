@@ -10,6 +10,18 @@ TEST_F(BlockFermionicUniTensorTest, SimpleTensorContract) {
   EXPECT_EQ(abs(BFUT3.contract(BFUT2).at({0, 0}) - 32) < 1e-13, true);
 }
 
+TEST_F(BlockFermionicUniTensorTest, LinAlogElementwise) {
+  const double tol = 1e-14;
+  UniTensor T = BFUT3.permute({3, 1, 4, 2, 0}).contiguous();
+  EXPECT_EQ(AreEqUniTensor(BFUT3PERM, T), true);
+  EXPECT_EQ(AreNearlyEqUniTensor(2. * BFUT3PERM, T + T, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor(2. * BFUT3PERM, T + BFUT3PERM, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((T + T + T + T) / 4., BFUT3PERM, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((T + T + BFUT3PERM + T) / 4., BFUT3PERM, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((2 * T) - T, BFUT3PERM, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((2 * T) - BFUT3PERM, BFUT3PERM, tol), true);
+}
+
 TEST_F(BlockFermionicUniTensorTest, SaveLoad) {
   BFUT1.Save("BFUT1");
   UniTensor BFUTloaded = BFUTloaded.Load("BFUT1.cytnx");
