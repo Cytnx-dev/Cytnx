@@ -429,19 +429,82 @@ namespace cytnx {
         }
       }
       // block
-      else if (Ut1.uten_type() == UTenType.Block || Ut1.uten_type() == UTenType.BlockFermionic) {
+      else if (Ut1.uten_type() == UTenType.Block) {
         const std::vector<Tensor>& blocks1 = Ut1.get_blocks_();
         const std::vector<Tensor>& blocks2 = Ut2.get_blocks_();
-        if (blocks1.size() != blocks2.size()) {
-          std::cout << "# of blocks are not the same btwn two UTs. " << std::endl;
+        BlockUniTensor* Ut1ptr = (BlockUniTensor*)Ut1._impl.get();
+        BlockUniTensor* Ut2ptr = (BlockUniTensor*)Ut2._impl.get();
+        auto blocks_num = blocks1.size();
+        if (blocks_num != blocks2.size()) {
+          std::cout << "# of blocks are not the same between two UTs. " << std::endl;
           return false;
         }
-        auto blocks_num = blocks1.size();
-        for (size_t i = 0; i < blocks_num; ++i) {
-          if (!AreNearlyEqTensor(blocks1[i], blocks2[i], tol)) {
-            std::cout << "on " << i << " blk, the tensor does not mtach!" << std::endl;
+        for (int i = 0; i < blocks_num; i++) {
+          // finding the blocks (they might be not in the same order!)
+          int ind2 = -1;
+          for (int j = 0; j < blocks_num; j++) {
+            int testind = (i + j) % blocks_num;
+            if (Ut1ptr->_inner_to_outer_idx[i] == Ut2ptr->_inner_to_outer_idx[testind]) {
+              ind2 = testind;
+              break;
+            }
+          }
+          if (ind2 < 0) {
+            std::cout << "Qnum " << Ut1ptr->_inner_to_outer_idx[i]
+                      << " not found in second tensor:" << std::endl;
+            // for  (int j = 0; j < blocks_num; j++) {
+            //   std::cout << "Qnum[" << j << "]: " << Ut2ptr->_inner_to_outer_idx[j] << std::endl;
+            // }
+            return false;
+          }
+          // check blocks
+          if (!AreNearlyEqTensor(blocks1[i], blocks2[ind2], tol)) {
+            std::cout << "Block[" << i << "] and Block[" << ind2
+                      << "] have same quantum numbers, but the tensors do not match!" << std::endl;
             std::cout << blocks1[i] << std::endl;
-            std::cout << blocks2[i] << std::endl;
+            std::cout << blocks2[ind2] << std::endl;
+            return false;
+          }
+        }
+      } else if (Ut1.uten_type() == UTenType.BlockFermionic) {
+        const std::vector<Tensor>& blocks1 = Ut1.get_blocks_();
+        const std::vector<Tensor>& blocks2 = Ut2.get_blocks_();
+        BlockFermionicUniTensor* Ut1ptr = (BlockFermionicUniTensor*)Ut1._impl.get();
+        BlockFermionicUniTensor* Ut2ptr = (BlockFermionicUniTensor*)Ut2._impl.get();
+        auto signs1 = Ut1.signflip();
+        auto signs2 = Ut2.signflip();
+        auto blocks_num = blocks1.size();
+        if (blocks_num != blocks2.size()) {
+          std::cout << "# of blocks are not the same between two UTs. " << std::endl;
+          return false;
+        }
+        for (int i = 0; i < blocks_num; i++) {
+          // finding the blocks (they might be not in the same order!)
+          int ind2 = -1;
+          for (int j = 0; j < blocks_num; j++) {
+            auto testind = (i + j) % blocks_num;
+            if (Ut1ptr->_inner_to_outer_idx[i] == Ut2ptr->_inner_to_outer_idx[testind]) {
+              ind2 = testind;
+              break;
+            }
+          }
+          if (ind2 < 0) {
+            std::cout << "Qnum " << Ut1ptr->_inner_to_outer_idx[i] << " not found in second tensor."
+                      << std::endl;
+            // for  (int j = 0; j < blocks_num; j++) {
+            //   std::cout << "Qnum[" << j << "]: " << Ut2ptr->_inner_to_outer_idx[j] << std::endl;
+            // }
+            return false;
+          }
+          // check blocks
+          if (!AreNearlyEqTensor(blocks1[i],
+                                 (signs1[i] == signs2[ind2] ? blocks2[ind2] : blocks2[ind2] * (-1)),
+                                 tol)) {
+            std::cout << "Block[" << i << "] and Block[" << ind2
+                      << "] have same quantum numbers, but the tensors do not match! Signflips: "
+                      << signs1[i] << " and " << signs2[ind2] << std::endl;
+            std::cout << blocks1[i] << std::endl;
+            std::cout << blocks2[ind2] << std::endl;
             return false;
           }
         }
