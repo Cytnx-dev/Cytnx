@@ -3,7 +3,7 @@
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
-if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
+if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE_LIBRARIES))
   if (USE_MKL)
     #message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
     # Set MKL interface to LP64 by default, but allow ILP64
@@ -33,29 +33,27 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
   #  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
     target_compile_definitions(cytnx PUBLIC UNI_MKL)
-    if(MKL_INTERFACE STREQUAL "ilp64")
-      target_compile_definitions(cytnx PUBLIC MKL_ILP64)
-    else()
-      target_compile_definitions(cytnx PUBLIC MKL_LP64)
 
-    endif()
 
   else()
     set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
     find_package( LAPACKE REQUIRED)
-    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
     set(LAPACKE_INCLUDE_DIRS ${LAPACKE_DIR_FOUND}/include)
     target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
-    message( STATUS "LAPACKE found: ${LAPACKE_INCLUDE_DIRS}" )
+    message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
+    message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
   endif()
 
 else()
-  set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES})
+  set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
-  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
+  message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
+  message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
 endif()
 
 
