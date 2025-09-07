@@ -3393,7 +3393,7 @@ namespace cytnx {
                             const std::vector<cytnx_uint64> &invmapper_L,
                             const std::vector<cytnx_uint64> &invmapper_R) {
       cytnx_double *_out = (cytnx_double *)out->data();
-      cytnx_int64 *_Lin = (cytnx_int64 *)Lin->data();
+      cytnx_int32 *_Lin = (cytnx_int32 *)Lin->data();
       cytnx_double *_Rin = (cytnx_double *)Rin->data();
 
       if (Lin->size() == 1) {
