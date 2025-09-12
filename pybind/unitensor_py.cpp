@@ -700,11 +700,11 @@ void unitensor_binding(py::module &m) {
     .def("get_blocks", [](const UniTensor &self) { return self.get_blocks(); })
     .def(
       "get_blocks_",
-      [](const UniTensor &self, const bool &slient) { return self.get_blocks_(slient); },
-      py::arg("slient") = false)
+      [](const UniTensor &self, const bool &silent) { return self.get_blocks_(silent); },
+      py::arg("silent") = false)
     .def(
-      "get_blocks_", [](UniTensor &self, const bool &slient) { return self.get_blocks_(slient); },
-      py::arg("slient") = false)
+      "get_blocks_", [](UniTensor &self, const bool &silent) { return self.get_blocks_(silent); },
+      py::arg("silent") = false)
     .def(
       "put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64 &idx) {
