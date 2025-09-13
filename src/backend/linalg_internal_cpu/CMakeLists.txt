@@ -68,7 +68,6 @@ target_sources_local(cytnx
     Outer_internal.cpp
     Trace_internal.cpp
     Tridiag_internal.cpp
-    Sub_internal.cpp
     iSub_internal.cpp
     Sdd_internal.cpp
     Gesvd_internal.cpp
