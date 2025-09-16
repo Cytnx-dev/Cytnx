@@ -11,7 +11,7 @@ namespace cytnx {
   namespace linalg {
     Tensor Mod(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[Mod] error, two tensor cannot on different devices.%s", "\n");
+                      "[Mod] The two tensors cannot be on different devices.%s", "\n");
 
       Tensor out;
       bool icnst = false;
@@ -23,7 +23,7 @@ namespace cytnx {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[Mod] error, the two tensor does not have the same shape.%s", "\n");
+                        "[Mod] The two tensors do not have the same shape.%s", "\n");
         out.Init(Lt.shape(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Lt.device());
       }
 
