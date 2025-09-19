@@ -737,6 +737,30 @@ TEST_F(BlockUniTensorTest, Div) {
   //     }
 }
 
+TEST_F(BlockUniTensorTest, LinAlgElementwise) {
+  const double tol = 1e-14;
+  UniTensor T = BUT4;
+  EXPECT_EQ(AreNearlyEqUniTensor(2. * BUT4, T + T, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor(2. * BUT4, T + BUT4, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((T + T + T + T) / 4., BUT4, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((T + T + BUT4 + T) / 4., BUT4, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((2 * T) - T, BUT4, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((2 * T) - BUT4, BUT4, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((T * T * T) / T, BUT4 * BUT4, tol), true);
+  // test inline
+  UniTensor T2 = T.clone();
+  T2 += T;
+  T2 /= 2.;
+  EXPECT_EQ(AreNearlyEqUniTensor(T2, T, tol), true);
+  // test Mul and Div for tensors
+  UniTensor Tsq = T.clone();
+  Tsq *= T;
+  EXPECT_EQ(AreNearlyEqUniTensor(Tsq, T * T, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor(Tsq, T.Pow(2.), tol), true);
+  Tsq /= T;
+  EXPECT_EQ(AreNearlyEqUniTensor(Tsq, T, tol), true);
+}
+
 TEST_F(BlockUniTensorTest, Norm) {
   // std::cout<<BUT4<<std::endl;
   // EXPECT_TRUE(Scalar(BUT4.Norm().at({0})-10.02330912178208).abs()<1e-5);
