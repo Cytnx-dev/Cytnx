@@ -7,7 +7,7 @@
 
 namespace cytnx {
   namespace linalg {
-    void Expf_(Tensor &Tin) {
+    void Expf_(Tensor& Tin) {
       if ((Tin.dtype() == Type.ComplexFloat) || (Tin.dtype() == Type.Float)) {
         ;
       } else if (Tin.dtype() == Type.ComplexDouble)

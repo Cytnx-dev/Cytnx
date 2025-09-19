@@ -11,7 +11,7 @@
 namespace cytnx {
   namespace linalg {
 
-    void Gemm_(const Scalar &a, const Tensor &x, const Tensor &y, const Scalar &b, Tensor &c) {
+    void Gemm_(const Scalar& a, const Tensor& x, const Tensor& y, const Scalar& b, Tensor& c) {
       // C = a*x*y + b*C
       cytnx_error_msg(x.shape().size() != 2,
                       "[Gemm_] error, tensor x , Gemm can only operate on rank-2 Tensor.%s", "\n");
@@ -107,7 +107,7 @@ namespace cytnx {
       }
     }
 
-    Tensor Gemm(const Scalar &a, const Tensor &x, const Tensor &y) {
+    Tensor Gemm(const Scalar& a, const Tensor& x, const Tensor& y) {
       // ax*y -> out
 
       // std::cout << "matmul" << std::endl;

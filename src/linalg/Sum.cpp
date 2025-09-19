@@ -6,7 +6,7 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
-    Tensor Sum(const Tensor &Tin) {
+    Tensor Sum(const Tensor& Tin) {
       cytnx_error_msg(Tin.dtype() == Type.Void,
                       "[Cannot have void (uninitialized) Tensor as input]%s", "\n");
       Tensor out({1}, Tin.dtype(), Tin.device());

@@ -7,7 +7,7 @@
 
 namespace cytnx {
   namespace linalg {
-    Tensor Max(const Tensor &Tin) {
+    Tensor Max(const Tensor& Tin) {
       cytnx_error_msg(Tin.dtype() == Type.Void, "[Cannot have void (Uninitialize) Tensor]%s", "\n");
       Tensor out({1}, Tin.dtype(), Tin.device());
 

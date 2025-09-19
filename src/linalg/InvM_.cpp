@@ -8,7 +8,7 @@ using namespace std;
 
 namespace cytnx {
   namespace linalg {
-    void InvM_(Tensor &Tin) {
+    void InvM_(Tensor& Tin) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[InvM] error, InvM can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[InvM] error tensor must be contiguous. Call
@@ -41,7 +41,7 @@ namespace cytnx {
 
 namespace cytnx {
   namespace linalg {
-    void _InvM_inplace_Dense_UT(UniTensor &Tin) {
+    void _InvM_inplace_Dense_UT(UniTensor& Tin) {
       Tensor tmp;
 
       if (Tin.is_contiguous())
@@ -65,7 +65,7 @@ namespace cytnx {
 
       if (Tin.is_contiguous()) tmp.reshape_(oldshape);
     }
-    void InvM_(UniTensor &Tin) {
+    void InvM_(UniTensor& Tin) {
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
                       "[InvM_][ERROR] InvM_ for UniTensor should have rank>1 and rowrank>0%s",
                       "\n");

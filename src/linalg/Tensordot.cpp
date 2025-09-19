@@ -11,10 +11,10 @@ namespace cytnx {
 
   namespace linalg {
 
-    void _Tensordot_generic(Tensor &out, const Tensor &Tl, const Tensor &Tr,
-                            const std::vector<cytnx_uint64> &idxl,
-                            const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
-                            const bool &cacheR) {
+    void _Tensordot_generic(Tensor& out, const Tensor& Tl, const Tensor& Tr,
+                            const std::vector<cytnx_uint64>& idxl,
+                            const std::vector<cytnx_uint64>& idxr, const bool& cacheL,
+                            const bool& cacheR) {
       std::vector<cytnx_uint64> mapperL, mapperR;
       std::vector<cytnx_uint64> non_contract_l = vec_erase(vec_range(Tl.shape().size()), idxl);
       std::vector<cytnx_uint64> non_contract_r = vec_erase(vec_range(Tr.shape().size()), idxr);
@@ -93,10 +93,10 @@ namespace cytnx {
     }
 
   #ifdef UNI_GPU
-    void _Tensordot_cutn(Tensor &out, const Tensor &Tl, const Tensor &Tr,
-                         const std::vector<cytnx_uint64> &idxl,
-                         const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
-                         const bool &cacheR) {
+    void _Tensordot_cutn(Tensor& out, const Tensor& Tl, const Tensor& Tr,
+                         const std::vector<cytnx_uint64>& idxl,
+                         const std::vector<cytnx_uint64>& idxr, const bool& cacheL,
+                         const bool& cacheR) {
       unsigned int t = Tl.dtype();
       if (t == Type.Uint64 || t == Type.Int64 || t == Type.Uint32 || t == Type.Int32 ||
           t == Type.Uint16 || t == Type.Int16 || t == Type.Bool) {
@@ -152,9 +152,9 @@ namespace cytnx {
     }
   #endif
 
-    Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
-                     const std::vector<cytnx_uint64> &idxr, const bool &cacheL,
-                     const bool &cacheR) {
+    Tensor Tensordot(const Tensor& Tl, const Tensor& Tr, const std::vector<cytnx_uint64>& idxl,
+                     const std::vector<cytnx_uint64>& idxr, const bool& cacheL,
+                     const bool& cacheR) {
       // checking:
       cytnx_error_msg(idxl.size() != idxr.size(),
                       "[ERROR] the number of index to trace must be consist across two tensors.%s",

@@ -21,20 +21,20 @@ using namespace cytnx;
 #ifdef BACKEND_TORCH
 #else
 
-void scalar_binding(py::module &m) {
+void scalar_binding(py::module& m) {
   py::class_<cytnx::Scalar>(m, "Scalar")
     .def(py::init<>())
-    .def(py::init<const cytnx_complex128 &>(), py::arg("a"))
-    .def(py::init<const cytnx_complex64 &>(), py::arg("a"))
-    .def(py::init<const cytnx_double &>(), py::arg("a"))
-    .def(py::init<const cytnx_float &>(), py::arg("a"))
-    .def(py::init<const cytnx_uint64 &>(), py::arg("a"))
-    .def(py::init<const cytnx_int64 &>(), py::arg("a"))
-    .def(py::init<const cytnx_uint32 &>(), py::arg("a"))
-    .def(py::init<const cytnx_int32 &>(), py::arg("a"))
-    .def(py::init<const cytnx_uint16 &>(), py::arg("a"))
-    .def(py::init<const cytnx_int16 &>(), py::arg("a"))
-    .def(py::init<const cytnx_bool &>(), py::arg("a"))
+    .def(py::init<const cytnx_complex128&>(), py::arg("a"))
+    .def(py::init<const cytnx_complex64&>(), py::arg("a"))
+    .def(py::init<const cytnx_double&>(), py::arg("a"))
+    .def(py::init<const cytnx_float&>(), py::arg("a"))
+    .def(py::init<const cytnx_uint64&>(), py::arg("a"))
+    .def(py::init<const cytnx_int64&>(), py::arg("a"))
+    .def(py::init<const cytnx_uint32&>(), py::arg("a"))
+    .def(py::init<const cytnx_int32&>(), py::arg("a"))
+    .def(py::init<const cytnx_uint16&>(), py::arg("a"))
+    .def(py::init<const cytnx_int16&>(), py::arg("a"))
+    .def(py::init<const cytnx_bool&>(), py::arg("a"))
 
     ;  // end of object line
 

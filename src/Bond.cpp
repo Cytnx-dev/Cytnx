@@ -5,17 +5,17 @@
 using namespace std;
 
 namespace cytnx {
-  void Bond_impl::Init(const cytnx_uint64 &dim, const bondType &bd_type) {
+  void Bond_impl::Init(const cytnx_uint64& dim, const bondType& bd_type) {
     cytnx_error_msg(dim == 0, "%s", "[ERROR] Bond_impl cannot have 0 or negative dimension.");
 
     this->_type = bd_type;
     this->_dim = dim;
   }
 
-  void Bond_impl::Init(const bondType &bd_type,
-                       const std::vector<std::vector<cytnx_int64>> &in_qnums,
-                       const std::vector<cytnx_uint64> &degs,
-                       const std::vector<Symmetry> &in_syms) {
+  void Bond_impl::Init(const bondType& bd_type,
+                       const std::vector<std::vector<cytnx_int64>>& in_qnums,
+                       const std::vector<cytnx_uint64>& degs,
+                       const std::vector<Symmetry>& in_syms) {
     cytnx_error_msg(degs.size() != in_qnums.size(), "%s",
                     "[ERROR] [degs] list must have same size as [qnum] list");
     cytnx_error_msg(degs.size() == 0, "%s", "[ERROR] [degs & qnums] lists cannot be empty!");
@@ -69,8 +69,8 @@ namespace cytnx {
     }
   }
 
-  void Bond_impl::force_combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in,
-                                     const bool &is_grp) {
+  void Bond_impl::force_combineBond_(const boost::intrusive_ptr<Bond_impl>& bd_in,
+                                     const bool& is_grp) {
     // check:
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
                     "[ERROR] cannot combine two Bonds with different symmetry.");
@@ -181,7 +181,7 @@ namespace cytnx {
     }  // check if symmetry.
   }
 
-  void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp) {
+  void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl>& bd_in, const bool& is_grp) {
     // check:
     cytnx_error_msg(this->type() != bd_in->type(), "%s\n",
                     "[ERROR] cannot combine two Bonds with different types.");
@@ -277,8 +277,8 @@ namespace cytnx {
   }
 
   //-------------
-  std::vector<std::vector<cytnx_int64>> Bond_impl::getUniqueQnums(std::vector<cytnx_uint64> &counts,
-                                                                  const bool &return_counts) {
+  std::vector<std::vector<cytnx_int64>> Bond_impl::getUniqueQnums(std::vector<cytnx_uint64>& counts,
+                                                                  const bool& return_counts) {
     cytnx_error_msg(this->_qnums.size() == 0,
                     "[ERROR][getUniqueQnums] cannot call this on a non-symmetry bond!%s", "\n");
 
@@ -315,7 +315,7 @@ namespace cytnx {
       cytnx_uint64 loc = 0;
       std::vector<cytnx_uint64> return_order(this->_qnums.size());
       std::vector<cytnx_uint64> idx_erase;
-      std::vector<cytnx_int64> *last = &this->_qnums[0];
+      std::vector<cytnx_int64>* last = &this->_qnums[0];
       return_order[mapper[0]] = cnt;
       for (int q = 1; q < this->_qnums.size(); q++) {
         if (this->_qnums[q] != *last) {
@@ -343,9 +343,9 @@ namespace cytnx {
     }
   }
 
-  cytnx_uint64 Bond_impl::getDegeneracy(const std::vector<cytnx_int64> &qnum,
-                                        const bool &return_indices,
-                                        std::vector<cytnx_uint64> &indices) {
+  cytnx_uint64 Bond_impl::getDegeneracy(const std::vector<cytnx_int64>& qnum,
+                                        const bool& return_indices,
+                                        std::vector<cytnx_uint64>& indices) {
     if (this->_qnums.size() == 0) {
       return 0;
     } else {
@@ -424,7 +424,7 @@ namespace cytnx {
   }
   */
 
-  fermionParity Bond_impl::get_fermion_parity(const std::vector<cytnx_int64> &qnum) {
+  fermionParity Bond_impl::get_fermion_parity(const std::vector<cytnx_int64>& qnum) {
     if (this->_qnums.size() == 0) {
       return EVEN;
     } else {
@@ -446,7 +446,7 @@ namespace cytnx {
   }
 
   //[done]
-  bool Bond::operator==(const Bond &rhs) const {
+  bool Bond::operator==(const Bond& rhs) const {
     if (this->dim() != rhs.dim()) return false;
     if (this->type() != rhs.type()) return false;
     if (this->Nsym() != rhs.Nsym()) return false;
@@ -465,9 +465,9 @@ namespace cytnx {
     return true;
   }
 
-  bool Bond::operator!=(const Bond &rhs) const { return !(*this == rhs); }
+  bool Bond::operator!=(const Bond& rhs) const { return !(*this == rhs); }
 
-  void Bond::Save(const std::string &fname) const {
+  void Bond::Save(const std::string& fname) const {
     fstream f;
     f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
     if (!f.is_open()) {
@@ -476,7 +476,7 @@ namespace cytnx {
     this->_Save(f);
     f.close();
   }
-  void Bond::Save(const char *fname) const {
+  void Bond::Save(const char* fname) const {
     fstream f;
     string ffname = string(fname) + ".cybd";
     f.open((ffname), ios::out | ios::trunc | ios::binary);
@@ -487,7 +487,7 @@ namespace cytnx {
     f.close();
   }
 
-  Bond Bond::Load(const std::string &fname) {
+  Bond Bond::Load(const std::string& fname) {
     Bond out;
     fstream f;
     f.open(fname, ios::in | ios::binary);
@@ -499,7 +499,7 @@ namespace cytnx {
     return out;
   }
 
-  Bond Bond::Load(const char *fname) {
+  Bond Bond::Load(const char* fname) {
     Bond out;
     fstream f;
     f.open(fname, ios::in | ios::binary);
@@ -511,37 +511,37 @@ namespace cytnx {
     return out;
   }
 
-  void Bond::_Save(fstream &f) const {
+  void Bond::_Save(fstream& f) const {
     cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
     unsigned int IDDs = 666;
-    f.write((char *)&IDDs, sizeof(unsigned int));
+    f.write((char*)&IDDs, sizeof(unsigned int));
 
     // write format version!
     int ver = 0;
     if (this->_impl->_degs.size()) {
       ver = 1;
     }
-    f.write((char *)&ver, sizeof(int));
+    f.write((char*)&ver, sizeof(int));
 
     cytnx_uint64 tmp;
     if (ver == 0)
-      f.write((char *)&this->_impl->_dim, sizeof(cytnx_uint64));
+      f.write((char*)&this->_impl->_dim, sizeof(cytnx_uint64));
     else {
       // if it is new version, store the size of qnums list instead!
       tmp = this->_impl->_qnums.size();
-      f.write((char *)&tmp, sizeof(cytnx_uint64));
+      f.write((char*)&tmp, sizeof(cytnx_uint64));
     }
-    f.write((char *)&this->_impl->_type, sizeof(int));
+    f.write((char*)&this->_impl->_type, sizeof(int));
 
     // write Nsyms:
     cytnx_uint64 Nsym = this->_impl->_syms.size();
-    f.write((char *)&Nsym, sizeof(cytnx_uint64));
+    f.write((char*)&Nsym, sizeof(cytnx_uint64));
 
     if (ver == 0) {  // old version:
       if (Nsym != 0) {
         // writing qnums:
         for (cytnx_uint64 i = 0; i < this->_impl->_dim; i++) {
-          f.write((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
+          f.write((char*)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
         }
         //
       }
@@ -549,9 +549,9 @@ namespace cytnx {
       // new version, can only be symmetric!
       // writing qnums:
       for (cytnx_uint64 i = 0; i < this->_impl->_qnums.size(); i++) {
-        f.write((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
+        f.write((char*)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym);
       }
-      f.write((char *)&(this->_impl->_degs[0]), sizeof(cytnx_uint64) * this->_impl->_degs.size());
+      f.write((char*)&(this->_impl->_degs[0]), sizeof(cytnx_uint64) * this->_impl->_degs.size());
     }
 
     if (Nsym != 0) {
@@ -561,26 +561,26 @@ namespace cytnx {
     }
   }
 
-  void Bond::_Load(fstream &f) {
+  void Bond::_Load(fstream& f) {
     cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
     unsigned int tmpIDDs;
-    f.read((char *)&tmpIDDs, sizeof(unsigned int));
+    f.read((char*)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 666, "[ERROR] the object is not a cytnx Bond!%s", "\n");
 
     int ver;
-    f.read((char *)&ver, sizeof(int));
+    f.read((char*)&ver, sizeof(int));
 
     cytnx_uint64 tmpD;
     if (ver == 0)
-      f.read((char *)&this->_impl->_dim, sizeof(cytnx_uint64));
+      f.read((char*)&this->_impl->_dim, sizeof(cytnx_uint64));
     else {
-      f.read((char *)&tmpD, sizeof(cytnx_uint64));
+      f.read((char*)&tmpD, sizeof(cytnx_uint64));
     }
-    f.read((char *)&this->_impl->_type, sizeof(int));
+    f.read((char*)&this->_impl->_type, sizeof(int));
 
     // read Nsyms:
     cytnx_uint64 Nsym_in;
-    f.read((char *)&Nsym_in, sizeof(cytnx_uint64));
+    f.read((char*)&Nsym_in, sizeof(cytnx_uint64));
 
     if (ver == 0) {
       if (Nsym_in != 0) {
@@ -588,7 +588,7 @@ namespace cytnx {
           this->_impl->_dim, std::vector<cytnx_int64>(Nsym_in));
         // reading qnums:
         for (cytnx_uint64 i = 0; i < this->_impl->_dim; i++) {
-          f.read((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
+          f.read((char*)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
         }
         //
       }
@@ -601,10 +601,10 @@ namespace cytnx {
       this->_impl->_degs.resize(tmpD);
       // reading qnums:
       for (cytnx_uint64 i = 0; i < tmpD; i++) {
-        f.read((char *)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
+        f.read((char*)&(this->_impl->_qnums[i][0]), sizeof(cytnx_int64) * Nsym_in);
       }
 
-      f.read((char *)&(this->_impl->_degs[0]), sizeof(cytnx_uint64) * tmpD);
+      f.read((char*)&(this->_impl->_degs[0]), sizeof(cytnx_uint64) * tmpD);
 
       this->_impl->_dim = 0;
       for (auto c : this->_impl->_degs) {
@@ -620,8 +620,8 @@ namespace cytnx {
     }
   }
 
-  std::ostream &operator<<(std::ostream &os, const Bond &bin) {
-    char *buffer = (char *)malloc(sizeof(char) * 256);
+  std::ostream& operator<<(std::ostream& os, const Bond& bin) {
+    char* buffer = (char*)malloc(sizeof(char) * 256);
     os << "Dim = " << bin.dim() << " | ";
     if (bin.type() == bondType::BD_REG) {
       os << "type: REGULAR " << std::endl;

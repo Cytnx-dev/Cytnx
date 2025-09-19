@@ -10,16 +10,16 @@
 namespace cytnx {
   namespace linalg_internal {
     template <typename TLin, typename TRin>
-    inline void SubInternalImpl(boost::intrusive_ptr<Storage_base> &out,
-                                boost::intrusive_ptr<Storage_base> &Lin,
-                                boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &len,
-                                const std::vector<cytnx_uint64> &shape,
-                                const std::vector<cytnx_uint64> &invmapper_L,
-                                const std::vector<cytnx_uint64> &invmapper_R) {
+    inline void SubInternalImpl(boost::intrusive_ptr<Storage_base>& out,
+                                boost::intrusive_ptr<Storage_base>& Lin,
+                                boost::intrusive_ptr<Storage_base>& Rin, const cytnx_uint64& len,
+                                const std::vector<cytnx_uint64>& shape,
+                                const std::vector<cytnx_uint64>& invmapper_L,
+                                const std::vector<cytnx_uint64>& invmapper_R) {
       using TOut = cytnx::Scalar_init_interface::type_promote_t<TLin, TRin>;
-      TOut *_out = reinterpret_cast<TOut *>(out->data());
-      const TLin *_Lin = reinterpret_cast<const TLin *>(Lin->data());
-      const TRin *_Rin = reinterpret_cast<const TRin *>(Rin->data());
+      TOut* _out = reinterpret_cast<TOut*>(out->data());
+      const TLin* _Lin = reinterpret_cast<const TLin*>(Lin->data());
+      const TRin* _Rin = reinterpret_cast<const TRin*>(Rin->data());
 
       if (Lin->size() == 1) {
         for (cytnx::cytnx_uint64 i = 0; i < len; i++) {

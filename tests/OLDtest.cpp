@@ -10,7 +10,7 @@ using namespace cytnx;
 
 typedef cytnx::Accessor ac;
 
-Scalar generic_func(const Tensor &input, const std::vector<Scalar> &args) {
+Scalar generic_func(const Tensor& input, const std::vector<Scalar>& args) {
   auto out = input + args[0];
   out = args[1] + out;
   return out(0, 0).item();
@@ -18,7 +18,7 @@ Scalar generic_func(const Tensor &input, const std::vector<Scalar> &args) {
 
 class test {
  public:
-  Tensor tff(const Tensor &T) {
+  Tensor tff(const Tensor& T) {
     auto A = T.reshape(2, 3, 4);
     return A;
   }
@@ -26,7 +26,7 @@ class test {
 
 //-------------------------------------------
 
-Tensor myfunc(const Tensor &Tin) {
+Tensor myfunc(const Tensor& Tin) {
   // Tin should be a 4x4 tensor.
   Tensor A = arange(25).reshape({5, 5});
   A += A.permute({1, 0}).contiguous() + 1;
@@ -43,7 +43,7 @@ class MyOp2 : public LinOp {
     print(linalg::Eigh(T));
   }
 
-  UniTensor matvec(const UniTensor &in) {
+  UniTensor matvec(const UniTensor& in) {
     auto T = arange(100).reshape(10, 10);
     T = T + T.permute(1, 0);
     auto H = UniTensor(T, 1);
@@ -64,7 +64,7 @@ class MyOp2 : public LinOp {
     }                                                                                 \
   } while (0)
 
-Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps,
+Scalar run_DMRG(tn_algo::MPO& mpo, tn_algo::MPS& mps, int Nsweeps,
                 std::vector<tn_algo::MPS> ortho_mps = {}, double weight = 40) {
   auto model = tn_algo::DMRG(mpo, mps, ortho_mps, weight);
 
@@ -77,7 +77,7 @@ Scalar run_DMRG(tn_algo::MPO &mpo, tn_algo::MPS &mps, int Nsweeps,
   return E;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   print(User_debug);
 
   Storage s112 = zeros(10).storage();

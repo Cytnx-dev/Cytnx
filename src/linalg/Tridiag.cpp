@@ -9,8 +9,8 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V,
-                                const bool &is_row, bool throw_excp /*= false*/) {
+    std::vector<Tensor> Tridiag(const Tensor& Diag, const Tensor& Sub_diag, const bool& is_V,
+                                const bool& is_row, bool throw_excp /*= false*/) {
       cytnx_error_msg(Diag.shape().size() != 1,
                       "[Tridiag] error, Tridiag can only accept on vector (rank-1) Tensor.%s",
                       "\n");

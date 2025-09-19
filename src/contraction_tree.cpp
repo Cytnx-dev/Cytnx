@@ -36,7 +36,7 @@ namespace cytnx {
   }
 
   void ContractionTree::build_contraction_tree_by_tokens(
-    const std::map<std::string, cytnx_uint64> &name2pos, const std::vector<std::string> &tokens) {
+    const std::map<std::string, cytnx_uint64>& name2pos, const std::vector<std::string>& tokens) {
     this->reset_contraction_order();
     cytnx_error_msg(this->base_nodes.size() < 2,
                     "[ERROR][ContractionTree][build_contraction_order_by_tokens] contraction tree "

@@ -6,8 +6,8 @@ namespace cytnx {
 
   namespace algo_internal {
 
-    void vConcate_internal(char *out_ptr, std::vector<void *> &ins,
-                           const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &ElemSize) {
+    void vConcate_internal(char* out_ptr, std::vector<void*>& ins,
+                           const std::vector<cytnx_uint64>& lens, const cytnx_uint64& ElemSize) {
       // require:
       // 1. Data type of out, all [ins] to be the same
       // 2. out is properly allocated!
@@ -24,9 +24,9 @@ namespace cytnx {
       }
     }
 
-    void hConcate_internal(char *out_ptr, std::vector<char *> &ins,
-                           const std::vector<cytnx_uint64> &lens, const cytnx_uint64 &Dshare,
-                           const cytnx_uint64 &Dtot, const cytnx_uint64 &ElemSize) {
+    void hConcate_internal(char* out_ptr, std::vector<char*>& ins,
+                           const std::vector<cytnx_uint64>& lens, const cytnx_uint64& Dshare,
+                           const cytnx_uint64& Dtot, const cytnx_uint64& ElemSize) {
       // require:
       // 1. Data type of out, all [ins] to be the same
       // 2. out is properly allocated!

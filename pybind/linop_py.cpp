@@ -26,14 +26,14 @@ class PyLinOp : public LinOp {
   /* inherit constructor */
   using LinOp::LinOp;
 
-  Tensor matvec(const Tensor &Tin) override {
+  Tensor matvec(const Tensor& Tin) override {
     PYBIND11_OVERLOAD(Tensor, /* Return type */
                       LinOp, /* Parent class */
                       matvec, /* Name of function in C++ (must match Python name) */
                       Tin /* Argument(s) */
     );
   }
-  UniTensor matvec(const UniTensor &Tin) override {
+  UniTensor matvec(const UniTensor& Tin) override {
     PYBIND11_OVERLOAD(UniTensor, /* Return type */
                       LinOp, /* Parent class */
                       matvec, /* Name of function in C++ (must match Python name) */
@@ -42,9 +42,9 @@ class PyLinOp : public LinOp {
   }
 };
 
-void linop_binding(py::module &m) {
+void linop_binding(py::module& m) {
   py::class_<LinOp, PyLinOp>(m, "LinOp")
-    .def(py::init<const std::string &, const cytnx_uint64 &, const int &, const int &>(),
+    .def(py::init<const std::string&, const cytnx_uint64&, const int&, const int&>(),
          py::arg("type"), py::arg("nx"), py::arg("dtype") = (int)Type.Double,
          py::arg("device") = (int)Device.cpu)
     .def("set_elem", &LinOp::set_elem<cytnx_complex128>, py::arg("i"), py::arg("j"),
@@ -73,10 +73,10 @@ void linop_binding(py::module &m) {
     //        return Tensor(self(i,j));
     //})
     .def(
-      "matvec", [](LinOp &self, const Tensor &Tin) -> Tensor { return self.matvec(Tin); },
+      "matvec", [](LinOp& self, const Tensor& Tin) -> Tensor { return self.matvec(Tin); },
       py::arg("Tin"))
     .def(
-      "matvec", [](LinOp &self, const UniTensor &Tin) -> UniTensor { return self.matvec(Tin); },
+      "matvec", [](LinOp& self, const UniTensor& Tin) -> UniTensor { return self.matvec(Tin); },
       py::arg("Tin"))
     .def("set_device", &LinOp::set_device)
     .def("set_dtype", &LinOp::set_dtype)
@@ -85,7 +85,7 @@ void linop_binding(py::module &m) {
     .def("nx", &LinOp::nx)
     .def(
       "__repr__",
-      [](cytnx::LinOp &self) -> std::string {
+      [](cytnx::LinOp& self) -> std::string {
         self._print();
         return std::string("");
       },

@@ -20,8 +20,8 @@
     if (is_true)                                                                            \
       error_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (is_true), (format), __VA_ARGS__); \
   }
-static inline void error_msg(char const *const func, const char *const file, int const line,
-                             bool is_true, char const *format, ...) {
+static inline void error_msg(char const* const func, const char* const file, int const line,
+                             bool is_true, char const* format, ...) {
   // try {
   if (is_true) {
     va_list args;
@@ -35,10 +35,10 @@ static inline void error_msg(char const *const func, const char *const file, int
     // std::cerr << output_str << std::endl;
     std::cerr << output_str << std::endl;
     std::cerr << "Stack trace:" << std::endl;
-    void *array[10];
+    void* array[10];
     size_t size;
     size = backtrace(array, 10);
-    char **strings = backtrace_symbols(array, size);
+    char** strings = backtrace_symbols(array, size);
     for (size_t i = 0; i < size; i++) {
       std::cerr << strings[i] << std::endl;
     }
@@ -54,8 +54,8 @@ static inline void error_msg(char const *const func, const char *const file, int
     if (is_true)                                                                              \
       warning_msg(__PRETTY_FUNCTION__, __FILE__, __LINE__, (is_true), (format), __VA_ARGS__); \
   }
-static inline void warning_msg(char const *const func, const char *const file, int const line,
-                               bool is_true, char const *format, ...) {
+static inline void warning_msg(char const* const func, const char* const file, int const line,
+                               bool is_true, char const* format, ...) {
   if (is_true) {
     va_list args;
     char output_str[1024];
@@ -83,7 +83,7 @@ static inline void warning_msg(char const *const func, const char *const file, i
   #endif
 
   #ifdef __DRIVER_TYPES_H__
-static const char *_cudaGetErrorEnum(cudaError_t error) {
+static const char* _cudaGetErrorEnum(cudaError_t error) {
   switch (error) {
     case cudaSuccess:
       return "cudaSuccess";
@@ -342,7 +342,7 @@ static const char *_cudaGetErrorEnum(cudaError_t error) {
 
   #ifdef CUBLAS_API_H_
 // cuBLAS API errors
-static const char *_cudaGetErrorEnum(cublasStatus_t error) {
+static const char* _cudaGetErrorEnum(cublasStatus_t error) {
   switch (error) {
     case CUBLAS_STATUS_SUCCESS:
       return "CUBLAS_STATUS_SUCCESS";
@@ -381,7 +381,7 @@ static const char *_cudaGetErrorEnum(cublasStatus_t error) {
 
   #ifdef CUSOLVER_COMMON_H_
 // cuSOLVER API errors
-static const char *_cudaGetErrorEnum(cusolverStatus_t error) {
+static const char* _cudaGetErrorEnum(cusolverStatus_t error) {
   switch (error) {
     case CUSOLVER_STATUS_SUCCESS:
       return "CUSOLVER_STATUS_SUCCESS";
@@ -415,7 +415,7 @@ static const char *_cudaGetErrorEnum(cusolverStatus_t error) {
 
   #ifdef CURAND_H_
 // cuRAND API errors
-static const char *_cudaGetErrorEnum(curandStatus_t error) {
+static const char* _cudaGetErrorEnum(curandStatus_t error) {
   switch (error) {
     case CURAND_STATUS_SUCCESS:
       return "CURAND_STATUS_SUCCESS";
@@ -450,7 +450,7 @@ static const char *_cudaGetErrorEnum(curandStatus_t error) {
   #endif
 
   #ifdef UNI_CUTENSOR
-static const char *_cudaGetErrorEnum(cutensorStatus_t error) {
+static const char* _cudaGetErrorEnum(cutensorStatus_t error) {
   return cutensorGetErrorString(error);
 }
   #endif
@@ -466,7 +466,7 @@ static const char *_cudaGetErrorEnum(cutensorStatus_t error) {
   #endif
 
 template <typename T>
-void check(T result, char const *const func, const char *const file, int const line) {
+void check(T result, char const* const func, const char* const file, int const line) {
   if (result) {
     fprintf(stderr, "CUDA error at %s:%d code=%d(%s) \"%s\" \n", file, line,
             static_cast<unsigned int>(result), _cudaGetErrorEnum(result), func);

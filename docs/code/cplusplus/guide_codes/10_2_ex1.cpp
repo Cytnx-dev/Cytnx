@@ -9,7 +9,7 @@ class MyOp : public LinOp {
 
  private:
   Tensor A;
-  Tensor matvec(const Tensor &v) override { return linalg::Dot(A, v); }
+  Tensor matvec(const Tensor& v) override { return linalg::Dot(A, v); }
 };
 
 auto op = MyOp();

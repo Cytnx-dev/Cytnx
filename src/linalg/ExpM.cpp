@@ -15,7 +15,7 @@ namespace cytnx {
   namespace linalg {
 
     template <typename T>
-    Tensor ExpM(const Tensor &Tin, const T &a, const T &b) {
+    Tensor ExpM(const Tensor& Tin, const T& a, const T& b) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[ExpH] error, ExpH can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[ExpH] error tensor must be contiguous. Call
@@ -48,17 +48,17 @@ namespace cytnx {
 
       return ut;
     }
-    Tensor ExpM(const Tensor &Tin) { return linalg::ExpM(Tin, double(1), double(0)); }
-    template Tensor ExpM(const Tensor &Tin, const cytnx_complex128 &a, const cytnx_complex128 &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_complex64 &a, const cytnx_complex64 &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_double &a, const cytnx_double &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_float &a, const cytnx_float &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b);
-    template Tensor ExpM(const Tensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b);
+    Tensor ExpM(const Tensor& Tin) { return linalg::ExpM(Tin, double(1), double(0)); }
+    template Tensor ExpM(const Tensor& Tin, const cytnx_complex128& a, const cytnx_complex128& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_complex64& a, const cytnx_complex64& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_double& a, const cytnx_double& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_float& a, const cytnx_float& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_uint64& a, const cytnx_uint64& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_uint32& a, const cytnx_uint32& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_uint16& a, const cytnx_uint16& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_int64& a, const cytnx_int64& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_int32& a, const cytnx_int32& b);
+    template Tensor ExpM(const Tensor& Tin, const cytnx_int16& a, const cytnx_int16& b);
 
   }  // namespace linalg
 
@@ -68,7 +68,7 @@ namespace cytnx {
   namespace linalg {
 
     template <typename T>
-    void _expm_Dense_UT(UniTensor &out, const UniTensor &Tin, const T &a, const T &b) {
+    void _expm_Dense_UT(UniTensor& out, const UniTensor& Tin, const T& a, const T& b) {
       cytnx_int64 Drow = 1, Dcol = 1;
       for (int i = 0; i < Tin.rowrank(); i++) {
         Drow *= Tin.shape()[i];
@@ -88,8 +88,8 @@ namespace cytnx {
     }
 
     template <typename T>
-    void _expm_Sparse_UT(UniTensor &out, const UniTensor &Tin, const T &a, const T &b) {
-      std::vector<Tensor> &tmp = out.get_blocks_();
+    void _expm_Sparse_UT(UniTensor& out, const UniTensor& Tin, const T& a, const T& b) {
+      std::vector<Tensor>& tmp = out.get_blocks_();
 
       for (int i = 0; i < tmp.size(); i++) {
         tmp[i] = cytnx::linalg::ExpM(tmp[i], a, b);
@@ -97,7 +97,7 @@ namespace cytnx {
     }
 
     template <typename T>
-    void _expm_Block_UT(UniTensor &out, const UniTensor &Tin, const T &a, const T &b) {
+    void _expm_Block_UT(UniTensor& out, const UniTensor& Tin, const T& a, const T& b) {
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
       //
       //   BDLeft -[ ]- BDRight
@@ -132,7 +132,7 @@ namespace cytnx {
 
       int cnt;
       for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        const std::vector<cytnx_uint64> &tmpv = Tin.get_qindices(b);
+        const std::vector<cytnx_uint64>& tmpv = Tin.get_qindices(b);
         for (cnt = 0; cnt < Tin.rowrank(); cnt++) {
           new_itoi[b][0] += tmpv[cnt] * strides[cnt];
         }
@@ -149,9 +149,9 @@ namespace cytnx {
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
-      vec2d<cytnx_uint64> &ref_itoi = ((BlockUniTensor *)out._impl.get())->_inner_to_outer_idx;
-      std::vector<Tensor> &out_blocks_ = ((BlockUniTensor *)out._impl.get())->_blocks;
-      for (auto const &x : mgrp) {
+      vec2d<cytnx_uint64>& ref_itoi = ((BlockUniTensor*)out._impl.get())->_inner_to_outer_idx;
+      std::vector<Tensor>& out_blocks_ = ((BlockUniTensor*)out._impl.get())->_blocks;
+      for (auto const& x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
         // cout << x.second.size() << "-------" << endl;
         for (int i = 0; i < x.second.size(); i++) {
@@ -210,7 +210,7 @@ namespace cytnx {
     }
 
     template <typename T>
-    UniTensor ExpM(const UniTensor &Tin, const T &a, const T &b) {
+    UniTensor ExpM(const UniTensor& Tin, const T& a, const T& b) {
       if (Tin.uten_type() == UTenType.Dense) {
         cytnx_error_msg((Tin.rowrank() == 0) || (Tin.rowrank() == Tin.rank()),
                         "[ERROR][ExpM] Rowrank must be >0 and <Tin.rank() !!%s", "\n");
@@ -228,7 +228,7 @@ namespace cytnx {
                         "[ERROR][ExpM] Rowrank must be >0 and <Tin.rank() !!%s", "\n");
 
         // copy everything except _blocks and _inner_to_outer_idx
-        BlockUniTensor *raw_out = ((BlockUniTensor *)Tin._impl.get())->clone_meta(false, true);
+        BlockUniTensor* raw_out = ((BlockUniTensor*)Tin._impl.get())->clone_meta(false, true);
 
         UniTensor out;
         out._impl = boost::intrusive_ptr<UniTensor_base>(raw_out);
@@ -260,20 +260,20 @@ namespace cytnx {
       }
     }
 
-    UniTensor ExpM(const UniTensor &Tin) { return linalg::ExpM(Tin, double(1), double(0)); }
+    UniTensor ExpM(const UniTensor& Tin) { return linalg::ExpM(Tin, double(1), double(0)); }
 
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_complex128 &a,
-                            const cytnx_complex128 &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_complex64 &a,
-                            const cytnx_complex64 &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_double &a, const cytnx_double &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_float &a, const cytnx_float &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_uint16 &a, const cytnx_uint16 &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_uint32 &a, const cytnx_uint32 &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_int16 &a, const cytnx_int16 &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_int32 &a, const cytnx_int32 &b);
-    template UniTensor ExpM(const UniTensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_complex128& a,
+                            const cytnx_complex128& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_complex64& a,
+                            const cytnx_complex64& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_double& a, const cytnx_double& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_float& a, const cytnx_float& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_uint16& a, const cytnx_uint16& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_uint32& a, const cytnx_uint32& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_uint64& a, const cytnx_uint64& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_int16& a, const cytnx_int16& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_int32& a, const cytnx_int32& b);
+    template UniTensor ExpM(const UniTensor& Tin, const cytnx_int64& a, const cytnx_int64& b);
 
   }  // namespace linalg
 }  // namespace cytnx

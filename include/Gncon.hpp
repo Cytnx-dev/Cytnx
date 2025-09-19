@@ -22,7 +22,7 @@ namespace cytnx {
   class GnconType_class {
    public:
     enum : int { Void = -1, Regular = 0, Fermion = 1 };
-    std::string getname(const int &nwrktype_id);
+    std::string getname(const int& nwrktype_id);
   };
   extern GnconType_class GNType;
   /// @endcond
@@ -60,7 +60,7 @@ namespace cytnx {
     friend class FermionGncon;
     friend class RegularGncon;
     friend class Gncon;
-    Gncon_base() : nwrktype_id(GNType.Void){};
+    Gncon_base() : nwrktype_id(GNType.Void) {};
 
     bool HasPutAllUniTensor() {
       for (cytnx_uint64 i = 0; i < this->tensors.size(); i++) {
@@ -80,38 +80,38 @@ namespace cytnx {
     // UniTensor Launch(const std::string &Tname="");
 
     // std::string GetContractOrder() const;
-    virtual void PutUniTensor(const std::string &name, const UniTensor &utensor);
-    virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
-    virtual void PutUniTensors(const std::vector<std::string> &name,
-                               const std::vector<UniTensor> &utensors);
-    virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                               const std::vector<std::string> &alias,
-                               const std::string &contract_order);
+    virtual void PutUniTensor(const std::string& name, const UniTensor& utensor);
+    virtual void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor);
+    virtual void PutUniTensors(const std::vector<std::string>& name,
+                               const std::vector<UniTensor>& utensors);
+    virtual void Contract_plan(const std::vector<UniTensor>& utensors, const std::string& Tout,
+                               const std::vector<std::string>& alias,
+                               const std::string& contract_order);
 
-    virtual void Fromfile(const std::string &fname);
-    virtual void FromString(const std::vector<std::string> &content);
+    virtual void Fromfile(const std::string& fname);
+    virtual void FromString(const std::vector<std::string>& content);
     virtual void clear();
     virtual std::string getOptimalOrder();
-    virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
-    virtual void PrintNet(std::ostream &os);
+    virtual UniTensor Launch(const bool& optimal = false, const std::string& contract_order = "");
+    virtual void PrintNet(std::ostream& os);
     virtual boost::intrusive_ptr<Gncon_base> clone();
-    virtual void Savefile(const std::string &fname);
-    virtual ~Gncon_base(){};
+    virtual void Savefile(const std::string& fname);
+    virtual ~Gncon_base() {};
 
   };  // Gncon_base
 
   class RegularGncon : public Gncon_base {
    public:
     RegularGncon() { this->nwrktype_id = GNType.Regular; };
-    void Fromfile(const std::string &fname);
-    void FromString(const std::vector<std::string> &contents);
-    void PutUniTensor(const std::string &name, const UniTensor &utensor);
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
-    void PutUniTensors(const std::vector<std::string> &name,
-                       const std::vector<UniTensor> &utensors);
-    void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                       const std::vector<std::string> &alias = {},
-                       const std::string &contract_order = "");
+    void Fromfile(const std::string& fname);
+    void FromString(const std::vector<std::string>& contents);
+    void PutUniTensor(const std::string& name, const UniTensor& utensor);
+    void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor);
+    void PutUniTensors(const std::vector<std::string>& name,
+                       const std::vector<UniTensor>& utensors);
+    void Contract_plan(const std::vector<UniTensor>& utensors, const std::string& Tout,
+                       const std::vector<std::string>& alias = {},
+                       const std::string& contract_order = "");
     void clear() {
       this->name2pos.clear();
       this->CtTree.clear();
@@ -123,9 +123,9 @@ namespace cytnx {
       this->ORDER_tokens.clear();
     }
     std::string getOptimalOrder();
-    UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
+    UniTensor Launch(const bool& optimal = false, const std::string& contract_order = "");
     boost::intrusive_ptr<Gncon_base> clone() {
-      RegularGncon *tmp = new RegularGncon();
+      RegularGncon* tmp = new RegularGncon();
       tmp->name2pos = this->name2pos;
       tmp->CtTree = this->CtTree;
       tmp->names = this->names;
@@ -137,9 +137,9 @@ namespace cytnx {
       boost::intrusive_ptr<Gncon_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os);
-    void Savefile(const std::string &fname);
-    ~RegularGncon(){};
+    void PrintNet(std::ostream& os);
+    void Savefile(const std::string& fname);
+    ~RegularGncon() {};
   };
 
   // Under dev!!
@@ -149,15 +149,15 @@ namespace cytnx {
 
    public:
     FermionGncon() { this->nwrktype_id = GNType.Fermion; };
-    void Fromfile(const std::string &fname){};
-    void FromString(const std::vector<std::string> &contents){};
-    void PutUniTensor(const std::string &name, const UniTensor &utensor){};
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){};
-    void PutUniTensors(const std::vector<std::string> &name,
-                       const std::vector<UniTensor> &utensors){};
-    void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                       const std::vector<std::string> &alias = {},
-                       const std::string &contract_order = ""){};
+    void Fromfile(const std::string& fname) {};
+    void FromString(const std::vector<std::string>& contents) {};
+    void PutUniTensor(const std::string& name, const UniTensor& utensor) {};
+    void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor) {};
+    void PutUniTensors(const std::vector<std::string>& name,
+                       const std::vector<UniTensor>& utensors) {};
+    void Contract_plan(const std::vector<UniTensor>& utensors, const std::string& Tout,
+                       const std::vector<std::string>& alias = {},
+                       const std::string& contract_order = "") {};
     void clear() {
       this->name2pos.clear();
       this->CtTree.clear();
@@ -168,9 +168,9 @@ namespace cytnx {
       this->TOUT_iBondNum = 0;
       this->ORDER_tokens.clear();
     }
-    UniTensor Launch(const bool &optimal = false) { return UniTensor(); };
+    UniTensor Launch(const bool& optimal = false) { return UniTensor(); };
     boost::intrusive_ptr<Gncon_base> clone() {
-      FermionGncon *tmp = new FermionGncon();
+      FermionGncon* tmp = new FermionGncon();
       tmp->name2pos = this->name2pos;
       tmp->CtTree = this->CtTree;
       tmp->names = this->names;
@@ -182,9 +182,9 @@ namespace cytnx {
       boost::intrusive_ptr<Gncon_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os){};
-    void Savefile(const std::string &fname){};
-    ~FermionGncon(){};
+    void PrintNet(std::ostream& os) {};
+    void Savefile(const std::string& fname) {};
+    ~FermionGncon() {};
   };
 
   ///@endcond
@@ -199,9 +199,9 @@ namespace cytnx {
    public:
     ///@cond
     boost::intrusive_ptr<Gncon_base> _impl;
-    Gncon() : _impl(new Gncon_base()){};
-    Gncon(const Gncon &rhs) { this->_impl = rhs._impl; }
-    Gncon &operator=(const Gncon &rhs) {
+    Gncon() : _impl(new Gncon_base()) {};
+    Gncon(const Gncon& rhs) { this->_impl = rhs._impl; }
+    Gncon& operator=(const Gncon& rhs) {
       this->_impl = rhs._impl;
       return *this;
     }
@@ -254,7 +254,7 @@ namespace cytnx {
 
 
     */
-    void Fromfile(const std::string &fname, const int &Gncon_type = GNType.Regular) {
+    void Fromfile(const std::string& fname, const int& Gncon_type = GNType.Regular) {
       if (Gncon_type == GNType.Regular) {
         boost::intrusive_ptr<Gncon_base> tmp(new RegularGncon());
         this->_impl = tmp;
@@ -291,8 +291,8 @@ namespace cytnx {
     \verbinclude example/Gncon/FromString.py.out
 
     */
-    void FromString(const std::vector<std::string> &contents,
-                    const int &Gncon_type = GNType.Regular) {
+    void FromString(const std::vector<std::string>& contents,
+                    const int& Gncon_type = GNType.Regular) {
       if (Gncon_type == GNType.Regular) {
         boost::intrusive_ptr<Gncon_base> tmp(new RegularGncon());
         this->_impl = tmp;
@@ -303,9 +303,9 @@ namespace cytnx {
     }
     // void Savefile(const std::string &fname);
 
-    static Gncon Contract(const std::vector<UniTensor> &tensors, const std::string &Tout,
-                          const std::vector<std::string> &alias = {},
-                          const std::string &contract_order = "") {
+    static Gncon Contract(const std::vector<UniTensor>& tensors, const std::string& Tout,
+                          const std::vector<std::string>& alias = {},
+                          const std::string& contract_order = "") {
       boost::intrusive_ptr<Gncon_base> tmp(new RegularGncon());
       Gncon out;
       out._impl = tmp;
@@ -313,29 +313,29 @@ namespace cytnx {
       return out;
     }
 
-    Gncon(const std::string &fname, const int &Gncon_type = GNType.Regular) {
+    Gncon(const std::string& fname, const int& Gncon_type = GNType.Regular) {
       this->Fromfile(fname, Gncon_type);
     }
 
-    void PutUniTensor(const std::string &name, const UniTensor &utensor) {
+    void PutUniTensor(const std::string& name, const UniTensor& utensor) {
       this->_impl->PutUniTensor(name, utensor);
     }
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
+    void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor) {
       this->_impl->PutUniTensor(idx, utensor);
     }
-    void PutUniTensors(const std::vector<std::string> &name,
-                       const std::vector<UniTensor> &utensors) {
+    void PutUniTensors(const std::vector<std::string>& name,
+                       const std::vector<UniTensor>& utensors) {
       this->_impl->PutUniTensors(name, utensors);
     }
-    std::string getOptimalOrder(const int &Gncon_type = GNType.Regular) {
+    std::string getOptimalOrder(const int& Gncon_type = GNType.Regular) {
       if (Gncon_type == GNType.Regular) {
         return this->_impl->getOptimalOrder();
       } else {
         cytnx_error_msg(true, "[Developing] currently only support regular type Gncon.%s", "\n");
       }
     }
-    UniTensor Launch(const bool &optimal, const std::string &contract_order = "",
-                     const int &Gncon_type = GNType.Regular) {
+    UniTensor Launch(const bool& optimal, const std::string& contract_order = "",
+                     const int& Gncon_type = GNType.Regular) {
       if (Gncon_type == GNType.Regular) {
         return this->_impl->Launch(optimal);
       } else {
@@ -354,11 +354,11 @@ namespace cytnx {
     }
     void PrintNet() { this->_impl->PrintNet(std::cout); }
 
-    void Savefile(const std::string &fname) { this->_impl->Savefile(fname); }
+    void Savefile(const std::string& fname) { this->_impl->Savefile(fname); }
   };
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Gncon &bin);
+  std::ostream& operator<<(std::ostream& os, const Gncon& bin);
   ///@endcond
 }  // namespace cytnx
 

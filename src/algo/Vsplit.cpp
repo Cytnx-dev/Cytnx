@@ -15,8 +15,8 @@ namespace cytnx {
   namespace algo {
     typedef Accessor ac;
 
-    void Vsplit_(std::vector<Tensor> &out, const Tensor &Tin,
-                 const std::vector<cytnx_uint64> &dims) {
+    void Vsplit_(std::vector<Tensor>& out, const Tensor& Tin,
+                 const std::vector<cytnx_uint64>& dims) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[ERROR][Vsplit_] Can only work for rank-2 Tensor.%s", "\n");
       cytnx_error_msg(Tin.dtype() == Type.Bool,
@@ -35,19 +35,19 @@ namespace cytnx {
                       "\n");
 
       out.resize(dims.size());
-      std::vector<char *> targ_ptrs(dims.size());
+      std::vector<char*> targ_ptrs(dims.size());
       for (int i = 0; i < out.size(); i++) {
         out[i] = Tensor({dims[i], Tin.shape()[1]}, Tin.dtype(), Tin.device());
-        targ_ptrs[i] = (char *)out[i].storage().data();
+        targ_ptrs[i] = (char*)out[i].storage().data();
       }
 
       if (Tin.device() == Device.cpu) {
-        algo_internal::vSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
-                                       _Tn.shape()[1], Type.typeSize(Tin.dtype()));
+        algo_internal::vSplit_internal(targ_ptrs, (char*)_Tn.storage().data(), dims, _Tn.shape()[1],
+                                       Type.typeSize(Tin.dtype()));
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
-        algo_internal::cuvSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
+        algo_internal::cuvSplit_internal(targ_ptrs, (char*)_Tn.storage().data(), dims,
                                          _Tn.shape()[1], Type.typeSize(Tin.dtype()));
   #else
         cytnx_error_msg(
@@ -56,7 +56,7 @@ namespace cytnx {
   #endif
       }
     }
-    std::vector<Tensor> Vsplit(const Tensor &Tin, const std::vector<cytnx_uint64> &dims) {
+    std::vector<Tensor> Vsplit(const Tensor& Tin, const std::vector<cytnx_uint64>& dims) {
       std::vector<Tensor> out;
       Vsplit_(out, Tin, dims);
       return out;

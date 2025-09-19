@@ -22,10 +22,10 @@ using namespace cytnx;
 #ifdef BACKEND_TORCH
 #else
 
-void storage_binding(py::module &m) {
+void storage_binding(py::module& m) {
   py::class_<cytnx::Storage>(m, "Storage")
     .def("numpy",
-         [](Storage &self) -> py::array {
+         [](Storage& self) -> py::array {
            // device on GPU? move to cpu:ref it;
            Storage tmpIN;
            if (self.device() >= 0) {
@@ -73,9 +73,9 @@ void storage_binding(py::module &m) {
 
     // construction
     .def(py::init<>())
-    .def(py::init<const cytnx::Storage &>())
+    .def(py::init<const cytnx::Storage&>())
     .def(py::init<boost::intrusive_ptr<cytnx::Storage_base>>())
-    .def(py::init<const unsigned long long &, const unsigned int &, int, const bool &>(),
+    .def(py::init<const unsigned long long&, const unsigned int&, int, const bool&>(),
          py::arg("size"), py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
          py::arg("init_zero") = true)
     .def("Init", &cytnx::Storage::Init, py::arg("size"),
@@ -94,7 +94,7 @@ void storage_binding(py::module &m) {
     //.def("astype", &cytnx::Storage::astype,py::arg("new_type"))
     .def(
       "astype_different_type",
-      [](cytnx::Storage &self, const cytnx_uint64 &new_type) {
+      [](cytnx::Storage& self, const cytnx_uint64& new_type) {
         cytnx_error_msg(self.dtype() == new_type,
                         "[ERROR][pybind][astype_diffferent_type] same type for astype() should be "
                         "handle in python side.%s",
@@ -104,7 +104,7 @@ void storage_binding(py::module &m) {
       py::arg("new_type"))
 
     .def("__getitem__",
-         [](cytnx::Storage &self, const unsigned long long &idx) {
+         [](cytnx::Storage& self, const unsigned long long& idx) {
            cytnx_error_msg(idx > self.size(), "idx exceed the size of storage.%s", "\n");
            py::object out;
            if (self.dtype() == cytnx::Type.Double)
@@ -135,7 +135,7 @@ void storage_binding(py::module &m) {
            return out;
          })
     .def("__setitem__",
-         [](cytnx::Storage &self, const unsigned long long &idx, py::object in) {
+         [](cytnx::Storage& self, const unsigned long long& idx, py::object in) {
            cytnx_error_msg(idx > self.size(), "idx exceed the size of storage.%s", "\n");
            py::object out;
            if (self.dtype() == cytnx::Type.Double)
@@ -166,19 +166,19 @@ void storage_binding(py::module &m) {
 
     .def(
       "__repr__",
-      [](cytnx::Storage &self) -> std::string {
+      [](cytnx::Storage& self) -> std::string {
         std::cout << self << std::endl;
         return std::string("");
       },
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("__len__", [](cytnx::Storage &self) -> cytnx::cytnx_uint64 { return self.size(); })
+    .def("__len__", [](cytnx::Storage& self) -> cytnx::cytnx_uint64 { return self.size(); })
 
     .def("to_", &cytnx::Storage::to_, py::arg("device"))
 
     // handle same device from cytnx/Storage_conti.py
     .def(
       "to_different_device",
-      [](cytnx::Storage &self, const cytnx_int64 &device) {
+      [](cytnx::Storage& self, const cytnx_int64& device) {
         cytnx_error_msg(self.device() == device,
                         "[ERROR][pybind][to_diffferent_device] same device for to() should be "
                         "handle in python side.%s",
@@ -193,12 +193,12 @@ void storage_binding(py::module &m) {
     .def("__copy__", &cytnx::Storage::clone)
     .def("__deepcopy__", &cytnx::Storage::clone)
     .def("size", &cytnx::Storage::size)
-    .def("__len__", [](cytnx::Storage &self) { return self.size(); })
+    .def("__len__", [](cytnx::Storage& self) { return self.size(); })
     .def("print_info", &cytnx::Storage::print_info,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("set_zeros", &cytnx::Storage::set_zeros)
     .def("__eq__",
-         [](cytnx::Storage &self, const cytnx::Storage &rhs) -> bool { return self == rhs; })
+         [](cytnx::Storage& self, const cytnx::Storage& rhs) -> bool { return self == rhs; })
 
     .def("fill", &cytnx::Storage::fill<cytnx::cytnx_complex128>, py::arg("val"))
     .def("fill", &cytnx::Storage::fill<cytnx::cytnx_complex64>, py::arg("val"))
@@ -260,17 +260,17 @@ void storage_binding(py::module &m) {
     .def("c_pylist_bool", &cytnx::Storage::vector<cytnx_bool>)
 
     .def(
-      "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },
+      "Save", [](cytnx::Storage& self, const std::string& fname) { self.Save(fname); },
       py::arg("fname"))
     .def(
-      "Tofile", [](cytnx::Storage &self, const std::string &fname) { self.Tofile(fname); },
+      "Tofile", [](cytnx::Storage& self, const std::string& fname) { self.Tofile(fname); },
       py::arg("fname"))
     .def_static(
-      "Load", [](const std::string &fname) { return cytnx::Storage::Load(fname); },
+      "Load", [](const std::string& fname) { return cytnx::Storage::Load(fname); },
       py::arg("fname"))
     .def_static(
       "Fromfile",
-      [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count) {
+      [](const std::string& fname, const unsigned int& dtype, const cytnx_int64& count) {
         return cytnx::Storage::Fromfile(fname, dtype, count);
       },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1))

@@ -21,13 +21,13 @@ using namespace cytnx;
 #ifdef BACKEND_TORCH
 #else
 
-void random_binding(py::module &m) {
+void random_binding(py::module& m) {
   // [Submodule random]
   pybind11::module m_random = m.def_submodule("random", "random related.");
 
   m_random.def(
     "normal_",
-    [](cytnx::Tensor &Tin, const double &mean, const double &std, int64_t &seed) {
+    [](cytnx::Tensor& Tin, const double& mean, const double& std, int64_t& seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -38,7 +38,7 @@ void random_binding(py::module &m) {
 
   m_random.def(
     "normal_",
-    [](cytnx::Storage &Sin, const double &mean, const double &std, int64_t &seed) {
+    [](cytnx::Storage& Sin, const double& mean, const double& std, int64_t& seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -49,7 +49,7 @@ void random_binding(py::module &m) {
 
   m_random.def(
     "normal_",
-    [](cytnx::UniTensor &Tin, const double &mean, const double &std, int64_t &seed) {
+    [](cytnx::UniTensor& Tin, const double& mean, const double& std, int64_t& seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -60,7 +60,7 @@ void random_binding(py::module &m) {
 
   m_random.def(
     "uniform_",
-    [](cytnx::Tensor &Tin, const double &low, const double &high, int64_t &seed) {
+    [](cytnx::Tensor& Tin, const double& low, const double& high, int64_t& seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -72,7 +72,7 @@ void random_binding(py::module &m) {
 
   m_random.def(
     "uniform_",
-    [](cytnx::Storage &Sin, const double &low, const double &high, int64_t &seed) {
+    [](cytnx::Storage& Sin, const double& low, const double& high, int64_t& seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -84,7 +84,7 @@ void random_binding(py::module &m) {
 
   m_random.def(
     "uniform_",
-    [](cytnx::UniTensor &Tin, const double &low, const double &high, int64_t &seed) {
+    [](cytnx::UniTensor& Tin, const double& low, const double& high, int64_t& seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -96,8 +96,8 @@ void random_binding(py::module &m) {
 
   m_random.def(
     "normal",
-    [](const cytnx_uint64 &Nelem, const double &mean, const double &std, const int &device,
-       int64_t &seed, const unsigned int &dtype) {
+    [](const cytnx_uint64& Nelem, const double& mean, const double& std, const int& device,
+       int64_t& seed, const unsigned int& dtype) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -108,8 +108,8 @@ void random_binding(py::module &m) {
     py::arg("dtype") = (unsigned int)(Type.Double));
   m_random.def(
     "normal",
-    [](const std::vector<cytnx_uint64> &Nelem, const double &mean, const double &std,
-       const int &device, int64_t &seed, const unsigned int &dtype) {
+    [](const std::vector<cytnx_uint64>& Nelem, const double& mean, const double& std,
+       const int& device, int64_t& seed, const unsigned int& dtype) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -120,8 +120,8 @@ void random_binding(py::module &m) {
     py::arg("dtype") = (unsigned int)(Type.Double));
   m_random.def(
     "uniform",
-    [](const cytnx_uint64 &Nelem, const double &low, const double &high, const int &device,
-       int64_t &seed, const unsigned int &dtype) {
+    [](const cytnx_uint64& Nelem, const double& low, const double& high, const int& device,
+       int64_t& seed, const unsigned int& dtype) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
@@ -132,8 +132,8 @@ void random_binding(py::module &m) {
     py::arg("dtype") = (unsigned int)(Type.Double));
   m_random.def(
     "uniform",
-    [](const std::vector<cytnx_uint64> &Nelem, const double &low, const double &high,
-       const int &device, int64_t &seed, const unsigned int &dtype) {
+    [](const std::vector<cytnx_uint64>& Nelem, const double& low, const double& high,
+       const int& device, int64_t& seed, const unsigned int& dtype) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();

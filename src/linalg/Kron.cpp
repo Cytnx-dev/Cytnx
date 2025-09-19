@@ -16,8 +16,8 @@
 namespace cytnx {
 
   namespace linalg {
-    Tensor Kron(const Tensor &_Tl, const Tensor &_Tr, const bool &Tl_pad_left,
-                const bool &Tr_pad_left) {
+    Tensor Kron(const Tensor& _Tl, const Tensor& _Tr, const bool& Tl_pad_left,
+                const bool& Tr_pad_left) {
       // checking:
       cytnx_error_msg(_Tl.shape().size() == 0, "[ERROR] pass empty tensor in param #1%s", "\n");
       cytnx_error_msg(_Tr.shape().size() == 0, "[ERROR] pass empty tensor in param #2%s", "\n");

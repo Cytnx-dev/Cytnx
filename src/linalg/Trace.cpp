@@ -12,12 +12,12 @@
 using namespace std;
 namespace cytnx {
   namespace linalg {
-    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a,
-                           const cytnx_int64 &b) {
+    cytnx::UniTensor Trace(const cytnx::UniTensor& Tin, const cytnx_int64& a,
+                           const cytnx_int64& b) {
       return Tin.Trace(a, b);
     }
-    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a,
-                           const std::string &b) {
+    cytnx::UniTensor Trace(const cytnx::UniTensor& Tin, const std::string& a,
+                           const std::string& b) {
       return Tin.Trace(a, b);
     }
 
@@ -29,7 +29,7 @@ namespace cytnx {
   namespace linalg {
     // dtype -1: default
     // device -2: default.
-    Tensor Trace(const Tensor &Tn, const cytnx_uint64 &axisA, const cytnx_uint64 &axisB) {
+    Tensor Trace(const Tensor& Tn, const cytnx_uint64& axisA, const cytnx_uint64& axisB) {
       // checking:
       cytnx_error_msg(Tn.shape().size() < 2, "[ERROR] Tensor must have at least rank-2.%s", "\n");
       cytnx_error_msg(axisA >= Tn.shape().size(), "[ERROR] axisA out of bound.%s", "\n");

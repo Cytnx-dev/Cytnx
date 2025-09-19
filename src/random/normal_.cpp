@@ -7,7 +7,7 @@
 
 namespace cytnx {
   namespace random {
-    void normal_(Storage &Sin, const double &mean, const double &std, const unsigned int &seed) {
+    void normal_(Storage& Sin, const double& mean, const double& std, const unsigned int& seed) {
       cytnx_error_msg(
         (Sin.dtype() < 1) || (Sin.dtype() > 4),
         "[ERROR][Random.normal_] Normal distribution only accept real/imag floating type.%s", "\n");
@@ -21,7 +21,7 @@ namespace cytnx {
   #endif
       }
     }
-    void normal_(Tensor &Tin, const double &mean, const double &std, const unsigned int &seed) {
+    void normal_(Tensor& Tin, const double& mean, const double& std, const unsigned int& seed) {
       cytnx_error_msg(
         (Tin.dtype() < 1) || (Tin.dtype() > 4),
         "[ERROR][Random.normal_] Normal distribution only accept real/imag floating type.%s", "\n");
@@ -36,7 +36,7 @@ namespace cytnx {
       }
     }
 
-    void normal_(UniTensor &Tin, const double &mean, const double &std, const unsigned int &seed) {
+    void normal_(UniTensor& Tin, const double& mean, const double& std, const unsigned int& seed) {
       if (Tin.uten_type() != UTenType.Dense) {
         for (cytnx_int64 i = 0; i < Tin.get_blocks_().size(); i++) {
           normal_(Tin.get_blocks_()[i], mean, std, seed + i);

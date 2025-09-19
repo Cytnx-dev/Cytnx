@@ -22,32 +22,32 @@ using namespace cytnx;
 // ref: https://pybind11.readthedocs.io/en/stable/advanced/classes.html
 // ref: https://block.arch.ethz.ch/blog/2016/07/adding-methods-to-python-classes/
 // ref: https://medium.com/@mgarod/dynamically-add-a-method-to-a-class-in-python-c49204b85bd6
-void bond_binding(py::module &m);
-void symmetry_binding(py::module &m);
+void bond_binding(py::module& m);
+void symmetry_binding(py::module& m);
 
 #ifdef BACKEND_TORCH
 #else
 
-void generator_binding(py::module &m);
-void storage_binding(py::module &m);
-void tensor_binding(py::module &m);
+void generator_binding(py::module& m);
+void storage_binding(py::module& m);
+void tensor_binding(py::module& m);
 
-void network_binding(py::module &m);
+void network_binding(py::module& m);
 
 class PyLinOp;
-void linop_binding(py::module &m);
+void linop_binding(py::module& m);
 
 class cHclass;
-void unitensor_binding(py::module &m);
+void unitensor_binding(py::module& m);
 
-void linalg_binding(py::module &m);
-void algo_binding(py::module &m);
-void physics_related_binding(py::module &m);
-void random_binding(py::module &m);
-void tnalgo_binding(py::module &m);
-void scalar_binding(py::module &m);
+void linalg_binding(py::module& m);
+void algo_binding(py::module& m);
+void physics_related_binding(py::module& m);
+void random_binding(py::module& m);
+void tnalgo_binding(py::module& m);
+void scalar_binding(py::module& m);
 
-void ncon_binding(py::module &m);
+void ncon_binding(py::module& m);
 #endif
 
 PYBIND11_MODULE(cytnx, m) {
@@ -72,7 +72,7 @@ PYBIND11_MODULE(cytnx, m) {
   mdev.attr("Ncpus") = cytnx::Device.Ncpus;
   mdev.def("Print_Property", []() { cytnx::Device.Print_Property(); });
   mdev.def("getname",
-           [](const int &device_id) -> std::string { return cytnx::Device.getname(device_id); });
+           [](const int& device_id) -> std::string { return cytnx::Device.getname(device_id); });
   // mdev.def("cudaDeviceSynchronize",[](){cytnx::Device.cudaDeviceSynchronize();});
 #ifdef BACKEND_TORCH
   m.attr("__cytnx_backend__") = std::string("torch");

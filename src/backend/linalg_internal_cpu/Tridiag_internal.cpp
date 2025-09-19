@@ -6,10 +6,10 @@ namespace cytnx {
 
   namespace linalg_internal {
 
-    void Tridiag_internal_d(const boost::intrusive_ptr<Storage_base> &diag,
-                            const boost::intrusive_ptr<Storage_base> &s_diag,
-                            boost::intrusive_ptr<Storage_base> &S,
-                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L,
+    void Tridiag_internal_d(const boost::intrusive_ptr<Storage_base>& diag,
+                            const boost::intrusive_ptr<Storage_base>& s_diag,
+                            boost::intrusive_ptr<Storage_base>& S,
+                            boost::intrusive_ptr<Storage_base>& U, const cytnx_int64& L,
                             bool throw_excp /*= false*/) {
       char job;
       job = (U->dtype() == Type.Void) ? 'N' : 'V';
@@ -18,7 +18,7 @@ namespace cytnx {
       memcpy(S->data(), diag->data(), L * sizeof(cytnx_double));
 
       // create tmp for sub-diag and cpy in:
-      cytnx_double *Dsv = (cytnx_double *)malloc((L - 1) * sizeof(cytnx_double));
+      cytnx_double* Dsv = (cytnx_double*)malloc((L - 1) * sizeof(cytnx_double));
       memcpy(Dsv, s_diag->data(), (L - 1) * sizeof(cytnx_double));
 
       lapack_int ldz = 1;
@@ -29,8 +29,8 @@ namespace cytnx {
         ldz = L;
       }
 
-      info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L, (cytnx_double *)S->data(), Dsv,
-                           (cytnx_double *)U->data(), ldz);
+      info = LAPACKE_dstev(LAPACK_COL_MAJOR, job, L, (cytnx_double*)S->data(), Dsv,
+                           (cytnx_double*)U->data(), ldz);
       // std::cout << L << std::endl;
       if (!throw_excp and info != 0) {
         cytnx_error_msg(info != 0, "%s %d",
@@ -42,10 +42,10 @@ namespace cytnx {
       // house keeping
       free(Dsv);
     }
-    void Tridiag_internal_f(const boost::intrusive_ptr<Storage_base> &diag,
-                            const boost::intrusive_ptr<Storage_base> &s_diag,
-                            boost::intrusive_ptr<Storage_base> &S,
-                            boost::intrusive_ptr<Storage_base> &U, const cytnx_int64 &L,
+    void Tridiag_internal_f(const boost::intrusive_ptr<Storage_base>& diag,
+                            const boost::intrusive_ptr<Storage_base>& s_diag,
+                            boost::intrusive_ptr<Storage_base>& S,
+                            boost::intrusive_ptr<Storage_base>& U, const cytnx_int64& L,
                             bool throw_excp /*= false*/) {
       char job;
       job = (U->dtype() == Type.Void) ? 'N' : 'V';
@@ -54,7 +54,7 @@ namespace cytnx {
       memcpy(S->data(), diag->data(), L * sizeof(cytnx_float));
 
       // create tmp for sub-diag and cpy in:
-      cytnx_float *Dsv = (cytnx_float *)malloc((L - 1) * sizeof(cytnx_float));
+      cytnx_float* Dsv = (cytnx_float*)malloc((L - 1) * sizeof(cytnx_float));
       memcpy(Dsv, s_diag->data(), (L - 1) * sizeof(cytnx_float));
 
       lapack_int ldz = 1;
@@ -65,8 +65,8 @@ namespace cytnx {
         ldz = L;
       }
 
-      info = LAPACKE_sstev(LAPACK_COL_MAJOR, job, L, (cytnx_float *)S->data(), Dsv,
-                           (cytnx_float *)U->data(), ldz);
+      info = LAPACKE_sstev(LAPACK_COL_MAJOR, job, L, (cytnx_float*)S->data(), Dsv,
+                           (cytnx_float*)U->data(), ldz);
       cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'sstev': Lapack INFO = ", info);
 
       // house keeping

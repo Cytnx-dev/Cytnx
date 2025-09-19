@@ -7,7 +7,7 @@ namespace cytnx {
   namespace linalg_internal {
 
     template <class T>
-    void GetUpTri(T *out, const T *elem, const cytnx_uint64 &M, const cytnx_uint64 &N) {
+    void GetUpTri(T* out, const T* elem, const cytnx_uint64& M, const cytnx_uint64& N) {
       cytnx_uint64 min = M < N ? M : N;
       for (cytnx_uint64 i = 0; i < min; i++) {
         memcpy(out + i * N + i, elem + i * N + i, (N - i) * sizeof(T));
@@ -15,8 +15,8 @@ namespace cytnx {
     }
 
     template <class T>
-    void GetDiag(T *out, const T *elem, const cytnx_uint64 &M, const cytnx_uint64 &N,
-                 const cytnx_uint64 &diag_N) {
+    void GetDiag(T* out, const T* elem, const cytnx_uint64& M, const cytnx_uint64& N,
+                 const cytnx_uint64& diag_N) {
       cytnx_uint64 min = M < N ? M : N;
       min = min < diag_N ? min : diag_N;
 
@@ -24,18 +24,18 @@ namespace cytnx {
     }
 
     /// QR
-    void QR_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
-                        boost::intrusive_ptr<Storage_base> &Q,
-                        boost::intrusive_ptr<Storage_base> &R,
-                        boost::intrusive_ptr<Storage_base> &D,
-                        boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                        const cytnx_int64 &N, const bool &is_d) {
+    void QR_internal_cd(const boost::intrusive_ptr<Storage_base>& in,
+                        boost::intrusive_ptr<Storage_base>& Q,
+                        boost::intrusive_ptr<Storage_base>& R,
+                        boost::intrusive_ptr<Storage_base>& D,
+                        boost::intrusive_ptr<Storage_base>& tau, const cytnx_int64& M,
+                        const cytnx_int64& N, const bool& is_d) {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_complex128 *pQ = (cytnx_complex128 *)Q->data();
-      cytnx_complex128 *pR = (cytnx_complex128 *)R->data();
-      cytnx_complex128 *ptau = (cytnx_complex128 *)tau->data();
+      cytnx_complex128* pQ = (cytnx_complex128*)Q->data();
+      cytnx_complex128* pR = (cytnx_complex128*)R->data();
+      cytnx_complex128* ptau = (cytnx_complex128*)tau->data();
 
       // cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
       memcpy(pQ, in->data(), M * N * sizeof(cytnx_complex128));
@@ -45,8 +45,8 @@ namespace cytnx {
       lapack_int K = M < N ? M : N;
 
       // call linalg:
-      info = LAPACKE_zgelqf(LAPACK_COL_MAJOR, N, M, (lapack_complex_double *)pQ, ldA,
-                            (lapack_complex_double *)ptau);
+      info = LAPACKE_zgelqf(LAPACK_COL_MAJOR, N, M, (lapack_complex_double*)pQ, ldA,
+                            (lapack_complex_double*)ptau);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'zgelqf': Lapack INFO = ", info);
 
@@ -55,7 +55,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_complex128 *pD = (cytnx_complex128 *)D->data();
+        cytnx_complex128* pD = (cytnx_complex128*)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:
@@ -72,23 +72,23 @@ namespace cytnx {
       lapack_int row = M >= N ? N : M;
 
       // call linalg:
-      info = LAPACKE_zunglq(LAPACK_COL_MAJOR, row, col, K, (lapack_complex_double *)pQ, ldA,
-                            (lapack_complex_double *)ptau);
+      info = LAPACKE_zunglq(LAPACK_COL_MAJOR, row, col, K, (lapack_complex_double*)pQ, ldA,
+                            (lapack_complex_double*)ptau);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'zunglq': Lapack INFO = ", info);
     }
-    void QR_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
-                        boost::intrusive_ptr<Storage_base> &Q,
-                        boost::intrusive_ptr<Storage_base> &R,
-                        boost::intrusive_ptr<Storage_base> &D,
-                        boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                        const cytnx_int64 &N, const bool &is_d) {
+    void QR_internal_cf(const boost::intrusive_ptr<Storage_base>& in,
+                        boost::intrusive_ptr<Storage_base>& Q,
+                        boost::intrusive_ptr<Storage_base>& R,
+                        boost::intrusive_ptr<Storage_base>& D,
+                        boost::intrusive_ptr<Storage_base>& tau, const cytnx_int64& M,
+                        const cytnx_int64& N, const bool& is_d) {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_complex64 *pQ = (cytnx_complex64 *)Q->data();
-      cytnx_complex64 *pR = (cytnx_complex64 *)R->data();
-      cytnx_complex64 *ptau = (cytnx_complex64 *)tau->data();
+      cytnx_complex64* pQ = (cytnx_complex64*)Q->data();
+      cytnx_complex64* pR = (cytnx_complex64*)R->data();
+      cytnx_complex64* ptau = (cytnx_complex64*)tau->data();
 
       // cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
       memcpy(pQ, in->data(), M * N * sizeof(cytnx_complex64));
@@ -98,8 +98,8 @@ namespace cytnx {
       lapack_int K = M < N ? M : N;
 
       // call linalg:
-      info = LAPACKE_cgelqf(LAPACK_COL_MAJOR, N, M, (lapack_complex_float *)pQ, ldA,
-                            (lapack_complex_float *)ptau);
+      info = LAPACKE_cgelqf(LAPACK_COL_MAJOR, N, M, (lapack_complex_float*)pQ, ldA,
+                            (lapack_complex_float*)ptau);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'cgelqf': Lapack INFO = ", info);
 
@@ -108,7 +108,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_complex64 *pD = (cytnx_complex64 *)D->data();
+        cytnx_complex64* pD = (cytnx_complex64*)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:
@@ -125,22 +125,22 @@ namespace cytnx {
       lapack_int row = M >= N ? N : M;
 
       // call linalg:
-      info = LAPACKE_cunglq(LAPACK_COL_MAJOR, row, col, K, (lapack_complex_float *)pQ, ldA,
-                            (lapack_complex_float *)ptau);
+      info = LAPACKE_cunglq(LAPACK_COL_MAJOR, row, col, K, (lapack_complex_float*)pQ, ldA,
+                            (lapack_complex_float*)ptau);
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'cunglq': Lapack INFO = ", info);
     }
-    void QR_internal_d(const boost::intrusive_ptr<Storage_base> &in,
-                       boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R,
-                       boost::intrusive_ptr<Storage_base> &D,
-                       boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                       const cytnx_int64 &N, const bool &is_d) {
+    void QR_internal_d(const boost::intrusive_ptr<Storage_base>& in,
+                       boost::intrusive_ptr<Storage_base>& Q, boost::intrusive_ptr<Storage_base>& R,
+                       boost::intrusive_ptr<Storage_base>& D,
+                       boost::intrusive_ptr<Storage_base>& tau, const cytnx_int64& M,
+                       const cytnx_int64& N, const bool& is_d) {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_double *pQ = (cytnx_double *)Q->data();
-      cytnx_double *pR = (cytnx_double *)R->data();
-      cytnx_double *ptau = (cytnx_double *)tau->data();
+      cytnx_double* pQ = (cytnx_double*)Q->data();
+      cytnx_double* pR = (cytnx_double*)R->data();
+      cytnx_double* ptau = (cytnx_double*)tau->data();
 
       memcpy(pQ, in->data(), M * N * sizeof(cytnx_double));
 
@@ -158,7 +158,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_double *pD = (cytnx_double *)D->data();
+        cytnx_double* pD = (cytnx_double*)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:
@@ -178,17 +178,17 @@ namespace cytnx {
       cytnx_error_msg(info != 0, "%s %d",
                       "Error in Lapack function 'dorglq': Lapack INFO = ", info);
     }
-    void QR_internal_f(const boost::intrusive_ptr<Storage_base> &in,
-                       boost::intrusive_ptr<Storage_base> &Q, boost::intrusive_ptr<Storage_base> &R,
-                       boost::intrusive_ptr<Storage_base> &D,
-                       boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                       const cytnx_int64 &N, const bool &is_d) {
+    void QR_internal_f(const boost::intrusive_ptr<Storage_base>& in,
+                       boost::intrusive_ptr<Storage_base>& Q, boost::intrusive_ptr<Storage_base>& R,
+                       boost::intrusive_ptr<Storage_base>& D,
+                       boost::intrusive_ptr<Storage_base>& tau, const cytnx_int64& M,
+                       const cytnx_int64& N, const bool& is_d) {
       // Q should be the same shape as in
       // tau should be the min(M,N)
 
-      cytnx_float *pQ = (cytnx_float *)Q->data();
-      cytnx_float *pR = (cytnx_float *)R->data();
-      cytnx_float *ptau = (cytnx_float *)tau->data();
+      cytnx_float* pQ = (cytnx_float*)Q->data();
+      cytnx_float* pR = (cytnx_float*)R->data();
+      cytnx_float* ptau = (cytnx_float*)tau->data();
 
       // cytnx_complex128* Mij = (cytnx_complex128*)malloc(M * N * sizeof(cytnx_complex128));
       memcpy(pQ, in->data(), M * N * sizeof(cytnx_float));
@@ -207,7 +207,7 @@ namespace cytnx {
 
       // getD:
       if (is_d) {
-        cytnx_float *pD = (cytnx_float *)D->data();
+        cytnx_float* pD = (cytnx_float*)D->data();
         GetDiag(pD, pR, M, N, N);
         cytnx_uint64 min = M < N ? M : N;
         // normalize:

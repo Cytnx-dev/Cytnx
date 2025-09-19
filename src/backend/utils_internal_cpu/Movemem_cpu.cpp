@@ -17,10 +17,10 @@ namespace cytnx {
   namespace utils_internal {
 
     template <typename T, typename std::enable_if_t<std::is_integral_v<T>, bool>>
-    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base> &in,
-                                                     const std::vector<cytnx_uint64> &old_shape,
-                                                     const std::vector<cytnx_uint64> &mapper,
-                                                     const std::vector<cytnx_uint64> &invmapper,
+    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base>& in,
+                                                     const std::vector<cytnx_uint64>& old_shape,
+                                                     const std::vector<cytnx_uint64>& mapper,
+                                                     const std::vector<cytnx_uint64>& invmapper,
                                                      const bool is_inplace) {
 #ifdef UNI_DEBUG
       cytnx_error_msg(
@@ -43,8 +43,8 @@ namespace cytnx {
         accu_new *= newshape[i];
       }
 
-      T *des = (T *)malloc(in->capacity() * sizeof(T));
-      T *src = static_cast<T *>(in->data());
+      T* des = (T*)malloc(in->capacity() * sizeof(T));
+      T* src = static_cast<T*>(in->data());
 
       std::vector<cytnx_uint64> old_inds(old_shape.size());
       cytnx_uint64 j, old_loc;
@@ -88,10 +88,10 @@ namespace cytnx {
     }
 
     template <typename T, typename std::enable_if_t<!std::is_integral_v<T>, bool>>
-    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base> &in,
-                                                     const std::vector<cytnx_uint64> &old_shape,
-                                                     const std::vector<cytnx_uint64> &mapper,
-                                                     const std::vector<cytnx_uint64> &invmapper,
+    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base>& in,
+                                                     const std::vector<cytnx_uint64>& old_shape,
+                                                     const std::vector<cytnx_uint64>& mapper,
+                                                     const std::vector<cytnx_uint64>& invmapper,
                                                      const bool is_inplace) {
 #ifdef UNI_DEBUG
       cytnx_error_msg(
@@ -100,8 +100,8 @@ namespace cytnx {
         in->dtype_str().c_str(), Type.getname(Type.cy_typeid(T())));
 #endif
 
-      T *des = (T *)malloc(in->capacity() * sizeof(T));
-      T *src = static_cast<T *>(in->data());
+      T* des = (T*)malloc(in->capacity() * sizeof(T));
+      T* src = static_cast<T*>(in->data());
       cytnx_uint64 accu_old = 1, accu_new = 1;
 
 #ifdef UNI_HPTT
@@ -212,38 +212,38 @@ namespace cytnx {
     }
 
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_complex128>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_complex64>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_double>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_float>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_uint64>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_int64>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_uint32>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_int32>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_uint16>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_int16>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
     template boost::intrusive_ptr<Storage_base> MoveMemoryCpu<cytnx_bool>(
-      boost::intrusive_ptr<Storage_base> &, const std::vector<cytnx_uint64> &,
-      const std::vector<cytnx_uint64> &, const std::vector<cytnx_uint64> &, const bool is_inplace);
+      boost::intrusive_ptr<Storage_base>&, const std::vector<cytnx_uint64>&,
+      const std::vector<cytnx_uint64>&, const std::vector<cytnx_uint64>&, const bool is_inplace);
 
   }  // namespace utils_internal
 }  // namespace cytnx

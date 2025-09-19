@@ -28,8 +28,8 @@
 #include <string>
 
 namespace cytnx {
-  bool _fx_compare_vec_inc(const std::vector<cytnx_int64> &v1, const std::vector<cytnx_int64> &v2);
-  bool _fx_compare_vec_dec(const std::vector<cytnx_int64> &v1, const std::vector<cytnx_int64> &v2);
+  bool _fx_compare_vec_inc(const std::vector<cytnx_int64>& v1, const std::vector<cytnx_int64>& v2);
+  bool _fx_compare_vec_dec(const std::vector<cytnx_int64>& v1, const std::vector<cytnx_int64>& v2);
 };  // namespace cytnx
 
 #endif  // CYTNX_UTILS_UTILS_H_

@@ -17,7 +17,7 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 using namespace cytnx;
 
-void symmetry_binding(py::module &m) {
+void symmetry_binding(py::module& m) {
   py::enum_<SymmetryType>(m, "SymType")
     .value("Z", SymmetryType::Z)
     .value("U", SymmetryType::U)
@@ -33,7 +33,7 @@ void symmetry_binding(py::module &m) {
   py::class_<Qs>(m, "_cQs")
     .def(py::init<const std::vector<cytnx_int64>>(), py::arg("qin"))
     .def(
-      "__rshift__", [](Qs &self, const cytnx_uint64 &dim) { return self >> dim; }, py::arg("dim"));
+      "__rshift__", [](Qs& self, const cytnx_uint64& dim) { return self >> dim; }, py::arg("dim"));
 
   py::class_<Symmetry>(m, "Symmetry")
     // construction
@@ -55,23 +55,23 @@ void symmetry_binding(py::module &m) {
     .def("check_qnums", &Symmetry::check_qnums, py::arg("qnums"))
     .def(
       "combine_rule",
-      [](Symmetry &self, const cytnx_int64 &inL, const cytnx_int64 &inR, const bool &is_reverse) {
+      [](Symmetry& self, const cytnx_int64& inL, const cytnx_int64& inR, const bool& is_reverse) {
         return self.combine_rule(inL, inR, is_reverse);
       },
       py::arg("qnL"), py::arg("qnR"), py::arg("is_reverse") = false)
     .def(
-      "reverse_rule", [](Symmetry &self, const cytnx_int64 &qin) { return self.reverse_rule(qin); },
+      "reverse_rule", [](Symmetry& self, const cytnx_int64& qin) { return self.reverse_rule(qin); },
       py::arg("qin"))
     .def("get_fermion_parity", &Symmetry::get_fermion_parity, py::arg("qnum"))
     .def("is_fermionic", &Symmetry::is_fermionic)
 
     .def(
-      "Save", [](Symmetry &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
+      "Save", [](Symmetry& self, const std::string& fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
-      "Load", [](const std::string &fname) { return Symmetry::Load(fname); }, py::arg("fname"))
+      "Load", [](const std::string& fname) { return Symmetry::Load(fname); }, py::arg("fname"))
     .def(
       "__repr__",
-      [](Symmetry &self) {
+      [](Symmetry& self) {
         std::cout << self << std::endl;
         return std::string("");
       },

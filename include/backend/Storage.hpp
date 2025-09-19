@@ -29,11 +29,11 @@ namespace cytnx {
     Storage_base() = default;
     // Storage_base(const std::initializer_list<unsigned int> &init_shape);
     // Storage_base(const std::vector<unsigned int> &init_shape);
-    Storage_base(const unsigned long long &len_in, const int &device, const bool &init_zero = true);
+    Storage_base(const unsigned long long& len_in, const int& device, const bool& init_zero = true);
 
-    Storage_base(Storage_base &Rhs);
-    Storage_base &operator=(Storage_base &Rhs);
-    boost::intrusive_ptr<Storage_base> astype(const unsigned int &dtype);
+    Storage_base(Storage_base& Rhs);
+    Storage_base& operator=(Storage_base& Rhs);
+    boost::intrusive_ptr<Storage_base> astype(const unsigned int& dtype);
 
     // void Init(const std::initializer_list<unsigned int> &init_shape);
     std::string dtype_str() const;
@@ -47,21 +47,21 @@ namespace cytnx {
     virtual ~Storage_base();
 
     template <class T>
-    T &at(const cytnx_uint64 &idx) const;
+    T& at(const cytnx_uint64& idx) const;
 
     template <class T>
-    T &back() const;
+    T& back() const;
 
     template <class T>
-    T *data() const;
+    T* data() const;
 
     // `Storage_base` can be instanitiated directly. It's deconstructor calls `data()`, so we cannot
     // throw a runtime error here.
-    virtual void *data() const { return nullptr; }
+    virtual void* data() const { return nullptr; }
     virtual int dtype() const { return Type.Void; }
     virtual int device() const { return Device.cpu; }
 
-    void _cpy_bool(void *ptr, const std::vector<cytnx_bool> &vin);
+    void _cpy_bool(void* ptr, const std::vector<cytnx_bool>& vin);
 
     void print();
     void print_info();
@@ -85,7 +85,7 @@ namespace cytnx {
 
     */
     template <class T>
-    void _Init_byptr_safe(T *rawptr, const unsigned long long &len_in) {
+    void _Init_byptr_safe(T* rawptr, const unsigned long long& len_in) {
       // check:
       if (this->dtype() == Type.Float) {
         cytnx_error_msg(typeid(T) != typeid(cytnx_float), "%s",
@@ -124,28 +124,28 @@ namespace cytnx {
         cytnx_error_msg(1, "[FATAL] ERROR%s", "\n");
       }
 
-      this->_Init_byptr((void *)rawptr, len_in);
+      this->_Init_byptr((void*)rawptr, len_in);
     }
 
-    void GetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &out,
-                            const std::vector<cytnx_uint64> &shape,
-                            const std::vector<std::vector<cytnx_uint64>> &locators,
-                            const cytnx_uint64 &Nunit);
-    void GetElem_byShape(boost::intrusive_ptr<Storage_base> &out,
-                         const std::vector<cytnx_uint64> &shape,
-                         const std::vector<cytnx_uint64> &mapper,
-                         const std::vector<cytnx_uint64> &len,
-                         const std::vector<std::vector<cytnx_uint64>> &locators);
-    void SetElem_byShape(boost::intrusive_ptr<Storage_base> &in,
-                         const std::vector<cytnx_uint64> &shape,
-                         const std::vector<cytnx_uint64> &mapper,
-                         const std::vector<cytnx_uint64> &len,
-                         const std::vector<std::vector<cytnx_uint64>> &locators,
-                         const bool &is_scalar);
-    void SetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &in,
-                            const std::vector<cytnx_uint64> &shape,
-                            const std::vector<std::vector<cytnx_uint64>> &locators,
-                            const cytnx_uint64 &Nunit, const bool &is_scalar);
+    void GetElem_byShape_v2(boost::intrusive_ptr<Storage_base>& out,
+                            const std::vector<cytnx_uint64>& shape,
+                            const std::vector<std::vector<cytnx_uint64>>& locators,
+                            const cytnx_uint64& Nunit);
+    void GetElem_byShape(boost::intrusive_ptr<Storage_base>& out,
+                         const std::vector<cytnx_uint64>& shape,
+                         const std::vector<cytnx_uint64>& mapper,
+                         const std::vector<cytnx_uint64>& len,
+                         const std::vector<std::vector<cytnx_uint64>>& locators);
+    void SetElem_byShape(boost::intrusive_ptr<Storage_base>& in,
+                         const std::vector<cytnx_uint64>& shape,
+                         const std::vector<cytnx_uint64>& mapper,
+                         const std::vector<cytnx_uint64>& len,
+                         const std::vector<std::vector<cytnx_uint64>>& locators,
+                         const bool& is_scalar);
+    void SetElem_byShape_v2(boost::intrusive_ptr<Storage_base>& in,
+                            const std::vector<cytnx_uint64>& shape,
+                            const std::vector<std::vector<cytnx_uint64>>& locators,
+                            const cytnx_uint64& Nunit, const bool& is_scalar);
 
     /**
      * @brief Drop the ownership of the underlying contiguous memory.
@@ -156,81 +156,81 @@ namespace cytnx {
      * @return The pointer referencing the underlying storage.
      * @deprecated This method may be removed without any notification.
      */
-    virtual void *release() noexcept { return nullptr; }
+    virtual void* release() noexcept { return nullptr; }
 
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);
-    virtual void Init(const unsigned long long &len_in, const int &device = -1,
-                      const bool &init_zero = true);
-    virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
-                             const bool &iscap = false, const unsigned long long &cap_in = 0);
+    virtual void Init(const unsigned long long& len_in, const int& device = -1,
+                      const bool& init_zero = true);
+    virtual void _Init_byptr(void* rawptr, const unsigned long long& len_in, const int& device = -1,
+                             const bool& iscap = false, const unsigned long long& cap_in = 0);
 
     // this function will return a new storage with the same type as the one
     // that initiate this function.
     virtual boost::intrusive_ptr<Storage_base> _create_new_sametype();
 
     // [future] this will move the memory to device / cpu
-    virtual void to_(const int &device);
-    virtual boost::intrusive_ptr<Storage_base> to(const int &device);
+    virtual void to_(const int& device);
+    virtual boost::intrusive_ptr<Storage_base> to(const int& device);
 
     virtual boost::intrusive_ptr<Storage_base> clone();
 
     // this will perform permute on the underlying memory.
     virtual boost::intrusive_ptr<Storage_base> Move_memory(
-      const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper,
-      const std::vector<cytnx_uint64> &invmapper);
-    virtual void Move_memory_(const std::vector<cytnx_uint64> &old_shape,
-                              const std::vector<cytnx_uint64> &mapper,
-                              const std::vector<cytnx_uint64> &invmapper);
-    virtual void PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
-                                   const std::vector<cytnx_uint64> &mapper = {});
+      const std::vector<cytnx_uint64>& old_shape, const std::vector<cytnx_uint64>& mapper,
+      const std::vector<cytnx_uint64>& invmapper);
+    virtual void Move_memory_(const std::vector<cytnx_uint64>& old_shape,
+                              const std::vector<cytnx_uint64>& mapper,
+                              const std::vector<cytnx_uint64>& invmapper);
+    virtual void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64>& shape,
+                                   const std::vector<cytnx_uint64>& mapper = {});
     virtual void print_elems();
 
     virtual boost::intrusive_ptr<Storage_base> real();
     virtual boost::intrusive_ptr<Storage_base> imag();
 
     // generators:
-    virtual void fill(const cytnx_complex128 &val);
-    virtual void fill(const cytnx_complex64 &val);
-    virtual void fill(const cytnx_double &val);
-    virtual void fill(const cytnx_float &val);
-    virtual void fill(const cytnx_int64 &val);
-    virtual void fill(const cytnx_uint64 &val);
-    virtual void fill(const cytnx_int32 &val);
-    virtual void fill(const cytnx_uint32 &val);
-    virtual void fill(const cytnx_int16 &val);
-    virtual void fill(const cytnx_uint16 &val);
-    virtual void fill(const cytnx_bool &val);
+    virtual void fill(const cytnx_complex128& val);
+    virtual void fill(const cytnx_complex64& val);
+    virtual void fill(const cytnx_double& val);
+    virtual void fill(const cytnx_float& val);
+    virtual void fill(const cytnx_int64& val);
+    virtual void fill(const cytnx_uint64& val);
+    virtual void fill(const cytnx_int32& val);
+    virtual void fill(const cytnx_uint32& val);
+    virtual void fill(const cytnx_int16& val);
+    virtual void fill(const cytnx_uint16& val);
+    virtual void fill(const cytnx_bool& val);
     virtual void set_zeros();
-    virtual void resize(const cytnx_uint64 &newsize);
+    virtual void resize(const cytnx_uint64& newsize);
 
-    virtual void append(const Scalar &val);
-    virtual void append(const cytnx_complex128 &val);
-    virtual void append(const cytnx_complex64 &val);
-    virtual void append(const cytnx_double &val);
-    virtual void append(const cytnx_float &val);
-    virtual void append(const cytnx_int64 &val);
-    virtual void append(const cytnx_uint64 &val);
-    virtual void append(const cytnx_int32 &val);
-    virtual void append(const cytnx_uint32 &val);
-    virtual void append(const cytnx_int16 &val);
-    virtual void append(const cytnx_uint16 &val);
-    virtual void append(const cytnx_bool &val);
+    virtual void append(const Scalar& val);
+    virtual void append(const cytnx_complex128& val);
+    virtual void append(const cytnx_complex64& val);
+    virtual void append(const cytnx_double& val);
+    virtual void append(const cytnx_float& val);
+    virtual void append(const cytnx_int64& val);
+    virtual void append(const cytnx_uint64& val);
+    virtual void append(const cytnx_int32& val);
+    virtual void append(const cytnx_uint32& val);
+    virtual void append(const cytnx_int16& val);
+    virtual void append(const cytnx_uint16& val);
+    virtual void append(const cytnx_bool& val);
 
-    virtual Scalar get_item(const cytnx_uint64 &in) const;
+    virtual Scalar get_item(const cytnx_uint64& in) const;
 
-    virtual void set_item(const cytnx_uint64 &idx, const Scalar &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_complex128 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_complex64 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_double &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_float &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_int64 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_uint64 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_int32 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_uint32 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_int16 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
-    virtual void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
+    virtual void set_item(const cytnx_uint64& idx, const Scalar& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_complex128& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_complex64& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_double& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_float& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_int64& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_uint64& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_int32& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_uint32& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_int16& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_uint16& val);
+    virtual void set_item(const cytnx_uint64& idx, const cytnx_bool& val);
   };
   ///@endcond
 
@@ -239,23 +239,23 @@ namespace cytnx {
   class StorageImplementation : public Storage_base {
    public:
     StorageImplementation()
-        : capacity_(0), size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
-    void Init(const unsigned long long &len_in, const int &device = -1,
-              const bool &init_zero = true);
-    void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
-                     const bool &iscap = false, const unsigned long long &cap_in = 0);
+        : capacity_(0), size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1) {};
+    void Init(const unsigned long long& len_in, const int& device = -1,
+              const bool& init_zero = true);
+    void _Init_byptr(void* rawptr, const unsigned long long& len_in, const int& device = -1,
+                     const bool& iscap = false, const unsigned long long& cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
     boost::intrusive_ptr<Storage_base> clone();
-    boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64> &old_shape,
-                                                   const std::vector<cytnx_uint64> &mapper,
-                                                   const std::vector<cytnx_uint64> &invmapper);
-    void Move_memory_(const std::vector<cytnx_uint64> &old_shape,
-                      const std::vector<cytnx_uint64> &mapper,
-                      const std::vector<cytnx_uint64> &invmapper);
-    void to_(const int &device);
-    boost::intrusive_ptr<Storage_base> to(const int &device);
-    void PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
-                           const std::vector<cytnx_uint64> &mapper = {});
+    boost::intrusive_ptr<Storage_base> Move_memory(const std::vector<cytnx_uint64>& old_shape,
+                                                   const std::vector<cytnx_uint64>& mapper,
+                                                   const std::vector<cytnx_uint64>& invmapper);
+    void Move_memory_(const std::vector<cytnx_uint64>& old_shape,
+                      const std::vector<cytnx_uint64>& mapper,
+                      const std::vector<cytnx_uint64>& invmapper);
+    void to_(const int& device);
+    boost::intrusive_ptr<Storage_base> to(const int& device);
+    void PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64>& shape,
+                           const std::vector<cytnx_uint64>& mapper = {});
     void print_elems();
 
     ~StorageImplementation();
@@ -265,7 +265,7 @@ namespace cytnx {
 
     const unsigned long long capacity() const override { return capacity_; }
     const unsigned long long size() const override { return size_; }
-    void *data() const override { return start_; }
+    void* data() const override { return start_; }
     int dtype() const override { return dtype_; }
     int device() const override { return device_; }
 
@@ -278,8 +278,8 @@ namespace cytnx {
      * @return The pointer referencing the underlying storage.
      * @deprecated This method may be removed without any notification.
      */
-    void *release() noexcept override {
-      void *original_start = start_;
+    void* release() noexcept override {
+      void* original_start = start_;
       start_ = nullptr;
       size_ = 0;
       capacity_ = 0;
@@ -287,60 +287,60 @@ namespace cytnx {
     };
 
     // generators:
-    void fill(const cytnx_complex128 &val);
-    void fill(const cytnx_complex64 &val);
-    void fill(const cytnx_double &val);
-    void fill(const cytnx_float &val);
-    void fill(const cytnx_int64 &val);
-    void fill(const cytnx_uint64 &val);
-    void fill(const cytnx_int32 &val);
-    void fill(const cytnx_uint32 &val);
-    void fill(const cytnx_int16 &val);
-    void fill(const cytnx_uint16 &val);
-    void fill(const cytnx_bool &val);
+    void fill(const cytnx_complex128& val);
+    void fill(const cytnx_complex64& val);
+    void fill(const cytnx_double& val);
+    void fill(const cytnx_float& val);
+    void fill(const cytnx_int64& val);
+    void fill(const cytnx_uint64& val);
+    void fill(const cytnx_int32& val);
+    void fill(const cytnx_uint32& val);
+    void fill(const cytnx_int16& val);
+    void fill(const cytnx_uint16& val);
+    void fill(const cytnx_bool& val);
     void set_zeros();
-    void resize(const cytnx_uint64 &newsize);
+    void resize(const cytnx_uint64& newsize);
 
-    void append(const Scalar &val);
-    void append(const cytnx_complex128 &val);
-    void append(const cytnx_complex64 &val);
-    void append(const cytnx_double &val);
-    void append(const cytnx_float &val);
-    void append(const cytnx_int64 &val);
-    void append(const cytnx_uint64 &val);
-    void append(const cytnx_int32 &val);
-    void append(const cytnx_uint32 &val);
-    void append(const cytnx_int16 &val);
-    void append(const cytnx_uint16 &val);
-    void append(const cytnx_bool &val);
-    Scalar get_item(const cytnx_uint64 &in) const;
+    void append(const Scalar& val);
+    void append(const cytnx_complex128& val);
+    void append(const cytnx_complex64& val);
+    void append(const cytnx_double& val);
+    void append(const cytnx_float& val);
+    void append(const cytnx_int64& val);
+    void append(const cytnx_uint64& val);
+    void append(const cytnx_int32& val);
+    void append(const cytnx_uint32& val);
+    void append(const cytnx_int16& val);
+    void append(const cytnx_uint16& val);
+    void append(const cytnx_bool& val);
+    Scalar get_item(const cytnx_uint64& in) const;
 
-    void set_item(const cytnx_uint64 &idx, const Scalar &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_complex128 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_complex64 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_double &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_float &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_int64 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_uint64 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_int32 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_uint32 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_int16 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val);
-    void set_item(const cytnx_uint64 &idx, const cytnx_bool &val);
+    void set_item(const cytnx_uint64& idx, const Scalar& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_complex128& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_complex64& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_double& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_float& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_int64& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_uint64& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_int32& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_uint32& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_int16& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_uint16& val);
+    void set_item(const cytnx_uint64& idx, const cytnx_bool& val);
 
    private:
     template <typename OtherDType>
-    void Fill(const OtherDType &value);
+    void Fill(const OtherDType& value);
 
     template <typename OtherDType>
-    void Append(const OtherDType &value);
-    void Append(const Scalar &value);
+    void Append(const OtherDType& value);
+    void Append(const Scalar& value);
 
     template <typename OtherDType>
-    void SetItem(cytnx_uint64 index, const OtherDType &value);
-    void SetItem(cytnx_uint64 index, const Scalar &value);
+    void SetItem(cytnx_uint64 index, const OtherDType& value);
+    void SetItem(cytnx_uint64 index, const Scalar& value);
 
-    void *start_;
+    void* start_;
     unsigned long long size_;
     unsigned long long capacity_;
     unsigned int dtype_;
@@ -462,8 +462,8 @@ namespace cytnx {
     #### output>
     \verbinclude example/Storage/Init.py.out
     */
-    void Init(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-              int device = -1, const bool &init_zero = true) {
+    void Init(const unsigned long long& size, const unsigned int& dtype = Type.Double,
+              int device = -1, const bool& init_zero = true) {
       cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
       this->_impl = __SII.USIInit[dtype]();
       this->_impl->Init(size, device, init_zero);
@@ -485,8 +485,8 @@ namespace cytnx {
      * @see Init(const unsigned long long &size, const unsigned int &dtype, int device, const bool
      * &init_zero)
      */
-    Storage(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-            int device = -1, const bool &init_zero = true)
+    Storage(const unsigned long long& size, const unsigned int& dtype = Type.Double,
+            int device = -1, const bool& init_zero = true)
         : _impl(new Storage_base()) {
       Init(size, dtype, device, init_zero);
     }
@@ -500,21 +500,21 @@ namespace cytnx {
     /**
      * @brief The default constructor of Storage class. It will create an empty Storage instance.
      */
-    Storage() : _impl(new Storage_base()){};
+    Storage() : _impl(new Storage_base()) {};
     ///@cond
     Storage(boost::intrusive_ptr<Storage_base> in_impl) { this->_impl = in_impl; }
-    Storage(const Storage &rhs) { this->_impl = rhs._impl; }
+    Storage(const Storage& rhs) { this->_impl = rhs._impl; }
 
     template <class Tp>
-    Storage(const std::vector<Tp> &rhs) {
+    Storage(const std::vector<Tp>& rhs) {
       this->_from_vector(rhs, -1);
     }
     template <class Tp>
-    Storage(const std::initializer_list<Tp> &rhs) {
+    Storage(const std::initializer_list<Tp>& rhs) {
       this->_from_vector(std::vector<Tp>(rhs), -1);
     }
 
-    Storage &operator=(const Storage &rhs) {
+    Storage& operator=(const Storage& rhs) {
       this->_impl = rhs._impl;
       return *this;
     }
@@ -522,10 +522,10 @@ namespace cytnx {
     ///@endcond
 
     /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
-    void _Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem);
-    void _Savebinary(std::fstream &f) const;
+    void _Save(std::fstream& f) const;
+    void _Load(std::fstream& f);
+    void _Loadbinary(std::fstream& f, const unsigned int& dtype, const cytnx_uint64& Nelem);
+    void _Savebinary(std::fstream& f) const;
 
     /// @endcond
 
@@ -537,21 +537,21 @@ namespace cytnx {
     ".cyst"
     @post The file extension will be ".cyst".
     */
-    void Save(const std::string &fname) const;
+    void Save(const std::string& fname) const;
 
     /**
      * @brief Save current Storage to file, same as \ref Save(const std::string &fname)
      */
-    void Save(const char *fname) const;
+    void Save(const char* fname) const;
     /**
      * @brief Save current Storage to a binary file, which only contains the raw data.
      * @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count)
      */
-    void Tofile(const std::string &fname) const;
+    void Tofile(const std::string& fname) const;
     /// @see Tofile(const std::string &fname) const
-    void Tofile(const char *fname) const;
+    void Tofile(const char* fname) const;
     /// @see Tofile(const std::string &fname) const
-    void Tofile(std::fstream &f) const;
+    void Tofile(std::fstream& f) const;
 
     /**
     @brief Load current Storage from file
@@ -561,12 +561,12 @@ namespace cytnx {
     @pre The file must be a Storage object, which is saved by the function
         Save(const std::string &fname) const.
     */
-    static Storage Load(const std::string &fname);
+    static Storage Load(const std::string& fname);
 
     /**
      * @brief Load current Storage from file, same as \ref Load(const std::string &fname)
      */
-    static Storage Load(const char *fname);
+    static Storage Load(const char* fname);
     /**
      * @brief Load the binary file, which only contains the raw data, to current Storage.
      * @details This function will load the binary file, which only contains the raw data,
@@ -584,15 +584,15 @@ namespace cytnx {
      *
      * @see Tofile(const std::string &fname) const
      */
-    static Storage Fromfile(const std::string &fname, const unsigned int &dtype,
-                            const cytnx_int64 &count = -1);
+    static Storage Fromfile(const std::string& fname, const unsigned int& dtype,
+                            const cytnx_int64& count = -1);
 
     /**
      * @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count =
      * -1)
      */
-    static Storage Fromfile(const char *fname, const unsigned int &dtype,
-                            const cytnx_int64 &count = -1);
+    static Storage Fromfile(const char* fname, const unsigned int& dtype,
+                            const cytnx_int64& count = -1);
 
     /**
     @brief cast the type of current Storage
@@ -618,7 +618,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Storage/astype.py.out
     */
-    Storage astype(const unsigned int &new_type) const { return this->_impl->astype(new_type); }
+    Storage astype(const unsigned int& new_type) const { return this->_impl->astype(new_type); }
 
     /**
     @brief the dtype-id of current Storage, see cytnx::Type for more details.
@@ -655,27 +655,27 @@ namespace cytnx {
     @note cannot append a complex value into a real Storage.
     */
     template <class T>
-    void append(const T &val) {
+    void append(const T& val) {
       return this->_impl->append(val);
     }
 
     ///@cond
     template <class T>  // this is c++ only
-    T &at(const cytnx_uint64 &idx) const {
+    T& at(const cytnx_uint64& idx) const {
       return this->_impl->at<T>(idx);
     }
 
-    const Scalar::Sproxy at(const cytnx_uint64 &idx) const {
+    const Scalar::Sproxy at(const cytnx_uint64& idx) const {
       Scalar::Sproxy out(this->_impl, idx);
       return out;
     }
-    Scalar::Sproxy at(const cytnx_uint64 &idx) {
+    Scalar::Sproxy at(const cytnx_uint64& idx) {
       Scalar::Sproxy out(this->_impl, idx);
       return out;
     }
 
     template <class T>  // this is c++ only
-    T &back() const {
+    T& back() const {
       return this->_impl->back<T>();
     }
 
@@ -689,25 +689,25 @@ namespace cytnx {
     }
 
     template <class T>  // this is c++ only
-    T *data() const {
+    T* data() const {
       return this->_impl->data<T>();
     }
 
-    void *data() const { return this->_impl->data(); }
+    void* data() const { return this->_impl->data(); }
     ///@endcond
 
     /**
     @brief resize the current Storage.
     @param[in] newsize.
     */
-    void resize(const cytnx_uint64 &newsize) { this->_impl->resize(newsize); }
+    void resize(const cytnx_uint64& newsize) { this->_impl->resize(newsize); }
 
     /**
     @brief Move the current Storage to different deivce.
     @param[in] device the device-id. It can be any device defined in cytnx::Device.
     @see Storage::to()
     */
-    void to_(const int &device) { this->_impl->to_(device); }
+    void to_(const int& device) { this->_impl->to_(device); }
 
     /**
     @brief move a new Storage with same content as current Storage on different deivce.
@@ -716,7 +716,7 @@ namespace cytnx {
         if the \p device is the same as the current Storage's device, return self.
     @see Storage::to_()
     */
-    Storage to(const int &device) { return Storage(this->_impl->to(device)); }
+    Storage to(const int& device) { return Storage(this->_impl->to(device)); }
 
     /**
     @brief return a deep copy of the current storage.
@@ -760,7 +760,7 @@ namespace cytnx {
      * @return The pointer referencing the underlying storage.
      * @deprecated This method may be removed without any notification.
      */
-    void *release() noexcept { return this->_impl->release(); }
+    void* release() noexcept { return this->_impl->release(); }
 
     /**
     @brief print the info of the Storage, including the device, dtype and size.
@@ -799,12 +799,12 @@ namespace cytnx {
     #### output>
     \verbinclude example/Storage/eq.py.out
     */
-    bool operator==(const Storage &rhs);
+    bool operator==(const Storage& rhs);
 
     /**
      * @brief The not-equal operator for Storage.
      */
-    bool operator!=(const Storage &rhs);
+    bool operator!=(const Storage& rhs);
 
     /**
     @brief set all the elements to the assigned value val
@@ -812,7 +812,7 @@ namespace cytnx {
     @note cannot assign a complex value into a real Storage.
     */
     template <class T>
-    void fill(const T &val) {
+    void fill(const T& val) {
       this->_impl->fill(val);
     }
 
@@ -822,7 +822,7 @@ namespace cytnx {
     @note This function is C++ only
     */
     template <class T>
-    static Storage from_vector(const std::vector<T> &vin, const int device = -1) {
+    static Storage from_vector(const std::vector<T>& vin, const int device = -1) {
       Storage out;
       out._from_vector(vin, device);
       return out;
@@ -865,7 +865,7 @@ namespace cytnx {
     /// @cond
 
     template <class T>
-    void _from_vector(const std::vector<T> &vin, const int device = -1) {
+    void _from_vector(const std::vector<T>& vin, const int device = -1) {
       // auto dispatch:
       // check:
       cytnx_error_msg(1, "[FATAL] ERROR unsupport type%s", "\n");
@@ -873,57 +873,57 @@ namespace cytnx {
       // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
     }
 
-    void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_complex128>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.ComplexDouble]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex128) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_complex64>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.ComplexFloat]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_double> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_double>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Double]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_double) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_float> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_float>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Float]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_float) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint64>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint64]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int64>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int64]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint32>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint32]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint32) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int32> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int32>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int32]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int32) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint16>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Uint16]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint16) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int16> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int16>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Int16]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int16) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_bool> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_bool>& vin, const int device = -1) {
       this->_impl = __SII.USIInit[Type.Bool]();
       this->_impl->Init(vin.size(), device);
       this->_impl->_cpy_bool(this->_impl->data(), vin);
@@ -968,7 +968,7 @@ namespace cytnx {
      * @param[in] idx The index of the element.
      * @return The element at the given index.
      */
-    Scalar get_item(const cytnx_uint64 &idx) const { return this->_impl->get_item(idx); };
+    Scalar get_item(const cytnx_uint64& idx) const { return this->_impl->get_item(idx); };
 
     /**
      * @brief Set the element at the given index.
@@ -976,7 +976,7 @@ namespace cytnx {
      * @param[in] elem The element to be set.
      */
     template <class T>
-    void set_item(const cytnx_uint64 &idx, const T &elem) {
+    void set_item(const cytnx_uint64& idx, const T& elem) {
       this->_impl->set_item(idx, elem);
     };
 
@@ -984,7 +984,7 @@ namespace cytnx {
      * @brief The access operator for the Storage.
      * @param[in] idx The index of the element.
      */
-    Scalar::Sproxy operator()(const cytnx_uint64 &idx);
+    Scalar::Sproxy operator()(const cytnx_uint64& idx);
 
     // /**
     //  * @brief Check if two Storage are equivalent in element.
@@ -998,7 +998,7 @@ namespace cytnx {
   };
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Storage &in);
+  std::ostream& operator<<(std::ostream& os, const Storage& in);
   ///@endcond
 
 }  // namespace cytnx

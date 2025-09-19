@@ -7,17 +7,17 @@ namespace cytnx {
   namespace linalg_internal {
 
     /// Eig
-    void Eig_internal_cd(const boost::intrusive_ptr<Storage_base> &in,
-                         boost::intrusive_ptr<Storage_base> &e,
-                         boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+    void Eig_internal_cd(const boost::intrusive_ptr<Storage_base>& in,
+                         boost::intrusive_ptr<Storage_base>& e,
+                         boost::intrusive_ptr<Storage_base>& v, const cytnx_int64& L) {
       char jobs = 'N';
 
-      cytnx_complex128 *tA;
-      cytnx_complex128 *buffer_A =
-        (cytnx_complex128 *)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex128));
+      cytnx_complex128* tA;
+      cytnx_complex128* buffer_A =
+        (cytnx_complex128*)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex128));
       memcpy(buffer_A, in->data(), sizeof(cytnx_complex128) * cytnx_uint64(L) * L);
       if (v->dtype() != Type.Void) {
-        tA = (cytnx_complex128 *)v->data();
+        tA = (cytnx_complex128*)v->data();
         jobs = 'V';
       }
 
@@ -25,25 +25,25 @@ namespace cytnx {
       lapack_int info;
       lapack_int ONE = 1;
 
-      info = LAPACKE_zgeev(LAPACK_COL_MAJOR, jobs, 'N', L, (lapack_complex_double *)buffer_A, ldA,
-                           (lapack_complex_double *)e->data(), (lapack_complex_double *)tA, L,
+      info = LAPACKE_zgeev(LAPACK_COL_MAJOR, jobs, 'N', L, (lapack_complex_double*)buffer_A, ldA,
+                           (lapack_complex_double*)e->data(), (lapack_complex_double*)tA, L,
                            nullptr, ONE);
 
       cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'zgeev': Lapack INFO = ", info);
 
       free(buffer_A);
     }
-    void Eig_internal_cf(const boost::intrusive_ptr<Storage_base> &in,
-                         boost::intrusive_ptr<Storage_base> &e,
-                         boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+    void Eig_internal_cf(const boost::intrusive_ptr<Storage_base>& in,
+                         boost::intrusive_ptr<Storage_base>& e,
+                         boost::intrusive_ptr<Storage_base>& v, const cytnx_int64& L) {
       char jobs = 'N';
 
-      cytnx_complex64 *tA;
-      cytnx_complex64 *buffer_A =
-        (cytnx_complex64 *)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex64));
+      cytnx_complex64* tA;
+      cytnx_complex64* buffer_A =
+        (cytnx_complex64*)malloc(cytnx_uint64(L) * L * sizeof(cytnx_complex64));
       memcpy(buffer_A, in->data(), sizeof(cytnx_complex64) * cytnx_uint64(L) * L);
       if (v->dtype() != Type.Void) {
-        tA = (cytnx_complex64 *)v->data();
+        tA = (cytnx_complex64*)v->data();
         jobs = 'V';
       }
 
@@ -51,18 +51,18 @@ namespace cytnx {
       lapack_int info;
       lapack_int ONE = 1;
 
-      info = LAPACKE_cgeev(LAPACK_COL_MAJOR, jobs, 'N', L, (lapack_complex_float *)buffer_A, ldA,
-                           (lapack_complex_float *)e->data(), (lapack_complex_float *)tA, L,
-                           nullptr, ONE);
+      info =
+        LAPACKE_cgeev(LAPACK_COL_MAJOR, jobs, 'N', L, (lapack_complex_float*)buffer_A, ldA,
+                      (lapack_complex_float*)e->data(), (lapack_complex_float*)tA, L, nullptr, ONE);
 
       cytnx_error_msg(info != 0, "%s %d", "Error in Lapack function 'cgeev': Lapack INFO = ", info);
 
       free(buffer_A);
     }
 
-    void Eig_internal_d(const boost::intrusive_ptr<Storage_base> &in,
-                        boost::intrusive_ptr<Storage_base> &e,
-                        boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+    void Eig_internal_d(const boost::intrusive_ptr<Storage_base>& in,
+                        boost::intrusive_ptr<Storage_base>& e,
+                        boost::intrusive_ptr<Storage_base>& v, const cytnx_int64& L) {
       /*
       char jobs = 'N';
 
@@ -108,9 +108,9 @@ namespace cytnx {
       free(e_imag);
       */
     }
-    void Eig_internal_f(const boost::intrusive_ptr<Storage_base> &in,
-                        boost::intrusive_ptr<Storage_base> &e,
-                        boost::intrusive_ptr<Storage_base> &v, const cytnx_int64 &L) {
+    void Eig_internal_f(const boost::intrusive_ptr<Storage_base>& in,
+                        boost::intrusive_ptr<Storage_base>& e,
+                        boost::intrusive_ptr<Storage_base>& v, const cytnx_int64& L) {
       /*
       char jobs = 'N';
 

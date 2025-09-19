@@ -14,7 +14,7 @@
 namespace cytnx {
 
   template <class T>
-  std::vector<T> vec_map(const std::vector<T> &in, const std::vector<cytnx_uint64> &mapper) {
+  std::vector<T> vec_map(const std::vector<T>& in, const std::vector<cytnx_uint64>& mapper) {
     cytnx_error_msg(in.size() != mapper.size(),
                     "[ERROR][vec_map] in and mapper does not have same size.%s", "\n");
     std::vector<T> out(in.size());
@@ -26,43 +26,43 @@ namespace cytnx {
     return out;
   }
 
-  template std::vector<cytnx_complex128> vec_map(const std::vector<cytnx_complex128> &,
-                                                 const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_complex64> vec_map(const std::vector<cytnx_complex64> &,
-                                                const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_double> vec_map(const std::vector<cytnx_double> &,
-                                             const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_float> vec_map(const std::vector<cytnx_float> &,
-                                            const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_int64> vec_map(const std::vector<cytnx_int64> &,
-                                            const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_uint64> vec_map(const std::vector<cytnx_uint64> &,
-                                             const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_int32> vec_map(const std::vector<cytnx_int32> &,
-                                            const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_uint32> vec_map(const std::vector<cytnx_uint32> &,
-                                             const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_int16> vec_map(const std::vector<cytnx_int16> &,
-                                            const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_uint16> vec_map(const std::vector<cytnx_uint16> &,
-                                             const std::vector<cytnx_uint64> &);
-  template std::vector<cytnx_bool> vec_map(const std::vector<cytnx_bool> &,
-                                           const std::vector<cytnx_uint64> &);
-  template std::vector<std::string> vec_map(const std::vector<std::string> &,
-                                            const std::vector<cytnx_uint64> &);
+  template std::vector<cytnx_complex128> vec_map(const std::vector<cytnx_complex128>&,
+                                                 const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_complex64> vec_map(const std::vector<cytnx_complex64>&,
+                                                const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_double> vec_map(const std::vector<cytnx_double>&,
+                                             const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_float> vec_map(const std::vector<cytnx_float>&,
+                                            const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_int64> vec_map(const std::vector<cytnx_int64>&,
+                                            const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_uint64> vec_map(const std::vector<cytnx_uint64>&,
+                                             const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_int32> vec_map(const std::vector<cytnx_int32>&,
+                                            const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_uint32> vec_map(const std::vector<cytnx_uint32>&,
+                                             const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_int16> vec_map(const std::vector<cytnx_int16>&,
+                                            const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_uint16> vec_map(const std::vector<cytnx_uint16>&,
+                                             const std::vector<cytnx_uint64>&);
+  template std::vector<cytnx_bool> vec_map(const std::vector<cytnx_bool>&,
+                                           const std::vector<cytnx_uint64>&);
+  template std::vector<std::string> vec_map(const std::vector<std::string>&,
+                                            const std::vector<cytnx_uint64>&);
 
-  template std::vector<Accessor> vec_map(const std::vector<Accessor> &,
-                                         const std::vector<cytnx_uint64> &);
+  template std::vector<Accessor> vec_map(const std::vector<Accessor>&,
+                                         const std::vector<cytnx_uint64>&);
 
-  template std::vector<Bond> vec_map(const std::vector<Bond> &, const std::vector<cytnx_uint64> &);
+  template std::vector<Bond> vec_map(const std::vector<Bond>&, const std::vector<cytnx_uint64>&);
 
 #ifndef BACKEND_TORCH
-  template std::vector<Tensor> vec_map(const std::vector<Tensor> &,
-                                       const std::vector<cytnx_uint64> &);
+  template std::vector<Tensor> vec_map(const std::vector<Tensor>&,
+                                       const std::vector<cytnx_uint64>&);
 #endif
   template std::vector<std::vector<cytnx_uint64>> vec_map(
-    const std::vector<std::vector<cytnx_uint64>> &, const std::vector<cytnx_uint64> &);
+    const std::vector<std::vector<cytnx_uint64>>&, const std::vector<cytnx_uint64>&);
   template std::vector<std::vector<cytnx_int64>> vec_map(
-    const std::vector<std::vector<cytnx_int64>> &, const std::vector<cytnx_uint64> &);
+    const std::vector<std::vector<cytnx_int64>>&, const std::vector<cytnx_uint64>&);
 
 }  // namespace cytnx

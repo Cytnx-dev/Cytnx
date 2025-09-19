@@ -25,13 +25,13 @@ namespace cytnx {
       std::vector<UniTensor> ortho_mps;
       double weight;
       int counter;
-      Hxx_new(std::vector<UniTensor> functArgs, const std::vector<UniTensor> &ortho_mps,
-              const double &weight, const cytnx_int64 &dtype, const cytnx_int64 &device)
+      Hxx_new(std::vector<UniTensor> functArgs, const std::vector<UniTensor>& ortho_mps,
+              const double& weight, const cytnx_int64& dtype, const cytnx_int64& device)
           : LinOp("mv", 0 /*doesn't matter for UniTensor as ipt*/, dtype, device) {
-        UniTensor &L = functArgs[0];
-        UniTensor &M1 = functArgs[1];
-        UniTensor &M2 = functArgs[2];
-        UniTensor &R = functArgs[3];
+        UniTensor& L = functArgs[0];
+        UniTensor& M1 = functArgs[1];
+        UniTensor& M2 = functArgs[2];
+        UniTensor& R = functArgs[3];
 
         // std::vector<cytnx_int64> pshape =
         // {L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]}; vec_print(std::cout,pshape);
@@ -45,7 +45,7 @@ namespace cytnx {
         this->counter = 0;
       }
 
-      UniTensor matvec(const UniTensor &v) override {
+      UniTensor matvec(const UniTensor& v) override {
         auto lbls = v.labels();
 
         this->anet.PutUniTensor("psi", v);
@@ -71,14 +71,14 @@ namespace cytnx {
       double weight;
       int counter;
 
-      Hxx(const cytnx_uint64 &psidim, std::vector<UniTensor> functArgs,
-          const std::vector<Tensor> &ortho_mps, const double &weight, const cytnx_int64 &dtype,
-          const cytnx_int64 &device)
+      Hxx(const cytnx_uint64& psidim, std::vector<UniTensor> functArgs,
+          const std::vector<Tensor>& ortho_mps, const double& weight, const cytnx_int64& dtype,
+          const cytnx_int64& device)
           : LinOp("mv", psidim, dtype, device) {
-        UniTensor &L = functArgs[0];
-        UniTensor &M1 = functArgs[1];
-        UniTensor &M2 = functArgs[2];
-        UniTensor &R = functArgs[3];
+        UniTensor& L = functArgs[0];
+        UniTensor& M1 = functArgs[1];
+        UniTensor& M2 = functArgs[2];
+        UniTensor& R = functArgs[3];
 
         std::vector<cytnx_int64> pshape = vec_cast<cytnx_uint64, cytnx_int64>(
           {L.shape()[1], M1.shape()[2], M2.shape()[2], R.shape()[1]});
@@ -94,7 +94,7 @@ namespace cytnx {
         this->counter = 0;
       }
 
-      Tensor matvec(const Tensor &v) override {
+      Tensor matvec(const Tensor& v) override {
         auto v_ = v.clone();
 
         auto psi_u = UniTensor(v_, false, 0);  // ## share memory, no copy
@@ -117,10 +117,10 @@ namespace cytnx {
     };
 
     std::vector<Tensor> optimize_psi(Tensor psivec, std::vector<UniTensor> functArgs,
-                                     const cytnx_uint64 &maxit = 4000,
-                                     const cytnx_uint64 &krydim = 4,
+                                     const cytnx_uint64& maxit = 4000,
+                                     const cytnx_uint64& krydim = 4,
                                      std::vector<Tensor> ortho_mps = {},
-                                     const double &weight = 30) {
+                                     const double& weight = 30) {
       auto H =
         Hxx(psivec.shape()[0], functArgs, ortho_mps, weight, psivec.dtype(), psivec.device());
 
@@ -129,10 +129,10 @@ namespace cytnx {
     }
 
     std::vector<UniTensor> optimize_psi_new(UniTensor psivec, std::vector<UniTensor> functArgs,
-                                            const cytnx_uint64 &maxit = 4000,
-                                            const cytnx_uint64 &krydim = 4,
+                                            const cytnx_uint64& maxit = 4000,
+                                            const cytnx_uint64& krydim = 4,
                                             std::vector<UniTensor> ortho_mps = {},
-                                            const double &weight = 30) {
+                                            const double& weight = 30) {
       auto H = Hxx_new(functArgs, ortho_mps, weight, psivec.dtype(), psivec.device());
 
       auto out = linalg::Lanczos_Gnd_Ut(&H, psivec, 1.0e-12, true, false, maxit);
@@ -202,7 +202,7 @@ namespace cytnx {
         this->hLRs[ip].resize(this->mps.size() + 1);
 
         // hLR is the alias/ref:
-        auto &hLR = hLRs[ip];
+        auto& hLR = hLRs[ip];
 
         hLR[0] = hL0;
         hLR.back() = hR0;
@@ -221,8 +221,8 @@ namespace cytnx {
 
     }  // DMRG_impl::initialize
 
-    Scalar DMRG_impl::sweep(const bool &verbose, const cytnx_int64 &maxit,
-                            const cytnx_int64 &krydim) {
+    Scalar DMRG_impl::sweep(const bool& verbose, const cytnx_int64& maxit,
+                            const cytnx_int64& krydim) {
       Scalar Entemp;
 
       // a. Optimize from right-to-left:
@@ -467,8 +467,8 @@ namespace cytnx {
 
     }  // DMRG_impl::sweep
 
-    Scalar DMRG_impl::sweepv2(const bool &verbose, const cytnx_int64 &maxit,
-                              const cytnx_int64 &krydim) {
+    Scalar DMRG_impl::sweepv2(const bool& verbose, const cytnx_int64& maxit,
+                              const cytnx_int64& krydim) {
       Scalar Entemp;
 
       // a. Optimize from right-to-left:

@@ -13,10 +13,10 @@ namespace cytnx {
   namespace linalg {
     typedef Accessor ac;
 
-    void _Lanczos_ER_general(std::vector<Tensor> &out, LinOp *Hop, std::vector<Tensor> &buffer,
-                             const cytnx_uint64 &k, const bool &is_V,
-                             const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter,
-                             const double &CvgCrit, const bool &verbose) {
+    void _Lanczos_ER_general(std::vector<Tensor>& out, LinOp* Hop, std::vector<Tensor>& buffer,
+                             const cytnx_uint64& k, const bool& is_V,
+                             const cytnx_uint32& max_krydim, const cytnx_uint64& maxiter,
+                             const double& CvgCrit, const bool& verbose) {
       std::vector<Tensor> converged_ev;
       // std::cout << max_krydim << std::endl;
 
@@ -522,10 +522,10 @@ namespace cytnx {
     // https://www.sciencedirect.com/science/article/pii/S0010465597001367
 
     // explicitly re-started Lanczos
-    std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k, const bool &is_V,
-                                   const cytnx_uint64 &maxiter, const double &CvgCrit,
-                                   const bool &is_row, const Tensor &Tin,
-                                   const cytnx_uint32 &max_krydim, const bool &verbose) {
+    std::vector<Tensor> Lanczos_ER(LinOp* Hop, const cytnx_uint64& k, const bool& is_V,
+                                   const cytnx_uint64& maxiter, const double& CvgCrit,
+                                   const bool& is_row, const Tensor& Tin,
+                                   const cytnx_uint32& max_krydim, const bool& verbose) {
       // check type:
       cytnx_error_msg(
         !Type.is_float(Hop->dtype()),

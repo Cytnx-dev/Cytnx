@@ -9,7 +9,7 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
-    Tensor Det(const Tensor &Tl) {
+    Tensor Det(const Tensor& Tl) {
       cytnx_error_msg(Tl.shape().size() != 2,
                       "[Det] error, tensor Tl , Det can only operate on rank-2 Tensor.%s", "\n");
       cytnx_error_msg(Tl.shape()[0] != Tl.shape()[1],

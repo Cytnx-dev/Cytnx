@@ -13,17 +13,17 @@ namespace cytnx {
   namespace utils_internal {
 
     template <typename T, typename std::enable_if_t<!std::is_integral_v<T>, bool> = true>
-    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base> &in,
-                                                     const std::vector<cytnx_uint64> &old_shape,
-                                                     const std::vector<cytnx_uint64> &mapper,
-                                                     const std::vector<cytnx_uint64> &invmapper,
+    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base>& in,
+                                                     const std::vector<cytnx_uint64>& old_shape,
+                                                     const std::vector<cytnx_uint64>& mapper,
+                                                     const std::vector<cytnx_uint64>& invmapper,
                                                      const bool is_inplace);
 
     template <typename T, typename std::enable_if_t<std::is_integral_v<T>, bool> = true>
-    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base> &in,
-                                                     const std::vector<cytnx_uint64> &old_shape,
-                                                     const std::vector<cytnx_uint64> &mapper,
-                                                     const std::vector<cytnx_uint64> &invmapper,
+    boost::intrusive_ptr<Storage_base> MoveMemoryCpu(boost::intrusive_ptr<Storage_base>& in,
+                                                     const std::vector<cytnx_uint64>& old_shape,
+                                                     const std::vector<cytnx_uint64>& mapper,
+                                                     const std::vector<cytnx_uint64>& invmapper,
                                                      const bool is_inplace);
   }  // namespace utils_internal
 }  // namespace cytnx

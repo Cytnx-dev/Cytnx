@@ -14,7 +14,7 @@ namespace cytnx {
   namespace algo {
     typedef Accessor ac;
 
-    Tensor Hstack(const std::vector<Tensor> &In_tensors) {
+    Tensor Hstack(const std::vector<Tensor>& In_tensors) {
       Tensor out;
 
       std::vector<Tensor> _Ins;
@@ -83,18 +83,18 @@ namespace cytnx {
       // allocate out!
       out = zeros({Dshare, Dcomb}, dtype_id, device_id);
 
-      std::vector<char *> rawPtr(In_tensors.size());
+      std::vector<char*> rawPtr(In_tensors.size());
       for (int i = 0; i < _Ins.size(); i++) {
-        rawPtr[i] = (char *)_Ins[i].storage().data();
+        rawPtr[i] = (char*)_Ins[i].storage().data();
       }
 
       if (device_id == Device.cpu) {
-        algo_internal::hConcate_internal((char *)out.storage().data(), rawPtr, Ds, Dshare, Dcomb,
+        algo_internal::hConcate_internal((char*)out.storage().data(), rawPtr, Ds, Dshare, Dcomb,
                                          Type.typeSize(dtype_id));
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(device_id));
-        algo_internal::cuhConcate_internal((char *)out.storage().data(), rawPtr, Ds, Dshare, Dcomb,
+        algo_internal::cuhConcate_internal((char*)out.storage().data(), rawPtr, Ds, Dshare, Dcomb,
                                            Type.typeSize(dtype_id));
   #else
         cytnx_error_msg(

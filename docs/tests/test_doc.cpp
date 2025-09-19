@@ -29,7 +29,7 @@ namespace DocTest {
   const string output_dir = "../../code/cplusplus/outputs/";
 
   // output redirect
-  streambuf *coutbuf = nullptr;
+  streambuf* coutbuf = nullptr;
   ofstream output_file_o;
 
   // 1. Objects behavior
@@ -57,16 +57,16 @@ namespace DocTest {
   // 3. Tensor
   // 3.1 Creating a Tensor
   // 3.1.1 Initialized Tensor
-  TEST(Doc, guide_basic_obj_Tensor_1_create_zeros){
+  TEST(Doc, guide_basic_obj_Tensor_1_create_zeros) {
 #include "guide_basic_obj_Tensor_1_create_zeros.cpp"
   }
 
-  TEST(Doc, guide_basic_obj_Tensor_1_create_diff_ways){
+  TEST(Doc, guide_basic_obj_Tensor_1_create_diff_ways) {
 #include "guide_basic_obj_Tensor_1_create_diff_ways.cpp"
   }
 
   // 3.1.2 Random Tensor
-  TEST(Doc, guide_basic_obj_Tensor_1_create_rand){
+  TEST(Doc, guide_basic_obj_Tensor_1_create_rand) {
 #include "guide_basic_obj_Tensor_1_create_rand.cpp"
   }
 
@@ -84,15 +84,13 @@ namespace DocTest {
 
 // 3.1.5 Transfer between devices
 #ifdef UNI_GPU
-  TEST(Doc, guide_basic_obj_Tensor_1_create_to) {
-    OUT_REDIRECT
+  TEST(Doc, guide_basic_obj_Tensor_1_create_to){OUT_REDIRECT
   #include "guide_basic_obj_Tensor_1_create_to.cpp"
-    OUT_RESET
-  }
+                                                  OUT_RESET}
 #endif
 
   // 3.1.6 Tensor from Storage
-  TEST(Doc, guide_basic_obj_Tensor_1_create_from_storage){
+  TEST(Doc, guide_basic_obj_Tensor_1_create_from_storage) {
 #include "guide_basic_obj_Tensor_1_create_from_storage.cpp"
   }
 
@@ -131,15 +129,15 @@ namespace DocTest {
                                                          OUT_RESET}
 
   // 3.3.3 Low-level API (C++ only)
-  TEST(Doc, guide_basic_obj_Tensor_3_access_c_accessor){
+  TEST(Doc, guide_basic_obj_Tensor_3_access_c_accessor) {
 #include "guide_basic_obj_Tensor_3_access_c_accessor.cpp"
   }
 
-  TEST(Doc, guide_basic_obj_Tensor_3_access_c_operator){
+  TEST(Doc, guide_basic_obj_Tensor_3_access_c_operator) {
 #include "guide_basic_obj_Tensor_3_access_c_operator.cpp"
   }
 
-  TEST(Doc, guide_basic_obj_Tensor_3_access_c_get_set){
+  TEST(Doc, guide_basic_obj_Tensor_3_access_c_get_set) {
 #include "guide_basic_obj_Tensor_3_access_c_get_set.cpp"
   }
 
@@ -155,7 +153,7 @@ namespace DocTest {
                                                                  OUT_RESET}
 
   // 3.4.4 Equivalent APIs (C++ only)
-  TEST(Doc, guide_basic_obj_Tensor_4_arithmetic_Add){
+  TEST(Doc, guide_basic_obj_Tensor_4_arithmetic_Add) {
 #include "guide_basic_obj_Tensor_4_arithmetic_Add.cpp"
   }
 
@@ -220,11 +218,9 @@ namespace DocTest {
 
 // 4.1.2 Transfer between devices
 #ifdef UNI_GPU
-  TEST(Doc, guide_basic_obj_Storage_1_create_to) {
-    OUT_REDIRECT
+  TEST(Doc, guide_basic_obj_Storage_1_create_to){OUT_REDIRECT
   #include "guide_basic_obj_Storage_1_create_to.cpp"
-    OUT_RESET
-  }
+                                                   OUT_RESET}
 #endif
 
   // 4.1.3 Get Storage of Tensor
@@ -243,11 +239,11 @@ namespace DocTest {
                                                    OUT_RESET}
 
   // 4.2.2 Get raw-pointer (C++ only)
-  TEST(Doc, guide_basic_obj_Storage_2_access_ptr_T){
+  TEST(Doc, guide_basic_obj_Storage_2_access_ptr_T) {
 #include "guide_basic_obj_Storage_2_access_ptr_T.cpp"
   }
 
-  TEST(Doc, guide_basic_obj_Storage_2_access_ptr_void){
+  TEST(Doc, guide_basic_obj_Storage_2_access_ptr_void) {
 #include "guide_basic_obj_Storage_2_access_ptr_void.cpp"
   }
 
@@ -275,7 +271,7 @@ namespace DocTest {
 
   // 4.5 Save/Load
   // 4.5.1 Save a Storage
-  TEST(Doc, guide_basic_obj_Storage_5_io_Save){
+  TEST(Doc, guide_basic_obj_Storage_5_io_Save) {
 #include "guide_basic_obj_Storage_5_io_Save.cpp"
   }
 
@@ -361,7 +357,7 @@ namespace DocTest {
                                        OUT_RESET}
 
   // 10.1.2 Inherit the LinOp class
-  TEST(Doc, guide_itersol_LinOp_inherit){
+  TEST(Doc, guide_itersol_LinOp_inherit) {
 #include "guide_itersol_LinOp_inherit.cpp"
   }
 

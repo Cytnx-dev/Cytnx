@@ -17,9 +17,9 @@ namespace cytnx {
     typedef Accessor ac;
     using namespace std;
 
-    void _Lanczos_Gnd_general(std::vector<Tensor> &out, LinOp *Hop, const Tensor &Tin,
-                              const bool &is_V, const double &CvgCrit, const unsigned int &Maxiter,
-                              const bool &verbose) {
+    void _Lanczos_Gnd_general(std::vector<Tensor>& out, LinOp* Hop, const Tensor& Tin,
+                              const bool& is_V, const double& CvgCrit, const unsigned int& Maxiter,
+                              const bool& verbose) {
       out.clear();
       //[require] Tin should be provided!
 
@@ -379,9 +379,9 @@ namespace cytnx {
     */
 
     // Lanczos
-    std::vector<Tensor> Lanczos_Gnd(LinOp *Hop, const double &CvgCrit, const bool &is_V,
-                                    const Tensor &Tin, const bool &verbose,
-                                    const unsigned int &Maxiter) {
+    std::vector<Tensor> Lanczos_Gnd(LinOp* Hop, const double& CvgCrit, const bool& is_V,
+                                    const Tensor& Tin, const bool& verbose,
+                                    const unsigned int& Maxiter) {
       // check type:
       cytnx_error_msg(
         !Type.is_float(Hop->dtype()),

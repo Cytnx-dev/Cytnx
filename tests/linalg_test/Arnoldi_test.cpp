@@ -55,7 +55,7 @@ namespace {
     cytnx_uint64 k = 1;
     cytnx_uint64 maxiter = 10000;
     cytnx_double cvg_crit = 0;
-    ErrorTestClass(){};
+    ErrorTestClass() {};
     cytnx_uint64 dim = 25;
     bool is_V = true;
     cytnx_int32 ncv = 0;

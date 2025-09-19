@@ -17,10 +17,10 @@ using namespace std;
 
 namespace cytnx {
   typedef Accessor ac;
-  void BlockUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
-                            const cytnx_int64 &rowrank, const unsigned int &dtype,
-                            const int &device, const bool &is_diag, const bool &no_alloc,
-                            const std::string &name) {
+  void BlockUniTensor::Init(const std::vector<Bond>& bonds, const std::vector<string>& in_labels,
+                            const cytnx_int64& rowrank, const unsigned int& dtype,
+                            const int& device, const bool& is_diag, const bool& no_alloc,
+                            const std::string& name) {
     this->_name = name;
     // the entering is already check all the bonds have symmetry.
     //  need to check:
@@ -152,7 +152,7 @@ namespace cytnx {
         // cytnx::vec_print_simple(std::cout, tot_qns);
 
         // if exists:
-        if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
+        if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int& i) { return i == 0; })) {
           // get size & init block!
           if (!no_alloc) {
             // cytnx_uint64 blockNelem = 1;
@@ -212,9 +212,9 @@ namespace cytnx {
     }  // is_diag?
   }
 
-  void beauty_print_block(std::ostream &os, const cytnx_uint64 &Nin, const cytnx_uint64 &Nout,
-                          const std::vector<cytnx_uint64> &qn_indices,
-                          const std::vector<Bond> &bonds, const Tensor &block) {
+  void beauty_print_block(std::ostream& os, const cytnx_uint64& Nin, const cytnx_uint64& Nout,
+                          const std::vector<cytnx_uint64>& qn_indices,
+                          const std::vector<Bond>& bonds, const Tensor& block) {
     cytnx_uint64 Total_line = Nin < Nout ? Nout : Nin;
 
     std::vector<std::string> Lside(Total_line);
@@ -303,13 +303,13 @@ namespace cytnx {
 
     os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
   }
-  void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+  void BlockUniTensor::print_block(const cytnx_int64& idx, const bool& full_info) const {
     cytnx_error_msg(
       (idx < 0) || (idx >= this->_blocks.size()),
       "[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n", idx,
       this->_blocks.size());
 
-    std::ostream &os = std::cout;
+    std::ostream& os = std::cout;
 
     os << "========================\n";
     if (this->_is_diag) os << " *is_diag: True\n";
@@ -351,11 +351,11 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::print_blocks(const bool &full_info) const {
-    std::ostream &os = std::cout;
+  void BlockUniTensor::print_blocks(const bool& full_info) const {
+    std::ostream& os = std::cout;
 
     os << "-------- start of print ---------\n";
-    char *buffer = (char *)malloc(sizeof(char) * 10240);
+    char* buffer = (char*)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
     sprintf(buffer, "Tensor type: %s\n", this->uten_type_str().c_str());
@@ -404,8 +404,8 @@ namespace cytnx {
     free(buffer);
   }
 
-  void BlockUniTensor::print_diagram(const bool &bond_info) const {
-    char *buffer = (char *)malloc(10240 * sizeof(char));
+  void BlockUniTensor::print_diagram(const bool& bond_info) const {
+    char* buffer = (char*)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
@@ -434,10 +434,10 @@ namespace cytnx {
       vl = Nout;
 
     std::string bks;
-    char *l = (char *)malloc(BUFFsize * sizeof(char));
-    char *llbl = (char *)malloc(BUFFsize * sizeof(char));
-    char *r = (char *)malloc(BUFFsize * sizeof(char));
-    char *rlbl = (char *)malloc(BUFFsize * sizeof(char));
+    char* l = (char*)malloc(BUFFsize * sizeof(char));
+    char* llbl = (char*)malloc(BUFFsize * sizeof(char));
+    char* r = (char*)malloc(BUFFsize * sizeof(char));
+    char* rlbl = (char*)malloc(BUFFsize * sizeof(char));
 
     int Space_Llabel_max = 0, Space_Ldim_max = 0, Space_Rdim_max = 0;
     // quickly checking the size for each line, only check the largest!
@@ -539,7 +539,7 @@ namespace cytnx {
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
     } else {
-      BlockUniTensor *tmp = new BlockUniTensor();
+      BlockUniTensor* tmp = new BlockUniTensor();
       tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
       for (unsigned int b = 0; b < this->_blocks.size(); b++) {
@@ -557,8 +557,8 @@ namespace cytnx {
   std::vector<Symmetry> BlockUniTensor::syms() const { return this->_bonds[0].syms(); }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
-    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    const std::vector<cytnx_int64>& mapper, const cytnx_int64& rowrank) {
+    BlockUniTensor* out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_uint64> mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
@@ -601,8 +601,8 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::permute(
-    const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) {
-    BlockUniTensor *out_raw = this->clone_meta(true, true);
+    const std::vector<std::string>& mapper, const cytnx_int64& rowrank) {
+    BlockUniTensor* out_raw = this->clone_meta(true, true);
     out_raw->_blocks.resize(this->_blocks.size());
 
     std::vector<cytnx_int64> mapper_i64;
@@ -618,8 +618,8 @@ namespace cytnx {
     return this->permute(mapper_i64, rowrank);
   }
 
-  void BlockUniTensor::permute_(const std::vector<cytnx_int64> &mapper,
-                                const cytnx_int64 &rowrank) {
+  void BlockUniTensor::permute_(const std::vector<cytnx_int64>& mapper,
+                                const cytnx_int64& rowrank) {
     std::vector<cytnx_uint64> mapper_u64;
 
     mapper_u64 = std::vector<cytnx_uint64>(mapper.begin(), mapper.end());
@@ -655,8 +655,8 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::permute_(const std::vector<std::string> &mapper,
-                                const cytnx_int64 &rowrank) {
+  void BlockUniTensor::permute_(const std::vector<std::string>& mapper,
+                                const cytnx_int64& rowrank) {
     std::vector<cytnx_int64> mapper_i64;
     // cytnx_error_msg(true,"[Developing!]%s","\n");
     std::vector<std::string>::iterator it;
@@ -671,8 +671,8 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
-    const std::vector<string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    const std::vector<string>& new_labels) {
+    BlockUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
@@ -680,8 +680,8 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(
-    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    const std::vector<std::string>& old_labels, const std::vector<std::string>& new_labels) {
+    BlockUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabel_(old_labels, new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
@@ -689,8 +689,8 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
-    const std::vector<string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    const std::vector<string>& new_labels) {
+    BlockUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
@@ -698,26 +698,26 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabels(
-    const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+    const std::vector<std::string>& old_labels, const std::vector<std::string>& new_labels) {
+    BlockUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->relabels_(old_labels, new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64 &inx,
-                                                               const string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const cytnx_int64& inx,
+                                                               const string& new_label) {
+    BlockUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string &inx,
-                                                               const string &new_label) {
-    BlockUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> BlockUniTensor::relabel(const string& inx,
+                                                               const string& new_label) {
+    BlockUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
@@ -725,8 +725,8 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> BlockUniTensor::contract(
-    const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
-    const bool &mv_elem_rhs) {
+    const boost::intrusive_ptr<UniTensor_base>& rhs, const bool& mv_elem_self,
+    const bool& mv_elem_rhs) {
     // checking type
     cytnx_error_msg(
       rhs->uten_type() != UTenType.Block,
@@ -743,8 +743,8 @@ namespace cytnx {
 
     if (comm_idx1.size() == 0) {
       // output instance;
-      BlockUniTensor *tmp = new BlockUniTensor();
-      BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+      BlockUniTensor* tmp = new BlockUniTensor();
+      BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
       std::vector<string> out_labels;
       std::vector<Bond> out_bonds;
       cytnx_int64 out_rowrank;
@@ -845,13 +845,13 @@ namespace cytnx {
         // All the legs are contracted, the return will be a scalar
 
         // output instance;
-        DenseUniTensor *tmp = new DenseUniTensor();
+        DenseUniTensor* tmp = new DenseUniTensor();
 
         boost::intrusive_ptr<UniTensor_base> Lperm = this->permute(_shadow_comm_idx1);
         boost::intrusive_ptr<UniTensor_base> Rperm = rhs->permute(_shadow_comm_idx2);
 
-        BlockUniTensor *Lperm_raw = (BlockUniTensor *)Lperm.get();
-        BlockUniTensor *Rperm_raw = (BlockUniTensor *)Rperm.get();
+        BlockUniTensor* Lperm_raw = (BlockUniTensor*)Lperm.get();
+        BlockUniTensor* Rperm_raw = (BlockUniTensor*)Rperm.get();
 
         // pair the block and contract using vectordot!
         //  naive way!
@@ -904,8 +904,8 @@ namespace cytnx {
         return out;
 
       } else {
-        BlockUniTensor *tmp = new BlockUniTensor();
-        BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+        BlockUniTensor* tmp = new BlockUniTensor();
+        BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
         std::vector<string> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
@@ -1005,13 +1005,13 @@ namespace cytnx {
           std::vector<char> transs(Rtn->_blocks.size(), 'N');
           std::vector<blas_int> ms(Rtn->_blocks.size(), 0), ns(Rtn->_blocks.size(), 0),
             ks(Rtn->_blocks.size(), 0);
-          std::vector<void *> LMems(Rtn->_blocks.size(), 0), RMems(Rtn->_blocks.size(), 0),
+          std::vector<void*> LMems(Rtn->_blocks.size(), 0), RMems(Rtn->_blocks.size(), 0),
             CMems(Rtn->_blocks.size(), 0);
           std::vector<blas_int> group_size(Rtn->_blocks.size(), 1);
           std::vector<Scalar> alphas(Rtn->_blocks.size(), 1.0);
           std::vector<Scalar> betas(Rtn->_blocks.size(), 0.0);
 
-          BlockUniTensor *tmp_Rtn = Rtn;
+          BlockUniTensor* tmp_Rtn = Rtn;
 
           // check if all sub-tensor are same dtype and device
           if (User_debug) {
@@ -1047,7 +1047,7 @@ namespace cytnx {
   #ifdef UNI_MKL
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
           if (this->dtype() != Rtn->dtype()) {
-            BlockUniTensor *tmpp = Rtn->clone_meta(true, true);
+            BlockUniTensor* tmpp = Rtn->clone_meta(true, true);
             tmpp->_blocks.resize(Rtn->_blocks.size());
             for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
               tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(this->dtype());
@@ -1116,8 +1116,8 @@ namespace cytnx {
                 (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
                  tmp_Rtn->dtype() != Type.Void)) {
               group_size.resize(group_count, 1);
-              linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void **)LMems.data(),
-                                   (const void **)RMems.data(), betas, (void **)CMems.data(),
+              linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas, (const void**)LMems.data(),
+                                   (const void**)RMems.data(), betas, (void**)CMems.data(),
                                    group_count, group_size, this->dtype(), tmp->device());
             }
             // restore the shape&permutation of this->_blocks[a]
@@ -1223,16 +1223,16 @@ namespace cytnx {
 
   void BlockUniTensor::normalize_() {
     Scalar out(0, this->dtype());
-    for (auto &block : this->_blocks) {
+    for (auto& block : this->_blocks) {
       out += Scalar(linalg::Pow(linalg::Norm(block), 2).item());
     }
     out = sqrt(out);
-    for (auto &block : this->_blocks) {
+    for (auto& block : this->_blocks) {
       block /= out;
     }
   };
 
-  void BlockUniTensor::Trace_(const std::string &a, const std::string &b) {
+  void BlockUniTensor::Trace_(const std::string& a, const std::string& b) {
     // 1) from label to indx.
     cytnx_int64 ida, idb;
 
@@ -1241,7 +1241,7 @@ namespace cytnx {
 
     this->Trace_(ida, idb);
   }
-  void BlockUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b) {
+  void BlockUniTensor::Trace_(const cytnx_int64& a, const cytnx_int64& b) {
     cytnx_int64 ida = a;
     cytnx_int64 idb = b;
 
@@ -1344,8 +1344,8 @@ namespace cytnx {
   }
 
   // helper function:
-  void BlockUniTensor::_fx_locate_elem(cytnx_int64 &bidx, std::vector<cytnx_uint64> &loc_in_T,
-                                       const std::vector<cytnx_uint64> &locator) const {
+  void BlockUniTensor::_fx_locate_elem(cytnx_int64& bidx, std::vector<cytnx_uint64>& loc_in_T,
+                                       const std::vector<cytnx_uint64>& locator) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1403,7 +1403,7 @@ namespace cytnx {
     }
   }
 
-  bool BlockUniTensor::elem_exists(const std::vector<cytnx_uint64> &locator) const {
+  bool BlockUniTensor::elem_exists(const std::vector<cytnx_uint64>& locator) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -1412,7 +1412,7 @@ namespace cytnx {
 
   //-------------------------------------------
   // at_for_sparse
-  Scalar::Sproxy BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator) {
+  Scalar::Sproxy BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -1422,71 +1422,71 @@ namespace cytnx {
       return this->_blocks[bidx].at(loc_in_T);
     }
   }
-  cytnx_complex128 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                  const cytnx_complex128 &aux) {
+  cytnx_complex128& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                  const cytnx_complex128& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex128>(loc_in_T);
   }
-  cytnx_complex64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                 const cytnx_complex64 &aux) {
+  cytnx_complex64& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                 const cytnx_complex64& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex64>(loc_in_T);
   }
-  cytnx_double &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_double &aux) {
+  cytnx_double& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_double& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_double>(loc_in_T);
   }
-  cytnx_float &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_float &aux) {
+  cytnx_float& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                             const cytnx_float& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_float>(loc_in_T);
   }
-  cytnx_uint64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_uint64 &aux) {
+  cytnx_uint64& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_uint64& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint64>(loc_in_T);
   }
-  cytnx_int64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_int64 &aux) {
+  cytnx_int64& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                             const cytnx_int64& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int64>(loc_in_T);
   }
-  cytnx_uint32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_uint32 &aux) {
+  cytnx_uint32& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_uint32& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint32>(loc_in_T);
   }
-  cytnx_int32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_int32 &aux) {
+  cytnx_int32& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                             const cytnx_int32& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int32>(loc_in_T);
   }
-  cytnx_uint16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_uint16 &aux) {
+  cytnx_uint16& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_uint16& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint16>(loc_in_T);
   }
-  cytnx_int16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                             const cytnx_int16 &aux) {
+  cytnx_int16& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                             const cytnx_int16& aux) {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -1494,7 +1494,7 @@ namespace cytnx {
   }
 
   const Scalar::Sproxy BlockUniTensor::at_for_sparse(
-    const std::vector<cytnx_uint64> &locator) const {
+    const std::vector<cytnx_uint64>& locator) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
@@ -1504,103 +1504,103 @@ namespace cytnx {
       return this->_blocks[bidx].at(loc_in_T);
     }
   }
-  const cytnx_complex128 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                        const cytnx_complex128 &aux) const {
+  const cytnx_complex128& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                        const cytnx_complex128& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex128>(loc_in_T);
   }
-  const cytnx_complex64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                       const cytnx_complex64 &aux) const {
+  const cytnx_complex64& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                       const cytnx_complex64& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_complex64>(loc_in_T);
   }
-  const cytnx_double &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_double &aux) const {
+  const cytnx_double& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_double& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_double>(loc_in_T);
   }
-  const cytnx_float &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_float &aux) const {
+  const cytnx_float& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                   const cytnx_float& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_float>(loc_in_T);
   }
-  const cytnx_uint64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_uint64 &aux) const {
+  const cytnx_uint64& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_uint64& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint64>(loc_in_T);
   }
-  const cytnx_int64 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_int64 &aux) const {
+  const cytnx_int64& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                   const cytnx_int64& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int64>(loc_in_T);
   }
-  const cytnx_uint32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_uint32 &aux) const {
+  const cytnx_uint32& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_uint32& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint32>(loc_in_T);
   }
-  const cytnx_int32 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_int32 &aux) const {
+  const cytnx_int32& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                   const cytnx_int32& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int32>(loc_in_T);
   }
-  const cytnx_uint16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_uint16 &aux) const {
+  const cytnx_uint16& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_uint16& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_uint16>(loc_in_T);
   }
-  const cytnx_int16 &BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_int16 &aux) const {
+  const cytnx_int16& BlockUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                   const cytnx_int16& aux) const {
     cytnx_int64 bidx;
     std::vector<cytnx_uint64> loc_in_T;
     this->_fx_locate_elem(bidx, loc_in_T, locator);
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
-  void BlockUniTensor::_save_dispatch(std::fstream &f) const {
+  void BlockUniTensor::_save_dispatch(std::fstream& f) const {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks = this->_blocks.size();
-    f.write((char *)&Nblocks, sizeof(cytnx_uint64));
+    f.write((char*)&Nblocks, sizeof(cytnx_uint64));
 
     // save inner_to_outer_idx:
     for (unsigned int b = 0; b < Nblocks; b++) {
-      f.write((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
+      f.write((char*)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
     }
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i]._Save(f);
     }
   }
 
-  void BlockUniTensor::_load_dispatch(std::fstream &f) {
+  void BlockUniTensor::_load_dispatch(std::fstream& f) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks;
-    f.read((char *)&Nblocks, sizeof(cytnx_uint64));
+    f.read((char*)&Nblocks, sizeof(cytnx_uint64));
 
     this->_inner_to_outer_idx = std::vector<std::vector<cytnx_uint64>>(
       Nblocks, std::vector<cytnx_uint64>(this->_bonds.size()));
     // read inner_to_outer_idx:
     for (unsigned int b = 0; b < Nblocks; b++) {
-      f.read((char *)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
+      f.read((char*)&this->_inner_to_outer_idx[b][0], sizeof(cytnx_uint64) * this->_bonds.size());
     }
     this->_blocks.resize(Nblocks);
 
@@ -1609,7 +1609,7 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index) {
+  void BlockUniTensor::truncate_(const cytnx_int64& bond_idx, const cytnx_uint64& q_index) {
     cytnx_error_msg(
       this->is_diag(),
       "[ERROR][BlockUniTensor][truncate_] cannot use truncate_ when is_diag() = true.%s", "\n");
@@ -1637,7 +1637,7 @@ namespace cytnx {
     vec_erase_(this->_inner_to_outer_idx, locs);
     vec_erase_(this->_blocks, locs);
   }
-  void BlockUniTensor::truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index) {
+  void BlockUniTensor::truncate_(const std::string& bond_idx, const cytnx_uint64& q_index) {
     auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_idx);
     cytnx_error_msg(it == this->_labels.end(),
                     "[ERROR] label [%s] does not exist in current UniTensor.\n", bond_idx.c_str());
@@ -1646,7 +1646,7 @@ namespace cytnx {
     this->truncate_(idx, q_index);
   }
 
-  void BlockUniTensor::Mul_(const Scalar &rhs) {
+  void BlockUniTensor::Mul_(const Scalar& rhs) {
     // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
@@ -1654,7 +1654,7 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::Div_(const Scalar &rhs) {
+  void BlockUniTensor::Div_(const Scalar& rhs) {
     // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
@@ -1662,12 +1662,12 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void BlockUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base>& rhs) {
     // checking Type:
     cytnx_error_msg(rhs->uten_type() != UTenType.Block,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+    BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
@@ -1695,12 +1695,12 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void BlockUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base>& rhs) {
     // checking Type:
     cytnx_error_msg(rhs->uten_type() != UTenType.Block,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+    BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
@@ -1728,12 +1728,12 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void BlockUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base>& rhs) {
     // checking Type:
     cytnx_error_msg(rhs->uten_type() != UTenType.Block,
                     "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
 
-    BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
+    BlockUniTensor* Rtn = (BlockUniTensor*)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
@@ -1762,8 +1762,8 @@ namespace cytnx {
   }
 
   void BlockUniTensor::_fx_group_duplicates(
-    const std::vector<cytnx_uint64> &dup_bond_idxs,
-    const std::vector<std::vector<cytnx_uint64>> &idx_mappers) {
+    const std::vector<cytnx_uint64>& dup_bond_idxs,
+    const std::vector<std::vector<cytnx_uint64>>& idx_mappers) {
     // checking the bonds that are duplicates
     // auto mod_idxs = dup_bond_idxs; std::sort(mod_idx.begin(),mod_idx.end());
 
@@ -1841,7 +1841,7 @@ namespace cytnx {
   }
 
   // Deprecated, internal use only
-  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force) {
+  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64>& indicators, const bool& force) {
     cytnx_error_msg(this->is_diag(),
                     "[ERROR][BlockUniTensor] cannot combineBonds when is_diag = true!%s", "\n");
 
@@ -1972,7 +1972,7 @@ namespace cytnx {
     this->group_basis_();
   }
 
-  void BlockUniTensor::combineBond(const std::vector<std::string> &indicators, const bool &force) {
+  void BlockUniTensor::combineBond(const std::vector<std::string>& indicators, const bool& force) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -1987,13 +1987,13 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void BlockUniTensor::combineBonds(const std::vector<std::string> &indicators, const bool &force) {
+  void BlockUniTensor::combineBonds(const std::vector<std::string>& indicators, const bool& force) {
     this->combineBond(indicators, force);
   }
 
   // Deprecated
-  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force,
-                                    const bool &by_label) {
+  void BlockUniTensor::combineBonds(const std::vector<cytnx_int64>& indicators, const bool& force,
+                                    const bool& by_label) {
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
     std::vector<std::string>::iterator it;
@@ -2013,8 +2013,8 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force,
-                   const cytnx_double &tol) {
+  void _bk_from_dn(BlockUniTensor* ths, DenseUniTensor* rhs, const bool& force,
+                   const cytnx_double& tol) {
     if (!force) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
@@ -2052,19 +2052,19 @@ namespace cytnx {
     }
   }
 
-  void _bk_from_bk(BlockUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
+  void _bk_from_bk(BlockUniTensor* ths, BlockUniTensor* rhs, const bool& force) {
     cytnx_error_msg(true, "[ERROR] BlockUT-> BlockUT not implemented.%s", "\n");
   }
 
-  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
-                             const cytnx_double &tol) {
+  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base>& rhs, const bool& force,
+                             const cytnx_double& tol) {
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
-      _bk_from_dn(this, (DenseUniTensor *)(rhs.get()), force, tol);
+      _bk_from_dn(this, (DenseUniTensor*)(rhs.get()), force, tol);
     } else if (rhs->uten_type() == UTenType.Block) {
-      _bk_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
+      _bk_from_bk(this, (BlockUniTensor*)(rhs.get()), force);
     } else {
       cytnx_error_msg(true, "[ERROR] unsupport conversion of UniTensor from %s => BlockUniTensor\n",
                       UTenType.getname(rhs->uten_type()).c_str());

@@ -6,7 +6,7 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
-    Tensor Exp(const Tensor &Tin) {
+    Tensor Exp(const Tensor& Tin) {
       Tensor out;
       if ((Tin.dtype() == Type.ComplexDouble) || (Tin.dtype() == Type.Double))
         out = Tin.clone();

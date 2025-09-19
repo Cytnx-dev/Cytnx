@@ -46,16 +46,16 @@ namespace cytnx {
 
    public:
     template <class... Ts>
-    Qs(const cytnx_int64 &e1, const Ts... elems) {
+    Qs(const cytnx_int64& e1, const Ts... elems) {
       this->tmpQs = dynamic_arg_int64_resolver(e1, elems...);
     }
 
-    Qs(const std::vector<cytnx_int64> &qin) { this->tmpQs = qin; }
+    Qs(const std::vector<cytnx_int64>& qin) { this->tmpQs = qin; }
 
     // interprete as 2d vector directly implicitly convert!
     explicit operator std::vector<cytnx_int64>() const { return this->tmpQs; };
 
-    std::pair<std::vector<cytnx_int64>, cytnx_uint64> operator>>(const cytnx_uint64 &dim) {
+    std::pair<std::vector<cytnx_int64>, cytnx_uint64> operator>>(const cytnx_uint64& dim) {
       return std::make_pair(this->tmpQs, dim);
     }
   };
@@ -65,29 +65,29 @@ namespace cytnx {
    public:
     int stype_id;
     int n;
-    Symmetry_base() : stype_id(SymmetryType::Void){};
-    Symmetry_base(const int &n) : stype_id(SymmetryType::Void) { this->Init(n); };
-    Symmetry_base(const Symmetry_base &rhs);
-    Symmetry_base &operator=(const Symmetry_base &rhs);
+    Symmetry_base() : stype_id(SymmetryType::Void) {};
+    Symmetry_base(const int& n) : stype_id(SymmetryType::Void) { this->Init(n); };
+    Symmetry_base(const Symmetry_base& rhs);
+    Symmetry_base& operator=(const Symmetry_base& rhs);
 
-    std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64> &inL,
-                                          const std::vector<cytnx_int64> &inR);
-    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR,
-                             const bool &is_reverse);
+    std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64>& inL,
+                                          const std::vector<cytnx_int64>& inR);
+    cytnx_int64 combine_rule(const cytnx_int64& inL, const cytnx_int64& inR,
+                             const bool& is_reverse);
 
-    cytnx_int64 reverse_rule(const cytnx_int64 &in);
+    cytnx_int64 reverse_rule(const cytnx_int64& in);
 
-    virtual void Init(const int &n){};
+    virtual void Init(const int& n) {};
     virtual boost::intrusive_ptr<Symmetry_base> clone() { return nullptr; };
     virtual bool check_qnum(
-      const cytnx_int64 &in_qnum);  // check the passed in qnums satisfy the symmetry requirement.
-    virtual bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
-    virtual void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
-                               const std::vector<cytnx_int64> &inR);
-    virtual void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
-                               const bool &is_reverse);
-    virtual void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    virtual fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const;
+      const cytnx_int64& in_qnum);  // check the passed in qnums satisfy the symmetry requirement.
+    virtual bool check_qnums(const std::vector<cytnx_int64>& in_qnums);
+    virtual void combine_rule_(std::vector<cytnx_int64>& out, const std::vector<cytnx_int64>& inL,
+                               const std::vector<cytnx_int64>& inR);
+    virtual void combine_rule_(cytnx_int64& out, const cytnx_int64& inL, const cytnx_int64& inR,
+                               const bool& is_reverse);
+    virtual void reverse_rule_(cytnx_int64& out, const cytnx_int64& in);
+    virtual fermionParity get_fermion_parity(const cytnx_int64& in_qnum) const;
     virtual bool is_fermionic() const { return false; };
 
     virtual void print_info() const;
@@ -101,8 +101,8 @@ namespace cytnx {
   class U1Symmetry : public Symmetry_base {
    public:
     U1Symmetry() { this->stype_id = SymmetryType::U; };
-    U1Symmetry(const int &n) { this->Init(n); };
-    void Init(const int &n) {
+    U1Symmetry(const int& n) { this->Init(n); };
+    void Init(const int& n) {
       this->stype_id = SymmetryType::U;
       this->n = n;
       if (n != 1) cytnx_error_msg(1, "%s", "[ERROR] U1Symmetry should set n = 1");
@@ -111,13 +111,13 @@ namespace cytnx {
       boost::intrusive_ptr<Symmetry_base> out(new U1Symmetry(this->n));
       return out;
     }
-    bool check_qnum(const cytnx_int64 &in_qnum);
-    bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
-    void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
-                       const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
-                       const bool &is_reverse);
-    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+    bool check_qnum(const cytnx_int64& in_qnum);
+    bool check_qnums(const std::vector<cytnx_int64>& in_qnums);
+    void combine_rule_(std::vector<cytnx_int64>& out, const std::vector<cytnx_int64>& inL,
+                       const std::vector<cytnx_int64>& inR);
+    void combine_rule_(cytnx_int64& out, const cytnx_int64& inL, const cytnx_int64& inR,
+                       const bool& is_reverse);
+    void reverse_rule_(cytnx_int64& out, const cytnx_int64& in);
     void print_info() const;
     std::string stype_str() const override { return "U1"; };
   };
@@ -127,8 +127,8 @@ namespace cytnx {
   class ZnSymmetry : public Symmetry_base {
    public:
     ZnSymmetry() { this->stype_id = SymmetryType::Z; };
-    ZnSymmetry(const int &n) { this->Init(n); };
-    void Init(const int &n) {
+    ZnSymmetry(const int& n) { this->Init(n); };
+    void Init(const int& n) {
       this->stype_id = SymmetryType::Z;
       this->n = n;
       if (n <= 1) cytnx_error_msg(1, "%s", "[ERROR] ZnSymmetry can only have n > 1");
@@ -137,13 +137,13 @@ namespace cytnx {
       boost::intrusive_ptr<Symmetry_base> out(new ZnSymmetry(this->n));
       return out;
     }
-    bool check_qnum(const cytnx_int64 &in_qnum);
-    bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
-    void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
-                       const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
-                       const bool &is_reverse);
-    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
+    bool check_qnum(const cytnx_int64& in_qnum);
+    bool check_qnums(const std::vector<cytnx_int64>& in_qnums);
+    void combine_rule_(std::vector<cytnx_int64>& out, const std::vector<cytnx_int64>& inL,
+                       const std::vector<cytnx_int64>& inR);
+    void combine_rule_(cytnx_int64& out, const cytnx_int64& inL, const cytnx_int64& inR,
+                       const bool& is_reverse);
+    void reverse_rule_(cytnx_int64& out, const cytnx_int64& in);
     void print_info() const;
     std::string stype_str() const override { return "Z" + std::to_string(this->n); };
   };
@@ -160,14 +160,14 @@ namespace cytnx {
       boost::intrusive_ptr<Symmetry_base> out(new FermionParitySymmetry());
       return out;
     }
-    bool check_qnum(const cytnx_int64 &in_qnum);
-    bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
-    void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
-                       const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
-                       const bool &is_reverse);
-    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
+    bool check_qnum(const cytnx_int64& in_qnum);
+    bool check_qnums(const std::vector<cytnx_int64>& in_qnums);
+    void combine_rule_(std::vector<cytnx_int64>& out, const std::vector<cytnx_int64>& inL,
+                       const std::vector<cytnx_int64>& inR);
+    void combine_rule_(cytnx_int64& out, const cytnx_int64& inL, const cytnx_int64& inR,
+                       const bool& is_reverse);
+    void reverse_rule_(cytnx_int64& out, const cytnx_int64& in);
+    fermionParity get_fermion_parity(const cytnx_int64& in_qnum) const override;
     bool is_fermionic() const override { return true; };
     void print_info() const;
     std::string stype_str() const override { return "fP"; }
@@ -185,14 +185,14 @@ namespace cytnx {
       boost::intrusive_ptr<Symmetry_base> out(new FermionNumberSymmetry());
       return out;
     }
-    bool check_qnum(const cytnx_int64 &in_qnum);
-    bool check_qnums(const std::vector<cytnx_int64> &in_qnums);
-    void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
-                       const std::vector<cytnx_int64> &inR);
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
-                       const bool &is_reverse);
-    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
+    bool check_qnum(const cytnx_int64& in_qnum);
+    bool check_qnums(const std::vector<cytnx_int64>& in_qnums);
+    void combine_rule_(std::vector<cytnx_int64>& out, const std::vector<cytnx_int64>& inL,
+                       const std::vector<cytnx_int64>& inR);
+    void combine_rule_(cytnx_int64& out, const cytnx_int64& inL, const cytnx_int64& inR,
+                       const bool& is_reverse);
+    void reverse_rule_(cytnx_int64& out, const cytnx_int64& in);
+    fermionParity get_fermion_parity(const cytnx_int64& in_qnum) const override;
     bool is_fermionic() const override { return true; };
     void print_info() const;
     std::string stype_str() const override { return "f#"; }
@@ -208,11 +208,11 @@ namespace cytnx {
     ///@cond
     boost::intrusive_ptr<Symmetry_base> _impl;
 
-    Symmetry(const int &stype = -1, const int &n = 0) : _impl(new Symmetry_base()) {
+    Symmetry(const int& stype = -1, const int& n = 0) : _impl(new Symmetry_base()) {
       this->Init(stype, n);
     };  // default is U1Symmetry
 
-    void Init(const int &stype = -1, const int &n = 0) {
+    void Init(const int& stype = -1, const int& n = 0) {
       if (stype == SymmetryType::U) {
         boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(1));
         this->_impl = tmp;
@@ -229,11 +229,11 @@ namespace cytnx {
         cytnx_error_msg(1, "%s", "[ERROR] invalid symmetry type.");
       }
     }
-    Symmetry &operator=(const Symmetry &rhs) {
+    Symmetry& operator=(const Symmetry& rhs) {
       this->_impl = rhs._impl;
       return *this;
     }
-    Symmetry(const Symmetry &rhs) { this->_impl = rhs._impl; }
+    Symmetry(const Symmetry& rhs) { this->_impl = rhs._impl; }
     ///@endcond
 
     //[genenrators]
@@ -296,7 +296,7 @@ namespace cytnx {
     \verbinclude example/Symmetry/Zn.py.out
 
     */
-    static Symmetry Zn(const int &n) { return Symmetry(SymmetryType::Z, n); }
+    static Symmetry Zn(const int& n) { return Symmetry(SymmetryType::Z, n); }
 
     /**
     @brief create a fermionic parity symmetry object
@@ -377,7 +377,7 @@ namespace cytnx {
         2. for Zn, n is the discrete symmetry number. (ex: Z2, n=2)
 
     */
-    int &n() const { return this->_impl->n; }
+    int& n() const { return this->_impl->n; }
 
     /**
     @brief return the symmetry type name of current Symmetry object in string form, see
@@ -394,7 +394,7 @@ namespace cytnx {
     @return [bool]
 
     */
-    bool check_qnum(const cytnx_int64 &qnum) { return this->_impl->check_qnum(qnum); }
+    bool check_qnum(const cytnx_int64& qnum) { return this->_impl->check_qnum(qnum); }
 
     /**
     @brief check all the quantum numbers \qnums are within the valid value range of current
@@ -403,7 +403,7 @@ namespace cytnx {
     @return [bool]
 
     */
-    bool check_qnums(const std::vector<cytnx_int64> &qnums) {
+    bool check_qnums(const std::vector<cytnx_int64>& qnums) {
       return this->_impl->check_qnums(qnums);
     }
 
@@ -413,8 +413,8 @@ namespace cytnx {
     @param[in] inR the #2 quantum number list that is to be combined.
     @return the combined quantum numbers.
     */
-    std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64> &inL,
-                                          const std::vector<cytnx_int64> &inR) {
+    std::vector<cytnx_int64> combine_rule(const std::vector<cytnx_int64>& inL,
+                                          const std::vector<cytnx_int64>& inR) {
       return this->_impl->combine_rule(inL, inR);
     }
 
@@ -425,8 +425,8 @@ namespace cytnx {
     @param[in] inL the #1 quantum number list that is to be combined.
     @param[in] inR the #2 quantum number list that is to be combined.
     */
-    void combine_rule_(std::vector<cytnx_int64> &out, const std::vector<cytnx_int64> &inL,
-                       const std::vector<cytnx_int64> &inR) {
+    void combine_rule_(std::vector<cytnx_int64>& out, const std::vector<cytnx_int64>& inL,
+                       const std::vector<cytnx_int64>& inR) {
       this->_impl->combine_rule_(out, inL, inR);
     }
 
@@ -436,8 +436,8 @@ namespace cytnx {
     @param[in] inR the #2 quantum number.
     @return the combined quantum number.
     */
-    cytnx_int64 combine_rule(const cytnx_int64 &inL, const cytnx_int64 &inR,
-                             const bool &is_reverse = false) const {
+    cytnx_int64 combine_rule(const cytnx_int64& inL, const cytnx_int64& inR,
+                             const bool& is_reverse = false) const {
       return this->_impl->combine_rule(inL, inR, is_reverse);
     }
 
@@ -448,8 +448,8 @@ namespace cytnx {
     @param[in] inL the #1 quantum number.
     @param[in] inR the #2 quantum number.
     */
-    void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
-                       const bool &is_reverse = false) {
+    void combine_rule_(cytnx_int64& out, const cytnx_int64& inL, const cytnx_int64& inR,
+                       const bool& is_reverse = false) {
       this->_impl->combine_rule_(out, inL, inR, is_reverse);
     }
 
@@ -461,7 +461,7 @@ namespace cytnx {
     @param[out] out the output quantum number.
     @param[in] in the input quantum number.
     */
-    void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
+    void reverse_rule_(cytnx_int64& out, const cytnx_int64& in) {
       this->_impl->reverse_rule_(out, in);
     }
 
@@ -473,7 +473,7 @@ namespace cytnx {
     @param[in] in the input quantum number.
     @return the reverse quantum number.
     */
-    cytnx_int64 reverse_rule(const cytnx_int64 &in) const { return this->_impl->reverse_rule(in); }
+    cytnx_int64 reverse_rule(const cytnx_int64& in) const { return this->_impl->reverse_rule(in); }
 
     /**
     @brief fermionic parity for a given quantum number
@@ -481,7 +481,7 @@ namespace cytnx {
     @return parity of the quantum number; false for bosonic degree of freedom, true for
     fermionic
     */
-    fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const {
+    fermionParity get_fermion_parity(const cytnx_int64& in_qnum) const {
       return this->_impl->get_fermion_parity(in_qnum);
     }
 
@@ -496,12 +496,12 @@ namespace cytnx {
      * @param[in] fname the file name.
      * @post the file extension will be automatically added as ".cysym".
      */
-    void Save(const std::string &fname) const;
+    void Save(const std::string& fname) const;
 
     /**
      * @brief Same as Save(const std::string &fname) const;
      */
-    void Save(const char *fname) const;
+    void Save(const char* fname) const;
 
     /**
      * @brief Load a Symmetry object from a file.
@@ -509,16 +509,16 @@ namespace cytnx {
      * @pre the file extension must be ".cysym".
      * @return the loaded Symmetry object.
      */
-    static Symmetry Load(const std::string &fname);
+    static Symmetry Load(const std::string& fname);
 
     /**
      * @brief Same as static Symmetry Load(const std::string &fname);
      */
-    static Symmetry Load(const char *fname);
+    static Symmetry Load(const char* fname);
 
     /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
+    void _Save(std::fstream& f) const;
+    void _Load(std::fstream& f);
     /// @endcond
 
     /**
@@ -529,16 +529,16 @@ namespace cytnx {
     /**
      * @brief the equality operator of the Symmetry object.
      */
-    bool operator==(const Symmetry &rhs) const;
+    bool operator==(const Symmetry& rhs) const;
 
     /**
      * @brief the inequality operator of the Symmetry object.
      */
-    bool operator!=(const Symmetry &rhs) const;
+    bool operator!=(const Symmetry& rhs) const;
   };  // Symmetry
 
   /// @cond
-  std::ostream &operator<<(std::ostream &os, const Symmetry &in);
+  std::ostream& operator<<(std::ostream& os, const Symmetry& in);
   /// @endcond
 
 };  // namespace cytnx

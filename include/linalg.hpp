@@ -28,7 +28,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
    */
-  cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator+(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The addition operator between a template type and a UniTensor.
@@ -40,7 +40,7 @@ namespace cytnx {
    * @see linalg::Add(const T &lc, const cytnx::UniTensor &Rt)
    */
   template <class T>
-  cytnx::UniTensor operator+(const T &lc, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator+(const T& lc, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The addition operator between a UniTensor and a template type.
@@ -52,7 +52,7 @@ namespace cytnx {
    * @see linalg::Add(const cytnx::UniTensor &Lt, const T &rc)
    */
   template <class T>
-  cytnx::UniTensor operator+(const cytnx::UniTensor &Lt, const T &rc);
+  cytnx::UniTensor operator+(const cytnx::UniTensor& Lt, const T& rc);
 
   /**
    * @brief The subtraction operator between two UniTensor.
@@ -64,7 +64,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
    */
-  cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator-(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The subtraction operator between a template type and a UniTensor.
@@ -76,7 +76,7 @@ namespace cytnx {
    * @see linalg::Sub(const T &lc, const cytnx::UniTensor &Rt)
    */
   template <class T>
-  cytnx::UniTensor operator-(const T &lc, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator-(const T& lc, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The subtraction operator between a UniTensor and a template type.
@@ -88,7 +88,7 @@ namespace cytnx {
    * @see linalg::Sub(const cytnx::UniTensor &Lt, const T &rc)
    */
   template <class T>
-  cytnx::UniTensor operator-(const cytnx::UniTensor &Lt, const T &rc);
+  cytnx::UniTensor operator-(const cytnx::UniTensor& Lt, const T& rc);
 
   /**
    * @brief The multiplication operator between two UniTensor.
@@ -100,7 +100,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
    */
-  cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator*(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The multiplication operator between a template type and a UniTensor.
@@ -112,7 +112,7 @@ namespace cytnx {
    * @see linalg::Mul(const T &lc, const cytnx::UniTensor &Rt)
    */
   template <class T>
-  cytnx::UniTensor operator*(const T &lc, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator*(const T& lc, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The multiplication operator between a UniTensor and a template type.
@@ -124,7 +124,7 @@ namespace cytnx {
    * @see linalg::Mul(const cytnx::UniTensor &Lt, const T &rc)
    */
   template <class T>
-  cytnx::UniTensor operator*(const cytnx::UniTensor &Lt, const T &rc);
+  cytnx::UniTensor operator*(const cytnx::UniTensor& Lt, const T& rc);
 
   /**
    * @brief The division operator between two UniTensor.
@@ -136,7 +136,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
    */
-  cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator/(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The division operator between a template type and a UniTensor.
@@ -148,7 +148,7 @@ namespace cytnx {
    * @see linalg::Div(const T &lc, const cytnx::UniTensor &Rt)
    */
   template <class T>
-  cytnx::UniTensor operator/(const T &lc, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator/(const T& lc, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The division operator between a UniTensor and a template type.
@@ -160,7 +160,7 @@ namespace cytnx {
    * @see linalg::Div(const cytnx::UniTensor &Lt, const T &rc)
    */
   template <class T>
-  cytnx::UniTensor operator/(const cytnx::UniTensor &Lt, const T &rc);
+  cytnx::UniTensor operator/(const cytnx::UniTensor& Lt, const T& rc);
 
   /**
    * @brief The modulo operator between two UniTensor.
@@ -172,7 +172,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mod(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
    */
-  cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator%(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The modulo operator between a template type and a UniTensor.
@@ -184,7 +184,7 @@ namespace cytnx {
    * @see linalg::Mod(const T &lc, const cytnx::UniTensor &Rt)
    */
   template <class T>
-  cytnx::UniTensor operator%(const T &lc, const cytnx::UniTensor &Rt);
+  cytnx::UniTensor operator%(const T& lc, const cytnx::UniTensor& Rt);
 
   /**
    * @brief The modulo operator between a UniTensor and a template type.
@@ -196,7 +196,7 @@ namespace cytnx {
    * @see linalg::Mod(const cytnx::UniTensor &Lt, const T &rc)
    */
   template <class T>
-  cytnx::UniTensor operator%(const cytnx::UniTensor &Lt, const T &rc);
+  cytnx::UniTensor operator%(const cytnx::UniTensor& Lt, const T& rc);
 
   /**
   @namespace cytnx::linalg
@@ -233,7 +233,7 @@ namespace cytnx {
      *     UniTensor::Add(const cytnx::UniTensor &Rt) const,
      *     operator+(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
      */
-    cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Add(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The addition function between a template type and a UniTensor.
@@ -268,7 +268,7 @@ namespace cytnx {
      *    Add(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
      */
     template <class T>
-    cytnx::UniTensor Add(const T &lc, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Add(const T& lc, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The addition function between a UniTensor and a template type.
@@ -304,7 +304,7 @@ namespace cytnx {
      * Add(const T &lc, const cytnx::UniTensor &Rt)
      */
     template <class T>
-    cytnx::UniTensor Add(const cytnx::UniTensor &Lt, const T &rc);
+    cytnx::UniTensor Add(const cytnx::UniTensor& Lt, const T& rc);
 
     // Sub:
     //==================================================
@@ -330,7 +330,7 @@ namespace cytnx {
      *     UniTensor::Sub(const cytnx::UniTensor &Rt) const,
      *     operator-(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
      */
-    cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Sub(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The subtraction function between a UniTensor and a template type.
@@ -365,7 +365,7 @@ namespace cytnx {
      *    Sub(const T &lc, const cytnx::UniTensor &Rt)
      */
     template <class T>
-    cytnx::UniTensor Sub(const T &lc, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Sub(const T& lc, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The subtraction function between a UniTensor and a template type.
@@ -400,7 +400,7 @@ namespace cytnx {
      *    Sub(const cytnx::UniTensor &Lt, const T &rc)
      */
     template <class T>
-    cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const T &rc);
+    cytnx::UniTensor Sub(const cytnx::UniTensor& Lt, const T& rc);
 
     // Mul:
     //==================================================
@@ -426,7 +426,7 @@ namespace cytnx {
      *     UniTensor::Mul(const cytnx::UniTensor &Rt) const,
      *     operator*(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
      */
-    cytnx::UniTensor Mul(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Mul(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The multiplication function between a UniTensor and a template type.
@@ -461,7 +461,7 @@ namespace cytnx {
      *    Mul(const T &lc, const cytnx::UniTensor &Rt)
      */
     template <class T>
-    cytnx::UniTensor Mul(const T &lc, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Mul(const T& lc, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The multiplication function between a UniTensor and a template type.
@@ -496,7 +496,7 @@ namespace cytnx {
      *    Mul(const cytnx::UniTensor &Lt, const T &rc)
      */
     template <class T>
-    cytnx::UniTensor Mul(const cytnx::UniTensor &Lt, const T &rc);
+    cytnx::UniTensor Mul(const cytnx::UniTensor& Lt, const T& rc);
 
     // Div:
     //==================================================
@@ -522,7 +522,7 @@ namespace cytnx {
      *     UniTensor::Div(const cytnx::UniTensor &Rt) const,
      *     operator/(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
      */
-    cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Div(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The division function between a UniTensor and a template type.
@@ -558,7 +558,7 @@ namespace cytnx {
      *    Div(const T &lc, const cytnx::UniTensor &Rt)
      */
     template <class T>
-    cytnx::UniTensor Div(const T &lc, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Div(const T& lc, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The division function between a UniTensor and a template type.
@@ -594,7 +594,7 @@ namespace cytnx {
      *    Div(const cytnx::UniTensor &Lt, const T &rc)
      */
     template <class T>
-    cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const T &rc);
+    cytnx::UniTensor Div(const cytnx::UniTensor& Lt, const T& rc);
 
     // Mod:
     //==================================================
@@ -622,7 +622,7 @@ namespace cytnx {
      *   Tensor::Mod(const T &rhs),
      *   operator%(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt)
      */
-    cytnx::UniTensor Mod(const cytnx::UniTensor &Lt, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Mod(const cytnx::UniTensor& Lt, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The modulo function between a UniTensor and a template type.
@@ -655,7 +655,7 @@ namespace cytnx {
      *    Mod(const cytnx::UniTensor &Lt, const T &rc)
      */
     template <class T>
-    cytnx::UniTensor Mod(const T &lc, const cytnx::UniTensor &Rt);
+    cytnx::UniTensor Mod(const T& lc, const cytnx::UniTensor& Rt);
 
     /**
      * @brief The modulo function between a UniTensor and a template type.
@@ -688,7 +688,7 @@ namespace cytnx {
      *    Mod(const cytnx::UniTensor &Lt, const T &rc)
      */
     template <class T>
-    cytnx::UniTensor Mod(const cytnx::UniTensor &Lt, const T &rc);
+    cytnx::UniTensor Mod(const cytnx::UniTensor& Lt, const T& rc);
 
     /**
     @brief Perform Singular-Value decomposition on a UniTensor using divide-and-conquer method.
@@ -697,7 +697,7 @@ namespace cytnx {
     refer to the documentation of the function Svd(const Tensor &Tin, const bool &is_UvT).
     @see Svd(const Tensor &Tin, const bool &is_UvT)
     */
-    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_UvT = true);
+    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor& Tin, const bool& is_UvT = true);
 
     /**
     @brief Perform randomized Singular-Value decomposition on a UniTensor using the ?gesvd method.
@@ -715,7 +715,7 @@ namespace cytnx {
     &power_iteration, const unsigned int &seed)
     @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
     */
-    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor& Tin, cytnx_uint64 keepdim,
                                        bool is_U = true, bool is_vT = true,
                                        cytnx_uint64 power_iteration = 2,
                                        unsigned int seed = random::__static_random_device());
@@ -729,8 +729,8 @@ namespace cytnx {
     @see Gesvd(const Tensor &Tin, const bool &is_U, const bool
     &is_vT), Svd(const Tensor &Tin, const bool &is_UvT).
     */
-    std::vector<cytnx::UniTensor> Gesvd(const cytnx::UniTensor &Tin, const bool &is_U = true,
-                                        const bool &is_vT = true);
+    std::vector<cytnx::UniTensor> Gesvd(const cytnx::UniTensor& Tin, const bool& is_U = true,
+                                        const bool& is_vT = true);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
@@ -743,11 +743,11 @@ namespace cytnx {
      Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const bool
      &is_UvT, const unsigned int &return_err, const cytnx_uint64& mindim)
      */
-    std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
-                                               const cytnx_uint64 &keepdim, const double &err = 0.,
-                                               const bool &is_UvT = true,
-                                               const unsigned int &return_err = 0,
-                                               const cytnx_uint64 &mindim = 1);
+    std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor& Tin,
+                                               const cytnx_uint64& keepdim, const double& err = 0.,
+                                               const bool& is_UvT = true,
+                                               const unsigned int& return_err = 0,
+                                               const cytnx_uint64& mindim = 1);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
@@ -796,12 +796,12 @@ namespace cytnx {
      * Example: if the singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension
      * will be 5 in order to keep all the degenerate singular values.
      */
-    std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor &Tin,
-                                               const cytnx_uint64 &keepdim,
+    std::vector<cytnx::UniTensor> Svd_truncate(const cytnx::UniTensor& Tin,
+                                               const cytnx_uint64& keepdim,
                                                std::vector<cytnx_uint64> min_blockdim,
-                                               const double &err = 0., const bool &is_UvT = true,
-                                               const unsigned int &return_err = 0,
-                                               const cytnx_uint64 &mindim = 1);
+                                               const double& err = 0., const bool& is_UvT = true,
+                                               const unsigned int& return_err = 0,
+                                               const cytnx_uint64& mindim = 1);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation.
@@ -814,12 +814,12 @@ namespace cytnx {
      * int &return_err, const cytnx_uint64 &mindim), Gesvd(const cytnx::UniTensor &Tin, const bool
      * &is_U, const bool &is_vT)
      */
-    std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
-                                                 const cytnx_uint64 &keepdim,
-                                                 const double &err = 0., const bool &is_U = true,
-                                                 const bool &is_vT = true,
-                                                 const unsigned int &return_err = 0,
-                                                 const cytnx_uint64 &mindim = 1);
+    std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor& Tin,
+                                                 const cytnx_uint64& keepdim,
+                                                 const double& err = 0., const bool& is_U = true,
+                                                 const bool& is_vT = true,
+                                                 const unsigned int& return_err = 0,
+                                                 const cytnx_uint64& mindim = 1);
 
     /**
      * @brief Perform Singular-Value decomposition on a UniTensor with truncation and keep at most
@@ -833,9 +833,9 @@ namespace cytnx {
      * cytnx::UniTensor &Tin, const bool &is_U, const bool &is_vT)
      */
     std::vector<cytnx::UniTensor> Gesvd_truncate(
-      const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
-      std::vector<cytnx_uint64> min_blockdim, const double &err = 0., const bool &is_U = true,
-      const bool &is_vT = true, const unsigned int &return_err = 0, const cytnx_uint64 &mindim = 1);
+      const cytnx::UniTensor& Tin, const cytnx_uint64& keepdim,
+      std::vector<cytnx_uint64> min_blockdim, const double& err = 0., const bool& is_U = true,
+      const bool& is_vT = true, const unsigned int& return_err = 0, const cytnx_uint64& mindim = 1);
 
     // Rsvd_truncate:
     //==================================================
@@ -888,15 +888,15 @@ namespace cytnx {
     @note Uses a full Gesvd if keepdim is as large as the rank of the tensor
     */
     std::vector<cytnx::UniTensor> Rsvd_truncate(
-      const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err = 0., bool is_U = true,
+      const cytnx::UniTensor& Tin, cytnx_uint64 keepdim, double err = 0., bool is_U = true,
       bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1,
       cytnx_uint64 oversampling_summand = 10, double oversampling_factor = 1.,
       cytnx_uint64 power_iteration = 0, unsigned int seed = random::__static_random_device());
 
     std::vector<cytnx::UniTensor> Hosvd(
-      const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
-      const bool &is_core = true, const bool &is_Ls = false,
-      const std::vector<cytnx_int64> &trucate_dim = std::vector<cytnx_int64>());
+      const cytnx::UniTensor& Tin, const std::vector<cytnx_uint64>& mode,
+      const bool& is_core = true, const bool& is_Ls = false,
+      const std::vector<cytnx_int64>& trucate_dim = std::vector<cytnx_int64>());
 
     /**
      * @brief Perform the exponential function on a UniTensor, which the blocks are
@@ -907,7 +907,7 @@ namespace cytnx {
      * @see ExpH(const Tensor &Tin, const T &a, const T &b)
      */
     template <typename T>
-    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
+    cytnx::UniTensor ExpH(const cytnx::UniTensor& Tin, const T& a, const T& b = 0);
 
     /**
      * @brief Perform the exponential function on a UniTensor.
@@ -917,7 +917,7 @@ namespace cytnx {
      * @see ExpM(const Tensor &Tin, const T &a, const T &b)
      */
     template <typename T>
-    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin, const T &a, const T &b = 0);
+    cytnx::UniTensor ExpM(const cytnx::UniTensor& Tin, const T& a, const T& b = 0);
 
     /**
      * @brief Perform the exponential function on a UniTensor, which the blocks are
@@ -927,7 +927,7 @@ namespace cytnx {
      * function ExpH(const Tensor &Tin)
      * @see ExpH(const Tensor &Tin)
      */
-    cytnx::UniTensor ExpH(const cytnx::UniTensor &Tin);
+    cytnx::UniTensor ExpH(const cytnx::UniTensor& Tin);
 
     /**
      * @brief Perform the exponential function on a UniTensor.
@@ -936,14 +936,14 @@ namespace cytnx {
      * function ExpM(const Tensor &Tin)
      * @see ExpM(const Tensor &Tin)
      */
-    cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin);
+    cytnx::UniTensor ExpM(const cytnx::UniTensor& Tin);
 
     /**
      * @deprecated This function is deprecated, please use
      * Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b) instead.
      */
-    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
-                           const cytnx_int64 &b = 1);
+    cytnx::UniTensor Trace(const cytnx::UniTensor& Tin, const cytnx_int64& a = 0,
+                           const cytnx_int64& b = 1);
 
     /**
      * @brief Perform trace over two legs of a UniTensor.
@@ -952,7 +952,7 @@ namespace cytnx {
      * function Trace(const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b).
      * @see Trace(const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b)
      */
-    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b);
+    cytnx::UniTensor Trace(const cytnx::UniTensor& Tin, const std::string& a, const std::string& b);
 
     /**
      * @brief Perform the QR decomposition on a UniTensor.
@@ -962,7 +962,7 @@ namespace cytnx {
      * Qr(const Tensor &Tin, const bool &is_tau).
      * @see Qr(const Tensor &Tin, const bool &is_tau)
      */
-    std::vector<cytnx::UniTensor> Qr(const cytnx::UniTensor &Tin, const bool &is_tau = false);
+    std::vector<cytnx::UniTensor> Qr(const cytnx::UniTensor& Tin, const bool& is_tau = false);
 
     /**
      * @brief Perform the QDR decomposition on a UniTensor.
@@ -972,7 +972,7 @@ namespace cytnx {
      * Qdr(const Tensor &Tin, const bool &is_tau).
      * @see Qdr(const Tensor &Tin, const bool &is_tau)
      */
-    std::vector<cytnx::UniTensor> Qdr(const cytnx::UniTensor &Tin, const bool &is_tau = false);
+    std::vector<cytnx::UniTensor> Qdr(const cytnx::UniTensor& Tin, const bool& is_tau = false);
 
     // Pow:
     //==================================================
@@ -988,7 +988,7 @@ namespace cytnx {
     function will not modify the input UniTensor and return a new UniTensor.
     @see Pow_(UniTensor &Tin, const double &p)
     */
-    UniTensor Pow(const cytnx::UniTensor &Tin, const double &p);
+    UniTensor Pow(const cytnx::UniTensor& Tin, const double& p);
 
     /**
      * @brief Take power p on all the elements in UniTensor, inplacely.
@@ -1001,7 +1001,7 @@ namespace cytnx {
      * will modify the input UniTensor.
      * @see Pow(const cytnx::UniTensor &Tin, const double &p)
      */
-    void Pow_(UniTensor &Tin, const double &p);
+    void Pow_(UniTensor& Tin, const double& p);
 
     /**
      * @brief Elementwise conjugate of the UniTensor
@@ -1009,14 +1009,14 @@ namespace cytnx {
      * @return [UniTensor] The UniTensor with all element being conjugated
      * @see See UniTensor.Conj() for further details
      */
-    cytnx::UniTensor Conj(const cytnx::UniTensor &UT);
+    cytnx::UniTensor Conj(const cytnx::UniTensor& UT);
 
     /**
      * @brief Inplace elementwise conjugate of the UniTensor
      * @param[in] UT The input UniTensor.
      * @see See UniTensor.Conj_() for further details
      */
-    void Conj_(cytnx::UniTensor &UT);
+    void Conj_(cytnx::UniTensor& UT);
 
     //====================================================================================
     //  [Tensor]
@@ -1046,7 +1046,7 @@ namespace cytnx {
      * iAdd(Tensor &Lt, const Tensor &Rt),
      * operator+(const Tensor &Lt, const Tensor &Rt)
      */
-    Tensor Add(const Tensor &Lt, const Tensor &Rt);
+    Tensor Add(const Tensor& Lt, const Tensor& Rt);
 
     /**
      * @brief The addition function for Tensor.
@@ -1070,7 +1070,7 @@ namespace cytnx {
      * operator+(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Add(const T &lc, const Tensor &Rt);
+    Tensor Add(const T& lc, const Tensor& Rt);
 
     /**
      * @brief The addition function for Tensor.
@@ -1094,7 +1094,7 @@ namespace cytnx {
      * operator+(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Add(const Tensor &Lt, const T &rc);
+    Tensor Add(const Tensor& Lt, const T& rc);
 
     /**
      * @brief The addition function for Tensor, inplacely.
@@ -1120,7 +1120,7 @@ namespace cytnx {
      * Add(const Tensor &Lt, const T &rc),
      * operator+(const Tensor &Lt, const Tensor &Rt)
      */
-    void iAdd(Tensor &Lt, const Tensor &Rt);
+    void iAdd(Tensor& Lt, const Tensor& Rt);
 
     // Sub:
     //==================================================
@@ -1146,7 +1146,7 @@ namespace cytnx {
      * iSub(Tensor &Lt, const Tensor &Rt),
      * operator-(const Tensor &Lt, const Tensor &Rt)
      */
-    Tensor Sub(const Tensor &Lt, const Tensor &Rt);
+    Tensor Sub(const Tensor& Lt, const Tensor& Rt);
 
     /**
      * @brief The subtraction function for Tensor.
@@ -1170,7 +1170,7 @@ namespace cytnx {
      * operator-(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Sub(const T &lc, const Tensor &Rt);
+    Tensor Sub(const T& lc, const Tensor& Rt);
 
     /**
      * @brief The subtraction function for Tensor.
@@ -1194,7 +1194,7 @@ namespace cytnx {
      * operator-(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Sub(const Tensor &Lt, const T &rc);
+    Tensor Sub(const Tensor& Lt, const T& rc);
 
     /**
      * @brief The subtraction function for Tensot, inplscely.
@@ -1220,7 +1220,7 @@ namespace cytnx {
      * Sub(const Tensor &Lt, const T &rc),
      * operator-(const Tensor &Lt, const Tensor &Rt)
      */
-    void iSub(Tensor &Lt, const Tensor &Rt);
+    void iSub(Tensor& Lt, const Tensor& Rt);
 
     // Mul:
     //==================================================
@@ -1246,7 +1246,7 @@ namespace cytnx {
      * iMul(Tensor &Lt, const Tensor &Rt),
      * operator*(const Tensor &Lt, const Tensor &Rt)
      */
-    Tensor Mul(const Tensor &Lt, const Tensor &Rt);
+    Tensor Mul(const Tensor& Lt, const Tensor& Rt);
 
     /**
      * @brief The multiplication function for Tensor.
@@ -1270,7 +1270,7 @@ namespace cytnx {
      * operator*(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Mul(const T &lc, const Tensor &Rt);
+    Tensor Mul(const T& lc, const Tensor& Rt);
 
     /**
      * @brief The multiplication function for Tensor.
@@ -1294,7 +1294,7 @@ namespace cytnx {
      * operator*(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Mul(const Tensor &Lt, const T &rc);
+    Tensor Mul(const Tensor& Lt, const T& rc);
 
     /**
      * @brief The multiplication function for Tensor, inplacely.
@@ -1320,7 +1320,7 @@ namespace cytnx {
      * Mul(const Tensor &Lt, const T &rc),
      * operator*(const Tensor &Lt, const Tensor &Rt)
      */
-    void iMul(Tensor &Lt, const Tensor &Rt);
+    void iMul(Tensor& Lt, const Tensor& Rt);
 
     // Div:
     //==================================================
@@ -1347,7 +1347,7 @@ namespace cytnx {
      * iDiv(Tensor &Lt, const Tensor &Rt),
      * operator/(const Tensor &Lt, const Tensor &Rt)
      */
-    Tensor Div(const Tensor &Lt, const Tensor &Rt);
+    Tensor Div(const Tensor& Lt, const Tensor& Rt);
 
     /**
      * @brief The division function for Tensor.
@@ -1372,7 +1372,7 @@ namespace cytnx {
      * operator/(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Div(const T &lc, const Tensor &Rt);
+    Tensor Div(const T& lc, const Tensor& Rt);
 
     /**
      * @brief The division function for Tensor.
@@ -1397,7 +1397,7 @@ namespace cytnx {
      * operator/(const Tensor &Lt, const Tensor &Rt)
      */
     template <class T>
-    Tensor Div(const Tensor &Lt, const T &rc);
+    Tensor Div(const Tensor& Lt, const T& rc);
 
     /**
      * @brief The inplace division function for Tensor, inplacely.
@@ -1423,7 +1423,7 @@ namespace cytnx {
      * Div(const Tensor &Lt, const T &rc),
      * operator/(const Tensor &Lt, const Tensor &Rt)
      */
-    void iDiv(Tensor &Lt, const Tensor &Rt);
+    void iDiv(Tensor& Lt, const Tensor& Rt);
 
     // Mod:
     //==================================================
@@ -1450,7 +1450,7 @@ namespace cytnx {
      * Mod(const T &lc, const Tensor &Rt),
      * Mod(const Tensor &Lt, const T &rc)
      */
-    Tensor Mod(const Tensor &Lt, const Tensor &Rt);
+    Tensor Mod(const Tensor& Lt, const Tensor& Rt);
 
     /**
      * @brief The mod function for Tensor.
@@ -1473,7 +1473,7 @@ namespace cytnx {
      * Mod(const Tensor &Lt, const T &rc)
      */
     template <class T>
-    Tensor Mod(const T &lc, const Tensor &Rt);
+    Tensor Mod(const T& lc, const Tensor& Rt);
 
     /**
      * @brief The mod function for Tensor.
@@ -1496,7 +1496,7 @@ namespace cytnx {
      * Mod(const T &lc, const Tensor &Rt)
      */
     template <class T>
-    Tensor Mod(const Tensor &Lt, const T &rc);
+    Tensor Mod(const Tensor& Lt, const T& rc);
 
     // Cpr:
     //==================================================
@@ -1525,7 +1525,7 @@ namespace cytnx {
      * Cpr(const T &lc, const Tensor &Rt),
      * Cpr(const Tensor &Lt, const T &rc)
      */
-    Tensor Cpr(const Tensor &Lt, const Tensor &Rt);
+    Tensor Cpr(const Tensor& Lt, const Tensor& Rt);
 
     /**
      * @brief The comparison function for Tensor.
@@ -1552,7 +1552,7 @@ namespace cytnx {
      * Cpr(const Tensor &Lt, const T &rc)
      */
     template <class T>
-    Tensor Cpr(const T &lc, const Tensor &Rt);
+    Tensor Cpr(const T& lc, const Tensor& Rt);
 
     /**
      * @brief The comparison function for Tensor.
@@ -1579,7 +1579,7 @@ namespace cytnx {
      * Cpr(const T &lc, const Tensor &Rt)
      */
     template <class T>
-    Tensor Cpr(const Tensor &Lt, const T &rc);
+    Tensor Cpr(const Tensor& Lt, const T& rc);
 
     // Norm:
     //=================================================
@@ -1592,7 +1592,7 @@ namespace cytnx {
     @param[in] Tl input Tensor
     @return Tensor
     */
-    Tensor Norm(const Tensor &Tl);
+    Tensor Norm(const Tensor& Tl);
 
     // Norm:
     //=================================================
@@ -1605,7 +1605,7 @@ namespace cytnx {
     @param[in] uTl input UniTensor
     @return Tensor
     */
-    Tensor Norm(const cytnx::UniTensor &uTl);
+    Tensor Norm(const cytnx::UniTensor& uTl);
 
     // Det:
     //=================================================
@@ -1617,7 +1617,7 @@ namespace cytnx {
     @return Tensor
     @pre the input tensor should be a rank-2 tensor with shape (N,N). (a square matrix)
     */
-    Tensor Det(const Tensor &Tl);
+    Tensor Det(const Tensor& Tl);
 
     // randomized isometries:
     //==================================================
@@ -1648,9 +1648,9 @@ namespace cytnx {
     @warning Using power_iteration > 0 increases memory and time requirements, but leads to
     significantly improved precision!
     */
-    Tensor Rand_isometry(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                         const cytnx_uint64 &power_iteration = 2,
-                         const unsigned int &seed = random::__static_random_device());
+    Tensor Rand_isometry(const Tensor& Tin, const cytnx_uint64& keepdim,
+                         const cytnx_uint64& power_iteration = 2,
+                         const unsigned int& seed = random::__static_random_device());
 
     // Svd:
     //==================================================
@@ -1679,7 +1679,7 @@ namespace cytnx {
     @see Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const
     bool &is_UvT, const unsigned int &return_err, const cytnx_uint64& mindim)
     */
-    std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT = true);
+    std::vector<Tensor> Svd(const Tensor& Tin, const bool& is_UvT = true);
 
     // Gesvd:
     //==================================================
@@ -1710,7 +1710,7 @@ namespace cytnx {
     @see Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err,
     const bool &is_U, const bool &is_vT, const unsigned int &return_err, const cytnx_uint64& mindim)
     */
-    std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
+    std::vector<Tensor> Gesvd(const Tensor& Tin, const bool& is_U = true, const bool& is_vT = true);
 
     // Rsvd:
     //==================================================
@@ -1731,7 +1731,7 @@ namespace cytnx {
     &power_iteration, const unsigned int &seed)
     @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
     */
-    std::vector<Tensor> Rsvd(const Tensor &Tin, cytnx_uint64 keepdim, bool is_U = true,
+    std::vector<Tensor> Rsvd(const Tensor& Tin, cytnx_uint64 keepdim, bool is_U = true,
                              bool is_vT = true, cytnx_uint64 power_iteration = 2,
                              unsigned int seed = random::__static_random_device());
 
@@ -1781,10 +1781,10 @@ namespace cytnx {
     Example: if the singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension
     will be 5 in order to keep all the degenerate singular values.
     */
-    std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                     const double &err = 0., const bool &is_UvT = true,
-                                     const unsigned int &return_err = 0,
-                                     const cytnx_uint64 &mindim = 1);
+    std::vector<Tensor> Svd_truncate(const Tensor& Tin, const cytnx_uint64& keepdim,
+                                     const double& err = 0., const bool& is_UvT = true,
+                                     const unsigned int& return_err = 0,
+                                     const cytnx_uint64& mindim = 1);
 
     // Rsvd_truncate:
     //==================================================
@@ -1835,7 +1835,7 @@ namespace cytnx {
     bool &is_U, const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim);
     @note Uses a full Gesvd if keepdim is as large as the rank of the tensor
     */
-    std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, cytnx_uint64 keepdim, double err = 0.,
+    std::vector<Tensor> Rsvd_truncate(const Tensor& Tin, cytnx_uint64 keepdim, double err = 0.,
                                       bool is_U = true, bool is_vT = true,
                                       unsigned int return_err = 0, cytnx_uint64 mindim = 1,
                                       cytnx_uint64 oversampling_summand = 10,
@@ -1872,16 +1872,16 @@ namespace cytnx {
     singular values are (1 2 2 2 2 3) and \p keepdim = 3, then the bond dimension will be 5 in order
     to keep all the degenerate singular values.
     */
-    std::vector<Tensor> Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                       const double &err = 0., const bool &is_U = true,
-                                       const bool &is_vT = true, const unsigned int &return_err = 0,
-                                       const cytnx_uint64 &mindim = 1);
+    std::vector<Tensor> Gesvd_truncate(const Tensor& Tin, const cytnx_uint64& keepdim,
+                                       const double& err = 0., const bool& is_U = true,
+                                       const bool& is_vT = true, const unsigned int& return_err = 0,
+                                       const cytnx_uint64& mindim = 1);
 
     // Hosvd:
     std::vector<Tensor> Hosvd(
-      const Tensor &Tin, const std::vector<cytnx_uint64> &mode, const bool &is_core = true,
-      const bool &is_Ls = false,
-      const std::vector<cytnx_int64> &trucate_dim = std::vector<cytnx_int64>());
+      const Tensor& Tin, const std::vector<cytnx_uint64>& mode, const bool& is_core = true,
+      const bool& is_Ls = false,
+      const std::vector<cytnx_int64>& trucate_dim = std::vector<cytnx_int64>());
 
     // Qr:
     //==================================================
@@ -1910,7 +1910,7 @@ namespace cytnx {
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see Qdr(const Tensor &Tin, const bool &is_tau)
     */
-    std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau = false);
+    std::vector<Tensor> Qr(const Tensor& Tin, const bool& is_tau = false);
 
     // Qdr:
     //==================================================
@@ -1933,7 +1933,7 @@ namespace cytnx {
     @pre The input tensor should be a rank-2 tensor (matrix).
     @see Qr(const Tensor &Tin, const bool &is_tau)
     */
-    std::vector<Tensor> Qdr(const Tensor &Tin, const bool &is_tau = false);
+    std::vector<Tensor> Qdr(const Tensor& Tin, const bool& is_tau = false);
 
     // Eigh:
     //==================================================
@@ -1959,10 +1959,10 @@ namespace cytnx {
     (This is strongly not recommended, please use
     Eig(const Tensor &Tin, const bool &is_V, const bool &row_v) instead.
     */
-    std::vector<Tensor> Eigh(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
+    std::vector<Tensor> Eigh(const Tensor& Tin, const bool& is_V = true, const bool& row_v = false);
 
-    std::vector<UniTensor> Eigh(const cytnx::UniTensor &Tin, const bool &is_V = true,
-                                const bool &row_v = false);
+    std::vector<UniTensor> Eigh(const cytnx::UniTensor& Tin, const bool& is_V = true,
+                                const bool& row_v = false);
 
     // Eig:
     //==================================================
@@ -1985,10 +1985,10 @@ namespace cytnx {
     form. Otherwise, the eigen vectors will be column form.
     @pre the \p Tin should be a square matrix.
     */
-    std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V = true, const bool &row_v = false);
+    std::vector<Tensor> Eig(const Tensor& Tin, const bool& is_V = true, const bool& row_v = false);
 
-    std::vector<UniTensor> Eig(const cytnx::UniTensor &Tin, const bool &is_V = true,
-                               const bool &row_v = false);
+    std::vector<UniTensor> Eig(const cytnx::UniTensor& Tin, const bool& is_V = true,
+                               const bool& row_v = false);
 
     // Trace:
     //==================================================
@@ -2005,7 +2005,7 @@ namespace cytnx {
     @param[in] axisB the second index to perform trace.
     @pre the \p Tn should be at-least rank-2 Tensor.
     */
-    Tensor Trace(const Tensor &Tn, const cytnx_uint64 &axisA = 0, const cytnx_uint64 &axisB = 1);
+    Tensor Trace(const Tensor& Tn, const cytnx_uint64& axisA = 0, const cytnx_uint64& axisB = 1);
 
     // Min:
     //==================================================
@@ -2014,7 +2014,7 @@ namespace cytnx {
     @param[in] Tn a cytnx::Tensor
     @note For complex TN, only real part is compared.
     */
-    Tensor Min(const Tensor &Tn);
+    Tensor Min(const Tensor& Tn);
 
     // Max:
     //==================================================
@@ -2023,7 +2023,7 @@ namespace cytnx {
     @param[in] Tn a cytnx::Tensor
     @note For complex TN, only real part is compared.
     */
-    Tensor Max(const Tensor &Tn);
+    Tensor Max(const Tensor& Tn);
 
     // Sum:
     //==================================================
@@ -2031,7 +2031,7 @@ namespace cytnx {
     @brief get the sum of all the elements.
     @param[in] Tn a cytnx::Tensor
     */
-    Tensor Sum(const Tensor &Tn);
+    Tensor Sum(const Tensor& Tn);
 
     // Matmul:
     //==================================================
@@ -2046,7 +2046,7 @@ namespace cytnx {
     @param[in] TR a right Tensor
     @pre the \p TL and \p TR should be rank-2 Tensor.
     */
-    Tensor Matmul(const Tensor &TL, const Tensor &TR);
+    Tensor Matmul(const Tensor& TL, const Tensor& TR);
 
     // Matmul_dg:
     //==================================================
@@ -2056,7 +2056,7 @@ namespace cytnx {
 
     @note one of \p TL and \p TR should be rank-1 Tensor and the other should be rank-2 Tensor.
     */
-    Tensor Matmul_dg(const Tensor &Tl, const Tensor &Tr);
+    Tensor Matmul_dg(const Tensor& Tl, const Tensor& Tr);
 
     // InvM:
     //==================================================
@@ -2066,8 +2066,8 @@ namespace cytnx {
     @return [Tensor] the inversion of the input matrix.
     @pre \p Tin should be a rank-2 Tensor.
     */
-    Tensor InvM(const Tensor &Tin);
-    UniTensor InvM(const cytnx::UniTensor &Tin);
+    Tensor InvM(const Tensor& Tin);
+    UniTensor InvM(const cytnx::UniTensor& Tin);
     /**
     @brief inplace matrix inverse.
     @details This function will perform matrix inverse on the input matrix \p Tin, inplacely.
@@ -2075,8 +2075,8 @@ namespace cytnx {
     inverse.
     @pre the Tin should be a rank-2 Tensor.
     */
-    void InvM_(Tensor &Tin);
-    void InvM_(UniTensor &Tin);
+    void InvM_(Tensor& Tin);
+    void InvM_(UniTensor& Tin);
     // Inv:
     //==================================================
     /**
@@ -2097,7 +2097,7 @@ namespace cytnx {
         [Tensor]
     @note For complex type Tensors, the square norm is used to determine the clip.
     */
-    Tensor Inv(const Tensor &Tin, const double &clip);
+    Tensor Inv(const Tensor& Tin, const double& clip);
 
     /**
     @brief inplace perform Element-wise inverse with clip.
@@ -2111,7 +2111,7 @@ namespace cytnx {
     2. on return, all the elements will be modified to it's inverse. if Tin is integer type, it
     will automatically promote to Type.Double.
     */
-    void Inv_(Tensor &Tin, const double &clip);
+    void Inv_(Tensor& Tin, const double& clip);
 
     // Conj:
     //==================================================
@@ -2129,7 +2129,7 @@ namespace cytnx {
     @param[in] Tin a Tensor
     @return [Tensor]
     */
-    Tensor Conj(const Tensor &Tin);
+    Tensor Conj(const Tensor& Tin);
 
     /**
     @brief inplace perform Conjugate on all the element in Tensor.
@@ -2139,7 +2139,7 @@ namespace cytnx {
     1. if the input Tensor is complex, the elements of input Tensor will all be conjugated.
     2. if the input Tensor is real, then nothing act.
     */
-    void Conj_(Tensor &Tin);
+    void Conj_(Tensor& Tin);
 
     // Exp:
     //==================================================
@@ -2156,7 +2156,7 @@ namespace cytnx {
         [Double Tensor] or [ComplexDouble Tensor]
 
     */
-    Tensor Exp(const Tensor &Tin);
+    Tensor Exp(const Tensor& Tin);
 
     /**
     @brief Exponential all the element in Tensor.
@@ -2171,7 +2171,7 @@ namespace cytnx {
         [Float Tensor] or [ComplexFloat Tensor]
 
     */
-    Tensor Expf(const Tensor &Tin);
+    Tensor Expf(const Tensor& Tin);
 
     /**
     @brief inplace perform Exponential on all the element in Tensor.
@@ -2182,7 +2182,7 @@ namespace cytnx {
         3. For Complex, if input is ComplexFloat, promote to ComplexDouble.
     @param[in] Tin, the input Tensor.
     */
-    void Exp_(Tensor &Tin);
+    void Exp_(Tensor& Tin);
 
     /**
     @brief inplace perform Exponential on all the element in Tensor.
@@ -2193,7 +2193,7 @@ namespace cytnx {
         3. For Complex, if input is ComplexDouble, promote to ComplexFloat.
     @param[in] Tin, the input Tensor.
     */
-    void Expf_(Tensor &Tin);
+    void Expf_(Tensor& Tin);
 
     // Pow:
     //==================================================
@@ -2208,7 +2208,7 @@ namespace cytnx {
     @return [Tensor]
 
     */
-    Tensor Pow(const Tensor &Tin, const double &p);
+    Tensor Pow(const Tensor& Tin, const double& p);
 
     /**
     @brief inplace perform power on all the elements in Tensor.
@@ -2216,7 +2216,7 @@ namespace cytnx {
     @param[in] Tin, the input Tensor.
     @param[in] p, the power.
     */
-    void Pow_(Tensor &Tin, const double &p);
+    void Pow_(Tensor& Tin, const double& p);
 
     // Abs:
     //==================================================
@@ -2227,7 +2227,7 @@ namespace cytnx {
     @param[in] Tin tensor.
     @return [Tensor]
     */
-    Tensor Abs(const Tensor &Tin);
+    Tensor Abs(const Tensor& Tin);
 
     /**
     @brief inplace perform elementwiase absolute value.
@@ -2236,7 +2236,7 @@ namespace cytnx {
     @note on return, the elements in Tin will be modified to it's absolute value. Note that if the
     input tensor is complex, it will be modified to real type.
     */
-    void Abs_(Tensor &Tin);
+    void Abs_(Tensor& Tin);
 
     // Diag:
     //==================================================
@@ -2248,7 +2248,7 @@ namespace cytnx {
     Furthermore, the return Tensor will be rank-2, with shape=(L, L); where L is the number of
     elements in \p Tin. \pre \p Tin should be a rank-2 Tensor.
     */
-    Tensor Diag(const Tensor &Tin);
+    Tensor Diag(const Tensor& Tin);
 
     // Tensordot:
     //==================================================
@@ -2267,9 +2267,9 @@ namespace cytnx {
         1. the elements in idxl and idxr have one to one correspondence.
         2. two tensors should on same device.
     */
-    Tensor Tensordot(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
-                     const std::vector<cytnx_uint64> &idxr, const bool &cacheL = false,
-                     const bool &cacheR = false);
+    Tensor Tensordot(const Tensor& Tl, const Tensor& Tr, const std::vector<cytnx_uint64>& idxl,
+                     const std::vector<cytnx_uint64>& idxr, const bool& cacheL = false,
+                     const bool& cacheR = false);
 
     // Tensordot_dg:
     //==================================================
@@ -2290,8 +2290,8 @@ namespace cytnx {
         3. if diag_L=true, Tl should be a rank-1 tensor as the diagonal elements of a diagonal
         matrix. if false, Tr should be a rank-1 tensor
     */
-    Tensor Tensordot_dg(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
-                        const std::vector<cytnx_uint64> &idxr, const bool &diag_L);
+    Tensor Tensordot_dg(const Tensor& Tl, const Tensor& Tr, const std::vector<cytnx_uint64>& idxl,
+                        const std::vector<cytnx_uint64>& idxr, const bool& diag_L);
 
     // Outer:
     //==================================================
@@ -2305,7 +2305,7 @@ namespace cytnx {
     @return [Tensor]
     @pre two tensor should on same device.
     */
-    Tensor Outer(const Tensor &Tl, const Tensor &Tr);
+    Tensor Outer(const Tensor& Tl, const Tensor& Tr);
 
     // Kron:
     //==================================================
@@ -2325,8 +2325,8 @@ namespace cytnx {
     @pre two tensor should on same device.
 
     */
-    Tensor Kron(const Tensor &Tl, const Tensor &Tr, const bool &Tl_pad_left = false,
-                const bool &Tr_pad_left = false);
+    Tensor Kron(const Tensor& Tl, const Tensor& Tr, const bool& Tl_pad_left = false,
+                const bool& Tr_pad_left = false);
 
     // Directsum:
     //==================================================
@@ -2344,8 +2344,8 @@ namespace cytnx {
     @return [Tensor]
     @pre two tensor should on same device.
     */
-    Tensor Directsum(const Tensor &T1, const Tensor &T2,
-                     const std::vector<cytnx_uint64> &shared_axes);
+    Tensor Directsum(const Tensor& T1, const Tensor& T2,
+                     const std::vector<cytnx_uint64>& shared_axes);
 
     // VectorDot:
     //=================================================
@@ -2360,7 +2360,7 @@ namespace cytnx {
     @note performance tune: This function have better performance when two vectors with same types,
     and are one of following type: cytnx_double, cytnx_float, cytnx_complex64 or cytnx_complex128.
     */
-    Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj = false);
+    Tensor Vectordot(const Tensor& Tl, const Tensor& Tr, const bool& is_conj = false);
 
     // Dot:
     //=================================================
@@ -2383,7 +2383,7 @@ namespace cytnx {
     [Python]
         In Python API, operator@ is overloaded as a shorthand of linalg::Dot.
     */
-    Tensor Dot(const Tensor &Tl, const Tensor &Tr);
+    Tensor Dot(const Tensor& Tl, const Tensor& Tr);
 
     // Tridiag:
     //===========================================
@@ -2407,8 +2407,8 @@ namespace cytnx {
     input, which will be promote to floating point type for calculation.
 
     */
-    std::vector<Tensor> Tridiag(const Tensor &Diag, const Tensor &Sub_diag, const bool &is_V = true,
-                                const bool &is_row = false, bool throw_excp = false);
+    std::vector<Tensor> Tridiag(const Tensor& Diag, const Tensor& Sub_diag, const bool& is_V = true,
+                                const bool& is_row = false, bool throw_excp = false);
 
     // ExpH:
     //===========================================
@@ -2430,7 +2430,7 @@ namespace cytnx {
 
     */
     template <typename T>
-    Tensor ExpH(const Tensor &in, const T &a, const T &b = 0);
+    Tensor ExpH(const Tensor& in, const T& a, const T& b = 0);
     /**
      * @brief perform matrix exponential for Hermitian matrix
      * @details This function perform matrix exponential for Hermitian matrix, That is,
@@ -2443,7 +2443,7 @@ namespace cytnx {
 
      * @see ExpH(const Tensor &in, const T &a, const T &b)
     */
-    Tensor ExpH(const Tensor &in);
+    Tensor ExpH(const Tensor& in);
 
     // ExpM:
     //===========================================
@@ -2460,7 +2460,7 @@ namespace cytnx {
     @return [Tensor]
     */
     template <typename T>
-    Tensor ExpM(const Tensor &in, const T &a, const T &b = 0);
+    Tensor ExpM(const Tensor& in, const T& a, const T& b = 0);
 
     /**
      * @brief perform matrix exponential for generic matrix
@@ -2472,7 +2472,7 @@ namespace cytnx {
      * @return [Tensor]
      * @see ExpM(const Tensor &in, const T &a, const T &b)
      */
-    Tensor ExpM(const Tensor &in);
+    Tensor ExpM(const Tensor& in);
 
     // Arnoldi:
     //===========================================
@@ -2521,11 +2521,11 @@ namespace cytnx {
     eigenvalues are \f$[0.2+0.2i, 0.2-0.2i]\f$ rather than \f$[0.2+0.2i, 0.7+0.1i]\f$ (as ARPACK
     prioritizes returning complete complex conjugate pairs for real operators).
     */
-    std::vector<Tensor> Arnoldi(LinOp *Hop, const Tensor &Tin = Tensor(),
-                                const std::string which = "LM", const cytnx_uint64 &maxiter = 10000,
-                                const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
-                                const bool &is_V = true, const cytnx_int32 &ncv = 0,
-                                const bool &verbose = false);
+    std::vector<Tensor> Arnoldi(LinOp* Hop, const Tensor& Tin = Tensor(),
+                                const std::string which = "LM", const cytnx_uint64& maxiter = 10000,
+                                const cytnx_double& cvg_crit = 0, const cytnx_uint64& k = 1,
+                                const bool& is_V = true, const cytnx_int32& ncv = 0,
+                                const bool& verbose = false);
 
     // Arnoldi:
     //===========================================
@@ -2577,12 +2577,12 @@ namespace cytnx {
  are \f$[0.2+0.2i, 0.2-0.2i]\f$ rather than \f$[0.2+0.2i, 0.7+0.1i]\f$ (as ARPACK prioritizes
  returning complete complex conjugate pairs for real operators).
     */
-    std::vector<UniTensor> Arnoldi(LinOp *Hop, const cytnx::UniTensor &Tin,
+    std::vector<UniTensor> Arnoldi(LinOp* Hop, const cytnx::UniTensor& Tin,
                                    const std::string which = "LM",
-                                   const cytnx_uint64 &maxiter = 10000,
-                                   const cytnx_double &cvg_crit = 1.0e-9, const cytnx_uint64 &k = 1,
-                                   const bool &is_V = true, const cytnx_int32 &ncv = 0,
-                                   const bool &verbose = false);
+                                   const cytnx_uint64& maxiter = 10000,
+                                   const cytnx_double& cvg_crit = 1.0e-9, const cytnx_uint64& k = 1,
+                                   const bool& is_V = true, const cytnx_int32& ncv = 0,
+                                   const bool& verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2616,11 +2616,11 @@ namespace cytnx {
   To use, define a linear operator with LinOp class either by assigning a custom function or
   creating a class that inherits LinOp (see LinOp for further details).
     */
-    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(),
-                                const std::string method = "Gnd", const double &CvgCrit = 1.0e-14,
-                                const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
-                                const bool &is_V = true, const bool &is_row = false,
-                                const cytnx_uint32 &max_krydim = 0, const bool &verbose = false);
+    std::vector<Tensor> Lanczos(LinOp* Hop, const Tensor& Tin = Tensor(),
+                                const std::string method = "Gnd", const double& CvgCrit = 1.0e-14,
+                                const unsigned int& Maxiter = 10000, const cytnx_uint64& k = 1,
+                                const bool& is_V = true, const bool& is_row = false,
+                                const cytnx_uint32& max_krydim = 0, const bool& verbose = false);
     /**
   @brief Performs Lanczos iteration for matrices or linear functions.
   @details This function calculates the eigenvalue problem using the Lanczos algorithm. It calls
@@ -2661,11 +2661,11 @@ namespace cytnx {
   The input operator in LinOp must be Hermitian; otherwise, the simulation results will be
   incorrect.
     */
-    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin = Tensor(),
-                                const std::string which = "SA", const cytnx_uint64 &maxiter = 10000,
-                                const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
-                                const bool &is_V = true, const cytnx_int32 &ncv = 0,
-                                const bool &verbose = false);
+    std::vector<Tensor> Lanczos(LinOp* Hop, const Tensor& Tin = Tensor(),
+                                const std::string which = "SA", const cytnx_uint64& maxiter = 10000,
+                                const cytnx_double& cvg_crit = 0, const cytnx_uint64& k = 1,
+                                const bool& is_V = true, const cytnx_int32& ncv = 0,
+                                const bool& verbose = false);
     /**
   @brief Performs Lanczos iteration for matrices or linear functions.
   @details This function calculates the eigenvalue problem using the Lanczos algorithm. It calls
@@ -2708,12 +2708,12 @@ namespace cytnx {
   The input operator in LinOp must be Hermitian; otherwise, the simulation results will be
   incorrect.
     */
-    std::vector<UniTensor> Lanczos(LinOp *Hop, const cytnx::UniTensor &Tin,
+    std::vector<UniTensor> Lanczos(LinOp* Hop, const cytnx::UniTensor& Tin,
                                    const std::string which = "SA",
-                                   const cytnx_uint64 &maxiter = 10000,
-                                   const cytnx_double &cvg_crit = 0, const cytnx_uint64 &k = 1,
-                                   const bool &is_V = true, const cytnx_int32 &ncv = 0,
-                                   const bool &verbose = false);
+                                   const cytnx_uint64& maxiter = 10000,
+                                   const cytnx_double& cvg_crit = 0, const cytnx_uint64& k = 1,
+                                   const bool& is_V = true, const cytnx_int32& ncv = 0,
+                                   const bool& verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2750,12 +2750,12 @@ namespace cytnx {
     The input operator in LinOp must be Hermitian; otherwise, the simulation results will be
     incorrect.
     */
-    std::vector<UniTensor> Lanczos(LinOp *Hop, const cytnx::UniTensor &Tin = UniTensor(),
+    std::vector<UniTensor> Lanczos(LinOp* Hop, const cytnx::UniTensor& Tin = UniTensor(),
                                    const std::string method = "Gnd",
-                                   const double &CvgCrit = 1.0e-14,
-                                   const unsigned int &Maxiter = 10000, const cytnx_uint64 &k = 1,
-                                   const bool &is_V = true, const bool &is_row = false,
-                                   const cytnx_uint32 &max_krydim = 4, const bool &verbose = false);
+                                   const double& CvgCrit = 1.0e-14,
+                                   const unsigned int& Maxiter = 10000, const cytnx_uint64& k = 1,
+                                   const bool& is_V = true, const bool& is_row = false,
+                                   const cytnx_uint32& max_krydim = 4, const bool& verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2780,11 +2780,11 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
-    std::vector<Tensor> Lanczos_ER(LinOp *Hop, const cytnx_uint64 &k = 1, const bool &is_V = true,
-                                   const cytnx_uint64 &maxiter = 10000,
-                                   const double &CvgCrit = 1.0e-14, const bool &is_row = false,
-                                   const Tensor &Tin = Tensor(), const cytnx_uint32 &max_krydim = 4,
-                                   const bool &verbose = false);
+    std::vector<Tensor> Lanczos_ER(LinOp* Hop, const cytnx_uint64& k = 1, const bool& is_V = true,
+                                   const cytnx_uint64& maxiter = 10000,
+                                   const double& CvgCrit = 1.0e-14, const bool& is_row = false,
+                                   const Tensor& Tin = Tensor(), const cytnx_uint32& max_krydim = 4,
+                                   const bool& verbose = false);
 
     // Lanczos:
     //===========================================
@@ -2806,10 +2806,10 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
-    std::vector<Tensor> Lanczos_Gnd(LinOp *Hop, const double &CvgCrit = 1.0e-14,
-                                    const bool &is_V = true, const Tensor &Tin = Tensor(),
-                                    const bool &verbose = false,
-                                    const unsigned int &Maxiter = 100000);
+    std::vector<Tensor> Lanczos_Gnd(LinOp* Hop, const double& CvgCrit = 1.0e-14,
+                                    const bool& is_V = true, const Tensor& Tin = Tensor(),
+                                    const bool& verbose = false,
+                                    const unsigned int& Maxiter = 100000);
 
     // Lanczos:
     //===============================================
@@ -2831,10 +2831,10 @@ namespace cytnx {
         To use, define a linear operator with LinOp class either by assign a custom function or
     create a class that inherit LinOp (see LinOp for further details)
     */
-    std::vector<UniTensor> Lanczos_Gnd_Ut(LinOp *Hop, const cytnx::UniTensor &Tin,
-                                          const double &CvgCrit = 1.0e-14, const bool &is_V = true,
-                                          const bool &verbose = false,
-                                          const unsigned int &Maxiter = 100000);
+    std::vector<UniTensor> Lanczos_Gnd_Ut(LinOp* Hop, const cytnx::UniTensor& Tin,
+                                          const double& CvgCrit = 1.0e-14, const bool& is_V = true,
+                                          const bool& verbose = false,
+                                          const unsigned int& Maxiter = 100000);
 
     // Lanczos_Exp:
     //===============================================
@@ -2868,9 +2868,9 @@ namespace cytnx {
     , and the exponetiate \f$e^{-H\tau}\f$ will converged. Ohterwise, the function will return the
     wrong results without any warning.
     */
-    UniTensor Lanczos_Exp(LinOp *Hop, const cytnx::UniTensor &v, const Scalar &tau,
-                          const double &CvgCrit = 1.0e-10, const unsigned int &Maxiter = 100000,
-                          const bool &verbose = false);
+    UniTensor Lanczos_Exp(LinOp* Hop, const cytnx::UniTensor& v, const Scalar& tau,
+                          const double& CvgCrit = 1.0e-10, const unsigned int& Maxiter = 100000,
+                          const bool& verbose = false);
 
     // Lstsq:
     //===========================================
@@ -2899,7 +2899,7 @@ namespace cytnx {
 
     @author Ke
     */
-    std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond = -1);
+    std::vector<Tensor> Lstsq(const Tensor& A, const Tensor& b, const float& rcond = -1);
 
     /**
     @brief Blas Axpy, performing \f$ a\textbf{x} + \textbf{y} \f$, inplacely.
@@ -2918,7 +2918,7 @@ namespace cytnx {
     If \f$ \textbf{y} \f$ is not specify, then it performs \f$ a\textbf{x} \f$ -> return
     @note This will return a new tensor.
     */
-    Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor());
+    Tensor Axpy(const Scalar& a, const Tensor& x, const Tensor& y = Tensor());
 
     /**
      * @brief Blas Axpy, performing \f$ \textbf{y} = a\textbf{x} + \textbf{y} \f$, inplacely.
@@ -2938,7 +2938,7 @@ namespace cytnx {
      * @note Compared to Axpy(const Scalar &a, const Tensor &x, const Tensor &y = Tensor()), this
      * function will perform inplacely.
      */
-    void Axpy_(const Scalar &a, const Tensor &x, Tensor &y);
+    void Axpy_(const Scalar& a, const Tensor& x, Tensor& y);
 
     /**
     @brief Blas Ger, performing return = a*vec(x)*vec(y)^T
@@ -2954,7 +2954,7 @@ namespace cytnx {
     @note
         This will return a new tensor.
     */
-    Tensor Ger(const Tensor &x, const Tensor &y, const Scalar &a = Scalar());
+    Tensor Ger(const Tensor& x, const Tensor& y, const Scalar& a = Scalar());
 
     /**
      * @brief Blas Gemm, performing \f$ \textbf{c} = a\textbf{x}\textbf{y} + b\textbf{c} \f$,
@@ -2973,7 +2973,7 @@ namespace cytnx {
      * @param[in,out ] c Tensor, rank-2 with shape (M,K), must be properly initialized with the
      * correct shape.
      */
-    void Gemm_(const Scalar &a, const Tensor &x, const Tensor &y, const Scalar &b, Tensor &c);
+    void Gemm_(const Scalar& a, const Tensor& x, const Tensor& y, const Scalar& b, Tensor& c);
 
     /**
      * @brief Blas Gemm, performing \f$ a\textbf{x}\textbf{y} -> \f$ return.
@@ -2990,7 +2990,7 @@ namespace cytnx {
      * @return
      * [Tensor] with shape (M,K)
      */
-    Tensor Gemm(const Scalar &a, const Tensor &x, const Tensor &y);
+    Tensor Gemm(const Scalar& a, const Tensor& x, const Tensor& y);
 
     /**
      * @brief Blas Gemm_Batch, performing many(batch) \f$ \textbf{c} = \alpha\textbf{a}\textbf{b} +
@@ -3019,20 +3019,20 @@ namespace cytnx {
      * @param[in] group_size array of cytnx_int64, each element is the number of matrices in each
      * group
      */
-    void Gemm_Batch(const std::vector<cytnx_int64> &m_array,
-                    const std::vector<cytnx_int64> &n_array,
-                    const std::vector<cytnx_int64> &k_array, const std::vector<Scalar> &alpha_array,
-                    const std::vector<Tensor> &a_tensors, const std::vector<Tensor> &b_tensors,
-                    const std::vector<Scalar> &beta_array, std::vector<Tensor> &c_tensors,
-                    const cytnx_int64 group_count, const std::vector<cytnx_int64> &group_size);
+    void Gemm_Batch(const std::vector<cytnx_int64>& m_array,
+                    const std::vector<cytnx_int64>& n_array,
+                    const std::vector<cytnx_int64>& k_array, const std::vector<Scalar>& alpha_array,
+                    const std::vector<Tensor>& a_tensors, const std::vector<Tensor>& b_tensors,
+                    const std::vector<Scalar>& beta_array, std::vector<Tensor>& c_tensors,
+                    const cytnx_int64 group_count, const std::vector<cytnx_int64>& group_size);
 
     ///@cond
-    void __Gemm_Batch(const std::vector<char> &transa_array, const std::vector<char> &transb_array,
-                      const std::vector<blas_int> &m_array, const std::vector<blas_int> &n_array,
-                      const std::vector<blas_int> &k_array, const std::vector<Scalar> &alpha_array,
-                      const void **a_array, const void **b_array,
-                      const std::vector<Scalar> &beta_array, void **c_array,
-                      const blas_int group_count, const std::vector<blas_int> &group_size,
+    void __Gemm_Batch(const std::vector<char>& transa_array, const std::vector<char>& transb_array,
+                      const std::vector<blas_int>& m_array, const std::vector<blas_int>& n_array,
+                      const std::vector<blas_int>& k_array, const std::vector<Scalar>& alpha_array,
+                      const void** a_array, const void** b_array,
+                      const std::vector<Scalar>& beta_array, void** c_array,
+                      const blas_int group_count, const std::vector<blas_int>& group_size,
                       const unsigned int dtype, const int device);
 
     ///@endcond
@@ -3050,7 +3050,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Add(const Tensor &Lt, const Tensor &Rt)
    */
-  Tensor operator+(const Tensor &Lt, const Tensor &Rt);
+  Tensor operator+(const Tensor& Lt, const Tensor& Rt);
 
   /**
    * @brief The addition operator between a template type and Tensor.
@@ -3062,7 +3062,7 @@ namespace cytnx {
    * @see linalg::Add(const T &lc, const Tensor &Rt)
    */
   template <class T>
-  Tensor operator+(const T &lc, const Tensor &Rt);
+  Tensor operator+(const T& lc, const Tensor& Rt);
 
   /**
    * @brief The addition operator between Tensor and a template type.
@@ -3074,7 +3074,7 @@ namespace cytnx {
    * @see linalg::Add(const Tensor &Lt, const T &rc)
    */
   template <class T>
-  Tensor operator+(const Tensor &Lt, const T &rc);
+  Tensor operator+(const Tensor& Lt, const T& rc);
 
   //------------------------------------
   /**
@@ -3087,7 +3087,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Sub(const Tensor &Lt, const Tensor &Rt)
    */
-  Tensor operator-(const Tensor &Lt, const Tensor &Rt);
+  Tensor operator-(const Tensor& Lt, const Tensor& Rt);
 
   /**
    * @brief The subtraction operator between a template type and Tensor.
@@ -3099,7 +3099,7 @@ namespace cytnx {
    * @see linalg::Sub(const T &lc, const Tensor &Rt)
    */
   template <class T>
-  Tensor operator-(const T &lc, const Tensor &Rt);
+  Tensor operator-(const T& lc, const Tensor& Rt);
 
   /**
    * @brief The subtraction operator between Tensor and a template type.
@@ -3111,7 +3111,7 @@ namespace cytnx {
    * @see linalg::Sub(const Tensor &Lt, const T &rc)
    */
   template <class T>
-  Tensor operator-(const Tensor &Lt, const T &rc);
+  Tensor operator-(const Tensor& Lt, const T& rc);
 
   //-----------------------------------
   /**
@@ -3124,7 +3124,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mul(const Tensor &Lt, const Tensor &Rt)
    */
-  Tensor operator*(const Tensor &Lt, const Tensor &Rt);
+  Tensor operator*(const Tensor& Lt, const Tensor& Rt);
 
   /**
    * @brief The multiplication operator between a template type and Tensor.
@@ -3136,7 +3136,7 @@ namespace cytnx {
    * @see linalg::Mul(const T &lc, const Tensor &Rt)
    */
   template <class T>
-  Tensor operator*(const T &lc, const Tensor &Rt);
+  Tensor operator*(const T& lc, const Tensor& Rt);
 
   /**
    * @brief The multiplication operator between Tensor and a template type.
@@ -3148,7 +3148,7 @@ namespace cytnx {
    * @see linalg::Mul(const Tensor &Lt, const T &rc)
    */
   template <class T>
-  Tensor operator*(const Tensor &Lt, const T &rc);
+  Tensor operator*(const Tensor& Lt, const T& rc);
 
   //----------------------------------
   /**
@@ -3163,7 +3163,7 @@ namespace cytnx {
    * 1. The divisor cannot be zero.
    * 2. \p Lt and \p Rt must have the same shape.
    */
-  Tensor operator/(const Tensor &Lt, const Tensor &Rt);
+  Tensor operator/(const Tensor& Lt, const Tensor& Rt);
 
   /**
    * @brief The division operator between a template type and Tensor.
@@ -3176,7 +3176,7 @@ namespace cytnx {
    * @pre The divisor cannot be zero.
    */
   template <class T>
-  Tensor operator/(const T &lc, const Tensor &Rt);
+  Tensor operator/(const T& lc, const Tensor& Rt);
 
   /**
    * @brief The division operator between Tensor and a template type.
@@ -3189,7 +3189,7 @@ namespace cytnx {
    * @pre The divisor cannot be zero.
    */
   template <class T>
-  Tensor operator/(const Tensor &Lt, const T &rc);
+  Tensor operator/(const Tensor& Lt, const T& rc);
 
   //----------------------------------
   /**
@@ -3202,7 +3202,7 @@ namespace cytnx {
    * @pre \p Lt and \p Rt must have the same shape.
    * @see linalg::Mod(const Tensor &Lt, const Tensor &Rt)
    */
-  Tensor operator%(const Tensor &Lt, const Tensor &Rt);
+  Tensor operator%(const Tensor& Lt, const Tensor& Rt);
 
   /**
    * @brief The mode operator between a template type and Tensor.
@@ -3214,7 +3214,7 @@ namespace cytnx {
    * @see linalg::Mod(const T &lc, const Tensor &Rt)
    */
   template <class T>
-  Tensor operator%(const T &lc, const Tensor &Rt);
+  Tensor operator%(const T& lc, const Tensor& Rt);
 
   /**
    * @brief The mode operator between Tensor and a template type.
@@ -3226,7 +3226,7 @@ namespace cytnx {
    * @see linalg::Mod(const Tensor &Lt, const T &rc)
    */
   template <class T>
-  Tensor operator%(const Tensor &Lt, const T &rc);
+  Tensor operator%(const Tensor& Lt, const T& rc);
 
   //----------------------------------
   /**
@@ -3238,7 +3238,7 @@ namespace cytnx {
    * @return [Tensor] the result of comparison.
    * @see linalg::Cpr(const Tensor &Lt, const Tensor &Rt)
    */
-  Tensor operator==(const Tensor &Lt, const Tensor &Rt);
+  Tensor operator==(const Tensor& Lt, const Tensor& Rt);
 
   /**
    * @brief The comparison operator between a template type and Tensor.
@@ -3250,7 +3250,7 @@ namespace cytnx {
    * @see linalg::Cpr(const T &lc, const Tensor &Rt)
    */
   template <class T>
-  Tensor operator==(const T &lc, const Tensor &Rt);
+  Tensor operator==(const T& lc, const Tensor& Rt);
 
   /**
    * @brief The comparison operator between Tensor and a template type.
@@ -3262,7 +3262,7 @@ namespace cytnx {
    * @see linalg::Cpr(const Tensor &Lt, const T &rc)
    */
   template <class T>
-  Tensor operator==(const Tensor &Lt, const T &rc);
+  Tensor operator==(const Tensor& Lt, const T& rc);
 
 }  // namespace cytnx
 

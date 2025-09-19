@@ -13,14 +13,14 @@
 
 namespace cytnx {
 
-  Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
+  Tensor zeros(const cytnx_uint64& Nelem, const unsigned int& dtype, const int& device) {
     Tensor out({Nelem}, dtype, device, true);  // init_zero
     // out is already init as zeros
     // out._impl->storage().set_zeros();
     return out;
   }
-  Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
-               const int &device) {
+  Tensor zeros(const std::vector<cytnx_uint64>& Nelem, const unsigned int& dtype,
+               const int& device) {
     // std::cout << "OK" << std::endl;
     // std::cout << Nelem << std::endl;
     Tensor out(Nelem, dtype, device, true);
@@ -28,28 +28,28 @@ namespace cytnx {
     return out;
   }
   //-----------------
-  Tensor ones(const cytnx_uint64 &Nelem, const unsigned int &dtype, const int &device) {
+  Tensor ones(const cytnx_uint64& Nelem, const unsigned int& dtype, const int& device) {
     Tensor out({Nelem}, dtype, device);  // the default
     out._impl->storage().fill(1);
     return out;
   }
-  Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
-              const int &device) {
+  Tensor ones(const std::vector<cytnx_uint64>& Nelem, const unsigned int& dtype,
+              const int& device) {
     Tensor out(Nelem, dtype, device);
     out._impl->storage().fill(1);
     return out;
   }
 
-  Tensor identity(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device) {
+  Tensor identity(const cytnx_uint64& Dim, const unsigned int& dtype, const int& device) {
     Tensor out = ones(Dim, dtype, device);
     return linalg::Diag(out);
   }
-  Tensor eye(const cytnx_uint64 &Dim, const unsigned int &dtype, const int &device) {
+  Tensor eye(const cytnx_uint64& Dim, const unsigned int& dtype, const int& device) {
     return identity(Dim, dtype, device);
   }
   //-----------------
-  Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step,
-                const unsigned int &dtype, const int &device) {
+  Tensor arange(const cytnx_double& start, const cytnx_double& end, const cytnx_double& step,
+                const unsigned int& dtype, const int& device) {
     cytnx_error_msg((end - start) / step <= 0,
                     "[ERROR] arange(start=%f,end=%f,step=%f) "
                     "No values in the sspecified range.\n",
@@ -82,13 +82,13 @@ namespace cytnx {
 
     return out;
   }
-  Tensor arange(const cytnx_int64 &Nelem) {
+  Tensor arange(const cytnx_int64& Nelem) {
     cytnx_error_msg(Nelem <= 0, "[ERROR] arange(Nelem) , %s", "Nelem must be integer > 0");
     return arange(0, Nelem, 1);
   }
 
-  Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
-                  const bool &endpoint, const unsigned int &dtype, const int &device) {
+  Tensor linspace(const cytnx_double& start, const cytnx_double& end, const cytnx_uint64& Nelem,
+                  const bool& endpoint, const unsigned int& dtype, const int& device) {
     Tensor out;
     cytnx_error_msg(Nelem == 0, "[ERROR] linspace(start,end,Nelem)%s", "Nelem cannot be zero!\n");
     out.Init({Nelem}, dtype, device);

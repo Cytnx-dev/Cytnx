@@ -9,8 +9,8 @@ using namespace std;
 namespace cytnx {
 
   //-----------------------------------------------
-  void Tensor_impl::Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype,
-                         int device, const bool &init_zero) {
+  void Tensor_impl::Init(const std::vector<cytnx_uint64>& shape, const unsigned int& dtype,
+                         int device, const bool& init_zero) {
     // check:
     cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
     cytnx_error_msg(shape.size() == 0, "%s",
@@ -28,7 +28,7 @@ namespace cytnx {
     this->_contiguous = true;
     // cout << shape << endl;
   }
-  void Tensor_impl::Init(const Storage &in) {
+  void Tensor_impl::Init(const Storage& in) {
     cytnx_error_msg(in.dtype() == Type.Void,
                     "[ERROR] cannot init Tensor using un-initialized Storage%s", "\n");
     this->_storage = in;
@@ -40,7 +40,7 @@ namespace cytnx {
     this->_contiguous = true;
   }
 
-  boost::intrusive_ptr<Tensor_impl> Tensor_impl::permute(const std::vector<cytnx_uint64> &rnks) {
+  boost::intrusive_ptr<Tensor_impl> Tensor_impl::permute(const std::vector<cytnx_uint64>& rnks) {
     // check::
     if (rnks.size() != this->_shape.size()) {
       cytnx_error_msg(true, "%s",
@@ -94,7 +94,7 @@ namespace cytnx {
     return out;
   }
 
-  void Tensor_impl::permute_(const std::vector<cytnx_uint64> &rnks) {
+  void Tensor_impl::permute_(const std::vector<cytnx_uint64>& rnks) {
     // check::
     if (rnks.size() != this->_shape.size()) {
       cytnx_error_msg(true, "%s",
@@ -159,7 +159,7 @@ namespace cytnx {
   //
 
   boost::intrusive_ptr<Tensor_impl> Tensor_impl::get(
-    const std::vector<cytnx::Accessor> &accessors) {
+    const std::vector<cytnx::Accessor>& accessors) {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
@@ -280,7 +280,7 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<Tensor_impl> Tensor_impl::get_deprecated(
-    const std::vector<cytnx::Accessor> &accessors) {
+    const std::vector<cytnx::Accessor>& accessors) {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
@@ -317,8 +317,8 @@ namespace cytnx {
     return out;
   }
 
-  void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors,
-                        const boost::intrusive_ptr<Tensor_impl> &rhs) {
+  void Tensor_impl::set(const std::vector<cytnx::Accessor>& accessors,
+                        const boost::intrusive_ptr<Tensor_impl>& rhs) {
     // cout << "calling set" << endl;
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
@@ -411,7 +411,7 @@ namespace cytnx {
   }
 
   template <class T>
-  void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const T &rc) {
+  void Tensor_impl::set(const std::vector<cytnx::Accessor>& accessors, const T& rc) {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
@@ -460,31 +460,31 @@ namespace cytnx {
     tmp.set_item(0, rc);
     this->storage()._impl->SetElem_byShape_v2(tmp._impl, curr_shape, locators, Nunit, true);
   }
-  template void Tensor_impl::set<cytnx_complex128>(const std::vector<cytnx::Accessor> &,
-                                                   const cytnx_complex128 &);
-  template void Tensor_impl::set<cytnx_complex64>(const std::vector<cytnx::Accessor> &,
-                                                  const cytnx_complex64 &);
-  template void Tensor_impl::set<cytnx_double>(const std::vector<cytnx::Accessor> &,
-                                               const cytnx_double &);
-  template void Tensor_impl::set<cytnx_float>(const std::vector<cytnx::Accessor> &,
-                                              const cytnx_float &);
-  template void Tensor_impl::set<cytnx_int64>(const std::vector<cytnx::Accessor> &,
-                                              const cytnx_int64 &);
-  template void Tensor_impl::set<cytnx_uint64>(const std::vector<cytnx::Accessor> &,
-                                               const cytnx_uint64 &);
-  template void Tensor_impl::set<cytnx_int32>(const std::vector<cytnx::Accessor> &,
-                                              const cytnx_int32 &);
-  template void Tensor_impl::set<cytnx_uint32>(const std::vector<cytnx::Accessor> &,
-                                               const cytnx_uint32 &);
-  template void Tensor_impl::set<cytnx_int16>(const std::vector<cytnx::Accessor> &,
-                                              const cytnx_int16 &);
-  template void Tensor_impl::set<cytnx_uint16>(const std::vector<cytnx::Accessor> &,
-                                               const cytnx_uint16 &);
-  template void Tensor_impl::set<cytnx_bool>(const std::vector<cytnx::Accessor> &,
-                                             const cytnx_bool &);
-  template void Tensor_impl::set<Scalar>(const std::vector<cytnx::Accessor> &, const Scalar &);
+  template void Tensor_impl::set<cytnx_complex128>(const std::vector<cytnx::Accessor>&,
+                                                   const cytnx_complex128&);
+  template void Tensor_impl::set<cytnx_complex64>(const std::vector<cytnx::Accessor>&,
+                                                  const cytnx_complex64&);
+  template void Tensor_impl::set<cytnx_double>(const std::vector<cytnx::Accessor>&,
+                                               const cytnx_double&);
+  template void Tensor_impl::set<cytnx_float>(const std::vector<cytnx::Accessor>&,
+                                              const cytnx_float&);
+  template void Tensor_impl::set<cytnx_int64>(const std::vector<cytnx::Accessor>&,
+                                              const cytnx_int64&);
+  template void Tensor_impl::set<cytnx_uint64>(const std::vector<cytnx::Accessor>&,
+                                               const cytnx_uint64&);
+  template void Tensor_impl::set<cytnx_int32>(const std::vector<cytnx::Accessor>&,
+                                              const cytnx_int32&);
+  template void Tensor_impl::set<cytnx_uint32>(const std::vector<cytnx::Accessor>&,
+                                               const cytnx_uint32&);
+  template void Tensor_impl::set<cytnx_int16>(const std::vector<cytnx::Accessor>&,
+                                              const cytnx_int16&);
+  template void Tensor_impl::set<cytnx_uint16>(const std::vector<cytnx::Accessor>&,
+                                               const cytnx_uint16&);
+  template void Tensor_impl::set<cytnx_bool>(const std::vector<cytnx::Accessor>&,
+                                             const cytnx_bool&);
+  template void Tensor_impl::set<Scalar>(const std::vector<cytnx::Accessor>&, const Scalar&);
 
-  void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors, const Scalar::Sproxy &rc) {
+  void Tensor_impl::set(const std::vector<cytnx::Accessor>& accessors, const Scalar::Sproxy& rc) {
     this->set(accessors, Scalar(rc));
   }
 

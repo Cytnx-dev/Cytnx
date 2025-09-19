@@ -10,7 +10,7 @@
 namespace cytnx {
   namespace linalg {
 
-    void iAdd(Tensor &Lt, const Tensor &Rt) {
+    void iAdd(Tensor& Lt, const Tensor& Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[iAdd]  error, the two tensors have to be on the same device.%s", "\n");
       if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {

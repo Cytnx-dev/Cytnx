@@ -4,7 +4,7 @@
 #include <vector>
 namespace cytnx {
 
-  void vec2d_col_sort(std::vector<std::vector<cytnx_int64>> &v1) {
+  void vec2d_col_sort(std::vector<std::vector<cytnx_int64>>& v1) {
     std::sort(v1.begin(), v1.end(), _fx_compare_vec_inc);
   }
   /*

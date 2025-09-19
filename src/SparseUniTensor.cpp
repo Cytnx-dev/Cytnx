@@ -12,10 +12,10 @@
 using namespace std;
 namespace cytnx {
   typedef Accessor ac;
-  void SparseUniTensor::Init(const std::vector<Bond> &bonds, const std::vector<string> &in_labels,
-                             const cytnx_int64 &rowrank, const unsigned int &dtype,
-                             const int &device, const bool &is_diag, const bool &no_alloc,
-                             const std::string &name) {
+  void SparseUniTensor::Init(const std::vector<Bond>& bonds, const std::vector<string>& in_labels,
+                             const cytnx_int64& rowrank, const unsigned int& dtype,
+                             const int& device, const bool& is_diag, const bool& no_alloc,
+                             const std::string& name) {
     // the entering is already check all the bonds have symmetry.
     //  need to check:
     //  1. the # of symmetry and their type across all bonds
@@ -154,7 +154,7 @@ namespace cytnx {
   //   Init(bonds, vs, rowrank, dtype, device, is_diag, no_alloc);
   // }
 
-  vector<Bond> SparseUniTensor::getTotalQnums(const bool &physical) {
+  vector<Bond> SparseUniTensor::getTotalQnums(const bool& physical) {
     if (physical) {
       cytnx_error_msg(true, "[Developing!]%s", "\n");
       return vector<Bond>();
@@ -201,12 +201,12 @@ namespace cytnx {
     }
   }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::permute(
-    const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank, const bool &by_label) {
+    const std::vector<cytnx_int64>& mapper, const cytnx_int64& rowrank, const bool& by_label) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
     // out->permute_(mapper,rowrank,by_label);
     // return out;
 
-    SparseUniTensor *out_raw = this->clone_meta(true, true);
+    SparseUniTensor* out_raw = this->clone_meta(true, true);
     out_raw->_blocks = this->_blocks;  // share content!!
 
     std::vector<cytnx_uint64> mapper_u64;
@@ -272,13 +272,13 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(out_raw);
     return out;
   };
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::permute(const std::vector<string> &mapper,
-                                                                const cytnx_int64 &rowrank) {
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::permute(const std::vector<string>& mapper,
+                                                                const cytnx_int64& rowrank) {
     // boost::intrusive_ptr<UniTensor_base> out = this->clone();
     // out->permute_(mapper,rowrank,by_label);
     // return out;
 
-    SparseUniTensor *out_raw = this->clone_meta(true, true);
+    SparseUniTensor* out_raw = this->clone_meta(true, true);
     out_raw->_blocks = this->_blocks;  // share content!!
 
     std::vector<cytnx_uint64> mapper_u64;
@@ -401,8 +401,8 @@ namespace cytnx {
     return out;
   };
   */
-  void SparseUniTensor::permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank,
-                                 const bool &by_label) {
+  void SparseUniTensor::permute_(const std::vector<cytnx_int64>& mapper, const cytnx_int64& rowrank,
+                                 const bool& by_label) {
     std::vector<cytnx_uint64> mapper_u64;
     if (by_label) {
       // cytnx_error_msg(true,"[Developing!]%s","\n");
@@ -465,7 +465,7 @@ namespace cytnx {
     // update braket form status.
     this->_is_braket_form = this->_update_braket();
   }
-  void SparseUniTensor::permute_(const std::vector<string> &mapper, const cytnx_int64 &rowrank) {
+  void SparseUniTensor::permute_(const std::vector<string>& mapper, const cytnx_int64& rowrank) {
     std::vector<cytnx_uint64> mapper_u64;
     // cytnx_error_msg(true,"[Developing!]%s","\n");
     std::vector<string>::iterator it;
@@ -579,87 +579,87 @@ namespace cytnx {
   */
 
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(
-    const std::vector<string> &new_labels) {
-    SparseUniTensor *tmp = this->clone_meta(true, true);
+    const std::vector<string>& new_labels) {
+    SparseUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_labels(new_labels);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void SparseUniTensor::relabels_(const std::vector<string> &new_labels) {
+  void SparseUniTensor::relabels_(const std::vector<string>& new_labels) {
     this->set_labels(new_labels);
   }
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabels(
-    const std::vector<cytnx_int64> &new_labels) {
+    const std::vector<cytnx_int64>& new_labels) {
     vector<string> vs(new_labels.size());
     transform(new_labels.begin(), new_labels.end(), vs.begin(),
               [](cytnx_int64 x) -> string { return to_string(x); });
     return relabels(vs);
   }
-  void SparseUniTensor::relabels_(const std::vector<cytnx_int64> &new_labels) {
+  void SparseUniTensor::relabels_(const std::vector<cytnx_int64>& new_labels) {
     vector<string> vs(new_labels.size());
     transform(new_labels.begin(), new_labels.end(), vs.begin(),
               [](cytnx_int64 x) -> string { return to_string(x); });
     relabels_(vs);
   }
 
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
-                                                                const cytnx_int64 &new_label,
-                                                                const bool &by_label) {
-    SparseUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64& inx,
+                                                                const cytnx_int64& new_label,
+                                                                const bool& by_label) {
+    SparseUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label, by_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void SparseUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label,
-                                 const bool &by_label) {
+  void SparseUniTensor::relabel_(const cytnx_int64& inx, const cytnx_int64& new_label,
+                                 const bool& by_label) {
     this->set_label(inx, new_label, by_label);
   }
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
-                                                                const string &new_label) {
-    SparseUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64& inx,
+                                                                const string& new_label) {
+    SparseUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void SparseUniTensor::relabel_(const cytnx_int64 &inx, const string &new_label) {
+  void SparseUniTensor::relabel_(const cytnx_int64& inx, const string& new_label) {
     this->set_label(inx, new_label);
   }
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const string &inx,
-                                                                const string &new_label) {
-    SparseUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const string& inx,
+                                                                const string& new_label) {
+    SparseUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void SparseUniTensor::relabel_(const string &inx, const string &new_label) {
+  void SparseUniTensor::relabel_(const string& inx, const string& new_label) {
     this->set_label(inx, new_label);
   }
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64 &inx,
-                                                                const cytnx_int64 &new_label) {
-    SparseUniTensor *tmp = this->clone_meta(true, true);
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::relabel(const cytnx_int64& inx,
+                                                                const cytnx_int64& new_label) {
+    SparseUniTensor* tmp = this->clone_meta(true, true);
     tmp->_blocks = this->_blocks;
     tmp->set_label(inx, new_label);
     boost::intrusive_ptr<UniTensor_base> out(tmp);
     return out;
   }
-  void SparseUniTensor::relabel_(const cytnx_int64 &inx, const cytnx_int64 &new_label) {
+  void SparseUniTensor::relabel_(const cytnx_int64& inx, const cytnx_int64& new_label) {
     this->set_label(inx, new_label);
   }
 
   std::vector<Symmetry> SparseUniTensor::syms() const { return this->_bonds[0].syms(); }
 
-  void SparseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+  void SparseUniTensor::print_block(const cytnx_int64& idx, const bool& full_info) const {
     cytnx_error_msg(true, "[ERROR] SpareUniTensor does not support individual printing.%s", "\n");
   }
 
-  void SparseUniTensor::print_blocks(const bool &full_info) const {
-    std::ostream &os = std::cout;
+  void SparseUniTensor::print_blocks(const bool& full_info) const {
+    std::ostream& os = std::cout;
     os << "-------- start of print ---------\n";
-    char *buffer = (char *)malloc(sizeof(char) * 1024);
+    char* buffer = (char*)malloc(sizeof(char) * 1024);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
     os << std::string(buffer);
     if (this->_is_tag)
@@ -700,8 +700,8 @@ namespace cytnx {
     free(buffer);
   }
 
-  void SparseUniTensor::print_diagram(const bool &bond_info) const {
-    char *buffer = (char *)malloc(1024 * sizeof(char));
+  void SparseUniTensor::print_diagram(const bool& bond_info) const {
+    char* buffer = (char*)malloc(1024 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
@@ -729,10 +729,10 @@ namespace cytnx {
       vl = Nout;
 
     std::string bks;
-    char *l = (char *)malloc(BUFFsize * sizeof(char));
-    char *llbl = (char *)malloc(BUFFsize * sizeof(char));
-    char *r = (char *)malloc(BUFFsize * sizeof(char));
-    char *rlbl = (char *)malloc(BUFFsize * sizeof(char));
+    char* l = (char*)malloc(BUFFsize * sizeof(char));
+    char* llbl = (char*)malloc(BUFFsize * sizeof(char));
+    char* r = (char*)malloc(BUFFsize * sizeof(char));
+    char* rlbl = (char*)malloc(BUFFsize * sizeof(char));
 
     int Space_Llabel_max = 0, Space_Ldim_max = 0, Space_Rdim_max = 0;
     // quickly checking the size for each line, only check the largest!
@@ -839,7 +839,7 @@ namespace cytnx {
       return out;
     } else {
       // make new instance
-      SparseUniTensor *tmp = new SparseUniTensor();
+      SparseUniTensor* tmp = new SparseUniTensor();
       // tmp->Init(this->_bonds, this->_labels, this->_rowrank, this->dtype(), this->device(),
       //           this->_is_diag);
       tmp->Init(this->_bonds, this->_labels, this->_rowrank, this->dtype(), this->device(),
@@ -887,10 +887,10 @@ namespace cytnx {
   // at_for_sparse;
   //=======================================================================
   // some helper function:
-  std::vector<cytnx_uint64> _locator_to_inner_ij(const std::vector<cytnx_uint64> &locator,
-                                                 const std::vector<cytnx_uint64> &current_shape,
-                                                 const cytnx_uint64 &inner_rowrank,
-                                                 const std::vector<cytnx_uint64> &inv_mapper) {
+  std::vector<cytnx_uint64> _locator_to_inner_ij(const std::vector<cytnx_uint64>& locator,
+                                                 const std::vector<cytnx_uint64>& current_shape,
+                                                 const cytnx_uint64& inner_rowrank,
+                                                 const std::vector<cytnx_uint64>& inv_mapper) {
     // 1. map the locator to the memory layout:
     std::vector<cytnx_uint64> mem_locator = vec_map(locator, inv_mapper);
 
@@ -923,7 +923,7 @@ namespace cytnx {
     return {cartesian2c(row_locator, acc_in_old), cartesian2c(col_locator, acc_out_old)};
   }
 
-  Scalar::Sproxy SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator) {
+  Scalar::Sproxy SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -935,8 +935,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -955,7 +955,7 @@ namespace cytnx {
     return this->_blocks[block_index].at({it1->second.second, it2->second.second});
   }
   const Scalar::Sproxy SparseUniTensor::at_for_sparse(
-    const std::vector<cytnx_uint64> &locator) const {
+    const std::vector<cytnx_uint64>& locator) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -967,8 +967,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -987,8 +987,8 @@ namespace cytnx {
     return this->_blocks[block_index].at({it1->second.second, it2->second.second});
   }
 
-  cytnx_complex128 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                   const cytnx_complex128 &aux) {
+  cytnx_complex128& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                   const cytnx_complex128& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1000,8 +1000,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1020,8 +1020,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_complex128>(
       {it1->second.second, it2->second.second});
   }
-  const cytnx_complex128 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                         const cytnx_complex128 &aux) const {
+  const cytnx_complex128& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                         const cytnx_complex128& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1033,8 +1033,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1055,8 +1055,8 @@ namespace cytnx {
   }
 
   //-----------------------------------------
-  cytnx_complex64 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                  const cytnx_complex64 &aux) {
+  cytnx_complex64& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                  const cytnx_complex64& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1068,8 +1068,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1087,8 +1087,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_complex64>({it1->second.second, it2->second.second});
   }
-  const cytnx_complex64 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                        const cytnx_complex64 &aux) const {
+  const cytnx_complex64& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                        const cytnx_complex64& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1100,8 +1100,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1120,8 +1120,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_complex64>({it1->second.second, it2->second.second});
   }
   //-------------------------------------
-  cytnx_double &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                               const cytnx_double &aux) {
+  cytnx_double& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                               const cytnx_double& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1133,8 +1133,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1152,8 +1152,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_double>({it1->second.second, it2->second.second});
   }
-  const cytnx_double &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                     const cytnx_double &aux) const {
+  const cytnx_double& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                     const cytnx_double& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1165,8 +1165,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1185,8 +1185,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_double>({it1->second.second, it2->second.second});
   }
   //--------------------------------------
-  cytnx_float &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_float &aux) {
+  cytnx_float& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_float& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1198,8 +1198,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1217,8 +1217,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_float>({it1->second.second, it2->second.second});
   }
-  const cytnx_float &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_float &aux) const {
+  const cytnx_float& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_float& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1230,8 +1230,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1250,8 +1250,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_float>({it1->second.second, it2->second.second});
   }
   //--------------------------------------
-  cytnx_uint64 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                               const cytnx_uint64 &aux) {
+  cytnx_uint64& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                               const cytnx_uint64& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1263,8 +1263,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1282,8 +1282,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_uint64>({it1->second.second, it2->second.second});
   }
-  const cytnx_uint64 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                     const cytnx_uint64 &aux) const {
+  const cytnx_uint64& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                     const cytnx_uint64& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1295,8 +1295,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1315,8 +1315,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_uint64>({it1->second.second, it2->second.second});
   }
   //--------------------------------------
-  cytnx_int64 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_int64 &aux) {
+  cytnx_int64& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_int64& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1328,8 +1328,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1347,8 +1347,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_int64>({it1->second.second, it2->second.second});
   }
-  const cytnx_int64 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_int64 &aux) const {
+  const cytnx_int64& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_int64& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1360,8 +1360,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1380,8 +1380,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_int64>({it1->second.second, it2->second.second});
   }
   //--------------------------------------
-  cytnx_uint32 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                               const cytnx_uint32 &aux) {
+  cytnx_uint32& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                               const cytnx_uint32& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1393,8 +1393,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1412,8 +1412,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_uint32>({it1->second.second, it2->second.second});
   }
-  const cytnx_uint32 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                     const cytnx_uint32 &aux) const {
+  const cytnx_uint32& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                     const cytnx_uint32& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1425,8 +1425,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1445,8 +1445,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_uint32>({it1->second.second, it2->second.second});
   }
   //--------------------------------------
-  cytnx_int32 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_int32 &aux) {
+  cytnx_int32& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_int32& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1458,8 +1458,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1477,8 +1477,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_int32>({it1->second.second, it2->second.second});
   }
-  const cytnx_int32 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_int32 &aux) const {
+  const cytnx_int32& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_int32& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1490,8 +1490,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1510,8 +1510,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_int32>({it1->second.second, it2->second.second});
   }
   //--------------------------------------
-  cytnx_uint16 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                               const cytnx_uint16 &aux) {
+  cytnx_uint16& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                               const cytnx_uint16& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1523,8 +1523,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1542,8 +1542,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_uint16>({it1->second.second, it2->second.second});
   }
-  const cytnx_uint16 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                     const cytnx_uint16 &aux) const {
+  const cytnx_uint16& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                     const cytnx_uint16& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1555,8 +1555,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1575,8 +1575,8 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_uint16>({it1->second.second, it2->second.second});
   }
   //--------------------------------------
-  cytnx_int16 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                              const cytnx_int16 &aux) {
+  cytnx_int16& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                              const cytnx_int16& aux) {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1588,8 +1588,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1607,8 +1607,8 @@ namespace cytnx {
     cytnx_uint64 block_index = it1->second.first;
     return this->_blocks[block_index].at<cytnx_int16>({it1->second.second, it2->second.second});
   }
-  const cytnx_int16 &SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64> &locator,
-                                                    const cytnx_int16 &aux) const {
+  const cytnx_int16& SparseUniTensor::at_for_sparse(const std::vector<cytnx_uint64>& locator,
+                                                    const cytnx_int16& aux) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1620,8 +1620,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     // 3. check if the item is there:
     //  if they ref to different block, then the element is invalid (zero)
@@ -1640,7 +1640,7 @@ namespace cytnx {
     return this->_blocks[block_index].at<cytnx_int16>({it1->second.second, it2->second.second});
   }
   //================================
-  bool SparseUniTensor::elem_exists(const std::vector<cytnx_uint64> &locator) const {
+  bool SparseUniTensor::elem_exists(const std::vector<cytnx_uint64>& locator) const {
     // 1. check if out of range:
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
@@ -1653,8 +1653,8 @@ namespace cytnx {
     // 2. calculate the location in real memory using meta datas.
     std::vector<cytnx_uint64> ij =
       _locator_to_inner_ij(locator, this->shape(), this->_inner_rowrank, this->_inv_mapper);
-    cytnx_uint64 &i = ij[0];
-    cytnx_uint64 &j = ij[1];
+    cytnx_uint64& i = ij[0];
+    cytnx_uint64& j = ij[1];
 
     //[DEBUG]
     /*
@@ -1725,9 +1725,9 @@ namespace cytnx {
     return R;
   }
 
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const cytnx_int64 &a,
-                                                              const cytnx_int64 &b,
-                                                              const bool &by_label) {
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const cytnx_int64& a,
+                                                              const cytnx_int64& b,
+                                                              const bool& by_label) {
     cytnx_error_msg(
       this->_bonds.size() != 2,
       "[ERROR] SparseUniTensor currently only support Trace on SparseUniTensor with rank-2!%s",
@@ -1796,8 +1796,8 @@ namespace cytnx {
     out->Init_by_Tensor(t, false, 0);
     return out;
   }
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const cytnx_int64 &a,
-                                                              const cytnx_int64 &b) {
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const cytnx_int64& a,
+                                                              const cytnx_int64& b) {
     cytnx_error_msg(
       this->_bonds.size() != 2,
       "[ERROR] SparseUniTensor currently only support Trace on SparseUniTensor with rank-2!%s",
@@ -1861,7 +1861,7 @@ namespace cytnx {
     out->Init_by_Tensor(t, false, 0);
     return out;
   }
-  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const string &a, const string &b) {
+  boost::intrusive_ptr<UniTensor_base> SparseUniTensor::Trace(const string& a, const string& b) {
     cytnx_error_msg(
       this->_bonds.size() != 2,
       "[ERROR] SparseUniTensor currently only support Trace on SparseUniTensor with rank-2!%s",
@@ -1925,8 +1925,8 @@ namespace cytnx {
   }
 
   boost::intrusive_ptr<UniTensor_base> SparseUniTensor::contract(
-    const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
-    const bool &mv_elem_rhs) {
+    const boost::intrusive_ptr<UniTensor_base>& rhs, const bool& mv_elem_self,
+    const bool& mv_elem_rhs) {
     // cytnx_error_msg(true,"[ERROR][Developing.]%s","\n");
 
     // checking type
@@ -1944,7 +1944,7 @@ namespace cytnx {
     vec_intersect_(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
 
     // output instance:
-    SparseUniTensor *tmp = new SparseUniTensor();
+    SparseUniTensor* tmp = new SparseUniTensor();
 
     bool is_scalar_out = false;
     std::vector<string> out_labels;
@@ -2147,9 +2147,9 @@ namespace cytnx {
         vector<cytnx_int64> i64lblthis;
         vector<cytnx_int64> i64lblrhs;
         std::transform(this->labels().begin(), this->labels().end(), i64lblthis.begin(),
-                       [](const string &x) -> cytnx_int64 { return stoi(x); });
+                       [](const string& x) -> cytnx_int64 { return stoi(x); });
         std::transform(this->labels().begin(), this->labels().end(), i64lblrhs.begin(),
-                       [](const string &x) -> cytnx_int64 { return stoi(x); });
+                       [](const string& x) -> cytnx_int64 { return stoi(x); });
         cytnx_int64 minlblint = min(*std::min_element(i64lblthis.begin(), i64lblthis.end()),
                                     *std::min_element(i64lblrhs.begin(), i64lblrhs.end()));
         // string minlbl = to_string(minlblint);
@@ -2231,7 +2231,7 @@ namespace cytnx {
         }
 
         for (int i = 0; i < comm_qnums.size(); i++) {
-          Tensor &T = tmp->get_block_(comm_qnums[i], true);
+          Tensor& T = tmp->get_block_(comm_qnums[i], true);
           Tensor otmp =
             t_this->get_block_(comm_qnums[i], true) * t_rhs->get_block_(comm_qnums[i], true);
           cytnx_error_msg(otmp.shape() != T.shape(),
@@ -2253,7 +2253,7 @@ namespace cytnx {
           // cout << comm_qnums << endl;
 
           for (int i = 0; i < comm_qnums.size(); i++) {
-            Tensor &T = tmp->get_block_(comm_qnums[i], true);
+            Tensor& T = tmp->get_block_(comm_qnums[i], true);
             Tensor otmp = linalg::Matmul_dg(t_this->get_block_(comm_qnums[i], true),
                                             t_rhs->get_block_(comm_qnums[i], true));
             cytnx_error_msg(otmp.shape() != T.shape(),
@@ -2295,7 +2295,7 @@ namespace cytnx {
           // cout << comm_qnums << endl;
 
           for (int i = 0; i < comm_qnums.size(); i++) {
-            Tensor &T = tmp->get_block_(comm_qnums[i], true);
+            Tensor& T = tmp->get_block_(comm_qnums[i], true);
             Tensor otmp = linalg::Matmul(t_this->get_block_(comm_qnums[i], true),
                                          t_rhs->get_block_(comm_qnums[i], true));
             cytnx_error_msg(otmp.shape() != T.shape(),
@@ -2321,33 +2321,33 @@ namespace cytnx {
     }
   }
 
-  void SparseUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim,
-                                  const bool &by_label) {
+  void SparseUniTensor::truncate_(const cytnx_int64& bond_idx, const cytnx_uint64& dim,
+                                  const bool& by_label) {
     cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
   }
-  void SparseUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim) {
+  void SparseUniTensor::truncate_(const cytnx_int64& bond_idx, const cytnx_uint64& dim) {
     cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
   }
-  void SparseUniTensor::truncate_(const string &bond_idx, const cytnx_uint64 &dim) {
+  void SparseUniTensor::truncate_(const string& bond_idx, const cytnx_uint64& dim) {
     cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
   }
 
-  void SparseUniTensor::_save_dispatch(std::fstream &f) const {
+  void SparseUniTensor::_save_dispatch(std::fstream& f) const {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks = this->_blocks.size();
-    f.write((char *)&Nblocks, sizeof(cytnx_uint64));
+    f.write((char*)&Nblocks, sizeof(cytnx_uint64));
 
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i]._Save(f);
     }
   }
 
-  void SparseUniTensor::_load_dispatch(std::fstream &f) {
+  void SparseUniTensor::_load_dispatch(std::fstream& f) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks;
-    f.read((char *)&Nblocks, sizeof(cytnx_uint64));
+    f.read((char*)&Nblocks, sizeof(cytnx_uint64));
 
     this->Init(this->_bonds, this->_labels, this->_rowrank, Type.Double, Device.cpu, false, true);
     cytnx_error_msg(Nblocks != this->_blocks.size(), "[ERROR] corrupted data. SparseUniTensor%s",
@@ -2359,34 +2359,34 @@ namespace cytnx {
   }
 
   // arithmetic
-  void SparseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void SparseUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base>& rhs) {
     cytnx_error_msg(true, "[ERROR] cannot perform arithmetic + with one of UniTensor is sparse!.%s",
                     "\n");
   }
-  void SparseUniTensor::Add_(const Scalar &rhs) {
+  void SparseUniTensor::Add_(const Scalar& rhs) {
     cytnx_error_msg(true, "[ERROR] cannot perform arithmetic + btwn Scalar and SparseUniTensor!.%s",
                     "\n");
   }
 
-  void SparseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void SparseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base>& rhs) {
     cytnx_error_msg(true, "[ERROR] cannot perform arithmetic - with one of UniTensor is sparse!.%s",
                     "\n");
   }
-  void SparseUniTensor::Sub_(const Scalar &rhs) {
+  void SparseUniTensor::Sub_(const Scalar& rhs) {
     cytnx_error_msg(true, "[ERROR] cannot perform arithmetic - btwn Scalar and UniTensor!.%s",
                     "\n");
   }
-  void SparseUniTensor::lSub_(const Scalar &lhs) {
+  void SparseUniTensor::lSub_(const Scalar& lhs) {
     cytnx_error_msg(true, "[ERROR] cannot perform arithmetic - btwn Scalar and UniTensor!.%s",
                     "\n");
   }
 
-  void SparseUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void SparseUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base>& rhs) {
     cytnx_error_msg(true, "[ERROR] cannot perform arithmetic * with one of UniTensor is sparse!.%s",
                     "\n");
   }
 
-  void SparseUniTensor::Mul_(const Scalar &rhs) {
+  void SparseUniTensor::Mul_(const Scalar& rhs) {
     // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
@@ -2394,10 +2394,10 @@ namespace cytnx {
     }
   }
 
-  void SparseUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+  void SparseUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base>& rhs) {
     cytnx_error_msg(true, "[ERROR] cannot arithmetic SparseUniTensor/SparseUniTensor.%s", "\n");
   }
-  void SparseUniTensor::Div_(const Scalar &rhs) {
+  void SparseUniTensor::Div_(const Scalar& rhs) {
     // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
@@ -2405,7 +2405,7 @@ namespace cytnx {
     }
   }
 
-  void SparseUniTensor::lDiv_(const Scalar &lhs) {
+  void SparseUniTensor::lDiv_(const Scalar& lhs) {
     cytnx_error_msg(true, "[ERROR] cannot arithmetic Scalar/SparseUniTensor.%s", "\n");
   }
 

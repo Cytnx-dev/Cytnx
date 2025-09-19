@@ -11,7 +11,7 @@
   #include "backend/Scalar.hpp"
 namespace cytnx {
   namespace algo {
-    Tensor Sort(const Tensor &Tin) {
+    Tensor Sort(const Tensor& Tin) {
       Tensor out;
       if (Tin.is_contiguous())
         out = Tin.clone();

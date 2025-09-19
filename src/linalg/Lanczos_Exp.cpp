@@ -20,36 +20,36 @@ namespace cytnx {
     using namespace std;
 
     // <A|B>
-    static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
+    static Scalar _Dot(const UniTensor& A, const UniTensor& B) {
       return Contract(A.Dagger(), B).item();
     }
 
     // project v to u
-    static UniTensor _Gram_Schimidt_proj(const UniTensor &v, const UniTensor &u) {
+    static UniTensor _Gram_Schimidt_proj(const UniTensor& v, const UniTensor& u) {
       auto nu = _Dot(u, v);
       auto de = _Dot(u, u);
       auto coe = nu / de;
       return coe * u;
     }
 
-    static UniTensor _Gram_Schimidt(const std::vector<UniTensor> &vs) {
+    static UniTensor _Gram_Schimidt(const std::vector<UniTensor>& vs) {
       auto u = vs.at(0).clone();
       double low = -1.0, high = 1.0;
       random::uniform_(u, low, high);
-      for (auto &v : vs) {
+      for (auto& v : vs) {
         u -= _Gram_Schimidt_proj(u, v);
       }
       return u;
     }
 
-    static Tensor _resize_mat(const Tensor &src, const cytnx_uint64 r, const cytnx_uint64 c) {
+    static Tensor _resize_mat(const Tensor& src, const cytnx_uint64 r, const cytnx_uint64 c) {
       const auto min_r = std::min(r, src.shape()[0]);
       const auto min_c = std::min(c, src.shape()[1]);
       // Tensor dst = src[{ac::range(0,min_r),ac::range(0,min_c)}];
 
       Tensor dst = Tensor({min_r, min_c}, src.dtype(), src.device(), false);
-      char *tgt = (char *)dst.storage().data();
-      char *csc = (char *)src.storage().data();
+      char* tgt = (char*)dst.storage().data();
+      char* csc = (char*)src.storage().data();
       unsigned long long Offset_csc = Type.typeSize(src.dtype()) * src.shape()[1];
       unsigned long long Offset_tgt = Type.typeSize(src.dtype()) * min_c;
       for (auto i = 0; i < min_r; ++i) {
@@ -61,9 +61,9 @@ namespace cytnx {
 
     // BiCGSTAB method to solve the linear equation
     // ref: https://en.wikipedia.org/wiki/Biconjugate_gradient_stabilized_method
-    UniTensor _invert_biCGSTAB(LinOp *Hop, const UniTensor &b, const UniTensor &Tin, const int &k,
-                               const double &CvgCrit = 1.0e-12,
-                               const unsigned int &Maxiter = 10000) {
+    UniTensor _invert_biCGSTAB(LinOp* Hop, const UniTensor& b, const UniTensor& Tin, const int& k,
+                               const double& CvgCrit = 1.0e-12,
+                               const unsigned int& Maxiter = 10000) {
       // the operation (I + Hop/k) on A
       auto I_plus_A_Op = [&](UniTensor A) {
         return ((Hop->matvec(A)) / k + A).relabels_(b.labels());
@@ -116,9 +116,9 @@ namespace cytnx {
     }
 
     // ref:  https://doi.org/10.48550/arXiv.1111.1491
-    void _Lanczos_Exp_Ut_positive(UniTensor &out, LinOp *Hop, const UniTensor &Tin,
-                                  const double &CvgCrit, const unsigned int &Maxiter,
-                                  const bool &verbose) {
+    void _Lanczos_Exp_Ut_positive(UniTensor& out, LinOp* Hop, const UniTensor& Tin,
+                                  const double& CvgCrit, const unsigned int& Maxiter,
+                                  const bool& verbose) {
       double delta = CvgCrit;
       int k = static_cast<int>(std::log(1.0 / delta));
       k = k < Maxiter ? k : Maxiter;
@@ -226,8 +226,8 @@ namespace cytnx {
       out.set_rowrank_(v0.rowrank());
     }
 
-    void _Lanczos_Exp_Ut(UniTensor &out, LinOp *Hop, const UniTensor &T, Scalar tau,
-                         const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose) {
+    void _Lanczos_Exp_Ut(UniTensor& out, LinOp* Hop, const UniTensor& T, Scalar tau,
+                         const double& CvgCrit, const unsigned int& Maxiter, const bool& verbose) {
       const double beta_tol = 1.0e-6;
       std::vector<UniTensor> vs;
       cytnx_uint32 vec_len = Hop->nx();
@@ -356,8 +356,8 @@ namespace cytnx {
     }
 
     // Lanczos_Exp
-    UniTensor Lanczos_Exp(LinOp *Hop, const UniTensor &Tin, const Scalar &tau,
-                          const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose) {
+    UniTensor Lanczos_Exp(LinOp* Hop, const UniTensor& Tin, const Scalar& tau,
+                          const double& CvgCrit, const unsigned int& Maxiter, const bool& verbose) {
       // check device:
       cytnx_error_msg(Hop->device() != Device.cpu,
                       "[ERROR][Lanczos_Exp] Lanczos_Exp still not sopprot cuda devices.%s", "\n");

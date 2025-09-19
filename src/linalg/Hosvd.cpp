@@ -13,9 +13,9 @@ using namespace std;
 namespace cytnx {
   namespace linalg {
 
-    std::vector<Tensor> Hosvd(const Tensor &Tin, const std::vector<cytnx_uint64> &mode,
-                              const bool &is_core, const bool &is_Ls,
-                              const std::vector<cytnx_int64> &truncate_dim) {
+    std::vector<Tensor> Hosvd(const Tensor& Tin, const std::vector<cytnx_uint64>& mode,
+                              const bool& is_core, const bool& is_Ls,
+                              const std::vector<cytnx_int64>& truncate_dim) {
       // cytnx_error_msg(Tin.shape().size() != 2,"[Svd] error, Svd can only operate on rank-2
       // Tensor.%s","\n"); cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be
       // contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -29,10 +29,10 @@ namespace cytnx {
 
 namespace cytnx {
   namespace linalg {
-    std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor &Tin,
-                                        const std::vector<cytnx_uint64> &mode, const bool &is_core,
-                                        const bool &is_Ls,
-                                        const std::vector<cytnx_int64> &truncate_dim) {
+    std::vector<cytnx::UniTensor> Hosvd(const cytnx::UniTensor& Tin,
+                                        const std::vector<cytnx_uint64>& mode, const bool& is_core,
+                                        const bool& is_Ls,
+                                        const std::vector<cytnx_int64>& truncate_dim) {
       // checking mode:
       cytnx_error_msg(mode.size() < 1, "[Hosvd] error mode must be at least 1 element.%s", "\n");
       if (truncate_dim.size() != 0) {

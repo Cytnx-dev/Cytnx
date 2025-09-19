@@ -52,28 +52,28 @@ namespace cytnx {
     std::vector<std::vector<cytnx_int64>> _qnums;  //(dim, # of sym)
     std::vector<Symmetry> _syms;
 
-    Bond_impl() : _dim(0), _type(bondType::BD_REG){};
+    Bond_impl() : _dim(0), _type(bondType::BD_REG) {};
 
-    void _rm_qnum(const cytnx_uint64 &q_index) {
+    void _rm_qnum(const cytnx_uint64& q_index) {
       // this will not check, so check it before using this internal function!!
       this->_dim -= this->_degs[q_index];
       this->_degs.erase(this->_degs.begin() + q_index);
       this->_qnums.erase(this->_qnums.begin() + q_index);
     }
 
-    void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG);
+    void Init(const cytnx_uint64& dim, const bondType& bd_type = bondType::BD_REG);
 
     // new added
-    void Init(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
-              const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {});
+    void Init(const bondType& bd_type, const std::vector<std::vector<cytnx_int64>>& in_qnums,
+              const std::vector<cytnx_uint64>& degs, const std::vector<Symmetry>& in_syms = {});
 
     bondType type() const { return this->_type; };
-    const std::vector<std::vector<cytnx_int64>> &qnums() const { return this->_qnums; }
-    std::vector<std::vector<cytnx_int64>> &qnums() { return this->_qnums; }
-    const cytnx_uint64 &dim() const { return this->_dim; }
+    const std::vector<std::vector<cytnx_int64>>& qnums() const { return this->_qnums; }
+    std::vector<std::vector<cytnx_int64>>& qnums() { return this->_qnums; }
+    const cytnx_uint64& dim() const { return this->_dim; }
     cytnx_uint32 Nsym() const { return this->_syms.size(); }
-    const std::vector<Symmetry> &syms() const { return this->_syms; }
-    std::vector<Symmetry> &syms() { return this->_syms; }
+    const std::vector<Symmetry>& syms() const { return this->_syms; }
+    std::vector<Symmetry>& syms() { return this->_syms; }
 
     // this is clone return.
     std::vector<std::vector<cytnx_int64>> qnums_clone() const { return this->_qnums; }
@@ -89,7 +89,7 @@ namespace cytnx {
       }
     }
 
-    void set_type(const bondType &new_bondType) {
+    void set_type(const bondType& new_bondType) {
       if ((this->_type != BD_REG)) {
         if (new_bondType == BD_REG) {
           cytnx_error_msg(this->_qnums.size(),
@@ -124,40 +124,40 @@ namespace cytnx {
 
     // [NOTE] for UniTensor internal, we might need to return the QNpool (unordered map for further
     // info on block arrangement!)
-    void combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp = true);
+    void combineBond_(const boost::intrusive_ptr<Bond_impl>& bd_in, const bool& is_grp = true);
 
-    boost::intrusive_ptr<Bond_impl> combineBond(const boost::intrusive_ptr<Bond_impl> &bd_in,
-                                                const bool &is_grp = true) {
+    boost::intrusive_ptr<Bond_impl> combineBond(const boost::intrusive_ptr<Bond_impl>& bd_in,
+                                                const bool& is_grp = true) {
       boost::intrusive_ptr<Bond_impl> out = this->clone();
       out->combineBond_(bd_in, is_grp);
       return out;
     }
 
     // return a sorted qnums by removing all duplicates, sorted from large to small.
-    std::vector<std::vector<cytnx_int64>> getUniqueQnums(std::vector<cytnx_uint64> &counts,
-                                                         const bool &return_counts);
+    std::vector<std::vector<cytnx_int64>> getUniqueQnums(std::vector<cytnx_uint64>& counts,
+                                                         const bool& return_counts);
     // checked [KHW] ^^
     // return the degeneracy of the specify qnum set.
-    cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64> &qnum, const bool &return_indices,
-                               std::vector<cytnx_uint64> &indices);
+    cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64>& qnum, const bool& return_indices,
+                               std::vector<cytnx_uint64>& indices);
 
     // return the effective qnums when Bra-Ket mismatch.
     std::vector<std::vector<cytnx_int64>> calc_reverse_qnums();
 
-    std::vector<cytnx_uint64> &getDegeneracies() { return this->_degs; };
-    const std::vector<cytnx_uint64> &getDegeneracies() const { return this->_degs; };
+    std::vector<cytnx_uint64>& getDegeneracies() { return this->_degs; };
+    const std::vector<cytnx_uint64>& getDegeneracies() const { return this->_degs; };
 
-    fermionParity get_fermion_parity(const std::vector<cytnx_int64> &qnum);
+    fermionParity get_fermion_parity(const std::vector<cytnx_int64>& qnum);
 
     std::vector<cytnx_uint64> group_duplicates_();
 
-    boost::intrusive_ptr<Bond_impl> group_duplicates(std::vector<cytnx_uint64> &mapper) const {
+    boost::intrusive_ptr<Bond_impl> group_duplicates(std::vector<cytnx_uint64>& mapper) const {
       boost::intrusive_ptr<Bond_impl> out = this->clone();
       mapper = out->group_duplicates_();
       return out;
     }
 
-    void force_combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp);
+    void force_combineBond_(const boost::intrusive_ptr<Bond_impl>& bd_in, const bool& is_grp);
 
   };  // Bond_impl
   ///@endcond
@@ -179,9 +179,9 @@ namespace cytnx {
    public:
     ///@cond
     boost::intrusive_ptr<Bond_impl> _impl;
-    Bond() : _impl(new Bond_impl()){};
-    Bond(const Bond &rhs) { this->_impl = rhs._impl; }
-    Bond &operator=(const Bond &rhs) {
+    Bond() : _impl(new Bond_impl()) {};
+    Bond(const Bond& rhs) { this->_impl = rhs._impl; }
+    Bond& operator=(const Bond& rhs) {
       this->_impl = rhs._impl;
       return *this;
     }
@@ -199,7 +199,7 @@ namespace cytnx {
      * @see
  *  Init(const cytnx_uint64 &dim, const bondType &bd_type)
      */
-    Bond(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG)
+    Bond(const cytnx_uint64& dim, const bondType& bd_type = bondType::BD_REG)
         : _impl(new Bond_impl()) {
       this->_impl->Init(dim, bd_type);
     }
@@ -224,8 +224,8 @@ namespace cytnx {
      *       const std::vector<cytnx_uint64> &degs,
      *  	 const std::vector<Symmetry> &in_syms)
      */
-    Bond(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
-         const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
+    Bond(const bondType& bd_type, const std::vector<std::vector<cytnx_int64>>& in_qnums,
+         const std::vector<cytnx_uint64>& degs, const std::vector<Symmetry>& in_syms = {})
         : _impl(new Bond_impl()) {
       this->_impl->Init(bd_type, in_qnums, degs, in_syms);
     }
@@ -237,8 +237,8 @@ namespace cytnx {
      *        const std::vector<cytnx_uint64> &degs,
      *        const std::vector<Symmetry> &in_syms)
      */
-    Bond(const bondType &bd_type, const std::initializer_list<std::vector<cytnx_int64>> &in_qnums,
-         const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
+    Bond(const bondType& bd_type, const std::initializer_list<std::vector<cytnx_int64>>& in_qnums,
+         const std::vector<cytnx_uint64>& degs, const std::vector<Symmetry>& in_syms = {})
         : _impl(new Bond_impl()) {
       this->_impl->Init(bd_type, in_qnums, degs, in_syms);
     }
@@ -251,8 +251,8 @@ namespace cytnx {
      *        const std::vector<cytnx_uint64> &degs,
      *        const std::vector<Symmetry> &in_syms)
      */
-    Bond(const bondType &bd_type, const std::vector<cytnx::Qs> &in_qnums,
-         const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {})
+    Bond(const bondType& bd_type, const std::vector<cytnx::Qs>& in_qnums,
+         const std::vector<cytnx_uint64>& degs, const std::vector<Symmetry>& in_syms = {})
         : _impl(new Bond_impl()) {
       vec2d<cytnx_int64> qnums(in_qnums.begin(), in_qnums.end());
       this->_impl->Init(bd_type, qnums, degs, in_syms);
@@ -265,9 +265,9 @@ namespace cytnx {
      *        const std::vector<cytnx_uint64> &degs,
      *        const std::vector<Symmetry> &in_syms)
      */
-    Bond(const bondType &bd_type,
-         const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>> &in_qnums_dims,
-         const std::vector<Symmetry> &in_syms = {})
+    Bond(const bondType& bd_type,
+         const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>>& in_qnums_dims,
+         const std::vector<Symmetry>& in_syms = {})
         : _impl(new Bond_impl()) {
       this->Init(bd_type, in_qnums_dims, in_syms);
     }
@@ -299,7 +299,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/Init.py.out
     */
-    void Init(const cytnx_uint64 &dim, const bondType &bd_type = bondType::BD_REG) {
+    void Init(const cytnx_uint64& dim, const bondType& bd_type = bondType::BD_REG) {
       this->_impl->Init(dim, bd_type);
     }
 
@@ -338,8 +338,8 @@ namespace cytnx {
                   or bondType.BD_KET, or bondType.BD_REG depending on the usage.
         3. The "bond dimension" is the sum over all numbers specified in degs.
     */
-    void Init(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
-              const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms = {}) {
+    void Init(const bondType& bd_type, const std::vector<std::vector<cytnx_int64>>& in_qnums,
+              const std::vector<cytnx_uint64>& degs, const std::vector<Symmetry>& in_syms = {}) {
       this->_impl->Init(bd_type, in_qnums, degs, in_syms);
     }
 
@@ -348,9 +348,9 @@ namespace cytnx {
      Init(const bondType &bd_type, const std::vector<std::vector<cytnx_int64>> &in_qnums,
           const std::vector<cytnx_uint64> &degs, const std::vector<Symmetry> &in_syms)
          */
-    void Init(const bondType &bd_type,
-              const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>> &in_qnums_dims,
-              const std::vector<Symmetry> &in_syms = {}) {
+    void Init(const bondType& bd_type,
+              const std::vector<std::pair<std::vector<cytnx_int64>, cytnx_uint64>>& in_qnums_dims,
+              const std::vector<Symmetry>& in_syms = {}) {
       vec2d<cytnx_int64> qnums(in_qnums_dims.size());
       std::vector<cytnx_uint64> degs(in_qnums_dims.size());
       for (int i = 0; i < in_qnums_dims.size(); i++) {
@@ -372,11 +372,11 @@ namespace cytnx {
     @return [2d vector] with shape: (dim, # of Symmetry)
         @note Compare to qnums_clone(), this function return reference.
     */
-    const std::vector<std::vector<cytnx_int64>> &qnums() const { return this->_impl->qnums(); };
+    const std::vector<std::vector<cytnx_int64>>& qnums() const { return this->_impl->qnums(); };
     /**
         @see qnums() const
     */
-    std::vector<std::vector<cytnx_int64>> &qnums() { return this->_impl->qnums(); };
+    std::vector<std::vector<cytnx_int64>>& qnums() { return this->_impl->qnums(); };
     //@}
 
     /**
@@ -406,11 +406,11 @@ namespace cytnx {
         @note Compare to syms_clone() const, this function return by reference.
     @return [vector of Symmetry]
     */
-    const std::vector<Symmetry> &syms() const { return this->_impl->syms(); };
+    const std::vector<Symmetry>& syms() const { return this->_impl->syms(); };
     /**
         @see syms() const
     */
-    std::vector<Symmetry> &syms() { return this->_impl->syms(); };
+    std::vector<Symmetry>& syms() { return this->_impl->syms(); };
     //@}
 
     /**
@@ -427,7 +427,7 @@ namespace cytnx {
         @attention You cannot change the symmetry bond (bondType.BD_BRA or bondType.BD_KET
             to regular type (bondType.BD_REG) except the size of the quantum number is 0.
     */
-    Bond &set_type(const bondType &new_bondType) {
+    Bond& set_type(const bondType& new_bondType) {
       this->_impl->set_type(new_bondType);
       return *this;
     }
@@ -441,7 +441,7 @@ namespace cytnx {
             to regular type (bondType.BD_REG) except the size of the quantum number is 0.
         @see clone(), set_type(const bondType & new_bondType)
     */
-    Bond retype(const bondType &new_bondType) {
+    Bond retype(const bondType& new_bondType) {
       auto out = this->clone();
       out.set_type(new_bondType);
       return out;
@@ -461,7 +461,7 @@ namespace cytnx {
     @brief Change the bond type between bondType.BD_BRA and bondType.BD_KET
             in the Bond.
     */
-    Bond &redirect_() {
+    Bond& redirect_() {
       this->set_type(bondType(int(this->type()) * -1));
       return *this;
     }
@@ -519,7 +519,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBondinplace.py.out
     */
-    void combineBond_(const Bond &bd_in, const bool &is_grp = true) {
+    void combineBond_(const Bond& bd_in, const bool& is_grp = true) {
       this->_impl->combineBond_(bd_in._impl, is_grp);
     }
 
@@ -550,7 +550,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBond.py.out
     */
-    Bond combineBond(const Bond &bd_in, const bool &is_grp = true) const {
+    Bond combineBond(const Bond& bd_in, const bool& is_grp = true) const {
       Bond out;
       out._impl = this->_impl->combineBond(bd_in._impl, is_grp);
       return out;
@@ -583,7 +583,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Bond/combineBond.py.out
     */
-    Bond combineBond(const std::vector<Bond> &bds, const bool &is_grp = true) {
+    Bond combineBond(const std::vector<Bond>& bds, const bool& is_grp = true) {
       Bond out = this->clone();
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
         out.combineBond_(bds[i], is_grp);
@@ -607,7 +607,7 @@ namespace cytnx {
           this function will create a new Bond object.
     @see combineBond(const std::vector<Bond> &bds, const bool &is_grp)
     */
-    void combineBond_(const std::vector<Bond> &bds, const bool &is_grp = true) {
+    void combineBond_(const std::vector<Bond>& bds, const bool& is_grp = true) {
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
         this->combineBond_(bds[i], is_grp);
       }
@@ -647,7 +647,7 @@ namespace cytnx {
       "Please use "
       "Bond combineBond(const Bond &bd_in, const bool &is_grp) const "
       "instead.")]] Bond
-      combineBonds(const std::vector<Bond> &bds, const bool &is_grp = true) {
+      combineBonds(const std::vector<Bond>& bds, const bool& is_grp = true) {
       Bond out = this->clone();
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
         out.combineBond_(bds[i], is_grp);
@@ -688,7 +688,7 @@ namespace cytnx {
       "Please use "
       "combineBond_(const std::vector<Bond> &bds, const bool &is_grp) "
       "instead.")]] void
-      combineBonds_(const std::vector<Bond> &bds, const bool &is_grp = true) {
+      combineBonds_(const std::vector<Bond>& bds, const bool& is_grp = true) {
       for (cytnx_uint64 i = 0; i < bds.size(); i++) {
         this->combineBond_(bds[i], is_grp);
       }
@@ -701,7 +701,7 @@ namespace cytnx {
     @return std::vector<std::vector<cytnx_int64>> unique_qnums
         @see getUniqueQnums()
     */
-    std::vector<std::vector<cytnx_int64>> getUniqueQnums(std::vector<cytnx_uint64> &counts) {
+    std::vector<std::vector<cytnx_int64>> getUniqueQnums(std::vector<cytnx_uint64>& counts) {
       return this->_impl->getUniqueQnums(counts, true);
     }
 
@@ -729,7 +729,7 @@ namespace cytnx {
          getDegeneracy(const std::vector<cytnx_int64> &qnum,
                        std::vector<cytnx_uint64> &indices) const.
     */
-    cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64> &qnum) const {
+    cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64>& qnum) const {
       std::vector<cytnx_uint64> tmp;
       return this->_impl->getDegeneracy(qnum, false, tmp);
     }
@@ -747,8 +747,8 @@ namespace cytnx {
         @see
          getDegeneracy(const std::vector<cytnx_int64> &qnum) const.
     */
-    cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64> &qnum,
-                               std::vector<cytnx_uint64> &indices) const {
+    cytnx_uint64 getDegeneracy(const std::vector<cytnx_int64>& qnum,
+                               std::vector<cytnx_uint64>& indices) const {
       indices.clear();
       return this->_impl->getDegeneracy(qnum, true, indices);
     }
@@ -761,12 +761,12 @@ namespace cytnx {
          getDegeneracy(const std::vector<cytnx_int64> &qnum,
                        std::vector<cytnx_uint64> &indices) const.
     */
-    std::vector<cytnx_uint64> &getDegeneracies() { return this->_impl->getDegeneracies(); }
+    std::vector<cytnx_uint64>& getDegeneracies() { return this->_impl->getDegeneracies(); }
 
     /**
         @see getDegeneracies()
     */
-    const std::vector<cytnx_uint64> &getDegeneracies() const {
+    const std::vector<cytnx_uint64>& getDegeneracies() const {
       return this->_impl->getDegeneracies();
     }
 
@@ -775,7 +775,7 @@ namespace cytnx {
     @param[in] in_qnum quantum number
     @return parity of the quantum number; EVEN for bosonic degree of freedom, ODD for fermionic
     */
-    fermionParity get_fermion_parity(const std::vector<cytnx_int64> &qnum) {
+    fermionParity get_fermion_parity(const std::vector<cytnx_int64>& qnum) {
       return this->_impl->get_fermion_parity(qnum);
     }
 
@@ -817,7 +817,7 @@ namespace cytnx {
             has_duplicate_qnums() const.
     @return Bond
     */
-    Bond group_duplicates(std::vector<cytnx_uint64> &mapper) const {
+    Bond group_duplicates(std::vector<cytnx_uint64>& mapper) const {
       Bond out;
       out._impl = this->_impl->group_duplicates(mapper);
       return out;
@@ -854,12 +854,12 @@ namespace cytnx {
           @param[in] fname the file name of the Bond object (exclude the file extension).
     @see Load(const std::string &fname)
     */
-    void Save(const std::string &fname) const;
+    void Save(const std::string& fname) const;
 
     /**
         @see Save(const std::string &fname) const;
     */
-    void Save(const char *fname) const;
+    void Save(const char* fname) const;
 
     /**
     @brief Load the Bond object from the file.
@@ -867,16 +867,16 @@ namespace cytnx {
           @pre The file need to be the file of Bond object, which is saved by the
       function Bond::Save(const std::string &fname) const.
     */
-    static cytnx::Bond Load(const std::string &fname);
+    static cytnx::Bond Load(const std::string& fname);
 
     /**
     @see Load(const std::string &fname)
     */
-    static cytnx::Bond Load(const char *fname);
+    static cytnx::Bond Load(const char* fname);
 
     /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
+    void _Save(std::fstream& f) const;
+    void _Load(std::fstream& f);
     /// @endcond
 
     /**
@@ -887,7 +887,7 @@ namespace cytnx {
     object (different address), but they are same "value", it will return true.
           @see operator!=(const Bond &rhs) const
     */
-    bool operator==(const Bond &rhs) const;
+    bool operator==(const Bond& rhs) const;
 
     /**
     @brief The comparison operator 'not equal to'.
@@ -895,7 +895,7 @@ namespace cytnx {
     the opposite result of the operator==(const Bond &rhs) const.
           @see operator==(const Bond &rhs) const
     */
-    bool operator!=(const Bond &rhs) const;
+    bool operator!=(const Bond& rhs) const;
 
     /**
     @brief The multiplication operator of the Bond object.
@@ -914,7 +914,7 @@ namespace cytnx {
         @see operator*=(const Bond &rhs),
         combineBond(const Bond &bd_in, const bool &is_grp) const
     */
-    Bond operator*(const Bond &rhs) const { return this->combineBond(rhs); }
+    Bond operator*(const Bond& rhs) const { return this->combineBond(rhs); }
 
     /**
     @brief The multiplication assignment operator of the Bond object.
@@ -933,14 +933,14 @@ namespace cytnx {
         @see operator*(const Bond &rhs) const,
                 combineBond_(const Bond &bd_in, const bool &is_grp)
     */
-    Bond &operator*=(const Bond &rhs) {
+    Bond& operator*=(const Bond& rhs) {
       this->combineBond_(rhs);
       return *this;
     }
   };
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Bond &bin);
+  std::ostream& operator<<(std::ostream& os, const Bond& bin);
   ///@endcond
 }  // namespace cytnx
 

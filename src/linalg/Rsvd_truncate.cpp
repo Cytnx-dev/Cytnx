@@ -20,7 +20,7 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, cytnx_uint64 keepdim, double err,
+    std::vector<Tensor> Rsvd_truncate(const Tensor& Tin, cytnx_uint64 keepdim, double err,
                                       bool is_U, bool is_vT, unsigned int return_err,
                                       cytnx_uint64 mindim, cytnx_uint64 oversampling_summand,
                                       double oversampling_factor, cytnx_uint64 power_iteration,
@@ -135,7 +135,7 @@ namespace cytnx {
       }
     }  // Rsvd_truncate(Tensor)
 
-    void _rsvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+    void _rsvd_truncate_Dense_UT(std::vector<UniTensor>& outCyT, const cytnx::UniTensor& Tin,
                                  cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
                                  unsigned int return_err, cytnx_uint64 mindim,
                                  cytnx_uint64 oversampling_summand, double oversampling_factor,
@@ -168,7 +168,7 @@ namespace cytnx {
       // cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Rsvd_truncate] keepdim should <=
       // dimension of singular tensor%s","\n");
 
-      cytnx::UniTensor &Cy_S = outCyT[t];
+      cytnx::UniTensor& Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[0].shape()[0]);
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
                 Tin.device(),
@@ -177,7 +177,7 @@ namespace cytnx {
       t++;
 
       if (is_U) {
-        cytnx::UniTensor &Cy_U = outCyT[t];
+        cytnx::UniTensor& Cy_U = outCyT[t];
         // shape
         cytnx_error_msg(Tin.rowrank() > oldshape.size(),
                         "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
@@ -196,7 +196,7 @@ namespace cytnx {
       }
 
       if (is_vT) {
-        cytnx::UniTensor &Cy_vT = outCyT[t];
+        cytnx::UniTensor& Cy_vT = outCyT[t];
 
         // shape
         std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
@@ -218,7 +218,7 @@ namespace cytnx {
         Cy_S.tag();
         t = 1;
         if (is_U) {
-          cytnx::UniTensor &Cy_U = outCyT[t];
+          cytnx::UniTensor& Cy_U = outCyT[t];
           Cy_U._impl->_is_tag = true;
           for (int i = 0; i < Cy_U.rowrank(); i++) {
             Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
@@ -228,7 +228,7 @@ namespace cytnx {
           t++;
         }
         if (is_vT) {
-          cytnx::UniTensor &Cy_vT = outCyT[t];
+          cytnx::UniTensor& Cy_vT = outCyT[t];
           Cy_vT._impl->_is_tag = true;
           Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
           for (int i = 1; i < Cy_vT.rank(); i++) {
@@ -243,7 +243,7 @@ namespace cytnx {
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
     };  // _rsvd_truncate_Dense_UT
 
-    std::vector<cytnx::UniTensor> Rsvd_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+    std::vector<cytnx::UniTensor> Rsvd_truncate(const cytnx::UniTensor& Tin, cytnx_uint64 keepdim,
                                                 double err, bool is_U, bool is_vT,
                                                 unsigned int return_err, cytnx_uint64 mindim,
                                                 cytnx_uint64 oversampling_summand,

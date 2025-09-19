@@ -8,7 +8,7 @@
 
 namespace cytnx {
   namespace linalg {
-    void Inv_(Tensor &Tin, const double &clip) {
+    void Inv_(Tensor& Tin, const double& clip) {
       if (Tin.dtype() == Type.Void) {
         cytnx_error_msg(true, "[ERROR][Inv_] Cannot operate on un-initialize Tensor.%s", "\n");
       } else if (Tin.dtype() > 4) {

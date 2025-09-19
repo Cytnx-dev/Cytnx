@@ -32,10 +32,10 @@ namespace cytnx {
       /**
       @brief initialize a histogram
       */
-      Histogram(const unsigned long long &Nbins, const double &min_val, const double &max_val);
+      Histogram(const unsigned long long& Nbins, const double& min_val, const double& max_val);
 
       ///@cond
-      Histogram(const Histogram &rhs) {
+      Histogram(const Histogram& rhs) {
         this->min = rhs.min;
         this->max = rhs.max;
         this->bins = rhs.bins;
@@ -44,7 +44,7 @@ namespace cytnx {
         this->total_count = rhs.total_count;
       }
 
-      Histogram &operator=(const Histogram &rhs) {
+      Histogram& operator=(const Histogram& rhs) {
         this->min = rhs.min;
         this->max = rhs.max;
         this->bins = rhs.bins;
@@ -61,7 +61,7 @@ namespace cytnx {
       }
 
       template <class T>
-      void accumulate(const std::vector<T> &data) {
+      void accumulate(const std::vector<T>& data) {
         std::vector<T> tmp = data;
         std::sort(tmp.begin(), tmp.end());
 
@@ -88,11 +88,11 @@ namespace cytnx {
       void normalize();
       void print() const;
 
-      const Storage &get_x() const {
+      const Storage& get_x() const {
         // get x
         return this->x;
       }
-      Storage &get_x() {
+      Storage& get_x() {
         // get x
         return this->x;
       }
@@ -119,12 +119,12 @@ namespace cytnx {
       /**
       @brief initialize a histogram
       */
-      Histogram2d(const unsigned long long &Nbinx, const unsigned long long &Nbiny,
-                  const double &min_x, const double &max_x, const double &min_y,
-                  const double &max_y);
+      Histogram2d(const unsigned long long& Nbinx, const unsigned long long& Nbiny,
+                  const double& min_x, const double& max_x, const double& min_y,
+                  const double& max_y);
 
       ///@cond
-      Histogram2d(const Histogram2d &rhs) {
+      Histogram2d(const Histogram2d& rhs) {
         this->minx = rhs.minx;
         this->maxx = rhs.maxx;
         this->miny = rhs.miny;
@@ -137,7 +137,7 @@ namespace cytnx {
         this->total_count = rhs.total_count;
       }
 
-      Histogram2d &operator=(const Histogram2d &rhs) {
+      Histogram2d& operator=(const Histogram2d& rhs) {
         this->minx = rhs.minx;
         this->maxx = rhs.maxx;
         this->miny = rhs.miny;
@@ -158,7 +158,7 @@ namespace cytnx {
       }
 
       template <class T>
-      void accumulate(const std::vector<T> &data_x, const std::vector<T> &data_y) {
+      void accumulate(const std::vector<T>& data_x, const std::vector<T>& data_y) {
         //[not fin!]
         cytnx_error_msg(
           data_x.size() != data_y.size(),
@@ -181,20 +181,20 @@ namespace cytnx {
       void normalize();
       void print() const;
 
-      const Storage &get_x() const {
+      const Storage& get_x() const {
         // get x
         return this->x;
       }
-      Storage &get_x() {
+      Storage& get_x() {
         // get x
         return this->x;
       }
 
-      const Storage &get_y() const {
+      const Storage& get_y() const {
         // get y
         return this->y;
       }
-      Storage &get_y() {
+      Storage& get_y() {
         // get y
         return this->y;
       }

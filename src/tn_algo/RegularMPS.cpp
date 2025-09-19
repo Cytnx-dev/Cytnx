@@ -13,7 +13,7 @@ using namespace std;
 namespace cytnx {
   namespace tn_algo {
 
-    std::ostream &RegularMPS::Print(std::ostream &os) {
+    std::ostream& RegularMPS::Print(std::ostream& os) {
       os << "MPS type : "
          << "[Regular]" << endl;
       os << "Size : " << this->_TNs.size() << endl;
@@ -60,8 +60,8 @@ namespace cytnx {
       return L.Trace().item();
     }
 
-    void RegularMPS::Init(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim,
-                          const cytnx_uint64 &virt_dim, const cytnx_int64 &dtype) {
+    void RegularMPS::Init(const cytnx_uint64& N, const std::vector<cytnx_uint64>& vphys_dim,
+                          const cytnx_uint64& virt_dim, const cytnx_int64& dtype) {
       // checking:
       cytnx_error_msg(N == 0, "[ERROR][RegularMPS] number of site N cannot be ZERO.%s", "\n");
       cytnx_error_msg(N != vphys_dim.size(),
@@ -71,7 +71,7 @@ namespace cytnx {
 
       this->virt_dim = virt_dim;
 
-      const cytnx_uint64 &chi = virt_dim;
+      const cytnx_uint64& chi = virt_dim;
 
       this->_TNs.resize(N);
       this->_TNs[0] = UniTensor(
@@ -114,10 +114,10 @@ namespace cytnx {
       this->Into_Lortho();
     }
 
-    void RegularMPS::Init_Msector(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim,
-                                  const cytnx_uint64 &virt_dim,
-                                  const std::vector<cytnx_int64> &select,
-                                  const cytnx_int64 &dtype) {
+    void RegularMPS::Init_Msector(const cytnx_uint64& N, const std::vector<cytnx_uint64>& vphys_dim,
+                                  const cytnx_uint64& virt_dim,
+                                  const std::vector<cytnx_int64>& select,
+                                  const cytnx_int64& dtype) {
       // checking:
       cytnx_error_msg(N == 0, "[ERROR][RegularMPS] number of site N cannot be ZERO.%s", "\n");
       cytnx_error_msg(N != vphys_dim.size(),
@@ -129,7 +129,7 @@ namespace cytnx {
 
       this->virt_dim = virt_dim;
 
-      const cytnx_uint64 &chi = virt_dim;
+      const cytnx_uint64& chi = virt_dim;
 
       this->_TNs.resize(N);
       // this->_TNs[0] = UniTensor(cytnx::random::normal({1, vphys_dim[0], min(chi, vphys_dim[0])},
@@ -266,19 +266,19 @@ namespace cytnx {
       }
     }
 
-    void RegularMPS::_save_dispatch(fstream &f) {
+    void RegularMPS::_save_dispatch(fstream& f) {
       cytnx_uint64 N = this->_TNs.size();
-      f.write((char *)&N, sizeof(cytnx_uint64));
+      f.write((char*)&N, sizeof(cytnx_uint64));
 
       // save UniTensor one by one:
       for (cytnx_uint64 i = 0; i < N; i++) {
         this->_TNs[i]._Save(f);
       }
     }
-    void RegularMPS::_load_dispatch(fstream &f) {
+    void RegularMPS::_load_dispatch(fstream& f) {
       cytnx_uint64 N;
 
-      f.read((char *)&N, sizeof(cytnx_uint64));
+      f.read((char*)&N, sizeof(cytnx_uint64));
       this->_TNs.resize(N);
 
       // Load UniTensor one by one:

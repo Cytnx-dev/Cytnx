@@ -22,14 +22,14 @@ namespace cytnx {
     //                 const vector<cytnx_uint64> &mapper, const vector<cytnx_uint64> &inv_mapper,
     //                 const cytnx_uint64 &src_inner_rowrank,  const cytnx_uint64 &dest_rowrank){
 
-    void _moving_elem(vector<Tensor> &dest_blocks, const vector<Tensor> &src_blocks,
-                      const vector<cytnx_uint64> &src_shape,
-                      const vector<vector<cytnx_uint64>> &src_inner2outer_row,
-                      const vector<vector<cytnx_uint64>> &src_inner2outer_col,
-                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_row,
-                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_col,
-                      const vector<cytnx_uint64> &mapper, const vector<cytnx_uint64> &inv_mapper,
-                      const cytnx_uint64 &src_inner_rowrank, const cytnx_uint64 &dest_rowrank) {
+    void _moving_elem(vector<Tensor>& dest_blocks, const vector<Tensor>& src_blocks,
+                      const vector<cytnx_uint64>& src_shape,
+                      const vector<vector<cytnx_uint64>>& src_inner2outer_row,
+                      const vector<vector<cytnx_uint64>>& src_inner2outer_col,
+                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>>& dest_outer2inner_row,
+                      map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>>& dest_outer2inner_col,
+                      const vector<cytnx_uint64>& mapper, const vector<cytnx_uint64>& inv_mapper,
+                      const cytnx_uint64& src_inner_rowrank, const cytnx_uint64& dest_rowrank) {
       const vector<cytnx_uint64> dest_shape = src_shape;
 
       vector<cytnx_uint64> oldshape = vec_map(src_shape, inv_mapper);
@@ -113,7 +113,7 @@ namespace cytnx {
           // (dest_outer2inner_row[new_row].second)*(dest_shapes[dest_outer2inner_row[new_row].first][1])
           // + dest_outer2inner_col[new_col].second; cytnx_int64 src_idx = i*src_shapes[b][1]+j;
 
-          static_cast<T *>(dest_mem)[dest_idx] = static_cast<T *>(src_mem)[src_idx];
+          static_cast<T*>(dest_mem)[dest_idx] = static_cast<T*>(src_mem)[src_idx];
         }  // traversal elements in given block b
       }  // end b loop
     }  // end mvelem
@@ -133,15 +133,15 @@ namespace cytnx {
     //                             dest_outer2inner_row, dest_outer2inner_col, mapper, inv_mapper,
     //                             src_inner_rowrank, dest_rowrank);
     // } // end blocks_mvelems
-    void blocks_mvelems_d(vector<Tensor> &dest_blocks, const vector<Tensor> &src_blocks,
-                          const vector<cytnx_uint64> &src_shape,
-                          const vector<vector<cytnx_uint64>> &src_inner2outer_row,
-                          const vector<vector<cytnx_uint64>> &src_inner2outer_col,
-                          map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_row,
-                          map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>> &dest_outer2inner_col,
-                          const vector<cytnx_uint64> &mapper,
-                          const vector<cytnx_uint64> &inv_mapper,
-                          const cytnx_uint64 &src_inner_rowrank, const cytnx_uint64 &dest_rowrank) {
+    void blocks_mvelems_d(vector<Tensor>& dest_blocks, const vector<Tensor>& src_blocks,
+                          const vector<cytnx_uint64>& src_shape,
+                          const vector<vector<cytnx_uint64>>& src_inner2outer_row,
+                          const vector<vector<cytnx_uint64>>& src_inner2outer_col,
+                          map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>>& dest_outer2inner_row,
+                          map<cytnx_uint64, pair<cytnx_uint64, cytnx_uint64>>& dest_outer2inner_col,
+                          const vector<cytnx_uint64>& mapper,
+                          const vector<cytnx_uint64>& inv_mapper,
+                          const cytnx_uint64& src_inner_rowrank, const cytnx_uint64& dest_rowrank) {
       _moving_elem<cytnx_double>(dest_blocks, src_blocks, src_shape, src_inner2outer_row,
                                  src_inner2outer_col, dest_outer2inner_row, dest_outer2inner_col,
                                  mapper, inv_mapper, src_inner_rowrank, dest_rowrank);

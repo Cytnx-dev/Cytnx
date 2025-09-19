@@ -9,7 +9,7 @@
 namespace cytnx {
   namespace linalg {
 
-    void iMul(Tensor &Lt, const Tensor &Rt) {
+    void iMul(Tensor& Lt, const Tensor& Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[iMul] error, two tensor cannot on different devices.%s", "\n");
       if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {

@@ -69,28 +69,28 @@ namespace cytnx {
   // }
 
   //==========================
-  void Storage_base::Init(const unsigned long long &len_in, const int &device,
-                          const bool &init_zero) {
+  void Storage_base::Init(const unsigned long long& len_in, const int& device,
+                          const bool& init_zero) {
     // cout << "Base.init" << endl;
   }
 
-  Storage_base::Storage_base(const unsigned long long &len_in, const int &device,
-                             const bool &init_zero) {
+  Storage_base::Storage_base(const unsigned long long& len_in, const int& device,
+                             const bool& init_zero) {
     this->Init(len_in, device, init_zero);
   }
 
-  Storage_base &Storage_base::operator=(Storage_base &Rhs) {
+  Storage_base& Storage_base::operator=(Storage_base& Rhs) {
     cout << "dev" << endl;
     return *this;
   }
 
-  Storage_base::Storage_base(Storage_base &Rhs) { cout << "dev" << endl; }
+  Storage_base::Storage_base(Storage_base& Rhs) { cout << "dev" << endl; }
 
-  void Storage_base::resize(const cytnx_uint64 &newsize) {
+  void Storage_base::resize(const cytnx_uint64& newsize) {
     cytnx_error_msg(1, "[ERROR][internal] resize should not be called by base%s", "\n");
   }
 
-  boost::intrusive_ptr<Storage_base> Storage_base::astype(const unsigned int &dtype) {
+  boost::intrusive_ptr<Storage_base> Storage_base::astype(const unsigned int& dtype) {
     boost::intrusive_ptr<Storage_base> out(new Storage_base());
     if (dtype == this->dtype()) return boost::intrusive_ptr<Storage_base>(this);
 
@@ -130,37 +130,37 @@ namespace cytnx {
 
   string Storage_base::dtype_str() const { return Type.getname(this->dtype()); }
   string Storage_base::device_str() const { return Device.getname(this->device()); }
-  void Storage_base::_Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device,
-                                 const bool &iscap, const unsigned long long &cap_in) {
+  void Storage_base::_Init_byptr(void* rawptr, const unsigned long long& len_in, const int& device,
+                                 const bool& iscap, const unsigned long long& cap_in) {
     cytnx_error_msg(1, "%s", "[ERROR] call _Init_byptr in base");
   }
 
   Storage_base::~Storage_base() {}
 
-  void Storage_base::Move_memory_(const std::vector<cytnx_uint64> &old_shape,
-                                  const std::vector<cytnx_uint64> &mapper,
-                                  const std::vector<cytnx_uint64> &invmapper) {
+  void Storage_base::Move_memory_(const std::vector<cytnx_uint64>& old_shape,
+                                  const std::vector<cytnx_uint64>& mapper,
+                                  const std::vector<cytnx_uint64>& invmapper) {
     cytnx_error_msg(1, "%s", "[ERROR] call Move_memory_ directly on Void Storage.");
   }
 
   boost::intrusive_ptr<Storage_base> Storage_base::Move_memory(
-    const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper,
-    const std::vector<cytnx_uint64> &invmapper) {
+    const std::vector<cytnx_uint64>& old_shape, const std::vector<cytnx_uint64>& mapper,
+    const std::vector<cytnx_uint64>& invmapper) {
     cytnx_error_msg(1, "%s", "[ERROR] call Move_memory_ directly on Void Storage.");
     return nullptr;
   }
 
-  void Storage_base::to_(const int &device) {
+  void Storage_base::to_(const int& device) {
     cytnx_error_msg(1, "%s", "[ERROR] call to_ directly on Void Storage.");
   }
 
-  boost::intrusive_ptr<Storage_base> Storage_base::to(const int &device) {
+  boost::intrusive_ptr<Storage_base> Storage_base::to(const int& device) {
     cytnx_error_msg(1, "%s", "[ERROR] call to directly on Void Storage.");
     return nullptr;
   }
 
-  void Storage_base::PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
-                                       const std::vector<cytnx_uint64> &mapper) {
+  void Storage_base::PrintElem_byShape(std::ostream& os, const std::vector<cytnx_uint64>& shape,
+                                       const std::vector<cytnx_uint64>& mapper) {
     cytnx_error_msg(1, "%s", "[ERROR] call PrintElem_byShape directly on Void Storage.");
   }
 
@@ -183,10 +183,10 @@ namespace cytnx {
   // we dont need mapper's information!
   // if len(locators) < shape.size(), it means last shape.size()-len(locators) axes are grouped.
 
-  void Storage_base::GetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &out,
-                                        const std::vector<cytnx_uint64> &shape,
-                                        const std::vector<std::vector<cytnx_uint64>> &locators,
-                                        const cytnx_uint64 &Nunit) {
+  void Storage_base::GetElem_byShape_v2(boost::intrusive_ptr<Storage_base>& out,
+                                        const std::vector<cytnx_uint64>& shape,
+                                        const std::vector<std::vector<cytnx_uint64>>& locators,
+                                        const cytnx_uint64& Nunit) {
     if (User_debug)
       cytnx_error_msg(out->dtype() != this->dtype(), "%s", "[ERROR][DEBUG] %s",
                       "internal, the output dtype does not match current storage dtype.\n");
@@ -239,11 +239,11 @@ namespace cytnx {
     }
   }
 
-  void Storage_base::GetElem_byShape(boost::intrusive_ptr<Storage_base> &out,
-                                     const std::vector<cytnx_uint64> &shape,
-                                     const std::vector<cytnx_uint64> &mapper,
-                                     const std::vector<cytnx_uint64> &len,
-                                     const std::vector<std::vector<cytnx_uint64>> &locators) {
+  void Storage_base::GetElem_byShape(boost::intrusive_ptr<Storage_base>& out,
+                                     const std::vector<cytnx_uint64>& shape,
+                                     const std::vector<cytnx_uint64>& mapper,
+                                     const std::vector<cytnx_uint64>& len,
+                                     const std::vector<std::vector<cytnx_uint64>>& locators) {
     if (User_debug) {
       cytnx_error_msg(shape.size() != len.size(), "%s",
                       "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
@@ -297,12 +297,12 @@ namespace cytnx {
   }
 
   // This is deprecated !!
-  void Storage_base::SetElem_byShape(boost::intrusive_ptr<Storage_base> &in,
-                                     const std::vector<cytnx_uint64> &shape,
-                                     const std::vector<cytnx_uint64> &mapper,
-                                     const std::vector<cytnx_uint64> &len,
-                                     const std::vector<std::vector<cytnx_uint64>> &locators,
-                                     const bool &is_scalar) {
+  void Storage_base::SetElem_byShape(boost::intrusive_ptr<Storage_base>& in,
+                                     const std::vector<cytnx_uint64>& shape,
+                                     const std::vector<cytnx_uint64>& mapper,
+                                     const std::vector<cytnx_uint64>& len,
+                                     const std::vector<std::vector<cytnx_uint64>>& locators,
+                                     const bool& is_scalar) {
     if (User_debug)
       cytnx_error_msg(shape.size() != len.size(), "%s",
                       "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
@@ -362,10 +362,10 @@ namespace cytnx {
     }
   }
 
-  void Storage_base::SetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &in,
-                                        const std::vector<cytnx_uint64> &shape,
-                                        const std::vector<std::vector<cytnx_uint64>> &locators,
-                                        const cytnx_uint64 &Nunit, const bool &is_scalar) {
+  void Storage_base::SetElem_byShape_v2(boost::intrusive_ptr<Storage_base>& in,
+                                        const std::vector<cytnx_uint64>& shape,
+                                        const std::vector<std::vector<cytnx_uint64>>& locators,
+                                        const cytnx_uint64& Nunit, const bool& is_scalar) {
     // plan: we assume in is contiguous for now!
     //
 
@@ -427,84 +427,84 @@ namespace cytnx {
   }
 
   // generators:
-  void Storage_base::fill(const cytnx_complex128 &val) {
+  void Storage_base::fill(const cytnx_complex128& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_complex64 &val) {
+  void Storage_base::fill(const cytnx_complex64& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_double &val) {
+  void Storage_base::fill(const cytnx_double& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_float &val) {
+  void Storage_base::fill(const cytnx_float& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_int64 &val) {
+  void Storage_base::fill(const cytnx_int64& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_uint64 &val) {
+  void Storage_base::fill(const cytnx_uint64& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_int32 &val) {
+  void Storage_base::fill(const cytnx_int32& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_uint32 &val) {
+  void Storage_base::fill(const cytnx_uint32& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_int16 &val) {
+  void Storage_base::fill(const cytnx_int16& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_uint16 &val) {
+  void Storage_base::fill(const cytnx_uint16& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
-  void Storage_base::fill(const cytnx_bool &val) {
+  void Storage_base::fill(const cytnx_bool& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call fill directly on Void Storage.");
   }
   void Storage_base::set_zeros() {
     cytnx_error_msg(1, "%s", "[ERROR] call set_zeros directly on Void Storage.");
   }
 
-  void Storage_base::append(const Scalar &val) {
+  void Storage_base::append(const Scalar& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_complex128 &val) {
+  void Storage_base::append(const cytnx_complex128& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_complex64 &val) {
+  void Storage_base::append(const cytnx_complex64& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_double &val) {
+  void Storage_base::append(const cytnx_double& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_float &val) {
+  void Storage_base::append(const cytnx_float& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_int64 &val) {
+  void Storage_base::append(const cytnx_int64& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_uint64 &val) {
+  void Storage_base::append(const cytnx_uint64& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_int32 &val) {
+  void Storage_base::append(const cytnx_int32& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_uint32 &val) {
+  void Storage_base::append(const cytnx_uint32& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_int16 &val) {
+  void Storage_base::append(const cytnx_int16& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_uint16 &val) {
+  void Storage_base::append(const cytnx_uint16& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
-  void Storage_base::append(const cytnx_bool &val) {
+  void Storage_base::append(const cytnx_bool& val) {
     cytnx_error_msg(1, "%s", "[ERROR] call append directly on Void Storage.");
   }
 
   // instantiation:
   //================================================
   template <>
-  float *Storage_base::data<float>() const {
+  float* Storage_base::data<float>() const {
     // check type
     cytnx_error_msg(this->dtype() != Type.Float,
                     "[ERROR] type mismatch. try to get <float> type from raw data of type %s",
@@ -512,21 +512,21 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<float *>(this->data());
+    return static_cast<float*>(this->data());
   }
   template <>
-  double *Storage_base::data<double>() const {
+  double* Storage_base::data<double>() const {
     cytnx_error_msg(this->dtype() != Type.Double,
                     "[ERROR] type mismatch. try to get <double> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<double *>(this->data());
+    return static_cast<double*>(this->data());
   }
 
   template <>
-  std::complex<double> *Storage_base::data<std::complex<double>>() const {
+  std::complex<double>* Storage_base::data<std::complex<double>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexDouble,
       "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s",
@@ -534,11 +534,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<std::complex<double> *>(this->data());
+    return static_cast<std::complex<double>*>(this->data());
   }
 
   template <>
-  std::complex<float> *Storage_base::data<std::complex<float>>() const {
+  std::complex<float>* Storage_base::data<std::complex<float>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexFloat,
       "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s",
@@ -546,90 +546,90 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<std::complex<float> *>(this->data());
+    return static_cast<std::complex<float>*>(this->data());
   }
 
   template <>
-  uint32_t *Storage_base::data<uint32_t>() const {
+  uint32_t* Storage_base::data<uint32_t>() const {
     cytnx_error_msg(this->dtype() != Type.Uint32,
                     "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint32_t *>(this->data());
+    return static_cast<uint32_t*>(this->data());
   }
 
   template <>
-  int32_t *Storage_base::data<int32_t>() const {
+  int32_t* Storage_base::data<int32_t>() const {
     cytnx_error_msg(this->dtype() != Type.Int32,
                     "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int32_t *>(this->data());
+    return static_cast<int32_t*>(this->data());
   }
 
   template <>
-  uint64_t *Storage_base::data<uint64_t>() const {
+  uint64_t* Storage_base::data<uint64_t>() const {
     cytnx_error_msg(this->dtype() != Type.Uint64,
                     "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint64_t *>(this->data());
+    return static_cast<uint64_t*>(this->data());
   }
 
   template <>
-  int64_t *Storage_base::data<int64_t>() const {
+  int64_t* Storage_base::data<int64_t>() const {
     cytnx_error_msg(this->dtype() != Type.Int64,
                     "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int64_t *>(this->data());
+    return static_cast<int64_t*>(this->data());
   }
 
   template <>
-  int16_t *Storage_base::data<int16_t>() const {
+  int16_t* Storage_base::data<int16_t>() const {
     cytnx_error_msg(this->dtype() != Type.Int16,
                     "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int16_t *>(this->data());
+    return static_cast<int16_t*>(this->data());
   }
 
   template <>
-  uint16_t *Storage_base::data<uint16_t>() const {
+  uint16_t* Storage_base::data<uint16_t>() const {
     cytnx_error_msg(this->dtype() != Type.Uint16,
                     "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint16_t *>(this->data());
+    return static_cast<uint16_t*>(this->data());
   }
 
   template <>
-  bool *Storage_base::data<bool>() const {
+  bool* Storage_base::data<bool>() const {
     cytnx_error_msg(this->dtype() != Type.Bool,
                     "[ERROR] type mismatch. try to get <bool> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<bool *>(this->data());
+    return static_cast<bool*>(this->data());
   }
 
 // get complex raw pointer using CUDA complex type
 #ifdef UNI_GPU
   template <>
-  cuDoubleComplex *Storage_base::data<cuDoubleComplex>() const {
+  cuDoubleComplex* Storage_base::data<cuDoubleComplex>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexDouble,
       "[ERROR] type mismatch. try to get <cuDoubleComplex> type from raw data of type %s",
@@ -638,10 +638,10 @@ namespace cytnx {
                     "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
                     "cuDoubleComplex. use type <cytnx_complex128> or < complex<double> > instead.");
     cudaDeviceSynchronize();
-    return static_cast<cuDoubleComplex *>(this->data());
+    return static_cast<cuDoubleComplex*>(this->data());
   }
   template <>
-  cuFloatComplex *Storage_base::data<cuFloatComplex>() const {
+  cuFloatComplex* Storage_base::data<cuFloatComplex>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexFloat,
       "[ERROR] type mismatch. try to get <cuFloatComplex> type from raw data of type %s",
@@ -650,14 +650,14 @@ namespace cytnx {
                     "[ERROR] the Storage is on CPU(Host) but try to get with CUDA complex type "
                     "cuFloatComplex. use type <cytnx_complex64> or < complex<float> > instead.");
     cudaDeviceSynchronize();
-    return static_cast<cuFloatComplex *>(this->data());
+    return static_cast<cuFloatComplex*>(this->data());
   }
 #endif
 
   // instantiation:
   //====================================================
   template <>
-  float &Storage_base::at<float>(const cytnx_uint64 &idx) const {
+  float& Storage_base::at<float>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug) {
       cytnx_error_msg(this->dtype() != Type.Float,
                       "[ERROR] type mismatch. try to get <float> type from raw data of type %s",
@@ -669,11 +669,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<float *>(this->data())[idx];
+    return static_cast<float*>(this->data())[idx];
   }
 
   template <>
-  double &Storage_base::at<double>(const cytnx_uint64 &idx) const {
+  double& Storage_base::at<double>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug) {
       cytnx_error_msg(this->dtype() != Type.Double,
                       "[ERROR] type mismatch. try to get <double> type from raw data of type %s",
@@ -685,11 +685,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<double *>(this->data())[idx];
+    return static_cast<double*>(this->data())[idx];
   }
 
   template <>
-  std::complex<float> &Storage_base::at<std::complex<float>>(const cytnx_uint64 &idx) const {
+  std::complex<float>& Storage_base::at<std::complex<float>>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(
         this->dtype() != Type.ComplexFloat,
@@ -701,11 +701,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<complex<float> *>(this->data())[idx];
+    return static_cast<complex<float>*>(this->data())[idx];
   }
 
   template <>
-  std::complex<double> &Storage_base::at<std::complex<double>>(const cytnx_uint64 &idx) const {
+  std::complex<double>& Storage_base::at<std::complex<double>>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(
         this->dtype() != Type.ComplexDouble,
@@ -717,11 +717,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<complex<double> *>(this->data())[idx];
+    return static_cast<complex<double>*>(this->data())[idx];
   }
 
   template <>
-  uint32_t &Storage_base::at<uint32_t>(const cytnx_uint64 &idx) const {
+  uint32_t& Storage_base::at<uint32_t>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(this->dtype() != Type.Uint32,
                       "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s",
@@ -732,11 +732,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint32_t *>(this->data())[idx];
+    return static_cast<uint32_t*>(this->data())[idx];
   }
 
   template <>
-  int32_t &Storage_base::at<int32_t>(const cytnx_uint64 &idx) const {
+  int32_t& Storage_base::at<int32_t>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(this->dtype() != Type.Int32,
                       "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s",
@@ -747,11 +747,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int32_t *>(this->data())[idx];
+    return static_cast<int32_t*>(this->data())[idx];
   }
 
   template <>
-  uint64_t &Storage_base::at<uint64_t>(const cytnx_uint64 &idx) const {
+  uint64_t& Storage_base::at<uint64_t>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(this->dtype() != Type.Uint64,
                       "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s",
@@ -762,11 +762,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint64_t *>(this->data())[idx];
+    return static_cast<uint64_t*>(this->data())[idx];
   }
 
   template <>
-  int64_t &Storage_base::at<int64_t>(const cytnx_uint64 &idx) const {
+  int64_t& Storage_base::at<int64_t>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(this->dtype() != Type.Int64,
                       "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s",
@@ -777,11 +777,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int64_t *>(this->data())[idx];
+    return static_cast<int64_t*>(this->data())[idx];
   }
 
   template <>
-  uint16_t &Storage_base::at<uint16_t>(const cytnx_uint64 &idx) const {
+  uint16_t& Storage_base::at<uint16_t>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(this->dtype() != Type.Uint16,
                       "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s",
@@ -793,11 +793,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint16_t *>(this->data())[idx];
+    return static_cast<uint16_t*>(this->data())[idx];
   }
 
   template <>
-  int16_t &Storage_base::at<int16_t>(const cytnx_uint64 &idx) const {
+  int16_t& Storage_base::at<int16_t>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(this->dtype() != Type.Int16,
                       "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s",
@@ -808,11 +808,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int16_t *>(this->data())[idx];
+    return static_cast<int16_t*>(this->data())[idx];
   }
 
   template <>
-  bool &Storage_base::at<bool>(const cytnx_uint64 &idx) const {
+  bool& Storage_base::at<bool>(const cytnx_uint64& idx) const {
     if (cytnx::User_debug)
       cytnx_error_msg(this->dtype() != Type.Bool,
                       "[ERROR] type mismatch. try to get <bool> type from raw data of type %s",
@@ -824,13 +824,13 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<bool *>(this->data())[idx];
+    return static_cast<bool*>(this->data())[idx];
   }
 
   // instantiation:
   //====================================================
   template <>
-  float &Storage_base::back<float>() const {
+  float& Storage_base::back<float>() const {
     cytnx_error_msg(this->dtype() != Type.Float,
                     "[ERROR] type mismatch. try to get <float> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -839,11 +839,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<float *>(this->data())[this->size() - 1];
+    return static_cast<float*>(this->data())[this->size() - 1];
   }
 
   template <>
-  double &Storage_base::back<double>() const {
+  double& Storage_base::back<double>() const {
     cytnx_error_msg(this->dtype() != Type.Double,
                     "[ERROR] type mismatch. try to get <double> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -851,11 +851,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<double *>(this->data())[this->size() - 1];
+    return static_cast<double*>(this->data())[this->size() - 1];
   }
 
   template <>
-  std::complex<float> &Storage_base::back<std::complex<float>>() const {
+  std::complex<float>& Storage_base::back<std::complex<float>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexFloat,
       "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s",
@@ -865,11 +865,11 @@ namespace cytnx {
     cudaDeviceSynchronize();
 #endif
 
-    return static_cast<complex<float> *>(this->data())[this->size() - 1];
+    return static_cast<complex<float>*>(this->data())[this->size() - 1];
   }
 
   template <>
-  std::complex<double> &Storage_base::back<std::complex<double>>() const {
+  std::complex<double>& Storage_base::back<std::complex<double>>() const {
     cytnx_error_msg(
       this->dtype() != Type.ComplexDouble,
       "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s",
@@ -878,11 +878,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<complex<double> *>(this->data())[this->size() - 1];
+    return static_cast<complex<double>*>(this->data())[this->size() - 1];
   }
 
   template <>
-  uint32_t &Storage_base::back<uint32_t>() const {
+  uint32_t& Storage_base::back<uint32_t>() const {
     cytnx_error_msg(this->dtype() != Type.Uint32,
                     "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -890,11 +890,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint32_t *>(this->data())[this->size() - 1];
+    return static_cast<uint32_t*>(this->data())[this->size() - 1];
   }
 
   template <>
-  int32_t &Storage_base::back<int32_t>() const {
+  int32_t& Storage_base::back<int32_t>() const {
     cytnx_error_msg(this->dtype() != Type.Int32,
                     "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -902,11 +902,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int32_t *>(this->data())[this->size() - 1];
+    return static_cast<int32_t*>(this->data())[this->size() - 1];
   }
 
   template <>
-  uint64_t &Storage_base::back<uint64_t>() const {
+  uint64_t& Storage_base::back<uint64_t>() const {
     cytnx_error_msg(this->dtype() != Type.Uint64,
                     "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -914,11 +914,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint64_t *>(this->data())[this->size() - 1];
+    return static_cast<uint64_t*>(this->data())[this->size() - 1];
   }
 
   template <>
-  int64_t &Storage_base::back<int64_t>() const {
+  int64_t& Storage_base::back<int64_t>() const {
     cytnx_error_msg(this->dtype() != Type.Int64,
                     "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -926,11 +926,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int64_t *>(this->data())[this->size() - 1];
+    return static_cast<int64_t*>(this->data())[this->size() - 1];
   }
 
   template <>
-  uint16_t &Storage_base::back<uint16_t>() const {
+  uint16_t& Storage_base::back<uint16_t>() const {
     cytnx_error_msg(this->dtype() != Type.Uint16,
                     "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -938,11 +938,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<uint16_t *>(this->data())[this->size() - 1];
+    return static_cast<uint16_t*>(this->data())[this->size() - 1];
   }
 
   template <>
-  int16_t &Storage_base::back<int16_t>() const {
+  int16_t& Storage_base::back<int16_t>() const {
     cytnx_error_msg(this->dtype() != Type.Int16,
                     "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -950,11 +950,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<int16_t *>(this->data())[this->size() - 1];
+    return static_cast<int16_t*>(this->data())[this->size() - 1];
   }
 
   template <>
-  bool &Storage_base::back<bool>() const {
+  bool& Storage_base::back<bool>() const {
     cytnx_error_msg(this->dtype() != Type.Bool,
                     "[ERROR] type mismatch. try to get <bool> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
@@ -962,11 +962,11 @@ namespace cytnx {
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
-    return static_cast<bool *>(this->data())[this->size() - 1];
+    return static_cast<bool*>(this->data())[this->size() - 1];
   }
 
-  void Storage_base::_cpy_bool(void *ptr, const std::vector<cytnx_bool> &vin) {
-    bool *tmp = static_cast<bool *>(ptr);
+  void Storage_base::_cpy_bool(void* ptr, const std::vector<cytnx_bool>& vin) {
+    bool* tmp = static_cast<bool*>(ptr);
 
     for (cytnx_uint64 i = 0; i < vin.size(); i++) {
       tmp[i] = vin[i];
@@ -980,45 +980,45 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.imag() from void Storage%s", "\n");
   }
 
-  Scalar Storage_base::get_item(const cytnx_uint64 &idx) const {
+  Scalar Storage_base::get_item(const cytnx_uint64& idx) const {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.get_item() from void Storage%s", "\n");
     return Scalar();
   }
 
-  void Storage_base::set_item(const cytnx_uint64 &idx, const Scalar &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const Scalar& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_complex128 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_complex128& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_complex64 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_complex64& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_double &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_double& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_float &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_float& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_int64 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_int64& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_uint64 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_uint64& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_int32 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_int32& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_uint32 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_uint32& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_int16 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_int16& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_uint16& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
-  void Storage_base::set_item(const cytnx_uint64 &idx, const cytnx_bool &val) {
+  void Storage_base::set_item(const cytnx_uint64& idx, const cytnx_bool& val) {
     cytnx_error_msg(true, "[ERROR] trying to call Storage.set_item() from void Storage%s", "\n");
   }
 

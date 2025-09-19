@@ -10,7 +10,7 @@
 namespace cytnx {
   namespace linalg {
 
-    void iSub(Tensor &Lt, const Tensor &Rt) {
+    void iSub(Tensor& Lt, const Tensor& Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[iSub] error, the two tensors have to be on the same device.%s", "\n");
 

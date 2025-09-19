@@ -6,7 +6,7 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
-    void Exp_(Tensor &Tin) {
+    void Exp_(Tensor& Tin) {
       if ((Tin.dtype() == Type.ComplexDouble) || (Tin.dtype() == Type.Double)) {
         ;
       } else if (Tin.dtype() == Type.ComplexFloat)

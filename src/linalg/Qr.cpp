@@ -14,7 +14,7 @@ typedef cytnx::Accessor ac;
 namespace cytnx {
   namespace linalg {
 
-    std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau) {
+    std::vector<Tensor> Qr(const Tensor& Tin, const bool& is_tau) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Qr] error, Qr can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[Qr] error tensor must be contiguous. Call
@@ -94,7 +94,7 @@ namespace cytnx {
 namespace cytnx {
   namespace linalg {
 
-    void _qr_Dense_UT(std::vector<UniTensor> &outCyT, const UniTensor &Tin, const bool &is_tau) {
+    void _qr_Dense_UT(std::vector<UniTensor>& outCyT, const UniTensor& Tin, const bool& is_tau) {
       Tensor tmp;
       if (Tin.is_contiguous())
         tmp = Tin.get_block_();
@@ -169,7 +169,7 @@ namespace cytnx {
       }
     };
 
-    void _qr_Block_UT(std::vector<UniTensor> &outCyT, const UniTensor &Tin, const bool &is_tau) {
+    void _qr_Block_UT(std::vector<UniTensor>& outCyT, const UniTensor& Tin, const bool& is_tau) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
@@ -208,7 +208,7 @@ namespace cytnx {
 
       int cnt;
       for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        const std::vector<cytnx_uint64> &tmpv = Tin.get_qindices(b);
+        const std::vector<cytnx_uint64>& tmpv = Tin.get_qindices(b);
         for (cnt = 0; cnt < Tin.rowrank(); cnt++) {
           new_itoi[b][0] += tmpv[cnt] * strides[cnt];
         }
@@ -239,7 +239,7 @@ namespace cytnx {
       std::vector<Tensor> R_blocks;
 
       cytnx_uint64 trcntr = 0;
-      for (auto const &x : mgrp) {
+      for (auto const& x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
         // cout << x.second.size() << "-------" << endl;
         for (int i = 0; i < x.second.size(); i++) {
@@ -310,7 +310,7 @@ namespace cytnx {
         new_shape[0] = -1;
         for (int ti = 0; ti < blks.size(); ti++) {
           R_blocks.push_back(blks[ti]);
-          auto &tpitoi = Tin.get_qindices(x.second[order[ti]]);
+          auto& tpitoi = Tin.get_qindices(x.second[order[ti]]);
           R_itoi.push_back({trcntr});
           for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
             R_itoi.back().push_back(tpitoi[i]);
@@ -334,7 +334,7 @@ namespace cytnx {
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
 
       // process Q
-      BlockUniTensor *Q_ptr = new BlockUniTensor();
+      BlockUniTensor* Q_ptr = new BlockUniTensor();
       for (int i = 0; i < Tin.rowrank(); i++) {
         Q_ptr->_bonds.push_back(Tin.bonds()[i].clone());
         Q_ptr->_labels.push_back(Tin.labels()[i]);
@@ -351,7 +351,7 @@ namespace cytnx {
       outCyT.push_back(Q);
 
       // process R:
-      BlockUniTensor *R_ptr = new BlockUniTensor();
+      BlockUniTensor* R_ptr = new BlockUniTensor();
       R_ptr->_bonds.push_back(Bd_aux);
       R_ptr->_labels.push_back("_aux_");
       for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
@@ -368,7 +368,7 @@ namespace cytnx {
       outCyT.push_back(R);
 
       if (is_tau) {
-        BlockUniTensor *tau_ptr = new BlockUniTensor();
+        BlockUniTensor* tau_ptr = new BlockUniTensor();
         tau_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_tau_L", "_tau_R"}, 1, Type.Double,
                       Device.cpu,  // this two will be overwrite later, so doesnt matter.
                       true,  // is_diag!
@@ -381,7 +381,7 @@ namespace cytnx {
       }
     };
 
-    std::vector<UniTensor> Qr(const UniTensor &Tin, const bool &is_tau) {
+    std::vector<UniTensor> Qr(const UniTensor& Tin, const bool& is_tau) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank(),
                       "[QR][ERROR] QR for DenseUniTensor should have rank>1 and rank>rowrank>0%s",

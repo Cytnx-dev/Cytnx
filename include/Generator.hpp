@@ -25,8 +25,8 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype = Type.Double,
-               const int &device = Device.cpu);
+  Tensor zeros(const cytnx_uint64& Nelem, const unsigned int& dtype = Type.Double,
+               const int& device = Device.cpu);
   /**
   @brief create an Tensor with all the elements are initialized with zero.
   @param Nelem the shape of the Tensor
@@ -39,8 +39,8 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype = Type.Double,
-               const int &device = Device.cpu);
+  Tensor zeros(const std::vector<cytnx_uint64>& Nelem, const unsigned int& dtype = Type.Double,
+               const int& device = Device.cpu);
   //@}
 
   /**
@@ -55,8 +55,8 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor identity(const cytnx_uint64 &Dim, const unsigned int &dtype = Type.Double,
-                  const int &device = Device.cpu);
+  Tensor identity(const cytnx_uint64& Dim, const unsigned int& dtype = Type.Double,
+                  const int& device = Device.cpu);
 
   /**
   @brief create a square rank-2 Tensor with all diagonal to be one.
@@ -73,8 +73,8 @@ namespace cytnx {
       This function is a alias of cytnx::identity().
 
   */
-  Tensor eye(const cytnx_uint64 &Dim, const unsigned int &dtype = Type.Double,
-             const int &device = Device.cpu);
+  Tensor eye(const cytnx_uint64& Dim, const unsigned int& dtype = Type.Double,
+             const int& device = Device.cpu);
 
   //@{
   /**
@@ -89,8 +89,8 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor ones(const cytnx_uint64 &Nelem, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu);
+  Tensor ones(const cytnx_uint64& Nelem, const unsigned int& dtype = Type.Double,
+              const int& device = Device.cpu);
   /**
   @brief create an Tensor with all the elements are initialized with one.
   @param Nelem the shape of the Tensor
@@ -103,8 +103,8 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor ones(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu);
+  Tensor ones(const std::vector<cytnx_uint64>& Nelem, const unsigned int& dtype = Type.Double,
+              const int& device = Device.cpu);
   //@}
 
   //@{
@@ -116,7 +116,7 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor arange(const cytnx_int64 &Nelem);
+  Tensor arange(const cytnx_int64& Nelem);
   /**
   @brief create an rank-1 Tensor with elements defined in range [start,end) with assigned step-size
   @param start the start value of the range
@@ -131,13 +131,13 @@ namespace cytnx {
       [Tensor]
 
   */
-  Tensor arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step = 1,
-                const unsigned int &dtype = Type.Double, const int &device = Device.cpu);
+  Tensor arange(const cytnx_double& start, const cytnx_double& end, const cytnx_double& step = 1,
+                const unsigned int& dtype = Type.Double, const int& device = Device.cpu);
   //@}
 
-  Tensor linspace(const cytnx_double &start, const cytnx_double &end, const cytnx_uint64 &Nelem,
-                  const bool &endpoint = true, const unsigned int &dtype = Type.Double,
-                  const int &device = Device.cpu);
+  Tensor linspace(const cytnx_double& start, const cytnx_double& end, const cytnx_uint64& Nelem,
+                  const bool& endpoint = true, const unsigned int& dtype = Type.Double,
+                  const int& device = Device.cpu);
 
   // Tensor rand(const std::vector<cytnx_uint64> &size);
   // Tensor randn(const std::vector<cytnx_uint64> &size);

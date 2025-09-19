@@ -8,7 +8,7 @@
 using namespace std;
 namespace cytnx {
 
-  Accessor::Accessor(const cytnx_int64 &loc) {
+  Accessor::Accessor(const cytnx_int64& loc) {
     this->_type = Accessor::Singl;
     this->loc = loc;
   }
@@ -37,7 +37,7 @@ namespace cytnx {
   */
 
   // all constr. ( use string to dispatch )
-  Accessor::Accessor(const std::string &str) {
+  Accessor::Accessor(const std::string& str) {
     // this->_axis_len = 0;
 
     // std::cout << str << "|" << std::endl;
@@ -85,7 +85,7 @@ namespace cytnx {
   }
 
   // range constr.
-  Accessor::Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step) {
+  Accessor::Accessor(const cytnx_int64& min, const cytnx_int64& max, const cytnx_int64& step) {
     cytnx_error_msg(step == 0, "[ERROR] cannot have step=0 for range%s", "\n");
     this->_type = Accessor::Range;
     this->_min = min;
@@ -94,7 +94,7 @@ namespace cytnx {
   }
 
   // copy constructor:
-  Accessor::Accessor(const Accessor &rhs) {
+  Accessor::Accessor(const Accessor& rhs) {
     this->_type = rhs._type;
     this->_min = rhs._min;
     this->_max = rhs._max;
@@ -104,7 +104,7 @@ namespace cytnx {
   }
 
   // copy assignment:
-  Accessor &Accessor::operator=(const Accessor &rhs) {
+  Accessor& Accessor::operator=(const Accessor& rhs) {
     this->_type = rhs._type;
     this->_min = rhs._min;
     this->_max = rhs._max;
@@ -118,8 +118,8 @@ namespace cytnx {
   // if _type is all, pos will be null, and len == dim
   // if _type is range, pos will be the locator, and len == len(pos)
   // if _type is singl, pos will be pos, and len == 0
-  void Accessor::get_len_pos(const cytnx_uint64 &dim, cytnx_uint64 &len,
-                             std::vector<cytnx_uint64> &pos) const {
+  void Accessor::get_len_pos(const cytnx_uint64& dim, cytnx_uint64& len,
+                             std::vector<cytnx_uint64>& pos) const {
     if (User_debug)
       cytnx_error_msg(this->_type == Accessor::none, "%s",
                       "[DEBUG][ERROR] try to call get_len from an un-initialize Accessor.");
@@ -238,7 +238,7 @@ namespace cytnx {
     }
   }
   //============================================
-  std::ostream &operator<<(std::ostream &os, const Accessor &in) {
+  std::ostream& operator<<(std::ostream& os, const Accessor& in) {
     if (in.type() == Accessor::Singl) {
       os << in.loc;
     } else if (in.type() == Accessor::All) {

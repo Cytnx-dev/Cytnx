@@ -29,7 +29,7 @@ namespace cytnx {
   class NetworkType_class {
    public:
     enum : int { Void = -1, Regular = 0, Fermion = 1 };
-    std::string getname(const int &nwrktype_id);
+    std::string getname(const int& nwrktype_id);
   };
   extern NetworkType_class NtType;
   /// @endcond
@@ -86,7 +86,7 @@ namespace cytnx {
     friend class FermionNetwork;
     friend class RegularNetwork;
     friend class Network;
-    Network_base() : nwrktype_id(NtType.Void){};
+    Network_base() : nwrktype_id(NtType.Void) {};
 
     bool HasPutAllUniTensor() {
       for (cytnx_uint64 i = 0; i < this->tensors.size(); i++) {
@@ -106,59 +106,59 @@ namespace cytnx {
     // UniTensor Launch(const std::string &Tname="");
 
     // std::string GetContractOrder() const;
-    virtual void PutUniTensor(const std::string &name, const UniTensor &utensor);
-    virtual void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
-    virtual void PutUniTensors(const std::vector<std::string> &name,
-                               const std::vector<UniTensor> &utensors);
+    virtual void PutUniTensor(const std::string& name, const UniTensor& utensor);
+    virtual void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor);
+    virtual void PutUniTensors(const std::vector<std::string>& name,
+                               const std::vector<UniTensor>& utensors);
 
-    virtual void RmUniTensor(const cytnx_uint64 &idx);
-    virtual void RmUniTensor(const std::string &name);
-    virtual void RmUniTensors(const std::vector<std::string> &name);
+    virtual void RmUniTensor(const cytnx_uint64& idx);
+    virtual void RmUniTensor(const std::string& name);
+    virtual void RmUniTensors(const std::vector<std::string>& name);
 
-    virtual void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                               const std::vector<std::string> &alias,
-                               const std::string &contract_order);
+    virtual void Contract_plan(const std::vector<UniTensor>& utensors, const std::string& Tout,
+                               const std::vector<std::string>& alias,
+                               const std::string& contract_order);
 
-    virtual void Fromfile(const std::string &fname);
-    virtual void FromString(const std::vector<std::string> &content);
+    virtual void Fromfile(const std::string& fname);
+    virtual void FromString(const std::vector<std::string>& content);
     virtual void clear();
     virtual std::string getOptimalOrder();
     // virtual UniTensor Launch(const bool &optimal = false, const std::string &contract_order =
     // "");
 
     virtual std::string getOrder();
-    virtual void setOrder(const bool &optimal = false, const std::string &contract_order = "");
+    virtual void setOrder(const bool& optimal = false, const std::string& contract_order = "");
 
     virtual UniTensor Launch();
 
-    virtual void construct(const std::vector<std::string> &alias,
-                           const std::vector<std::vector<std::string>> &labels,
-                           const std::vector<std::string> &outlabel, const cytnx_int64 &outrk,
-                           const std::string &order, const bool optim);
-    virtual void PrintNet(std::ostream &os);
+    virtual void construct(const std::vector<std::string>& alias,
+                           const std::vector<std::vector<std::string>>& labels,
+                           const std::vector<std::string>& outlabel, const cytnx_int64& outrk,
+                           const std::string& order, const bool optim);
+    virtual void PrintNet(std::ostream& os);
     virtual boost::intrusive_ptr<Network_base> clone();
-    virtual void Savefile(const std::string &fname);
-    virtual ~Network_base(){};
+    virtual void Savefile(const std::string& fname);
+    virtual ~Network_base() {};
 
   };  // Network_base
 
   class RegularNetwork : public Network_base {
    public:
     RegularNetwork() { this->nwrktype_id = NtType.Regular; };
-    void Fromfile(const std::string &fname);
-    void FromString(const std::vector<std::string> &contents);
-    void PutUniTensor(const std::string &name, const UniTensor &utensor);
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor);
-    void PutUniTensors(const std::vector<std::string> &name,
-                       const std::vector<UniTensor> &utensors);
+    void Fromfile(const std::string& fname);
+    void FromString(const std::vector<std::string>& contents);
+    void PutUniTensor(const std::string& name, const UniTensor& utensor);
+    void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor);
+    void PutUniTensors(const std::vector<std::string>& name,
+                       const std::vector<UniTensor>& utensors);
     // void initialize_CtTree();
-    void RmUniTensor(const cytnx_uint64 &idx);
-    void RmUniTensor(const std::string &name);
-    void RmUniTensors(const std::vector<std::string> &name);
+    void RmUniTensor(const cytnx_uint64& idx);
+    void RmUniTensor(const std::string& name);
+    void RmUniTensors(const std::vector<std::string>& name);
 
-    void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                       const std::vector<std::string> &alias = {},
-                       const std::string &contract_order = "");
+    void Contract_plan(const std::vector<UniTensor>& utensors, const std::string& Tout,
+                       const std::vector<std::string>& alias = {},
+                       const std::string& contract_order = "");
     void clear() {
       this->tensors.clear();
       this->name2pos.clear();
@@ -174,15 +174,15 @@ namespace cytnx {
     // UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "");
 
     std::string getOrder();
-    void setOrder(const bool &optimal = false, const std::string &contract_order = "");
+    void setOrder(const bool& optimal = false, const std::string& contract_order = "");
     UniTensor Launch();
 
-    void construct(const std::vector<std::string> &alias,
-                   const std::vector<std::vector<std::string>> &labels,
-                   const std::vector<std::string> &outlabel, const cytnx_int64 &outrk,
-                   const std::string &order, const bool optim);
+    void construct(const std::vector<std::string>& alias,
+                   const std::vector<std::vector<std::string>>& labels,
+                   const std::vector<std::string>& outlabel, const cytnx_int64& outrk,
+                   const std::string& order, const bool optim);
     boost::intrusive_ptr<Network_base> clone() {
-      RegularNetwork *tmp = new RegularNetwork();
+      RegularNetwork* tmp = new RegularNetwork();
       tmp->name2pos = this->name2pos;
       tmp->CtTree = this->CtTree;
       tmp->names = this->names;
@@ -194,9 +194,9 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os);
-    void Savefile(const std::string &fname);
-    ~RegularNetwork(){};
+    void PrintNet(std::ostream& os);
+    void Savefile(const std::string& fname);
+    ~RegularNetwork() {};
   };
 
   // Under dev!!
@@ -206,19 +206,19 @@ namespace cytnx {
 
    public:
     FermionNetwork() { this->nwrktype_id = NtType.Fermion; };
-    void Fromfile(const std::string &fname){};
-    void FromString(const std::vector<std::string> &contents){};
-    void RmUniTensor(const cytnx_uint64 &idx){};
-    void RmUniTensor(const std::string &name){};
-    void RmUniTensors(const std::vector<std::string> &name){};
+    void Fromfile(const std::string& fname) {};
+    void FromString(const std::vector<std::string>& contents) {};
+    void RmUniTensor(const cytnx_uint64& idx) {};
+    void RmUniTensor(const std::string& name) {};
+    void RmUniTensors(const std::vector<std::string>& name) {};
 
-    void PutUniTensor(const std::string &name, const UniTensor &utensor){};
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor){};
-    void PutUniTensors(const std::vector<std::string> &name,
-                       const std::vector<UniTensor> &utensors){};
-    void Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                       const std::vector<std::string> &alias = {},
-                       const std::string &contract_order = ""){};
+    void PutUniTensor(const std::string& name, const UniTensor& utensor) {};
+    void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor) {};
+    void PutUniTensors(const std::vector<std::string>& name,
+                       const std::vector<UniTensor>& utensors) {};
+    void Contract_plan(const std::vector<UniTensor>& utensors, const std::string& Tout,
+                       const std::vector<std::string>& alias = {},
+                       const std::string& contract_order = "") {};
     void clear() {
       this->name2pos.clear();
       this->CtTree.clear();
@@ -229,11 +229,11 @@ namespace cytnx {
       this->TOUT_iBondNum = 0;
       this->ORDER_tokens.clear();
     }
-    UniTensor Launch(const bool &optimal = false, const std::string &contract_order = "") {
+    UniTensor Launch(const bool& optimal = false, const std::string& contract_order = "") {
       return UniTensor();
     };
     boost::intrusive_ptr<Network_base> clone() {
-      FermionNetwork *tmp = new FermionNetwork();
+      FermionNetwork* tmp = new FermionNetwork();
       tmp->name2pos = this->name2pos;
       tmp->CtTree = this->CtTree;
       tmp->names = this->names;
@@ -245,9 +245,9 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os){};
-    void Savefile(const std::string &fname){};
-    ~FermionNetwork(){};
+    void PrintNet(std::ostream& os) {};
+    void Savefile(const std::string& fname) {};
+    ~FermionNetwork() {};
   };
 
   ///@endcond
@@ -262,9 +262,9 @@ namespace cytnx {
    public:
     ///@cond
     boost::intrusive_ptr<Network_base> _impl;
-    Network() : _impl(new Network_base()){};
-    Network(const Network &rhs) { this->_impl = rhs._impl; }
-    Network &operator=(const Network &rhs) {
+    Network() : _impl(new Network_base()) {};
+    Network(const Network& rhs) { this->_impl = rhs._impl; }
+    Network& operator=(const Network& rhs) {
       this->_impl = rhs._impl;
       return *this;
     }
@@ -317,7 +317,7 @@ namespace cytnx {
 
 
     */
-    void Fromfile(const std::string &fname, const int &network_type = NtType.Regular) {
+    void Fromfile(const std::string& fname, const int& network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
         boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
         this->_impl = tmp;
@@ -354,8 +354,8 @@ namespace cytnx {
     \verbinclude example/Network/FromString.py.out
 
     */
-    void FromString(const std::vector<std::string> &contents,
-                    const int &network_type = NtType.Regular) {
+    void FromString(const std::vector<std::string>& contents,
+                    const int& network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
         boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
         this->_impl = tmp;
@@ -366,9 +366,9 @@ namespace cytnx {
     }
     // void Savefile(const std::string &fname);
 
-    static Network Contract(const std::vector<UniTensor> &tensors, const std::string &Tout,
-                            const std::vector<std::string> &alias = {},
-                            const std::string &contract_order = "") {
+    static Network Contract(const std::vector<UniTensor>& tensors, const std::string& Tout,
+                            const std::vector<std::string>& alias = {},
+                            const std::string& contract_order = "") {
       boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
       Network out;
       out._impl = tmp;
@@ -376,23 +376,23 @@ namespace cytnx {
       return out;
     }
 
-    Network(const std::string &fname, const int &network_type = NtType.Regular) {
+    Network(const std::string& fname, const int& network_type = NtType.Regular) {
       this->Fromfile(fname, network_type);
     }
 
-    void RmUniTensor(const std::string &name) { this->_impl->RmUniTensor(name); }
-    void RmUniTensor(const cytnx_uint64 &idx) { this->_impl->RmUniTensor(idx); }
-    void RmUniTensors(const std::vector<std::string> &names) { this->_impl->RmUniTensors(names); }
-    void PutUniTensor(const std::string &name, const UniTensor &utensor,
-                      const std::vector<std::string> &label_order = {}) {
+    void RmUniTensor(const std::string& name) { this->_impl->RmUniTensor(name); }
+    void RmUniTensor(const cytnx_uint64& idx) { this->_impl->RmUniTensor(idx); }
+    void RmUniTensors(const std::vector<std::string>& names) { this->_impl->RmUniTensors(names); }
+    void PutUniTensor(const std::string& name, const UniTensor& utensor,
+                      const std::vector<std::string>& label_order = {}) {
       if (label_order.size()) {
         auto tmpu = utensor.permute(label_order);
         this->_impl->PutUniTensor(name, tmpu);
       } else
         this->_impl->PutUniTensor(name, utensor);
     }
-    void PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor,
-                      const std::vector<std::string> &label_order = {}) {
+    void PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor,
+                      const std::vector<std::string>& label_order = {}) {
       if (label_order.size()) {
         auto tmpu = utensor.permute(label_order);
         this->_impl->PutUniTensor(idx, tmpu);
@@ -400,11 +400,11 @@ namespace cytnx {
         this->_impl->PutUniTensor(idx, utensor);
     }
 
-    void PutUniTensors(const std::vector<std::string> &name,
-                       const std::vector<UniTensor> &utensors) {
+    void PutUniTensors(const std::vector<std::string>& name,
+                       const std::vector<UniTensor>& utensors) {
       this->_impl->PutUniTensors(name, utensors);
     }
-    std::string getOptimalOrder(const int &network_type = NtType.Regular) {
+    std::string getOptimalOrder(const int& network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
         return this->_impl->getOptimalOrder();
       } else {
@@ -414,11 +414,11 @@ namespace cytnx {
 
     std::string getOrder() { return this->_impl->getOrder(); }
 
-    void setOrder(const bool &optimal, const std::string &contract_order /*default ""*/) {
+    void setOrder(const bool& optimal, const std::string& contract_order /*default ""*/) {
       return this->_impl->setOrder(optimal, contract_order);
     }
 
-    UniTensor Launch(const int &network_type = NtType.Regular) {
+    UniTensor Launch(const int& network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
         return this->_impl->Launch();
       } else {
@@ -426,11 +426,11 @@ namespace cytnx {
       }
     }
 
-    void construct(const std::vector<std::string> &alias,
-                   const std::vector<std::vector<std::string>> &labels,
-                   const std::vector<std::string> &outlabel = std::vector<std::string>(),
-                   const cytnx_int64 &outrk = 0, const std::string &order = "",
-                   const bool optim = false, const int &network_type = NtType.Regular) {
+    void construct(const std::vector<std::string>& alias,
+                   const std::vector<std::vector<std::string>>& labels,
+                   const std::vector<std::string>& outlabel = std::vector<std::string>(),
+                   const cytnx_int64& outrk = 0, const std::string& order = "",
+                   const bool optim = false, const int& network_type = NtType.Regular) {
       if (network_type == NtType.Regular) {
         boost::intrusive_ptr<Network_base> tmp(new RegularNetwork());
         this->_impl = tmp;
@@ -452,11 +452,11 @@ namespace cytnx {
     }
     void PrintNet() { this->_impl->PrintNet(std::cout); }
 
-    void Savefile(const std::string &fname) { this->_impl->Savefile(fname); }
+    void Savefile(const std::string& fname) { this->_impl->Savefile(fname); }
   };
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Network &bin);
+  std::ostream& operator<<(std::ostream& os, const Network& bin);
   ///@endcond
 }  // namespace cytnx
 

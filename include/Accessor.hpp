@@ -34,7 +34,7 @@ namespace cytnx {
 
     enum : cytnx_int64 { none, Singl, All, Range, Tilend, Step, Tn, list, Qns };
 
-    Accessor() : _type(Accessor::none){};
+    Accessor() : _type(Accessor::none) {};
     ///@endcond
 
     // single constructor
@@ -54,12 +54,12 @@ namespace cytnx {
     #### output>
     \verbinclude example/Accessor/example.py.out
     */
-    explicit Accessor(const cytnx_int64 &loc);
+    explicit Accessor(const cytnx_int64& loc);
     // explicit Accessor(const Tensor &tn);// construct from Tensor, should be 1d with dtype
     // integer.
 
     template <class T>
-    explicit Accessor(const std::initializer_list<T> &list) {
+    explicit Accessor(const std::initializer_list<T>& list) {
       std::vector<T> tmp = list;
       this->_type = this->list;
       this->idx_list = std::vector<cytnx_int64>(tmp.begin(), tmp.end());
@@ -67,7 +67,7 @@ namespace cytnx {
     };  // construct from vector/list, should be 1d with dtype integer.
 
     template <class T>
-    explicit Accessor(const std::vector<T> &list) {
+    explicit Accessor(const std::vector<T>& list) {
       this->_type = this->list;
       this->idx_list = std::vector<cytnx_int64>(list.begin(), list.end());
     };  // construct from vector/list, should be 1d with dtype integer.
@@ -75,15 +75,15 @@ namespace cytnx {
     ///@cond
 
     // all constr. ( use string to dispatch )
-    explicit Accessor(const std::string &str);
+    explicit Accessor(const std::string& str);
 
     // range constr.
-    Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step);
+    Accessor(const cytnx_int64& min, const cytnx_int64& max, const cytnx_int64& step);
 
     // copy constructor:
-    Accessor(const Accessor &rhs);
+    Accessor(const Accessor& rhs);
     // copy assignment:
-    Accessor &operator=(const Accessor &rhs);
+    Accessor& operator=(const Accessor& rhs);
     ///@endcond
 
     int type() const { return this->_type; }
@@ -121,12 +121,12 @@ namespace cytnx {
     #### output>
     \verbinclude example/Accessor/example.py.out
     */
-    static Accessor range(const cytnx_int64 &min, const cytnx_int64 &max,
-                          const cytnx_int64 &step = 1) {
+    static Accessor range(const cytnx_int64& min, const cytnx_int64& max,
+                          const cytnx_int64& step = 1) {
       return Accessor(min, max, step);
     };
 
-    static Accessor tilend(const cytnx_int64 &min, const cytnx_int64 &step = 1) {
+    static Accessor tilend(const cytnx_int64& min, const cytnx_int64& step = 1) {
       cytnx_error_msg(step == 0, "[ERROR] cannot have _step=0 for tilend%s", "\n");
       Accessor out;
       out._type = Accessor::Tilend;
@@ -135,7 +135,7 @@ namespace cytnx {
       return out;
     };
 
-    static Accessor step(const cytnx_int64 &step) {
+    static Accessor step(const cytnx_int64& step) {
       cytnx_error_msg(step == 0, "[ERROR] cannot have _step=0 for _step%s", "\n");
       Accessor out;
       out._type = Accessor::Step;
@@ -144,7 +144,7 @@ namespace cytnx {
       return out;
     };
 
-    static Accessor qns(const std::vector<std::vector<cytnx_int64>> &qns) {
+    static Accessor qns(const std::vector<std::vector<cytnx_int64>>& qns) {
       cytnx_error_msg(qns.size() == 0, "[ERROR] cannot have empty qnums.%s", "\n");
       Accessor out;
 
@@ -158,29 +158,29 @@ namespace cytnx {
     // if type is all, pos will be null, and len == dim
     // if type is range, pos will be the locator, and len == len(pos)
     // if type is singl, pos will be pos, and len == 0
-    void get_len_pos(const cytnx_uint64 &dim, cytnx_uint64 &len,
-                     std::vector<cytnx_uint64> &pos) const;
+    void get_len_pos(const cytnx_uint64& dim, cytnx_uint64& len,
+                     std::vector<cytnx_uint64>& pos) const;
     ///@endcond
   };  // class Accessor
 
   /// @cond
   // layout:
-  std::ostream &operator<<(std::ostream &os, const Accessor &in);
+  std::ostream& operator<<(std::ostream& os, const Accessor& in);
 
   // elements resolver
   template <class T>
-  void _resolve_elems(std::vector<cytnx::Accessor> &cool, const T &a) {
+  void _resolve_elems(std::vector<cytnx::Accessor>& cool, const T& a) {
     cool.push_back(cytnx::Accessor(a));
   }
 
   template <class T, class... Ts>
-  void _resolve_elems(std::vector<cytnx::Accessor> &cool, const T &a, const Ts &...args) {
+  void _resolve_elems(std::vector<cytnx::Accessor>& cool, const T& a, const Ts&... args) {
     cool.push_back(cytnx::Accessor(a));
     _resolve_elems(cool, args...);
   }
 
   template <class T, class... Ts>
-  std::vector<cytnx::Accessor> Indices_resolver(const T &a, const Ts &...args) {
+  std::vector<cytnx::Accessor> Indices_resolver(const T& a, const Ts&... args) {
     // std::cout << a << std::endl;;
     std::vector<cytnx::Accessor> idxs;
     _resolve_elems(idxs, a, args...);

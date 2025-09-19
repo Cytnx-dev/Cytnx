@@ -6,7 +6,7 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
-    Tensor Expf(const Tensor &Tin) {
+    Tensor Expf(const Tensor& Tin) {
       Tensor out;
       if ((Tin.dtype() == Type.ComplexFloat) || (Tin.dtype() == Type.Float))
         out = Tin.clone();

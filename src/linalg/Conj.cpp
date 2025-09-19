@@ -10,7 +10,7 @@
 namespace cytnx {
 
   namespace linalg {
-    Tensor Conj(const Tensor &Tin) {
+    Tensor Conj(const Tensor& Tin) {
       // cytnx_error_msg(Tin.shape().size() != 2,"[Inv] error, Inv can only operate on rank-2
       // Tensor.%s","\n"); cytnx_error_msg(!Tin.is_contiguous(), "[Inv] error tensor must be
       // contiguous. Call Contiguous_() or Contiguous() first%s","\n");
@@ -43,7 +43,7 @@ namespace cytnx {
       }
     }
 
-    UniTensor Conj(const UniTensor &Tin) { return Tin.Conj(); }
+    UniTensor Conj(const UniTensor& Tin) { return Tin.Conj(); }
 
   }  // namespace linalg
 }  // namespace cytnx

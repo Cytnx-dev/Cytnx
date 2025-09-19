@@ -9,7 +9,7 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Lstsq(const Tensor &A, const Tensor &b, const float &rcond) {
+    std::vector<Tensor> Lstsq(const Tensor& A, const Tensor& b, const float& rcond) {
       cytnx_error_msg(A.shape().size() != 2 || b.shape().size() != 2,
                       "[Lsq] error, Lstsq can only operate on rank-2 Tensor.%s", "\n");
 

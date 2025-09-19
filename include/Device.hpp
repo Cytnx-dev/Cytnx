@@ -19,7 +19,7 @@ namespace cytnx {
     std::vector<std::vector<bool>> CanAccessPeer;
     Device_class();
     void Print_Property();
-    std::string getname(const int &device_id);
+    std::string getname(const int& device_id);
     ~Device_class();
     // void cudaDeviceSynchronize();
   };

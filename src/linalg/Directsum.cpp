@@ -11,8 +11,8 @@ using namespace std;
 
 namespace cytnx {
   namespace linalg {
-    cytnx::Tensor Directsum(const cytnx::Tensor &T1, const cytnx::Tensor &T2,
-                            const std::vector<cytnx_uint64> &shared_axes) {
+    cytnx::Tensor Directsum(const cytnx::Tensor& T1, const cytnx::Tensor& T2,
+                            const std::vector<cytnx_uint64>& shared_axes) {
       // check:
       cytnx_error_msg(T1.shape().size() != T2.shape().size(),
                       "[ERROR] T1 and T2 must be the same rank!%s", "\n");

@@ -11,7 +11,7 @@
 namespace cytnx {
 
   namespace linalg {
-    Tensor Outer(const Tensor &Tl, const Tensor &Tr) {
+    Tensor Outer(const Tensor& Tl, const Tensor& Tr) {
       // checking:
       cytnx_error_msg(Tl.shape().size() == 0, "[ERROR] pass empty tensor in param #1%s", "\n");
       cytnx_error_msg(Tr.shape().size() == 0, "[ERROR] pass empty tensor in param #2%s", "\n");

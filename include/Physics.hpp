@@ -28,10 +28,10 @@ namespace cytnx {
         [Tensor]
 
     */
-    Tensor spin(const cytnx_double &S, const std::string &Comp, const int &device = Device.cpu);
+    Tensor spin(const cytnx_double& S, const std::string& Comp, const int& device = Device.cpu);
 
     /// @cond
-    Tensor spin(const cytnx_double &S, const char &Comp, const int &device = Device.cpu);
+    Tensor spin(const cytnx_double& S, const char& Comp, const int& device = Device.cpu);
     /// @endcond
 
     //@{
@@ -45,10 +45,10 @@ namespace cytnx {
         [Tensor]
 
     */
-    Tensor pauli(const std::string &Comp, const int &device = Device.cpu);
+    Tensor pauli(const std::string& Comp, const int& device = Device.cpu);
 
     /// @cond
-    Tensor pauli(const char &Comp, const int &device = Device.cpu);
+    Tensor pauli(const char& Comp, const int& device = Device.cpu);
       /// @endcond
 
   #define kBoltz cytnx_double(1.380649e-23)  // J/K
@@ -61,11 +61,11 @@ namespace cytnx {
 namespace cytnx {
   namespace operators {
 
-    UniTensor Sz_shalf(const int &device = Device.cpu, const bool &conserve_qns = false);
-    UniTensor Sp_shalf(const int &device = Device.cpu, const bool &conserve_qns = false,
-                       const std::string &aux_dir = "r");
-    UniTensor Sn_shalf(const int &device = Device.cpu, const bool &conserve_qns = false,
-                       const std::string &aux_dir = "r");
+    UniTensor Sz_shalf(const int& device = Device.cpu, const bool& conserve_qns = false);
+    UniTensor Sp_shalf(const int& device = Device.cpu, const bool& conserve_qns = false,
+                       const std::string& aux_dir = "r");
+    UniTensor Sn_shalf(const int& device = Device.cpu, const bool& conserve_qns = false,
+                       const std::string& aux_dir = "r");
 
   }  // namespace operators
 }  // namespace cytnx
@@ -73,15 +73,15 @@ namespace cytnx {
 /// @cond
 namespace cytnx {
   namespace qgates {
-    UniTensor pauli_x(const int &device = Device.cpu);
-    UniTensor pauli_y(const int &device = Device.cpu);
-    UniTensor pauli_z(const int &device = Device.cpu);
-    UniTensor hadamard(const int &device = Device.cpu);
-    UniTensor phase_shift(const cytnx_double &phase, const int &device = Device.cpu);
-    UniTensor swap(const int &device = Device.cpu);
-    UniTensor sqrt_swap(const int &device = Device.cpu);
-    UniTensor toffoli(const int &device = Device.cpu);
-    UniTensor cntl_gate_2q(const UniTensor &gate_1q);
+    UniTensor pauli_x(const int& device = Device.cpu);
+    UniTensor pauli_y(const int& device = Device.cpu);
+    UniTensor pauli_z(const int& device = Device.cpu);
+    UniTensor hadamard(const int& device = Device.cpu);
+    UniTensor phase_shift(const cytnx_double& phase, const int& device = Device.cpu);
+    UniTensor swap(const int& device = Device.cpu);
+    UniTensor sqrt_swap(const int& device = Device.cpu);
+    UniTensor toffoli(const int& device = Device.cpu);
+    UniTensor cntl_gate_2q(const UniTensor& gate_1q);
 
   }  // namespace qgates
 

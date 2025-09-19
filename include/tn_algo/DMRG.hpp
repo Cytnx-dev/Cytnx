@@ -43,8 +43,8 @@ namespace cytnx {
       friend class MPO;
 
       void initialize();
-      Scalar sweep(const bool &verbose, const cytnx_int64 &maxit, const cytnx_int64 &krydim);
-      Scalar sweepv2(const bool &verbose, const cytnx_int64 &maxit, const cytnx_int64 &krydim);
+      Scalar sweep(const bool& verbose, const cytnx_int64& maxit, const cytnx_int64& krydim);
+      Scalar sweepv2(const bool& verbose, const cytnx_int64& maxit, const cytnx_int64& krydim);
     };
     ///@endcond
 
@@ -54,7 +54,7 @@ namespace cytnx {
      public:
       ///@cond
       boost::intrusive_ptr<DMRG_impl> _impl;
-      DMRG(MPO mpo, MPS mps, std::vector<MPS> ortho_mps = {}, const double &weight = 30)
+      DMRG(MPO mpo, MPS mps, std::vector<MPS> ortho_mps = {}, const double& weight = 30)
           : _impl(new DMRG_impl()) {
         // currently default init is DMRG_impl;
 
@@ -67,28 +67,28 @@ namespace cytnx {
         this->_impl->weight = weight;
       };
 
-      DMRG(const DMRG &rhs) { _impl = rhs._impl; }
+      DMRG(const DMRG& rhs) { _impl = rhs._impl; }
       ///@endcond
 
-      DMRG &operator=(const DMRG &rhs) {
+      DMRG& operator=(const DMRG& rhs) {
         _impl = rhs._impl;
         return *this;
       }
 
-      DMRG &initialize() {
+      DMRG& initialize() {
         this->_impl->initialize();
         return *this;
       }
 
       // return the current energy
-      Scalar sweep(const bool &verbose = false, const cytnx_int64 &maxit = 4000,
-                   const cytnx_int64 &krydim = 4) {
+      Scalar sweep(const bool& verbose = false, const cytnx_int64& maxit = 4000,
+                   const cytnx_int64& krydim = 4) {
         return this->_impl->sweep(verbose, maxit, krydim);
       }
 
       // return the current energy
-      Scalar sweepv2(const bool &verbose = false, const cytnx_int64 &maxit = 4000,
-                     const cytnx_int64 &krydim = 4) {
+      Scalar sweepv2(const bool& verbose = false, const cytnx_int64& maxit = 4000,
+                     const cytnx_int64& krydim = 4) {
         return this->_impl->sweepv2(verbose, maxit, krydim);
       }
     };

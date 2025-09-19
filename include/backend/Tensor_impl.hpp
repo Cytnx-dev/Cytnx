@@ -48,11 +48,11 @@ namespace cytnx {
       out->_contiguous = this->_contiguous;
       return out;
     }
-    Tensor_impl() : _contiguous(true){};
+    Tensor_impl() : _contiguous(true) {};
 
-    void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              int device = -1, const bool &init_zero = true);
-    void Init(const Storage &in);
+    void Init(const std::vector<cytnx_uint64>& shape, const unsigned int& dtype = Type.Double,
+              int device = -1, const bool& init_zero = true);
+    void Init(const Storage& in);
     // void Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
     // const unsigned int &dtype, int device);
     /*
@@ -67,8 +67,8 @@ namespace cytnx {
     }
     */
     // clone&assignment constr., use intrusive_ptr's
-    Tensor_impl(const Tensor_impl &rhs);
-    Tensor_impl &operator=(const Tensor_impl &rhs);  // add const
+    Tensor_impl(const Tensor_impl& rhs);
+    Tensor_impl& operator=(const Tensor_impl& rhs);  // add const
 
     unsigned int dtype() const { return this->_storage.dtype(); }
     int device() const { return this->_storage.device(); }
@@ -76,15 +76,15 @@ namespace cytnx {
     std::string dtype_str() const { return Type.getname(this->_storage.dtype()); }
     std::string device_str() const { return Device.getname(this->_storage.device()); }
 
-    const std::vector<cytnx_uint64> &shape() const { return _shape; }
+    const std::vector<cytnx_uint64>& shape() const { return _shape; }
 
-    const bool &is_contiguous() const { return this->_contiguous; }
+    const bool& is_contiguous() const { return this->_contiguous; }
 
-    const std::vector<cytnx_uint64> &mapper() const { return this->_mapper; }
-    const std::vector<cytnx_uint64> &invmapper() const { return this->_invmapper; }
-    Storage &storage() { return _storage; }
+    const std::vector<cytnx_uint64>& mapper() const { return this->_mapper; }
+    const std::vector<cytnx_uint64>& invmapper() const { return this->_invmapper; }
+    Storage& storage() { return _storage; }
 
-    const Storage &storage() const { return _storage; }
+    const Storage& storage() const { return _storage; }
 
     boost::intrusive_ptr<Tensor_impl> clone() const {
       boost::intrusive_ptr<Tensor_impl> out = this->_clone_meta_only();
@@ -92,8 +92,8 @@ namespace cytnx {
       return out;
     }
 
-    void to_(const int &device) { this->_storage.to_(device); }
-    boost::intrusive_ptr<Tensor_impl> to(const int &device) {
+    void to_(const int& device) { this->_storage.to_(device); }
+    boost::intrusive_ptr<Tensor_impl> to(const int& device) {
       if (this->device() == device) {
         // boost::intrusive_ptr<Tensor_impl> out(this);
         return this;
@@ -104,12 +104,12 @@ namespace cytnx {
       }
     }
 
-    void permute_(const std::vector<cytnx_uint64> &rnks);
+    void permute_(const std::vector<cytnx_uint64>& rnks);
 
-    boost::intrusive_ptr<Tensor_impl> permute(const std::vector<cytnx_uint64> &rnks);
+    boost::intrusive_ptr<Tensor_impl> permute(const std::vector<cytnx_uint64>& rnks);
 
     template <class T>
-    T &at(const std::vector<cytnx_uint64> &locator) const {
+    T& at(const std::vector<cytnx_uint64>& locator) const {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
 
@@ -135,7 +135,7 @@ namespace cytnx {
       return this->_storage.at<T>(RealRank);
     }
 
-    const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
+    const Scalar::Sproxy at(const std::vector<cytnx_uint64>& locator) const {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
 
@@ -161,7 +161,7 @@ namespace cytnx {
       return this->_storage.at(RealRank);
     }
 
-    Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
+    Scalar::Sproxy at(const std::vector<cytnx_uint64>& locator) {
       cytnx_error_msg(locator.size() != this->_shape.size(), "%s",
                       "The input index does not match Tensor's rank.");
 
@@ -187,18 +187,18 @@ namespace cytnx {
       return this->_storage.at(RealRank);
     }
 
-    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors);
-    boost::intrusive_ptr<Tensor_impl> get_deprecated(const std::vector<cytnx::Accessor> &accessors);
-    void set(const std::vector<cytnx::Accessor> &accessors,
-             const boost::intrusive_ptr<Tensor_impl> &rhs);
+    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor>& accessors);
+    boost::intrusive_ptr<Tensor_impl> get_deprecated(const std::vector<cytnx::Accessor>& accessors);
+    void set(const std::vector<cytnx::Accessor>& accessors,
+             const boost::intrusive_ptr<Tensor_impl>& rhs);
 
     template <class T>
-    void set(const std::vector<cytnx::Accessor> &accessors, const T &rc);
+    void set(const std::vector<cytnx::Accessor>& accessors, const T& rc);
 
-    void set(const std::vector<cytnx::Accessor> &accessors, const Scalar::Sproxy &rc);
+    void set(const std::vector<cytnx::Accessor>& accessors, const Scalar::Sproxy& rc);
 
     template <class Tx>
-    void fill(const Tx &val) {
+    void fill(const Tx& val) {
       this->storage().fill(val);
     }
 
@@ -248,7 +248,7 @@ namespace cytnx {
       }
     }
 
-    void reshape_(const std::vector<cytnx_int64> &new_shape) {
+    void reshape_(const std::vector<cytnx_int64>& new_shape) {
       if (!this->_contiguous) {
         this->contiguous_();
       }
@@ -298,7 +298,7 @@ namespace cytnx {
       this->_invmapper = this->_mapper;
     }
 
-    boost::intrusive_ptr<Tensor_impl> reshape(const std::vector<cytnx_int64> &new_shape) {
+    boost::intrusive_ptr<Tensor_impl> reshape(const std::vector<cytnx_int64>& new_shape) {
       boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
       if (this->is_contiguous()) {
         out = this->_clone_meta_only();
@@ -312,7 +312,7 @@ namespace cytnx {
       return out;
     }
 
-    boost::intrusive_ptr<Tensor_impl> astype(const int &new_type) {
+    boost::intrusive_ptr<Tensor_impl> astype(const int& new_type) {
       // boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
       // out->_storage = this->_storage.astype(new_type);
       if (this->dtype() == new_type) {

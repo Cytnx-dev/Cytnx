@@ -8,7 +8,7 @@
 
 namespace cytnx {
   namespace linalg {
-    void Pow_(Tensor &Tin, const double &p) {
+    void Pow_(Tensor& Tin, const double& p) {
       if (Tin.dtype() > 4) Tin = Tin.astype(Type.Double);
 
       if (Tin.device() == Device.cpu) {
@@ -29,7 +29,7 @@ namespace cytnx {
       }
     }
 
-    void Pow_(Tensor &Tin, const Scalar &p) {
+    void Pow_(Tensor& Tin, const Scalar& p) {
       if (Tin.dtype() > 4) Tin = Tin.astype(Type.Double);
       double dp = double(p);
 
@@ -56,11 +56,11 @@ namespace cytnx {
 
 namespace cytnx {
   namespace linalg {
-    void Pow_(UniTensor &Tin, const double &p) {
+    void Pow_(UniTensor& Tin, const double& p) {
       if (Tin.uten_type() == UTenType.Dense) {
         Tin.get_block_().Pow_(p);
       } else if (Tin.uten_type() == UTenType.Block || Tin.uten_type() == UTenType.BlockFermionic) {
-        for (auto &blk : Tin.get_blocks_()) {
+        for (auto& blk : Tin.get_blocks_()) {
           blk.Pow_(p);
         }
       } else {

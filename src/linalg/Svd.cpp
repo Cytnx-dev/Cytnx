@@ -15,7 +15,7 @@ using namespace std;
 namespace cytnx {
   namespace linalg {
 
-    std::vector<Tensor> Svd(const Tensor &Tin, const bool &is_UvT) {
+    std::vector<Tensor> Svd(const Tensor& Tin, const bool& is_UvT) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Svd] error, Svd can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[Svd] error tensor must be contiguous. Call
@@ -94,8 +94,8 @@ namespace cytnx {
   namespace linalg {
 
     // actual impls:
-    void _svd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                       const bool &compute_uv) {
+    void _svd_Dense_UT(std::vector<cytnx::UniTensor>& outCyT, const cytnx::UniTensor& Tin,
+                       const bool& compute_uv) {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
@@ -126,7 +126,7 @@ namespace cytnx {
       outCyT.resize(outT.size());
 
       // s
-      cytnx::UniTensor &Cy_S = outCyT[t];
+      cytnx::UniTensor& Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
@@ -137,7 +137,7 @@ namespace cytnx {
       t++;
 
       if (compute_uv) {
-        cytnx::UniTensor &Cy_U = outCyT[t];
+        cytnx::UniTensor& Cy_U = outCyT[t];
         cytnx_error_msg(Tin.rowrank() > oldshape.size(),
                         "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
                         "contained tensor.%s",
@@ -152,7 +152,7 @@ namespace cytnx {
         t++;  // U
       }
       if (compute_uv) {
-        cytnx::UniTensor &Cy_vT = outCyT[t];
+        cytnx::UniTensor& Cy_vT = outCyT[t];
         vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
         shapevT[0] = -1;
         memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
@@ -173,7 +173,7 @@ namespace cytnx {
         Cy_S.tag();
         t = 1;
         if (compute_uv) {
-          cytnx::UniTensor &Cy_U = outCyT[t];
+          cytnx::UniTensor& Cy_U = outCyT[t];
           Cy_U._impl->_is_tag = true;
           for (int i = 0; i < Cy_U.rowrank(); i++) {
             Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
@@ -183,7 +183,7 @@ namespace cytnx {
           t++;
         }
         if (compute_uv) {
-          cytnx::UniTensor &Cy_vT = outCyT[t];
+          cytnx::UniTensor& Cy_vT = outCyT[t];
           Cy_vT._impl->_is_tag = true;
           Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
           for (int i = 1; i < Cy_vT.rank(); i++) {
@@ -196,8 +196,8 @@ namespace cytnx {
       }  // if tag
     }
 
-    void _svd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                       const bool &compute_uv) {
+    void _svd_Block_UT(std::vector<cytnx::UniTensor>& outCyT, const cytnx::UniTensor& Tin,
+                       const bool& compute_uv) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
@@ -236,7 +236,7 @@ namespace cytnx {
 
       int cnt;
       for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        const std::vector<cytnx_uint64> &tmpv = Tin.get_qindices(b);
+        const std::vector<cytnx_uint64>& tmpv = Tin.get_qindices(b);
         for (cnt = 0; cnt < Tin.rowrank(); cnt++) {
           new_itoi[b][0] += tmpv[cnt] * strides[cnt];
         }
@@ -266,7 +266,7 @@ namespace cytnx {
       std::vector<Tensor> vT_blocks;
 
       int tr;
-      for (auto const &x : mgrp) {
+      for (auto const& x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
         // cout << x.second.size() << "-------" << endl;
         for (int i = 0; i < x.second.size(); i++) {
@@ -344,7 +344,7 @@ namespace cytnx {
           new_shape[0] = -1;
           for (int ti = 0; ti < blks.size(); ti++) {
             vT_blocks.push_back(blks[ti]);
-            auto &tpitoi = Tin.get_qindices(x.second[order[ti]]);
+            auto& tpitoi = Tin.get_qindices(x.second[order[ti]]);
             vT_itoi.push_back({S_blocks.size() - 1});
             for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
               vT_itoi.back().push_back(tpitoi[i]);
@@ -363,7 +363,7 @@ namespace cytnx {
 
       // process S:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
-      BlockUniTensor *S_ptr = new BlockUniTensor();
+      BlockUniTensor* S_ptr = new BlockUniTensor();
       S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
                   Device.cpu,  // this two will be overwrite later, so doesnt matter.
                   true,  // is_diag!
@@ -375,7 +375,7 @@ namespace cytnx {
       outCyT.push_back(S);
 
       if (compute_uv) {
-        BlockUniTensor *U_ptr = new BlockUniTensor();
+        BlockUniTensor* U_ptr = new BlockUniTensor();
         for (int i = 0; i < Tin.rowrank(); i++) {
           U_ptr->_bonds.push_back(Tin.bonds()[i].clone());
           U_ptr->_labels.push_back(Tin.labels()[i]);
@@ -393,7 +393,7 @@ namespace cytnx {
       }
 
       if (compute_uv) {
-        BlockUniTensor *vT_ptr = new BlockUniTensor();
+        BlockUniTensor* vT_ptr = new BlockUniTensor();
         vT_ptr->_bonds.push_back(Bd_aux);
         vT_ptr->_labels.push_back("_aux_R");
 
@@ -413,8 +413,8 @@ namespace cytnx {
 
     }  // _svd_Block_UT
 
-    void _svd_BlockFermionic_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                const bool &compute_uv) {
+    void _svd_BlockFermionic_UT(std::vector<cytnx::UniTensor>& outCyT, const cytnx::UniTensor& Tin,
+                                const bool& compute_uv) {
       //[8 Oct 2024] This is a copy from BlockUniTensor; signflips included
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
@@ -455,7 +455,7 @@ namespace cytnx {
 
       int cnt;
       for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        const std::vector<cytnx_uint64> &tmpv = Tin.get_qindices(b);
+        const std::vector<cytnx_uint64>& tmpv = Tin.get_qindices(b);
         for (cnt = 0; cnt < Tin.rowrank(); cnt++) {
           new_itoi[b][0] += tmpv[cnt] * strides[cnt];
         }
@@ -485,7 +485,7 @@ namespace cytnx {
       std::vector<Tensor> vT_blocks;
 
       int tr;
-      for (auto const &x : mgrp) {
+      for (auto const& x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
         // cout << x.second.size() << "-------" << endl;
         for (int i = 0; i < x.second.size(); i++) {
@@ -570,7 +570,7 @@ namespace cytnx {
           new_shape[0] = -1;
           for (int ti = 0; ti < blks.size(); ti++) {
             vT_blocks.push_back(blks[ti]);
-            auto &tpitoi = Tin.get_qindices(x.second[order[ti]]);
+            auto& tpitoi = Tin.get_qindices(x.second[order[ti]]);
             vT_itoi.push_back({S_blocks.size() - 1});
             for (int i = Tin.rowrank(); i < Tin.rank(); i++) {
               vT_itoi.back().push_back(tpitoi[i]);
@@ -589,7 +589,7 @@ namespace cytnx {
 
       // process S:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
-      BlockFermionicUniTensor *S_ptr = new BlockFermionicUniTensor();
+      BlockFermionicUniTensor* S_ptr = new BlockFermionicUniTensor();
       S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
                   Device.cpu,  // this two will be overwrite later, so doesnt matter.
                   true,  // is_diag!
@@ -601,7 +601,7 @@ namespace cytnx {
       outCyT.push_back(S);
 
       if (compute_uv) {
-        BlockFermionicUniTensor *U_ptr = new BlockFermionicUniTensor();
+        BlockFermionicUniTensor* U_ptr = new BlockFermionicUniTensor();
         for (int i = 0; i < Tin.rowrank(); i++) {
           U_ptr->_bonds.push_back(Tin.bonds()[i].clone());
           U_ptr->_labels.push_back(Tin.labels()[i]);
@@ -620,7 +620,7 @@ namespace cytnx {
         // }
 
         // if (compute_uv) {
-        BlockFermionicUniTensor *vT_ptr = new BlockFermionicUniTensor();
+        BlockFermionicUniTensor* vT_ptr = new BlockFermionicUniTensor();
         vT_ptr->_bonds.push_back(Bd_aux);
         vT_ptr->_labels.push_back("_aux_R");
 
@@ -641,7 +641,7 @@ namespace cytnx {
 
     }  // _svd_BlockFermionic_UT
 
-    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_UvT) {
+    std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor& Tin, const bool& is_UvT) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
                       "[Svd][ERROR] Svd for UniTensor should have rank>1 and rowrank>0%s", "\n");

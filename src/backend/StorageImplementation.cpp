@@ -31,7 +31,7 @@
 using namespace std;
 namespace cytnx {
   template <typename DType>
-  void PrintValueAndSpace(std::ostream &os, const DType &value) {
+  void PrintValueAndSpace(std::ostream& os, const DType& value) {
     if constexpr (is_complex_v<DType>) {
       std::streamsize original_percision = os.precision(5);
       std::ios::fmtflags original_flags = os.flags(std::ios::scientific);
@@ -62,8 +62,8 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::Init(const unsigned long long &len_in, const int &device,
-                                          const bool &init_zero) {
+  void StorageImplementation<DType>::Init(const unsigned long long& len_in, const int& device,
+                                          const bool& init_zero) {
     this->size_ = len_in;
 
     // check:
@@ -96,9 +96,9 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::_Init_byptr(void *rawptr, const unsigned long long &len_in,
-                                                 const int &device, const bool &iscap,
-                                                 const unsigned long long &cap_in) {
+  void StorageImplementation<DType>::_Init_byptr(void* rawptr, const unsigned long long& len_in,
+                                                 const int& device, const bool& iscap,
+                                                 const unsigned long long& cap_in) {
     //[note], this is an internal function, the device should match the device_id that allocate the
     // pointer if the pointer is on GPU device.
 
@@ -147,9 +147,9 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::Move_memory_(const std::vector<cytnx_uint64> &old_shape,
-                                                  const std::vector<cytnx_uint64> &mapper,
-                                                  const std::vector<cytnx_uint64> &invmapper) {
+  void StorageImplementation<DType>::Move_memory_(const std::vector<cytnx_uint64>& old_shape,
+                                                  const std::vector<cytnx_uint64>& mapper,
+                                                  const std::vector<cytnx_uint64>& invmapper) {
     boost::intrusive_ptr<Storage_base> tmp(this);
     if (this->device_ == Device.cpu) {
       utils_internal::MoveMemoryCpu<DType>(tmp, old_shape, mapper, invmapper, 1);
@@ -165,8 +165,8 @@ namespace cytnx {
 
   template <typename DType>
   boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::Move_memory(
-    const std::vector<cytnx_uint64> &old_shape, const std::vector<cytnx_uint64> &mapper,
-    const std::vector<cytnx_uint64> &invmapper) {
+    const std::vector<cytnx_uint64>& old_shape, const std::vector<cytnx_uint64>& mapper,
+    const std::vector<cytnx_uint64>& invmapper) {
     boost::intrusive_ptr<Storage_base> tmp(this);
     if (this->device_ == Device.cpu) {
       return utils_internal::MoveMemoryCpu<DType>(tmp, old_shape, mapper, invmapper, 0);
@@ -182,14 +182,14 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::to_(const int &device) {
+  void StorageImplementation<DType>::to_(const int& device) {
     if (this->device_ != device) {
       if (this->device_ == Device.cpu) {
 // here, cpu->gpu with gid=device
 #ifdef UNI_GPU
         cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
         cudaSetDevice(device);
-        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
+        void* dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
         checkCudaErrors(
           cudaMemcpy(dtmp, this->start_, sizeof(DType) * this->size_, cudaMemcpyHostToDevice));
         free(this->start_);
@@ -203,7 +203,7 @@ namespace cytnx {
         if (device == Device.cpu) {
           // here, gpu->cpu
           cudaSetDevice(this->device_);
-          void *htmp = malloc(sizeof(DType) * this->capacity_);
+          void* htmp = malloc(sizeof(DType) * this->capacity_);
           checkCudaErrors(
             cudaMemcpy(htmp, this->start_, sizeof(DType) * this->size_, cudaMemcpyDeviceToHost));
           cudaFree(this->start_);
@@ -213,7 +213,7 @@ namespace cytnx {
           // here, gpu->gpu
           cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
           cudaSetDevice(device);
-          void *dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
+          void* dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
           checkCudaErrors(
             cudaMemcpyPeer(dtmp, device, this->start_, this->device_, sizeof(DType) * this->size_));
           cudaFree(this->start_);
@@ -229,7 +229,7 @@ namespace cytnx {
     }
   }
   template <typename DType>
-  boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::to(const int &device) {
+  boost::intrusive_ptr<Storage_base> StorageImplementation<DType>::to(const int& device) {
     // Here, we follow pytorch scheme. if the device is the same as this->device_, then return this
     // (python self) otherwise, return a clone on different device.
     if (this->device_ == device) {
@@ -240,7 +240,7 @@ namespace cytnx {
 #ifdef UNI_GPU
         cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
         cudaSetDevice(device);
-        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
+        void* dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
         checkCudaErrors(
           cudaMemcpy(dtmp, this->start_, sizeof(DType) * this->size_, cudaMemcpyHostToDevice));
         boost::intrusive_ptr<Storage_base> out(new StorageImplementation());
@@ -255,7 +255,7 @@ namespace cytnx {
         if (device == Device.cpu) {
           // here, gpu->cpu
           cudaSetDevice(this->device_);
-          void *htmp = malloc(sizeof(DType) * this->capacity_);
+          void* htmp = malloc(sizeof(DType) * this->capacity_);
           checkCudaErrors(
             cudaMemcpy(htmp, this->start_, sizeof(DType) * this->size_, cudaMemcpyDeviceToHost));
           boost::intrusive_ptr<Storage_base> out(new StorageImplementation());
@@ -265,7 +265,7 @@ namespace cytnx {
           // here, gpu->gpu
           cytnx_error_msg(device >= Device.Ngpus, "%s", "[ERROR] invalid device.");
           cudaSetDevice(device);
-          void *dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
+          void* dtmp = utils_internal::cuMalloc_gpu(sizeof(DType) * this->capacity_);
           checkCudaErrors(
             cudaMemcpyPeer(dtmp, device, this->start_, this->device_, sizeof(DType) * this->size_));
           boost::intrusive_ptr<Storage_base> out(new StorageImplementation());
@@ -283,10 +283,10 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::PrintElem_byShape(std::ostream &os,
-                                                       const std::vector<cytnx_uint64> &shape,
-                                                       const std::vector<cytnx_uint64> &mapper) {
-    char *buffer = (char *)malloc(sizeof(char) * 256);
+  void StorageImplementation<DType>::PrintElem_byShape(std::ostream& os,
+                                                       const std::vector<cytnx_uint64>& shape,
+                                                       const std::vector<cytnx_uint64>& mapper) {
+    char* buffer = (char*)malloc(sizeof(char) * 256);
     // checking:
     cytnx_uint64 Ne = 1;
     for (cytnx_uint64 i = 0; i < shape.size(); i++) {
@@ -327,7 +327,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> stk(shape.size(), 0), stk2;
 
       cytnx_uint64 s;
-      DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
+      DType* elem_ptr_ = reinterpret_cast<DType*>(this->start_);
 
       if (mapper.empty()) {
         cytnx_uint64 cnt = 0;
@@ -446,7 +446,7 @@ namespace cytnx {
 
   template <typename DType>
   void StorageImplementation<DType>::print_elems() {
-    DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
+    DType* elem_ptr_ = reinterpret_cast<DType*>(this->start_);
     cout << "[ ";
     for (unsigned long long cnt = 0; cnt < this->size_; cnt++) {
       PrintValueAndSpace(std::cout, elem_ptr_[cnt]);
@@ -455,47 +455,47 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_complex128 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_complex128& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_complex64 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_complex64& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_double &val) {
+  void StorageImplementation<DType>::fill(const cytnx_double& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_float &val) {
+  void StorageImplementation<DType>::fill(const cytnx_float& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_uint64 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_uint64& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_int64 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_int64& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_uint32 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_uint32& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_int32 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_int32& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_uint16 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_uint16& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_int16 &val) {
+  void StorageImplementation<DType>::fill(const cytnx_int16& val) {
     Fill(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::fill(const cytnx_bool &val) {
+  void StorageImplementation<DType>::fill(const cytnx_bool& val) {
     Fill(val);
   }
 
@@ -515,7 +515,7 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::resize(const cytnx_uint64 &newsize) {
+  void StorageImplementation<DType>::resize(const cytnx_uint64& newsize) {
     // cytnx_error_msg(newsize < 1,"[ERROR]resize should have size > 0%s","\n");
 
     if (newsize > this->capacity_) {
@@ -525,7 +525,7 @@ namespace cytnx {
         this->capacity_ = newsize;
       }
       if (this->device_ == Device.cpu) {
-        void *htmp = calloc(this->capacity_, sizeof(DType));
+        void* htmp = calloc(this->capacity_, sizeof(DType));
         memcpy(htmp, this->start_, sizeof(DType) * this->size_);
         free(this->start_);
         this->start_ = htmp;
@@ -533,7 +533,7 @@ namespace cytnx {
 #ifdef UNI_GPU
         cytnx_error_msg(device_ >= Device.Ngpus, "%s", "[ERROR] invalid device.");
         cudaSetDevice(device_);
-        void *dtmp = utils_internal::cuCalloc_gpu(this->capacity_, sizeof(DType));
+        void* dtmp = utils_internal::cuCalloc_gpu(this->capacity_, sizeof(DType));
         checkCudaErrors(
           cudaMemcpyPeer(dtmp, device_, this->start_, this->device_, sizeof(DType) * this->size_));
         cudaFree(this->start_);
@@ -549,51 +549,51 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::append(const Scalar &val) {
+  void StorageImplementation<DType>::append(const Scalar& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_complex128 &val) {
+  void StorageImplementation<DType>::append(const cytnx_complex128& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_complex64 &val) {
+  void StorageImplementation<DType>::append(const cytnx_complex64& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_double &val) {
+  void StorageImplementation<DType>::append(const cytnx_double& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_float &val) {
+  void StorageImplementation<DType>::append(const cytnx_float& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_uint64 &val) {
+  void StorageImplementation<DType>::append(const cytnx_uint64& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_int64 &val) {
+  void StorageImplementation<DType>::append(const cytnx_int64& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_uint32 &val) {
+  void StorageImplementation<DType>::append(const cytnx_uint32& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_int32 &val) {
+  void StorageImplementation<DType>::append(const cytnx_int32& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_uint16 &val) {
+  void StorageImplementation<DType>::append(const cytnx_uint16& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_int16 &val) {
+  void StorageImplementation<DType>::append(const cytnx_int16& val) {
     Append(val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::append(const cytnx_bool &val) {
+  void StorageImplementation<DType>::append(const cytnx_bool& val) {
     Append(val);
   }
 
@@ -606,7 +606,7 @@ namespace cytnx {
       using ValueType = typename DType::value_type;
       if (this->device_ == Device.cpu) {
         boost::intrusive_ptr<Storage_base> out(new StorageImplementation<ValueType>());
-        void *dtmp = malloc(sizeof(ValueType) * this->capacity_);
+        void* dtmp = malloc(sizeof(ValueType) * this->capacity_);
         if constexpr (std::is_same_v<DType, cytnx_complex128>) {
           utils_internal::Complexmem_cpu_cdtd(dtmp, this->start_, this->size_, true);
 
@@ -619,7 +619,7 @@ namespace cytnx {
 #ifdef UNI_GPU
         boost::intrusive_ptr<Storage_base> out(new StorageImplementation<ValueType>());
         cudaSetDevice(device_);
-        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(ValueType) * this->capacity_);
+        void* dtmp = utils_internal::cuMalloc_gpu(sizeof(ValueType) * this->capacity_);
         if constexpr (std::is_same_v<DType, cytnx_complex128>) {
           utils_internal::cuComplexmem_gpu_cdtd(dtmp, this->start_, this->size_, true);
 
@@ -647,7 +647,7 @@ namespace cytnx {
       using ValueType = typename DType::value_type;
       if (this->device_ == Device.cpu) {
         boost::intrusive_ptr<Storage_base> out(new StorageImplementation<ValueType>());
-        void *dtmp = malloc(sizeof(ValueType) * this->capacity_);
+        void* dtmp = malloc(sizeof(ValueType) * this->capacity_);
         if constexpr (std::is_same_v<DType, cytnx_complex128>) {
           utils_internal::Complexmem_cpu_cdtd(dtmp, this->start_, this->size_, false);
 
@@ -660,7 +660,7 @@ namespace cytnx {
 #ifdef UNI_GPU
         boost::intrusive_ptr<Storage_base> out(new StorageImplementation<ValueType>());
         cudaSetDevice(device_);
-        void *dtmp = utils_internal::cuMalloc_gpu(sizeof(ValueType) * this->capacity_);
+        void* dtmp = utils_internal::cuMalloc_gpu(sizeof(ValueType) * this->capacity_);
         if constexpr (std::is_same_v<DType, cytnx_complex128>) {
           utils_internal::cuComplexmem_gpu_cdtd(dtmp, this->start_, this->size_, false);
 
@@ -680,63 +680,63 @@ namespace cytnx {
   }
 
   template <typename DType>
-  Scalar StorageImplementation<DType>::get_item(const cytnx_uint64 &idx) const {
+  Scalar StorageImplementation<DType>::get_item(const cytnx_uint64& idx) const {
     return Scalar(this->at<DType>(idx));
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const Scalar &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const Scalar& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx,
-                                              const cytnx_complex128 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx,
+                                              const cytnx_complex128& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_complex64 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_complex64& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_double &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_double& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_float &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_float& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_int64 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_int64& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_uint64 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_uint64& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_int32 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_int32& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_uint32 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_uint32& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_int16 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_int16& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_uint16 &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_uint16& val) {
     SetItem(idx, val);
   }
   template <typename DType>
-  void StorageImplementation<DType>::set_item(const cytnx_uint64 &idx, const cytnx_bool &val) {
+  void StorageImplementation<DType>::set_item(const cytnx_uint64& idx, const cytnx_bool& val) {
     SetItem(idx, val);
   }
 
   template <typename DType>
   template <typename OtherDType>
-  void StorageImplementation<DType>::Fill(const OtherDType &value) {
+  void StorageImplementation<DType>::Fill(const OtherDType& value) {
     if constexpr (!std::is_constructible_v<DType, OtherDType>) {
       cytnx_error_msg(true, "[ERROR] cannot fill %s value into %s container",
                       Type.getname(Type.cy_typeid(OtherDType())).c_str(),
@@ -744,8 +744,7 @@ namespace cytnx {
       return;
     } else {
       if (this->device_ == Device.cpu) {
-        std::fill_n(reinterpret_cast<DType *>(this->start_), this->size_,
-                    static_cast<DType>(value));
+        std::fill_n(reinterpret_cast<DType*>(this->start_), this->size_, static_cast<DType>(value));
       } else {
 #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(this->device_));
@@ -760,7 +759,7 @@ namespace cytnx {
 
   template <typename DType>
   template <typename OtherDType>
-  void StorageImplementation<DType>::Append(const OtherDType &value) {
+  void StorageImplementation<DType>::Append(const OtherDType& value) {
     if constexpr (std::is_constructible_v<DType, OtherDType>) {
       if (this->size_ == this->capacity_) {
         this->resize(this->size_ + 1);
@@ -776,7 +775,7 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::Append(const Scalar &value) {
+  void StorageImplementation<DType>::Append(const Scalar& value) {
     if (this->size_ == this->capacity_) {
       this->resize(this->size_ + 1);
     } else {
@@ -793,7 +792,7 @@ namespace cytnx {
 
   template <typename DType>
   template <typename OtherDType>
-  void StorageImplementation<DType>::SetItem(cytnx_uint64 index, const OtherDType &value) {
+  void StorageImplementation<DType>::SetItem(cytnx_uint64 index, const OtherDType& value) {
     if constexpr (std::is_constructible_v<DType, OtherDType>) {
       this->at<DType>(index) = value;
     } else {
@@ -804,7 +803,7 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::SetItem(cytnx_uint64 index, const Scalar &value) {
+  void StorageImplementation<DType>::SetItem(cytnx_uint64 index, const Scalar& value) {
     if constexpr (is_same_v<DType, cytnx_complex128>) {
       this->at<DType>(index) = complex128(value);
     } else if constexpr (is_same_v<DType, cytnx_complex64>) {

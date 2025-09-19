@@ -21,14 +21,14 @@ namespace cytnx {
 
     // T_ten: Tensor or UniTensor
     template <typename T, typename T_ten>
-    static T *get_obj_data_ptr(const T_ten &buffer, const cytnx_int32 bk_idx = 0) {
+    static T* get_obj_data_ptr(const T_ten& buffer, const cytnx_int32 bk_idx = 0) {
       if constexpr (std::is_same_v<T_ten, UniTensor>) {
         if (buffer.uten_type() == UTenType.Block) {
           if (buffer.device() == Device.cpu) {
             return buffer.get_blocks_()[bk_idx].template ptr_as<T>();
           } else {  // on cuda
   #ifdef UNI_GPU
-            return reinterpret_cast<T *>(
+            return reinterpret_cast<T*>(
               buffer.get_blocks_()[bk_idx].template gpu_ptr_as<void>(false));
   #endif
           }
@@ -37,7 +37,7 @@ namespace cytnx {
             return buffer.get_block_().template ptr_as<T>();
           } else {  // on cuda
   #ifdef UNI_GPU
-            return reinterpret_cast<T *>(buffer.get_block_().template gpu_ptr_as<void>(false));
+            return reinterpret_cast<T*>(buffer.get_block_().template gpu_ptr_as<void>(false));
   #endif
           }
         }
@@ -46,25 +46,25 @@ namespace cytnx {
           return buffer.template ptr_as<T>();
         } else {  // cuda
   #ifdef UNI_GPU
-          return reinterpret_cast<T *>(buffer.template gpu_ptr_as<void>(false));
+          return reinterpret_cast<T*>(buffer.template gpu_ptr_as<void>(false));
   #endif
         }
       }
     }
 
-    static cytnx_int64 get_dim(const Tensor &T) {
+    static cytnx_int64 get_dim(const Tensor& T) {
       auto shape = T.shape();
       cytnx_int64 dim = 1;
-      for (auto &x : shape) {
+      for (auto& x : shape) {
         dim *= x;
       }
       return dim;
     }
 
-    static cytnx_int64 get_elem_num(const UniTensor &UT) {
+    static cytnx_int64 get_elem_num(const UniTensor& UT) {
       if (UT.uten_type() == UTenType.Block) {
         cytnx_int64 dim = 0;
-        auto &blocks = UT.get_blocks_();
+        auto& blocks = UT.get_blocks_();
         for (int i = 0; i < blocks.size(); ++i) {
           dim += get_dim(blocks[i]);
         }
@@ -75,13 +75,13 @@ namespace cytnx {
     }
 
     template <typename T, typename T_ten>
-    static void pass_data_UT(T_ten &UT, T *data_ptr, bool to_UT) {
+    static void pass_data_UT(T_ten& UT, T* data_ptr, bool to_UT) {
       if constexpr (std::is_same_v<T_ten, UniTensor>) {
         if (UT.uten_type() == UTenType.Block) {
-          auto &blocks = UT.get_blocks_();
-          for (auto &block : blocks) {
+          auto& blocks = UT.get_blocks_();
+          for (auto& block : blocks) {
             auto dim = get_dim(block);
-            T *UT_data = get_obj_data_ptr<T, Tensor>(block);
+            T* UT_data = get_obj_data_ptr<T, Tensor>(block);
             if (to_UT) {
               memcpy(UT_data, data_ptr, dim * sizeof(T));
             } else {
@@ -91,9 +91,9 @@ namespace cytnx {
           }
           return;
         } else if (UT.uten_type() == UTenType.Dense) {
-          auto &block = UT.get_block_();
+          auto& block = UT.get_block_();
           auto dim = get_dim(block);
-          T *UT_data = get_obj_data_ptr<T, Tensor>(block);
+          T* UT_data = get_obj_data_ptr<T, Tensor>(block);
           if (to_UT) {
             memcpy(UT_data, data_ptr, dim * sizeof(T));
           } else {
@@ -103,7 +103,7 @@ namespace cytnx {
         }
       } else if constexpr (std::is_same_v<T_ten, Tensor>) {
         auto dim = get_dim(UT);
-        T *UT_data = get_obj_data_ptr<T, Tensor>(UT);
+        T* UT_data = get_obj_data_ptr<T, Tensor>(UT);
         if (to_UT) {
           memcpy(UT_data, data_ptr, dim * sizeof(T));
         } else {
@@ -113,10 +113,10 @@ namespace cytnx {
       }
     }
 
-    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &Tin, const std::string method,
-                                const double &CvgCrit, const unsigned int &Maxiter,
-                                const cytnx_uint64 &k, const bool &is_V, const bool &is_row,
-                                const cytnx_uint32 &max_krydim, const bool &verbose) {
+    std::vector<Tensor> Lanczos(LinOp* Hop, const Tensor& Tin, const std::string method,
+                                const double& CvgCrit, const unsigned int& Maxiter,
+                                const cytnx_uint64& k, const bool& is_V, const bool& is_row,
+                                const cytnx_uint32& max_krydim, const bool& verbose) {
       if (method == "ER") {
         return Lanczos_ER(Hop, k, is_V, Maxiter, CvgCrit, is_row, Tin, max_krydim, verbose);
         // return Lanczos(Hop, Tin, "SA", Maxiter, CvgCrit, k, is_V, verbose);
@@ -136,10 +136,10 @@ namespace cytnx {
       }
     }  // Lanczos
 
-    std::vector<UniTensor> Lanczos(LinOp *Hop, const UniTensor &Tin, const std::string method,
-                                   const double &CvgCrit, const unsigned int &Maxiter,
-                                   const cytnx_uint64 &k, const bool &is_V, const bool &is_row,
-                                   const cytnx_uint32 &max_krydim, const bool &verbose) {
+    std::vector<UniTensor> Lanczos(LinOp* Hop, const UniTensor& Tin, const std::string method,
+                                   const double& CvgCrit, const unsigned int& Maxiter,
+                                   const cytnx_uint64& k, const bool& is_V, const bool& is_row,
+                                   const cytnx_uint32& max_krydim, const bool& verbose) {
       if (method == "ER") {
         cytnx_error_msg(
           1, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");
@@ -160,8 +160,8 @@ namespace cytnx {
     }  // Lanczos
 
     template <typename T>
-    static void clean_arpack_buffer(T *&resid, T *&v, T *&workd, T *&workl, cytnx_int32 *&select,
-                                    T *&d, T *&z) {
+    static void clean_arpack_buffer(T*& resid, T*& v, T*& workd, T*& workl, cytnx_int32*& select,
+                                    T*& d, T*& z) {
       delete[] v;
       v = nullptr;
       delete[] resid;
@@ -180,7 +180,7 @@ namespace cytnx {
 
     // T_ten: Tensor or UniTensor
     template <typename T, typename T_ten>
-    static void matvec(LinOp *Hop, T_ten &buffer, T *v_in, T *v_out) {
+    static void matvec(LinOp* Hop, T_ten& buffer, T* v_in, T* v_out) {
       buffer.contiguous_();
       pass_data_UT<T, T_ten>(buffer, v_in, true);
       auto nextTens = Hop->matvec(buffer).astype(Hop->dtype());
@@ -194,7 +194,7 @@ namespace cytnx {
 
     // sort eignvalues, it seems that arpack will not sort it...
     template <typename T>
-    std::vector<cytnx_int32> sort_indices(const T *d, const char *which, const cytnx_int32 k) {
+    std::vector<cytnx_int32> sort_indices(const T* d, const char* which, const cytnx_int32 k) {
       char large_or_small = which[0];  //'S' or 'L'
       char metric_type = which[1];  //'M', or 'A'
 
@@ -226,21 +226,21 @@ namespace cytnx {
     // T_ten: Tensor or UniTensor
     // T: cytnx_double or cytnx_float
     template <typename T, typename T_ten>
-    void _Lanczos_internal(std::vector<T_ten> &out, LinOp *Hop, const T_ten &UT_init,
-                           const std::string which_str, const cytnx_uint64 &maxiter,
-                           const cytnx_double &CvgCrit, const cytnx_uint64 &k,
-                           const cytnx_bool &is_V, const cytnx_int32 &ncv_in,
-                           const cytnx_bool &verbose) {
-      std::function<void(cytnx_int32 * ido, char *bmat, cytnx_int32 *n, char *which,
-                         cytnx_int32 *nev, T *tol, T *resid, cytnx_int32 *ncv, T *v,
-                         cytnx_int32 *ldv, cytnx_int32 *iparam, cytnx_int32 *ipntr, T *workd,
-                         T *workl, cytnx_int32 *lworkl, cytnx_int32 *info)>
+    void _Lanczos_internal(std::vector<T_ten>& out, LinOp* Hop, const T_ten& UT_init,
+                           const std::string which_str, const cytnx_uint64& maxiter,
+                           const cytnx_double& CvgCrit, const cytnx_uint64& k,
+                           const cytnx_bool& is_V, const cytnx_int32& ncv_in,
+                           const cytnx_bool& verbose) {
+      std::function<void(cytnx_int32 * ido, char* bmat, cytnx_int32* n, char* which,
+                         cytnx_int32* nev, T* tol, T* resid, cytnx_int32* ncv, T* v,
+                         cytnx_int32* ldv, cytnx_int32* iparam, cytnx_int32* ipntr, T* workd,
+                         T* workl, cytnx_int32* lworkl, cytnx_int32* info)>
         func_xsaupd;
-      std::function<void(cytnx_int32 * rvec, char *howmny, cytnx_int32 *select, T *d, T *z,
-                         cytnx_int32 *ldz, T *sigma, char *bmat, cytnx_int32 *n, char *which,
-                         cytnx_int32 *nev, T *tol, T *resid, cytnx_int32 *ncv, T *v,
-                         cytnx_int32 *ldv, cytnx_int32 *iparam, cytnx_int32 *ipntr, T *workd,
-                         T *workl, cytnx_int32 *lworkl, cytnx_int32 *info)>
+      std::function<void(cytnx_int32 * rvec, char* howmny, cytnx_int32* select, T* d, T* z,
+                         cytnx_int32* ldz, T* sigma, char* bmat, cytnx_int32* n, char* which,
+                         cytnx_int32* nev, T* tol, T* resid, cytnx_int32* ncv, T* v,
+                         cytnx_int32* ldv, cytnx_int32* iparam, cytnx_int32* ipntr, T* workd,
+                         T* workl, cytnx_int32* lworkl, cytnx_int32* info)>
         func_xseupd;
       auto dtype = Hop->dtype();
       if constexpr (std::is_same_v<T, cytnx_double>) {
@@ -268,7 +268,7 @@ namespace cytnx {
       iparam[3] = 1;  // current code only for 1
       iparam[6] = 1;  /// Sets the mode of d(s)saupd.
       cytnx_int32 ipntr[14];
-      T *resid = new T[dim];
+      T* resid = new T[dim];
       T_ten buffer_UT = UT_init.clone();
       cytnx_bool ifinit = true;  // not allow for false, currently
       if (ifinit) {
@@ -285,13 +285,13 @@ namespace cytnx {
       // ncv = (ncv > dim) ? dim : ncv; ///the number of Ritz vector, nev+2 <= ncv <= dim
       cytnx_int32 ncv = ncv_in == 0 ? std::min(dim, 2 * nev + 10) : ncv_in;
       cytnx_int32 ldv = dim;  /// leading dimension of v
-      T *v = new T[dim * ncv];
-      T *workd = new T[3 * dim];
+      T* v = new T[dim * ncv];
+      T* workd = new T[3 * dim];
       cytnx_int32 lworkl = ncv * (ncv + 8);  /// LWORKL must be at least NCV**2 + 8*NCV .
-      T *workl = new T[lworkl];
-      cytnx_int32 *select = new cytnx_int32[ncv];
-      T *d = new T[nev];
-      T *z = new T[dim * nev];
+      T* workl = new T[lworkl];
+      cytnx_int32* select = new cytnx_int32[ncv];
+      T* d = new T[nev];
+      T* z = new T[dim * nev];
 
       T sigma;
 
@@ -343,23 +343,23 @@ namespace cytnx {
       }
 
       auto sorted_idx = sort_indices<T>(d, which, k);
-      T *eigvals_data = get_obj_data_ptr<T, T_ten>(out[0]);
+      T* eigvals_data = get_obj_data_ptr<T, T_ten>(out[0]);
       for (cytnx_int32 ik = 0; ik < k; ++ik) {
         eigvals_data[ik] = d[sorted_idx[ik]];
       }
 
       if (is_V) {
-        T *z_data_ptr = reinterpret_cast<T *>(z);
+        T* z_data_ptr = reinterpret_cast<T*>(z);
         if constexpr (std::is_same_v<T_ten, UniTensor>) {
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
-            T *z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
+            T* z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
             pass_data_UT<T, T_ten>(out[ik + 1], z_k_ptr, true);
           }
         } else if constexpr (std::is_same_v<T_ten, Tensor>) {
-          T *tens_data = get_obj_data_ptr<T, T_ten>(out[1]);
+          T* tens_data = get_obj_data_ptr<T, T_ten>(out[1]);
           for (cytnx_int32 ik = 0; ik < k; ++ik) {
-            T *tmp_data = tens_data + ik * dim;
-            T *z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
+            T* tmp_data = tens_data + ik * dim;
+            T* z_k_ptr = z_data_ptr + sorted_idx[ik] * dim;
             memcpy(tmp_data, z_k_ptr, dim * sizeof(T));
           }
         }
@@ -368,10 +368,10 @@ namespace cytnx {
       clean_arpack_buffer(resid, v, workd, workl, select, d, z);
     }
 
-    void _Lanczos(std::vector<UniTensor> &out, LinOp *Hop, const UniTensor &UT_init,
-                  const std::string which, const cytnx_uint64 &maxiter, const double &CvgCrit,
-                  const cytnx_uint64 &k, const bool &is_V, const cytnx_int32 &ncv,
-                  const bool &verbose) {
+    void _Lanczos(std::vector<UniTensor>& out, LinOp* Hop, const UniTensor& UT_init,
+                  const std::string which, const cytnx_uint64& maxiter, const double& CvgCrit,
+                  const cytnx_uint64& k, const bool& is_V, const cytnx_int32& ncv,
+                  const bool& verbose) {
       auto dtype = Hop->dtype();
       auto device = Hop->device();
       auto eigvals_tens = zeros({k}, dtype, device);
@@ -395,10 +395,10 @@ namespace cytnx {
       }
     }
 
-    void _Lanczos(std::vector<Tensor> &out, LinOp *Hop, const Tensor &UT_init,
-                  const std::string which, const cytnx_uint64 &maxiter, const double &CvgCrit,
-                  const cytnx_uint64 &k, const bool &is_V, const cytnx_int32 &ncv,
-                  const bool &verbose) {
+    void _Lanczos(std::vector<Tensor>& out, LinOp* Hop, const Tensor& UT_init,
+                  const std::string which, const cytnx_uint64& maxiter, const double& CvgCrit,
+                  const cytnx_uint64& k, const bool& is_V, const cytnx_int32& ncv,
+                  const bool& verbose) {
       auto dtype = Hop->dtype();
       auto device = Hop->device();
       auto eigvals_tens = zeros({k}, dtype, device);
@@ -421,10 +421,10 @@ namespace cytnx {
       }
     }
 
-    std::vector<Tensor> Lanczos(LinOp *Hop, const Tensor &T_init, const std::string which,
-                                const cytnx_uint64 &maxiter, const double &cvg_crit,
-                                const cytnx_uint64 &k, const bool &is_V, const cytnx_int32 &ncv,
-                                const bool &verbose) {
+    std::vector<Tensor> Lanczos(LinOp* Hop, const Tensor& T_init, const std::string which,
+                                const cytnx_uint64& maxiter, const double& cvg_crit,
+                                const cytnx_uint64& k, const bool& is_V, const cytnx_int32& ncv,
+                                const bool& verbose) {
       // check type:
       cytnx_error_msg(
         !Type.is_float(Hop->dtype()),
@@ -483,10 +483,10 @@ namespace cytnx {
       return out;
     }
 
-    std::vector<UniTensor> Lanczos(LinOp *Hop, const UniTensor &UT_init, const std::string which,
-                                   const cytnx_uint64 &maxiter, const double &cvg_crit,
-                                   const cytnx_uint64 &k, const bool &is_V, const cytnx_int32 &ncv,
-                                   const bool &verbose) {
+    std::vector<UniTensor> Lanczos(LinOp* Hop, const UniTensor& UT_init, const std::string which,
+                                   const cytnx_uint64& maxiter, const double& cvg_crit,
+                                   const cytnx_uint64& k, const bool& is_V, const cytnx_int32& ncv,
+                                   const bool& verbose) {
       // check type:
       cytnx_error_msg(
         !Type.is_float(Hop->dtype()),

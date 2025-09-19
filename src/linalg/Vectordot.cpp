@@ -9,7 +9,7 @@ namespace cytnx {
 
   namespace linalg {
     using namespace std;
-    Tensor Vectordot(const Tensor &Tl, const Tensor &Tr, const bool &is_conj) {
+    Tensor Vectordot(const Tensor& Tl, const Tensor& Tr, const bool& is_conj) {
       // checking:
       cytnx_error_msg(Tl.device() != Tr.device(),
                       "[ERROR] Two tensors for Vectordot cannot be on different devices.%s", "\n");

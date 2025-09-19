@@ -34,7 +34,7 @@ namespace cytnx {
       _elems;  // map[i] -> pair[<js>,<Storage>]
     std::map<cytnx_uint64, std::pair<std::vector<cytnx_uint64>, Tensor>>::iterator _elems_it;
 
-    Tensor _mv_elemfunc(const Tensor &);
+    Tensor _mv_elemfunc(const Tensor&);
 
    public:
     /// @cond
@@ -67,8 +67,8 @@ namespace cytnx {
     \verbinclude example/LinOp/init.py.out
 
     */
-    LinOp(const std::string &type, const cytnx_uint64 &nx, const int &dtype = Type.Double,
-          const int &device = Device.cpu) {
+    LinOp(const std::string& type, const cytnx_uint64& nx, const int& dtype = Type.Double,
+          const int& device = Device.cpu) {
       if (type == "mv") {
       } else if (type == "mv_elem") {
       } else
@@ -95,7 +95,7 @@ namespace cytnx {
     };
     */
     template <class T>
-    void set_elem(const cytnx_uint64 &i, const cytnx_uint64 &j, const T &elem,
+    void set_elem(const cytnx_uint64& i, const cytnx_uint64& j, const T& elem,
                   const bool check_exists = true) {
       this->_elems_it = this->_elems.find(i);
       if (this->_elems_it == this->_elems.end()) {
@@ -105,8 +105,8 @@ namespace cytnx {
         this->_elems[i] = std::pair<std::vector<cytnx_uint64>, Tensor>({j}, x);
 
       } else {
-        std::vector<cytnx_uint64> &vi = this->_elems_it->second.first;  // pair:
-        Tensor &ie = this->_elems_it->second.second;
+        std::vector<cytnx_uint64>& vi = this->_elems_it->second.first;  // pair:
+        Tensor& ie = this->_elems_it->second.second;
         if (check_exists) {
           cytnx_error_msg(std::find(vi.begin(), vi.end(), j) != vi.end(),
                           "[ERROR] the element is set%s", "\n");
@@ -115,7 +115,7 @@ namespace cytnx {
         ie.append(elem);
       }
     };
-    Tensor::Tproxy operator()(const cytnx_uint64 &i, const cytnx_uint64 &j) {
+    Tensor::Tproxy operator()(const cytnx_uint64& i, const cytnx_uint64& j) {
       //[Note that this can only call by mv_elem]
       // if the element is not exists, it will create one.
       this->_elems_it = this->_elems.find(i);
@@ -126,8 +126,8 @@ namespace cytnx {
         this->_elems[i] = std::pair<std::vector<cytnx_uint64>, Tensor>({j}, x);
         return this->_elems[i].second(0);
       } else {
-        std::vector<cytnx_uint64> &vi = this->_elems_it->second.first;  // pair:
-        Tensor &ie = this->_elems_it->second.second;
+        std::vector<cytnx_uint64>& vi = this->_elems_it->second.first;  // pair:
+        Tensor& ie = this->_elems_it->second.second;
         auto tmp_it = std::find(vi.begin(), vi.end(), j);
 
         // if(check_exists){
@@ -144,11 +144,11 @@ namespace cytnx {
       }
     }
 
-    void set_device(const int &device) {
+    void set_device(const int& device) {
       cytnx_error_msg(device < -1 || device >= Device.Ngpus, "[ERROR] invalid device.%s", "\n");
       this->_device = device;
     };
-    void set_dtype(const int &dtype) {
+    void set_dtype(const int& dtype) {
       cytnx_error_msg(dtype < 1 || dtype >= N_Type, "[ERROR] invalid dtype.%s", "\n");
       this->_dtype = dtype;
     };
@@ -162,11 +162,11 @@ namespace cytnx {
     // this expose to interitance:
     // need user to check the output to be Tensor
     /// @endcond
-    virtual Tensor matvec(const Tensor &Tin);
+    virtual Tensor matvec(const Tensor& Tin);
 
     /// @cond
     // this expose to interface:
-    virtual UniTensor matvec(const UniTensor &Tin);
+    virtual UniTensor matvec(const UniTensor& Tin);
     // virtual std::vector<UniTensor> matvec(const std::vector<UniTensor> &Tin);
     /// @endcond
   };

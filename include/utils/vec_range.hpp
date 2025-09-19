@@ -10,21 +10,21 @@
 #include "cytnx_error.hpp"
 
 namespace cytnx {
-  std::vector<cytnx_uint64> vec_range(const cytnx_uint64 &len);
-  std::vector<cytnx_uint64> vec_range(const cytnx_uint64 &start, const cytnx_uint64 &end);
+  std::vector<cytnx_uint64> vec_range(const cytnx_uint64& len);
+  std::vector<cytnx_uint64> vec_range(const cytnx_uint64& start, const cytnx_uint64& end);
 
   template <class T>
-  std::vector<T> vec_range(const cytnx_int64 &len);
+  std::vector<T> vec_range(const cytnx_int64& len);
   template <class T>
-  std::vector<T> vec_range(const cytnx_int64 &start, const cytnx_int64 &end);
+  std::vector<T> vec_range(const cytnx_int64& start, const cytnx_int64& end);
 
-  void vec_range_(std::vector<cytnx_uint64> &v, const cytnx_uint64 &len);
-  void vec_range_(std::vector<cytnx_uint64> &v, const cytnx_uint64 &start, const cytnx_uint64 &end);
+  void vec_range_(std::vector<cytnx_uint64>& v, const cytnx_uint64& len);
+  void vec_range_(std::vector<cytnx_uint64>& v, const cytnx_uint64& start, const cytnx_uint64& end);
 
   template <class T>
-  void vec_range_(std::vector<cytnx_int64> &v, const cytnx_int64 &len);
+  void vec_range_(std::vector<cytnx_int64>& v, const cytnx_int64& len);
   template <class T>
-  void vec_range_(std::vector<cytnx_int64> &v, const cytnx_int64 &start, const cytnx_int64 &end);
+  void vec_range_(std::vector<cytnx_int64>& v, const cytnx_int64& start, const cytnx_int64& end);
 
 }  // namespace cytnx
 

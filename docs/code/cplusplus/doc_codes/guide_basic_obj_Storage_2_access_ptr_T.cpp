@@ -1,2 +1,2 @@
 auto A = cytnx::Storage(6);
-double *pA = A.data<double>();
+double* pA = A.data<double>();

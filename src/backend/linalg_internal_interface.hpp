@@ -77,137 +77,134 @@
 namespace cytnx {
 
   namespace linalg_internal {
-    typedef void (*Normfunc_oii)(void *, const boost::intrusive_ptr<Storage_base> &);
-    typedef void (*Detfunc_oii)(void *, const boost::intrusive_ptr<Storage_base> &,
-                                const cytnx_uint64 &);
+    typedef void (*Normfunc_oii)(void*, const boost::intrusive_ptr<Storage_base>&);
+    typedef void (*Detfunc_oii)(void*, const boost::intrusive_ptr<Storage_base>&,
+                                const cytnx_uint64&);
     typedef void (*Arithmeticfunc_oii)(
-      boost::intrusive_ptr<Storage_base> &, boost::intrusive_ptr<Storage_base> &,
-      boost::intrusive_ptr<Storage_base> &, const unsigned long long &len,
-      const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
-      const std::vector<cytnx_uint64> &invmapper_R, const char &type);
+      boost::intrusive_ptr<Storage_base>&, boost::intrusive_ptr<Storage_base>&,
+      boost::intrusive_ptr<Storage_base>&, const unsigned long long& len,
+      const std::vector<cytnx_uint64>& shape, const std::vector<cytnx_uint64>& invmapper_L,
+      const std::vector<cytnx_uint64>& invmapper_R, const char& type);
 
-    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base> &,
-                             boost::intrusive_ptr<Storage_base> &, const Scalar &);
-    typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base> &,
-                            const boost::intrusive_ptr<Storage_base> &,
-                            const boost::intrusive_ptr<Storage_base> &, const Scalar &);
+    typedef void (*axpy_oii)(const boost::intrusive_ptr<Storage_base>&,
+                             boost::intrusive_ptr<Storage_base>&, const Scalar&);
+    typedef void (*ger_oii)(boost::intrusive_ptr<Storage_base>&,
+                            const boost::intrusive_ptr<Storage_base>&,
+                            const boost::intrusive_ptr<Storage_base>&, const Scalar&);
 
-    typedef void (*Gemmfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                 const boost::intrusive_ptr<Storage_base> &,
-                                 const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
-                                 const cytnx_int64 &, const cytnx_int64 &, const Scalar &,
-                                 const Scalar &);
+    typedef void (*Gemmfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                 const boost::intrusive_ptr<Storage_base>&,
+                                 const boost::intrusive_ptr<Storage_base>&, const cytnx_int64&,
+                                 const cytnx_int64&, const cytnx_int64&, const Scalar&,
+                                 const Scalar&);
 
     typedef void (*Gemm_Batchfunc_oii)(
-      const char *transa_array, const char *transb_array, const blas_int *m_array,
-      const blas_int *n_array, const blas_int *k_array, const std::vector<Scalar> &alpha_array,
-      const void **a_array, const blas_int *lda_array, const void **b_array,
-      const blas_int *ldb_array, const std::vector<Scalar> &beta_array, void **c_array,
-      const blas_int *ldc_array, const blas_int group_count, const blas_int *group_size);
+      const char* transa_array, const char* transb_array, const blas_int* m_array,
+      const blas_int* n_array, const blas_int* k_array, const std::vector<Scalar>& alpha_array,
+      const void** a_array, const blas_int* lda_array, const void** b_array,
+      const blas_int* ldb_array, const std::vector<Scalar>& beta_array, void** c_array,
+      const blas_int* ldc_array, const blas_int group_count, const blas_int* group_size);
 
-    typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
-                                boost::intrusive_ptr<Storage_base> &,
-                                boost::intrusive_ptr<Storage_base> &,
-                                boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
-                                const cytnx_int64 &);
-    typedef void (*Qrfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
-                               boost::intrusive_ptr<Storage_base> &,
-                               boost::intrusive_ptr<Storage_base> &,
-                               boost::intrusive_ptr<Storage_base> &,
-                               boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
-                               const cytnx_int64 &, const bool &);
-    typedef void (*Eighfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
-                                 boost::intrusive_ptr<Storage_base> &,
-                                 boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &);
-    typedef void (*InvMinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &);
-    typedef void (*Conjinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
-    typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
-    typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                 const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
-                                 const cytnx_bool &);
-    typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
-                                   const cytnx_int64 &, const cytnx_int64 &);
-    typedef void (*Matmul_dgfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                      const boost::intrusive_ptr<Storage_base> &,
-                                      const boost::intrusive_ptr<Storage_base> &,
-                                      const cytnx_int64 &, const cytnx_int64 &, const cytnx_int64 &,
-                                      const int &);
-    typedef void (*Matvecfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
-                                   const cytnx_int64 &);
-    typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                  const boost::intrusive_ptr<Storage_base> &,
-                                  const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
-                                  const cytnx_uint64 &);
-    typedef void (*Vectordotfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                      const boost::intrusive_ptr<Storage_base> &,
-                                      const boost::intrusive_ptr<Storage_base> &,
-                                      const unsigned long long &, const bool &);
-    typedef void (*Tdfunc_oii)(const boost::intrusive_ptr<Storage_base> &,
-                               const boost::intrusive_ptr<Storage_base> &,
-                               boost::intrusive_ptr<Storage_base> &,
-                               boost::intrusive_ptr<Storage_base> &, const cytnx_int64 &,
+    typedef void (*Svdfunc_oii)(const boost::intrusive_ptr<Storage_base>&,
+                                boost::intrusive_ptr<Storage_base>&,
+                                boost::intrusive_ptr<Storage_base>&,
+                                boost::intrusive_ptr<Storage_base>&, const cytnx_int64&,
+                                const cytnx_int64&);
+    typedef void (*Qrfunc_oii)(const boost::intrusive_ptr<Storage_base>&,
+                               boost::intrusive_ptr<Storage_base>&,
+                               boost::intrusive_ptr<Storage_base>&,
+                               boost::intrusive_ptr<Storage_base>&,
+                               boost::intrusive_ptr<Storage_base>&, const cytnx_int64&,
+                               const cytnx_int64&, const bool&);
+    typedef void (*Eighfunc_oii)(const boost::intrusive_ptr<Storage_base>&,
+                                 boost::intrusive_ptr<Storage_base>&,
+                                 boost::intrusive_ptr<Storage_base>&, const cytnx_int64&);
+    typedef void (*InvMinplacefunc_oii)(boost::intrusive_ptr<Storage_base>&, const cytnx_int64&);
+    typedef void (*Conjinplacefunc_oii)(boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&);
+    typedef void (*Expfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&);
+    typedef void (*Diagfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                 const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&,
+                                 const cytnx_bool&);
+    typedef void (*Matmulfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                   const boost::intrusive_ptr<Storage_base>&,
+                                   const boost::intrusive_ptr<Storage_base>&, const cytnx_int64&,
+                                   const cytnx_int64&, const cytnx_int64&);
+    typedef void (*Matmul_dgfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                      const boost::intrusive_ptr<Storage_base>&,
+                                      const boost::intrusive_ptr<Storage_base>&, const cytnx_int64&,
+                                      const cytnx_int64&, const cytnx_int64&, const int&);
+    typedef void (*Matvecfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                   const boost::intrusive_ptr<Storage_base>&,
+                                   const boost::intrusive_ptr<Storage_base>&, const cytnx_int64&,
+                                   const cytnx_int64&);
+    typedef void (*Outerfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                  const boost::intrusive_ptr<Storage_base>&,
+                                  const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&,
+                                  const cytnx_uint64&);
+    typedef void (*Vectordotfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                      const boost::intrusive_ptr<Storage_base>&,
+                                      const boost::intrusive_ptr<Storage_base>&,
+                                      const unsigned long long&, const bool&);
+    typedef void (*Tdfunc_oii)(const boost::intrusive_ptr<Storage_base>&,
+                               const boost::intrusive_ptr<Storage_base>&,
+                               boost::intrusive_ptr<Storage_base>&,
+                               boost::intrusive_ptr<Storage_base>&, const cytnx_int64&,
                                bool throw_excp);
-    typedef void (*Powfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
-                                const double &);
-    typedef void (*Absfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
-    typedef void (*MaxMinfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                   const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &,
-                                   const char &);
-    typedef void (*Invinplacefunc_oii)(boost::intrusive_ptr<Storage_base> &ten,
-                                       const cytnx_uint64 &Nelem, const double &clip);
+    typedef void (*Powfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&,
+                                const double&);
+    typedef void (*Absfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&);
+    typedef void (*MaxMinfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                   const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&,
+                                   const char&);
+    typedef void (*Invinplacefunc_oii)(boost::intrusive_ptr<Storage_base>& ten,
+                                       const cytnx_uint64& Nelem, const double& clip);
 
-    typedef void (*Lstsqfunc_oii)(boost::intrusive_ptr<Storage_base> &in,
-                                  boost::intrusive_ptr<Storage_base> &b,
-                                  boost::intrusive_ptr<Storage_base> &s,
-                                  boost::intrusive_ptr<Storage_base> &r, const cytnx_int64 &M,
-                                  const cytnx_int64 &N, const cytnx_int64 &nrhs,
-                                  const cytnx_float &rcond);
+    typedef void (*Lstsqfunc_oii)(boost::intrusive_ptr<Storage_base>& in,
+                                  boost::intrusive_ptr<Storage_base>& b,
+                                  boost::intrusive_ptr<Storage_base>& s,
+                                  boost::intrusive_ptr<Storage_base>& r, const cytnx_int64& M,
+                                  const cytnx_int64& N, const cytnx_int64& nrhs,
+                                  const cytnx_float& rcond);
 
-    typedef void (*Sumfunc_oii)(boost::intrusive_ptr<Storage_base> &,
-                                const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
+    typedef void (*Sumfunc_oii)(boost::intrusive_ptr<Storage_base>&,
+                                const boost::intrusive_ptr<Storage_base>&, const cytnx_uint64&);
 
-    typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &,
-                                  const int &, const cytnx_uint64 &,
-                                  const std::vector<cytnx_uint64> &,
-                                  const std::vector<cytnx_uint64> &,
-                                  const std::vector<cytnx_int64> &, const cytnx_uint64 &,
-                                  const cytnx_uint64 &);
+    typedef void (*Tracefunc_oii)(const bool&, Tensor&, const Tensor&, const cytnx_uint64&,
+                                  const int&, const cytnx_uint64&, const std::vector<cytnx_uint64>&,
+                                  const std::vector<cytnx_uint64>&, const std::vector<cytnx_int64>&,
+                                  const cytnx_uint64&, const cytnx_uint64&);
 
-    typedef void (*Tensordotfunc_oii)(Tensor &out, const Tensor &Lin, const Tensor &Rin,
-                                      const std::vector<cytnx_uint64> &idxl,
-                                      const std::vector<cytnx_uint64> &idxr);
+    typedef void (*Tensordotfunc_oii)(Tensor& out, const Tensor& Lin, const Tensor& Rin,
+                                      const std::vector<cytnx_uint64>& idxl,
+                                      const std::vector<cytnx_uint64>& idxr);
 
-    typedef void (*memcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                         const cytnx_uint64 &keepdim, const double &err,
-                                         const bool &is_U, const bool &is_vT,
-                                         const unsigned int &return_err,
-                                         const unsigned int &mindim);
+    typedef void (*memcpyTruncation_oii)(Tensor& U, Tensor& vT, Tensor& S, Tensor& terr,
+                                         const cytnx_uint64& keepdim, const double& err,
+                                         const bool& is_U, const bool& is_vT,
+                                         const unsigned int& return_err,
+                                         const unsigned int& mindim);
 
 #ifdef UNI_GPU
 
-    typedef void (*cudaMemcpyTruncation_oii)(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                             const cytnx_uint64 &keepdim, const double &err,
-                                             const bool &is_U, const bool &is_vT,
-                                             const unsigned int &return_err,
-                                             const unsigned int &mindim);
+    typedef void (*cudaMemcpyTruncation_oii)(Tensor& U, Tensor& vT, Tensor& S, Tensor& terr,
+                                             const cytnx_uint64& keepdim, const double& err,
+                                             const bool& is_U, const bool& is_vT,
+                                             const unsigned int& return_err,
+                                             const unsigned int& mindim);
 
   #ifdef UNI_CUQUANTUM
-    typedef void (*cuQuantumGeSvd_oii)(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                                       const double &err, const unsigned int &return_err, Tensor &U,
-                                       Tensor &S, Tensor &vT, Tensor &terr);
-    typedef void (*cuQuantumQr_oii)(const boost::intrusive_ptr<Storage_base> &in,
-                                    boost::intrusive_ptr<Storage_base> &Q,
-                                    boost::intrusive_ptr<Storage_base> &R,
-                                    boost::intrusive_ptr<Storage_base> &D,
-                                    boost::intrusive_ptr<Storage_base> &tau, const cytnx_int64 &M,
-                                    const cytnx_int64 &N, const bool &is_d);
+    typedef void (*cuQuantumGeSvd_oii)(const Tensor& Tin, const cytnx_uint64& keepdim,
+                                       const double& err, const unsigned int& return_err, Tensor& U,
+                                       Tensor& S, Tensor& vT, Tensor& terr);
+    typedef void (*cuQuantumQr_oii)(const boost::intrusive_ptr<Storage_base>& in,
+                                    boost::intrusive_ptr<Storage_base>& Q,
+                                    boost::intrusive_ptr<Storage_base>& R,
+                                    boost::intrusive_ptr<Storage_base>& D,
+                                    boost::intrusive_ptr<Storage_base>& tau, const cytnx_int64& M,
+                                    const cytnx_int64& N, const bool& is_d);
   #endif
 #endif
     class linalg_internal_interface {

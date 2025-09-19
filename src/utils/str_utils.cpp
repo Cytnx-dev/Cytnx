@@ -4,7 +4,7 @@ using namespace std;
 
 namespace cytnx {
 
-  vector<string> str_split(const string &in, const bool remove_null, const string &delimiter) {
+  vector<string> str_split(const string& in, const bool remove_null, const string& delimiter) {
     vector<string> out;
     size_t last = 0;
     size_t next = 0;
@@ -31,7 +31,7 @@ namespace cytnx {
     return out;
   }
 
-  string str_strip(const string &in, const string &key) {
+  string str_strip(const string& in, const string& key) {
     if (in.empty()) return in;
 
     string tmp = in;  // make  copy of in string
@@ -47,7 +47,7 @@ namespace cytnx {
     return tmp;
   }
 
-  vector<string> str_findall(const string &in, const string &tokens) {
+  vector<string> str_findall(const string& in, const string& tokens) {
     vector<string> out;
     if (in.empty()) return out;
 
@@ -77,7 +77,7 @@ namespace cytnx {
     return out;
   }
 
-  std::string operator*(const std::string &in, const unsigned int &N) {
+  std::string operator*(const std::string& in, const unsigned int& N) {
     std::string out = in;
     if (N == 0) return std::string("");
     for (cytnx_uint64 i = 1; i < N; i++) {

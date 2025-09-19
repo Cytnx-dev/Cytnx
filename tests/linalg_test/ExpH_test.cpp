@@ -65,7 +65,7 @@ TEST(ExpH_UT, UTExpH_test) {
 
   // checking data:
   UTFin.reshape_({4, 4});
-  Tensor &t_f = UTFin.get_block_();
+  Tensor& t_f = UTFin.get_block_();
   for (int i = 0; i < 16; i++) {
     int x = i / 4, y = i % 4;
     // std::cout<<std::fabs(static_cast<double>(t_f(x,y).item().real())-t_f_e[x][y].real())<<std::endl;

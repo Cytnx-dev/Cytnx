@@ -13,7 +13,7 @@ namespace cytnx {
 
   namespace linalg {
     using namespace std;
-    Tensor Axpy(const Scalar &a, const Tensor &x, const Tensor &y) {
+    Tensor Axpy(const Scalar& a, const Tensor& x, const Tensor& y) {
       bool no_y = false;
       // checking the largest dtype!
       int fin_dtype = x.dtype();
@@ -64,7 +64,7 @@ namespace cytnx {
       return out;
     };
 
-    void Axpy_(const Scalar &a, const Tensor &x, Tensor &y) {
+    void Axpy_(const Scalar& a, const Tensor& x, Tensor& y) {
       //   y = a*x + y
 
       cytnx_error_msg(x.shape() != y.shape(),

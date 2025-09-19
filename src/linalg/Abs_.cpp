@@ -7,7 +7,7 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
-    void Abs_(Tensor &Tin) {
+    void Abs_(Tensor& Tin) {
       // Tensor out;
 
       // if the type is unsigned, clone and return.

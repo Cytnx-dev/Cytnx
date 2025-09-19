@@ -9,7 +9,7 @@ namespace cytnx {
     //_t2c = vector<Tor2Cy_io>(N_Type);
   }
 
-  torch::TensorOptions TypeCvrt_class::Cy2Tor(const unsigned int &dtype, const int &device) {
+  torch::TensorOptions TypeCvrt_class::Cy2Tor(const unsigned int& dtype, const int& device) {
     auto options = torch::TensorOptions();
     if (device < 0) {
       options.device(torch::kCPU);
@@ -50,7 +50,7 @@ namespace cytnx {
     };
   }
 
-  unsigned int TypeCvrt_class::Tor2Cy(const torch::ScalarType &scalar_type) {
+  unsigned int TypeCvrt_class::Tor2Cy(const torch::ScalarType& scalar_type) {
     if (scalar_type == torch::kFloat64) {
       return Type.Double;
     } else if (scalar_type == torch::kFloat32) {
@@ -70,7 +70,7 @@ namespace cytnx {
     }
   }
 
-  torch::ScalarType TypeCvrt_class::tStr2Tor_ST(const std::string &dtype_str) {
+  torch::ScalarType TypeCvrt_class::tStr2Tor_ST(const std::string& dtype_str) {
     if (dtype_str == "torch.float64") {
       return torch::kFloat64;
     } else if (dtype_str == "torch.float32") {
@@ -90,7 +90,7 @@ namespace cytnx {
     }
   }
 
-  torch::Device TypeCvrt_class::tStr2Tor_Dv(const std::string &device_str) {
+  torch::Device TypeCvrt_class::tStr2Tor_Dv(const std::string& device_str) {
     if (device_str == "torch.cpu") {
       return torch::kCPU;
     } else {

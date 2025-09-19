@@ -28,13 +28,13 @@ namespace cytnx {
   ///@cond
   // [Note] these are fwd from linalg.hpp
   template <class T>
-  Tensor operator+(const Tensor &lhs, const T &rc);
+  Tensor operator+(const Tensor& lhs, const T& rc);
   template <class T>
-  Tensor operator-(const Tensor &lhs, const T &rhs);
+  Tensor operator-(const Tensor& lhs, const T& rhs);
   template <class T>
-  Tensor operator*(const Tensor &lhs, const T &rhs);
+  Tensor operator*(const Tensor& lhs, const T& rhs);
   template <class T>
-  Tensor operator/(const Tensor &lhs, const T &rhs);
+  Tensor operator/(const Tensor& lhs, const T& rhs);
   ///@endcond
 
   /// @brief an tensor (multi-dimensional array)
@@ -46,28 +46,28 @@ namespace cytnx {
     struct Tproxy {
       boost::intrusive_ptr<Tensor_impl> _insimpl;
       std::vector<cytnx::Accessor> _accs;
-      Tproxy(boost::intrusive_ptr<Tensor_impl> _ptr, const std::vector<cytnx::Accessor> &accs)
+      Tproxy(boost::intrusive_ptr<Tensor_impl> _ptr, const std::vector<cytnx::Accessor>& accs)
           : _insimpl(std::move(_ptr)), _accs(accs) {}
 
       // when used to set elems:
-      const Tensor &operator=(const Tensor &rhs) {
+      const Tensor& operator=(const Tensor& rhs) {
         this->_insimpl->set(_accs, rhs._impl);
         return rhs;
       }
 
       template <class T>
-      const T &operator=(const T &rc) {
+      const T& operator=(const T& rc) {
         this->_insimpl->set(_accs, rc);
         return rc;
       }
-      const Tproxy &operator=(const Tproxy &rc) {
+      const Tproxy& operator=(const Tproxy& rc) {
         Tensor tmp = Tensor(rc);
         this->_insimpl->set(_accs, tmp._impl);
         return rc;
       }
 
       template <class T>
-      Tensor operator+=(const T &rc) {
+      Tensor operator+=(const T& rc) {
         Tensor self;
         self._impl = _insimpl->get(_accs);
         self += rc;
@@ -75,10 +75,10 @@ namespace cytnx {
         self._impl = this->_insimpl;
         return self;
       }
-      Tensor operator+=(const Tproxy &rc);
+      Tensor operator+=(const Tproxy& rc);
 
       template <class T>
-      Tensor operator-=(const T &rc) {
+      Tensor operator-=(const T& rc) {
         Tensor self;
         self._impl = _insimpl->get(_accs);
         self -= rc;
@@ -86,10 +86,10 @@ namespace cytnx {
         self._impl = this->_insimpl;
         return self;
       }
-      Tensor operator-=(const Tproxy &rc);
+      Tensor operator-=(const Tproxy& rc);
 
       template <class T>
-      Tensor operator/=(const T &rc) {
+      Tensor operator/=(const T& rc) {
         Tensor self;
         self._impl = _insimpl->get(_accs);
         self /= rc;
@@ -97,10 +97,10 @@ namespace cytnx {
         self._impl = this->_insimpl;
         return self;
       }
-      Tensor operator/=(const Tproxy &rc);
+      Tensor operator/=(const Tproxy& rc);
 
       template <class T>
-      Tensor operator*=(const T &rc) {
+      Tensor operator*=(const T& rc) {
         Tensor self;
         self._impl = _insimpl->get(_accs);
         self *= rc;
@@ -108,7 +108,7 @@ namespace cytnx {
         self._impl = this->_insimpl;
         return self;
       }
-      Tensor operator*=(const Tproxy &rc);
+      Tensor operator*=(const Tproxy& rc);
 
       // alias to resolve conflict with op ovld for rc=Tensor
       /*
@@ -119,18 +119,18 @@ namespace cytnx {
           return out.Add(rc);
       }
       */
-      Tensor operator+(const cytnx_complex128 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_complex64 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_double &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_float &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_uint64 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_int64 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_uint32 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_int32 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_uint16 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_int16 &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const cytnx_bool &rc) const;  //{return this->_operatorADD(rc);};
-      Tensor operator+(const Tproxy &rc) const;
+      Tensor operator+(const cytnx_complex128& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_complex64& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_double& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_float& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_uint64& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_int64& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_uint32& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_int32& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_uint16& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_int16& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const cytnx_bool& rc) const;  //{return this->_operatorADD(rc);};
+      Tensor operator+(const Tproxy& rc) const;
 
       /*
       template<class T>
@@ -140,18 +140,18 @@ namespace cytnx {
           return out.Sub(rc);
       }
       */
-      Tensor operator-(const cytnx_complex128 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_complex64 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_double &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_float &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_uint64 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_int64 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_uint32 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_int32 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_uint16 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_int16 &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const cytnx_bool &rc) const;  //{return this->_operatorSUB(rc);};
-      Tensor operator-(const Tproxy &rc) const;
+      Tensor operator-(const cytnx_complex128& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_complex64& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_double& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_float& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_uint64& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_int64& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_uint32& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_int32& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_uint16& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_int16& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const cytnx_bool& rc) const;  //{return this->_operatorSUB(rc);};
+      Tensor operator-(const Tproxy& rc) const;
 
       Tensor operator-() const;
 
@@ -163,18 +163,18 @@ namespace cytnx {
           return out.Mul(rc);
       }
       */
-      Tensor operator*(const cytnx_complex128 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_complex64 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_double &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_float &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_uint64 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_int64 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_uint32 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_int32 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_uint16 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_int16 &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const cytnx_bool &rc) const;  //{return this->_operatorMUL(rc);};
-      Tensor operator*(const Tproxy &rc) const;
+      Tensor operator*(const cytnx_complex128& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_complex64& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_double& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_float& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_uint64& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_int64& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_uint32& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_int32& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_uint16& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_int16& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const cytnx_bool& rc) const;  //{return this->_operatorMUL(rc);};
+      Tensor operator*(const Tproxy& rc) const;
 
       /*
       template<class T>
@@ -184,18 +184,18 @@ namespace cytnx {
           return out.Div(rc);
       }
       */
-      Tensor operator/(const cytnx_complex128 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_complex64 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_double &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_float &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_uint64 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_int64 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_uint32 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_int32 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_uint16 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_int16 &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const cytnx_bool &rc) const;  //{return this->_operatorDIV(rc);};
-      Tensor operator/(const Tproxy &rc) const;
+      Tensor operator/(const cytnx_complex128& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_complex64& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_double& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_float& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_uint64& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_int64& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_uint32& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_int32& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_uint16& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_int16& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const cytnx_bool& rc) const;  //{return this->_operatorDIV(rc);};
+      Tensor operator/(const Tproxy& rc) const;
 
       template <class T>
       T item() const {
@@ -231,81 +231,81 @@ namespace cytnx {
     // these two are using the python way!
     //----------------------------------------
     template <class... Ts>
-    Tproxy operator()(const std::string &e1, const Ts &...elems) {
+    Tproxy operator()(const std::string& e1, const Ts&... elems) {
       // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
-    Tproxy operator()(const cytnx_int64 &e1, const Ts &...elems) {
+    Tproxy operator()(const cytnx_int64& e1, const Ts&... elems) {
       // std::cout << e1<< std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
-    Tproxy operator()(const cytnx::Accessor &e1, const Ts &...elems) {
+    Tproxy operator()(const cytnx::Accessor& e1, const Ts&... elems) {
       // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
-    const Tproxy operator()(const std::string &e1, const Ts &...elems) const {
+    const Tproxy operator()(const std::string& e1, const Ts&... elems) const {
       // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
-    const Tproxy operator()(const cytnx_int64 &e1, const Ts &...elems) const {
+    const Tproxy operator()(const cytnx_int64& e1, const Ts&... elems) const {
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
-    const Tproxy operator()(const cytnx::Accessor &e1, const Ts &...elems) const {
+    const Tproxy operator()(const cytnx::Accessor& e1, const Ts&... elems) const {
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
 
     //-----------------------------------------
 
-    Tproxy operator[](const std::initializer_list<cytnx::Accessor> &accs) {
+    Tproxy operator[](const std::initializer_list<cytnx::Accessor>& accs) {
       std::vector<cytnx::Accessor> tmp = accs;
       return (*this)[tmp];
     }
-    Tproxy operator[](const std::vector<cytnx::Accessor> &accs) {
+    Tproxy operator[](const std::vector<cytnx::Accessor>& accs) {
       return Tproxy(this->_impl, accs);
     }
 
-    const Tproxy operator[](const std::vector<cytnx::Accessor> &accs) const {
+    const Tproxy operator[](const std::vector<cytnx::Accessor>& accs) const {
       return Tproxy(this->_impl, accs);
     }
-    const Tproxy operator[](const std::initializer_list<cytnx::Accessor> &accs) const {
+    const Tproxy operator[](const std::initializer_list<cytnx::Accessor>& accs) const {
       std::vector<cytnx::Accessor> tmp = accs;
       return (*this)[tmp];
     }
 
-    Tproxy operator[](const std::initializer_list<cytnx_int64> &accs) {
+    Tproxy operator[](const std::initializer_list<cytnx_int64>& accs) {
       std::vector<cytnx_int64> tmp = accs;
       return (*this)[tmp];
     }
-    Tproxy operator[](const std::vector<cytnx_int64> &accs) {
+    Tproxy operator[](const std::vector<cytnx_int64>& accs) {
       std::vector<cytnx::Accessor> acc_in;
       for (int i = 0; i < accs.size(); i++) {
         acc_in.push_back(cytnx::Accessor(accs[i]));
       }
       return Tproxy(this->_impl, acc_in);
     }
-    const Tproxy operator[](const std::initializer_list<cytnx_int64> &accs) const {
+    const Tproxy operator[](const std::initializer_list<cytnx_int64>& accs) const {
       std::vector<cytnx_int64> tmp = accs;
       return (*this)[tmp];
     }
-    const Tproxy operator[](const std::vector<cytnx_uint64> &accs) const {
+    const Tproxy operator[](const std::vector<cytnx_uint64>& accs) const {
       std::vector<cytnx::Accessor> acc_in;
       for (int i = 0; i < accs.size(); i++) {
         acc_in.push_back(cytnx::Accessor(accs[i]));
       }
       return Tproxy(this->_impl, acc_in);
     }
-    const Tproxy operator[](const std::vector<cytnx_int64> &accs) const {
+    const Tproxy operator[](const std::vector<cytnx_int64>& accs) const {
       std::vector<cytnx::Accessor> acc_in;
       for (int i = 0; i < accs.size(); i++) {
         acc_in.push_back(cytnx::Accessor(accs[i]));
@@ -316,8 +316,8 @@ namespace cytnx {
     //-------------------------------------------
 
     /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
+    void _Save(std::fstream& f) const;
+    void _Load(std::fstream& f);
 
     /// @endcond
     /**
@@ -329,11 +329,11 @@ namespace cytnx {
     ".cytn"
     @see Load(const std::string &fname)
     */
-    void Save(const std::string &fname) const;
+    void Save(const std::string& fname) const;
     /**
      * @see Save(const std::string &fname) const
      */
-    void Save(const char *fname) const;
+    void Save(const char* fname) const;
 
     /**
      * @brief Save current Tensor to the binary file
@@ -343,17 +343,17 @@ namespace cytnx {
      * @pre The file name @p fname must be valid.
      * @see cytnx::Tensor::Fromfile
      */
-    void Tofile(const std::string &fname) const;
+    void Tofile(const std::string& fname) const;
 
     /**
      * @see Tofile(const std::string &fname) const
      */
-    void Tofile(const char *fname) const;
+    void Tofile(const char* fname) const;
 
     /**
      * @see Tofile(const std::string &fname) const
      */
-    void Tofile(std::fstream &f) const;
+    void Tofile(std::fstream& f) const;
 
     /**
     @brief Load current Tensor from file
@@ -363,11 +363,11 @@ namespace cytnx {
     @pre the file must be a Tensor object which is saved by cytnx::Tensor::Save.
     */
 
-    static Tensor Load(const std::string &fname);
+    static Tensor Load(const std::string& fname);
     /**
      * @see Load(const std::string &fname)
      */
-    static Tensor Load(const char *fname);
+    static Tensor Load(const char* fname);
 
     /**
      * @brief Load current Tensor from the binary file
@@ -389,17 +389,17 @@ namespace cytnx {
      *  5. The file name @p fname must be valid.
      * @see cytnx::Tensor::Tofile
      */
-    static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1);
-    static Tensor Fromfile(const char *fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1);
+    static Tensor Fromfile(const std::string& fname, const unsigned int& dtype,
+                           const cytnx_int64& count = -1);
+    static Tensor Fromfile(const char* fname, const unsigned int& dtype,
+                           const cytnx_int64& count = -1);
 
     // static Tensor Frombinary(const std::string &fname);
 
     ///@cond
     boost::intrusive_ptr<Tensor_impl> _impl;
-    Tensor() : _impl(new Tensor_impl()){};
-    Tensor(const Tensor &rhs) { _impl = rhs._impl; }
+    Tensor() : _impl(new Tensor_impl()) {};
+    Tensor(const Tensor& rhs) { _impl = rhs._impl; }
 
     /*
     template<class Tp>
@@ -411,12 +411,12 @@ namespace cytnx {
     }
     */
 
-    Tensor &operator=(const Tensor &rhs) {
+    Tensor& operator=(const Tensor& rhs) {
       _impl = rhs._impl;
       return *this;
     }
 
-    void operator=(const Tproxy &rhsp) {  // this is used to handle proxy assignment
+    void operator=(const Tproxy& rhsp) {  // this is used to handle proxy assignment
       this->_impl = rhsp._insimpl->get(rhsp._accs);
     }
     ///@endcond
@@ -447,8 +447,8 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/Init.py.out
     */
-    void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              const int &device = -1, const bool &init_zero = true) {
+    void Init(const std::vector<cytnx_uint64>& shape, const unsigned int& dtype = Type.Double,
+              const int& device = -1, const bool& init_zero = true) {
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       this->_impl = tmp;
       this->_impl->Init(shape, dtype, device, init_zero);
@@ -477,8 +477,8 @@ namespace cytnx {
      *   the content of Tensor will be un-initialized.
      * @see cytnx::Tensor::Init
      */
-    Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-           const int &device = -1, const bool &init_zero = 1)
+    Tensor(const std::vector<cytnx_uint64>& shape, const unsigned int& dtype = Type.Double,
+           const int& device = -1, const bool& init_zero = 1)
         : _impl(new Tensor_impl()) {
       this->Init(shape, dtype, device, init_zero);
     }
@@ -519,14 +519,14 @@ namespace cytnx {
     // convert this->_impl->_strorage->Mem to the given pointer type.
     // Throws an exception if T does not match this->dtype
     template <typename T>
-    T *ptr_as(bool check_type = true) const {
+    T* ptr_as(bool check_type = true) const {
       if (check_type) {
         cytnx_error_msg(this->dtype() != Type_class::cy_typeid_v<std::remove_cv_t<T>>,
                         "[ERROR] Attempt to convert dtype %d (%s) to pointer of type %s",
                         this->dtype(), Type_class::getname(this->dtype()).c_str(),
                         Type_class::getname(Type_class::cy_typeid_v<std::remove_cv_t<T>>).c_str());
       }
-      return reinterpret_cast<T *>(this->_impl->_storage._impl->data());
+      return reinterpret_cast<T*>(this->_impl->_storage._impl->data());
     }
 
   #ifdef UNI_GPU
@@ -541,7 +541,7 @@ namespace cytnx {
     // convert this->_impl->_strorage->Mem to the given pointer type.
     // Throws an exception if T does not match this->dtype
     template <typename T>
-    T *gpu_ptr_as(bool check_type = true) const {
+    T* gpu_ptr_as(bool check_type = true) const {
       if (check_type) {
         cytnx_error_msg(
           this->dtype() != Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>,
@@ -549,7 +549,7 @@ namespace cytnx {
           Type_class::getname(this->dtype()).c_str(),
           Type_class::getname(Type_class::cy_typeid_gpu_v<std::remove_cv_t<T>>).c_str());
       }
-      return reinterpret_cast<T *>(this->_impl->_storage._impl->data());
+      return reinterpret_cast<T*>(this->_impl->_storage._impl->data());
     }
   #endif
 
@@ -558,7 +558,7 @@ namespace cytnx {
     @param[in] in the Storage to be converted
     @return [Tensor] a Tensor with the same dtype and device as the input Storage
     */
-    static Tensor from_storage(const Storage &in) {
+    static Tensor from_storage(const Storage& in) {
       Tensor out;
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       out._impl = tmp;
@@ -598,7 +598,7 @@ namespace cytnx {
     @brief the shape of the Tensor
     @return [std::vector<cytnx_uint64>] the shape of the Tensor
     */
-    const std::vector<cytnx_uint64> &shape() const { return this->_impl->shape(); }
+    const std::vector<cytnx_uint64>& shape() const { return this->_impl->shape(); }
 
     /**
         @brief the rank of the Tensor
@@ -649,7 +649,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/to.py.out
     */
-    Tensor to(const int &device) const {
+    Tensor to(const int& device) const {
       Tensor out;
       out._impl = this->_impl->to(device);
       return out;
@@ -672,21 +672,21 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/to_.py.out
     */
-    void to_(const int &device) { this->_impl->to_(device); }
+    void to_(const int& device) { this->_impl->to_(device); }
 
     /**
     @brief return whether the Tensor is contiguous or not.
     @return [bool] true if the Tensor is contiguous, false otherwise.
     */
-    const bool &is_contiguous() const { return this->_impl->is_contiguous(); }
+    const bool& is_contiguous() const { return this->_impl->is_contiguous(); }
 
-    Tensor &permute_(const std::vector<cytnx_uint64> &rnks) {
+    Tensor& permute_(const std::vector<cytnx_uint64>& rnks) {
       this->_impl->permute_(rnks);
       return *this;
     }
     /// @cond
     template <class... Ts>
-    Tensor &permute_(const cytnx_uint64 &e1, const Ts &...elems) {
+    Tensor& permute_(const cytnx_uint64& e1, const Ts&... elems) {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
       this->_impl->permute_(argv);
       return *this;
@@ -711,14 +711,14 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/permute.py.out
     */
-    Tensor permute(const std::vector<cytnx_uint64> &rnks) const {
+    Tensor permute(const std::vector<cytnx_uint64>& rnks) const {
       Tensor out;
       out._impl = this->_impl->permute(rnks);
       return out;
     }
     /// @cond
     template <class... Ts>
-    Tensor permute(const cytnx_uint64 &e1, const Ts &...elems) const {
+    Tensor permute(const cytnx_uint64& e1, const Ts&... elems) const {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
       return this->permute(argv);
     }
@@ -785,23 +785,23 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/reshape_.py.out
     */
-    Tensor &reshape_(const std::vector<cytnx_int64> &new_shape) {
+    Tensor& reshape_(const std::vector<cytnx_int64>& new_shape) {
       this->_impl->reshape_(new_shape);
       return *this;
     }
     /// @cond
-    Tensor &reshape_(const std::vector<cytnx_uint64> &new_shape) {
+    Tensor& reshape_(const std::vector<cytnx_uint64>& new_shape) {
       std::vector<cytnx_int64> shape(new_shape.begin(), new_shape.end());
       this->_impl->reshape_(shape);
       return *this;
     }
-    Tensor &reshape_(const std::initializer_list<cytnx_int64> &new_shape) {
+    Tensor& reshape_(const std::initializer_list<cytnx_int64>& new_shape) {
       std::vector<cytnx_int64> shape = new_shape;
       this->_impl->reshape_(shape);
       return *this;
     }
     template <class... Ts>
-    Tensor &reshape_(const cytnx_int64 &e1, const Ts... elems) {
+    Tensor& reshape_(const cytnx_int64& e1, const Ts... elems) {
       std::vector<cytnx_int64> shape = dynamic_arg_int64_resolver(e1, elems...);
       // std::cout << shape << std::endl;
       this->_impl->reshape_(shape);
@@ -833,7 +833,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/reshape.py.out
     */
-    Tensor reshape(const std::vector<cytnx_int64> &new_shape) const {
+    Tensor reshape(const std::vector<cytnx_int64>& new_shape) const {
       Tensor out;
       out._impl = this->_impl->reshape(new_shape);
       return out;
@@ -842,7 +842,7 @@ namespace cytnx {
     /**
      * @see reshape(const std::vector<cytnx_int64> &new_shape) const
      */
-    Tensor reshape(const std::vector<cytnx_uint64> &new_shape) const {
+    Tensor reshape(const std::vector<cytnx_uint64>& new_shape) const {
       std::vector<cytnx_int64> tmp(new_shape.size());
       memcpy(&tmp[0], &new_shape[0], sizeof(cytnx_uint64) * new_shape.size());
       Tensor out;
@@ -853,13 +853,13 @@ namespace cytnx {
     /**
      * @see reshape(const std::vector<cytnx_int64> &new_shape) const
      */
-    Tensor reshape(const std::initializer_list<cytnx_int64> &new_shape) const {
+    Tensor reshape(const std::initializer_list<cytnx_int64>& new_shape) const {
       return this->reshape(std::vector<cytnx_int64>(new_shape));
     }
 
     /// @cond
     template <class... Ts>
-    Tensor reshape(const cytnx_int64 &e1, const Ts &...elems) const {
+    Tensor reshape(const cytnx_int64& e1, const Ts&... elems) const {
       std::vector<cytnx_int64> argv = dynamic_arg_int64_resolver(e1, elems...);
       return this->reshape(argv);
     }
@@ -886,7 +886,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/astype.py.out
     */
-    Tensor astype(const int &new_type) const {
+    Tensor astype(const int& new_type) const {
       Tensor out;
       out._impl = this->_impl->astype(new_type);
       return out;
@@ -921,7 +921,7 @@ namespace cytnx {
     \verbinclude example/Tensor/at.cpp.out
     */
     template <class T>
-    T &at(const std::vector<cytnx_uint64> &locator) {
+    T& at(const std::vector<cytnx_uint64>& locator) {
       return this->_impl->at<T>(locator);
     }
 
@@ -929,26 +929,26 @@ namespace cytnx {
      * @see at(const std::vector<cytnx_uint64> &locator)
      */
     template <class T>
-    const T &at(const std::vector<cytnx_uint64> &locator) const {
+    const T& at(const std::vector<cytnx_uint64>& locator) const {
       return this->_impl->at<T>(locator);
     }
     /// @cond
     template <class T, class... Ts>
-    const T &at(const cytnx_uint64 &e1, const Ts &...elems) const {
+    const T& at(const cytnx_uint64& e1, const Ts&... elems) const {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
       return this->at<T>(argv);
     }
     template <class T, class... Ts>
-    T &at(const cytnx_uint64 &e1, const Ts &...elems) {
+    T& at(const cytnx_uint64& e1, const Ts&... elems) {
       std::vector<cytnx_uint64> argv = dynamic_arg_uint64_resolver(e1, elems...);
       return this->at<T>(argv);
     }
 
-    const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
+    const Scalar::Sproxy at(const std::vector<cytnx_uint64>& locator) const {
       return this->_impl->at(locator);
     }
 
-    Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) { return this->_impl->at(locator); }
+    Scalar::Sproxy at(const std::vector<cytnx_uint64>& locator) { return this->_impl->at(locator); }
     /// @endcond
 
     /**
@@ -977,7 +977,7 @@ namespace cytnx {
     \verbinclude example/Tensor/item.py.out
     */
     template <class T>
-    T &item() {
+    T& item() {
       cytnx_error_msg(this->_impl->storage().size() != 1, "[ERROR][Tensor.item<T>]%s",
                       "item can only be called from a Tensor with only one element\n");
       return this->_impl->storage().at<T>(0);
@@ -985,7 +985,7 @@ namespace cytnx {
 
     ///@cond
     template <class T>
-    const T &item() const {
+    const T& item() const {
       cytnx_error_msg(this->_impl->storage().size() != 1, "[ERROR][Tensor.item<T>]%s",
                       "item can only be called from a Tensor with only one element\n");
       return this->_impl->storage().at<T>(0);
@@ -1024,7 +1024,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/get.py.out
     */
-    Tensor get(const std::vector<cytnx::Accessor> &accessors) const {
+    Tensor get(const std::vector<cytnx::Accessor>& accessors) const {
       Tensor out;
       out._impl = this->_impl->get(accessors);
       return out;
@@ -1056,7 +1056,7 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/set.py.out
     */
-    void set(const std::vector<cytnx::Accessor> &accessors, const Tensor &rhs) {
+    void set(const std::vector<cytnx::Accessor>& accessors, const Tensor& rhs) {
       this->_impl->set(accessors, rhs._impl);
     }
 
@@ -1079,12 +1079,12 @@ namespace cytnx {
     \verbinclude example/Tensor/set.py.out
     */
     template <class T>
-    void set(const std::vector<cytnx::Accessor> &accessors, const T &rc) {
+    void set(const std::vector<cytnx::Accessor>& accessors, const T& rc) {
       this->_impl->set(accessors, rc);
     }
     ///@cond
     template <class T>
-    void set(const std::initializer_list<cytnx::Accessor> &accessors, const T &rc) {
+    void set(const std::initializer_list<cytnx::Accessor>& accessors, const T& rc) {
       std::vector<cytnx::Accessor> args = accessors;
       this->set(args, rc);
     }
@@ -1099,7 +1099,7 @@ namespace cytnx {
       Storage.clone() to create a new instance of the returned Storage.
 
     */
-    Storage &storage() const { return this->_impl->storage(); }
+    Storage& storage() const { return this->_impl->storage(); }
 
     /**
     @brief fill all the element of current Tensor with the value.
@@ -1116,7 +1116,7 @@ namespace cytnx {
     \verbinclude example/Tensor/fill.py.out
     */
     template <class T>
-    void fill(const T &val) {
+    void fill(const T& val) {
       this->_impl->fill(val);
     }
 
@@ -1124,7 +1124,7 @@ namespace cytnx {
      * @brief compare the shape of two tensors.
      * @param[in] rhs the tensor to be compared.
      */
-    bool equivshape(const Tensor &rhs) {
+    bool equivshape(const Tensor& rhs) {
       if (this->shape() != rhs.shape()) return false;
       return true;
     }
@@ -1165,7 +1165,7 @@ namespace cytnx {
      *       must be the same as the current tensor.
      */
     template <class T>
-    Tensor &operator+=(const T &rc);
+    Tensor& operator+=(const T& rc);
 
     /**
      * @brief subtraction assignment operator with a Tensor or a scalar.
@@ -1184,7 +1184,7 @@ namespace cytnx {
      *     must be the same as the current tensor.
      */
     template <class T>
-    Tensor &operator-=(const T &rc);
+    Tensor& operator-=(const T& rc);
 
     /**
      * @brief multiplication assignment operator with a Tensor or a scalar.
@@ -1203,7 +1203,7 @@ namespace cytnx {
      *   must be the same as the current tensor.
      */
     template <class T>
-    Tensor &operator*=(const T &rc);
+    Tensor& operator*=(const T& rc);
 
     /**
      * @brief division assignment operator with a Tensor or a scalar.
@@ -1223,7 +1223,7 @@ namespace cytnx {
      * 2. \p rc cannot be zero.
      */
     template <class T>
-    Tensor &operator/=(const T &rc);
+    Tensor& operator/=(const T& rc);
 
     // Tensor &operator+=(const Tproxy &rc);
     // Tensor &operator-=(const Tproxy &rc);
@@ -1249,7 +1249,7 @@ namespace cytnx {
      * @param[in] rhs the added Tensor or scalar.
      */
     template <class T>
-    Tensor Add(const T &rhs) {
+    Tensor Add(const T& rhs) {
       return *this + rhs;
     }
 
@@ -1259,7 +1259,7 @@ namespace cytnx {
      * @param[in] rhs the added Tensor or scalar.
      */
     template <class T>
-    Tensor &Add_(const T &rhs) {
+    Tensor& Add_(const T& rhs) {
       return *this += rhs;
     }
 
@@ -1269,7 +1269,7 @@ namespace cytnx {
      * @param[in] rhs the subtracted Tensor or scalar.
      */
     template <class T>
-    Tensor Sub(const T &rhs) {
+    Tensor Sub(const T& rhs) {
       return *this - rhs;
     }
 
@@ -1279,7 +1279,7 @@ namespace cytnx {
      * @param[in] rhs the subtracted Tensor or scalar.
      */
     template <class T>
-    Tensor &Sub_(const T &rhs) {
+    Tensor& Sub_(const T& rhs) {
       return *this -= rhs;
     }
 
@@ -1289,7 +1289,7 @@ namespace cytnx {
      * @param[in] rhs the multiplied Tensor or scalar.
      */
     template <class T>
-    Tensor Mul(const T &rhs) {
+    Tensor Mul(const T& rhs) {
       return *this * rhs;
     }
 
@@ -1299,7 +1299,7 @@ namespace cytnx {
      * @param[in] rhs the multiplied Tensor or scalar.
      */
     template <class T>
-    Tensor &Mul_(const T &rhs) {
+    Tensor& Mul_(const T& rhs) {
       return *this *= rhs;
     }
 
@@ -1310,7 +1310,7 @@ namespace cytnx {
      * @attension \p rhs cannot be zero.
      */
     template <class T>
-    Tensor Div(const T &rhs) {
+    Tensor Div(const T& rhs) {
       return *this / rhs;
     }
 
@@ -1321,7 +1321,7 @@ namespace cytnx {
      * @attension \p rhs cannot be zero.
      */
     template <class T>
-    Tensor &Div_(const T &rhs) {
+    Tensor& Div_(const T& rhs) {
       return *this /= rhs;
     }
 
@@ -1332,7 +1332,7 @@ namespace cytnx {
      * @param[in] rhs the compared object.
      */
     template <class T>
-    Tensor Cpr(const T &rhs) {
+    Tensor Cpr(const T& rhs) {
       return *this == rhs;
     }
 
@@ -1375,7 +1375,7 @@ namespace cytnx {
     // }
 
     template <class T>
-    Tensor Mod(const T &rhs) {
+    Tensor Mod(const T& rhs) {
       return *this % rhs;
     }
 
@@ -1439,7 +1439,7 @@ namespace cytnx {
      * the \p rhs will be casted to the dtype of the current tensor.
      * @see append(const Storage &rhs)
      */
-    void append(const Tensor &rhs) {
+    void append(const Tensor& rhs) {
       // Tensor in;
       if (!this->is_contiguous()) this->contiguous_();
 
@@ -1470,7 +1470,7 @@ namespace cytnx {
       this->_impl->_shape[0] += 1;
       cytnx_uint64 oldsize = this->_impl->_storage.size();
       this->_impl->_storage.resize(oldsize + Nelem);
-      memcpy(((char *)this->_impl->_storage.data()) +
+      memcpy(((char*)this->_impl->_storage.data()) +
                oldsize * Type.typeSize(this->dtype()) / sizeof(char),
              in._impl->_storage.data(), Type.typeSize(in.dtype()) * Nelem);
     }
@@ -1501,7 +1501,7 @@ namespace cytnx {
      * the \p srhs will be casted to the dtype of the current tensor.
      * @see append(const Tensor &rhs)
      */
-    void append(const Storage &srhs) {
+    void append(const Storage& srhs) {
       if (!this->is_contiguous()) this->contiguous_();
 
       // check Tensor in shape:
@@ -1522,7 +1522,7 @@ namespace cytnx {
       this->_impl->_shape[0] += 1;
       cytnx_uint64 oldsize = this->_impl->_storage.size();
       this->_impl->_storage.resize(oldsize + in.size());
-      memcpy(((char *)this->_impl->_storage.data()) +
+      memcpy(((char*)this->_impl->_storage.data()) +
                oldsize * Type.typeSize(this->dtype()) / sizeof(char),
              in._impl->data(), Type.typeSize(in.dtype()) * in.size());
     }
@@ -1564,7 +1564,7 @@ namespace cytnx {
      * 3. \p rhs must be a scalar.
      */
     template <class T>
-    void append(const T &rhs) {
+    void append(const T& rhs) {
       cytnx_error_msg(this->shape().size() != 1,
                       "[ERROR] trying to append a scalar into multidimentional Tensor is not "
                       "allow.\n Only rank-1 Tensor can accept scalar append.%s",
@@ -1585,7 +1585,7 @@ namespace cytnx {
      * guide for more details.
      * @param[in] rhs the tensor to be compared.
      */
-    bool same_data(const Tensor &rhs) const;
+    bool same_data(const Tensor& rhs) const;
 
     // linalg:
     /**
@@ -1593,20 +1593,20 @@ namespace cytnx {
      * \ref cytnx::linalg::Svd(const Tensor &Tin, const bool &is_UvT)
      * , where \p Tin is the current Tensor.
      */
-    std::vector<Tensor> Svd(const bool &is_UvT = true) const;
+    std::vector<Tensor> Svd(const bool& is_UvT = true) const;
 
     /**
      * @brief the Eigh member function. Same as
      * \ref cytnx::linalg::Eigh(const Tensor &Tin, const bool &is_V, const bool &row_v)
      * , where \p Tin is the current Tensor.
      */
-    std::vector<Tensor> Eigh(const bool &is_V = true, const bool &row_v = false) const;
+    std::vector<Tensor> Eigh(const bool& is_V = true, const bool& row_v = false) const;
 
     /**
      * @brief the InvM_ member function. Same as
      * \ref cytnx::linalg::InvM_(Tensor &Tin), where \p Tin is the current Tensor.
      */
-    Tensor &InvM_();
+    Tensor& InvM_();
 
     /**
      * @brief the InvM member function. Same as
@@ -1618,19 +1618,19 @@ namespace cytnx {
      * @brief the Inv_ member function. Same as
      * \ref cytnx::linalg::Inv_(Tensor &Tin, const double &clip)
      */
-    Tensor &Inv_(const double &clip);
+    Tensor& Inv_(const double& clip);
 
     /**
      * @brief the Inv member function. Same as
      * \ref cytnx::linalg::Inv(const Tensor &Tin, const double &clip)
      */
-    Tensor Inv(const double &clip) const;
+    Tensor Inv(const double& clip) const;
 
     /**
      * @brief the Conj_ member function. Same as
      * \ref cytnx::linalg::Conj_(Tensor &Tin), where \p Tin is the current Tensor.
      */
-    Tensor &Conj_();
+    Tensor& Conj_();
 
     /**
      * @brief the Conj member function. Same as
@@ -1642,7 +1642,7 @@ namespace cytnx {
      * @brief the Exp_ member function. Same as linalg::Exp_(Tensor &Tin), where \p Tin is the
      * current Tensor.
      */
-    Tensor &Exp_();
+    Tensor& Exp_();
 
     /**
      * @brief the Exp member function. Same as linalg::Exp(const Tensor &Tin), where \p Tin is the
@@ -1660,19 +1660,19 @@ namespace cytnx {
      * @brief the Pow member function. Same as linalg::Pow(const Tensor &Tin, const cytnx_double
      * &p), where \p Tin is the current Tensor.
      */
-    Tensor Pow(const cytnx_double &p) const;
+    Tensor Pow(const cytnx_double& p) const;
 
     /**
      * @brief the Pow_ member function. Same as linalg::Pow_(Tensor &Tin, const cytnx_double
      * &p), where \p Tin is the current Tensor.
      */
-    Tensor &Pow_(const cytnx_double &p);
+    Tensor& Pow_(const cytnx_double& p);
 
     /**
      * @brief the Trace member function. Same as linalg::Trace(const Tensor &Tin, const
      * cytnx_uint64 &a, const cytnx_uint64 &b), where \p Tin is the current Tensor.
      */
-    Tensor Trace(const cytnx_uint64 &a = 0, const cytnx_uint64 &b = 1) const;
+    Tensor Trace(const cytnx_uint64& a = 0, const cytnx_uint64& b = 1) const;
 
     /**
      * @brief the Abs member function. Same as linalg::Abs(const Tensor &Tin), where \p Tin is the
@@ -1684,7 +1684,7 @@ namespace cytnx {
      * @brief the Abs_ member function. Same as linalg::Abs_(Tensor &Tin), where \p Tin is the
      * current Tensor.
      */
-    Tensor &Abs_();
+    Tensor& Abs_();
 
     /**
      * @brief the Max member function. Same as linalg::Max(const Tensor &Tin),
@@ -1700,19 +1700,19 @@ namespace cytnx {
 
   };  // class Tensor
 
-  Tensor operator+(const Tensor &lhs, const Tensor::Tproxy &rhs);
-  Tensor operator-(const Tensor &lhs, const Tensor::Tproxy &rhs);
-  Tensor operator*(const Tensor &lhs, const Tensor::Tproxy &rhs);
-  Tensor operator/(const Tensor &lhs, const Tensor::Tproxy &rhs);
+  Tensor operator+(const Tensor& lhs, const Tensor::Tproxy& rhs);
+  Tensor operator-(const Tensor& lhs, const Tensor::Tproxy& rhs);
+  Tensor operator*(const Tensor& lhs, const Tensor::Tproxy& rhs);
+  Tensor operator/(const Tensor& lhs, const Tensor::Tproxy& rhs);
 
-  Tensor operator+(const Tensor &lhs, const Scalar::Sproxy &rhs);
-  Tensor operator-(const Tensor &lhs, const Scalar::Sproxy &rhs);
-  Tensor operator*(const Tensor &lhs, const Scalar::Sproxy &rhs);
-  Tensor operator/(const Tensor &lhs, const Scalar::Sproxy &rhs);
+  Tensor operator+(const Tensor& lhs, const Scalar::Sproxy& rhs);
+  Tensor operator-(const Tensor& lhs, const Scalar::Sproxy& rhs);
+  Tensor operator*(const Tensor& lhs, const Scalar::Sproxy& rhs);
+  Tensor operator/(const Tensor& lhs, const Scalar::Sproxy& rhs);
 
   ///@cond
-  std::ostream &operator<<(std::ostream &os, const Tensor &in);
-  std::ostream &operator<<(std::ostream &os, const Tensor::Tproxy &in);
+  std::ostream& operator<<(std::ostream& os, const Tensor& in);
+  std::ostream& operator<<(std::ostream& os, const Tensor::Tproxy& in);
   ///@endcond
   //{ os << Tensor(in);};
 }  // namespace cytnx

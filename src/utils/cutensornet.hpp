@@ -65,7 +65,7 @@ namespace cytnx {
 
     // required workspace
     int64_t requiredWorkspaceSize = 0;
-    void *work = nullptr;
+    void* work = nullptr;
 
     // contraction plan
     cutensornetContractionPlan_t plan;
@@ -79,18 +79,18 @@ namespace cytnx {
 
     // input datas
     int32_t numInputs;
-    void *R_d;
+    void* R_d;
     int32_t nmodeR;
     bool verbose = false;  // For DEBUG use
 
-    std::vector<void *> rawDataIn_d;
+    std::vector<void*> rawDataIn_d;
     std::vector<UniTensor> tns;
     std::vector<int64_t> extentR;
     std::vector<int32_t> modesR;
-    std::vector<int32_t *> modesIn;
+    std::vector<int32_t*> modesIn;
     std::vector<int32_t> numModesIn;
-    std::vector<int64_t *> extentsIn;
-    std::vector<int64_t *> stridesIn;
+    std::vector<int64_t*> extentsIn;
+    std::vector<int64_t*> stridesIn;
 
     std::map<std::string, int32_t> lblmap;
     std::vector<std::vector<int32_t>> tmp_modes;
@@ -100,11 +100,11 @@ namespace cytnx {
     UniTensor out;
     cutensornet();
     // ~cutensornet();
-    void parseLabels(std::vector<int64_t> &res_label, std::vector<std::vector<int64_t>> &labels);
-    void setOutputMem(UniTensor &res);
-    void setInputMem(std::vector<UniTensor> &uts);
-    void set_extents(std::vector<UniTensor> &uts);
-    void set_output_extents(std::vector<cytnx_uint64> &outshape);
+    void parseLabels(std::vector<int64_t>& res_label, std::vector<std::vector<int64_t>>& labels);
+    void setOutputMem(UniTensor& res);
+    void setInputMem(std::vector<UniTensor>& uts);
+    void set_extents(std::vector<UniTensor>& uts);
+    void set_output_extents(std::vector<cytnx_uint64>& outshape);
     void checkVersion();
     void setDevice(int id);
     void createStream();

@@ -20,7 +20,7 @@ namespace cytnx {
     @param[in] Tin the input Tensor.
     @return [Tensor]
     */
-    Tensor Sort(const Tensor &Tin);
+    Tensor Sort(const Tensor& Tin);
 
     /**
      * @brief concatenate two 1d Tensor.
@@ -65,7 +65,7 @@ namespace cytnx {
      * If the data type of the input \p In_tensors are different, the data type of the
      *   output Tensor will be the stronger one.
      */
-    Tensor Vstack(const std::vector<Tensor> &In_tensors);
+    Tensor Vstack(const std::vector<Tensor>& In_tensors);
 
     /**
      * @brief horizontal stack a list of Tensor.
@@ -93,7 +93,7 @@ namespace cytnx {
      * If the data type of the input \p In_tensors are different, the data type of the
      *   output Tensor will be the stronger one.
      */
-    Tensor Hstack(const std::vector<Tensor> &In_tensors);
+    Tensor Hstack(const std::vector<Tensor>& In_tensors);
 
     /**
      * @brief split a Matrix (a 2d Tensor) into a list of Matrices along the vertical direction.
@@ -105,8 +105,8 @@ namespace cytnx {
      * @param[in] dims the row number of each Matrix in the output list.
      * @see Vsplit
      */
-    void Vsplit_(std::vector<Tensor> &out, const Tensor &Tin,
-                 const std::vector<cytnx_uint64> &dims);
+    void Vsplit_(std::vector<Tensor>& out, const Tensor& Tin,
+                 const std::vector<cytnx_uint64>& dims);
 
     /**
      * @brief split a Matrix (a 2d Tensor) into a list of Matrices along the horizontal direction.
@@ -118,8 +118,8 @@ namespace cytnx {
      * @param[in] dims the column number of each Matrix in the output list.
      * @see Hsplit
      */
-    void Hsplit_(std::vector<Tensor> &out, const Tensor &Tin,
-                 const std::vector<cytnx_uint64> &dims);
+    void Hsplit_(std::vector<Tensor>& out, const Tensor& Tin,
+                 const std::vector<cytnx_uint64>& dims);
 
     /**
      * @brief split a Matrix (a 2d Tensor) into a list of Matrices along the vertical direction.
@@ -159,7 +159,7 @@ namespace cytnx {
      * 4. The elements in \p dims cannot be zero.
      * @see Hsplit, Vstack
      */
-    std::vector<Tensor> Vsplit(const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
+    std::vector<Tensor> Vsplit(const Tensor& Tin, const std::vector<cytnx_uint64>& dims);
 
     /**
      * @brief split a Matrix (a 2d Tensor) into a list of Matrices along the horizontal direction.
@@ -202,14 +202,14 @@ namespace cytnx {
      * 4. The elements in \p dims cannot be zero.
      * @see Vsplit, Hstack
      */
-    std::vector<Tensor> Hsplit(const Tensor &Tin, const std::vector<cytnx_uint64> &dims);
+    std::vector<Tensor> Hsplit(const Tensor& Tin, const std::vector<cytnx_uint64>& dims);
 
     ///@cond
-    Tensor _fx_Matric_combine(std::vector<Tensor> &Tlist, const cytnx_uint64 &Row_Nblk,
-                              const cytnx_uint64 &Col_Nblk);
-    void _fx_Matric_split(std::vector<Tensor> &out, const Tensor &Tin,
-                          const std::vector<cytnx_uint64> &rdims,
-                          const std::vector<cytnx_uint64> &cdims);
+    Tensor _fx_Matric_combine(std::vector<Tensor>& Tlist, const cytnx_uint64& Row_Nblk,
+                              const cytnx_uint64& Col_Nblk);
+    void _fx_Matric_split(std::vector<Tensor>& out, const Tensor& Tin,
+                          const std::vector<cytnx_uint64>& rdims,
+                          const std::vector<cytnx_uint64>& cdims);
     ///@endcond
 
   }  // namespace algo

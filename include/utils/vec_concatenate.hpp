@@ -6,10 +6,10 @@
 namespace cytnx {
 
   template <class T>
-  std::vector<T> vec_concatenate(const std::vector<T> &inL, const std::vector<T> &inR);
+  std::vector<T> vec_concatenate(const std::vector<T>& inL, const std::vector<T>& inR);
 
   template <class T>
-  void vec_concatenate_(std::vector<T> &out, const std::vector<T> &inL, const std::vector<T> &inR);
+  void vec_concatenate_(std::vector<T>& out, const std::vector<T>& inL, const std::vector<T>& inR);
 
 }  // namespace cytnx
 

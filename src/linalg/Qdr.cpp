@@ -14,7 +14,7 @@ typedef cytnx::Accessor ac;
 namespace cytnx {
   namespace linalg {
 
-    std::vector<Tensor> Qdr(const Tensor &Tin, const bool &is_tau) {
+    std::vector<Tensor> Qdr(const Tensor& Tin, const bool& is_tau) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Qdr] error, Qdr can only operate on rank-2 Tensor.%s", "\n");
       // cytnx_error_msg(!Tin.is_contiguous(), "[Qdr] error tensor must be contiguous. Call
@@ -84,7 +84,7 @@ namespace cytnx {
 
 namespace cytnx {
   namespace linalg {
-    std::vector<UniTensor> Qdr(const UniTensor &Tin, const bool &is_tau) {
+    std::vector<UniTensor> Qdr(const UniTensor& Tin, const bool& is_tau) {
       if (Tin.is_blockform()) {
         cytnx_error_msg(true, "[Qdr for sparse UniTensor is developling%s]", "\n");
       } else {

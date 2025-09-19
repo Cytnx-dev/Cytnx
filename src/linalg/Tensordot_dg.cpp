@@ -9,8 +9,8 @@
 namespace cytnx {
 
   namespace linalg {
-    Tensor Tensordot_dg(const Tensor &Tl, const Tensor &Tr, const std::vector<cytnx_uint64> &idxl,
-                        const std::vector<cytnx_uint64> &idxr, const bool &diag_L) {
+    Tensor Tensordot_dg(const Tensor& Tl, const Tensor& Tr, const std::vector<cytnx_uint64>& idxl,
+                        const std::vector<cytnx_uint64>& idxr, const bool& diag_L) {
       // checking:
       cytnx_error_msg(idxl.size() != idxr.size(),
                       "[ERROR] the number of index to trace must be consist across two tensors.%s",

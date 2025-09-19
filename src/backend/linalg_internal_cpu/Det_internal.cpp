@@ -12,14 +12,14 @@ namespace cytnx {
   namespace linalg_internal {
 
     /// Det
-    void Det_internal_cd(void *out, const boost::intrusive_ptr<Storage_base> &Rin,
-                         const cytnx_uint64 &L) {
-      cytnx_complex128 *od = static_cast<cytnx_complex128 *>(out);
-      lapack_complex_double *_Rin =
-        (lapack_complex_double *)malloc(sizeof(cytnx_complex128) * Rin->size());
+    void Det_internal_cd(void* out, const boost::intrusive_ptr<Storage_base>& Rin,
+                         const cytnx_uint64& L) {
+      cytnx_complex128* od = static_cast<cytnx_complex128*>(out);
+      lapack_complex_double* _Rin =
+        (lapack_complex_double*)malloc(sizeof(cytnx_complex128) * Rin->size());
       memcpy(_Rin, Rin->data(), sizeof(cytnx_complex128) * Rin->size());
 
-      lapack_int *ipiv = (lapack_int *)malloc((L + 1) * sizeof(lapack_int));
+      lapack_int* ipiv = (lapack_int*)malloc((L + 1) * sizeof(lapack_int));
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_zgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
@@ -56,14 +56,14 @@ namespace cytnx {
       free(_Rin);
       if (neg) od[0] *= -1;
     }
-    void Det_internal_cf(void *out, const boost::intrusive_ptr<Storage_base> &Rin,
-                         const cytnx_uint64 &L) {
-      cytnx_complex64 *od = static_cast<cytnx_complex64 *>(out);
-      lapack_complex_float *_Rin =
-        (lapack_complex_float *)malloc(sizeof(cytnx_complex64) * Rin->size());
+    void Det_internal_cf(void* out, const boost::intrusive_ptr<Storage_base>& Rin,
+                         const cytnx_uint64& L) {
+      cytnx_complex64* od = static_cast<cytnx_complex64*>(out);
+      lapack_complex_float* _Rin =
+        (lapack_complex_float*)malloc(sizeof(cytnx_complex64) * Rin->size());
       memcpy(_Rin, Rin->data(), sizeof(cytnx_complex64) * Rin->size());
 
-      lapack_int *ipiv = (lapack_int *)malloc((L + 1) * sizeof(lapack_int));
+      lapack_int* ipiv = (lapack_int*)malloc((L + 1) * sizeof(lapack_int));
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_cgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
@@ -100,13 +100,13 @@ namespace cytnx {
       free(_Rin);
       if (neg) od[0] *= -1;
     }
-    void Det_internal_d(void *out, const boost::intrusive_ptr<Storage_base> &Rin,
-                        const cytnx_uint64 &L) {
-      cytnx_double *od = static_cast<cytnx_double *>(out);
-      cytnx_double *_Rin = (cytnx_double *)malloc(sizeof(cytnx_double) * Rin->size());
+    void Det_internal_d(void* out, const boost::intrusive_ptr<Storage_base>& Rin,
+                        const cytnx_uint64& L) {
+      cytnx_double* od = static_cast<cytnx_double*>(out);
+      cytnx_double* _Rin = (cytnx_double*)malloc(sizeof(cytnx_double) * Rin->size());
       memcpy(_Rin, Rin->data(), sizeof(cytnx_double) * Rin->size());
 
-      lapack_int *ipiv = (lapack_int *)malloc((L + 1) * sizeof(lapack_int));
+      lapack_int* ipiv = (lapack_int*)malloc((L + 1) * sizeof(lapack_int));
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_dgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);
@@ -132,13 +132,13 @@ namespace cytnx {
       free(_Rin);
       if (neg) od[0] *= -1;
     }
-    void Det_internal_f(void *out, const boost::intrusive_ptr<Storage_base> &Rin,
-                        const cytnx_uint64 &L) {
-      float *od = static_cast<float *>(out);
-      cytnx_float *_Rin = (cytnx_float *)malloc(sizeof(cytnx_float) * Rin->size());
+    void Det_internal_f(void* out, const boost::intrusive_ptr<Storage_base>& Rin,
+                        const cytnx_uint64& L) {
+      float* od = static_cast<float*>(out);
+      cytnx_float* _Rin = (cytnx_float*)malloc(sizeof(cytnx_float) * Rin->size());
       memcpy(_Rin, Rin->data(), sizeof(cytnx_float) * Rin->size());
 
-      lapack_int *ipiv = (lapack_int *)malloc((L + 1) * sizeof(lapack_int));
+      lapack_int* ipiv = (lapack_int*)malloc((L + 1) * sizeof(lapack_int));
       lapack_int N = L;
       lapack_int info;
       info = LAPACKE_sgetrf(LAPACK_COL_MAJOR, N, N, _Rin, N, ipiv);

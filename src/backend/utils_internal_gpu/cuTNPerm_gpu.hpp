@@ -14,22 +14,22 @@ namespace cytnx {
 
 #ifdef UNI_GPU
     boost::intrusive_ptr<Storage_base> cuTNPerm_gpu_cd(
-      boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape,
-      const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper, );
+      boost::intrusive_ptr<Storage_base>& in, const std::vector<cytnx_uint64>& old_shape,
+      const std::vector<cytnx_uint64>& mapper, const std::vector<cytnx_uint64>& invmapper, );
 
     boost::intrusive_ptr<Storage_base> cuTNPerm_gpu_cf(
-      boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &old_shape,
-      const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &invmapper, );
+      boost::intrusive_ptr<Storage_base>& in, const std::vector<cytnx_uint64>& old_shape,
+      const std::vector<cytnx_uint64>& mapper, const std::vector<cytnx_uint64>& invmapper, );
 
-    boost::intrusive_ptr<Storage_base> cuTNPerm_gpu_d(boost::intrusive_ptr<Storage_base> &in,
-                                                      const std::vector<cytnx_uint64> &old_shape,
-                                                      const std::vector<cytnx_uint64> &mapper,
-                                                      const std::vector<cytnx_uint64> &invmapper, );
+    boost::intrusive_ptr<Storage_base> cuTNPerm_gpu_d(boost::intrusive_ptr<Storage_base>& in,
+                                                      const std::vector<cytnx_uint64>& old_shape,
+                                                      const std::vector<cytnx_uint64>& mapper,
+                                                      const std::vector<cytnx_uint64>& invmapper, );
 
-    boost::intrusive_ptr<Storage_base> cuTNPerm_gpu_f(boost::intrusive_ptr<Storage_base> &in,
-                                                      const std::vector<cytnx_uint64> &old_shape,
-                                                      const std::vector<cytnx_uint64> &mapper,
-                                                      const std::vector<cytnx_uint64> &invmapper, );
+    boost::intrusive_ptr<Storage_base> cuTNPerm_gpu_f(boost::intrusive_ptr<Storage_base>& in,
+                                                      const std::vector<cytnx_uint64>& old_shape,
+                                                      const std::vector<cytnx_uint64>& mapper,
+                                                      const std::vector<cytnx_uint64>& invmapper, );
 
 #endif
 

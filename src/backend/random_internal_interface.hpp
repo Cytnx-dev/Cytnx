@@ -14,8 +14,8 @@ namespace cytnx {
   namespace random_internal {
 
     // func signature
-    typedef void (*Rnd_io)(boost::intrusive_ptr<Storage_base> &, const double &a, const double &b,
-                           const unsigned int &seed);
+    typedef void (*Rnd_io)(boost::intrusive_ptr<Storage_base>&, const double& a, const double& b,
+                           const unsigned int& seed);
     class random_internal_interface {
      public:
       // fucntion signature:

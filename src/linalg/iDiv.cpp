@@ -10,7 +10,7 @@
 namespace cytnx {
   namespace linalg {
 
-    void iDiv(Tensor &Lt, const Tensor &Rt) {
+    void iDiv(Tensor& Lt, const Tensor& Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[iDiv] error, two tensor cannot on different devices.%s", "\n");
 

@@ -20,7 +20,7 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Rsvd(const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
+    std::vector<Tensor> Rsvd(const cytnx::Tensor& Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
                              cytnx_uint64 power_iteration, unsigned int seed) {
       std::vector<cytnx_uint64> shape = Tin.shape();
       cytnx_error_msg(shape.size() != 2, "[Rsvd] error, Rsvd can only operate on rank-2 Tensor.%s",
@@ -96,7 +96,7 @@ namespace cytnx {
       }
     }  // Rsvd(Tensor)
 
-    void _Rsvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+    void _Rsvd_Dense_UT(std::vector<cytnx::UniTensor>& outCyT, const cytnx::UniTensor& Tin,
                         cytnx_uint64 keepdim, bool is_U, bool is_vT, cytnx_uint64 power_iteration,
                         unsigned int seed) {
       //[Note] outCyT must be empty!
@@ -130,7 +130,7 @@ namespace cytnx {
       outCyT.resize(outT.size());
 
       // s
-      cytnx::UniTensor &Cy_S = outCyT[t];
+      cytnx::UniTensor& Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
@@ -141,7 +141,7 @@ namespace cytnx {
       t++;
 
       if (is_U) {
-        cytnx::UniTensor &Cy_U = outCyT[t];
+        cytnx::UniTensor& Cy_U = outCyT[t];
         cytnx_error_msg(Tin.rowrank() > oldshape.size(),
                         "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
                         "contained tensor.%s",
@@ -156,7 +156,7 @@ namespace cytnx {
         t++;  // U
       }
       if (is_vT) {
-        cytnx::UniTensor &Cy_vT = outCyT[t];
+        cytnx::UniTensor& Cy_vT = outCyT[t];
         std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
         shapevT[0] = -1;
         memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
@@ -177,7 +177,7 @@ namespace cytnx {
         Cy_S.tag();
         t = 1;
         if (is_U) {
-          cytnx::UniTensor &Cy_U = outCyT[t];
+          cytnx::UniTensor& Cy_U = outCyT[t];
           Cy_U._impl->_is_tag = true;
           for (int i = 0; i < Cy_U.rowrank(); i++) {
             Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
@@ -187,7 +187,7 @@ namespace cytnx {
           t++;
         }
         if (is_vT) {
-          cytnx::UniTensor &Cy_vT = outCyT[t];
+          cytnx::UniTensor& Cy_vT = outCyT[t];
           Cy_vT._impl->_is_tag = true;
           Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
           for (int i = 1; i < Cy_vT.rank(); i++) {
@@ -200,7 +200,7 @@ namespace cytnx {
       }  // if tag
     }  // _Rsvd_Dense_UT
 
-    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U,
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor& Tin, cytnx_uint64 keepdim, bool is_U,
                                        bool is_vT, cytnx_uint64 power_iteration,
                                        unsigned int seed) {
       // using rowrank to split the bond to form a matrix.

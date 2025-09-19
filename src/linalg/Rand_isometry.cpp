@@ -14,8 +14,8 @@
 
 namespace cytnx {
   namespace linalg {
-    Tensor Rand_isometry(const Tensor &Tin, const cytnx_uint64 &keepdim,
-                         const cytnx_uint64 &power_iteration, const unsigned int &seed) {
+    Tensor Rand_isometry(const Tensor& Tin, const cytnx_uint64& keepdim,
+                         const cytnx_uint64& power_iteration, const unsigned int& seed) {
       std::vector<cytnx_uint64> shape = Tin.shape();
       cytnx_int64 truncdim = std::min({keepdim, shape[0], shape[1]});
       shape[0] = shape[1];

@@ -13,10 +13,10 @@ namespace cytnx {
   namespace utils_internal {
 #ifdef UNI_GPU
     template <typename DType>
-    boost::intrusive_ptr<Storage_base> MoveMemoryGpu(boost::intrusive_ptr<Storage_base> &in,
-                                                     const std::vector<cytnx_uint64> &old_shape,
-                                                     const std::vector<cytnx_uint64> &mapper,
-                                                     const std::vector<cytnx_uint64> &invmapper,
+    boost::intrusive_ptr<Storage_base> MoveMemoryGpu(boost::intrusive_ptr<Storage_base>& in,
+                                                     const std::vector<cytnx_uint64>& old_shape,
+                                                     const std::vector<cytnx_uint64>& mapper,
+                                                     const std::vector<cytnx_uint64>& invmapper,
                                                      bool is_inplace);
 
 #endif

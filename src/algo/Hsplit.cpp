@@ -15,8 +15,8 @@ namespace cytnx {
   namespace algo {
     typedef Accessor ac;
 
-    void Hsplit_(std::vector<Tensor> &out, const Tensor &Tin,
-                 const std::vector<cytnx_uint64> &dims) {
+    void Hsplit_(std::vector<Tensor>& out, const Tensor& Tin,
+                 const std::vector<cytnx_uint64>& dims) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[ERROR][Hsplit_] Can only work for rank-2 Tensor.%s", "\n");
       cytnx_error_msg(Tin.dtype() == Type.Bool,
@@ -35,19 +35,19 @@ namespace cytnx {
                       "\n");
 
       out.resize(dims.size());
-      std::vector<char *> targ_ptrs(dims.size());
+      std::vector<char*> targ_ptrs(dims.size());
       for (int i = 0; i < out.size(); i++) {
         out[i] = Tensor({Tin.shape()[0], dims[i]}, Tin.dtype(), Tin.device());
-        targ_ptrs[i] = (char *)out[i].storage().data();
+        targ_ptrs[i] = (char*)out[i].storage().data();
       }
 
       if (Tin.device() == Device.cpu) {
-        algo_internal::hSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
-                                       _Tn.shape()[0], Type.typeSize(Tin.dtype()));
+        algo_internal::hSplit_internal(targ_ptrs, (char*)_Tn.storage().data(), dims, _Tn.shape()[0],
+                                       Type.typeSize(Tin.dtype()));
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tin.device()));
-        algo_internal::cuhSplit_internal(targ_ptrs, (char *)_Tn.storage().data(), dims,
+        algo_internal::cuhSplit_internal(targ_ptrs, (char*)_Tn.storage().data(), dims,
                                          _Tn.shape()[0], Type.typeSize(Tin.dtype()));
   #else
         cytnx_error_msg(
@@ -57,7 +57,7 @@ namespace cytnx {
       }
     }
 
-    std::vector<Tensor> Hsplit(const Tensor &Tin, const std::vector<cytnx_uint64> &dims) {
+    std::vector<Tensor> Hsplit(const Tensor& Tin, const std::vector<cytnx_uint64>& dims) {
       std::vector<Tensor> out;
       Hsplit_(out, Tin, dims);
       return out;

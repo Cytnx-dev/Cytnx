@@ -65,7 +65,7 @@ TEST(ExpH_UT, gpu_UTExpH_test) {
 
   // checking data:
   UTFin.reshape_({4, 4});
-  Tensor &t_f = UTFin.get_block_();
+  Tensor& t_f = UTFin.get_block_();
   t_f.to_(cytnx::Device.cuda);
   for (int i = 0; i < 16; i++) {
     int x = i / 4, y = i % 4;

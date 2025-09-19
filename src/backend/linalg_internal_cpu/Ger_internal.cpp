@@ -5,47 +5,47 @@
 namespace cytnx {
   namespace linalg_internal {
 
-    void Ger_internal_cd(boost::intrusive_ptr<Storage_base> &A,
-                         const boost::intrusive_ptr<Storage_base> &x,
-                         const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
-      cytnx_complex128 *_A = (cytnx_complex128 *)A->data();
-      cytnx_complex128 *_x = (cytnx_complex128 *)x->data();
-      cytnx_complex128 *_y = (cytnx_complex128 *)y->data();
+    void Ger_internal_cd(boost::intrusive_ptr<Storage_base>& A,
+                         const boost::intrusive_ptr<Storage_base>& x,
+                         const boost::intrusive_ptr<Storage_base>& y, const Scalar& a) {
+      cytnx_complex128* _A = (cytnx_complex128*)A->data();
+      cytnx_complex128* _x = (cytnx_complex128*)x->data();
+      cytnx_complex128* _y = (cytnx_complex128*)y->data();
       cytnx_complex128 _a = complex128(a);
 
-      cblas_zgeru(CblasRowMajor, x->size(), y->size(), (double *)&_a, (double *)_x, 1, (double *)_y,
-                  1, (double *)_A, y->size());
+      cblas_zgeru(CblasRowMajor, x->size(), y->size(), (double*)&_a, (double*)_x, 1, (double*)_y, 1,
+                  (double*)_A, y->size());
     }
 
-    void Ger_internal_cf(boost::intrusive_ptr<Storage_base> &A,
-                         const boost::intrusive_ptr<Storage_base> &x,
-                         const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
-      cytnx_complex64 *_A = (cytnx_complex64 *)A->data();
-      cytnx_complex64 *_x = (cytnx_complex64 *)x->data();
-      cytnx_complex64 *_y = (cytnx_complex64 *)y->data();
+    void Ger_internal_cf(boost::intrusive_ptr<Storage_base>& A,
+                         const boost::intrusive_ptr<Storage_base>& x,
+                         const boost::intrusive_ptr<Storage_base>& y, const Scalar& a) {
+      cytnx_complex64* _A = (cytnx_complex64*)A->data();
+      cytnx_complex64* _x = (cytnx_complex64*)x->data();
+      cytnx_complex64* _y = (cytnx_complex64*)y->data();
       cytnx_complex64 _a = complex64(a);
 
-      cblas_cgeru(CblasRowMajor, x->size(), y->size(), (float *)&_a, (float *)_x, 1, (float *)_y, 1,
-                  (float *)_A, y->size());
+      cblas_cgeru(CblasRowMajor, x->size(), y->size(), (float*)&_a, (float*)_x, 1, (float*)_y, 1,
+                  (float*)_A, y->size());
     }
 
-    void Ger_internal_d(boost::intrusive_ptr<Storage_base> &A,
-                        const boost::intrusive_ptr<Storage_base> &x,
-                        const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
-      cytnx_double *_A = (cytnx_double *)A->data();
-      cytnx_double *_x = (cytnx_double *)x->data();
-      cytnx_double *_y = (cytnx_double *)y->data();
+    void Ger_internal_d(boost::intrusive_ptr<Storage_base>& A,
+                        const boost::intrusive_ptr<Storage_base>& x,
+                        const boost::intrusive_ptr<Storage_base>& y, const Scalar& a) {
+      cytnx_double* _A = (cytnx_double*)A->data();
+      cytnx_double* _x = (cytnx_double*)x->data();
+      cytnx_double* _y = (cytnx_double*)y->data();
       cytnx_double _a = double(a);
 
       cblas_dger(CblasRowMajor, x->size(), y->size(), _a, _x, 1, _y, 1, _A, y->size());
     }
 
-    void Ger_internal_f(boost::intrusive_ptr<Storage_base> &A,
-                        const boost::intrusive_ptr<Storage_base> &x,
-                        const boost::intrusive_ptr<Storage_base> &y, const Scalar &a) {
-      cytnx_float *_A = (cytnx_float *)A->data();
-      cytnx_float *_x = (cytnx_float *)x->data();
-      cytnx_float *_y = (cytnx_float *)y->data();
+    void Ger_internal_f(boost::intrusive_ptr<Storage_base>& A,
+                        const boost::intrusive_ptr<Storage_base>& x,
+                        const boost::intrusive_ptr<Storage_base>& y, const Scalar& a) {
+      cytnx_float* _A = (cytnx_float*)A->data();
+      cytnx_float* _x = (cytnx_float*)x->data();
+      cytnx_float* _y = (cytnx_float*)y->data();
       cytnx_float _a = float(a);
 
       cblas_sger(CblasRowMajor, x->size(), y->size(), _a, _x, 1, _y, 1, _A, y->size());

@@ -9,7 +9,7 @@
 
 namespace cytnx {
   namespace linalg {
-    Tensor Matmul(const Tensor &Tl, const Tensor &Tr) {
+    Tensor Matmul(const Tensor& Tl, const Tensor& Tr) {
       // std::cout << "matmul" << std::endl;
       // std::cout << Tl << Tr << std::endl;
 

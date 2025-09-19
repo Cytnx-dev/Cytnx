@@ -9,7 +9,7 @@ namespace cytnx {
   namespace tn_algo {
 
     //====================================================
-    std::string MPSType_class::getname(const int &mps_type) {
+    std::string MPSType_class::getname(const int& mps_type) {
       if (mps_type == this->Void) {
         return std::string("Void (un-initialize MPS");
       } else if (mps_type == this->RegularMPS) {
@@ -37,20 +37,20 @@ namespace cytnx {
       return boost::intrusive_ptr<MPS_impl>(new MPS_impl());
     }
 
-    std::ostream &MPS_impl::Print(std::ostream &os) {
+    std::ostream& MPS_impl::Print(std::ostream& os) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
       return os;
     }
 
-    void MPS_impl::Init(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim,
-                        const cytnx_uint64 &virt_dim, const cytnx_int64 &dtype) {
+    void MPS_impl::Init(const cytnx_uint64& N, const std::vector<cytnx_uint64>& vphys_dim,
+                        const cytnx_uint64& virt_dim, const cytnx_int64& dtype) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
-    void MPS_impl::Init_Msector(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim,
-                                const cytnx_uint64 &virt_dim,
-                                const std::vector<cytnx_int64> &select, const cytnx_int64 &dtype) {
+    void MPS_impl::Init_Msector(const cytnx_uint64& N, const std::vector<cytnx_uint64>& vphys_dim,
+                                const cytnx_uint64& virt_dim,
+                                const std::vector<cytnx_int64>& select, const cytnx_int64& dtype) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
@@ -74,12 +74,12 @@ namespace cytnx {
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
 
-    void MPS_impl::_save_dispatch(fstream &f) {
+    void MPS_impl::_save_dispatch(fstream& f) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
 
-    void MPS_impl::_load_dispatch(fstream &f) {
+    void MPS_impl::_load_dispatch(fstream& f) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }

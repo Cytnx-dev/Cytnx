@@ -21,7 +21,7 @@ namespace cytnx {
     }
   }
 
-  Tensor LinOp::_mv_elemfunc(const Tensor &Tin) {
+  Tensor LinOp::_mv_elemfunc(const Tensor& Tin) {
     cytnx_error_msg(this->_type != "mv_elem",
                     "[ERROR][LinOp][Internal] Fatal call _mv_elemfunc when type==mv %s", "\n");
 
@@ -30,7 +30,7 @@ namespace cytnx {
     // traversal all the rows:
     for (auto it = this->_elems.begin(); it != this->_elems.end(); it++) {
       Tensor e_i = it->second.second;
-      auto &v_i = it->second.first;
+      auto& v_i = it->second.first;
       for (cytnx_uint64 j = 0; j < v_i.size(); j++) {
         out(it->first) += e_i(j) * Tin(v_i[j]);
       }
@@ -38,7 +38,7 @@ namespace cytnx {
     return out;
   }
 
-  Tensor LinOp::matvec(const Tensor &Tin) {
+  Tensor LinOp::matvec(const Tensor& Tin) {
     if (this->_type == "mv_elem") {
       return this->_mv_elemfunc(Tin);
       // cytnx_error_msg(true,"Developing%s","\n");
@@ -51,7 +51,7 @@ namespace cytnx {
     }
   }
 
-  UniTensor LinOp::matvec(const UniTensor &Tin) {
+  UniTensor LinOp::matvec(const UniTensor& Tin) {
     if (this->_type == "mv_elem") {
       cytnx_error_msg(
         true, "[ERROR][LinOp] LinOp with 'mv_elem' type can only accept Tensor as matvec input!.%s",

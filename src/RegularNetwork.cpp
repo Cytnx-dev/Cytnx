@@ -15,8 +15,8 @@ using namespace std;
 namespace cytnx {
 
   // these two are internal functions:
-  void _parse_ORDER_line_(vector<string> &tokens, const string &line,
-                          const cytnx_uint64 &line_num) {
+  void _parse_ORDER_line_(vector<string>& tokens, const string& line,
+                          const cytnx_uint64& line_num) {
     cytnx_error_msg((line.find_first_of("\t;\n:") != string::npos),
                     "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
                     "\n");
@@ -37,8 +37,8 @@ namespace cytnx {
                     line_num, "\n");
   }
 
-  void _parse_TOUT_line_(vector<string> &labels, cytnx_uint64 &TOUT_iBondNum, const string &line,
-                         const cytnx_uint64 &line_num) {
+  void _parse_TOUT_line_(vector<string>& labels, cytnx_uint64& TOUT_iBondNum, const string& line,
+                         const cytnx_uint64& line_num) {
     labels.clear();
 
     vector<string> tmp = str_split(line, false, ";");
@@ -97,8 +97,8 @@ namespace cytnx {
   }
 
   /// This is debug function for printing special characters
-  void tri(const char *text) {
-    for (const char *p = text; *p != '\0'; ++p) {
+  void tri(const char* text) {
+    for (const char* p = text; *p != '\0'; ++p) {
       int c = (unsigned char)*p;
 
       switch (c) {
@@ -129,8 +129,8 @@ namespace cytnx {
     }
   }
 
-  void _parse_TN_line_(vector<string> &labels, cytnx_uint64 &TN_iBondNum, const string &line,
-                       const cytnx_uint64 &line_num) {
+  void _parse_TN_line_(vector<string>& labels, cytnx_uint64& TN_iBondNum, const string& line,
+                       const cytnx_uint64& line_num) {
     labels.clear();
     // vector<string> tmp = str_split(line, false, ";");
     // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
@@ -195,7 +195,7 @@ namespace cytnx {
                     "Invalid TN line. no label present in this line, which is invalid.%s", "\n");
   }
 
-  void _extract_TNs_from_ORDER_(vector<string> &TN_names, const vector<string> &tokens) {
+  void _extract_TNs_from_ORDER_(vector<string>& TN_names, const vector<string>& tokens) {
     TN_names.clear();
     for (cytnx_uint64 i = 0; i < tokens.size(); i++) {
       string tok = str_strip(tokens[i]);  // remove space.
@@ -275,7 +275,7 @@ namespace cytnx {
     return path;
   }
 
-  void check(vector<UniTensor> &tns, vector<string> &tn_names) {
+  void check(vector<UniTensor>& tns, vector<string>& tn_names) {
     // check tensors are all set, and put all unitensor on node for contraction:
     cytnx_error_msg(
       tns.size() == 0,
@@ -308,8 +308,8 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::Contract_plan(const vector<UniTensor> &utensors, const string &Tout,
-                                     const vector<string> &alias, const string &contract_order) {
+  void RegularNetwork::Contract_plan(const vector<UniTensor>& utensors, const string& Tout,
+                                     const vector<string>& alias, const string& contract_order) {
     cytnx_error_msg(utensors.size() < 2,
                     "[ERROR][Network] invalid network. Should have at least 2 tensors defined.%s",
                     "\n");
@@ -443,7 +443,7 @@ namespace cytnx {
     for (int i = 0; i < utensors.size(); i++) this->tensors[i] = utensors[i];
   }
 
-  void RegularNetwork::FromString(const vector<string> &contents) {
+  void RegularNetwork::FromString(const vector<string>& contents) {
     this->clear();
 
     string line;
@@ -650,7 +650,7 @@ namespace cytnx {
     this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }  // end of FromString
 
-  void RegularNetwork::Fromfile(const string &fname) {
+  void RegularNetwork::Fromfile(const string& fname) {
     const cytnx_uint64 MAXLINES = 1024;
 
     // empty all
@@ -689,8 +689,8 @@ namespace cytnx {
     this->FromString(contents);
   }
 
-  void RegularNetwork::PutUniTensors(const vector<string> &names,
-                                     const vector<UniTensor> &utensors) {
+  void RegularNetwork::PutUniTensors(const vector<string>& names,
+                                     const vector<UniTensor>& utensors) {
     cytnx_error_msg(names.size() != utensors.size(),
                     "[ERROR][RegularNetwork][PutUniTensors] total number of names does not match "
                     "number of input UniTensors.%s",
@@ -700,7 +700,7 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
+  void RegularNetwork::PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor) {
     cytnx_error_msg(idx >= this->CtTree.base_nodes.size(),
                     "[ERROR][RegularNetwork][PutUniTensor] index=%d out of range.\n", idx);
 
@@ -713,13 +713,13 @@ namespace cytnx {
     this->tensors[idx] = utensor;
   }
 
-  void RegularNetwork::RmUniTensor(const cytnx_uint64 &idx) {
+  void RegularNetwork::RmUniTensor(const cytnx_uint64& idx) {
     cytnx_error_msg(idx >= this->CtTree.base_nodes.size(),
                     "[ERROR][RegularNetwork][RmUniTensor] index=%d out of range.\n", idx);
 
     this->tensors[idx] = UniTensor();
   }
-  void RegularNetwork::RmUniTensor(const string &name) {
+  void RegularNetwork::RmUniTensor(const string& name) {
     cytnx_uint64 idx;
     try {
       idx = this->name2pos.at(name);
@@ -732,13 +732,13 @@ namespace cytnx {
 
     this->RmUniTensor(idx);
   }
-  void RegularNetwork::RmUniTensors(const vector<string> &names) {
+  void RegularNetwork::RmUniTensors(const vector<string>& names) {
     for (int i = 0; i < names.size(); i++) {
       this->RmUniTensor(names[i]);
     }
   }
 
-  void RegularNetwork::Savefile(const string &fname) {
+  void RegularNetwork::Savefile(const string& fname) {
     cytnx_error_msg(
       this->label_arr.size() == 0,
       "[ERROR][RegularNetwork][Savefile] cannot save empty network to network file!%s", "\n");
@@ -792,7 +792,7 @@ namespace cytnx {
     fo.close();
   }
 
-  void RegularNetwork::PutUniTensor(const string &name, const UniTensor &utensor) {
+  void RegularNetwork::PutUniTensor(const string& name, const UniTensor& utensor) {
     cytnx_uint64 idx;
     try {
       idx = this->name2pos.at(name);
@@ -806,7 +806,7 @@ namespace cytnx {
     this->PutUniTensor(idx, utensor);
   }
 
-  void RegularNetwork::PrintNet(ostream &os) {
+  void RegularNetwork::PrintNet(ostream& os) {
     string status;
     os << "==== Network ====" << endl;
     if (this->tensors.size() == 0) {
@@ -862,7 +862,7 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::setOrder(const bool &optimal, const string &contract_order /*default ""*/) {
+  void RegularNetwork::setOrder(const bool& optimal, const string& contract_order /*default ""*/) {
     cytnx_warning_msg(optimal && (contract_order != ""),
                       "[WARNING][setOrder][RegularNetwork] Setting Optimal = true while specifying "
                       "the order, will find the optimal order instead."
@@ -1151,9 +1151,9 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::construct(const vector<string> &alias, const vector<vector<string>> &labels,
-                                 const vector<string> &outlabel, const cytnx_int64 &outrk,
-                                 const string &order, const bool optim) {
+  void RegularNetwork::construct(const vector<string>& alias, const vector<vector<string>>& labels,
+                                 const vector<string>& outlabel, const cytnx_int64& outrk,
+                                 const string& order, const bool optim) {
     this->clear();
     for (int i = 0; i < alias.size(); i++) {
       this->names.push_back(alias[i]);

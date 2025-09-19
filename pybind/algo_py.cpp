@@ -21,7 +21,7 @@ using namespace cytnx;
 #ifdef BACKEND_TORCH
 #else
 
-void algo_binding(py::module &m) {
+void algo_binding(py::module& m) {
   // [Submodule algo]
   pybind11::module m_algo = m.def_submodule("algo", "algorithm related.");
   m_algo.def("Sort", &cytnx::algo::Sort, py::arg("Tn"));

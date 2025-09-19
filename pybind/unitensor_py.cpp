@@ -26,9 +26,9 @@ class cHclass {
  public:
   Scalar::Sproxy proxy;
 
-  cHclass(const Scalar::Sproxy &inproxy) { this->proxy = inproxy; }
-  cHclass(const cHclass &rhs) { this->proxy = rhs.proxy.copy(); }
-  cHclass &operator=(cHclass &rhs) {
+  cHclass(const Scalar::Sproxy& inproxy) { this->proxy = inproxy; }
+  cHclass(const cHclass& rhs) { this->proxy = rhs.proxy.copy(); }
+  cHclass& operator=(cHclass& rhs) {
     this->proxy = rhs.proxy.copy();
     return *this;
   }
@@ -49,20 +49,20 @@ class cHclass {
   cytnx_bool get_elem_b() const { return cytnx_bool(Scalar(this->proxy)); }
 
   template <class T>
-  void set_elem(const T &elem) {
+  void set_elem(const T& elem) {
     // std::cout << typeid(T).name() << std::endl;
     this->proxy = elem;
   }
 };
 
 template <class T>
-void f_UniTensor_setelem_scal(UniTensor &self, const std::vector<cytnx_uint64> &locator,
-                              const T &rc) {
+void f_UniTensor_setelem_scal(UniTensor& self, const std::vector<cytnx_uint64>& locator,
+                              const T& rc) {
   self.set_elem(locator, rc);
 }
 
 template <class T>
-void f_UniTensor_setelem_scal_int(UniTensor &self, const cytnx_uint64 &locator, const T &rc) {
+void f_UniTensor_setelem_scal_int(UniTensor& self, const cytnx_uint64& locator, const T& rc) {
   const std::vector<cytnx_uint64> tmp = {locator};
   self.set_elem(tmp, rc);
 }
@@ -71,7 +71,7 @@ void f_UniTensor_setelem_scal_int(UniTensor &self, const cytnx_uint64 &locator, 
 //
 // This function should be replaced with `py::arg("silent") = false` after stopping
 // support for the deprecated typo argument "slient".
-inline bool parse_get_blocks_silent_arg(const py::args &args, const py::kwargs &kwargs) {
+inline bool parse_get_blocks_silent_arg(const py::args& args, const py::kwargs& kwargs) {
   bool silent = false;
   if (args.size() + kwargs.size() > 1) {
     throw py::type_error("get_blocks_() takes at most 1 argument");
@@ -94,7 +94,7 @@ inline bool parse_get_blocks_silent_arg(const py::args &args, const py::kwargs &
   return silent;
 }
 
-void unitensor_binding(py::module &m) {
+void unitensor_binding(py::module& m) {
   py::class_<cHclass>(m, "Helpclass")
     .def("exists", &cHclass::exists)
     .def("dtype", &cHclass::dtype)
@@ -1440,18 +1440,18 @@ void unitensor_binding(py::module &m) {
   //         py::arg("cacheR") = false);
   m.def(
     "Contract",
-    [](const UniTensor &inL, const UniTensor &inR, const bool &cacheL,
-       const bool &cacheR) -> UniTensor { return Contract(inL, inR, cacheL, cacheR); },
+    [](const UniTensor& inL, const UniTensor& inR, const bool& cacheL,
+       const bool& cacheR) -> UniTensor { return Contract(inL, inR, cacheL, cacheR); },
     py::arg("Tl"), py::arg("Tr"), py::arg("cacheL") = false, py::arg("cacheR") = false);
   m.def(
     "Contract",
-    [](const std::vector<UniTensor> &TNs, const std::string &order,
-       const bool &optimal) -> UniTensor { return Contract(TNs, order, optimal); },
+    [](const std::vector<UniTensor>& TNs, const std::string& order,
+       const bool& optimal) -> UniTensor { return Contract(TNs, order, optimal); },
     py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
   m.def(
     "Contracts",
-    [](const std::vector<UniTensor> &TNs, const std::string &order,
-       const bool &optimal) -> UniTensor { return Contracts(TNs, order, optimal); },
+    [](const std::vector<UniTensor>& TNs, const std::string& order,
+       const bool& optimal) -> UniTensor { return Contracts(TNs, order, optimal); },
     py::arg("TNs"), py::arg("order") = "", py::arg("optimal") = true);
 }
 #endif

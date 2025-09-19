@@ -9,7 +9,7 @@
 
 namespace cytnx {
   namespace linalg {
-    Tensor Dot(const Tensor &Tl, const Tensor &Tr) {
+    Tensor Dot(const Tensor& Tl, const Tensor& Tr) {
       // checking contiguous
       // cytnx_error_msg(!Tl.is_contiguous(), "[Dot] error tensor Tl must be contiguous. Call
       // Contiguous_() or Contiguous() first%s","\n"); cytnx_error_msg(!Tr.is_contiguous(), "[Dot]

@@ -41,7 +41,7 @@ namespace cytnx {
 #endif  // UNI_GPU
   };
 
-  Device_class::~Device_class(){
+  Device_class::~Device_class() {
 
   };
 

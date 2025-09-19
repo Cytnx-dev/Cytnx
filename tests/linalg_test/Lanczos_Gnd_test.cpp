@@ -142,7 +142,7 @@ namespace {
     cytnx_double cvg_crit = 0;
     bool is_V = true;
     cytnx_int32 ncv = 0;
-    ErrorTestClass(){};
+    ErrorTestClass() {};
     void ExcuteErrorTest();
     // set
     void Set_mat_type(const int _mat_type) {

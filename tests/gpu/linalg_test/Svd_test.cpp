@@ -281,8 +281,8 @@ namespace SvdTest {
     //   std::vector<UniTensor> svds = linalg::Svd(src_T, need_U = true, need_VT = true);
     // }, std::logic_error) << "Should throw error when input bool type unitensor but not."
     //     " Line:" << __LINE__ << std::endl;
-    EXPECT_THROW({ std::vector<UniTensor> svds = linalg::Svd(src_T, compute_uv = true); },
-                 std::logic_error)
+    EXPECT_THROW(
+      { std::vector<UniTensor> svds = linalg::Svd(src_T, compute_uv = true); }, std::logic_error)
       << "Should throw error when input bool type unitensor but not."
          " Line:"
       << __LINE__ << std::endl;
@@ -295,7 +295,8 @@ namespace SvdTest {
   ====================*/
   TEST(Svd, gpu_err_Void_UTenType_UT) {
     auto Ut = UniTensor();
-    EXPECT_THROW({ std::vector<UniTensor> svds = linalg::Svd(Ut); }, std::logic_error)
+    EXPECT_THROW(
+      { std::vector<UniTensor> svds = linalg::Svd(Ut); }, std::logic_error)
       << "Should throw error when input void type unitensor but not."
          " Line:"
       << __LINE__ << std::endl;

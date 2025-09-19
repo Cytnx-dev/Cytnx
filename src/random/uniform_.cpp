@@ -25,7 +25,7 @@ namespace cytnx {
      * @param low the lower bound of the new range
      * @param hight the higher bound of the new range
      */
-    void TransformToRange(Tensor &Tin, double low, double high) {
+    void TransformToRange(Tensor& Tin, double low, double high) {
       if (high - low != 1.0) {
         if (Tin.dtype() == Type.ComplexDouble || Tin.dtype() == Type.Double) {
           Tin *= (high - low);
@@ -50,7 +50,7 @@ namespace cytnx {
       }
     }
 
-    void uniform_(Storage &Sin, const double &low, const double &high, const unsigned int &seed) {
+    void uniform_(Storage& Sin, const double& low, const double& high, const unsigned int& seed) {
       cytnx_error_msg(
         (!Type.is_float(Sin.dtype())),
         "[ERROR][Random.uniform_] Uniform distribution only accept real/imag floating type.%s",
@@ -73,7 +73,7 @@ namespace cytnx {
   #endif
       }
     }
-    void uniform_(Tensor &Tin, const double &low, const double &high, const unsigned int &seed) {
+    void uniform_(Tensor& Tin, const double& low, const double& high, const unsigned int& seed) {
       cytnx_error_msg(
         (!Type.is_float(Tin.dtype())),
         "[ERROR][Random.uniform_] Uniform distribution only accept real/imag floating type.%s",
@@ -95,7 +95,7 @@ namespace cytnx {
       }
     }
 
-    void uniform_(UniTensor &Tin, const double &low, const double &high, const unsigned int &seed) {
+    void uniform_(UniTensor& Tin, const double& low, const double& high, const unsigned int& seed) {
       if (Tin.uten_type() != UTenType.Dense) {
         for (cytnx_int64 i = 0; i < Tin.get_blocks_().size(); i++) {
           uniform_(Tin.get_blocks_()[i], low, high, seed + i);

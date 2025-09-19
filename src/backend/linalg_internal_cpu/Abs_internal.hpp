@@ -12,10 +12,10 @@ namespace cytnx {
   namespace linalg_internal {
 
     template <typename TIn, typename TOut>
-    void AbsInternalImpl(boost::intrusive_ptr<Storage_base> &out,
-                         const boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem) {
-      TOut *_out = reinterpret_cast<TOut *>(out->data());
-      const TIn *_ten = reinterpret_cast<const TIn *>(ten->data());
+    void AbsInternalImpl(boost::intrusive_ptr<Storage_base>& out,
+                         const boost::intrusive_ptr<Storage_base>& ten, const cytnx_uint64& Nelem) {
+      TOut* _out = reinterpret_cast<TOut*>(out->data());
+      const TIn* _ten = reinterpret_cast<const TIn*>(ten->data());
 
       if constexpr (is_complex_v<TIn>) {
         for (cytnx_uint64 n = 0; n < Nelem; n++) {

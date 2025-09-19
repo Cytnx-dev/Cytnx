@@ -20,13 +20,13 @@ namespace cytnx {
     using namespace std;
 
     // <A|B>
-    static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
+    static Scalar _Dot(const UniTensor& A, const UniTensor& B) {
       return Contract(A.Dagger(), B).item();
     }
 
-    void _Lanczos_Gnd_general_Ut(std::vector<UniTensor> &out, LinOp *Hop, const UniTensor &Tin,
-                                 const bool &is_V, const double &CvgCrit,
-                                 const unsigned int &Maxiter, const bool &verbose) {
+    void _Lanczos_Gnd_general_Ut(std::vector<UniTensor>& out, LinOp* Hop, const UniTensor& Tin,
+                                 const bool& is_V, const double& CvgCrit,
+                                 const unsigned int& Maxiter, const bool& verbose) {
       out.clear();
       std::vector<UniTensor> psi_s;
       //[require] Tin should be provided!
@@ -154,9 +154,9 @@ namespace cytnx {
     }
 
     // Lanczos
-    std::vector<UniTensor> Lanczos_Gnd_Ut(LinOp *Hop, const UniTensor &Tin, const double &CvgCrit,
-                                          const bool &is_V, const bool &verbose,
-                                          const unsigned int &Maxiter) {
+    std::vector<UniTensor> Lanczos_Gnd_Ut(LinOp* Hop, const UniTensor& Tin, const double& CvgCrit,
+                                          const bool& is_V, const bool& verbose,
+                                          const unsigned int& Maxiter) {
       // check type:
       cytnx_error_msg(
         !Type.is_float(Hop->dtype()),

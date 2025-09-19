@@ -9,7 +9,7 @@ using namespace std;
 
 namespace cytnx {
   namespace tn_algo {
-    std::ostream &iMPS::Print(std::ostream &os) {
+    std::ostream& iMPS::Print(std::ostream& os) {
       os << "MPS type : "
          << "[iMPS]" << endl;
       os << "Size : " << this->_TNs.size() << endl;
@@ -38,8 +38,8 @@ namespace cytnx {
       return os;
     }
 
-    void iMPS::Init(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &vphys_dim,
-                    const cytnx_uint64 &virt_dim, const cytnx_int64 &dtype) {
+    void iMPS::Init(const cytnx_uint64& N, const std::vector<cytnx_uint64>& vphys_dim,
+                    const cytnx_uint64& virt_dim, const cytnx_int64& dtype) {
       // checking:
       cytnx_error_msg(N == 0, "[ERROR][iMPS] number of site N cannot be ZERO.%s", "\n");
       cytnx_error_msg(N != vphys_dim.size(), "[ERROR][iMPS] vphys_dim.size() should equal to N.%s",
@@ -49,7 +49,7 @@ namespace cytnx {
 
       this->virt_dim = virt_dim;
 
-      const cytnx_uint64 &chi = virt_dim;
+      const cytnx_uint64& chi = virt_dim;
 
       this->_TNs.resize(N);
 
@@ -60,19 +60,19 @@ namespace cytnx {
       }
     }
 
-    void iMPS::_save_dispatch(fstream &f) {
+    void iMPS::_save_dispatch(fstream& f) {
       cytnx_uint64 N = this->_TNs.size();
-      f.write((char *)&N, sizeof(cytnx_uint64));
+      f.write((char*)&N, sizeof(cytnx_uint64));
 
       // save UniTensor one by one:
       for (cytnx_uint64 i = 0; i < N; i++) {
         this->_TNs[i]._Save(f);
       }
     }
-    void iMPS::_load_dispatch(fstream &f) {
+    void iMPS::_load_dispatch(fstream& f) {
       cytnx_uint64 N;
 
-      f.read((char *)&N, sizeof(cytnx_uint64));
+      f.read((char*)&N, sizeof(cytnx_uint64));
       this->_TNs.resize(N);
 
       // Load UniTensor one by one:

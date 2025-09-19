@@ -9,41 +9,41 @@ using namespace std;
 #else
 
 namespace cytnx {
-  void Network_base::Contract_plan(const std::vector<UniTensor> &utensors, const std::string &Tout,
-                                   const std::vector<std::string> &alias,
-                                   const std::string &contract_order) {
+  void Network_base::Contract_plan(const std::vector<UniTensor>& utensors, const std::string& Tout,
+                                   const std::vector<std::string>& alias,
+                                   const std::string& contract_order) {
     cytnx_error_msg(true, "[ERROR][Network][Contract_plan] call from uninitialized network.%s",
                     "\n");
   }
-  void Network_base::Fromfile(const std::string &fname) {
+  void Network_base::Fromfile(const std::string& fname) {
     cytnx_error_msg(true, "[ERROR][Network][Fromfile] call from uninitialized network.%s", "\n");
   }
-  void Network_base::FromString(const std::vector<std::string> &fname) {
+  void Network_base::FromString(const std::vector<std::string>& fname) {
     cytnx_error_msg(true, "[ERROR][Network][FromString] call from uninitialized network.%s", "\n");
   }
-  void Network_base::Savefile(const std::string &fname) {
+  void Network_base::Savefile(const std::string& fname) {
     cytnx_error_msg(true, "[ERROR][Network][Savefile] call from uninitialized network.%s", "\n");
   }
-  void Network_base::PutUniTensor(const std::string &name, const UniTensor &utensor) {
+  void Network_base::PutUniTensor(const std::string& name, const UniTensor& utensor) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensor] call from uninitialized network.%s",
                     "\n");
   }
-  void Network_base::PutUniTensor(const cytnx_uint64 &idx, const UniTensor &utensor) {
+  void Network_base::PutUniTensor(const cytnx_uint64& idx, const UniTensor& utensor) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensor] call from uninitialized network.%s",
                     "\n");
   }
-  void Network_base::RmUniTensor(const std::string &name) {
+  void Network_base::RmUniTensor(const std::string& name) {
     cytnx_error_msg(true, "[ERROR][Network][RmUniTensor] call from uninitialized network.%s", "\n");
   }
-  void Network_base::RmUniTensor(const cytnx_uint64 &idx) {
+  void Network_base::RmUniTensor(const cytnx_uint64& idx) {
     cytnx_error_msg(true, "[ERROR][Network][RmUniTensor] call from uninitialized network.%s", "\n");
   }
-  void Network_base::RmUniTensors(const std::vector<string> &names) {
+  void Network_base::RmUniTensors(const std::vector<string>& names) {
     cytnx_error_msg(true, "[ERROR][Network][RmUniTensors] call from uninitialized network.%s",
                     "\n");
   }
-  void Network_base::PutUniTensors(const std::vector<string> &names,
-                                   const std::vector<UniTensor> &utensors) {
+  void Network_base::PutUniTensors(const std::vector<string>& names,
+                                   const std::vector<UniTensor>& utensors) {
     cytnx_error_msg(true, "[ERROR][Network][PutUniTensors] call from uninitialized network.%s",
                     "\n");
   }
@@ -56,7 +56,7 @@ namespace cytnx {
     return "";
   }
 
-  void Network_base::setOrder(const bool &optimal, const std::string &contract_order) {
+  void Network_base::setOrder(const bool& optimal, const std::string& contract_order) {
     cytnx_error_msg(true, "[ERROR][Network][setOrder] call from uninitialized network.%s", "\n");
   }
 
@@ -70,10 +70,10 @@ namespace cytnx {
     return UniTensor();
   }
 
-  void Network_base::construct(const std::vector<std::string> &alias,
-                               const std::vector<std::vector<std::string>> &labels,
-                               const std::vector<std::string> &outlabel, const cytnx_int64 &outrk,
-                               const std::string &order, const bool optim) {
+  void Network_base::construct(const std::vector<std::string>& alias,
+                               const std::vector<std::vector<std::string>>& labels,
+                               const std::vector<std::string>& outlabel, const cytnx_int64& outrk,
+                               const std::string& order, const bool optim) {
     cytnx_error_msg(true, "[ERROR][Network][construct] call from uninitialized network.%s", "\n");
   }
 
@@ -81,7 +81,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR][Network][clone] call from uninitialized network. %s", "\n");
     return nullptr;
   }
-  void Network_base::PrintNet(std::ostream &os) {
+  void Network_base::PrintNet(std::ostream& os) {
     os << "        [Empty Network]" << endl;
     os << "--- Please Load Network file ---\n";
     os << endl;

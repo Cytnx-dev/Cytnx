@@ -7,7 +7,7 @@
 
 namespace cytnx {
   namespace linalg {
-    Tensor Matmul_dg(const Tensor &Tl, const Tensor &Tr) {
+    Tensor Matmul_dg(const Tensor& Tl, const Tensor& Tr) {
       cytnx_error_msg(Tl.shape().size() > 2,
                       "[Matmul_dg] error, tensor Tl ,Matmul_dg can only operate on rank-2 x rank-1 "
                       "(rank-1 x rank-2) Tensor.%s",

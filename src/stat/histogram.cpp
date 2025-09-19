@@ -7,8 +7,8 @@
 namespace cytnx {
   namespace stat {
 
-    Histogram::Histogram(const unsigned long long &Nbins, const double &min_val,
-                         const double &max_val) {
+    Histogram::Histogram(const unsigned long long& Nbins, const double& min_val,
+                         const double& max_val) {
       if (min_val >= max_val) {
         std::cout << "[ERROR] cannot have min >= max" << std::endl;
         exit(1);
@@ -46,9 +46,9 @@ namespace cytnx {
     }
 
     //-----------[2d]
-    Histogram2d::Histogram2d(const unsigned long long &Nbinx, const unsigned long long &Nbiny,
-                             const double &min_x, const double &max_x, const double &min_y,
-                             const double &max_y) {
+    Histogram2d::Histogram2d(const unsigned long long& Nbinx, const unsigned long long& Nbiny,
+                             const double& min_x, const double& max_x, const double& min_y,
+                             const double& max_y) {
       if (min_x >= max_x) {
         std::cout << "[ERROR] cannot have min >= max [x axis]" << std::endl;
         exit(1);
