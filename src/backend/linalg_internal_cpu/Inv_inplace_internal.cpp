@@ -10,7 +10,7 @@ namespace cytnx {
       cytnx_double *_ten = (cytnx_double *)ten->data();
 
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
-        _ten[n] = std::abs(_ten[n]) < clip ? double(0) : double(1) / _ten[n];
+        _ten[n] = std::abs(_ten[n]) < clip ? 0. : 1. / _ten[n];
       }
     }
 
@@ -19,7 +19,7 @@ namespace cytnx {
       cytnx_float *_ten = (cytnx_float *)ten->data();
 
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
-        _ten[n] = std::abs(_ten[n]) < clip ? float(0) : float(1) / _ten[n];
+        _ten[n] = std::abs(_ten[n]) < clip ? 0.0f : 1.0f / _ten[n];
       }
     }
 
@@ -29,7 +29,7 @@ namespace cytnx {
 
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
         _ten[n] =
-          std::norm(_ten[n]) < clip ? cytnx_complex128(0, 0) : cytnx_complex128(1., 0) / _ten[n];
+          std::norm(_ten[n]) < clip ? cytnx_complex128(0., 0.) : cytnx_complex128(1., 0.) / _ten[n];
       }
     }
 
@@ -38,8 +38,8 @@ namespace cytnx {
       cytnx_complex64 *_ten = (cytnx_complex64 *)ten->data();
 
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
-        _ten[n] =
-          std::norm(_ten[n]) < clip ? cytnx_complex64(0, 0) : cytnx_complex64(1., 0) / _ten[n];
+        _ten[n] = std::norm(_ten[n]) < clip ? cytnx_complex64(0.0f, 0.0f)
+                                            : cytnx_complex64(1.0f, 0.0f) / _ten[n];
       }
     }
 
