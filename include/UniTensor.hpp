@@ -360,6 +360,9 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> normalize();
     virtual void normalize_();
 
+    virtual boost::intrusive_ptr<UniTensor_base> Inv(double clip);
+    virtual void Inv_(double clip);
+
     virtual boost::intrusive_ptr<UniTensor_base> Conj();
     virtual void Conj_();
 
@@ -777,6 +780,14 @@ namespace cytnx {
     void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Div_(const Scalar &rhs);
     void lDiv_(const Scalar &lhs);
+
+    void Inv_(double clip) { this->_block.Inv_(clip); };
+
+    boost::intrusive_ptr<UniTensor_base> Inv(double clip) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Inv_(clip);
+      return out;
+    };
 
     void Conj_() { this->_block.Conj_(); };
 
@@ -1567,6 +1578,18 @@ namespace cytnx {
       // no-use!
     }
 
+    boost::intrusive_ptr<UniTensor_base> Inv(double clip) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Inv_(clip);
+      return out;
+    };
+
+    void Inv_(double clip) {
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].Inv_(clip);
+      }
+    };
+
     boost::intrusive_ptr<UniTensor_base> Conj() {
       boost::intrusive_ptr<UniTensor_base> out = this->clone();
       out->Conj_();
@@ -2350,6 +2373,18 @@ namespace cytnx {
     void tag() {
       // no-use!
     }
+
+    boost::intrusive_ptr<UniTensor_base> Inv(double clip) {
+      boost::intrusive_ptr<UniTensor_base> out = this->clone();
+      out->Inv_(clip);
+      return out;
+    };
+
+    void Inv_(double clip) {
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        this->_blocks[i].Inv_(clip);
+      }
+    };
 
     boost::intrusive_ptr<UniTensor_base> Conj() {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
@@ -4835,6 +4870,35 @@ namespace cytnx {
         */
     UniTensor &operator*=(const Scalar &rhs) {
       this->Mul_(rhs);
+      return *this;
+    }
+
+    /**
+    @brief Apply the inverse on each entry of the UniTensor.
+        @param[in] clip  emements smaller than clip are set to zero; corresponds to the
+    pseudo-inverse
+        @return UniTensor
+    @note Compared to Inv_(), this function will create a new object UniTensor.
+        @see Inv_()
+    @note For symmetric UniTensors, only the elements in the blocks are inverted.
+        */
+    UniTensor Inv(double clip = -1.) const {
+      UniTensor out;
+      out._impl = this->_impl->Inv(clip);
+      return out;
+    }
+
+    /**
+    @brief Apply the inverse on each entry of the UniTensor.
+        @param[in] clip  emements smaller than clip are set to zero; corresponds to the
+    pseudo-inverse
+        @return UniTensor
+    @note Compared to Inv(), this function is an inplace function.
+        @see Inv()
+    @note For symmetric UniTensors, only the elements in the blocks are inverted.
+        */
+    UniTensor &Inv_(double clip = -1.) {
+      this->_impl->Inv_(clip);
       return *this;
     }
 
