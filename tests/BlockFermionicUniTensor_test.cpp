@@ -22,6 +22,15 @@ TEST_F(BlockFermionicUniTensorTest, LinAlogElementwise) {
   EXPECT_EQ(AreNearlyEqUniTensor((2 * T) - BFUT3PERM, BFUT3PERM, tol), true);
 }
 
+TEST_F(BlockFermionicUniTensorTest, Inv) {
+  const double tol = 1e-14;
+  const double clip = 1e-15;
+  EXPECT_TRUE(AreNearlyEqUniTensor(BFUT3.Inv(clip), BFUT3INV, tol));
+  UniTensor T = BFUT3.permute({3, 1, 4, 2, 0}).contiguous();
+  EXPECT_TRUE(AreNearlyEqUniTensor(T.Inv(clip).Inv_(clip), T, tol));
+  EXPECT_FALSE(AreNearlyEqUniTensor(T.Inv(clip), T, tol));
+}
+
 TEST_F(BlockFermionicUniTensorTest, SaveLoad) {
   BFUT1.Save("BFUT1");
   UniTensor BFUTloaded = BFUTloaded.Load("BFUT1.cytnx");

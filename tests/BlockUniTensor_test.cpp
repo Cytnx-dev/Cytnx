@@ -752,6 +752,28 @@ TEST_F(BlockUniTensorTest, Norm) {
   EXPECT_DOUBLE_EQ(ans, tmp);
 }
 
+TEST_F(BlockUniTensorTest, Inv) {
+  const double tol = 1e-14;
+  const double clip = 1e-14;
+  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(tol).Inv_(tol), BUT4, tol));
+  EXPECT_FALSE(AreNearlyEqUniTensor(BUT4.Inv(clip), BUT4, tol));
+  auto tmp = BUT4.clone();
+  for (size_t i = 0; i < 5; i++)
+    for (size_t j = 0; j < 11; j++)
+      for (size_t k = 0; k < 3; k++)
+        for (size_t l = 0; l < 5; l++) {
+          auto proxy = tmp.at({i, j, k, l});
+          if (proxy.exists()) {
+            Scalar val = proxy;
+            if (val.abs() < tol)
+              proxy = cytnx_complex128(0., 0.);
+            else
+              proxy = cytnx_complex128(1., 0.) / proxy;
+          }
+        }
+  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(tol), tmp, tol));
+}
+
 TEST_F(BlockUniTensorTest, Conj) {
   auto tmp = BUT4.Conj();
   for (size_t i = 1; i <= 5; i++)
