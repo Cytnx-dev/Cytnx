@@ -4875,12 +4875,12 @@ namespace cytnx {
 
     /**
     @brief Apply the inverse on each entry of the UniTensor.
-        @param[in] clip  emements smaller than clip are set to zero; corresponds to the
+        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
     pseudo-inverse
         @return UniTensor
-    @note Compared to Inv_(), this function will create a new object UniTensor.
-        @see Inv_()
-    @note For symmetric UniTensors, only the elements in the blocks are inverted.
+        @note Compared to Inv_(), this function will create a new UniTensor.
+        @see Inv_(const double &clip)
+        @note For symmetric UniTensors, only the elements in the blocks are inverted.
         */
     UniTensor Inv(double clip = -1.) const {
       UniTensor out;
@@ -4890,12 +4890,12 @@ namespace cytnx {
 
     /**
     @brief Apply the inverse on each entry of the UniTensor.
-        @param[in] clip  emements smaller than clip are set to zero; corresponds to the
+        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
     pseudo-inverse
         @return UniTensor
-    @note Compared to Inv(), this function is an inplace function.
-        @see Inv()
-    @note For symmetric UniTensors, only the elements in the blocks are inverted.
+        @note Compared to Inv(), this function is an inplace function.
+        @see Inv(const double &clip)
+        @note For symmetric UniTensors, only the elements in the blocks are inverted.
         */
     UniTensor &Inv_(double clip = -1.) {
       this->_impl->Inv_(clip);
