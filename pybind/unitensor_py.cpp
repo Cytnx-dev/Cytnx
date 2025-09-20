@@ -1202,6 +1202,14 @@ void unitensor_binding(py::module &m) {
     .def("c__ipow__", [](UniTensor &self, const cytnx::cytnx_double &p) { self.Pow_(p); })
     .def("Pow", &UniTensor::Pow)
     .def("cPow_", &UniTensor::Pow_)
+    .def("cInv_", [](UniTensor &self, double clip){
+                            return self.Inv_(clip);
+                    },
+                    py::arg("clip")=-1)
+    .def("Inv", [](UniTensor &self, double clip){
+                            return self.Inv(clip);
+                    },
+                    py::arg("clip")=-1)
     .def("cConj_", &UniTensor::Conj_)
     .def("Conj", &UniTensor::Conj)
 

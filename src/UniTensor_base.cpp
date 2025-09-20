@@ -474,6 +474,15 @@ namespace cytnx {
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
     return std::vector<std::vector<cytnx_int64>>();
   }
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::Inv(double clip) {
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+    return nullptr;
+  }
+  void UniTensor_base::Inv_(double clip) {
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+  }
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::Conj() {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
