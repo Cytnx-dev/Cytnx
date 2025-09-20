@@ -9,11 +9,6 @@
 
 namespace cytnx {
   /// @cond
-  class Storage_base;  // forward, defined in backend/Storage.hpp
-  // The following two declarations are necessary for ADL.
-  void intrusive_ptr_add_ref(Storage_base *);
-  void intrusive_ptr_release(Storage_base *);
-
   template <class T>
   class intrusive_ptr_base {
    public:
