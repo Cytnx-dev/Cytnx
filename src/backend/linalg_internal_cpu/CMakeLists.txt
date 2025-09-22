@@ -51,7 +51,6 @@ target_sources_local(cytnx
     Conj_inplace_internal.cpp
     Cpr_internal.cpp
     Diag_internal.cpp
-    Div_internal.cpp
     iDiv_internal.cpp
     Eigh_internal.cpp
     Eig_internal.cpp
