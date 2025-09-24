@@ -69,8 +69,8 @@ namespace cytnx {
 
 namespace cytnx {
   namespace linalg {
-    UniTensor Pow(const UniTensor &Tin, const double &p) {
-      UniTensor out;
+    cytnx::UniTensor Pow(const cytnx::UniTensor &Tin, const double &p) {
+      cytnx::UniTensor out;
       if (Tin.uten_type() == UTenType.Dense) {
         out = Tin.clone();
         out.get_block_().Pow_(p);
@@ -79,17 +79,15 @@ namespace cytnx {
         for (auto &blk : out.get_blocks_()) {
           blk.Pow_(p);
         }
+      } else if (Tin.uten_type() == UTenType.Void) {
+        cytnx_error_msg(
+          true, "[ERROR][Pow] fatal internal, cannot call on an un-initialized UniTensor_base%s",
+          "\n");
       } else {
-        // cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
-        out = Tin.clone();
-        auto tmp = out.get_blocks_();
-        for (int i = 0; i < tmp.size(); i++) {
-          tmp[i].Pow_(p);
-        }
-      }
-
+        cytnx_error_msg(true, "[Pow]Unknown UniTensor type%s", "\n");
+      }  // uten types
       return out;
-    };
+    }
 
   }  // namespace linalg
 }  // namespace cytnx

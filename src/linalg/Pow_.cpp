@@ -56,21 +56,21 @@ namespace cytnx {
 
 namespace cytnx {
   namespace linalg {
-    void Pow_(UniTensor &Tin, const double &p) {
+    void Pow_(cytnx::UniTensor &Tin, const double &p) {
       if (Tin.uten_type() == UTenType.Dense) {
         Tin.get_block_().Pow_(p);
       } else if (Tin.uten_type() == UTenType.Block || Tin.uten_type() == UTenType.BlockFermionic) {
         for (auto &blk : Tin.get_blocks_()) {
           blk.Pow_(p);
         }
+      } else if (Tin.uten_type() == UTenType.Void) {
+        cytnx_error_msg(
+          true, "[ERROR][Pow_] fatal internal, cannot call on an un-initialized UniTensor_base%s",
+          "\n");
       } else {
-        // cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
-        auto tmp = Tin.get_blocks_();
-        for (int i = 0; i < tmp.size(); i++) {
-          tmp[i].Pow_(p);
-        }
+        cytnx_error_msg(true, "[Pow_]Unknown UniTensor type%s", "\n");
       }  // uten types
-    };
+    }
 
   }  // namespace linalg
 }  // namespace cytnx
