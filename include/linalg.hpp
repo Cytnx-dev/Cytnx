@@ -1035,7 +1035,8 @@ namespace cytnx {
      * pseudo-inverse
      * @return UniTensor
      * @note
-     * 1. For complex type UniTensors, the square norm is used to determine the clip.
+     * 1. For complex type UniTensors, the norm \f$ \sqrt{Re^2 + Im^2} \f$ is used to determine the
+     * clip.
      * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
      * 3. For symmetric UniTensors, only the elements in the blocks are inverted.
      * @note Compared to Inv_(cytnx::UniTensor &Tio, double clip), this function does not modify the
@@ -1062,7 +1063,8 @@ namespace cytnx {
      * pseudo-inverse
      * @return UniTensor
      * @note
-     * 1. For complex type UniTensors, the square norm is used to determine the clip.
+     * 1. For complex type UniTensors, the norm \f$ \sqrt{Re^2 + Im^2} \f$ is used to determine the
+     * clip.
      * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
      * 3. For symmetric UniTensors, only the elements in the blocks are inverted.
      * @note Compared to Inv(const UniTensor &Tin, double clip), this is an inplace function, which
@@ -2166,7 +2168,8 @@ namespace cytnx {
      * pseudo-inverse
      * @return Tensor
      * @note
-     * 1. For complex type Tensors, the square norm is used to determine the clip.
+     * 1. For complex type Tensors, the norm \f$ \sqrt{Re^2 + Im^2} \f$ is used to determine the
+     * clip.
      * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
      * @note Compared to Inv_(Tensor &Tin, const double &clip), this function does not modify the
      * input UniTensor but returns a new UniTensor.
@@ -2191,7 +2194,8 @@ namespace cytnx {
      * pseudo-inverse
      * @return Tensor
      * @note
-     * 1. For complex type Tensors, the square norm is used to determine the clip.
+     * 1. For complex type Tensors, the norm \f$ \sqrt{Re^2 + Im^2} \f$ is used to determine the
+     * clip.
      * 2. If Tio is integer type, it will automatically be promoted to Type.Double.
      * @note Compared to Inv(const Tensor &Tin, const double &clip), this is an inplace function,
      * which modifies the input Tensor.

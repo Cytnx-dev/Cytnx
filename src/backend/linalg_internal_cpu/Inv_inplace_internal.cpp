@@ -26,20 +26,20 @@ namespace cytnx {
     void Inv_inplace_internal_cd(boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
                                  const double &clip) {
       cytnx_complex128 *_ten = (cytnx_complex128 *)ten->data();
-
+      const double clipsq = (clip < 0. ? -1. : clip * clip);
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
-        _ten[n] = std::norm(_ten[n]) <= clip ? cytnx_complex128(0., 0.)
-                                             : cytnx_complex128(1., 0.) / _ten[n];
+        _ten[n] = std::norm(_ten[n]) <= clipsq ? cytnx_complex128(0., 0.)
+                                               : cytnx_complex128(1., 0.) / _ten[n];
       }
     }
 
     void Inv_inplace_internal_cf(boost::intrusive_ptr<Storage_base> &ten, const cytnx_uint64 &Nelem,
                                  const double &clip) {
       cytnx_complex64 *_ten = (cytnx_complex64 *)ten->data();
-
+      const double clipsq = (clip < 0. ? -1. : clip * clip);
       for (cytnx_uint64 n = 0; n < Nelem; n++) {
-        _ten[n] = std::norm(_ten[n]) <= clip ? cytnx_complex64(0.0f, 0.0f)
-                                             : cytnx_complex64(1.0f, 0.0f) / _ten[n];
+        _ten[n] = std::norm(_ten[n]) <= clipsq ? cytnx_complex64(0.0f, 0.0f)
+                                               : cytnx_complex64(1.0f, 0.0f) / _ten[n];
       }
     }
 
