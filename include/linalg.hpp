@@ -983,8 +983,9 @@ namespace cytnx {
      * @param[in] p the power to take
      * @pre If \p Tin is a real UniTensor containing negative elements, then \p p must be an
      * integer.
-     * @note Compared Pow_(UniTensor &Tio, const double &p), this function will not modify the input
-     * UniTensor but return a new UniTensor.
+     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared Pow_(UniTensor &Tio, const double &p), this function does not modify the input
+     * UniTensor but returns a new UniTensor.
      * @see Pow_(UniTensor &Tio, const double &p)
      * @see Pow(const Tensor &Tin, const double &p)
      */
@@ -997,9 +998,10 @@ namespace cytnx {
      * @param[in] p the power to take
      * @pre If \p Tio is a real UniTensor containing negative elements, then \p p must be an
      * integer.
-     * @note Compared Pow(const cytnx::UniTensor &Tin, const double &p), this is an inplacely
-     * function, which modifies the input UniTensor.
-     * @see Pow(const cytnx::UniTensor &Tin, const double &p),
+     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared Pow(const UniTensor &Tin, const double &p), this is an inplace function, which
+     * modifies the input UniTensor.
+     * @see Pow(const UniTensor &Tin, const double &p),
      * @see Pow_(Tensor &Tio, const double &p)
      */
     void Pow_(cytnx::UniTensor &Tio, const double &p);
@@ -1007,26 +1009,56 @@ namespace cytnx {
     // Inv:
     //==================================================
     /**
-     * @brief Apply the inverse on each entry of the UniTensor.
+     * @brief Element-wise (pseudo-)inverse.
+     * @details This function performs an element-wise inverse with clip. If
+     * \f$ |T_\text{in}[i]| \le \mathrm{clip} \f$, then the new element is set to zero.
+     * \f[
+     * T_\text{out}[i] = \left\{
+     * \begin{array}{ll}
+     * 1/(T_\text{in}[i]) & \mathrm{if} \ |T_\text{in}[i]| > \mathrm{clip} \\
+     * 0 & \mathrm{otherwise}
+     * \end{array}
+     * \right.
+     * \f]
      * @param[in] Tin the input UniTensor
-     * @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+     * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
      * pseudo-inverse
      * @return UniTensor
-     * @note Compared to Inv_(), this function will create a new UniTensor.
-     * @see Inv_(cytnx::UniTensor &Tio, const double &clip)
-     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note
+     * 1. For complex type UniTensors, the square norm is used to determine the clip.
+     * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
+     * 3. For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared to Inv_(cytnx::UniTensor &Tio, double clip), this function does not modify the
+     * input UniTensor but returns a new UniTensor.
+     * @see Inv_(UniTensor &Tio, double clip)
+     * @see Inv(const Tensor &Tin, const double &clip)
      */
     cytnx::UniTensor Inv(const cytnx::UniTensor &Tin, double clip);
 
     /**
-     * @brief Apply the inverse on each entry of the UniTensor.
-     * @param[in,out] Tio the UniTensor
-     * @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+     * @brief Element-wise (pseudo-)inverse, inplacely.
+     * @details This function performs an element-wise inverse with clip. If
+     * \f$ |T_\text{in}[i]| \le \mathrm{clip} \f$, then the new element is set to zero.
+     * \f[
+     * T_\text{in}[i] \rightarrow \left\{
+     * \begin{array}{ll}
+     * 1/(T_\text{in}[i]) & \mathrm{if} \ |T_\text{in}[i]| > \mathrm{clip} \\
+     * 0 & \mathrm{otherwise}
+     * \end{array}
+     * \right.
+     * \f]
+     * @param[in] Tio the UniTensor
+     * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
      * pseudo-inverse
      * @return UniTensor
-     * @note Compared to Inv(), this function is an inplace function.
-     * @see Inv(const cytnx::UniTensor &Tin, double clip)
-     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note
+     * 1. For complex type UniTensors, the square norm is used to determine the clip.
+     * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
+     * 3. For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared to Inv(const UniTensor &Tin, double clip), this is an inplace function, which
+     * modifies the input UniTensor.
+     * @see UniTensor Inv(const cytnx::UniTensor &Tin, double clip)
+     * @see Inv_(Tensor &Tio, const double &clip)
      */
     void Inv_(cytnx::UniTensor &Tio, double clip);
 
@@ -2104,41 +2136,58 @@ namespace cytnx {
     */
     void InvM_(Tensor &Tin);
     void InvM_(UniTensor &Tin);
+
     // Inv:
     //==================================================
     /**
-    @brief Element-wise inverse with clip.
-    @details This function will perform Element-wise inverse with clip. If
-    A[i] < \p clip, then 1/A[i] = 0 will be set. That is, the out put will be:
-    \f[
-    A_{out} = \left\{
-    \begin{array}{ll}
-    1/A[i] & \mathrm{if} \ A[i] \geq \mathrm{clip} \\
-    0 & \mathrm{otherwise}
-    \end{array}
-    \right.
-    \f]
-    @param[in] Tin a Tensor
-    @param[in] clip the clip value.
-    @return
-        [Tensor]
-    @note For complex type Tensors, the square norm is used to determine the clip.
-    */
+     * @brief Element-wise (pseudo-)inverse.
+     * @details This function performs an element-wise inverse with clip. If
+     * \f$ |T_\text{in}[i]| \le \mathrm{clip} \f$, then the new element is set to zero.
+     * \f[
+     * T_\text{out}[i] = \left\{
+     * \begin{array}{ll}
+     * 1/(T_\text{in}[i]) & \mathrm{if} \ |T_\text{in}[i]| > \mathrm{clip} \\
+     * 0 & \mathrm{otherwise}
+     * \end{array}
+     * \right.
+     * \f]
+     * @param[in] Tin the input Tensor
+     * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
+     * pseudo-inverse
+     * @return Tensor
+     * @note
+     * 1. For complex type Tensors, the square norm is used to determine the clip.
+     * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
+     * @note Compared to Inv_(Tensor &Tin, const double &clip), this function does not modify the
+     * input UniTensor but returns a new UniTensor.
+     * @see Inv_(Tensor &Tin, const double &clip)
+     */
     Tensor Inv(const Tensor &Tin, const double &clip);
 
     /**
-    @brief inplace perform Element-wise inverse with clip.
-    @details This function will perform Element-wise inverse with clip. This function
-    is just as same as Inv, but it will modify the input Tensor inplace.
-    @param[in] Tin a Tensor
-    @param[in] clip the clip value.
-    @return [Tensor]
-    @note
-    1. For complex type Tensors, the square norm is used to determine the clip.
-    2. on return, all the elements will be modified to it's inverse. if Tin is integer type, it
-    will automatically promote to Type.Double.
-    */
-    void Inv_(Tensor &Tin, const double &clip);
+     * @brief Element-wise (pseudo-)inverse, inplacely.
+     * @details This function performs an element-wise inverse with clip. If
+     * \f$ |T_\text{in}[i]| \le \mathrm{clip} \f$, then the new element is set to zero.
+     * \f[
+     * T_\text{in}[i] \rightarrow \left\{
+     * \begin{array}{ll}
+     * 1/(T_\text{in}[i]) & \mathrm{if} \ |T_\text{in}[i]| > \mathrm{clip} \\
+     * 0 & \mathrm{otherwise}
+     * \end{array}
+     * \right.
+     * \f]
+     * @param[in] Tio the Tensor
+     * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
+     * pseudo-inverse
+     * @return Tensor
+     * @note
+     * 1. For complex type Tensors, the square norm is used to determine the clip.
+     * 2. If Tio is integer type, it will automatically be promoted to Type.Double.
+     * @note Compared to Inv(const Tensor &Tin, const double &clip), this is an inplace function,
+     * which modifies the input Tensor.
+     * @see Inv(const Tensor &Tin, const double &clip)
+     */
+    void Inv_(Tensor &Tio, const double &clip);
 
     // Conj:
     //==================================================
@@ -2230,8 +2279,8 @@ namespace cytnx {
      * @param[in,out] Tin the input Tensor
      * @param[in] p the power to take
      * @pre If \p Tin is a real Tensor containing negative elements, then \p p must be an integer.
-     * @note Compared Pow_(Tensor &Tio, const double &p), this function will not modify the input
-     * Tensor but return a new Tensor.
+     * @note Compared Pow_(Tensor &Tio, const double &p), this function does not modify the input
+     * Tensor but returns a new Tensor.
      * @see Pow_(Tensor &Tio, const double &p)
      */
     Tensor Pow(const Tensor &Tin, const double &p);
@@ -2243,11 +2292,11 @@ namespace cytnx {
      * @param[in] p the power to take
      * @pre If \p Tio is a real UniTensor containing negative elements, then \p p must be an
      * integer.
-     * @note Compared Pow(const cytnx::Tensor &Tin, const double &p), this is an inplacely function,
-     * which modifies the input Tensor.
+     * @note Compared Pow(const Tensor &Tin, const double &p), this is an inplace function, which
+     * modifies the input Tensor.
      * @see Pow(const Tensor &Tin, const double &p)
      */
-    void Pow_(Tensor &Tin, const double &p);
+    void Pow_(Tensor &Tio, const double &p);
 
     // Abs:
     //==================================================

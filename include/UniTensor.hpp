@@ -4839,25 +4839,53 @@ namespace cytnx {
     }
 
     /**
-    @brief Apply the inverse on each entry of the UniTensor.
-        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
-    pseudo-inverse
-        @return UniTensor
-        @note Compared to Inv_(), this function will create a new UniTensor.
-        @see Inv_(const double &clip)
-        @note For symmetric UniTensors, only the elements in the blocks are inverted.
-        */
+     * @brief Element-wise (pseudo-)inverse.
+     * @details This function performs an element-wise inverse with clip. If
+     * \f$ |T_\text{in}[i]| \le \mathrm{clip} \f$, then the new element is set to zero.
+     * \f[
+     * T_\text{out}[i] = \left\{
+     * \begin{array}{ll}
+     * 1/(T_\text{in}[i]) & \mathrm{if} \ |T_\text{in}[i]| > \mathrm{clip} \\
+     * 0 & \mathrm{otherwise}
+     * \end{array}
+     * \right.
+     * \f]
+     * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
+     * pseudo-inverse; default: -1 (no clipping)
+     * @return UniTensor
+     * @note
+     * 1. For complex type UniTensors, the square norm is used to determine the clip.
+     * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
+     * 3. For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared to Inv_(double clip), this function does not modify the input UniTensor but
+     * returns a new UniTensor.
+     * @see Inv_(double clip)
+     */
     UniTensor Inv(double clip = -1.) const;
 
     /**
-    @brief Apply the inverse on each entry of the UniTensor.
-        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
-    pseudo-inverse
-        @return UniTensor
-        @note Compared to Inv(), this function is an inplace function.
-        @see Inv(const double &clip)
-        @note For symmetric UniTensors, only the elements in the blocks are inverted.
-        */
+     * @brief Element-wise (pseudo-)inverse, inplacely.
+     * @details This function performs an element-wise inverse with clip. If
+     * \f$ |T_\text{in}[i]| \le \mathrm{clip} \f$, then the new element is set to zero.
+     * \f[
+     * T_\text{in}[i] \rightarrow \left\{
+     * \begin{array}{ll}
+     * 1/(T_\text{in}[i]) & \mathrm{if} \ |T_\text{in}[i]| > \mathrm{clip} \\
+     * 0 & \mathrm{otherwise}
+     * \end{array}
+     * \right.
+     * \f]
+     * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
+     * pseudo-inverse; default: -1 (no clipping)
+     * @return UniTensor
+     * @note
+     * 1. For complex type UniTensors, the square norm is used to determine the clip.
+     * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
+     * 3. For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared to UniTensor Inv(const UniTensor &Tin, double clip), this is an inplace
+     * function, which modifies the input UniTensor.
+     * @see Inv(double clip) const
+     */
     UniTensor &Inv_(double clip = -1.);
 
     /**
@@ -5052,8 +5080,9 @@ namespace cytnx {
      * @details \f[ T_\text{out}[i] = (T_\text{in}[i])^p \f]
      * @param[in] p the power to take
      * @pre If this is a real UniTensor containing negative elements, then \p p must be an integer.
-     * @note Compared  UniTensor &Pow_(const double &p), this function will not modify the input
-     * UniTensor but return a new UniTensor.
+     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared  UniTensor &Pow_(const double &p), this function does not modify the input
+     * UniTensor but returns a new UniTensor.
      * @see UniTensor &Pow_(const double &p)
      */
     UniTensor Pow(const double &p) const;
@@ -5063,14 +5092,15 @@ namespace cytnx {
      * @details \f[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \f]
      * @param[in] p the power to take
      * @pre If this is a real UniTensor containing negative elements, then \p p must be an integer.
-     * @note Compared  UniTensor Pow(const double &p) const, this is an inplacely function, which
+     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @note Compared  UniTensor Pow(const double &p) const, this is an inplace function, which
      * modifies the input UniTensor.
      * @see UniTensor &Pow(const double &p) const
      */
     UniTensor &Pow_(const double &p);
 
     /**
-     * @brief Geiven the locator, check if the element exists.
+     * @brief Given the locator, check if the element exists.
      * @param[in] locator the locator of the element.
      * @return [bool]
      * @note Same as at(\p locator).exists().
