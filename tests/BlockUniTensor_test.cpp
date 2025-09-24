@@ -752,13 +752,19 @@ TEST_F(BlockUniTensorTest, Norm) {
   EXPECT_DOUBLE_EQ(ans, tmp);
 }
 
+/*=====test info=====
+describe:test pseudo-inverse
+====================*/
 TEST_F(BlockUniTensorTest, Inv) {
   const double tol = 1e-14;
   double clip = 1e-14;
-  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(tol).Inv_(tol), BUT4, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(clip).Inv_(clip), BUT4, tol));
   EXPECT_FALSE(AreNearlyEqUniTensor(BUT4.Inv(clip), BUT4, tol));
   clip = 0.1;  // test actual clipping as well
   auto tmp = BUT4.clone();
+  tmp.Inv_(clip);  // test inline version
+  EXPECT_TRUE(AreEqUniTensor(BUT4.Inv(clip), tmp));
+  tmp = BUT4.clone();
   for (size_t i = 0; i < 5; i++)
     for (size_t j = 0; j < 11; j++)
       for (size_t k = 0; k < 3; k++)
@@ -766,13 +772,39 @@ TEST_F(BlockUniTensorTest, Inv) {
           auto proxy = tmp.at({i, j, k, l});
           if (proxy.exists()) {
             Scalar val = proxy;
-            if (val.abs() <= tol)
+            if (val.abs() <= clip)
               proxy = cytnx_complex128(0., 0.);
             else
               proxy = cytnx_complex128(1., 0.) / proxy;
           }
         }
-  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(tol), tmp, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(clip), tmp, tol));
+}
+
+/*=====test info=====
+describe:test power
+====================*/
+TEST_F(BlockUniTensorTest, Pow) {
+  const double tol = 1e-14;
+  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Pow(2.), BUT4 * BUT4, tol));
+  auto tmp = BUT4.clone();
+  tmp.Pow_(2.3);  // test inline version
+  EXPECT_TRUE(AreEqUniTensor(BUT4.Pow(2.3), tmp));
+  for (double p = 0.; p < 1.6; p += 0.5) {
+    tmp = BUT4.clone();
+    for (size_t i = 0; i < 5; i++)
+      for (size_t j = 0; j < 11; j++)
+        for (size_t k = 0; k < 3; k++)
+          for (size_t l = 0; l < 5; l++) {
+            auto proxy = tmp.at({i, j, k, l});
+            if (proxy.exists()) {
+              Scalar val = proxy;
+              proxy =
+                std::pow(cytnx_complex128((cytnx_double)val.real(), (cytnx_double)val.imag()), p);
+            }
+          }
+    EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Pow(p), tmp, tol));
+  }
 }
 
 TEST_F(BlockUniTensorTest, Conj) {

@@ -5081,6 +5081,11 @@ namespace cytnx {
      * @param[in] p the power to take
      * @pre If this is a real UniTensor containing negative elements, then \p p must be an integer.
      * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @warning If \p p < 0 an inverse has to be taken. If elements could be zero (or close to it),
+     * use Inv(double clip) const for a pseudo-inverse instead.
+     * @warning For fermionic UniTensors, the sign structure of the blocks remains unchanged. This
+     * way, permute commutes with Pow. This can lead to unexpected behavior since T.Pow(2.0) can
+     * differ by signs from T * T.
      * @note Compared  UniTensor &Pow_(const double &p), this function does not modify the input
      * UniTensor but returns a new UniTensor.
      * @see UniTensor &Pow_(const double &p)
@@ -5093,6 +5098,11 @@ namespace cytnx {
      * @param[in] p the power to take
      * @pre If this is a real UniTensor containing negative elements, then \p p must be an integer.
      * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     * @warning If \p p < 0 an inverse has to be taken. If elements could be zero (or close to it),
+     * use Inv_(double clip) for a pseudo-inverse instead.
+     * @warning For fermionic UniTensors, the sign structure of the blocks remains unchanged. This
+     * way, permute commutes with Pow_. This can lead to unexpected behavior since T.Pow_(2.0) can
+     * differ by signs from T * T.
      * @note Compared  UniTensor Pow(const double &p) const, this is an inplace function, which
      * modifies the input UniTensor.
      * @see UniTensor &Pow(const double &p) const
