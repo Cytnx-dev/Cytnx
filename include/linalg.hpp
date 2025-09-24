@@ -977,55 +977,58 @@ namespace cytnx {
     // Pow:
     //==================================================
     /**
-    @brief take power p on all the elements in UniTensor.
-    @details This function will take power p on all the elements in UniTensor.
-    @param[in] Tin the input UniTensor
-    @param[in] p the power
-    @pre If \p Tin is a real UniTensor and containt negative elements,
-    then \p p must be an integer.
-    @return UniTensor with the same shape as Tin, but with the elements are the power of Tin.
-    @note Compare to the Pow_(UniTensor &Tin, const double &p) function, this
-    function will not modify the input UniTensor and return a new UniTensor.
-    @see Pow_(UniTensor &Tin, const double &p)
-    */
+     * @brief Take the power \p p of all elements in a UniTensor.
+     * @details \f[ T_\text{out}[i] = (T_\text{in}[i])^p \f]
+     * @param[in,out] Tin the input UniTensor
+     * @param[in] p the power to take
+     * @pre If \p Tin is a real UniTensor containing negative elements, then \p p must be an
+     * integer.
+     * @note Compared Pow_(UniTensor &Tio, const double &p), this function will not modify the input
+     * UniTensor but return a new UniTensor.
+     * @see Pow_(UniTensor &Tio, const double &p)
+     * @see Pow(const Tensor &Tin, const double &p)
+     */
     cytnx::UniTensor Pow(const cytnx::UniTensor &Tin, const double &p);
 
     /**
-     * @brief Take power p on all the elements in UniTensor, inplacely.
-     * @details This function will take power p on all the elements in UniTensor, inplacely.
-     * @param[in,out] Tin the input UniTensor
-     * @param[in] p the power
-     * @pre If \p Tin is a real UniTensor and containt negative elements,
-     * then \p p must be an integer.
-     * @note Compare to the Pow function, this is an inplacely function, which
-     * will modify the input UniTensor.
-     * @see Pow(const cytnx::UniTensor &Tin, const double &p)
+     * @brief Take the power \p p of all elements in a UniTensor, inplacely.
+     * @details \f[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \f]
+     * @param[in,out] Tio the UniTensor
+     * @param[in] p the power to take
+     * @pre If \p Tio is a real UniTensor containing negative elements, then \p p must be an
+     * integer.
+     * @note Compared Pow(const cytnx::UniTensor &Tin, const double &p), this is an inplacely
+     * function, which modifies the input UniTensor.
+     * @see Pow(const cytnx::UniTensor &Tin, const double &p),
+     * @see Pow_(Tensor &Tio, const double &p)
      */
-    void Pow_(cytnx::UniTensor &Tin, const double &p);
+    void Pow_(cytnx::UniTensor &Tio, const double &p);
 
     // Inv:
     //==================================================
     /**
-    @brief Apply the inverse on each entry of the UniTensor.
-    @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
-    pseudo-inverse
-    @return UniTensor
-    @note Compared to Inv_(), this function will create a new UniTensor.
-    @see Inv_(const double &clip)
-    @note For symmetric UniTensors, only the elements in the blocks are inverted.
-    */
+     * @brief Apply the inverse on each entry of the UniTensor.
+     * @param[in] Tin the input UniTensor
+     * @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+     * pseudo-inverse
+     * @return UniTensor
+     * @note Compared to Inv_(), this function will create a new UniTensor.
+     * @see Inv_(cytnx::UniTensor &Tio, const double &clip)
+     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     */
     cytnx::UniTensor Inv(const cytnx::UniTensor &Tin, double clip);
 
     /**
-    @brief Apply the inverse on each entry of the UniTensor.
-    @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
-    pseudo-inverse
-    @return UniTensor
-    @note Compared to Inv(), this function is an inplace function.
-    @see Inv(double clip)
-    @note For symmetric UniTensors, only the elements in the blocks are inverted.
-        */
-    void Inv_(cytnx::UniTensor &Tin, double clip);
+     * @brief Apply the inverse on each entry of the UniTensor.
+     * @param[in,out] Tio the UniTensor
+     * @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+     * pseudo-inverse
+     * @return UniTensor
+     * @note Compared to Inv(), this function is an inplace function.
+     * @see Inv(const cytnx::UniTensor &Tin, double clip)
+     * @note For symmetric UniTensors, only the elements in the blocks are inverted.
+     */
+    void Inv_(cytnx::UniTensor &Tio, double clip);
 
     /**
      * @brief Elementwise conjugate of the UniTensor
@@ -2222,24 +2225,28 @@ namespace cytnx {
     // Pow:
     //==================================================
     /**
-    @brief take power p on all the elements in Tensor.
-    @details This function will perform power p on all the elements in Tensor \p Tin.
-    That is, the output will be:
-    \f[
-        T_{o}[i] = T_{i}[i]^{p}
-    \f]
-    @param[in] p, the power
-    @return [Tensor]
-
-    */
+     * @brief Take the power \p p of all elements in a Tensor.
+     * @details \f[ T_\text{out}[i] = (T_\text{in}[i])^p \f]
+     * @param[in,out] Tin the input Tensor
+     * @param[in] p the power to take
+     * @pre If \p Tin is a real Tensor containing negative elements, then \p p must be an integer.
+     * @note Compared Pow_(Tensor &Tio, const double &p), this function will not modify the input
+     * Tensor but return a new Tensor.
+     * @see Pow_(Tensor &Tio, const double &p)
+     */
     Tensor Pow(const Tensor &Tin, const double &p);
 
     /**
-    @brief inplace perform power on all the elements in Tensor.
-    @details this is just a inplace version of Pow. The input Tensor \p Tin will be modified.
-    @param[in] Tin, the input Tensor.
-    @param[in] p, the power.
-    */
+     * @brief Take the power \p p of all elements in a Tensor, inplacely.
+     * @details \f[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \f]
+     * @param[in,out] Tio the Tensor
+     * @param[in] p the power to take
+     * @pre If \p Tio is a real UniTensor containing negative elements, then \p p must be an
+     * integer.
+     * @note Compared Pow(const cytnx::Tensor &Tin, const double &p), this is an inplacely function,
+     * which modifies the input Tensor.
+     * @see Pow(const Tensor &Tin, const double &p)
+     */
     void Pow_(Tensor &Tin, const double &p);
 
     // Abs:

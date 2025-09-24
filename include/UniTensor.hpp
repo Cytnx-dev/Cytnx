@@ -5048,23 +5048,25 @@ namespace cytnx {
     }
 
     /**
-    @brief Power function.
-        @details Take power \p p on all the elements in the UniTensor.
-        @param p power
-        @return UniTensor
-    @note Compared to Pow_(), this function creates a new UniTensor ojbect.
-        @see Pow_()
-        */
+     * @brief Take the power \p p of all elements
+     * @details \f[ T_\text{out}[i] = (T_\text{in}[i])^p \f]
+     * @param[in] p the power to take
+     * @pre If this is a real UniTensor containing negative elements, then \p p must be an integer.
+     * @note Compared  UniTensor &Pow_(const double &p), this function will not modify the input
+     * UniTensor but return a new UniTensor.
+     * @see UniTensor &Pow_(const double &p)
+     */
     UniTensor Pow(const double &p) const;
 
     /**
-    @brief Power function.
-        @details Take power \p p on all the elements in the UniTensor, inplacely.
-        @param p power
-        @return UniTensor&
-    @note Compared to Pow(), this function is an inplacely function.
-        @see Pow()
-        */
+     * @brief Take the power \p p of all elements, inplacely
+     * @details \f[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \f]
+     * @param[in] p the power to take
+     * @pre If this is a real UniTensor containing negative elements, then \p p must be an integer.
+     * @note Compared  UniTensor Pow(const double &p) const, this is an inplacely function, which
+     * modifies the input UniTensor.
+     * @see UniTensor &Pow(const double &p) const
+     */
     UniTensor &Pow_(const double &p);
 
     /**
