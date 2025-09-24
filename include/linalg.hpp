@@ -988,7 +988,7 @@ namespace cytnx {
     function will not modify the input UniTensor and return a new UniTensor.
     @see Pow_(UniTensor &Tin, const double &p)
     */
-    UniTensor Pow(const cytnx::UniTensor &Tin, const double &p);
+    cytnx::UniTensor Pow(const cytnx::UniTensor &Tin, const double &p);
 
     /**
      * @brief Take power p on all the elements in UniTensor, inplacely.
@@ -1001,7 +1001,31 @@ namespace cytnx {
      * will modify the input UniTensor.
      * @see Pow(const cytnx::UniTensor &Tin, const double &p)
      */
-    void Pow_(UniTensor &Tin, const double &p);
+    void Pow_(cytnx::UniTensor &Tin, const double &p);
+
+    // Inv:
+    //==================================================
+    /**
+    @brief Apply the inverse on each entry of the UniTensor.
+    @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+    pseudo-inverse
+    @return UniTensor
+    @note Compared to Inv_(), this function will create a new UniTensor.
+    @see Inv_(const double &clip)
+    @note For symmetric UniTensors, only the elements in the blocks are inverted.
+    */
+    cytnx::UniTensor Inv(const cytnx::UniTensor &Tin, double clip);
+
+    /**
+    @brief Apply the inverse on each entry of the UniTensor.
+    @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+    pseudo-inverse
+    @return UniTensor
+    @note Compared to Inv(), this function is an inplace function.
+    @see Inv(double clip)
+    @note For symmetric UniTensors, only the elements in the blocks are inverted.
+        */
+    void Inv_(cytnx::UniTensor &Tin, double clip);
 
     /**
      * @brief Elementwise conjugate of the UniTensor

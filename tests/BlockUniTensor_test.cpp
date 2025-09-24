@@ -757,7 +757,7 @@ TEST_F(BlockUniTensorTest, Inv) {
   double clip = 1e-14;
   EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(tol).Inv_(tol), BUT4, tol));
   EXPECT_FALSE(AreNearlyEqUniTensor(BUT4.Inv(clip), BUT4, tol));
-  clip = 0.1; // test actual clipping as well
+  clip = 0.1;  // test actual clipping as well
   auto tmp = BUT4.clone();
   for (size_t i = 0; i < 5; i++)
     for (size_t j = 0; j < 11; j++)

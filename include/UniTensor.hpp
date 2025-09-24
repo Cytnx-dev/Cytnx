@@ -5094,7 +5094,7 @@ namespace cytnx {
         @details Take power \p p on all the elements in the UniTensor.
         @param p power
         @return UniTensor
-    @note Compared to Pow_(), this function will create a new UniTensor ojbect.
+    @note Compared to Pow_(), this function creates a new UniTensor ojbect.
         @see Pow_()
         */
     UniTensor Pow(const double &p) const;

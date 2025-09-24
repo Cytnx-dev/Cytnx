@@ -3886,7 +3886,7 @@ TEST_F(DenseUniTensorTest, Inv) {
   double clip = 1e-14;
   EXPECT_TRUE(AreNearlyEqUniTensor(utarcomplex3456.Inv(tol).Inv_(tol), utarcomplex3456, tol));
   EXPECT_FALSE(AreNearlyEqUniTensor(utarcomplex3456.Inv(clip), utarcomplex3456, tol));
-  clip = 3.5; // test actual clipping as well
+  clip = 3.5;  // test actual clipping as well
   auto tmp = utarcomplex3456.clone();
   for (size_t i = 0; i < 3; i++)
     for (size_t j = 0; j < 4; j++)

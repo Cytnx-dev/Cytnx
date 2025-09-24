@@ -1,10 +1,11 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
+#include "UniTensor.hpp"
 
 #ifdef BACKEND_TORCH
 #else
 
-  #include "backend/linalg_internal_interface.hpp"
+  #include "../backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -29,6 +30,28 @@ namespace cytnx {
   #endif
       }
     }
+
+  }  // namespace linalg
+}  // namespace cytnx
+
+namespace cytnx {
+  namespace linalg {
+    void Inv_(cytnx::UniTensor &Tin, double clip) {
+      if (Tin.uten_type() == UTenType.Dense) {
+        Tin.get_block_().Inv_(clip);
+      } else if (Tin.uten_type() == UTenType.Block || Tin.uten_type() == UTenType.BlockFermionic) {
+        for (auto &blk : Tin.get_blocks_()) {
+          blk.Inv_(clip);
+        }
+      } else if (Tin.uten_type() == UTenType.Void) {
+        cytnx_error_msg(
+          true, "[ERROR][Inv_] fatal internal, cannot call on an un-initialized UniTensor_base%s",
+          "\n");
+      } else {
+        cytnx_error_msg(true, "[Inv_]Unknown UniTensor type%s", "\n");
+      }  // uten types
+    }
+
   }  // namespace linalg
 }  // namespace cytnx
 
