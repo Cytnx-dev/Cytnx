@@ -51,11 +51,6 @@ namespace cytnx {
       }
     }
 
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
     void Pow_(cytnx::UniTensor &Tio, const double &p) {
       if (Tio.uten_type() == UTenType.Dense) {
         Tio.get_block_().Pow_(p);

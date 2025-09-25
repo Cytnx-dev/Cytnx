@@ -31,11 +31,6 @@ namespace cytnx {
       }
     }
 
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
     void Inv_(cytnx::UniTensor &Tio, double clip) {
       if (Tio.uten_type() == UTenType.Dense) {
         Tio.get_block_().Inv_(clip);

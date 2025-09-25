@@ -34,11 +34,6 @@ namespace cytnx {
       return out;
     }
 
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
     cytnx::UniTensor Inv(const cytnx::UniTensor &Tin, double clip) {
       cytnx::UniTensor out;
       if (Tin.uten_type() == UTenType.Dense) {

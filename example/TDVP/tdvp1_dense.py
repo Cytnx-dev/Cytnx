@@ -53,7 +53,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
         M = M.astype(cytnx.Type.ComplexDouble)
         R = R.astype(cytnx.Type.ComplexDouble)
         op = OneSiteOp(L,M,R)
-        exp_iH_v = cytnx.linalg.Lanczos_Exp(op, psi, -1.0j*delta*0.5, 1.0e-8, 200000)
+        exp_iH_v = cytnx.linalg.Lanczos_Exp(op, psi, -1.0j*delta*0.5, 1.0e-8)
         exp_iH_v.relabels_(psi.labels())
         return exp_iH_v
 
@@ -62,7 +62,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
         L = L.astype(cytnx.Type.ComplexDouble)
         R = R.astype(cytnx.Type.ComplexDouble)
         op = ZeroSiteOp(L,R)
-        exp_iH_v = cytnx.linalg.Lanczos_Exp(op, psi, 1.0j*delta*0.5, 1.0e-8, 200000)
+        exp_iH_v = cytnx.linalg.Lanczos_Exp(op, psi, 1.0j*delta*0.5, 1.0e-8)
         exp_iH_v.relabels_(psi.labels())
         return exp_iH_v
 
