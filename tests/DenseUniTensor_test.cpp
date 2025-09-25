@@ -3881,6 +3881,9 @@ describe:test Norm with uninitialized UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Norm_uninit) { EXPECT_ANY_THROW(ut_uninit.Norm()); }
 
+/*=====test info=====
+describe:test pseudo-inverse
+====================*/
 TEST_F(DenseUniTensorTest, Inv) {
   const double tol = 1e-12;
   double clip = 1e-14;
@@ -3895,13 +3898,13 @@ TEST_F(DenseUniTensorTest, Inv) {
           auto proxy = tmp.at({i, j, k, l});
           if (proxy.exists()) {
             Scalar val = proxy;
-            if (val.abs() <= tol)
+            if (val.abs() <= clip)
               proxy = cytnx_complex128(0., 0.);
             else
               proxy = cytnx_complex128(1., 0.) / proxy;
           }
         }
-  EXPECT_TRUE(AreNearlyEqUniTensor(utarcomplex3456.Inv(tol), tmp, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(utarcomplex3456.Inv(clip), tmp, tol));
 }
 
 TEST_F(DenseUniTensorTest, Conj) {

@@ -133,6 +133,21 @@ TEST_F(DenseUniTensorTest, gpu_Norm) {
                    sqrt(2.0 * 59.0 * 60.0 * 119.0 / 6.0));
 }
 
+/*=====test info=====
+describe:test pseudo-inverse
+====================*/
+TEST_F(DenseUniTensorTest, Inv) {
+  const double tol = 1e-12;
+  double clip = 1e-14;
+  EXPECT_TRUE(AreNearlyEqUniTensor(utarcomplex3456.Inv(tol).Inv_(tol), utarcomplex3456, tol));
+  EXPECT_FALSE(AreNearlyEqUniTensor(utarcomplex3456.Inv(clip), utarcomplex3456, tol));
+  clip = 3.5;  // test actual clipping as well
+  auto tmp = utarcomplex3456.to(cytnx::Device.cpu);
+  tmp.Inv_(clip);
+  tmp.to_(cytnx::Device.cuda);
+  EXPECT_TRUE(AreNearlyEqUniTensor(utarcomplex3456.Inv(clip), tmp, tol));
+}
+
 TEST_F(DenseUniTensorTest, gpu_Conj) {
   auto tmp = utarcomplex3456.Conj();
   for (size_t i = 1; i <= 3; i++)
