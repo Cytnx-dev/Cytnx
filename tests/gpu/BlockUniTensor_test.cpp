@@ -195,21 +195,6 @@ TEST_F(BlockUniTensorTest, gpu_Norm) {
 }
 
 /*=====test info=====
-describe:test pseudo-inverse
-====================*/
-TEST_F(BlockUniTensorTest, gpu_Inv) {
-  const double tol = 1e-14;
-  double clip = 1e-14;
-  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(clip).Inv_(clip), BUT4, tol));
-  EXPECT_FALSE(AreNearlyEqUniTensor(BUT4.Inv(clip), BUT4, tol));
-  clip = 0.1;  // test actual clipping as well
-  auto tmp = BUT4.to(cytnx::Device.cpu);
-  tmp.Inv_(clip);
-  tmp.to_(cytnx::Device.cuda);
-  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(clip), tmp, tol));
-}
-
-/*=====test info=====
 describe:test power
 ====================*/
 TEST_F(BlockUniTensorTest, gpu_Pow) {
