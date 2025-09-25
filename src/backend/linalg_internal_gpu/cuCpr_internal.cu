@@ -1048,7 +1048,20 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cuCpr_internal_cdtd(out, Rin, Lin, len, shape, invmapper_R, invmapper_L);
+      cytnx_bool *_out = (cytnx_bool *)out->data();
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cuDoubleComplex *_Rin = (cuDoubleComplex *)Rin->data();
+
+      cytnx_uint32 NBlocks = len / 512;
+      if (len % 512) NBlocks += 1;
+
+      if (Lin->size() == 1) {
+        cuCpr_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
+      } else if (Rin->size() == 1) {
+        cuCpr_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
+      } else {
+        cuCpr_tn_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin);
+      }
     }
     void cuCpr_internal_dtcf(boost::intrusive_ptr<Storage_base> &out,
                              boost::intrusive_ptr<Storage_base> &Lin,
@@ -1056,7 +1069,20 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cuCpr_internal_cftd(out, Rin, Lin, len, shape, invmapper_R, invmapper_L);
+      cytnx_bool *_out = (cytnx_bool *)out->data();
+      cytnx_double *_Lin = (cytnx_double *)Lin->data();
+      cuFloatComplex *_Rin = (cuFloatComplex *)Rin->data();
+
+      cytnx_uint32 NBlocks = len / 512;
+      if (len % 512) NBlocks += 1;
+
+      if (Lin->size() == 1) {
+        cuCpr_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
+      } else if (Rin->size() == 1) {
+        cuCpr_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
+      } else {
+        cuCpr_tn_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin);
+      }
     }
 
     void cuCpr_internal_dtd(boost::intrusive_ptr<Storage_base> &out,
@@ -1246,6 +1272,62 @@ namespace cytnx {
       }
       __syncthreads();
     }
+
+    __global__ void cuCpr_lconst_kernel(cytnx_bool *out, const cytnx_double val,
+                                        const cytnx_uint64 Nelem, const cuDoubleComplex *ptr) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuDoubleComplex(val, 0) == ptr[blockIdx.x * blockDim.x + threadIdx.x]);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_lconst_kernel(cytnx_bool *out, const cytnx_double val,
+                                        const cytnx_uint64 Nelem, const cuFloatComplex *ptr) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuFloatComplex(val, 0) == ptr[blockIdx.x * blockDim.x + threadIdx.x]);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_rconst_kernel(cytnx_bool *out, const cytnx_double *ptr,
+                                        const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuDoubleComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) == val);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_rconst_kernel(cytnx_bool *out, const cytnx_double *ptr,
+                                        const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) == val);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_tn_kernel(cytnx_bool *out, const cytnx_double *ptr,
+                                    const cytnx_uint64 Nelem, const cuDoubleComplex *val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuDoubleComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) ==
+           val[blockIdx.x * blockDim.x + threadIdx.x]);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_tn_kernel(cytnx_bool *out, const cytnx_double *ptr,
+                                    const cytnx_uint64 Nelem, const cuFloatComplex *val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) ==
+           val[blockIdx.x * blockDim.x + threadIdx.x]);
+      }
+      __syncthreads();
+    }
     void cuCpr_internal_dtb(boost::intrusive_ptr<Storage_base> &out,
                             boost::intrusive_ptr<Storage_base> &Lin,
                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
@@ -1274,7 +1356,20 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cuCpr_internal_cdtf(out, Rin, Lin, len, shape, invmapper_R, invmapper_L);
+      cytnx_bool *_out = (cytnx_bool *)out->data();
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cuDoubleComplex *_Rin = (cuDoubleComplex *)Rin->data();
+
+      cytnx_uint32 NBlocks = len / 512;
+      if (len % 512) NBlocks += 1;
+
+      if (Lin->size() == 1) {
+        cuCpr_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
+      } else if (Rin->size() == 1) {
+        cuCpr_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
+      } else {
+        cuCpr_tn_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin);
+      }
     }
     void cuCpr_internal_ftcf(boost::intrusive_ptr<Storage_base> &out,
                              boost::intrusive_ptr<Storage_base> &Lin,
@@ -1282,7 +1377,20 @@ namespace cytnx {
                              const std::vector<cytnx_uint64> &shape,
                              const std::vector<cytnx_uint64> &invmapper_L,
                              const std::vector<cytnx_uint64> &invmapper_R) {
-      cuCpr_internal_cftf(out, Rin, Lin, len, shape, invmapper_R, invmapper_L);
+      cytnx_bool *_out = (cytnx_bool *)out->data();
+      cytnx_float *_Lin = (cytnx_float *)Lin->data();
+      cuFloatComplex *_Rin = (cuFloatComplex *)Rin->data();
+
+      cytnx_uint32 NBlocks = len / 512;
+      if (len % 512) NBlocks += 1;
+
+      if (Lin->size() == 1) {
+        cuCpr_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
+      } else if (Rin->size() == 1) {
+        cuCpr_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
+      } else {
+        cuCpr_tn_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin);
+      }
     }
     void cuCpr_internal_ftd(boost::intrusive_ptr<Storage_base> &out,
                             boost::intrusive_ptr<Storage_base> &Lin,
@@ -1455,6 +1563,62 @@ namespace cytnx {
         out[blockIdx.x * blockDim.x + threadIdx.x] =
           (val[blockIdx.x * blockDim.x + threadIdx.x] ==
            float(ptr[blockIdx.x * blockDim.x + threadIdx.x]));
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_lconst_kernel(cytnx_bool *out, const cytnx_float val,
+                                        const cytnx_uint64 Nelem, const cuDoubleComplex *ptr) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuDoubleComplex(val, 0) == ptr[blockIdx.x * blockDim.x + threadIdx.x]);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_lconst_kernel(cytnx_bool *out, const cytnx_float val,
+                                        const cytnx_uint64 Nelem, const cuFloatComplex *ptr) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuFloatComplex(val, 0) == ptr[blockIdx.x * blockDim.x + threadIdx.x]);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_rconst_kernel(cytnx_bool *out, const cytnx_float *ptr,
+                                        const cytnx_uint64 Nelem, const cuDoubleComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuDoubleComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) == val);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_rconst_kernel(cytnx_bool *out, const cytnx_float *ptr,
+                                        const cytnx_uint64 Nelem, const cuFloatComplex val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) == val);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_tn_kernel(cytnx_bool *out, const cytnx_float *ptr,
+                                    const cytnx_uint64 Nelem, const cuDoubleComplex *val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuDoubleComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) ==
+           val[blockIdx.x * blockDim.x + threadIdx.x]);
+      }
+      __syncthreads();
+    }
+
+    __global__ void cuCpr_tn_kernel(cytnx_bool *out, const cytnx_float *ptr,
+                                    const cytnx_uint64 Nelem, const cuFloatComplex *val) {
+      if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
+        out[blockIdx.x * blockDim.x + threadIdx.x] =
+          (make_cuFloatComplex(ptr[blockIdx.x * blockDim.x + threadIdx.x], 0) ==
+           val[blockIdx.x * blockDim.x + threadIdx.x]);
       }
       __syncthreads();
     }
