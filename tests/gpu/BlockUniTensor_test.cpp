@@ -209,6 +209,23 @@ TEST_F(BlockUniTensorTest, gpu_Inv) {
   EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Inv(clip), tmp, tol));
 }
 
+/*=====test info=====
+describe:test power
+====================*/
+TEST_F(BlockUniTensorTest, gpu_Pow) {
+  const double tol = 1e-14;
+  EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Pow(2.), BUT4 * BUT4, tol));
+  auto tmp = BUT4.clone();
+  tmp.Pow_(2.3);  // test inline version
+  EXPECT_TRUE(AreEqUniTensor(BUT4.Pow(2.3), tmp));
+  for (double p = 0.; p < 1.6; p += 0.5) {
+    auto tmp = BUT4.to(cytnx::Device.cpu);
+    tmp.Pow_(p);
+    tmp.to_(cytnx::Device.cuda);
+    EXPECT_TRUE(AreNearlyEqUniTensor(BUT4.Pow(p), tmp, tol));
+  }
+}
+
 TEST_F(BlockUniTensorTest, gpu_Conj) {
   auto tmp = BUT4.Conj();
   for (size_t i = 1; i <= 5; i++)
