@@ -30,21 +30,20 @@ namespace cytnx {
     }
 
     // hook boost::intrusive_ptr add
-    friend void intrusive_ptr_add_ref(intrusive_ptr_base<T> const *s) {
+    friend void intrusive_ptr_add_ref(T *s) {
       // add ref
-      // std::cout << "add" << std::endl;
-      assert(s->ref_count >= 0);
-      assert(s != 0);
-      ++s->ref_count;
+      assert(s != nullptr);
+      auto &base = static_cast<const intrusive_ptr_base<T> &>(*s);
+      assert(base.ref_count >= 0);
+      ++base.ref_count;
     }
-
     // hook boost::intrusive_ptr release
-    friend void intrusive_ptr_release(intrusive_ptr_base<T> const *s) {
+    friend void intrusive_ptr_release(T *s) {
       // release ref
-      // std::cout << "release" << std::endl;
-      assert(s->ref_count > 0);
-      assert(s != 0);
-      if (--s->ref_count == 0) boost::checked_delete(static_cast<T const *>(s));
+      assert(s != nullptr);
+      auto &base = static_cast<const intrusive_ptr_base<T> &>(*s);
+      assert(base.ref_count > 0);
+      if (--base.ref_count == 0) boost::checked_delete(static_cast<T const *>(s));
     }
 
     boost::intrusive_ptr<T> self() { return boost::intrusive_ptr<T>((T *)this); }
