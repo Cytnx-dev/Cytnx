@@ -146,42 +146,18 @@ namespace cytnx {
   }
 
   bool cytnx::FermionParitySymmetry::check_qnums(const std::vector<cytnx_int64> &qnums) {
-#ifdef UNI_OMP
-    std::vector<bool> buf(1, true);
-  #pragma omp parallel
-    {
-      if (omp_get_thread_num() == 0) buf.assign(omp_get_num_threads(), true);
-    }
-
-  #pragma omp parallel for schedule(dynamic)
-    for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
-      if (buf[omp_get_thread_num()] == false)
-        continue;
-      else
-        buf[omp_get_thread_num()] = ((qnums[i] >= 0) && (qnums[i] < 2));
-    }
-
-    for (cytnx_uint64 i = 0; i < buf.size(); i++) {
-      buf[0] = (buf[0] && buf[i]);
-    }
-    return buf[0];
-#else
     bool out = true;
     for (cytnx_uint64 i = 0; i < qnums.size(); i++) {
       out = ((qnums[i] >= 0) && (qnums[i] < this->n));
       if (out == false) break;
     }
     return out;
-#endif
   }
 
   void cytnx::FermionParitySymmetry::combine_rule_(std::vector<cytnx_int64> &out,
                                                    const std::vector<cytnx_int64> &inL,
                                                    const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % 2;
     }
@@ -228,9 +204,6 @@ namespace cytnx {
                                                    const std::vector<cytnx_int64> &inL,
                                                    const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
-#ifdef UNI_OMP
-  #pragma omp parallel for schedule(dynamic)
-#endif
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
       out[i] = inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()];
     }
