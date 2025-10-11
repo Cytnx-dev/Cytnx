@@ -49,7 +49,6 @@ target_sources_local(cytnx
     Arithmetic_internal.cpp
     iArithmetic_internal.cpp
     Conj_inplace_internal.cpp
-    Cpr_internal.cpp
     Diag_internal.cpp
     iDiv_internal.cpp
     Eigh_internal.cpp
