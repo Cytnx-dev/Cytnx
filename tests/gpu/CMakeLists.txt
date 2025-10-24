@@ -18,6 +18,7 @@ add_executable(
   linalg_test/Add_test.cpp
   linalg_test/Cpr_test.cpp
   linalg_test/Div_test.cpp
+  linalg_test/Mod_test.cpp
   linalg_test/Mul_test.cpp
   linalg_test/Sub_test.cpp
   linalg_test/Det_test.cpp
