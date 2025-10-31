@@ -50,6 +50,7 @@ target_sources_local(cytnx
     iArithmetic_internal.cpp
     Conj_inplace_internal.cpp
     Diag_internal.cpp
+    Div_internal.cpp
     iDiv_internal.cpp
     Eigh_internal.cpp
     Eig_internal.cpp
