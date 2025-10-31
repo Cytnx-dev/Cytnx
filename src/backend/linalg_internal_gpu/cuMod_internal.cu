@@ -347,13 +347,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -564,13 +558,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -783,13 +771,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -1025,13 +1007,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -1267,13 +1243,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -1509,13 +1479,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -1751,13 +1715,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -1993,13 +1951,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
@@ -2234,13 +2186,7 @@ namespace cytnx {
       if (len % 512) NBlocks += 1;
 
       if (Lin->size() == 1) {
-        // TODO: Investigate why _Rin is a host pointer instead of device pointer
-        // This causes CUDA Error 700 (illegal memory access) when kernel tries to access host
-        // memory
-        cytnx_double *d_Rin;
-        cudaMalloc(&d_Rin, Rin->size() * sizeof(cytnx_double));
-        cudaMemcpy(d_Rin, _Rin, Rin->size() * sizeof(cytnx_double), cudaMemcpyHostToDevice);
-        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, _Lin[0], len, d_Rin);
+        cufMod_lconst_kernel<<<NBlocks, 512>>>(_out, cytnx_double(_Lin[0]), len, _Rin);
       } else if (Rin->size() == 1) {
         cufMod_rconst_kernel<<<NBlocks, 512>>>(_out, _Lin, len, _Rin[0]);
       } else {
