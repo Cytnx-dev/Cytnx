@@ -16,7 +16,6 @@
 
 namespace py = pybind11;
 using namespace pybind11::literals;
-using namespace cytnx;
 
 #ifdef BACKEND_TORCH
 #else
@@ -29,9 +28,9 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
   std::vector<cytnx::Accessor> accessors;
   if (py::isinstance<py::tuple>(locators)) {
     py::tuple Args = locators.cast<py::tuple>();
-    cytnx_uint64 cnt = 0;
+    cytnx::cytnx_uint64 cnt = 0;
     // mixing of slice and ints
-    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+    for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
       cnt++;
       // check type:
       if (py::isinstance<py::slice>(Args[axis])) {
@@ -40,21 +39,21 @@ void f_Tensor_setitem_scal(cytnx::Tensor &self, py::object locators, const T &rc
           throw py::error_already_set();
         // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
         // if(slicelength == self.shape()[axis]) accessors.push_back(cytnx::Accessor::all());
-        accessors.push_back(
-          cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop), cytnx_int64(step)));
+        accessors.push_back(cytnx::Accessor::range(
+          cytnx::cytnx_int64(start), cytnx::cytnx_int64(stop), cytnx::cytnx_int64(step)));
       } else {
-        accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+        accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx::cytnx_int64>()));
       }
     }
     while (cnt < self.shape().size()) {
       cnt++;
-      accessors.push_back(Accessor::all());
+      accessors.push_back(cytnx::Accessor::all());
     }
   } else {
     // only int
-    for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
+    for (cytnx::cytnx_uint32 i = 0; i < self.shape().size(); i++) {
       if (i == 0)
-        accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+        accessors.push_back(cytnx::Accessor(locators.cast<cytnx::cytnx_int64>()));
       else
         accessors.push_back(cytnx::Accessor::all());
     }
@@ -67,9 +66,9 @@ void tensor_binding(py::module &m) {
   py::class_<cytnx::Tensor>(m, "Tensor")
     .def(
       "numpy",
-      [](Tensor &self, const bool &share_mem) -> py::array {
+      [](cytnx::Tensor &self, const bool &share_mem) -> py::array {
         // device on GPU? move to cpu:ref it;
-        Tensor tmpIN;
+        cytnx::Tensor tmpIN;
         if (self.device() >= 0) {
           if (share_mem) {
             cytnx_error_msg(true,
@@ -77,7 +76,7 @@ void tensor_binding(py::module &m) {
                             "back to CPU by .to(Device.cpu).%s",
                             "\n");
           } else {
-            tmpIN = self.to(Device.cpu);
+            tmpIN = self.to(cytnx::Device.cpu);
           }
         } else {
           tmpIN = self;
@@ -102,35 +101,35 @@ void tensor_binding(py::module &m) {
         std::vector<ssize_t> shape(tmpIN.shape().begin(), tmpIN.shape().end());
         ssize_t accu = 1;
         for (int i = shape.size() - 1; i >= 0; i--) {
-          stride[i] = accu * Type.typeSize(tmpIN.dtype());
+          stride[i] = accu * cytnx::Type.typeSize(tmpIN.dtype());
           accu *= shape[i];
         }
         py::buffer_info npbuf;
         std::string chr_dtype;
-        if (tmpIN.dtype() == Type.ComplexDouble) {
-          chr_dtype = py::format_descriptor<cytnx_complex128>::format();
-        } else if (tmpIN.dtype() == Type.ComplexFloat) {
-          chr_dtype = py::format_descriptor<cytnx_complex64>::format();
-        } else if (tmpIN.dtype() == Type.Double) {
-          chr_dtype = py::format_descriptor<cytnx_double>::format();
-        } else if (tmpIN.dtype() == Type.Float) {
-          chr_dtype = py::format_descriptor<cytnx_float>::format();
-        } else if (tmpIN.dtype() == Type.Uint64) {
-          chr_dtype = py::format_descriptor<cytnx_uint64>::format();
-        } else if (tmpIN.dtype() == Type.Int64) {
-          chr_dtype = py::format_descriptor<cytnx_int64>::format();
-        } else if (tmpIN.dtype() == Type.Uint32) {
-          chr_dtype = py::format_descriptor<cytnx_uint32>::format();
-        } else if (tmpIN.dtype() == Type.Int32) {
-          chr_dtype = py::format_descriptor<cytnx_int32>::format();
-        } else if (tmpIN.dtype() == Type.Bool) {
-          chr_dtype = py::format_descriptor<cytnx_bool>::format();
+        if (tmpIN.dtype() == cytnx::Type.ComplexDouble) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_complex128>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.ComplexFloat) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_complex64>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Double) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_double>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Float) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_float>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Uint64) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_uint64>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Int64) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_int64>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Uint32) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_uint32>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Int32) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_int32>::format();
+        } else if (tmpIN.dtype() == cytnx::Type.Bool) {
+          chr_dtype = py::format_descriptor<cytnx::cytnx_bool>::format();
         } else {
           cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s", "\n");
         }
 
         npbuf = py::buffer_info(tmpIN.storage()._impl->data(),  // ptr
-                                Type.typeSize(tmpIN.dtype()),  // size of elem
+                                cytnx::Type.typeSize(tmpIN.dtype()),  // size of elem
                                 chr_dtype,  // pss format
                                 tmpIN.rank(),  // rank
                                 shape,  // shape
@@ -150,10 +149,10 @@ void tensor_binding(py::module &m) {
     .def(py::init<const cytnx::Tensor &>())
     .def(
       py::init<const std::vector<cytnx::cytnx_uint64> &, const unsigned int &, int, const bool &>(),
-      py::arg("shape"), py::arg("dtype") = (cytnx_uint64)cytnx::Type.Double,
+      py::arg("shape"), py::arg("dtype") = (cytnx::cytnx_uint64)cytnx::Type.Double,
       py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("Init", &cytnx::Tensor::Init, py::arg("shape"),
-         py::arg("dtype") = (cytnx_uint64)cytnx::Type.Double,
+         py::arg("dtype") = (cytnx::cytnx_uint64)cytnx::Type.Double,
          py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("dtype", &cytnx::Tensor::dtype)
     .def("dtype_str", &cytnx::Tensor::dtype_str)
@@ -168,7 +167,7 @@ void tensor_binding(py::module &m) {
     // handle same device from cytnx/Tensor_conti.py
     .def(
       "to_different_device",
-      [](cytnx::Tensor &self, const cytnx_int64 &device) {
+      [](cytnx::Tensor &self, const cytnx::cytnx_int64 &device) {
         cytnx_error_msg(self.device() == device,
                         "[ERROR][pybind][to_diffferent_device] same device for to() should be "
                         "handle in python side.%s",
@@ -209,7 +208,7 @@ void tensor_binding(py::module &m) {
     //.def("astype", &cytnx::Tensor::astype,py::arg("new_type"))
     .def(
       "astype_different_dtype",
-      [](cytnx::Tensor &self, const cytnx_uint64 &dtype) {
+      [](cytnx::Tensor &self, const cytnx::cytnx_uint64 &dtype) {
         cytnx_error_msg(self.dtype() == dtype,
                         "[ERROR][pybind][astype_diffferent_device] same dtype for astype() should "
                         "be handle in python side.%s",
@@ -298,15 +297,15 @@ void tensor_binding(py::module &m) {
       py::arg("fname"))
     .def_static(
       "Fromfile",
-      [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count) {
+      [](const std::string &fname, const unsigned int &dtype, const cytnx::cytnx_int64 &count) {
         return cytnx::Tensor::Load(fname);
       },
-      py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1))
+      py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx::cytnx_int64)(-1))
 
     .def_static(
       "from_storage",
-      [](const Storage &sin, const bool &is_clone) {
-        Tensor out;
+      [](const cytnx::Storage &sin, const bool &is_clone) {
+        cytnx::Tensor out;
         if (is_clone)
           out = cytnx::Tensor::from_storage(sin.clone());
         else
@@ -317,7 +316,7 @@ void tensor_binding(py::module &m) {
 
     .def("__len__",
          [](const cytnx::Tensor &self) {
-           if (self.dtype() == Type.Void) {
+           if (self.dtype() == cytnx::Type.Void) {
              cytnx_error_msg(true, "[ERROR] uninitialize Tensor does not have len!%s", "\n");
 
            } else {
@@ -333,9 +332,9 @@ void tensor_binding(py::module &m) {
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
-             cytnx_uint64 cnt = 0;
+             cytnx::cytnx_uint64 cnt = 0;
              // mixing of slice and ints
-             for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+             for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
                cnt++;
                // check type:
                if (py::isinstance<py::slice>(Args[axis])) {
@@ -345,15 +344,15 @@ void tensor_binding(py::module &m) {
                  // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                  // if(slicelength == self.shape()[axis])
                  // accessors.push_back(cytnx::Accessor::all());
-                 accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
-                                                            cytnx_int64(step)));
+                 accessors.push_back(cytnx::Accessor::range(
+                   cytnx::cytnx_int64(start), cytnx::cytnx_int64(stop), cytnx::cytnx_int64(step)));
                } else {
-                 accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                 accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx::cytnx_int64>()));
                }
              }
              while (cnt < self.shape().size()) {
                cnt++;
-               accessors.push_back(Accessor::all());
+               accessors.push_back(cytnx::Accessor::all());
              }
            } else if (py::isinstance<py::slice>(locators)) {
              py::slice sls = locators.cast<py::slice>();
@@ -362,17 +361,17 @@ void tensor_binding(py::module &m) {
              // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
              std::cout << start << " " << stop << " " << step << std::endl;
              accessors.push_back(cytnx::Accessor::range(start, stop, step));
-             for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
-               accessors.push_back(Accessor::all());
+             for (cytnx::cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
+               accessors.push_back(cytnx::Accessor::all());
              }
 
            } else {
              // std::cout << "int locators" << std::endl;
-             // std::cout << locators.cast<cytnx_int64>() << std::endl;
+             // std::cout << locators.cast<cytnx::cytnx_int64>() << std::endl;
              //  only int
-             for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
+             for (cytnx::cytnx_uint32 i = 0; i < self.shape().size(); i++) {
                if (i == 0)
-                 accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                 accessors.push_back(cytnx::Accessor(locators.cast<cytnx::cytnx_int64>()));
                else
                  accessors.push_back(cytnx::Accessor::all());
              }
@@ -390,9 +389,9 @@ void tensor_binding(py::module &m) {
            std::vector<cytnx::Accessor> accessors;
            if (py::isinstance<py::tuple>(locators)) {
              py::tuple Args = locators.cast<py::tuple>();
-             cytnx_uint64 cnt = 0;
+             cytnx::cytnx_uint64 cnt = 0;
              // mixing of slice and ints
-             for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+             for (cytnx::cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
                cnt++;
                // check type:
                if (py::isinstance<py::slice>(Args[axis])) {
@@ -402,15 +401,15 @@ void tensor_binding(py::module &m) {
                  // std::cout << start << " " << stop << " " << step << slicelength << std::endl;
                  // if(slicelength == self.shape()[axis])
                  // accessors.push_back(cytnx::Accessor::all());
-                 accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
-                                                            cytnx_int64(step)));
+                 accessors.push_back(cytnx::Accessor::range(
+                   cytnx::cytnx_int64(start), cytnx::cytnx_int64(stop), cytnx::cytnx_int64(step)));
                } else {
-                 accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                 accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx::cytnx_int64>()));
                }
              }
              while (cnt < self.shape().size()) {
                cnt++;
-               accessors.push_back(Accessor::all());
+               accessors.push_back(cytnx::Accessor::all());
              }
            } else if (py::isinstance<py::slice>(locators)) {
              py::slice sls = locators.cast<py::slice>();
@@ -418,15 +417,15 @@ void tensor_binding(py::module &m) {
                throw py::error_already_set();
              // if(slicelength == self.shape()[0]) accessors.push_back(cytnx::Accessor::all());
              accessors.push_back(cytnx::Accessor::range(start, stop, step));
-             for (cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
-               accessors.push_back(Accessor::all());
+             for (cytnx::cytnx_uint32 axis = 1; axis < self.shape().size(); axis++) {
+               accessors.push_back(cytnx::Accessor::all());
              }
 
            } else {
              // only int
-             for (cytnx_uint32 i = 0; i < self.shape().size(); i++) {
+             for (cytnx::cytnx_uint32 i = 0; i < self.shape().size(); i++) {
                if (i == 0)
-                 accessors.push_back(cytnx::Accessor(locators.cast<cytnx_int64>()));
+                 accessors.push_back(cytnx::Accessor(locators.cast<cytnx::cytnx_int64>()));
                else
                  accessors.push_back(cytnx::Accessor::all());
              }
@@ -434,28 +433,28 @@ void tensor_binding(py::module &m) {
 
            self.set(accessors, rhs);
          })
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_complex128>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_complex64>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_double>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_float>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_int64>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_uint64>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_int32>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_uint32>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_int16>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_uint16>)
-    .def("__setitem__", &f_Tensor_setitem_scal<cytnx_bool>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_complex128>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_complex64>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_double>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_float>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_int64>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_uint64>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_int32>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_uint32>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_int16>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_uint16>)
+    .def("__setitem__", &f_Tensor_setitem_scal<cytnx::cytnx_bool>)
     // arithmetic >>
     .def("__neg__",
          [](cytnx::Tensor &self) {
-           if (self.dtype() == Type.Double) {
-             return cytnx::linalg::Mul(cytnx_double(-1), self);
-           } else if (self.dtype() == Type.ComplexDouble) {
-             return cytnx::linalg::Mul(cytnx_complex128(-1, 0), self);
-           } else if (self.dtype() == Type.Float) {
-             return cytnx::linalg::Mul(cytnx_float(-1), self);
-           } else if (self.dtype() == Type.ComplexFloat) {
-             return cytnx::linalg::Mul(cytnx_complex64(-1, 0), self);
+           if (self.dtype() == cytnx::Type.Double) {
+             return cytnx::linalg::Mul(cytnx::cytnx_double(-1), self);
+           } else if (self.dtype() == cytnx::Type.ComplexDouble) {
+             return cytnx::linalg::Mul(cytnx::cytnx_complex128(-1, 0), self);
+           } else if (self.dtype() == cytnx::Type.Float) {
+             return cytnx::linalg::Mul(cytnx::cytnx_float(-1), self);
+           } else if (self.dtype() == cytnx::Type.ComplexFloat) {
+             return cytnx::linalg::Mul(cytnx::cytnx_complex64(-1, 0), self);
            } else {
              return cytnx::linalg::Mul(-1, self);
            }
@@ -510,6 +509,7 @@ void tensor_binding(py::module &m) {
                         const cytnx::cytnx_uint16 &lhs) { return cytnx::linalg::Add(lhs, self); })
     .def("__radd__", [](cytnx::Tensor &self,
                         const cytnx::cytnx_bool &lhs) { return cytnx::linalg::Add(lhs, self); })
+
     .def("c__iadd__",
          [](cytnx::Tensor &self, const cytnx::Tensor &rhs) {
            return self.Add_(rhs);
@@ -586,6 +586,7 @@ void tensor_binding(py::module &m) {
                         const cytnx::cytnx_uint16 &lhs) { return cytnx::linalg::Sub(lhs, self); })
     .def("__rsub__", [](cytnx::Tensor &self,
                         const cytnx::cytnx_bool &lhs) { return cytnx::linalg::Sub(lhs, self); })
+
     .def("c__isub__",
          [](cytnx::Tensor &self, const cytnx::Tensor &rhs) {
            return self.Sub_(rhs);
@@ -762,6 +763,11 @@ void tensor_binding(py::module &m) {
          [](cytnx::Tensor &self, const cytnx::cytnx_uint16 &rhs) { return self.Div(rhs); })
     .def("__truediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_bool &rhs) { return self.Div(rhs); })
+    .def("__truediv__", [](cytnx::Tensor &self, const cytnx::Scalar &rhs) { return self.Div(rhs); })
+    .def("__truediv__",
+         [](cytnx::Tensor &self, const py::numpy_scalar<float> &rhs) {
+           return self.Div((cytnx::cytnx_float)rhs);
+         })
 
     .def("__rtruediv__",
          [](cytnx::Tensor &self, const cytnx::cytnx_complex128 &lhs) {
