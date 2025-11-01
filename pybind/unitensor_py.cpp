@@ -999,7 +999,7 @@ void unitensor_binding(py::module &m) {
     .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<int16_t> &lhs) { return cytnx::linalg::Sub((cytnx::cytnx_int16) lhs, self); })
     .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<uint16_t> &lhs) { return cytnx::linalg::Sub((cytnx::cytnx_uint16) lhs, self); })
     .def("__rsub__", [](cytnx::UniTensor &self, const py::numpy_scalar<bool> &lhs) { return cytnx::linalg::Sub((bool) lhs, self); })
-    
+
     .def("__isub__",
          [](UniTensor &self, const UniTensor &rhs) {
            return self.Sub_(rhs);
