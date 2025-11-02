@@ -606,7 +606,8 @@ namespace cytnx {
     void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
-    Tensor get_block(const cytnx_uint64 &idx = 0) const {
+    Tensor get_block() const { return this->_block.clone(); }
+    Tensor get_block(const cytnx_uint64 &idx) const {
       cytnx_error_msg(idx != 0,
                       "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
                       "invalid. Use get_block(0).\n",
@@ -637,7 +638,8 @@ namespace cytnx {
     }
 
     // return a share view of block, this only work for non-symm tensor.
-    Tensor &get_block_(const cytnx_uint64 &idx = 0) {
+    Tensor &get_block_() { return this->_block; }
+    Tensor &get_block_(const cytnx_uint64 &idx) {
       cytnx_error_msg(idx != 0,
                       "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
                       "invalid. Use get_block_(0).\n",
@@ -645,7 +647,8 @@ namespace cytnx {
       return this->_block;
     }
     // return a share view of block, this only work for non-symm tensor.
-    const Tensor &get_block_(const cytnx_uint64 &idx = 0) const {
+    const Tensor &get_block_() const { return this->_block; }
+    const Tensor &get_block_(const cytnx_uint64 &idx) const {
       cytnx_error_msg(idx != 0,
                       "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
                       "invalid. Use get_block_(0).\n",
@@ -674,7 +677,7 @@ namespace cytnx {
     }
 
     void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
-      // We don't check the dtype for DenseUniTensor, since it'll be more convinent to change
+      // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
 
       cytnx_error_msg(idx != 0,
@@ -705,7 +708,7 @@ namespace cytnx {
     }
     // share view of the block
     void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
-      // We don't check the dtype for DenseUniTensor, since it'll be more convinent to change
+      // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
       cytnx_error_msg(idx != 0,
                       "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
