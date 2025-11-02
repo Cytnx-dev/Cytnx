@@ -1328,11 +1328,9 @@ TEST_F(DenseUniTensorTest, get_block) {
 /*=====test info=====
 describe:test get_block out of range
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, get_block_out_of_range) {
   EXPECT_THROW(utzero345.get_block(3), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test get_block, diagonal
@@ -1448,11 +1446,9 @@ TEST_F(DenseUniTensorTest, get_block__uninit) {
 /*=====test info=====
 describe:test get_block out of range
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, get_block__out_of_range) {
   EXPECT_THROW(utzero345.get_block_(3), std::logic_error);
 }
-#endif
 
 TEST_F(DenseUniTensorTest, get_blocks) { EXPECT_THROW(utzero345.get_blocks(), std::logic_error); }
 
@@ -1558,7 +1554,6 @@ TEST_F(DenseUniTensorTest, put_block_rank_mismatch) {
 /*=====test info=====
 describe:test put_block_, out of index
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, put_block_out_of_idx) {
   constexpr cytnx_uint64 dim1 = 2, dim2 = 3;
   auto tens = zeros({dim1, dim2});
@@ -1569,7 +1564,6 @@ TEST_F(DenseUniTensorTest, put_block_out_of_idx) {
   auto ut = UniTensor({Bond(dim1), Bond(dim2)});
   EXPECT_THROW(ut.put_block(tens, 1), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test put_block_
@@ -1654,7 +1648,6 @@ TEST_F(DenseUniTensorTest, put_block__rank_mismatch) {
 /*=====test info=====
 describe:test put_block_, out of index
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, put_block__out_of_idx) {
   constexpr cytnx_uint64 dim1 = 2, dim2 = 3;
   auto tens = zeros({dim1, dim2});
@@ -1665,7 +1658,6 @@ TEST_F(DenseUniTensorTest, put_block__out_of_idx) {
   auto ut = UniTensor({Bond(dim1), Bond(dim2)});
   EXPECT_THROW(ut.put_block_(tens, 1), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test put_blocks, input uninitialized UniTensor
