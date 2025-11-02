@@ -1864,6 +1864,7 @@ namespace cytnx {
     // get the mapper:
     int cnt = 0;
     int idor;
+    int newrowrank = this->_rowrank;
     for (int i = 0; i < this->rank(); i++) {
       if (cnt == indicators.size()) {
         idx_mapper.push_back(i);
@@ -1876,7 +1877,12 @@ namespace cytnx {
           if (i == indicators[0]) {
             // new_shape_aft_perm.push_back(-1);
             idor = idx_mapper.size();  // new_shape_aft_perm.size();
-            for (int j = 0; j < indicators.size(); j++) idx_mapper.push_back(indicators[j]);
+            idx_mapper.push_back(indicators[0]);
+            for (auto ind = indicators.begin() + 1; ind != indicators.end(); ++ind) {
+              idx_mapper.push_back(*ind);
+              if (*ind < this->_rowrank)
+                newrowrank--;
+            }
           }
           cnt += 1;
         }
@@ -1962,7 +1968,8 @@ namespace cytnx {
     // std::cout << this->_inner_to_outer_idx << std::endl;
 
     // check rowrank:
-    if (this->_rowrank >= this->rank()) this->_rowrank = this->rank();
+    // if (this->_rowrank >= this->rank()) this->_rowrank = this->rank();
+    this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
 
