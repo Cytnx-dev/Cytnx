@@ -696,8 +696,8 @@ namespace cytnx {
     // find the index of label:
     for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
-      cytnx_error_msg(it == this->_labels.end(), "[ERROR] label %s not found in current UniTensor\n",
-                      indicators[i]);
+      cytnx_error_msg(it == this->_labels.end(),
+                      "[ERROR] label '%s' not found in current UniTensor\n", indicators[i].c_str());
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
     this->combineBonds(idx_mapper, force);
@@ -735,8 +735,7 @@ namespace cytnx {
             idx_mapper.push_back(indicators[0]);
             for (auto ind = indicators.begin() + 1; ind != indicators.end(); ++ind) {
               idx_mapper.push_back(*ind);
-              if (*ind < this->_rowrank)
-                newrowrank--;
+              if (*ind < this->_rowrank) newrowrank--;
             }
           }
           cnt += 1;
@@ -920,7 +919,7 @@ namespace cytnx {
       for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
         it = std::find(this->_labels.begin(), this->_labels.end(), std::to_string(indicators[i]));
         cytnx_error_msg(it == this->_labels.end(),
-                        "[ERROR] label %s not found in current UniTensor\n", indicators[i]);
+                        "[ERROR] labels not found in current UniTensor%s", "\n");
         idx_mapper.push_back(std::distance(this->_labels.begin(), it));
       }
 

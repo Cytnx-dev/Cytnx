@@ -1880,8 +1880,7 @@ namespace cytnx {
             idx_mapper.push_back(indicators[0]);
             for (auto ind = indicators.begin() + 1; ind != indicators.end(); ++ind) {
               idx_mapper.push_back(*ind);
-              if (*ind < this->_rowrank)
-                newrowrank--;
+              if (*ind < this->_rowrank) newrowrank--;
             }
           }
           cnt += 1;
@@ -1967,8 +1966,7 @@ namespace cytnx {
     }
     // std::cout << this->_inner_to_outer_idx << std::endl;
 
-    // check rowrank:
-    // if (this->_rowrank >= this->rank()) this->_rowrank = this->rank();
+    // change rowrank:
     this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
@@ -1987,8 +1985,8 @@ namespace cytnx {
     // find the index of label:
     for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
-      cytnx_error_msg(it == this->_labels.end(), "[ERROR] labels not found in current UniTensor%s",
-                      "\n");
+      cytnx_error_msg(it == this->_labels.end(),
+                      "[ERROR] label '%s' not found in current UniTensor\n", indicators[i].c_str());
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
     this->combineBonds(idx_mapper, force);
