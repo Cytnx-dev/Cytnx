@@ -223,7 +223,6 @@ namespace cytnx {
       std::vector<Conjinplacefunc_oii> Conj_inplace_ii;
       std::vector<Expfunc_oii> Exp_ii;
       std::vector<Powfunc_oii> Pow_ii;
-      std::vector<Absfunc_oii> Abs_ii;
       std::vector<Diagfunc_oii> Diag_ii;
       std::vector<Matmulfunc_oii> Matmul_ii;
       std::vector<Gemmfunc_oii> Gemm_ii;
@@ -246,8 +245,6 @@ namespace cytnx {
       std::vector<ger_oii> ger_ii;
 
       std::vector<memcpyTruncation_oii> memcpyTruncation_ii;
-
-      int mkl_code;
 
 #ifdef UNI_GPU
       std::vector<std::vector<Arithmeticfunc_oii>> cuAri_ii;
@@ -285,8 +282,6 @@ namespace cytnx {
 
       linalg_internal_interface();
       ~linalg_internal_interface();
-      int set_mkl_ilp64();
-      int get_mkl_code();
     };
     extern linalg_internal_interface lii;
   }  // namespace linalg_internal

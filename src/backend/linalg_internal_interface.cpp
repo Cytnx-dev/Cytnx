@@ -1,6 +1,7 @@
 #include "linalg_internal_interface.hpp"
 #ifdef UNI_MKL
   #include <mkl.h>
+
 #endif
 
 using namespace std;
@@ -10,29 +11,8 @@ namespace cytnx {
 
     linalg_internal_interface lii;
 
-    int linalg_internal_interface::get_mkl_code() { return this->mkl_code; }
-
-    int linalg_internal_interface::set_mkl_ilp64() {
-      int code = 0;
-#ifdef UNI_MKL
-      code = mkl_set_interface_layer(MKL_INTERFACE_ILP64);
-      this->mkl_code = code;
-      // std::cout << "MKL interface code: " << code;
-      // if (code % 2)
-      //   std::cout << " >> using [ilp64] interface" << std::endl;
-      // else
-      //   std::cout << " >> using [ lp64] interface" << std::endl;
-
-#endif
-      return code;
-    }
     linalg_internal_interface::~linalg_internal_interface() {}
     linalg_internal_interface::linalg_internal_interface() {
-      mkl_code = -1;
-#ifdef UNI_MKL
-      this->set_mkl_ilp64();
-#endif
-
       Ari_ii = vector<vector<Arithmeticfunc_oii>>(N_Type, vector<Arithmeticfunc_oii>(N_Type, NULL));
 
       Ari_ii[Type.ComplexDouble][Type.ComplexDouble] = Arithmetic_internal_cdtcd;
@@ -387,21 +367,6 @@ namespace cytnx {
       Pow_ii[Type.ComplexFloat] = Pow_internal_cf;
       Pow_ii[Type.Double] = Pow_internal_d;
       Pow_ii[Type.Float] = Pow_internal_f;
-
-      //=====================
-      Abs_ii = vector<Absfunc_oii>(N_Type);
-
-      Abs_ii[Type.ComplexDouble] = Abs_internal_cd;
-      Abs_ii[Type.ComplexFloat] = Abs_internal_cf;
-      Abs_ii[Type.Double] = Abs_internal_d;
-      Abs_ii[Type.Float] = Abs_internal_f;
-      Abs_ii[Type.Int64] = Abs_internal_i64;
-      Abs_ii[Type.Uint64] = Abs_internal_pass;
-      Abs_ii[Type.Int32] = Abs_internal_i32;
-      Abs_ii[Type.Uint32] = Abs_internal_pass;
-      Abs_ii[Type.Int16] = Abs_internal_i16;
-      Abs_ii[Type.Uint16] = Abs_internal_pass;
-      Abs_ii[Type.Bool] = Abs_internal_pass;
 
       //=====================
       Diag_ii = vector<Diagfunc_oii>(N_Type);

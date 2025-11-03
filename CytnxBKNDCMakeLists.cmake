@@ -1,32 +1,55 @@
 
-if (USE_MKL)
-  option(MKL_SDL "Link to a single MKL dynamic libary." ON)
-  option(MKL_MLT "Use multi-threading libary. [Default]" ON)
-  mark_as_advanced(MKL_SDL MKL_MLT)
-  set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
-  target_compile_definitions(cytnx PUBLIC UNI_MKL)
-  target_compile_definitions(cytnx PUBLIC MKL_ILP64)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-endif() #use_mkl
 
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
 if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
   if (USE_MKL)
-    #set(BLA_VENDOR Intel10_64ilp)
-    set(BLA_VENDOR Intel10_64_dyn)
+    #message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
+    # Set MKL interface to LP64 by default, but allow ILP64
+    set(MKL_INTERFACE "lp64" CACHE STRING "MKL interface (lp64 or ilp64)")
+    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_MKL")
+
+    set(MKL_ROOT $ENV{MKLROOT})
+    message(STATUS "MKL_ROOT: ${MKL_ROOT}")
+    message(STATUS "MKL_INTERFACE: ${MKL_INTERFACE}")
+    if(MKL_INTERFACE STREQUAL "ilp64")
+        set(BLA_VENDOR Intel10_64ilp)
+    else()
+        set(BLA_VENDOR Intel10_64lp)
+    endif()
+    message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
-    #find_package(MKL REQUIRED)
+
+    message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
+
+    #find_package(MKL CONFIG REQUIRED)
+    #Provides available list of targets based on input
+    #message(STATUS "MKL_IMPORTED_TARGETS: ${MKL_IMPORTED_TARGETS}")
+  #  target_compile_options(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>)
+  #  target_include_directories(cytnx PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
+  #  target_link_libraries(cytnx PUBLIC  $<LINK_ONLY:MKL::MKL>)
+  #  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
-    message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
+    target_compile_definitions(cytnx PUBLIC UNI_MKL)
+    if(MKL_INTERFACE STREQUAL "ilp64")
+      target_compile_definitions(cytnx PUBLIC MKL_ILP64)
+    else()
+      target_compile_definitions(cytnx PUBLIC MKL_LP64)
+
+    endif()
+
   else()
     set(BLA_VENDOR OpenBLAS)
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
+    find_package( LAPACKE REQUIRED)
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+    set(LAPACKE_INCLUDE_DIRS ${LAPACKE_DIR_FOUND}/include)
+    target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
+    message( STATUS "LAPACKE found: ${LAPACKE_INCLUDE_DIRS}" )
   endif()
 
 else()
@@ -39,15 +62,18 @@ endif()
 
 if (USE_HPTT)
     option(HPTT_ENABLE_ARM "HPTT option ARM" OFF)
-    option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
     option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
+    option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
+
+
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
+    # TODO: Build HPTT from the submodule in the thirdparty folder.
     ExternalProject_Add(hptt
     PREFIX hptt
-    GIT_REPOSITORY https://github.com/kaihsin/hptt.git
-    GIT_TAG fc9c8cb9b71f4f6d16aad435bdce20025b342a73
-    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
+    GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
+    GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
+    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
     )
     message( STATUS " Build HPTT Support: YES")
     message( STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")
@@ -57,22 +83,6 @@ if (USE_HPTT)
     FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_HPTT\n" "")
 endif() #use_HPTT
 
-if (USE_CUDA)
-    if (USE_CUTT)
-      option(CUTT_ENABLE_FINE_TUNE "CUTT option FINE_TUNE" OFF)
-      option(CUTT_ENABLE_NVTOOLS "CUTT option NVTOOLS" OFF)
-      option(CUTT_NO_ALIGN_ALLOC "CUTT option NO_ALIGN_ALLIC" OFF)
-      set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUTT")
-      ExternalProject_Add(cutt
-        PREFIX cutt_src
-        GIT_REPOSITORY https://github.com/kaihsin/cutt.git
-        GIT_TAG 27ed59a42f2610923084c4687327d00f4c2d1d2d
-        BINARY_DIR cutt_src/build
-        INSTALL_DIR cutt
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_BUILD_TYPE=Release -DNO_ALIGN_ALLOC=${CUTT_NO_ALIGN_ALLOC} -DENABLE_NVTOOLS=${CUTT_ENABLE_NVTOOLS} -DFINE_TUNE=${CUTT_ENABLE_FINE_TUNE} -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-      )
-    endif()
-endif()
 
 
 #####################################################################
@@ -81,6 +91,7 @@ endif()
 if(USE_CUDA)
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_CUDA")
+
     enable_language(CUDA)
     find_package(CUDAToolkit REQUIRED)
     if(NOT DEFINED CMAKE_CUDA_STANDARD)
@@ -104,7 +115,6 @@ if(USE_CUDA)
     #      -gencode=arch=compute_70,code=sm_70 \
     #      -gencode=arch=compute_75,code=sm_75 \
     #      -gencode=arch=compute_75,code=compute_75 ")
-    set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES native)
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
@@ -148,25 +158,7 @@ if(USE_CUDA)
     endif()
 
 
-    if(USE_CUTT)
-        ExternalProject_Get_Property(cutt install_dir)
-        include_directories(${install_dir}/include)
-        message(STATUS "cutt install dir: ${install_dir}")
-        add_dependencies(cytnx cutt)
-        # set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES 52 53 60 61 62 70 72 75 80 86)
-        set_property(TARGET cytnx PROPERTY CUDA_ARCHITECTURES native)
-        target_compile_definitions(cytnx PRIVATE UNI_CUTT)
-        target_link_libraries(cytnx PUBLIC ${install_dir}/lib/libcutt.a)
-        # relocate cutt
-        install(DIRECTORY ${CMAKE_BINARY_DIR}/cutt DESTINATION ${CMAKE_INSTALL_PREFIX})
 
-        message( STATUS " Build CUTT Support: YES")
-        message( STATUS " --CUTT option FINE_TUNE: ${CUTT_ENABLE_FINE_TUNE}")
-        message( STATUS " --CUTT option NVTOOLS: ${CUTT_ENABLE_NVTOOLS}")
-        message( STATUS " --CUTT option NO_ALIGN_ALLOC: ${HPTT_NO_ALIGN_ALLOC}")
-        FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_CUTT\n" "")
-
-    endif()
 
 
     message( STATUS " Build CUDA Support: YES")
@@ -212,7 +204,10 @@ if(USE_HPTT)
     target_link_libraries(cytnx PUBLIC "${hptt_lib_dir}/libhptt.a")
 
     # XXX: `cytnx` itself doesn't need this linking flag. Why?
-    target_link_options(cytnx INTERFACE -fopenmp)
+    #target_link_options(cytnx INTERFACE -fopenmp)
+    #Find OpenMP for HPTT
+    find_package(OpenMP REQUIRED)
+    target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
 
     # Install HPTT to input CMAKE_INSTALL_PREFIX.
     cmake_path(APPEND CMAKE_INSTALL_INCLUDEDIR "hptt" OUTPUT_VARIABLE hptt_install_include_dir)

@@ -3,7 +3,7 @@
 #include "cuda_runtime_api.h"
 #include "gtest/gtest.h"
 
-#include "../test_tools.h"
+#include "gpu_test_tools.h"
 #include "cytnx_error.hpp"
 #include "linalg.hpp"
 #include "Tensor.hpp"
@@ -58,7 +58,8 @@ namespace cytnx {
     int element_number = 10000;
     unsigned int dtype = Type_class().cy_typeid(value);
 
-    Tensor tensor(/* shape */ {element_number}, dtype, Device.cuda, /* init_zero */ false);
+    Tensor tensor(/* shape */ {static_cast<unsigned long>(element_number)}, dtype, Device.cuda,
+                  /* init_zero */ false);
     checkCudaErrors(cudaSetDevice(tensor.device()));
     tensor.fill(value);
     Tensor sum_result = linalg::Sum(tensor);
@@ -67,6 +68,6 @@ namespace cytnx {
     EXPECT_EQ(sum_result.shape().size(), 1);
     EXPECT_EQ(sum_result.shape()[0], 1);
 
-    EXPECT_NUMBER_EQ(sum_result.at<TypeParam>({0}), value * TypeParam{element_number});
+    EXPECT_NUMBER_EQ(sum_result.at<TypeParam>({0}), value * static_cast<TypeParam>(element_number));
   }
 }  // namespace cytnx

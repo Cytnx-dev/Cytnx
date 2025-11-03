@@ -51,8 +51,6 @@
       "inherits": "default",
       "cacheVariables": {
         "USE_CUDA": "ON",
-        "USE_CUTT": "ON",
-        "CUTT_ENABLE_FINE_TUNE": "ON",
         "USE_CUTENSOR": "ON",
         "USE_CUQUANTUM": "ON"
       }

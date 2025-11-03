@@ -1,6 +1,6 @@
 add_executable(
   gpu_test_main
-  test_tools.cpp
+  gpu_test_tools.cpp
   common_data_generator.cpp
   Bond_test.cpp
   Network_test.cpp
@@ -14,23 +14,33 @@ add_executable(
   utils_test/vec_concatenate.cpp
   utils_test/vec_unique.cpp
   utils/getNconParameter.cpp
+  linalg_test/Abs_test.cpp
+  linalg_test/Add_test.cpp
   linalg_test/Det_test.cpp
   linalg_test/Directsum_test.cpp
   linalg_test/ExpH_test.cpp
   linalg_test/ExpM_test.cpp
+  linalg_test/Lanczos_test.cpp
   linalg_test/Lanczos_Gnd_test.cpp
   linalg_test/Arnoldi_test.cpp
+  linalg_test/Arnoldi_Ut_test.cpp
   linalg_test/Svd_test.cpp
   linalg_test/GeSvd_test.cpp
   linalg_test/linalg_test.cpp
   linalg_test/sum_test.cpp
   algo_test/Hsplit_test.cpp
   algo_test/Hstack_test.cpp
+  algo_test/Sort_test.cpp
   algo_test/Vsplit_test.cpp
   algo_test/Vstack_test.cpp
   random_test/uniform_test.cpp
 )
 
+target_include_directories(
+  gpu_test_main
+  PRIVATE
+  ${CMAKE_CURRENT_SOURCE_DIR}
+)
 target_link_libraries(
   gpu_test_main
   gtest_main

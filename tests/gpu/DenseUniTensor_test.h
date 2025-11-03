@@ -1,9 +1,10 @@
 #ifndef _H_DENSEUNITENSOR_TEST
 #define _H_DENSEUNITENSOR_TEST
 
+#include "gtest/gtest.h"
+
+#include "gpu_test_tools.h"
 #include "cytnx.hpp"
-#include <gtest/gtest.h>
-#include "test_tools.h"
 
 using namespace cytnx;
 using namespace std;

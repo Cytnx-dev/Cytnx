@@ -1,9 +1,14 @@
-#include "Lanczos_Gnd_test.h"
-#include "../test_tools.h"
+#include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include "cytnx.hpp"
+#include "gpu_test_tools.h"
+
+using namespace cytnx;
+using namespace testing;
 
 class MyOp : public LinOp {
  public:
-  MyOp() : LinOp("mv", 4) {}
+  MyOp() : LinOp("mv", 27) {}
 
   UniTensor matvec(const UniTensor& v) override {
     Tensor tA = arange(27 * 27).reshape(27, 27).to(cytnx::Device.cuda);

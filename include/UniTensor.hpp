@@ -426,6 +426,8 @@ namespace cytnx {
     virtual const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                              const cytnx_int16 &aux) const;
 
+    virtual void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
+                       const cytnx_double &tol);
     virtual void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
     virtual void group_basis_();
@@ -1751,7 +1753,8 @@ namespace cytnx {
         "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
         "operation on the block(s).");
     }
-    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
+               const cytnx_double &tol);
 
     void group_basis_();
 
@@ -5383,8 +5386,9 @@ namespace cytnx {
     void _Save(std::fstream &f) const;
     /// @endcond
 
-    UniTensor &convert_from(const UniTensor &rhs, const bool &force = false) {
-      this->_impl->from_(rhs._impl, force);
+    UniTensor &convert_from(const UniTensor &rhs, const bool &force = false,
+                            const cytnx_double &tol = 1e-14) {
+      this->_impl->from_(rhs._impl, force, tol);
       return *this;
     }
 

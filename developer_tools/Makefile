@@ -31,8 +31,7 @@ INCFLAGS +=-I$(CONDA_PREFIX)/include/
 
 
 HPTT_PATH=$(CytnxPATH)/thirdparty/hptt
-CUTT_PATH=$(CytnxPATH)/thirdparty/cutt
-MAGMA_PATH?=
+
 
 ifeq ($(ICPC_Enable),1)
   CC:= $(ICPC)
@@ -43,7 +42,7 @@ else
 endif
 
 ifeq ($(MKL_Enable),1)
-  CCFLAGS += -std=c++20 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_ILP64 #-DUNI_DEBUG -Wno-c++11-narrowing
+  CCFLAGS += -std=c++20 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_LP64 #-DUNI_DEBUG -Wno-c++11-narrowing
   LDFLAGS += $(DOCKER_MKL) -lmkl_rt -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -ldl -lm
 else
   CCFLAGS += -std=c++20 ${OPTIM} -Wformat=0 -fPIC -w -g #-DUNI_DEBUG -Wno-c++11-narrowing
@@ -77,11 +76,11 @@ endif
 
 ALL_CCFLAGS :=
 ifeq ($(GPU_Enable),1)
-  ifeq ($(CUTT_Enable),1)
-   CCFLAGS += -DUNI_CUTT
-   INCFLAGS+= -I$(CUTT_PATH)/include
-   LDFLAGS+= $(CUTT_PATH)/lib/libcutt.a
-  endif
+#   ifeq ($(CUTT_Enable),1)
+#    CCFLAGS += -DUNI_CUTT
+#    INCFLAGS+= -I$(CUTT_PATH)/include
+#    LDFLAGS+= $(CUTT_PATH)/lib/libcutt.a
+#   endif
 
   ifeq ($(CUTN_Enable),1)
    CCFLAGS += -DUNI_CUTENSOR
@@ -136,13 +135,12 @@ endif
 
 ## Linalg_internal
 OBJS += linalg_internal_interface.o
-OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Abs_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Sdd_internal.o Gesvd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Trace_internal.o Tridiag_internal.o Axpy_internal.o Ger_internal.o Gemm_Batch_internal.o Gemm_internal.o
+OBJS += Lstsq_internal.o Mod_internal.o Det_internal.o Sum_internal.o MaxMin_internal.o QR_internal.o Pow_internal.o Eig_internal.o Matvec_internal.o Norm_internal.o Kron_internal.o Cpr_internal.o iAdd_internal.o Add_internal.o iSub_internal.o Sub_internal.o iMul_internal.o Mul_internal.o iDiv_internal.o Div_internal.o iArithmetic_internal.o Arithmetic_internal.o Sdd_internal.o Gesvd_internal.o Inv_inplace_internal.o InvM_inplace_internal.o Conj_inplace_internal.o Exp_internal.o Eigh_internal.o Matmul_dg_internal.o Matmul_internal.o Diag_internal.o Outer_internal.o Vectordot_internal.o Trace_internal.o Tridiag_internal.o Axpy_internal.o Ger_internal.o Gemm_Batch_internal.o Gemm_internal.o
 ifeq ($(GPU_Enable),1)
   OBJS += cuMod_internal.o cuPow_internal.o cuVectordot_internal.o cuMatvec_internal.o cuNorm_internal.o cuCpr_internal.o cuAbs_internal.o cuGer_internal.o cuAdd_internal.o cuSub_internal.o cuMul_internal.o cuDiv_internal.o cuArithmetic_internal.o cuMaxMin_internal.o cuSum_internal.o cuKron_internal.o cuDet_internal.o cuSvd_internal.o cuInv_inplace_internal.o cuInvM_inplace_internal.o cuConj_inplace_internal.o cuExp_internal.o  cuEigh_internal.o cuMatmul_dg_internal.o cuMatmul_internal.o cuDiag_internal.o cuOuter_internal.o
 endif
 
 ## Algo_internal
-OBJS += algo_internal_interface.o
 OBJS += Sort_internal.o Split_internal.o Concate_internal.o
 
 
@@ -341,9 +339,6 @@ ComplexDoubleStorage.o: $(CytnxPATH)/src/backend/ComplexDoubleStorage.cpp $(Cytn
 
 ## algo_internal
 ##########################
-algo_internal_interface.o : $(CytnxPATH)/src/algo/algo_internal_interface.cpp $(CytnxPATH)/src/algo/algo_internal_interface.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
-
 Sort_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Sort_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 Concate_internal.o :  $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.cpp $(CytnxPATH)/src/algo/algo_internal_cpu/Concate_internal.hpp
@@ -491,8 +486,6 @@ Norm_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Norm_internal.cp
 Eig_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Eig_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Eig_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
-Abs_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/Abs_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/Abs_internal.hpp
-	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 QR_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_cpu/QR_internal.cpp $(CytnxPATH)/src/backend/linalg_internal_cpu/QR_internal.hpp
 	$(CC) $(CCFLAGS) $(INCFLAGS) -c $<
 
@@ -575,8 +568,6 @@ cuMatmul_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_int
 cuMatmul_dg_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_dg_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatmul_dg_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuMatvec_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatvec_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuMatvec_internal.hpp
-	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
-cuVectordot_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuVectordot_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuVectordot_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@
 cuOuter_internal.o :  $(CytnxPATH)/src/backend/linalg_internal_gpu/cuOuter_internal.cu $(CytnxPATH)/src/backend/linalg_internal_gpu/cuOuter_internal.hpp
 	$(NVCC) $(ALL_CCFLAGS) -dc $< -o $@

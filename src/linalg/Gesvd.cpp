@@ -10,7 +10,7 @@ using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
-  #include "../backend/linalg_internal_interface.hpp"
+  #include "backend/linalg_internal_interface.hpp"
 
 namespace cytnx {
   namespace linalg {
@@ -641,7 +641,7 @@ namespace cytnx {
                       "\n");
 
       cytnx_error_msg(Tin.is_diag(),
-                      "[Gesvd][ERROR] Gesvd for diagonal UniTensor is trivial and currently not "
+                      "[Gesvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
                       "support. Use other manipulation.%s",
                       "\n");
 

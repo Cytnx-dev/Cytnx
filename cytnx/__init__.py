@@ -9,30 +9,40 @@ if cytnx.__cytnx_backend__ == "torch":
 
 else:
 
-    #1) check if numpy is previous imported, if it is, pop warning:
-    if ('numpy' in sys.modules) or ('scipy' in sys.modules):
-        warnings.warn("numpy and/or scipy are imported before cytnx. Please make sure it support ILP64.")
+
+    # #1) check if numpy is previous imported, if it is, pop warning:
+
+    # ## [NOTE!!] These part has to execute first before import numpy!
+    # # Detect and set MKL interface
+    # mkl_interface = detect_mkl_interface()
+    # print(f"MKL interface: {mkl_interface}")
+    # if mkl_interface == 2:  # ILP64
+    #     if ('numpy' in sys.modules) or ('scipy' in sys.modules):
+    #         warnings.warn("numpy and/or scipy are imported before cytnx. Please make sure it supports ILP64.")
+
+    #     set_mkl_ilp64()
+    # elif mkl_interface == 1:  # LP64
+    #     set_mkl_lp64()
+    # else:
+    #     warnings.warn("MKL interface not detected. Using default interface.")
+
+    # def _init_mkl():
+    #     a = zeros(2)
+    #     b = zeros(2)
+    #     linalg.Dot(a,b)
+    #     return 0
+    # _init_mkl()
 
 
-    ## [NOTE!!] These part has to execute first before import numpy!
-    #set_mkl_ilp64()
-    def _init_mkl():
-        a = zeros(2)
-        b = zeros(2)
-        linalg.Dot(a,b)
-        return 0
-    _init_mkl()
+    # def get_mkl_interface():
+    #     code = get_mkl_code()
+    #     if code < 0:
+    #         raise Warning("cytnx is not compiled with MKL.")
 
-
-    def get_mkl_interface():
-        code = get_mkl_code()
-        if code < 0:
-            raise Warning("does not compile with mkl.")
-
-        if(code%2):
-            return "ilp64"
-        else:
-            return "lp64"
+    #     if(code%2):
+    #         return "ilp64"
+    #     else:
+    #         return "lp64"
 
 
     import numpy
@@ -82,14 +92,6 @@ def _find_hptt__():
 
     return hptt_path
 
-def _find_cutt__():
-    cutt_path = None
-    if os.path.exists(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cutt")):
-        cutt_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),"cutt")
-    elif os.path.exists(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"cutt")):
-        cutt_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),"cutt")
-
-    return cutt_path
 
 
 def _get_version__():
@@ -128,9 +130,7 @@ def _resolve_cpp_linkflags__():
     if not hptt_path is None:
         out += os.path.join(hptt_path,"lib/libhptt.a")
 
-    cutt_path = _find_cutt__()
-    if not cutt_path is None:
-        out += " " + os.path.join(cutt_path,"lib/libcutt.a")
+
 
 
     f.close()

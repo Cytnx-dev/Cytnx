@@ -1,4 +1,3 @@
-
 message(STATUS "")
 message(STATUS "------------------------------------------------------------------------")
 message(STATUS "  Project Cytnx, A Cross-section of Python & C++,Tensor network library ")
@@ -98,7 +97,7 @@ FILE(APPEND "${CMAKE_BINARY_DIR}/vinfo.tmp" "${CYTNX_VARIANT_INFO}" "")
 #   - If all conditions are met and the variable is not already defined, the
 #     variable is set to the provided default value in the cache using the
 #     specified type and help message.
-#   - If the variable’s value is empty, a fatal error is raised.
+#   - If the variable's value is empty, a fatal error is raised.
 #
 # :Examples:
 #
@@ -147,19 +146,19 @@ endfunction()
 
 include(CMakeDependentOption)
 
-set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx" CACHE PATH "the destination path for installation")
-option(BUILD_PYTHON "Build Python API. Require Python and pybind11 installed." ON)
+set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx" CACHE PATH "Destination path for installation")
+option(BUILD_PYTHON "Build Python API. Requires Python and pybind11 installed." ON)
 option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
 cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
-cmake_dependent_option(USE_HPTT "Use HPTT library to accelrate tensor transpose." OFF "NOT BACKEND_TORCH" OFF)
-cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Enable fine tune HPTT for the native hardware." OFF "USE_HPTT" OFF)
+cmake_dependent_option(USE_HPTT "Use HPTT library to accelerate tensor transpose." OFF "NOT BACKEND_TORCH" OFF)
+cmake_dependent_option(HPTT_ENABLE_FINE_TUNE "Enable fine-tune HPTT for the native hardware." OFF "USE_HPTT" OFF)
 # TODO: use variable instead of option to handle HPTT variant.
 cmake_dependent_option(HPTT_ENABLE_ARM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_AVX; NOT HPTT_ENABLE_IBM" OFF)
 cmake_dependent_option(HPTT_ENABLE_AVX "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_IBM" OFF)
 cmake_dependent_option(HPTT_ENABLE_IBM "HPTT variant" OFF "USE_HPTT;NOT HPTT_ENABLE_ARM; NOT HPTT_ENABLE_AVX" OFF)
 cmake_dependent_option(USE_CUDA "Enable CUDA support." OFF "NOT BACKEND_TORCH" OFF)
-cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
-cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
+# cmake_dependent_option(USE_CUTT "Use CUTT library to accelrate tensor transpose." OFF "USE_CUDA" OFF)
+# cmake_dependent_option(CUTT_ENABLE_FINE_TUNE "Enable CUTT fine tune for the native hardware." OFF "USE_CUTT" OFF)
 cmake_dependent_option(USE_CUTENSOR "Enable cuTENSOR." OFF "USE_CUDA" OFF)
 require_dependent_variable(CUTENSOR_ROOT "$ENV{CUTENSOR_ROOT}" PATH
 "Please provide CUTENSOR_ROOT in the environment variables.
@@ -168,10 +167,10 @@ cmake_dependent_option(USE_CUQUANTUM "Enable cuQuantum." OFF "USE_CUDA" OFF)
 require_dependent_variable(CUQUANTUM_ROOT "$ENV{CUQUANTUM_ROOT}" PATH
 "Please provide CUQUANTUM_ROOT in the environment variables.
 CUQUANTUM_ROOT is the path to the folder of cuQuantum." "USE_CUQUANTUM")
-option(RUN_TESTS "Run Cytnx tests" OFF)
-option(RUN_BENCHMARKS "Run Cytnx benchmarks" OFF)
-option(USE_DEBUG "Build in debug more and enable address sanitizer" OFF)
-option(BUILD_DOC "Build API docuemntation" OFF)
+option(RUN_TESTS "Run Cytnx tests." OFF)
+option(RUN_BENCHMARKS "Run Cytnx benchmarks." OFF)
+option(USE_DEBUG "Build in debug mode and enable address sanitizer." OFF)
+option(BUILD_DOC "Build API documentation." OFF)
 option(DEV_MODE "Build testing dev_test.cpp with cytnx" OFF)
 
 # #####################################################################
@@ -181,6 +180,7 @@ project(CYTNX VERSION ${CYTNX_VERSION} LANGUAGES CXX C)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 if(USE_CUDA)
+  set(CMAKE_CUDA_ARCHITECTURES native)
   enable_language(CUDA)
   # Disable generation of "--option-file" flag in compile_commands.json.
   # This workaround helps VSCode's cpptools extension correctly locate CUDA
@@ -243,7 +243,7 @@ endif()
 # #####################################################################
 
 # ## Boost
-find_package(Boost REQUIRED)
+find_package(Boost CONFIG REQUIRED)
 target_include_directories(cytnx SYSTEM
   PUBLIC
   ${Boost_INCLUDE_DIRS}
@@ -282,6 +282,12 @@ else()
   message(STATUS "backend = cytnx")
   include(CytnxBKNDCMakeLists.cmake)
 endif() # Backend torch
+
+#ARPACK
+find_library(ARPACK_LIB arpack REQUIRED)
+message(STATUS "Found ARPACK_LIB at: ${ARPACK_LIB}")
+target_link_libraries(cytnx PRIVATE ${ARPACK_LIB})
+
 
 # #####################################################################
 # ## Get Gtest & benchmark
@@ -478,6 +484,18 @@ message(STATUS "    CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "    CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "    BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")
 message(STATUS "    Link libraries: ${CYTNX_LINK_Libs}")
+
+get_target_property(LINK_LIBS_PROP cytnx LINK_LIBRARIES)
+message(STATUS "LINK_LIBRARIES for cytnx: ${LINK_LIBS_PROP}")
+
+get_target_property(LINK_INTERFACE_LIBS_PROP cytnx INTERFACE_LINK_LIBRARIES)
+message(STATUS "INTERFACE_LINK_LIBRARIES for cytnx: ${LINK_INTERFACE_LIBS_PROP}")
+
+get_target_property(LINK_OPTIONS_PROP cytnx LINK_OPTIONS)
+message(STATUS "LINK_OPTIONS for cytnx: ${LINK_OPTIONS_PROP}")
+
+get_target_property(LINK_FLAGS_PROP cytnx LINK_FLAGS)
+message(STATUS "LINK_FLAGS for cytnx: ${LINK_FLAGS_PROP}")
 
 FILE(APPEND "${CMAKE_BINARY_DIR}/linkflags.tmp" "${LAPACK_LIBRARIES}\n" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "${CMAKE_CXX_FLAGS}\n" "")
