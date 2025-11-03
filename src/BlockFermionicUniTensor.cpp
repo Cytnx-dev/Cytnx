@@ -2582,9 +2582,9 @@ namespace cytnx {
   void BlockFermionicUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators,
                                              const bool &force) {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // TODOfermions: signflips need to be included!!!
-    cytnx_error_msg(
-      true, "[ERROR][BlockFermionicUniTensor][_fx_group_duplicates] not implemented yet.%s", "\n");
+    // TODOfermion: signflips need to be included!!!
+    cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][combineBonds] not implemented yet.%s",
+                    "\n");
     cytnx_error_msg(this->is_diag(),
                     "[ERROR][BlockFermionicUniTensor] cannot combineBonds when is_diag = true!%s",
                     "\n");
@@ -2808,7 +2808,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockUT not implemented.%s", "\n");
   }
 
-  void _bkf_from_bkF(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
+  void _bkf_from_bkf(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
                      const bool &force) {
     cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockFermionicUT not implemented.%s", "\n");
   }
@@ -2826,7 +2826,7 @@ namespace cytnx {
     } else if (rhs->uten_type() == UTenType.Block) {
       _bkf_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
     } else if (rhs->uten_type() == UTenType.BlockFermionic) {
-      _bkf_from_bkF(this, (BlockFermionicUniTensor *)(rhs.get()), force);
+      _bkf_from_bkf(this, (BlockFermionicUniTensor *)(rhs.get()), force);
     } else {
       cytnx_error_msg(
         true, "[ERROR] unsupport conversion of UniTensor from %s => BlockFermionicUniTensor\n",
