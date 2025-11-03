@@ -1,6 +1,8 @@
+#include <format>
 #include <vector>
 #include <map>
 #include <random>
+#include <string>
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -9,10 +11,9 @@
 #include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/warnings.h>
 
 #include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
-#include "complex.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -64,6 +65,33 @@ template <class T>
 void f_UniTensor_setelem_scal_int(UniTensor &self, const cytnx_uint64 &locator, const T &rc) {
   const std::vector<cytnx_uint64> tmp = {locator};
   self.set_elem(tmp, rc);
+}
+
+// Parse UniTensor.get_blocks_ function's silent argument.
+//
+// This function should be replaced with `py::arg("silent") = false` after stopping
+// support for the deprecated typo argument "slient".
+inline bool parse_get_blocks_silent_arg(const py::args &args, const py::kwargs &kwargs) {
+  bool silent = false;
+  if (args.size() + kwargs.size() > 1) {
+    throw py::type_error("get_blocks_() takes at most 1 argument");
+  }
+  if (args.size() == 1) {
+    silent = py::cast<bool>(args[0]);
+  } else if (kwargs.contains("slient")) {
+    py::warnings::warn(
+      "Keyword 'slient' is deprecated and will be removed in v2.0.0; use 'silent' instead.",
+      PyExc_FutureWarning, 2);
+    silent = kwargs["slient"].cast<bool>();
+  } else if (kwargs.contains("silent")) {
+    silent = kwargs["silent"].cast<bool>();
+  } else if (kwargs.size() == 1) {
+    // The case that kwargs.size() > 1 has been caught above.
+    std::string kwarg_name = py::str(kwargs.begin()->first);
+    throw py::type_error(
+      std::format("'{}' is an invalid keyword argument for get_blocks_()", kwarg_name));
+  }
+  return silent;
 }
 
 void unitensor_binding(py::module &m) {
@@ -712,11 +740,18 @@ void unitensor_binding(py::module &m) {
     .def("get_blocks", [](const UniTensor &self) { return self.get_blocks(); })
     .def(
       "get_blocks_",
-      [](const UniTensor &self, const bool &slient) { return self.get_blocks_(slient); },
-      py::arg("slient") = false)
+      [](const UniTensor& self, py::args args, py::kwargs kwargs) {
+        return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
+      }
+      // ,py::arg("silent") = false // Uncmment this line after removing the deprecated argument.
+    )
     .def(
-      "get_blocks_", [](UniTensor &self, const bool &slient) { return self.get_blocks_(slient); },
-      py::arg("slient") = false)
+      "get_blocks_",
+      [](UniTensor &self, py::args args, py::kwargs kwargs) {
+        return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
+    }
+    // ,py::arg("silent") = false // Uncmment this line after removing the deprecated argument.
+)
     .def(
       "put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64 &idx) {

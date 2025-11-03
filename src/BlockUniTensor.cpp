@@ -1673,7 +1673,7 @@ namespace cytnx {
                     "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
                     "\n");
 
-    // 2) finding the blocks (they might be not in the same order!
+    // 2) finding the blocks (they might be not in the same order!)
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         if (this->_inner_to_outer_idx[b] ==
@@ -1706,7 +1706,7 @@ namespace cytnx {
                     "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
                     "\n");
 
-    // 2) finding the blocks (they might be not in the same order!
+    // 2) finding the blocks (they might be not in the same order!)
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         if (this->_inner_to_outer_idx[b] ==
@@ -1739,7 +1739,7 @@ namespace cytnx {
                     "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
                     "\n");
 
-    // 2) finding the blocks (they might be not in the same order!
+    // 2) finding the blocks (they might be not in the same order!)
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         if (this->_inner_to_outer_idx[b] ==

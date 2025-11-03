@@ -19,6 +19,10 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
   UniTensor BFUT1 = UniTensor({B1, B2, B12}, {"a", "b", "c"});
   UniTensor BFUT2;
   UniTensor BFUT3 = UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"});
+  UniTensor BFUT3PERM =
+    UniTensor({B3, B2, B4, B12, B1}, {"d", "b", "e", "c", "a"});  // permutation {3, 1, 4, 2, 0}
+
+  // UniTensor BFUTfparfnum; // fpar x fnum symmetries
 
  protected:
   void SetUp() override {
@@ -30,6 +34,7 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     BFUT1.at({1, 0, 3}) = 6.;
     BFUT1.at({1, 1, 0}) = 7.;
     BFUT1.at({1, 1, 1}) = 8.;
+
     BFUT2 = BFUT1.clone();
     // BFUT2.permute_nosignflip_({2, 1, 0});
     BFUT2.Transpose_();
@@ -43,7 +48,17 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     BFUT3.at({1, 0, 3, 0, 0}) = 6.;
     BFUT3.at({1, 1, 0, 0, 0}) = 7.;
     BFUT3.at({1, 1, 1, 0, 0}) = 8.;
-    // BUT4 = UniTensor::Load(data_dir + "OriginalBUT.cytnx");
+
+    BFUT3PERM.at({0, 0, 0, 0, 0}) = 1.;
+    BFUT3PERM.at({0, 0, 0, 1, 0}) = 2.;
+    BFUT3PERM.at({0, 1, 0, 2, 0}) = 3.;
+    BFUT3PERM.at({0, 1, 0, 3, 0}) = 4.;
+    BFUT3PERM.at({0, 0, 0, 2, 1}) = -5.;
+    BFUT3PERM.at({0, 0, 0, 3, 1}) = -6.;
+    BFUT3PERM.at({0, 1, 0, 0, 1}) = -7.;
+    BFUT3PERM.at({0, 1, 0, 1, 1}) = -8.;
+
+    // BFUTfparfnum = UniTensor::Load(data_dir + "ferm_fpar_fnum_F64.cytnx");
   }
   void TearDown() override {}
 };

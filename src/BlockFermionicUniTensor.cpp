@@ -1929,8 +1929,8 @@ namespace cytnx {
   }
   void BlockFermionicUniTensor::Trace_(const cytnx_int64 &a, const cytnx_int64 &b) {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // TODOfermions: sign structure needs to be incorporated, and supertrace needs to be avoided!
-    cytnx_error_msg(true, "[ERROR][BlockFermionicUniTensor][Trace_] not implemented yet.%s", "\n");
+    // permutes BD_KET bond directly behind BD_BRA bond to ensure the right sign structure and avoid
+    // supertraces
     cytnx_int64 ida = a;
     cytnx_int64 idb = b;
 
@@ -1964,8 +1964,26 @@ namespace cytnx {
     if (ida < tmpRk) this->_rowrank--;
     if (idb < tmpRk) this->_rowrank--;
 
+    // make sure BRA_KET comes before BD_BRA to avoid supertrace
+    if (this->_bonds[ida].type() == BD_KET) std::swap(ida, idb);
+    // permute such that idb comes right after ida
+    std::vector<cytnx_int64> perm(this->rank());
+    std::iota(perm.begin(), perm.end(), 0);
+    if (ida < idb) {
+      perm.erase(perm.begin() + idb);
+      perm.insert(perm.begin() + ida + 1, idb);
+      idb = ida + 1;
+    } else {
+      perm.insert(perm.begin() + ida + 1, idb);
+      perm.erase(perm.begin() + idb);
+      idb = ida;
+      ida--;
+    }
+    this->permute_(perm);
+    // cout << "[DEBUG] ida=" << ida << "; idb=" << idb << "; permutation=" << perm << endl;
+    // this->print_diagram();
+
     // 1) remove the bond, labels:
-    if (ida > idb) std::swap(ida, idb);
     this->_bonds.erase(this->_bonds.begin() + idb);
     this->_bonds.erase(this->_bonds.begin() + ida);
     this->_labels.erase(this->_labels.begin() + idb);
@@ -1973,17 +1991,26 @@ namespace cytnx {
 
     // trace the block!
     std::vector<Tensor> new_blocks;
+    std::vector<bool> new_signflips;
     vec2d<cytnx_uint64> new_itoi;
     if (this->_labels.size() == 0) {
       // if there is no leg left, leaving only one block, and let API to handle the
       // BlockFermionicUniTensor->DenseUniTensor!
       new_blocks.push_back(zeros(1, this->dtype(), this->device()));
+      new_signflips.push_back(false);
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
-          if (this->is_diag())
-            new_blocks.back() += linalg::Sum(this->_blocks[i]);
-          else
-            new_blocks.back() += this->_blocks[i].Trace(ida, idb);
+          if (this->is_diag()) {
+            if (this->_signflip[i])
+              new_blocks.back() -= linalg::Sum(this->_blocks[i]);
+            else
+              new_blocks.back() += linalg::Sum(this->_blocks[i]);
+          } else {
+            if (this->_signflip[i])
+              new_blocks.back() -= this->_blocks[i].Trace(ida, idb);
+            else
+              new_blocks.back() += this->_blocks[i].Trace(ida, idb);
+          }
         }
       }
 
@@ -1997,12 +2024,19 @@ namespace cytnx {
           s.erase(s.begin() + idb);
           s.erase(s.begin() + ida);
           auto itr = tmap.find(s);
-          if (itr != tmap.end())
-            new_blocks[itr->second] += this->_blocks[i].Trace(ida, idb);
+          if (itr != tmap.end())  // itr already exists in tmap
+            if (this->_signflip[i])
+              new_blocks[itr->second] -= this->_blocks[i].Trace(ida, idb);
+            else
+              new_blocks[itr->second] += this->_blocks[i].Trace(ida, idb);
           else {
             tmap[s] = new_blocks.size();
-            new_blocks.push_back(this->_blocks[i].Trace(ida, idb));
+            if (this->_signflip[i])
+              new_blocks.push_back(-this->_blocks[i].Trace(ida, idb));
+            else
+              new_blocks.push_back(this->_blocks[i].Trace(ida, idb));
             new_itoi.push_back(s);
+            new_signflips.push_back(false);
           }
         }
       }
@@ -2010,6 +2044,7 @@ namespace cytnx {
 
     this->_blocks = new_blocks;
     this->_inner_to_outer_idx = new_itoi;
+    this->_signflip = new_signflips;
   }
 
   Tensor BlockFermionicUniTensor::Norm() const {
@@ -2430,7 +2465,7 @@ namespace cytnx {
       this->is_diag() != Rtn->is_diag(),
       "[ERROR] cannot add BlockFermionicUniTensor with is_diag=true and is_diag=false.%s", "\n");
 
-    // 2) finding the blocks (they might be not in the same order!
+    // 2) finding the blocks (they might be not in the same order!)
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         blockrhs = (b + a) % Rtn->_blocks.size();
@@ -2468,7 +2503,7 @@ namespace cytnx {
       this->is_diag() != Rtn->is_diag(),
       "[ERROR] cannot add BlockFermionicUniTensor with is_diag=true and is_diag=false.%s", "\n");
 
-    // 2) finding the blocks (they might be not in the same order!
+    // 2) finding the blocks (they might be not in the same order!)
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         blockrhs = (b + a) % Rtn->_blocks.size();
@@ -2513,7 +2548,7 @@ namespace cytnx {
       this->is_diag() != Rtn->is_diag(),
       "[ERROR] cannot add BlockFermionicUniTensor with is_diag=true and is_diag=false.%s", "\n");
 
-    // 2) finding the blocks (they might be not in the same order!
+    // 2) finding the blocks (they might be not in the same order!)
     for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
       for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
         blockrhs = (b + a) % Rtn->_blocks.size();
