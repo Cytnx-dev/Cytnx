@@ -176,7 +176,7 @@ namespace cytnx {
     //-----------------------------------------
 
     template <class T1, class T2>
-    __global__ void cuSetElems_conti_gpu_scal_kernel(T1 d_in, T2 *d_out, cytnx_uint64 *offj,
+    __global__ void cuSetElems_conti_gpu_scal_kernel(T1 *d_in, T2 *d_out, cytnx_uint64 *offj,
                                                      cytnx_uint64 *new_offj, cytnx_uint64 *locators,
                                                      cytnx_uint64 *picksize, cytnx_uint64 rank,
                                                      cytnx_uint64 TotalElem, cytnx_uint64 Nunit) {
@@ -193,11 +193,11 @@ namespace cytnx {
           offset += picksize[r];
         }
         // d_out[Loc] = d_in;
-        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in;
+        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[0];
       }
     }
 
-    __global__ void cuSetElems_conti_gpu_scal_kernel(cuDoubleComplex d_in, cuDoubleComplex *d_out,
+    __global__ void cuSetElems_conti_gpu_scal_kernel(cuDoubleComplex *d_in, cuDoubleComplex *d_out,
                                                      cytnx_uint64 *offj, cytnx_uint64 *new_offj,
                                                      cytnx_uint64 *locators, cytnx_uint64 *picksize,
                                                      cytnx_uint64 rank, cytnx_uint64 TotalElem,
@@ -215,11 +215,11 @@ namespace cytnx {
           offset += picksize[r];
         }
         // d_out[Loc] = d_in;
-        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in;
+        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[0];
       }
     }
 
-    __global__ void cuSetElems_conti_gpu_scal_kernel(cuDoubleComplex d_in, cuFloatComplex *d_out,
+    __global__ void cuSetElems_conti_gpu_scal_kernel(cuDoubleComplex *d_in, cuFloatComplex *d_out,
                                                      cytnx_uint64 *offj, cytnx_uint64 *new_offj,
                                                      cytnx_uint64 *locators, cytnx_uint64 *picksize,
                                                      cytnx_uint64 rank, cytnx_uint64 TotalElem,
@@ -238,11 +238,11 @@ namespace cytnx {
         }
         // d_out[Loc] = cuComplexDoubleToFloat(d_in);
         for (cytnx_uint64 x = 0; x < Nunit; x++)
-          d_out[Loc * Nunit + x] = cuComplexDoubleToFloat(d_in);
+          d_out[Loc * Nunit + x] = cuComplexDoubleToFloat(d_in[0]);
       }
     }
 
-    __global__ void cuSetElems_conti_gpu_scal_kernel(cuFloatComplex d_in, cuDoubleComplex *d_out,
+    __global__ void cuSetElems_conti_gpu_scal_kernel(cuFloatComplex *d_in, cuDoubleComplex *d_out,
                                                      cytnx_uint64 *offj, cytnx_uint64 *new_offj,
                                                      cytnx_uint64 *locators, cytnx_uint64 *picksize,
                                                      cytnx_uint64 rank, cytnx_uint64 TotalElem,
@@ -261,11 +261,11 @@ namespace cytnx {
         }
         // d_out[Loc] = cuComplexFloatToDouble(d_in);
         for (cytnx_uint64 x = 0; x < Nunit; x++)
-          d_out[Loc * Nunit + x] = cuComplexFloatToDouble(d_in);
+          d_out[Loc * Nunit + x] = cuComplexFloatToDouble(d_in[0]);
       }
     }
 
-    __global__ void cuSetElems_conti_gpu_scal_kernel(cuFloatComplex d_in, cuFloatComplex *d_out,
+    __global__ void cuSetElems_conti_gpu_scal_kernel(cuFloatComplex *d_in, cuFloatComplex *d_out,
                                                      cytnx_uint64 *offj, cytnx_uint64 *new_offj,
                                                      cytnx_uint64 *locators, cytnx_uint64 *picksize,
                                                      cytnx_uint64 rank, cytnx_uint64 TotalElem,
@@ -283,12 +283,12 @@ namespace cytnx {
           offset += picksize[r];
         }
         // d_out[Loc] = d_in;
-        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in;
+        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x] = d_in[0];
       }
     }
 
     template <class TT>
-    __global__ void cuSetElems_conti_gpu_scal_kernel(TT d_in, cuFloatComplex *d_out,
+    __global__ void cuSetElems_conti_gpu_scal_kernel(TT *d_in, cuFloatComplex *d_out,
                                                      cytnx_uint64 *offj, cytnx_uint64 *new_offj,
                                                      cytnx_uint64 *locators, cytnx_uint64 *picksize,
                                                      cytnx_uint64 rank, cytnx_uint64 TotalElem,
@@ -306,12 +306,12 @@ namespace cytnx {
           offset += picksize[r];
         }
         // d_out[Loc].x = d_in;
-        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x].x = d_in;
+        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x].x = d_in[0];
       }
     }
 
     template <class TT>
-    __global__ void cuSetElems_conti_gpu_scal_kernel(TT d_in, cuDoubleComplex *d_out,
+    __global__ void cuSetElems_conti_gpu_scal_kernel(TT *d_in, cuDoubleComplex *d_out,
                                                      cytnx_uint64 *offj, cytnx_uint64 *new_offj,
                                                      cytnx_uint64 *locators, cytnx_uint64 *picksize,
                                                      cytnx_uint64 rank, cytnx_uint64 TotalElem,
@@ -329,7 +329,7 @@ namespace cytnx {
           offset += picksize[r];
         }
         // d_out[Loc].x = d_in;
-        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x].x = d_in;
+        for (cytnx_uint64 x = 0; x < Nunit; x++) d_out[Loc * Nunit + x].x = d_in[0];
       }
     }
 
@@ -396,8 +396,8 @@ namespace cytnx {
                                         const std::vector<cytnx_uint64> &new_offj,
                                         const std::vector<std::vector<cytnx_uint64>> &locators,
                                         const cytnx_uint64 &TotalElem, const cytnx_uint64 &Nunit) {
-      Ty1 new_elem_ = *(static_cast<Ty1 *>(in));
-      Ty2 *elem_ptr_ = static_cast<Ty2 *>(out);
+      Ty1 *new_elem_ = reinterpret_cast<Ty1 *>(in);
+      Ty2 *elem_ptr_ = reinterpret_cast<Ty2 *>(out);
 
       // create on device:
       cytnx_uint64 *d_offj;
