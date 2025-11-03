@@ -6,7 +6,7 @@ using namespace cytnx;
 using namespace testing;
 using namespace TestTools;
 
-namespace RsvdTruncateTest {
+namespace RsvdNoTruncateTest {
 
   static TestFailMsg fail_msg;
 
@@ -16,7 +16,7 @@ namespace RsvdTruncateTest {
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
   std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
-  std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
+  std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Rsvd/";
   // normal test
 
   /*=====test info=====
@@ -26,7 +26,7 @@ namespace RsvdTruncateTest {
     is_U:true
     is_VT:true
   ====================*/
-  TEST(Rsvd_truncate, dense_one_elem) {
+  TEST(Rsvd_notruncate, dense_one_elem) {
     std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
     fail_msg.Init(test_case_name);
     int size = 1;
@@ -36,7 +36,7 @@ namespace RsvdTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, -10, 0, 0);
-    std::vector<UniTensor> Rsvds = linalg::Rsvd_truncate(T, 1);
+    std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 1);
     EXPECT_TRUE(CheckLabels(T, Rsvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Rsvds)) << fail_msg.TraceFailMsgs();
     EXPECT_EQ(Rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
@@ -51,7 +51,7 @@ namespace RsvdTruncateTest {
   //   is_U:true
   //   is_VT:true
   // ====================*/
-  // TEST(Rsvd_truncate, dense_nondiag_test) {
+  // TEST(Rsvd_notruncate, dense_nondiag_test) {
   //   std::vector<std::string> case_list = {"dense_nondiag_C128", "dense_nondiag_F64"};
   //   for (const auto& case_name : case_list) {
   //     std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
@@ -69,7 +69,7 @@ namespace RsvdTruncateTest {
     is_U:true
     is_VT:true
   ====================*/
-  TEST(Rsvd_truncate, err_dense_diag_test) {
+  TEST(Rsvd_notruncate, err_dense_diag_test) {
     int size = 5;
     std::vector<Bond> bonds = {Bond(size), Bond(size)};
     int rowrank = 1;
@@ -77,7 +77,7 @@ namespace RsvdTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_truncate(T, 2); }, std::logic_error);
+    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 2); }, std::logic_error);
   }
 
   /*=====test info=====
@@ -87,27 +87,27 @@ namespace RsvdTruncateTest {
     is_U:true
     is_VT:true
   ====================*/
-  TEST(Rsvd_truncate, dense_exp_svals_test) {
+  TEST(Rsvd_notruncate, dense_exp_svals_test) {
     std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                           "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
-      EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
+      EXPECT_TRUE(CheckResult(case_name, 15, 2)) << fail_msg.TraceFailMsgs();
     }
   }
 
   /*=====test info=====
   describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration in
-  Rsvd. input: T:Dense UniTensor with real or complex real type. is_U:true is_VT:true
+  Rsvd_notruncate. input: T:Dense UniTensor with real or complex real type. is_U:true is_VT:true
   ====================*/
-  TEST(Rsvd_truncate, dense_exp_svals_no_power_iteration_test) {
+  TEST(Rsvd_notruncate, dense_exp_svals_no_power_iteration_test) {
     std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                           "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
-      EXPECT_TRUE(CheckResult(case_name, 5, 0)) << fail_msg.TraceFailMsgs();
+      EXPECT_TRUE(CheckResult(case_name, 15, 0)) << fail_msg.TraceFailMsgs();
     }
   }
 
@@ -177,7 +177,7 @@ namespace RsvdTruncateTest {
     double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
     // std::cout << relative_err << std::endl;
 
-    const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
+    const double tol = is_double_float_acc ? 1.0e-10 : 1.0e-5;
     return (relative_err < tol);
   }
 
@@ -197,17 +197,13 @@ namespace RsvdTruncateTest {
     std::string src_file_name = src_data_root + case_name + ".cytnx";
     // anscer file
     std::string ans_file_name = ans_data_root + case_name + ".cytnx";
-    // reconstructed matrix file
-    std::string rec_file_name = ans_data_root + case_name + "_reconstructed.cytnx";
     // bool need_U, need_VT;
     bool compute_uv;
     UniTensor src_T = UniTensor::Load(src_file_name);
     UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
-    UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
 
-    // Do Rsvd_truncate
-    std::vector<UniTensor> Rsvds =
-      linalg::Rsvd_truncate(src_T, keepdim, 0, true, true, 0, 0, 2, 1, power_iteration, 0);
+    // Do Rsvd_notruncate
+    std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(src_T, keepdim, true, true, power_iteration, 0);
 
     // check labels
     if (!(CheckLabels(src_T, Rsvds))) {
@@ -222,7 +218,7 @@ namespace RsvdTruncateTest {
     }
 
     // check recompose [M - USV*]
-    if (!ReComposeCheck(rec_T, Rsvds)) {
+    if (!ReComposeCheck(src_T, Rsvds)) {
       fail_msg.AppendMsg(
         "The result is wrong after recomposing. "
         "That's mean T not equal USV* ",
@@ -232,4 +228,4 @@ namespace RsvdTruncateTest {
 
     return true;
   }
-}  // namespace RsvdTruncateTest
+}  // namespace RsvdNoTruncateTest

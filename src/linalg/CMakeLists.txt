@@ -52,10 +52,10 @@ target_sources_local(cytnx
     Rand_isometry.cpp
     Svd.cpp
     Gesvd.cpp
-    Rsvd.cpp
+    Rsvd_notruncate.cpp
     Svd_truncate.cpp
     Gesvd_truncate.cpp
-    Rsvd_truncate.cpp
+    Rsvd.cpp
     Gemm.cpp
     Gemm_Batch.cpp
     Tensordot.cpp

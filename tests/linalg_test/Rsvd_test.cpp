@@ -16,7 +16,7 @@ namespace RsvdTest {
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
   std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
-  std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Rsvd/";
+  std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
   // normal test
 
   /*=====test info=====
@@ -93,7 +93,7 @@ namespace RsvdTest {
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
-      EXPECT_TRUE(CheckResult(case_name, 15, 2)) << fail_msg.TraceFailMsgs();
+      EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
     }
   }
 
@@ -107,7 +107,7 @@ namespace RsvdTest {
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
-      EXPECT_TRUE(CheckResult(case_name, 15, 0)) << fail_msg.TraceFailMsgs();
+      EXPECT_TRUE(CheckResult(case_name, 5, 0)) << fail_msg.TraceFailMsgs();
     }
   }
 
@@ -177,7 +177,7 @@ namespace RsvdTest {
     double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
     // std::cout << relative_err << std::endl;
 
-    const double tol = is_double_float_acc ? 1.0e-10 : 1.0e-5;
+    const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
     return (relative_err < tol);
   }
 
@@ -197,13 +197,17 @@ namespace RsvdTest {
     std::string src_file_name = src_data_root + case_name + ".cytnx";
     // anscer file
     std::string ans_file_name = ans_data_root + case_name + ".cytnx";
+    // reconstructed matrix file
+    std::string rec_file_name = ans_data_root + case_name + "_reconstructed.cytnx";
     // bool need_U, need_VT;
     bool compute_uv;
     UniTensor src_T = UniTensor::Load(src_file_name);
     UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
+    UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
 
     // Do Rsvd
-    std::vector<UniTensor> Rsvds = linalg::Rsvd(src_T, keepdim, true, true, power_iteration, 0);
+    std::vector<UniTensor> Rsvds =
+      linalg::Rsvd(src_T, keepdim, 0, true, true, 0, 0, 2, 1, power_iteration, 0);
 
     // check labels
     if (!(CheckLabels(src_T, Rsvds))) {
@@ -218,7 +222,7 @@ namespace RsvdTest {
     }
 
     // check recompose [M - USV*]
-    if (!ReComposeCheck(src_T, Rsvds)) {
+    if (!ReComposeCheck(rec_T, Rsvds)) {
       fail_msg.AppendMsg(
         "The result is wrong after recomposing. "
         "That's mean T not equal USV* ",

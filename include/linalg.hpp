@@ -713,12 +713,14 @@ namespace cytnx {
     @param[in] seed the seed for the random generator. [Default] Using device entropy.
     @see Rand_isometry(const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_uint64
     &power_iteration, const unsigned int &seed)
-    @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
+    @see Rsvd()
+    @see Gesvd()
+    @warning No truncation of the singular values is performed, and the smaller ones will be
+    inaccurate. Use Rsvd() for a truncated version that drops small singular values.
     */
-    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
-                                       bool is_U = true, bool is_vT = true,
-                                       cytnx_uint64 power_iteration = 2,
-                                       unsigned int seed = random::__static_random_device());
+    std::vector<cytnx::UniTensor> Rsvd_notruncate(
+      const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U = true, bool is_vT = true,
+      cytnx_uint64 power_iteration = 2, unsigned int seed = random::__static_random_device());
 
     /**
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
@@ -837,14 +839,14 @@ namespace cytnx {
       std::vector<cytnx_uint64> min_blockdim, const double &err = 0., const bool &is_U = true,
       const bool &is_vT = true, const unsigned int &return_err = 0, const cytnx_uint64 &mindim = 1);
 
-    // Rsvd_truncate:
+    // Rsvd:
     //==================================================
     /**
      * @brief Perform a truncated Singular-Value decomposition of a UniTensor.
     @details This function will perform a truncated Singular-Value decomposition
     of a UniTensor. It uses the ?gesvd method for the SVD. It will perform the randomized
     SVD first, and then truncate the singular values to the given cutoff \p err. That means, given a
-    UniYrndot \p Tin as \f$ M \f$, then the result will be: \f[ M = U S V^\dagger, \f] where \f$ S
+    UniTensor \p Tin as \f$ M \f$, then the result will be: \f[ M = U S V^\dagger, \f] where \f$ S
     \f$ is a singular values matrix with the singular values truncated to the given cutoff \p err.
     The dimension of \f$ S \f$ is at most \p keepdim.
 
@@ -861,8 +863,8 @@ namespace cytnx {
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
     @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
     the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    singular values matrix \f$ S \f$.) If \p return_err is > 1, then the full list of truncated
+    singular values will be returned.
     @param[in] oversampling_summand the randomized SVD computes (1 + oversampling_fact) * keepdim +
     oversampling_summand before further truncating to keepdim
     @param[in] oversampling_fact the randomized SVD computes (1 + oversampling_fact) * keepdim +
@@ -879,19 +881,19 @@ namespace cytnx {
     back to the vector.
     4. If \p return_err is true, then the error will be pushed back to the vector.
     @endparblock
-    @pre The input tensor should be a rank-2 tensor (matrix).
-    @see Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT,
-    const cytnx_uint64 &power_iteration, const unsigned int &seed);
-    @see Gesvd_truncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const double &err,
-    const bool &is_U, const bool &is_vT, const unsigned int &return_err, const cytnx_uint64
-    &mindim);
+    @pre The rowrank and permutation must be set accordingly for a matrix interpretation of the
+    UniTensor.
+    @see Rsvd_notruncate();
+    @see Gesvd_truncate();
     @note Uses a full Gesvd if keepdim is as large as the rank of the tensor
     */
-    std::vector<cytnx::UniTensor> Rsvd_truncate(
-      const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err = 0., bool is_U = true,
-      bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1,
-      cytnx_uint64 oversampling_summand = 10, double oversampling_factor = 1.,
-      cytnx_uint64 power_iteration = 0, unsigned int seed = random::__static_random_device());
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                       double err = 0., bool is_U = true, bool is_vT = true,
+                                       unsigned int return_err = 0, cytnx_uint64 mindim = 1,
+                                       cytnx_uint64 oversampling_summand = 10,
+                                       double oversampling_factor = 1.,
+                                       cytnx_uint64 power_iteration = 0,
+                                       unsigned int seed = random::__static_random_device());
 
     std::vector<cytnx::UniTensor> Hosvd(
       const cytnx::UniTensor &Tin, const std::vector<cytnx_uint64> &mode,
@@ -1712,7 +1714,7 @@ namespace cytnx {
     */
     std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U = true, const bool &is_vT = true);
 
-    // Rsvd:
+    // Rsvd_notruncate:
     //==================================================
     /**
     @brief Perform randomized Singular-Value decomposition on a rank-2 Tensor (a @em matrix) using
@@ -1725,15 +1727,17 @@ namespace cytnx {
     @param[in] power_iteration number of iterations for the power method: Y = (A *
     Adag)^power_iteration * A * Tin
     @param[in] seed the seed for the random generator. [Default] Using device entropy.
-    @see Rsvd(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool
-    &is_vT, const cytnx_uint64 &power_iteration, const unsigned int &seed);
-    @see Rand_isometry(const Tensor &Tin, const cytnx_uint64 &keepdim, const cytnx_uint64
-    &power_iteration, const unsigned int &seed)
-    @see Gesvd(const UniTensor &Tin, const bool &is_U, const bool &is_vT)
+    @see Rsvd_notruncate(const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U,
+    const bool &is_vT, const cytnx_uint64 &power_iteration, const unsigned int &seed);
+    @see Rsvd()
+    @see Rand_isometry()
+    @see Gesvd()
+    @warning No truncation of the singular values is performed, and the smaller ones will be
+    inaccurate. Use Rsvd() for a truncated version that drops small singular values.
     */
-    std::vector<Tensor> Rsvd(const Tensor &Tin, cytnx_uint64 keepdim, bool is_U = true,
-                             bool is_vT = true, cytnx_uint64 power_iteration = 2,
-                             unsigned int seed = random::__static_random_device());
+    std::vector<Tensor> Rsvd_notruncate(const Tensor &Tin, cytnx_uint64 keepdim, bool is_U = true,
+                                        bool is_vT = true, cytnx_uint64 power_iteration = 2,
+                                        unsigned int seed = random::__static_random_device());
 
     // Svd_truncate:
     //==================================================
@@ -1762,8 +1766,8 @@ namespace cytnx {
     @param[in] is_UvT if \em true, the left- and right- unitary matrices (isometries) are returned.
     @param[in] return_err whether the error shall be returned. If \p return_err is \em true, then
     the largest error will be pushed back to the vector (The smallest singular value in the return
-    singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
-    full list of truncated singular values will be returned.
+    singular values matrix \f$ S \f$.) If \p return_err > 1, then the full list of truncated
+    singular values will be returned.
     @return
     @parblock
     [std::vector<Tensors>]
@@ -1786,7 +1790,7 @@ namespace cytnx {
                                      const unsigned int &return_err = 0,
                                      const cytnx_uint64 &mindim = 1);
 
-    // Rsvd_truncate:
+    // Rsvd:
     //==================================================
     /**
     @brief Perform a truncated Singular-Value decomposition of a rank-2 Tensor (a @em matrix).
@@ -1829,19 +1833,15 @@ namespace cytnx {
     4. If \p return_err is true, then the error will be pushed back to the vector.
     @endparblock
     @pre The input tensor should be a rank-2 tensor (matrix).
-    @see Rsvd(const Tensor &Tin, const cytnx_uint64 &keepdim, const bool &is_U, const bool &is_vT,
-    const cytnx_uint64 &power_iteration, const unsigned int &seed)
-    @see Gesvd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim, const double &err, const
-    bool &is_U, const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim);
+    @see Rsvd_notruncate()
+    @see Gesvd_truncate();
     @note Uses a full Gesvd if keepdim is as large as the rank of the tensor
     */
-    std::vector<Tensor> Rsvd_truncate(const Tensor &Tin, cytnx_uint64 keepdim, double err = 0.,
-                                      bool is_U = true, bool is_vT = true,
-                                      unsigned int return_err = 0, cytnx_uint64 mindim = 1,
-                                      cytnx_uint64 oversampling_summand = 10,
-                                      double oversampling_factor = 1.,
-                                      cytnx_uint64 power_iteration = 0,
-                                      unsigned int seed = random::__static_random_device());
+    std::vector<Tensor> Rsvd(const Tensor &Tin, cytnx_uint64 keepdim, double err = 0.,
+                             bool is_U = true, bool is_vT = true, unsigned int return_err = 0,
+                             cytnx_uint64 mindim = 1, cytnx_uint64 oversampling_summand = 10,
+                             double oversampling_factor = 1., cytnx_uint64 power_iteration = 0,
+                             unsigned int seed = random::__static_random_device());
     // Gesvd_truncate:
     //==================================================
     /**
