@@ -18,7 +18,7 @@ def test_tdvp1_dense():
     hx = 0.0
     hz = -1.0
     tau = -1.0j
-    time_step = 10
+    time_step = 12
     # prepare up state
     As, Es = tdvp1_XXZmodel_dense(J, Jz, hx, hz, MPS_rand, chi, tau, time_step)
     error = np.abs(Es[-1]-(-1.0*Nsites))
