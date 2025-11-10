@@ -279,13 +279,11 @@ namespace cytnx {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum,
-                                 const bool &force) {
+  void UniTensor_base::put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum,
-                                  const bool &force) {
+  void UniTensor_base::put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }

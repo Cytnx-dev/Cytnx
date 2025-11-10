@@ -749,29 +749,30 @@ void unitensor_binding(py::module &m) {
 
     .def(
       "put_block",
-      [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block(in, qnum, force); },
-      py::arg("in"), py::arg("qidx"), py::arg("force") = false)
-     .def(
-      "put_block",
-      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block(in, lbls, qnum, force); },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force") = false)
+      [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) {
+        self.put_block(in, qnum);
+      },
+      py::arg("in"), py::arg("qidx"))
+    .def("put_block",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) {
+        self.put_block(in, lbls, qnum);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"))
     .def(
       "put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const cytnx_uint64 &idx) { self.put_block_(in, idx); },
       py::arg("in"), py::arg("idx") = (cytnx_uint64)(0))
 
-    .def(
-      "put_block_",
-      [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block_(in, qnum, force); },
-      py::arg("in"), py::arg("qidx"), py::arg("force") = false)
-     .def(
-      "put_block_",
-      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block_(in, lbls, qnum, force); },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force") = false)
+    .def("put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) {
+        self.put_block_(in, qnum);
+      },
+      py::arg("in"), py::arg("qidx"))
+    .def("put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) {
+        self.put_block_(in, lbls, qnum);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"))
     .def(
       "__repr__",
       [](UniTensor &self) -> std::string {
