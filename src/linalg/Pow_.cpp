@@ -8,19 +8,19 @@
 
 namespace cytnx {
   namespace linalg {
-    void Pow_(Tensor &Tin, const double &p) {
-      if (Tin.dtype() > 4) Tin = Tin.astype(Type.Double);
+    void Pow_(Tensor &Tio, const double &p) {
+      if (Tio.dtype() > 4) Tio = Tio.astype(Type.Double);
 
-      if (Tin.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Pow_ii[Tin.dtype()](Tin._impl->storage()._impl,
-                                                        Tin._impl->storage()._impl,
-                                                        Tin._impl->storage()._impl->size(), p);
+      if (Tio.device() == Device.cpu) {
+        cytnx::linalg_internal::lii.Pow_ii[Tio.dtype()](Tio._impl->storage()._impl,
+                                                        Tio._impl->storage()._impl,
+                                                        Tio._impl->storage()._impl->size(), p);
       } else {
   #ifdef UNI_GPU
-        checkCudaErrors(cudaSetDevice(Tin.device()));
-        cytnx::linalg_internal::lii.cuPow_ii[Tin.dtype()](Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl->size(), p);
+        checkCudaErrors(cudaSetDevice(Tio.device()));
+        cytnx::linalg_internal::lii.cuPow_ii[Tio.dtype()](Tio._impl->storage()._impl,
+                                                          Tio._impl->storage()._impl,
+                                                          Tio._impl->storage()._impl->size(), p);
           // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
   #else
         cytnx_error_msg(true, "[Pow_] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -29,20 +29,20 @@ namespace cytnx {
       }
     }
 
-    void Pow_(Tensor &Tin, const Scalar &p) {
-      if (Tin.dtype() > 4) Tin = Tin.astype(Type.Double);
+    void Pow_(Tensor &Tio, const Scalar &p) {
+      if (Tio.dtype() > 4) Tio = Tio.astype(Type.Double);
       double dp = double(p);
 
-      if (Tin.device() == Device.cpu) {
-        cytnx::linalg_internal::lii.Pow_ii[Tin.dtype()](Tin._impl->storage()._impl,
-                                                        Tin._impl->storage()._impl,
-                                                        Tin._impl->storage()._impl->size(), dp);
+      if (Tio.device() == Device.cpu) {
+        cytnx::linalg_internal::lii.Pow_ii[Tio.dtype()](Tio._impl->storage()._impl,
+                                                        Tio._impl->storage()._impl,
+                                                        Tio._impl->storage()._impl->size(), dp);
       } else {
   #ifdef UNI_GPU
-        checkCudaErrors(cudaSetDevice(Tin.device()));
-        cytnx::linalg_internal::lii.cuPow_ii[Tin.dtype()](Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl,
-                                                          Tin._impl->storage()._impl->size(), dp);
+        checkCudaErrors(cudaSetDevice(Tio.device()));
+        cytnx::linalg_internal::lii.cuPow_ii[Tio.dtype()](Tio._impl->storage()._impl,
+                                                          Tio._impl->storage()._impl,
+                                                          Tio._impl->storage()._impl->size(), dp);
           // cytnx_error_msg(true,"[Pow][GPU] developing%s","\n");
   #else
         cytnx_error_msg(true, "[Pow_] fatal error, the tensor is on GPU without CUDA support.%s",
@@ -51,26 +51,21 @@ namespace cytnx {
       }
     }
 
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
-    void Pow_(UniTensor &Tin, const double &p) {
-      if (Tin.uten_type() == UTenType.Dense) {
-        Tin.get_block_().Pow_(p);
-      } else if (Tin.uten_type() == UTenType.Block || Tin.uten_type() == UTenType.BlockFermionic) {
-        for (auto &blk : Tin.get_blocks_()) {
+    void Pow_(cytnx::UniTensor &Tio, const double &p) {
+      if (Tio.uten_type() == UTenType.Dense) {
+        Tio.get_block_().Pow_(p);
+      } else if (Tio.uten_type() == UTenType.Block || Tio.uten_type() == UTenType.BlockFermionic) {
+        for (auto &blk : Tio.get_blocks_()) {
           blk.Pow_(p);
         }
+      } else if (Tio.uten_type() == UTenType.Void) {
+        cytnx_error_msg(
+          true, "[ERROR][Pow_] fatal internal, cannot call on an un-initialized UniTensor_base%s",
+          "\n");
       } else {
-        // cytnx_error_msg(true,"[Pow][SparseUniTensor] Developing%s","\n");
-        auto tmp = Tin.get_blocks_();
-        for (int i = 0; i < tmp.size(); i++) {
-          tmp[i].Pow_(p);
-        }
+        cytnx_error_msg(true, "[Pow_]Unknown UniTensor type%s", "\n");
       }  // uten types
-    };
+    }
 
   }  // namespace linalg
 }  // namespace cytnx

@@ -36,11 +36,6 @@ namespace cytnx {
       }
     }
 
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
     void _InvM_inplace_Dense_UT(UniTensor &Tin) {
       Tensor tmp;
 

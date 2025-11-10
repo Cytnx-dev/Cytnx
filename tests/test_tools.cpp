@@ -424,7 +424,11 @@ namespace cytnx {
         Tensor block1 = Ut1.get_block();
         Tensor block2 = Ut2.get_block();
         if (!AreNearlyEqTensor(block1, block2, tol)) {
-          std::cout << "[AreNearlyEqUniTensor] two block not the same. " << std::endl;
+          std::cout << "[AreNearlyEqUniTensor] The entries of the dense UniTensor are not the same."
+                    << std::endl;
+          std::cout << block1 << std::endl;
+          std::cout << block2 << std::endl;
+
           return false;
         }
       }

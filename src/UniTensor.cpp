@@ -17,6 +17,13 @@ namespace cytnx {
     cytnx::linalg::Pow_(*this, p);
     return *this;
   }
+
+  UniTensor UniTensor::Inv(double clip) const { return cytnx::linalg::Inv(*this, clip); }
+  UniTensor &UniTensor::Inv_(double clip) {
+    cytnx::linalg::Inv_(*this, clip);
+    return *this;
+  }
+
   UniTensor UniTensor::Add(const UniTensor &rhs) const { return cytnx::linalg::Add(*this, rhs); }
   UniTensor UniTensor::Add(const Scalar &rhs) const {
     // cout << "lyer1: " << rhs << endl;
