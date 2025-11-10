@@ -26,9 +26,9 @@ namespace cytnx {
 
       if (a == 0) {
         if (b == 0)
-          return cytnx::linalg::Diag(cytnx::ones(Tin.shape()[0]));
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device());
         else
-          return cytnx::linalg::Diag(cytnx::ones(Tin.shape()[0])) * exp(b);
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device()) * exp(b);
       }
 
       vector<Tensor> su = cytnx::linalg::Eigh(Tin, true);
