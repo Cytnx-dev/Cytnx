@@ -38,67 +38,67 @@ void scalar_binding(py::module &m) {
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<std::complex<double>> value) {
-        new (&self) Scalar((cytnx::cytnx_complex128)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_complex128>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<std::complex<float>> value) {
-        new (&self) Scalar((cytnx::cytnx_complex64)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_complex64>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<double> value) {
-        new (&self) Scalar((cytnx::cytnx_double)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_double>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<float> value) {
-        new (&self) Scalar((cytnx::cytnx_float)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_float>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<int64_t> value) {
-        new (&self) Scalar((cytnx::cytnx_int64)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_int64>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<uint64_t> value) {
-        new (&self) Scalar((cytnx::cytnx_uint64)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_uint64>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<int32_t> value) {
-        new (&self) Scalar((cytnx::cytnx_int32)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_int32>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<uint32_t> value) {
-        new (&self) Scalar((cytnx::cytnx_uint32)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_uint32>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<int16_t> value) {
-        new (&self) Scalar((cytnx::cytnx_int16)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_int16>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<uint16_t> value) {
-        new (&self) Scalar((cytnx::cytnx_uint16)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_uint16>(value));
       },
       py::arg("a"))
     .def(
       "__init__",
       [](Scalar &self, const py::numpy_scalar<bool> value) {
-        new (&self) Scalar((cytnx::cytnx_bool)value);
+        new (&self) Scalar(static_cast<cytnx::cytnx_bool>(value));
       },
       py::arg("a"))
 
@@ -180,46 +180,46 @@ void scalar_binding(py::module &m) {
   #define FOR_EACH_NUMPY_TYPE(OPNAME, OP)                                                  \
     .def("__" #OPNAME "__",                                                                \
          [](cytnx::Scalar &self, const py::numpy_scalar<std::complex<double>> &rhs) {      \
-           return self OP(cytnx::cytnx_complex128) rhs;                                    \
+           return self OP static_cast<cytnx::cytnx_complex128>(rhs);                                    \
          })                                                                                \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<std::complex<float>> &rhs) {     \
-             return self OP(cytnx::cytnx_complex64) rhs;                                   \
+             return self OP static_cast<cytnx::cytnx_complex64>(rhs);                                   \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<double> &rhs) {                  \
-             return self OP(cytnx::cytnx_double) rhs;                                      \
+             return self OP static_cast<cytnx::cytnx_double>(rhs);                                      \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<float> &rhs) {                   \
-             return self OP(cytnx::cytnx_float) rhs;                                       \
+             return self OP static_cast<cytnx::cytnx_float>(rhs);                                       \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<int64_t> &rhs) {                 \
-             return self OP(cytnx::cytnx_int64) rhs;                                       \
+             return self OP static_cast<cytnx::cytnx_int64>(rhs);                                       \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint64_t> &rhs) {                \
-             return self OP(cytnx::cytnx_uint64) rhs;                                      \
+             return self OP static_cast<cytnx::cytnx_uint64>(rhs);                                      \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<int32_t> &rhs) {                 \
-             return self OP(cytnx::cytnx_int32) rhs;                                       \
+             return self OP static_cast<cytnx::cytnx_int32>(rhs);                                       \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint32_t> &rhs) {                \
-             return self OP(cytnx::cytnx_uint32) rhs;                                      \
+             return self OP static_cast<cytnx::cytnx_uint32>(rhs);                                      \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<int16_t> &rhs) {                 \
-             return self OP(cytnx::cytnx_int16) rhs;                                       \
+             return self OP static_cast<cytnx::cytnx_int16>(rhs);                                       \
            })                                                                              \
       .def("__" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint16_t> &rhs) {                \
-             return self OP(cytnx::cytnx_uint16) rhs;                                      \
+             return self OP static_cast<cytnx::cytnx_uint16>(rhs);                                      \
            })                                                                              \
       .def("__" #OPNAME "__", [](cytnx::Scalar &self, const py::numpy_scalar<bool> &rhs) { \
-        return self OP(bool) rhs;                                                          \
+        return self OP static_cast<cytnx::cytnx_bool>(rhs);                                                          \
       })
 
   // does not give the right type because of type casting to python objects before handling to
@@ -227,104 +227,104 @@ void scalar_binding(py::module &m) {
   #define FOR_EACH_NUMPY_RTYPE(OPNAME, OP)                                                  \
     .def("__r" #OPNAME "__",                                                                \
          [](cytnx::Scalar &self, const py::numpy_scalar<std::complex<double>> &lhs) {       \
-           return (cytnx::Scalar((cytnx::cytnx_complex128)lhs))OP self;                     \
+           return (cytnx::Scalar(static_cast<cytnx::cytnx_complex128>(lhs)))OP self;                     \
          })                                                                                 \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<std::complex<float>> &lhs) {      \
-             return (cytnx::Scalar((cytnx::cytnx_complex64)lhs))OP self;                    \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_complex64>(lhs)))OP self;                    \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<double> &lhs) {                   \
-             return (cytnx::Scalar((cytnx::cytnx_double)lhs))OP self;                       \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_double>(lhs)))OP self;                       \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<float> &lhs) {                    \
-             return (cytnx::Scalar((cytnx::cytnx_float)lhs))OP self;                        \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_float>(lhs)))OP self;                        \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<int64_t> &lhs) {                  \
-             return (cytnx::Scalar((cytnx::cytnx_int64)lhs))OP self;                        \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_int64>(lhs)))OP self;                        \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint64_t> &lhs) {                 \
-             return (cytnx::Scalar((cytnx::cytnx_uint64)lhs))OP self;                       \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_uint64>(lhs)))OP self;                       \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<int32_t> &lhs) {                  \
-             return (cytnx::Scalar((cytnx::cytnx_int32)lhs))OP self;                        \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_int32>(lhs)))OP self;                        \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint32_t> &lhs) {                 \
-             return (cytnx::Scalar((cytnx::cytnx_uint32)lhs))OP self;                       \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_uint32>(lhs)))OP self;                       \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<int16_t> &lhs) {                  \
-             return (cytnx::Scalar((cytnx::cytnx_int16)lhs))OP self;                        \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_int16>(lhs)))OP self;                        \
            })                                                                               \
       .def("__r" #OPNAME "__",                                                              \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint16_t> &lhs) {                 \
-             return (cytnx::Scalar((cytnx::cytnx_uint16)lhs))OP self;                       \
+             return (cytnx::Scalar(static_cast<cytnx::cytnx_uint16>(lhs)))OP self;                       \
            })                                                                               \
       .def("__r" #OPNAME "__", [](cytnx::Scalar &self, const py::numpy_scalar<bool> &lhs) { \
-        return (cytnx::Scalar((bool)lhs))OP self;                                           \
+        return (cytnx::Scalar(static_cast<cytnx::cytnx_bool>(lhs)))OP self;                                           \
       })
 
   #define FOR_EACH_NUMPY_ITYPE(OPNAME, OP)                                                     \
     .def("__i" #OPNAME "__",                                                                   \
          [](cytnx::Scalar &self,                                                               \
             const py::numpy_scalar<std::complex<double>> &rhs) -> cytnx::Scalar & {            \
-           self OP(cytnx::cytnx_complex128) rhs;                                               \
+           self OP static_cast<cytnx::cytnx_complex128>(rhs);                                               \
            return self;                                                                        \
          })                                                                                    \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self,                                                             \
               const py::numpy_scalar<std::complex<float>> &rhs) -> cytnx::Scalar & {           \
-             self OP(cytnx::cytnx_complex64) rhs;                                              \
+             self OP static_cast<cytnx::cytnx_complex64>(rhs);                                              \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<double> &rhs) -> cytnx::Scalar & {   \
-             self OP(cytnx::cytnx_double) rhs;                                                 \
+             self OP static_cast<cytnx::cytnx_double>(rhs);                                                 \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<float> &rhs) -> cytnx::Scalar & {    \
-             self OP(cytnx::cytnx_float) rhs;                                                  \
+             self OP static_cast<cytnx::cytnx_float>(rhs);                                                  \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<int64_t> &rhs) -> cytnx::Scalar & {  \
-             self OP(cytnx::cytnx_int64) rhs;                                                  \
+             self OP static_cast<cytnx::cytnx_int64>(rhs);                                                  \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint64_t> &rhs) -> cytnx::Scalar & { \
-             self OP(cytnx::cytnx_uint64) rhs;                                                 \
+             self OP static_cast<cytnx::cytnx_uint64>(rhs);                                                 \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<int32_t> &rhs) -> cytnx::Scalar & {  \
-             self OP(cytnx::cytnx_int32) rhs;                                                  \
+             self OP static_cast<cytnx::cytnx_int32>(rhs);                                                  \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint32_t> &rhs) -> cytnx::Scalar & { \
-             self OP(cytnx::cytnx_uint32) rhs;                                                 \
+             self OP static_cast<cytnx::cytnx_uint32>(rhs);                                                 \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<int16_t> &rhs) -> cytnx::Scalar & {  \
-             self OP(cytnx::cytnx_int16) rhs;                                                  \
+             self OP static_cast<cytnx::cytnx_int16>(rhs);                                                  \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<uint16_t> &rhs) -> cytnx::Scalar & { \
-             self OP(cytnx::cytnx_uint16) rhs;                                                 \
+             self OP static_cast<cytnx::cytnx_uint16>(rhs);                                                 \
              return self;                                                                      \
            })                                                                                  \
       .def("__i" #OPNAME "__",                                                                 \
            [](cytnx::Scalar &self, const py::numpy_scalar<bool> &rhs) -> cytnx::Scalar & {     \
-             self OP(bool) rhs;                                                                \
+             self OP static_cast<cytnx::cytnx_bool>(rhs);                                                                \
              return self;                                                                      \
            })
 
