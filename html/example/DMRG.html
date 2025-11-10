@@ -1,0 +1,972 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="4. iDMRG" href="iDMRG.html" /><link rel="prev" title="2. iTEBD" href="iTEBD.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>3. DMRG - Cytnx documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Cytnx  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../_static/Iconi.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Cytnx  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../Intro.html">Introduction</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../install.html">Install &amp; Usage of Cytnx</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Install &amp; Usage of Cytnx</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../adv_install.html">Advanced Install of Cytnx</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Advanced Install of Cytnx</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../convention.html">Function Naming convention</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Function Naming convention</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Guide.html">User Guide</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/behavior.html">1. Objects behavior</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of 1. Objects behavior</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/Device.html">2. Device</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor.html">3. Tensor</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 3. Tensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_1_create.html">3.1. Creating a Tensor</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 3.1. Creating a Tensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_2_manip.html">3.2. Manipulating Tensors</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3.2. Manipulating Tensors</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_3_access.html">3.3. Accessing elements</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 3.3. Accessing elements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_4_arithmetic.html">3.4. Tensor arithmetic</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 3.4. Tensor arithmetic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_5_numpy.html">3.5. To/From numpy.array</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 3.5. To/From numpy.array</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_6_app.html">3.6. Appending elements</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 3.6. Appending elements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_7_io.html">3.7. Save/Load a Tensor</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 3.7. Save/Load a Tensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Tensor_8_cp.html">3.8. When will data be copied?</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of 3.8. When will data be copied?</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/basic_obj/Storage.html">4. Storage</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of 4. Storage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Storage_1_create.html">4.1. Creating a Storage</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of 4.1. Creating a Storage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Storage_2_access.html">4.2. Accessing elements</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of 4.2. Accessing elements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Storage_3_expand.html">4.3. Increase size</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of 4.3. Increase size</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of 4.4. From/To C++.vector</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/basic_obj/Storage_5_io.html">4.5. Save/Load a storage</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of 4.5. Save/Load a storage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/basic_obj/Scalar.html">5. Scalar</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle navigation of 5. Scalar</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/TNotation.html">6. Tensor notation</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of 6. Tensor notation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/uniten.html">7. UniTensor</a><input class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle navigation of 7. UniTensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/print.html">7.1. Print and display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/create.html">7.2. Creating a UniTensor</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/uniten/labels.html">7.3. Changing labels</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle navigation of 7.3. Changing labels</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/uniten/bond.html">7.4. Bond</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle navigation of 7.4. Bond</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/uniten/tagged.html">7.5. Tagged UniTensor</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle navigation of 7.5. Tagged UniTensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/uniten/symmetric.html">7.6. UniTensor with Symmetries</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle navigation of 7.6. UniTensor with Symmetries</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/uniten/blocks.html">7.7. Accessing the block(s)</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle navigation of 7.7. Accessing the block(s)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/uniten/elements.html">7.8. Get/set UniTensor element</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle navigation of 7.8. Get/set UniTensor element</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/uniten/manipulation.html">7.9. Manipulate UniTensor</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/uniten/io.html">7.10. Save/Load a UniTensor</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle navigation of 7.10. Save/Load a UniTensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/contraction.html">8. Contraction</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle navigation of 8. Contraction</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/contraction/network.html">8.1. Network</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle navigation of 8.1. Network</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/contract.html">8.2. Contract(s)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/contraction/ncon.html">8.3. ncon</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/linalg.html">9. Linear algebra</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle navigation of 9. Linear algebra</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/itersol.html">10. Iterative solver</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle navigation of 10. Iterative solver</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../guide/itersol/LinOp.html">10.1. LinOp class</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle navigation of 10.1. LinOp class</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../guide/itersol/Lanczos.html">10.2. Lanczos solver</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../guide/xlinalg.html">11. linalg extension</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle navigation of 11. linalg extension</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../guide/common.html">12. Common APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../Examples.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle navigation of Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ED.html">1. Exact Diagonalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iTEBD.html">2. iTEBD</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iDMRG.html">4. iDMRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../CommApp.html">Common usage</a><input class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle navigation of Common usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../common_app/BlasINT.html">2. Check current Blas/Lapack integer size</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../Perf_tune.html">Performance tuning</a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle navigation of Performance tuning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Developer.html">Developer</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/example/DMRG.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="dmrg">
+<span id="sectiondmrg"></span><h1><span class="section-number">3. </span>DMRG<a class="headerlink" href="#dmrg" title="Link to this heading">¶</a></h1>
+<p><strong>By : Ke Hsu, Kai-Hsin Wu</strong></p>
+<p>The density matrix renormalization group (DMRG) is one of the powerful algorithm for study quantum systems.
+The algorithm is especially useful in study 1D systems, while the extension to study 2D systems are also possible. The original formulation <span id="id1">[<a class="reference internal" href="#id5" title="Steven R. White. Density matrix formulation for quantum renormalization groups. Phys. Rev. Lett., 69:2863–2866, Nov 1992. URL: https://link.aps.org/doi/10.1103/PhysRevLett.69.2863, doi:10.1103/PhysRevLett.69.2863.">Whi92</a>]</span> of DMRG is based on the desity matrix, and had been later-on being re-formulated with the concept of matrix product state (MPS) <span id="id2">[<a class="reference internal" href="#id4" title="Ulrich Schollwöck. The density-matrix renormalization group in the age of matrix product states. Annals of Physics, 326(1):96-192, 2011. January 2011 Special Issue. URL: https://www.sciencedirect.com/science/article/pii/S0003491610001752, doi:https://doi.org/10.1016/j.aop.2010.09.012.">Sch11</a>]</span>.</p>
+<p>In the following, we are going use the MPS language for explaination. There are two important objects Matrix product state (MPS) and Matrix product operator (MPO) which we will explain them in a moment.</p>
+<p>Using 1D spin-1/2 XY model as an example system, we are going to introduce how to use Cytnx to implement the DMRG algorithm, and benchmark our results with the exact analytic solution avaliable via bethe ansatz.</p>
+<section id="the-model-xy-chain">
+<h2><span class="section-number">3.1. </span>The model– XY chain<a class="headerlink" href="#the-model-xy-chain" title="Link to this heading">¶</a></h2>
+<p>Before introduce the algorithm, let’s start with the system that we are going to study. Consider the XY model where the Hamiltonian defines as:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[H = \sum^N_{j=0} S^x_j \cdot  S^x_{j+1} + S^y_j \cdot S^y_{j+1}\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(S^{x}_j\)</span> and <span class="math notranslate nohighlight">\(S^{y}_j\)</span> are the spin-1/2 operators at site <strong>j</strong>. One can also written the model in terms of the raising/lowering operator <span class="math notranslate nohighlight">\(S^{\pm}\)</span> as</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[H = \sum^N_{j=1} \frac{1}{2} \left( S^+_jS^-_{j+1} + S^+_{j+1}S^-_{j} \right)\]</div>
+</div>
+</section>
+<section id="basic-components">
+<h2><span class="section-number">3.2. </span>Basic components<a class="headerlink" href="#basic-components" title="Link to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Matrix product state (MPS):</p>
+<p>Our major goal in this example is, of course, to get the ground state. The state <span class="math notranslate nohighlight">\(|\Psi&gt;\)</span> is represent in terms of the MPS, which is variational wave function written in an effieient way to represent a many-body wave function. The tensor notation are shown in following figure (a)</p>
+</li>
+<li><p>Matrix product operator (MPO):</p>
+<p>The concept of MPO is actually quite simple, for which it is just the way we decompose our many-body Hamiltonian into local operators <em>M</em> (on each site) In our XY model, we define the MPO (on each site <em>j</em>) as:</p>
+</li>
+</ol>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}M_j = \begin{bmatrix}
+I &amp; S^-_j &amp; S^+_j &amp; 0 \\
+0 &amp;  0 &amp;  0 &amp; S^+_j\\
+0 &amp;  0&amp;   0&amp; S^-_j \\
+0 &amp; 0 &amp; 0 &amp; I
+\end{bmatrix}\end{split}\]</div>
+</div>
+<p>with the left and right boundary:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}L = \begin{bmatrix}
+1\\
+0\\
+0\\
+0
+\end{bmatrix}\end{split}\]</div>
+</div>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}R = \begin{bmatrix}
+0\\
+0\\
+0\\
+1
+\end{bmatrix}\end{split}\]</div>
+</div>
+<p>which is shown in the following figure (b). One can easily verify that succesive product of number of <strong>M</strong> operators  along with the left and right boundaries gives the desire Hamitonian of the model.</p>
+<a class="reference internal image-reference" href="../_images/MPSMPO.png"><img alt="../_images/MPSMPO.png" class="align-center" src="../_images/MPSMPO.png" style="width: 400px;" />
+</a>
+</section>
+<section id="preparing-the-mpo">
+<h2><span class="section-number">3.3. </span>Preparing the MPO<a class="headerlink" href="#preparing-the-mpo" title="Link to this heading">¶</a></h2>
+<p>Now, let’s first prepare the MPO, <strong>M</strong>. Here, the <strong>d</strong> is the physical bond dimension. For spin-half it is <strong>d=2</strong>. <strong>s</strong> is the spin, for spin-half <strong>s=0.5</strong>. Here, since we have translational invariant, so all <strong>M_j</strong> for each site <em>j</em> will be the same. Thus, we only need to define a single <strong>M</strong> operator.</p>
+<p><strong>L0</strong> and <strong>R0</strong> are the left and right boundary as mentioned previously.</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">d</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1">#physical dimension</span>
+<span class="linenos"> 2</span><span class="n">s</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="c1">#spin-half</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="n">sx</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="n">sy</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">spin</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="n">sp</span> <span class="o">=</span> <span class="n">sx</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">sy</span>
+<span class="linenos"> 7</span><span class="n">sm</span> <span class="o">=</span> <span class="n">sx</span><span class="o">-</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">sy</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">eye</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="linenos">10</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">d</span><span class="p">])</span>
+<span class="linenos">11</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">eye</span>
+<span class="linenos">12</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sp</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="linenos">13</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="mf">0.5</span><span class="o">*</span><span class="n">sm</span><span class="o">.</span><span class="n">real</span><span class="p">()</span>
+<span class="linenos">14</span><span class="n">M</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span><span class="n">L0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#Left boundary</span>
+<span class="linenos">17</span><span class="n">R0</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="c1">#Right boundary</span>
+<span class="linenos">18</span><span class="n">L0</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">;</span> <span class="n">R0</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Here, we first provide the Matrix <em>data</em> via <strong>Tensor</strong>, and convert then to <strong>UniTensor</strong>, which gives enhanced functionality (such as labels for each bond).</p>
+</div>
+<p>At this moment, let’s print out to show what <strong>M</strong>, <strong>L0</strong> and <strong>R0</strong> looks like:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">M</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">2</span><span class="n">L0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">3</span><span class="n">R0</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 4
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+           |           4 |____ 0
+           |             |
+           |           4 |____ 1
+           |             |
+           |           2 |____ 2
+           |             |
+           |           2 |____ 3
+           \             /
+            -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+           |           4 |____ 0
+           |             |
+           |           1 |____ 1
+           |             |
+           |           1 |____ 2
+           \             /
+            -------------
+-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : false
+is_diag     : False
+on device   : cytnx device: CPU
+            -------------
+           /             \
+           |           4 |____ 0
+           |             |
+           |           1 |____ 1
+           |             |
+           |           1 |____ 2
+           \             /
+            -------------
+</pre></div>
+</div>
+</section>
+<section id="preparing-the-mps-and-enviroments">
+<h2><span class="section-number">3.4. </span>Preparing the MPS and enviroments<a class="headerlink" href="#preparing-the-mps-and-enviroments" title="Link to this heading">¶</a></h2>
+<p>Next, we are going to prepare our variational ansatz (MPS). Here, <strong>chi</strong> is the <em>virtual bond</em> dimension, and <strong>Nsites</strong> is the number of sites.</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># MPS, chi is virtual bond dimension</span>
+<span class="linenos"> 2</span><span class="n">chi</span> <span class="o">=</span> <span class="mi">32</span>
+<span class="linenos"> 3</span><span class="n">Nsites</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="linenos"> 4</span><span class="n">lbls</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># List for storing the MPS labels</span>
+<span class="linenos"> 5</span><span class="n">A</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="p">)]</span>
+<span class="linenos"> 6</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">d</span><span class="p">)],</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos"> 7</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">([</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">])</span>
+<span class="linenos"> 8</span><span class="n">lbls</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s2">&quot;0&quot;</span><span class="p">,</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;2&quot;</span><span class="p">])</span> <span class="c1"># store the labels for later convinience.</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Nsites</span><span class="p">):</span>
+<span class="linenos">11</span>    <span class="n">dim1</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">];</span> <span class="n">dim2</span> <span class="o">=</span> <span class="n">d</span>
+<span class="linenos">12</span>    <span class="n">dim3</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">chi</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="n">d</span> <span class="o">**</span> <span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+<span class="linenos">13</span>    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">([</span><span class="n">dim1</span><span class="p">,</span> <span class="n">dim2</span><span class="p">,</span> <span class="n">dim3</span><span class="p">],</span><span class="mf">0.</span><span class="p">,</span><span class="mf">1.</span><span class="p">),</span> <span class="n">rowrank</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="linenos">14</span>
+<span class="linenos">15</span>    <span class="n">lbl</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">),</span><span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span><span class="nb">str</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">)]</span>
+<span class="linenos">16</span>    <span class="n">A</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbl</span><span class="p">)</span>
+<span class="linenos">17</span>    <span class="n">lbls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lbl</span><span class="p">)</span> <span class="c1"># store the labels for later convinience.</span>
+</pre></div>
+</div>
+<p>The resulting MPS would look like a tensor train, stored in the list A:</p>
+<a class="reference internal image-reference" href="../_images/dmrg1.png"><img alt="../_images/dmrg1.png" class="align-center" src="../_images/dmrg1.png" style="width: 400px;" />
+</a>
+<p>The dim3 of each tensor may look a little bit tricky, but we are simply comparing the “maximum dimension needed to span the information for the left part” and that of the right part, while we also want the disired dim3 not larger than our bond dimension.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>The alternative way to assign dim3 is min(chi, d ** (k+1), d ** (Nsites - k - 1))</p>
+</div>
+<p>The MPS created at this moment are not physically sound. The one more thing we need to do is to make these MPS state into so called <em>canonical form</em>, for which we achieve this by iteratively performing svd and get it’s left (or right, depending on how you do it.) unitary matrix.
+Here, we do it from left to right, and we decompose each tensor into its U, s and vT, then “throw” the s and vT part into next tensor, until the mps becomes its <em>left normal form</em>:</p>
+<a class="reference internal image-reference" href="../_images/dmrg2.png"><img alt="../_images/dmrg2.png" class="align-center" src="../_images/dmrg2.png" style="width: 400px;" />
+</a>
+<p>The othogonal form of the MPS looks like:</p>
+<a class="reference internal image-reference" href="../_images/dmrg3.png"><img alt="../_images/dmrg3.png" class="align-center" src="../_images/dmrg3.png" style="width: 400px;" />
+</a>
+<p>Further more, as a naive implementation, here, at the same time we also store all the <em>left and right enviroments</em> <strong>LR</strong>, assocate to each site just for convenience. These include contracting 4 tensors <strong>L</strong>, <strong>M</strong>, <strong>A</strong> and <span class="math notranslate nohighlight">\(A^\dagger\)</span>.</p>
+<p>Here, the contraction can be easily performed using <strong>cytnx.Network</strong> with the contraction graph defined by the <em>network file</em> (L_AMAH.net) as following:</p>
+<ul class="simple">
+<li><p>L_AMAH.net:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">L</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
+<span class="linenos">2</span><span class="n">A</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span>
+<span class="linenos">3</span><span class="n">M</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span>
+<span class="linenos">4</span><span class="n">A_Conj</span><span class="p">:</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">2</span>
+<span class="linenos">5</span><span class="n">TOUT</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>we load it, put tensors in, then call “Launch”, all the four tensors got contracted properly and optimally, in the for loop, the whole process looks like following:</p>
+<a class="reference internal image-reference" href="../_images/dmrg4.png"><img alt="../_images/dmrg4.png" class="align-center" src="../_images/dmrg4.png" style="width: 400px;" />
+</a>
+<p>The full implementation looks like:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">LR</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+<span class="linenos"> 2</span><span class="n">LR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="o">=</span> <span class="n">L0</span>
+<span class="linenos"> 3</span><span class="n">LR</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">R0</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="c1">## Changing to canonical form site by site:</span>
+<span class="linenos"> 8</span>    <span class="n">s</span><span class="p">,</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="p">,</span><span class="n">vt</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Gesvd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+<span class="linenos"> 9</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">vt</span><span class="p">),</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">10</span>
+<span class="linenos">11</span>    <span class="c1">## Calculate enviroments:</span>
+<span class="linenos">12</span>    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">13</span>    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">])</span>
+<span class="linenos">14</span>    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>    <span class="c1"># Recover the original MPS labels</span>
+<span class="linenos">17</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="p">])</span>
+<span class="linenos">18</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span><span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Gesvd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
+<span class="linenos">21</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># Recover the original MPS labels</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>In the line 20, we perform SVD on the last tensor but only save the U part, this is the case since the shape of the original tensor is (A[Nsites-2].shape[2], 1, 1),
+what we get from SVD is 1*1 matrix (or a number) for both s and Vt, moreover, these two numbers are just identity, so U is all we need.</p>
+</div>
+</section>
+<section id="optimization-of-mps-update-sweep">
+<h2><span class="section-number">3.5. </span>Optimization of MPS (update sweep)<a class="headerlink" href="#optimization-of-mps-update-sweep" title="Link to this heading">¶</a></h2>
+<p>Now we are ready for describing the main DMRG algorithm that optimize our MPS, the way we are going to do this, is so called “sweeping” update. First, we provide the full code for a single sweep process:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">numsweeps</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># number of DMRG sweeps</span>
+<span class="linenos"> 2</span><span class="n">maxit</span> <span class="o">=</span> <span class="mi">2</span> <span class="c1"># iterations of Lanczos method</span>
+<span class="linenos"> 3</span>
+<span class="linenos"> 4</span><span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos"> 5</span>    <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 6</span>    <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos"> 7</span>    <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># contract</span>
+<span class="linenos">10</span>    <span class="n">psi</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">,</span> <span class="n">krydim</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>    <span class="n">psi</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># maintain rowrank to perform the svd</span>
+<span class="linenos">13</span>    <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos">14</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span> <span class="c1"># set the label back to be consistent</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1"># normalize s</span>
+<span class="linenos">17</span>
+<span class="linenos">18</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1"># absorb s into next neighbor</span>
+<span class="linenos">19</span>    <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="p">]);</span> <span class="c1"># set the label back to be consistent</span>
+<span class="linenos">20</span>
+<span class="linenos">21</span>    <span class="c1"># update LR from right to left:</span>
+<span class="linenos">22</span>    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">23</span>    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">()])</span>
+<span class="linenos">24</span>    <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
+<span class="linenos">25</span>
+<span class="linenos">26</span>    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[r-&gt;l], Loc:</span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">27</span>
+<span class="linenos">28</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># maintain rowrank to perform the svd</span>
+<span class="linenos">29</span><span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Gesvd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">30</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1"># set the label back to be consistent</span>
+</pre></div>
+</div>
+<p>There are lots of things happening here, let’s break it up a bit, from right to left, the first thing we do is to contract two tensors A[p] and A[p+1]:</p>
+<a class="reference internal image-reference" href="../_images/dmrg5.png"><img alt="../_images/dmrg5.png" class="align-center" src="../_images/dmrg5.png" style="width: 400px;" />
+</a>
+<p>Generally, the idea is pretty simple, for each local two sites, one contract the left and right enviroments <span class="math notranslate nohighlight">\(L_{j}\)</span> and <span class="math notranslate nohighlight">\(R_{j+3}\)</span> with local MPOs <span class="math notranslate nohighlight">\(M_{j}\)</span> and <span class="math notranslate nohighlight">\(M_{j+1}\)</span>. We call this the local operator <span class="math notranslate nohighlight">\(H_{loc}\)</span>.</p>
+<p>The lowest eigen vector of this operator will be our optimized <em>local</em> state, which we call this <strong>psi</strong>. Of course, one can performs eigH directly with this <span class="math notranslate nohighlight">\(H_{loc}\)</span> to get the local optimized state. However, the computational and memory cost are very high, and it’s not pratical to do so espectially when virtual bond dimension is large.</p>
+<p>Instead, we use iterative solver (Lanczos method) to get our ground state, and use the <strong>A[p]</strong> and <strong>A[p+1]</strong> as our initial trial state for performing Lanczos with our local operator <span class="math notranslate nohighlight">\(H_{loc}\)</span>.</p>
+<p>The <span class="math notranslate nohighlight">\(H_{loc}\)</span> is obtained by the following projector.net network:</p>
+<ul class="simple">
+<li><p>projector.net:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">psi</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span>
+<span class="linenos">2</span><span class="n">L</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span>
+<span class="linenos">3</span><span class="n">R</span><span class="p">:</span> <span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span>
+<span class="linenos">4</span><span class="n">M1</span><span class="p">:</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span>
+<span class="linenos">5</span><span class="n">M2</span><span class="p">:</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span>
+<span class="linenos">6</span><span class="n">TOUT</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span>
+</pre></div>
+</div>
+<p>which in tensor notation looks like this:</p>
+<a class="reference internal image-reference" href="../_images/dmrg6.png"><img alt="../_images/dmrg6.png" class="align-center" src="../_images/dmrg6.png" style="width: 400px;" />
+</a>
+<p>To ultilize the Lanczos function, the opertion of acting Hamitonian (which involves contraction using a network) is implemented using LinOp class (See Iterative Solver section for furtuer details).</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span><span class="w"> </span><span class="nc">Hxx</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="p">):</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anet</span><span class="p">,</span> <span class="n">psidim</span><span class="p">):</span>
+<span class="linenos"> 4</span>        <span class="n">cytnx</span><span class="o">.</span><span class="n">LinOp</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s2">&quot;mv&quot;</span><span class="p">,</span> <span class="n">psidim</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">,</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cpu</span><span class="p">)</span>
+<span class="linenos"> 5</span>        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span> <span class="o">=</span> <span class="n">anet</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">def</span><span class="w"> </span><span class="nf">matvec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="n">lbl</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">labels</span><span class="p">()</span>
+<span class="linenos"> 9</span>        <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensor</span><span class="p">(</span><span class="s2">&quot;psi&quot;</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
+<span class="linenos">10</span>        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
+<span class="linenos">11</span>        <span class="n">out</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbl</span><span class="p">)</span>
+<span class="linenos">12</span>        <span class="k">return</span> <span class="n">out</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>the class itself contain this projector network and do the contraction job for the input vector(state).
+We then pass this linear operation to the Lanczos algorithm to use as the operation of optimization.</p>
+</div>
+<p>So now the optimize_psi function looks like:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">def</span><span class="w"> </span><span class="nf">optimize_psi</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="n">functArgs</span><span class="p">,</span> <span class="n">maxit</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">krydim</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span>    <span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">M2</span><span class="p">,</span><span class="n">R</span> <span class="o">=</span> <span class="n">functArgs</span>
+<span class="linenos"> 4</span>    <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;projector.net&quot;</span><span class="p">)</span>
+<span class="linenos"> 5</span>    <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;M1&quot;</span><span class="p">,</span><span class="s2">&quot;M2&quot;</span><span class="p">,</span><span class="s2">&quot;R&quot;</span><span class="p">],[</span><span class="n">L</span><span class="p">,</span><span class="n">M1</span><span class="p">,</span><span class="n">M2</span><span class="p">,</span><span class="n">R</span><span class="p">])</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="n">H</span> <span class="o">=</span> <span class="n">Hxx</span><span class="p">(</span><span class="n">anet</span><span class="p">,</span> <span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">psi</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">3</span><span class="p">])</span>
+<span class="linenos"> 8</span>    <span class="n">energy</span><span class="p">,</span> <span class="n">psivec</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Lanczos</span><span class="p">(</span><span class="n">Hop</span> <span class="o">=</span> <span class="n">H</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;Gnd&quot;</span><span class="p">,</span> <span class="n">Maxiter</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">CvgCrit</span> <span class="o">=</span> <span class="mi">9999999999</span><span class="p">,</span> <span class="n">Tin</span> <span class="o">=</span> <span class="n">psi</span><span class="p">)</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span>    <span class="k">return</span> <span class="n">psivec</span><span class="p">,</span> <span class="n">energy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Where we constructed the network (put tensors in) then pass it to our linear operation H.</p>
+<p>Now, we get our energy and ground state for a two-sites system, after some re-labeling (in order to contract UniTensor) and reshape,
+we have to make our psi into the canonical form, for which we do the SVD for the ground state we just obtained, then let the left hand side site keep the U and s, while the other site became Vt. The intermediate bond are truncated such that the maximum virtual bond dimension is limited to <strong>chi</strong>.</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">psi</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># maintain rowrank to perform the svd</span>
+<span class="linenos"> 4</span><span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span> <span class="c1"># set the label back to be consistent</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1"># normalize s</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1"># absorb s into next neighbor</span>
+<span class="linenos">10</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="p">]);</span> <span class="c1"># set the label back to be consistent</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="../_images/dmrg7.png"><img alt="../_images/dmrg7.png" class="align-center" src="../_images/dmrg7.png" style="width: 400px;" />
+</a>
+<a class="reference internal image-reference" href="../_images/dmrg8.png"><img alt="../_images/dmrg8.png" class="align-center" src="../_images/dmrg8.png" style="width: 400px;" />
+</a>
+<p>remember that the right hand side vTs are obtained after we do the optimization, those are immediately used to calculate the updated right enviroment using the network</p>
+<ul class="simple">
+<li><p>R_AMAH.net:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">R</span><span class="p">:</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
+<span class="linenos">2</span><span class="n">B</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span>
+<span class="linenos">3</span><span class="n">M</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span>
+<span class="linenos">4</span><span class="n">B_Conj</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span>
+<span class="linenos">5</span><span class="n">TOUT</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>graphically it looks like:</p>
+<a class="reference internal image-reference" href="../_images/dmrg8-2.png"><img alt="../_images/dmrg8-2.png" class="align-center" src="../_images/dmrg8-2.png" style="width: 470px;" />
+</a>
+<p>So our enviroments are also updated by the vT from the optimized two-side states.</p>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>The Svd_truncate is used to limit the tensor size, followed by a normalization on singular values, which is the physical requirement for the state of the whole system to be in the Schimit form.</p>
+</div>
+<p>The for loop is finished, now we arrived at the left end of the system, with the last two line</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Gesvd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">3</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1">#set the label back to be consistent</span>
+</pre></div>
+</div>
+<p>looks like the same as we did for the right-end site in the beginning, this time we saves the vT, the purpose of the
+set_rowrank_(1) is only for the convenience of calling Svd/Svd_truncate in the next sweeping procedure from left to right.</p>
+<p>We can now sweep from left to the right. The code is pretty much the same as we went through, with only a few modifications.</p>
+<p>So we are done! With the other loop to control the number of times we sweep, we get the full DMRG sweep code:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1"># DMRG sweep</span>
+<span class="linenos"> 2</span>
+<span class="linenos"> 3</span><span class="n">Ekeep</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># For storing the energy</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">numsweeps</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos"> 8</span>        <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos"> 9</span>        <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">10</span>        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1"># contract</span>
+<span class="linenos">13</span>        <span class="n">psi</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">)</span>
+<span class="linenos">14</span>        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">)</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>        <span class="n">psi</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># maintain rowrank to perform the svd</span>
+<span class="linenos">17</span>        <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos">18</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span> <span class="c1"># set the label back to be consistent</span>
+<span class="linenos">19</span>
+<span class="linenos">20</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1"># normalize s</span>
+<span class="linenos">21</span>
+<span class="linenos">22</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">s</span><span class="p">)</span> <span class="c1"># absorb s into next neighbor</span>
+<span class="linenos">23</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="p">]);</span> <span class="c1"># set the label back to be consistent</span>
+<span class="linenos">24</span>
+<span class="linenos">25</span>        <span class="c1"># update LR from right to left:</span>
+<span class="linenos">26</span>        <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;R_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">27</span>        <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;R&quot;</span><span class="p">,</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">,</span><span class="s2">&quot;B_Conj&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">()])</span>
+<span class="linenos">28</span>        <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[r-&gt;l]: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">, Loc: </span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numsweeps</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">31</span>
+<span class="linenos">32</span>    <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">33</span>    <span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Gesvd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">is_vT</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">34</span>    <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="c1">#set the label back to be consistent</span>
+<span class="linenos">35</span>
+<span class="linenos">36</span>    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="linenos">37</span>        <span class="n">dim_l</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="linenos">38</span>        <span class="n">dim_r</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span>
+<span class="linenos">39</span>        <span class="n">new_dim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">dim_l</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">dim_r</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="n">chi</span><span class="p">)</span>
+<span class="linenos">40</span>
+<span class="linenos">41</span>        <span class="n">psi</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## contract</span>
+<span class="linenos">42</span>        <span class="n">psi</span><span class="p">,</span> <span class="n">Entemp</span> <span class="o">=</span> <span class="n">optimize_psi</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span> <span class="p">(</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">M</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">2</span><span class="p">]),</span> <span class="n">maxit</span><span class="p">)</span>
+<span class="linenos">43</span>        <span class="n">Ekeep</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Entemp</span><span class="p">)</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span>        <span class="n">psi</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="c1"># maintain rowrank to perform the svd</span>
+<span class="linenos">46</span>        <span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Svd_truncate</span><span class="p">(</span><span class="n">psi</span><span class="p">,</span><span class="n">new_dim</span><span class="p">)</span>
+<span class="linenos">47</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="p">]);</span> <span class="c1">#set the label back to be consistent</span>
+<span class="linenos">48</span>
+<span class="linenos">49</span>        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">s</span><span class="o">.</span><span class="n">Norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="c1"># normalize s</span>
+<span class="linenos">50</span>
+<span class="linenos">51</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Contract</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="c1">## absorb s into next neighbor.</span>
+<span class="linenos">52</span>        <span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span> <span class="c1">#set the label back to be consistent</span>
+<span class="linenos">53</span>
+<span class="linenos">54</span>        <span class="c1"># update LR from left to right:</span>
+<span class="linenos">55</span>        <span class="n">anet</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">Network</span><span class="p">(</span><span class="s2">&quot;L_AMAH.net&quot;</span><span class="p">)</span>
+<span class="linenos">56</span>        <span class="n">anet</span><span class="o">.</span><span class="n">PutUniTensors</span><span class="p">([</span><span class="s2">&quot;L&quot;</span><span class="p">,</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;A_Conj&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">],[</span><span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">],</span><span class="n">A</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">Conj</span><span class="p">(),</span><span class="n">M</span><span class="p">])</span>
+<span class="linenos">57</span>        <span class="n">LR</span><span class="p">[</span><span class="n">p</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">anet</span><span class="o">.</span><span class="n">Launch</span><span class="p">()</span>
+<span class="linenos">58</span>
+<span class="linenos">59</span>        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sweep[l-&gt;r]: </span><span class="si">%d</span><span class="s1">/</span><span class="si">%d</span><span class="s1">, Loc: </span><span class="si">%d</span><span class="s1">,Energy: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">numsweeps</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">Ekeep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="linenos">60</span>
+<span class="linenos">61</span>    <span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_rowrank_</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">62</span>    <span class="n">_</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">Gesvd</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">is_U</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">is_vT</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1">## last one.</span>
+<span class="linenos">63</span>    <span class="n">A</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">relabels_</span><span class="p">(</span><span class="n">lbls</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]);</span> <span class="c1">#set the label back to be consistent</span>
+</pre></div>
+</div>
+</section>
+<section id="compare-dmrg-results">
+<h2><span class="section-number">3.6. </span>Compare DMRG Results<a class="headerlink" href="#compare-dmrg-results" title="Link to this heading">¶</a></h2>
+<p>Here, we plot the energy as a function of iteration. We see that after iterations, the energy successfully converge to a value that is consistent with the exact solution.</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="c1">#### Compare with exact results (computed from free fermions)</span>
+<span class="linenos"> 2</span><span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">linalg</span> <span class="k">as</span> <span class="n">LA</span>
+<span class="linenos"> 3</span><span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="linenos"> 4</span><span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">k</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">Nsites</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="n">k</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos"> 5</span><span class="n">D</span> <span class="o">=</span> <span class="n">LA</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">H</span><span class="p">)</span>
+<span class="linenos"> 6</span><span class="n">EnExact</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="nb">sum</span><span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="n">D</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">])</span>
+<span class="linenos"> 7</span>
+<span class="linenos"> 8</span><span class="c1">##### Plot results</span>
+<span class="linenos"> 9</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">10</span><span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="linenos">11</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Ekeep</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Ekeep</span><span class="p">)</span> <span class="o">-</span> <span class="n">EnExact</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;chi = </span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">chi</span><span class="p">),</span> <span class="n">marker</span> <span class="o">=</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="linenos">12</span><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="linenos">13</span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;DMRG for XX model&#39;</span><span class="p">)</span>
+<span class="linenos">14</span><span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Update Step&#39;</span><span class="p">)</span>
+<span class="linenos">15</span><span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Ground Energy Error&#39;</span><span class="p">)</span>
+<span class="linenos">16</span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For the 20 sites system, the result is:</p>
+<a class="reference internal image-reference" href="../_images/dmrg_res.png"><img alt="../_images/dmrg_res.png" class="align-center" src="../_images/dmrg_res.png" style="width: 450px;" />
+</a>
+<div class="docutils container" id="id3">
+<div role="list" class="citation-list">
+<div class="citation" id="id4" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">Sch11</a><span class="fn-bracket">]</span></span>
+<p>Ulrich Schollwöck. The density-matrix renormalization group in the age of matrix product states. <em>Annals of Physics</em>, 326(1):96–192, 2011. January 2011 Special Issue. URL: <a class="reference external" href="https://www.sciencedirect.com/science/article/pii/S0003491610001752">https://www.sciencedirect.com/science/article/pii/S0003491610001752</a>, <a class="reference external" href="https://doi.org/https://doi.org/10.1016/j.aop.2010.09.012">doi:https://doi.org/10.1016/j.aop.2010.09.012</a>.</p>
+</div>
+<div class="citation" id="id5" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">Whi92</a><span class="fn-bracket">]</span></span>
+<p>Steven R. White. Density matrix formulation for quantum renormalization groups. <em>Phys. Rev. Lett.</em>, 69:2863–2866, Nov 1992. URL: <a class="reference external" href="https://link.aps.org/doi/10.1103/PhysRevLett.69.2863">https://link.aps.org/doi/10.1103/PhysRevLett.69.2863</a>, <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.69.2863">doi:10.1103/PhysRevLett.69.2863</a>.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="iDMRG.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">4. </span>iDMRG</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="iTEBD.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">2. </span>iTEBD</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2019-, Kai-Hsin Wu
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">3. DMRG</a><ul>
+<li><a class="reference internal" href="#the-model-xy-chain">3.1. The model– XY chain</a></li>
+<li><a class="reference internal" href="#basic-components">3.2. Basic components</a></li>
+<li><a class="reference internal" href="#preparing-the-mpo">3.3. Preparing the MPO</a></li>
+<li><a class="reference internal" href="#preparing-the-mps-and-enviroments">3.4. Preparing the MPS and enviroments</a></li>
+<li><a class="reference internal" href="#optimization-of-mps-update-sweep">3.5. Optimization of MPS (update sweep)</a></li>
+<li><a class="reference internal" href="#compare-dmrg-results">3.6. Compare DMRG Results</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    </body>
+</html>

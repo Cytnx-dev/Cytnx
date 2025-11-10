@@ -1,0 +1,720 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" /><link rel="next" title="7.3. Changing labels" href="labels.html" /><link rel="prev" title="7.1. Print and display" href="print.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>7.2. Creating a UniTensor - Cytnx documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">Cytnx  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <div class="sidebar-logo-container">
+    <img class="sidebar-logo" src="../../_static/Iconi.png" alt="Logo"/>
+  </div>
+  
+  <span class="sidebar-brand-text">Cytnx  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Intro.html">Introduction</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../install.html">Install &amp; Usage of Cytnx</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Install &amp; Usage of Cytnx</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../adv_install.html">Advanced Install of Cytnx</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Advanced Install of Cytnx</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../convention.html">Function Naming convention</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" role="switch" type="checkbox"/><label for="toctree-checkbox-3"><div class="visually-hidden">Toggle navigation of Function Naming convention</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../Guide.html">User Guide</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of User Guide</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="../behavior.html">1. Objects behavior</a><input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" role="switch" type="checkbox"/><label for="toctree-checkbox-5"><div class="visually-hidden">Toggle navigation of 1. Objects behavior</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Device.html">2. Device</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../basic_obj/Tensor.html">3. Tensor</a><input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" role="switch" type="checkbox"/><label for="toctree-checkbox-6"><div class="visually-hidden">Toggle navigation of 3. Tensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_1_create.html">3.1. Creating a Tensor</a><input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" role="switch" type="checkbox"/><label for="toctree-checkbox-7"><div class="visually-hidden">Toggle navigation of 3.1. Creating a Tensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_2_manip.html">3.2. Manipulating Tensors</a><input class="toctree-checkbox" id="toctree-checkbox-8" name="toctree-checkbox-8" role="switch" type="checkbox"/><label for="toctree-checkbox-8"><div class="visually-hidden">Toggle navigation of 3.2. Manipulating Tensors</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_3_access.html">3.3. Accessing elements</a><input class="toctree-checkbox" id="toctree-checkbox-9" name="toctree-checkbox-9" role="switch" type="checkbox"/><label for="toctree-checkbox-9"><div class="visually-hidden">Toggle navigation of 3.3. Accessing elements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_4_arithmetic.html">3.4. Tensor arithmetic</a><input class="toctree-checkbox" id="toctree-checkbox-10" name="toctree-checkbox-10" role="switch" type="checkbox"/><label for="toctree-checkbox-10"><div class="visually-hidden">Toggle navigation of 3.4. Tensor arithmetic</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_5_numpy.html">3.5. To/From numpy.array</a><input class="toctree-checkbox" id="toctree-checkbox-11" name="toctree-checkbox-11" role="switch" type="checkbox"/><label for="toctree-checkbox-11"><div class="visually-hidden">Toggle navigation of 3.5. To/From numpy.array</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_6_app.html">3.6. Appending elements</a><input class="toctree-checkbox" id="toctree-checkbox-12" name="toctree-checkbox-12" role="switch" type="checkbox"/><label for="toctree-checkbox-12"><div class="visually-hidden">Toggle navigation of 3.6. Appending elements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_7_io.html">3.7. Save/Load a Tensor</a><input class="toctree-checkbox" id="toctree-checkbox-13" name="toctree-checkbox-13" role="switch" type="checkbox"/><label for="toctree-checkbox-13"><div class="visually-hidden">Toggle navigation of 3.7. Save/Load a Tensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Tensor_8_cp.html">3.8. When will data be copied?</a><input class="toctree-checkbox" id="toctree-checkbox-14" name="toctree-checkbox-14" role="switch" type="checkbox"/><label for="toctree-checkbox-14"><div class="visually-hidden">Toggle navigation of 3.8. When will data be copied?</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../basic_obj/Storage.html">4. Storage</a><input class="toctree-checkbox" id="toctree-checkbox-15" name="toctree-checkbox-15" role="switch" type="checkbox"/><label for="toctree-checkbox-15"><div class="visually-hidden">Toggle navigation of 4. Storage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Storage_1_create.html">4.1. Creating a Storage</a><input class="toctree-checkbox" id="toctree-checkbox-16" name="toctree-checkbox-16" role="switch" type="checkbox"/><label for="toctree-checkbox-16"><div class="visually-hidden">Toggle navigation of 4.1. Creating a Storage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Storage_2_access.html">4.2. Accessing elements</a><input class="toctree-checkbox" id="toctree-checkbox-17" name="toctree-checkbox-17" role="switch" type="checkbox"/><label for="toctree-checkbox-17"><div class="visually-hidden">Toggle navigation of 4.2. Accessing elements</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Storage_3_expand.html">4.3. Increase size</a><input class="toctree-checkbox" id="toctree-checkbox-18" name="toctree-checkbox-18" role="switch" type="checkbox"/><label for="toctree-checkbox-18"><div class="visually-hidden">Toggle navigation of 4.3. Increase size</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Storage_4_vec.html">4.4. From/To C++.vector</a><input class="toctree-checkbox" id="toctree-checkbox-19" name="toctree-checkbox-19" role="switch" type="checkbox"/><label for="toctree-checkbox-19"><div class="visually-hidden">Toggle navigation of 4.4. From/To C++.vector</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../basic_obj/Storage_5_io.html">4.5. Save/Load a storage</a><input class="toctree-checkbox" id="toctree-checkbox-20" name="toctree-checkbox-20" role="switch" type="checkbox"/><label for="toctree-checkbox-20"><div class="visually-hidden">Toggle navigation of 4.5. Save/Load a storage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../basic_obj/Scalar.html">5. Scalar</a><input class="toctree-checkbox" id="toctree-checkbox-21" name="toctree-checkbox-21" role="switch" type="checkbox"/><label for="toctree-checkbox-21"><div class="visually-hidden">Toggle navigation of 5. Scalar</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../TNotation.html">6. Tensor notation</a><input class="toctree-checkbox" id="toctree-checkbox-22" name="toctree-checkbox-22" role="switch" type="checkbox"/><label for="toctree-checkbox-22"><div class="visually-hidden">Toggle navigation of 6. Tensor notation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 current has-children"><a class="reference internal" href="../uniten.html">7. UniTensor</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-23" name="toctree-checkbox-23" role="switch" type="checkbox"/><label for="toctree-checkbox-23"><div class="visually-hidden">Toggle navigation of 7. UniTensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="print.html">7.1. Print and display</a></li>
+<li class="toctree-l3 current current-page"><a class="current reference internal" href="#">7.2. Creating a UniTensor</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="labels.html">7.3. Changing labels</a><input class="toctree-checkbox" id="toctree-checkbox-24" name="toctree-checkbox-24" role="switch" type="checkbox"/><label for="toctree-checkbox-24"><div class="visually-hidden">Toggle navigation of 7.3. Changing labels</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="bond.html">7.4. Bond</a><input class="toctree-checkbox" id="toctree-checkbox-25" name="toctree-checkbox-25" role="switch" type="checkbox"/><label for="toctree-checkbox-25"><div class="visually-hidden">Toggle navigation of 7.4. Bond</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="tagged.html">7.5. Tagged UniTensor</a><input class="toctree-checkbox" id="toctree-checkbox-26" name="toctree-checkbox-26" role="switch" type="checkbox"/><label for="toctree-checkbox-26"><div class="visually-hidden">Toggle navigation of 7.5. Tagged UniTensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="symmetric.html">7.6. UniTensor with Symmetries</a><input class="toctree-checkbox" id="toctree-checkbox-27" name="toctree-checkbox-27" role="switch" type="checkbox"/><label for="toctree-checkbox-27"><div class="visually-hidden">Toggle navigation of 7.6. UniTensor with Symmetries</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="blocks.html">7.7. Accessing the block(s)</a><input class="toctree-checkbox" id="toctree-checkbox-28" name="toctree-checkbox-28" role="switch" type="checkbox"/><label for="toctree-checkbox-28"><div class="visually-hidden">Toggle navigation of 7.7. Accessing the block(s)</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="elements.html">7.8. Get/set UniTensor element</a><input class="toctree-checkbox" id="toctree-checkbox-29" name="toctree-checkbox-29" role="switch" type="checkbox"/><label for="toctree-checkbox-29"><div class="visually-hidden">Toggle navigation of 7.8. Get/set UniTensor element</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="manipulation.html">7.9. Manipulate UniTensor</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="io.html">7.10. Save/Load a UniTensor</a><input class="toctree-checkbox" id="toctree-checkbox-30" name="toctree-checkbox-30" role="switch" type="checkbox"/><label for="toctree-checkbox-30"><div class="visually-hidden">Toggle navigation of 7.10. Save/Load a UniTensor</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../contraction.html">8. Contraction</a><input class="toctree-checkbox" id="toctree-checkbox-31" name="toctree-checkbox-31" role="switch" type="checkbox"/><label for="toctree-checkbox-31"><div class="visually-hidden">Toggle navigation of 8. Contraction</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../contraction/network.html">8.1. Network</a><input class="toctree-checkbox" id="toctree-checkbox-32" name="toctree-checkbox-32" role="switch" type="checkbox"/><label for="toctree-checkbox-32"><div class="visually-hidden">Toggle navigation of 8.1. Network</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../contraction/contract.html">8.2. Contract(s)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../contraction/ncon.html">8.3. ncon</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../linalg.html">9. Linear algebra</a><input class="toctree-checkbox" id="toctree-checkbox-33" name="toctree-checkbox-33" role="switch" type="checkbox"/><label for="toctree-checkbox-33"><div class="visually-hidden">Toggle navigation of 9. Linear algebra</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../itersol.html">10. Iterative solver</a><input class="toctree-checkbox" id="toctree-checkbox-34" name="toctree-checkbox-34" role="switch" type="checkbox"/><label for="toctree-checkbox-34"><div class="visually-hidden">Toggle navigation of 10. Iterative solver</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../itersol/LinOp.html">10.1. LinOp class</a><input class="toctree-checkbox" id="toctree-checkbox-35" name="toctree-checkbox-35" role="switch" type="checkbox"/><label for="toctree-checkbox-35"><div class="visually-hidden">Toggle navigation of 10.1. LinOp class</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../itersol/Lanczos.html">10.2. Lanczos solver</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../xlinalg.html">11. linalg extension</a><input class="toctree-checkbox" id="toctree-checkbox-36" name="toctree-checkbox-36" role="switch" type="checkbox"/><label for="toctree-checkbox-36"><div class="visually-hidden">Toggle navigation of 11. linalg extension</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../common.html">12. Common APIs</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-37" name="toctree-checkbox-37" role="switch" type="checkbox"/><label for="toctree-checkbox-37"><div class="visually-hidden">Toggle navigation of Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../example/ED.html">1. Exact Diagonalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/iTEBD.html">2. iTEBD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/DMRG.html">3. DMRG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../example/iDMRG.html">4. iDMRG</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../CommApp.html">Common usage</a><input class="toctree-checkbox" id="toctree-checkbox-38" name="toctree-checkbox-38" role="switch" type="checkbox"/><label for="toctree-checkbox-38"><div class="visually-hidden">Toggle navigation of Common usage</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/SymUT_fill.html">1. Set same value for all blocks in UniTensor with Symmetry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../common_app/BlasINT.html">2. Check current Blas/Lapack integer size</a></li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../Perf_tune.html">Performance tuning</a><input class="toctree-checkbox" id="toctree-checkbox-39" name="toctree-checkbox-39" role="switch" type="checkbox"/><label for="toctree-checkbox-39"><div class="visually-hidden">Toggle navigation of Performance tuning</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensordot.html">Tensordot with input cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../perf_tune/tensorelem.html">Access single element of Tensor in C++</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://kaihsinwu.gitlab.io/cytnx_api/">API Documentation</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/kaihsin/Cytnx">Github</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing">5-mins Blitz intro slide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../Developer.html">Developer</a></li>
+</ul>
+
+</div></div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../../_sources/guide/uniten/create.rst.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="creating-a-unitensor">
+<h1><span class="section-number">7.2. </span>Creating a UniTensor<a class="headerlink" href="#creating-a-unitensor" title="Link to this heading">¶</a></h1>
+<p>As mentioned in the introduction, a <strong>UniTensor</strong> consists of Block(s), Bond(s) and label(s). The Block(s) contain the data, while Bond(s) and label(s) are the meta data that describe the properties of the UniTensor.</p>
+<a class="reference internal image-reference" href="../../_images/utcomp.png"><img alt="../../_images/utcomp.png" class="align-center" src="../../_images/utcomp.png" style="width: 600px;" />
+</a>
+<p>Generally, there are two types of UniTensor types: <strong>un-tagged</strong> and <strong>tagged</strong>, depending on whether the Bonds have a <em>direction</em>. In more advanced applications, a UniTensor may have block diagonal or other more complicated structure when symmetries are involved. Therefore, UniTensors can further be categorized into <strong>non-symmetric</strong> and <strong>symmetric (block form)</strong>:</p>
+<div class="table-wrapper docutils container">
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td></td>
+<td><p>non-symmetric</p></td>
+<td><p>symmetric (block-diagonal)</p></td>
+</tr>
+<tr class="row-even"><td><p>tagged</p></td>
+<td><p><strong>O</strong></p></td>
+<td><p><strong>O</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>untagged</p></td>
+<td><p><strong>O</strong></p></td>
+<td><p><strong>X</strong></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In the following, we will explain how to construct a UniTensor.</p>
+<section id="constructing-from-tensor">
+<h2><span class="section-number">7.2.1. </span>Constructing from Tensor<a class="headerlink" href="#constructing-from-tensor" title="Link to this heading">¶</a></h2>
+<p>Before going into more complicated UniTensor structures, let’s start with the most simple example. For this, we convert a <strong>cytnx.Tensor</strong> into a UniTensor. This gives us the first type of a UniTensor: an <strong>untagged</strong> UniTensor.</p>
+<p>In the following, we consider a simple rank-3 tensor as an example. The tensor diagram looks like:</p>
+<a class="reference internal image-reference" href="../../_images/untag.png"><img alt="../../_images/untag.png" class="align-center" src="../../_images/untag.png" style="width: 200px;" />
+</a>
+<p>We can convert such a Tensor to a UniTensor:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># create a rank-3 tensor with shape [2,3,4]</span>
+<span class="linenos">2</span><span class="n">T</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="mi">3</span><span class="o">*</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="linenos">3</span><span class="c1"># convert to UniTensor:</span>
+<span class="linenos">4</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Here, the Tensor <strong>T</strong> is converted to a UniTensor <strong>uT</strong> simply by wrapping it with constructor <em>cytnx.UniTensor()</em>. Formally, we can think of this as constructing a UniTensor <strong>uT</strong> with <strong>T</strong> being its <em>block</em> (data).
+If we want to create a UniTensor with different dtype, for example, a complex UniTensor, we can do:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c1"># initialize a tensor with complex data type</span>
+<span class="linenos">2</span><span class="n">T</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">ComplexDouble</span><span class="p">)</span>
+<span class="linenos">3</span><span class="c1"># convert to UniTensor</span>
+<span class="linenos">4</span><span class="n">uT</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="linenos">5</span><span class="c1"># randomize the elements with a uniform distribution in the range [low, high]</span>
+<span class="linenos">6</span><span class="n">cytnx</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="n">uT</span><span class="p">,</span> <span class="n">low</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can use <strong>print_diagram()</strong> to visualize a UniTensor in a more straightforward way as a diagram:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name :
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------
+         /         \
+   0 ____| 2     3 |____ 1
+         |         |
+         |       4 |____ 2
+         \         /
+          ---------
+</pre></div>
+</div>
+<p>The information provided by this output is explained in detail in <a class="reference internal" href="print.html#print-diagram"><span class="std std-ref">print_diagram()</span></a>. We see that a UniTensor with the same shape as <em>T</em> was created. The bond labels are set to the default values “0”, “1” and “2”.</p>
+</section>
+<section id="from-scratch">
+<h2><span class="section-number">7.2.2. </span>From scratch<a class="headerlink" href="#from-scratch" title="Link to this heading">¶</a></h2>
+<p>Next, let’s introduce the complete API for constructing a UniTensor from scratch:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="UniTensor">
+<span class="sig-name descname"><span class="pre">UniTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bonds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rowrank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_diag</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#UniTensor" title="Link to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bonds</strong> (<em>List</em><em>[</em><em>cytnx.Bond</em><em>]</em>) – list of bonds</p></li>
+<li><p><strong>labels</strong> (<em>List</em><em>[</em><em>string</em><em>]</em>) – list of labels associate to each bond</p></li>
+<li><p><strong>rowrank</strong> (<em>int</em>) – rowrank used when flattened into a matrix</p></li>
+<li><p><strong>dtype</strong> (<em>cytnx.Type</em>) – the dtype of the block(s)</p></li>
+<li><p><strong>device</strong> (<em>cytnx.Device</em>) – the device where the block(s) are held</p></li>
+<li><p><strong>is_diag</strong> (<em>bool</em>) – whether the UniTensor is diagonal</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p>The first argument <strong>bonds</strong> is a list of Bond objects. These correspond to the <em>shape</em> of a <strong>cytnx.Tensor</strong> where the elements in <em>shape</em> indicate the dimensions of the bonds. Here, each bond is represent by a <strong>cytnx.Bond</strong> object. In general, <strong>cytnx.Bond</strong> contains three things:</p>
+<ol class="arabic simple">
+<li><p>The dimension of the bond.</p></li>
+<li><p>The direction of the bond (it can be BD_REG–undirectional, BD_KET (BD_IN)–inward, BD_BRA (BD_OUT)–outward)</p></li>
+<li><p>The symmetry and the associate quantum numbers.</p></li>
+</ol>
+<p>For more details, see <a class="reference internal" href="bond.html#bond"><span class="std std-ref">Bond</span></a>. Here, for simplicity, we will use only the dimension property of a Bond.</p>
+<p>Now let’s construct the rank-3 UniTensor with the same shape as in the above example. We assign the three bonds with labels (“a”, “b”, “c”) and also set name to be “uT2 scratch”.</p>
+<a class="reference internal image-reference" href="../../_images/ut2.png"><img alt="../../_images/ut2.png" class="align-center" src="../../_images/ut2.png" style="width: 300px;" />
+</a>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">uT2</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">([</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Bond</span><span class="p">(</span><span class="mi">4</span><span class="p">)],</span><span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">],</span><span class="n">rowrank</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="linenos">2</span><span class="n">uT2</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s2">&quot;uT2 scratch&quot;</span><span class="p">)</span>
+<span class="linenos">3</span><span class="n">uT2</span><span class="o">.</span><span class="n">print_diagram</span><span class="p">()</span>
+<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">uT2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-----------------------
+tensor Name : uT2 scratch
+tensor Rank : 3
+block_form  : False
+is_diag     : False
+on device   : cytnx device: CPU
+          ---------
+         /         \
+   a ____| 2     3 |____ b
+         |         |
+         |       4 |____ c
+         \         /
+          ---------
+-------- start of print ---------
+Tensor name: uT2 scratch
+is_diag    : False
+contiguous : True
+
+Total elem: 24
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,3,4)
+[[[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]
+ [[0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]
+  [0.00000e+00 0.00000e+00 0.00000e+00 0.00000e+00 ]]]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The UniTensor will have all the elements in the block initialized with zeros.</p>
+</div>
+</section>
+<section id="type-conversion">
+<h2><span class="section-number">7.2.3. </span>Type conversion<a class="headerlink" href="#type-conversion" title="Link to this heading">¶</a></h2>
+<p>It is possible to convert a UniTensor to a different data type. To convert the data type, simply use <strong>UniTensor.astype()</strong>.</p>
+<p>For example, consider a UniTensor <em>A</em> with <strong>dtype=Type.Int64</strong>, which shall be converted to <strong>Type.Double</strong>:</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Int64</span><span class="p">))</span>
+<span class="linenos">2</span><span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Double</span><span class="p">)</span>
+<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">dtype_str</span><span class="p">())</span>
+<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="o">.</span><span class="n">dtype_str</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Output &gt;&gt;</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Int64
+Double (Float64)
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>UniTensor.dtype() returns a type-id, while UniTensor.dtype_str() returns the type name.</p>
+</div>
+</section>
+<section id="transfer-between-devices">
+<h2><span class="section-number">7.2.4. </span>Transfer between devices<a class="headerlink" href="#transfer-between-devices" title="Link to this heading">¶</a></h2>
+<p>Moving a UniTensor between different devices is very easy. We can use <strong>UniTensor.to()</strong> to move the UniTensor to a different device.</p>
+<p>For example, let’s create a UniTensor in the memory accessible by the CPU and transfer it to the GPU with gpu-id=0.</p>
+<ul class="simple">
+<li><p>In Python:</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="n">A</span> <span class="o">=</span> <span class="n">cytnx</span><span class="o">.</span><span class="n">UniTensor</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]))</span> <span class="c1">#on CPU</span>
+<span class="linenos">2</span><span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cuda</span><span class="o">+</span><span class="mi">0</span><span class="p">)</span>
+<span class="linenos">3</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="c1"># on CPU</span>
+<span class="linenos">4</span><span class="nb">print</span><span class="p">(</span><span class="n">B</span><span class="p">)</span> <span class="c1"># on GPU</span>
+<span class="linenos">5</span>
+<span class="linenos">6</span><span class="n">A</span><span class="o">.</span><span class="n">to_</span><span class="p">(</span><span class="n">cytnx</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">cuda</span><span class="p">)</span>
+<span class="linenos">7</span><span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="c1"># on GPU</span>
+</pre></div>
+</div>
+<p>&gt;&gt; Output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>-------- start of print ---------
+Tensor name:
+is_diag    : False
+contiguous : True
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CPU
+Shape : (2,2)
+[[1.00000e+00 1.00000e+00 ]
+[1.00000e+00 1.00000e+00 ]]
+
+
+
+
+-------- start of print ---------
+Tensor name:
+is_diag    : False
+contiguous : True
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (2,2)
+[[1.00000e+00 1.00000e+00 ]
+[1.00000e+00 1.00000e+00 ]]
+
+
+
+
+-------- start of print ---------
+Tensor name:
+is_diag    : False
+contiguous : True
+
+Total elem: 4
+type  : Double (Float64)
+cytnx device: CUDA/GPU-id:0
+Shape : (2,2)
+[[1.00000e+00 1.00000e+00 ]
+[1.00000e+00 1.00000e+00 ]]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ol class="arabic simple">
+<li><p>You can use <strong>UniTensor.device()</strong> to get the current device-id (cpu = -1), whereas <strong>UniTensor.device_str()</strong> returns the device name.</p></li>
+<li><p><strong>UniTensor.to()</strong> will return a copy on the target device. If you want to move the current Tensor to another device, use <strong>UniTensor.to_()</strong> (with underscore).</p></li>
+</ol>
+</div>
+</section>
+<section id="tagged-unitensors-and-unitensors-with-symmetries">
+<h2><span class="section-number">7.2.5. </span>Tagged UniTensors and UniTensors with Symmetries<a class="headerlink" href="#tagged-unitensors-and-unitensors-with-symmetries" title="Link to this heading">¶</a></h2>
+<p>The creation of tagged, non-symmetric UniTensors will be explained in <a class="reference internal" href="tagged.html#tagged-unitensor"><span class="std std-ref">Tagged UniTensor</span></a>. Symmetric UniTensors are discussed in <a class="reference internal" href="symmetric.html#unitensor-with-symmetries"><span class="std std-ref">UniTensor with Symmetries</span></a>.</p>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="labels.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">7.3. </span>Changing labels</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="print.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">7.1. </span>Print and display</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2019-, Kai-Hsin Wu
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">7.2. Creating a UniTensor</a><ul>
+<li><a class="reference internal" href="#constructing-from-tensor">7.2.1. Constructing from Tensor</a></li>
+<li><a class="reference internal" href="#from-scratch">7.2.2. From scratch</a><ul>
+<li><a class="reference internal" href="#UniTensor"><code class="docutils literal notranslate"><span class="pre">UniTensor()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#type-conversion">7.2.3. Type conversion</a></li>
+<li><a class="reference internal" href="#transfer-between-devices">7.2.4. Transfer between devices</a></li>
+<li><a class="reference internal" href="#tagged-unitensors-and-unitensors-with-symmetries">7.2.5. Tagged UniTensors and UniTensors with Symmetries</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/jquery.js?v=5d32c60e"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>
