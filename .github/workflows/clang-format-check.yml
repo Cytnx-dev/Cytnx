@@ -21,7 +21,7 @@ jobs:
         git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
 
     - name: Run clang-format style check for C/C++/Protobuf programs.
-      uses: jidicula/clang-format-action@v4.11.0
+      uses: jidicula/clang-format-action@v4.16.0
       with:
         clang-format-version: '14'
         check-path: '.'
