@@ -86,56 +86,65 @@ void linop_binding(py::module &m) {
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<double> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_double>(elem), check_exists); },
+         const py::numpy_scalar<double> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_double>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<float> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_float>(elem), check_exists); },
+         const py::numpy_scalar<float> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_float>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<int64_t> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_int64>(elem), check_exists); },
+         const py::numpy_scalar<int64_t> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_int64>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<uint64_t> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_uint64>(elem), check_exists); },
+         const py::numpy_scalar<uint64_t> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_uint64>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<int32_t> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_int32>(elem), check_exists); },
+         const py::numpy_scalar<int32_t> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_int32>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<uint32_t> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_uint32>(elem), check_exists); },
+         const py::numpy_scalar<uint32_t> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_uint32>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<int16_t> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_int16>(elem), check_exists); },
+         const py::numpy_scalar<int16_t> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_int16>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<uint16_t> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_uint16>(elem), check_exists); },
+         const py::numpy_scalar<uint16_t> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_uint16>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
     .def(
       "set_elem",
       [](LinOp &self, const cytnx::cytnx_uint64 i, const cytnx::cytnx_uint64 j,
-         const py::numpy_scalar<bool> elem,
-         const bool check_exists) { self.set_elem(i, j, static_cast<cytnx::cytnx_bool>(elem), check_exists); },
+         const py::numpy_scalar<bool> elem, const bool check_exists) {
+        self.set_elem(i, j, static_cast<cytnx::cytnx_bool>(elem), check_exists);
+      },
       py::arg("i"), py::arg("j"), py::arg("elem"), py::arg("check_exists") = true)
 
     //.def("__call__",[](cytnx::LinOp &self, const cytnx_uint64 &i, const cytnx_uint64 &j){

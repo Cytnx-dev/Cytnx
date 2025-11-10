@@ -276,68 +276,78 @@ void linalg_binding(py::module &m) {
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<std::complex<double>> &a,
        const py::numpy_scalar<std::complex<double>> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_complex128>(a), static_cast<cytnx::cytnx_complex128>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_complex128>(a),
+                                 static_cast<cytnx::cytnx_complex128>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_complex128(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<std::complex<float>> &a,
        const py::numpy_scalar<std::complex<float>> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_complex64>(a), static_cast<cytnx::cytnx_complex64>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_complex64>(a),
+                                 static_cast<cytnx::cytnx_complex64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_complex64(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<double> &a, const py::numpy_scalar<double> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_double>(a), static_cast<cytnx::cytnx_double>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_double>(a),
+                                 static_cast<cytnx::cytnx_double>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_double(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<float> &a, const py::numpy_scalar<float> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_float>(a), static_cast<cytnx::cytnx_float>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_float>(a),
+                                 static_cast<cytnx::cytnx_float>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_float(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<int64_t> &a,
        const py::numpy_scalar<int64_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int64>(a), static_cast<cytnx::cytnx_int64>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int64>(a),
+                                 static_cast<cytnx::cytnx_int64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int64(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<uint64_t> &a,
        const py::numpy_scalar<uint64_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint64>(a), static_cast<cytnx::cytnx_uint64>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint64>(a),
+                                 static_cast<cytnx::cytnx_uint64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint64(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<int32_t> &a,
        const py::numpy_scalar<int32_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int32>(a), static_cast<cytnx::cytnx_int32>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int32>(a),
+                                 static_cast<cytnx::cytnx_int32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int32(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<uint32_t> &a,
        const py::numpy_scalar<uint32_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint32>(a), static_cast<cytnx::cytnx_uint32>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint32>(a),
+                                 static_cast<cytnx::cytnx_uint32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint32(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<int16_t> &a,
        const py::numpy_scalar<int16_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int16>(a), static_cast<cytnx::cytnx_int16>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int16>(a),
+                                 static_cast<cytnx::cytnx_int16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int16(0));
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<uint16_t> &a,
        const py::numpy_scalar<uint16_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint16>(a), static_cast<cytnx::cytnx_uint16>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint16>(a),
+                                 static_cast<cytnx::cytnx_uint16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint16(0));
 
@@ -425,52 +435,60 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<double> &a, const py::numpy_scalar<double> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_double>(a), static_cast<cytnx::cytnx_double>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_double>(a),
+                                 static_cast<cytnx::cytnx_double>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_double(0));
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<float> &a, const py::numpy_scalar<float> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_float>(a), static_cast<cytnx::cytnx_float>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_float>(a),
+                                 static_cast<cytnx::cytnx_float>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_float(0));
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<int64_t> &a, const py::numpy_scalar<int64_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int64>(a), static_cast<cytnx::cytnx_int64>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int64>(a),
+                                 static_cast<cytnx::cytnx_int64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int64(0));
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<uint64_t> &a,
        const py::numpy_scalar<uint64_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint64>(a), static_cast<cytnx::cytnx_uint64>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint64>(a),
+                                 static_cast<cytnx::cytnx_uint64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint64(0));
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<int32_t> &a, const py::numpy_scalar<int32_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int32>(a), static_cast<cytnx::cytnx_int32>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int32>(a),
+                                 static_cast<cytnx::cytnx_int32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int32(0));
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<uint32_t> &a,
        const py::numpy_scalar<uint32_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint32>(a), static_cast<cytnx::cytnx_uint32>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint32>(a),
+                                 static_cast<cytnx::cytnx_uint32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint32(0));
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<int16_t> &a, const py::numpy_scalar<int16_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int16>(a), static_cast<cytnx::cytnx_int16>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_int16>(a),
+                                 static_cast<cytnx::cytnx_int16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int16(0));
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<uint16_t> &a,
        const py::numpy_scalar<uint16_t> &b) {
-      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint16>(a), static_cast<cytnx::cytnx_uint16>(b));
+      return cytnx::linalg::ExpH(Tin, static_cast<cytnx::cytnx_uint16>(a),
+                                 static_cast<cytnx::cytnx_uint16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint16(0));
 
@@ -554,52 +572,60 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<double> &a, const py::numpy_scalar<double> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_double>(a), static_cast<cytnx::cytnx_double>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_double>(a),
+                                 static_cast<cytnx::cytnx_double>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_double(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<float> &a, const py::numpy_scalar<float> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_float>(a), static_cast<cytnx::cytnx_float>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_float>(a),
+                                 static_cast<cytnx::cytnx_float>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_float(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<int64_t> &a, const py::numpy_scalar<int64_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int64>(a), static_cast<cytnx::cytnx_int64>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int64>(a),
+                                 static_cast<cytnx::cytnx_int64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int64(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<uint64_t> &a,
        const py::numpy_scalar<uint64_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint64>(a), static_cast<cytnx::cytnx_uint64>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint64>(a),
+                                 static_cast<cytnx::cytnx_uint64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint64(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<int32_t> &a, const py::numpy_scalar<int32_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int32>(a), static_cast<cytnx::cytnx_int32>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int32>(a),
+                                 static_cast<cytnx::cytnx_int32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int32(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<uint32_t> &a,
        const py::numpy_scalar<uint32_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint32>(a), static_cast<cytnx::cytnx_uint32>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint32>(a),
+                                 static_cast<cytnx::cytnx_uint32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint32(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<int16_t> &a, const py::numpy_scalar<int16_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int16>(a), static_cast<cytnx::cytnx_int16>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int16>(a),
+                                 static_cast<cytnx::cytnx_int16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int16(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<uint16_t> &a,
        const py::numpy_scalar<uint16_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint16>(a), static_cast<cytnx::cytnx_uint16>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint16>(a),
+                                 static_cast<cytnx::cytnx_uint16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint16(0));
 
@@ -677,52 +703,60 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<double> &a, const py::numpy_scalar<double> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_double>(a), static_cast<cytnx::cytnx_double>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_double>(a),
+                                 static_cast<cytnx::cytnx_double>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_double(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<float> &a, const py::numpy_scalar<float> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_float>(a), static_cast<cytnx::cytnx_float>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_float>(a),
+                                 static_cast<cytnx::cytnx_float>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_float(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<int64_t> &a, const py::numpy_scalar<int64_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int64>(a), static_cast<cytnx::cytnx_int64>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int64>(a),
+                                 static_cast<cytnx::cytnx_int64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int64(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<uint64_t> &a,
        const py::numpy_scalar<uint64_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint64>(a), static_cast<cytnx::cytnx_uint64>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint64>(a),
+                                 static_cast<cytnx::cytnx_uint64>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint64(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<int32_t> &a, const py::numpy_scalar<int32_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int32>(a), static_cast<cytnx::cytnx_int32>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int32>(a),
+                                 static_cast<cytnx::cytnx_int32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int32(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<uint32_t> &a,
        const py::numpy_scalar<uint32_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint32>(a), static_cast<cytnx::cytnx_uint32>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint32>(a),
+                                 static_cast<cytnx::cytnx_uint32>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint32(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<int16_t> &a, const py::numpy_scalar<int16_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int16>(a), static_cast<cytnx::cytnx_int16>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_int16>(a),
+                                 static_cast<cytnx::cytnx_int16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_int16(0));
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<uint16_t> &a,
        const py::numpy_scalar<uint16_t> &b) {
-      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint16>(a), static_cast<cytnx::cytnx_uint16>(b));
+      return cytnx::linalg::ExpM(Tin, static_cast<cytnx::cytnx_uint16>(a),
+                                 static_cast<cytnx::cytnx_uint16>(b));
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx::cytnx_uint16(0));
 
