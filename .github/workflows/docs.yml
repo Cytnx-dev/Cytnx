@@ -21,12 +21,15 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - name: Install dependencies
+        working-directory: docs
         run: |
           uv sync --python 3.10
       - name: Sphinx build
+        working-directory: docs
         run: |
           uv run sphinx-multiversion source build
       - name: Create index.html
+        working-directory: docs
         run: |
           uv run python redirect.py ${{ github.ref_name }} > build/index.html
       - name: Deploy
