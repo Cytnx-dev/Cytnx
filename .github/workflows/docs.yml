@@ -27,7 +27,7 @@ jobs:
       - name: Sphinx build
         working-directory: docs
         run: |
-          uv run just docs
+          uv run just doc
       - name: Create index.html
         working-directory: docs
         run: |
