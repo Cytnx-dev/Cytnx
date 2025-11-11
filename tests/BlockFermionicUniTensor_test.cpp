@@ -10,7 +10,7 @@ TEST_F(BlockFermionicUniTensorTest, SimpleTensorContract) {
   EXPECT_EQ(abs(BFUT3.contract(BFUT2).at({0, 0}) - 32) < 1e-13, true);
 }
 
-TEST_F(BlockFermionicUniTensorTest, LinAlogElementwise) {
+TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {
   const double tol = 1e-14;
   UniTensor T = BFUT3.permute({3, 1, 4, 2, 0}).contiguous();
   EXPECT_EQ(AreEqUniTensor(BFUT3PERM, T), true);
@@ -20,6 +20,23 @@ TEST_F(BlockFermionicUniTensorTest, LinAlogElementwise) {
   EXPECT_EQ(AreNearlyEqUniTensor((T + T + BFUT3PERM + T) / 4., BFUT3PERM, tol), true);
   EXPECT_EQ(AreNearlyEqUniTensor((2 * T) - T, BFUT3PERM, tol), true);
   EXPECT_EQ(AreNearlyEqUniTensor((2 * T) - BFUT3PERM, BFUT3PERM, tol), true);
+  EXPECT_EQ(AreNearlyEqUniTensor((T * T * T) / T, BFUT3PERM * BFUT3PERM, tol), true);
+  // test inline
+  UniTensor T2 = T;
+  T2 += T;
+  T2 /= 2.;
+  EXPECT_EQ(AreNearlyEqUniTensor(T2, T, tol), true);
+  // test Mul and Div for tensors
+  UniTensor Tsq = T.clone();
+  Tsq *= T;
+  EXPECT_EQ(AreNearlyEqUniTensor(Tsq, T * T, tol), true);
+  Tsq /= T;
+  EXPECT_EQ(AreNearlyEqUniTensor(Tsq, T, tol), true);
+  // check power, only works for unpermuted tensor (otherwise, sign structure of T*T and T.Pow(2.)
+  // differs)
+  Tsq = BFUT3.clone();
+  Tsq *= BFUT3;
+  EXPECT_EQ(AreNearlyEqUniTensor(Tsq, BFUT3.Pow(2.), tol), true);
 }
 
 TEST_F(BlockFermionicUniTensorTest, SaveLoad) {

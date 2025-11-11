@@ -10,7 +10,7 @@ namespace cytnx {
   namespace linalg {
     Tensor Add(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[Add] error, two tensor cannot on different devices.%s", "\n");
+                      "[Add] The two tensors cannot be on different devices.%s", "\n");
 
       Tensor out;
       bool icnst = false;
@@ -31,7 +31,7 @@ namespace cytnx {
 
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[Add] error, the two tensor does not have the same shape. Lt rank: [%d] "
+                        "[Add] The two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
         out.Init(Lt.shape(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Lt.device());
@@ -633,7 +633,6 @@ namespace cytnx {
         out = Rt.clone();
         out.Add_(lc);
       }
-      // out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
       out.set_name("");
 
       return out;

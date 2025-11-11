@@ -1678,10 +1678,10 @@ namespace cytnx {
     void Add_(const Scalar &rhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
+        "[ERROR] cannot perform elementwise arithmetic '+' between Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+        "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
+        "to do operation on blocks.");
     }
 
     void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -1691,36 +1691,29 @@ namespace cytnx {
     void Sub_(const Scalar &rhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
+        "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+        "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
+        "to do operation on blocks.");
     }
     void lSub_(const Scalar &lhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
+        "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+        "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
+        "to do operation on blocks.");
     }
 
-    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-      cytnx_error_msg(
-        true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
-        "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
-    }
+    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Div_(const Scalar &rhs);
     void lDiv_(const Scalar &lhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
+        "[ERROR] cannot perform elementwise arithmetic '/' between Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+        "This operation would cause division by zero on non-block elements. [Suggest] Avoid or use "
+        "get/set_block(s) to do operation on blocks.");
     }
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
                const cytnx_double &tol);
@@ -2470,13 +2463,12 @@ namespace cytnx {
 
     void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Add_(const Scalar &rhs) {
-      cytnx_error_msg(
-        true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
-        "BlockFermionicUniTensor.\n %s "
-        "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+      cytnx_error_msg(true,
+                      "[ERROR] cannot perform elementwise arithmetic '+' between Scalar and "
+                      "BlockFermionicUniTensor.\n %s "
+                      "\n",
+                      "This operation would destroy the block structure. [Suggest] Avoid or use "
+                      "get/set_block(s) to do operation on blocks.");
     }
 
     void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -2484,42 +2476,31 @@ namespace cytnx {
 
     void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Sub_(const Scalar &rhs) {
-      cytnx_error_msg(
-        true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
-        "BlockFermionicUniTensor.\n %s "
-        "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+      cytnx_error_msg(true,
+                      "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and "
+                      "BlockFermionicUniTensor.\n %s "
+                      "\n",
+                      "This operation would destroy the block structure. [Suggest] Avoid or use "
+                      "get/set_block(s) to do operation on blocks.");
     }
     void lSub_(const Scalar &lhs) {
-      cytnx_error_msg(
-        true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
-        "BlockFermionicUniTensor.\n %s "
-        "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+      cytnx_error_msg(true,
+                      "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and "
+                      "BlockFermionicUniTensor.\n %s "
+                      "\n",
+                      "This operation would destroy the block structure. [Suggest] Avoid or use "
+                      "get/set_block(s) to do operation on blocks.");
     }
 
-    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
-      cytnx_error_msg(
-        true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
-        "BlockFermionicUniTensor.\n %s "
-        "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
-    }
+    void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Div_(const Scalar &rhs);
     void lDiv_(const Scalar &lhs) {
-      cytnx_error_msg(
-        true,
-        "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
-        "BlockFermionicUniTensor.\n %s "
-        "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
-        "operation on the block(s).");
+      cytnx_error_msg(true,
+                      "[ERROR] cannot perform elementwise arithmetic '/' between Scalar and "
+                      "BlockFermionicUniTensor.\n %s "
+                      "\n",
+                      "This operation would cause division by zero on non-block elements. "
+                      "[Suggest] Avoid or use get/set_block(s) to do operation on blocks.");
     }
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
