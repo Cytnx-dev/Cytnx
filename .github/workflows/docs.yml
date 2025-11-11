@@ -37,6 +37,7 @@ jobs:
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          personal_token: ${{ secrets.PAGES_PAT }}
           external_repository: Cytnx-dev/Cytnx_doc
           publish_dir: docs/build/
           force_orphan: true
