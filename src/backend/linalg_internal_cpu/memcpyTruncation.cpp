@@ -10,6 +10,22 @@
 namespace cytnx {
   namespace linalg_internal {
 
+    /**
+    @brief Truncate the singular values and the matrices U and vT inline
+    @param[in,out] U  UniTensor with type cytnx_complex128 entries
+    @param[in,out] vT UniTensor with type cytnx_complex128 entries
+    @param[in,out] S  UniTensor with type cytnx_double entries
+    @param[out] terr  truncated singular values, same type as S; depends on return_err
+    @param[in] keepdim  number of singular values to keep at most
+    @param[out] err   singular values < err are truncated
+    @param[in] is_U   truncate U?
+    @param[in] is_vT  truncate vT?
+    @param[in] return_err return type of terr;
+                          0: no error returned
+                          1: only first trunceted singular value
+                          2: all truncated singular values
+    @param[in] is_vT  minimum number of singular values to keep
+    */
     void memcpyTruncation_cd(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                              const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
                              const bool &is_vT, const unsigned int &return_err,
@@ -78,6 +94,22 @@ namespace cytnx {
       }
     }
 
+    /**
+    @brief Truncate the singular values and the matrices U and vT inline
+    @param[in,out] U  UniTensor with type cytnx_complex64 entries
+    @param[in,out] vT UniTensor with type cytnx_complex64 entries
+    @param[in,out] S  UniTensor with type cytnx_float entries
+    @param[out] terr  truncated singular values, same type as S; depends on return_err
+    @param[in] keepdim  number of singular values to keep at most
+    @param[out] err   singular values < err are truncated
+    @param[in] is_U   truncate U?
+    @param[in] is_vT  truncate vT?
+    @param[in] return_err return type of terr;
+                          0: no error returned
+                          1: only first trunceted singular value
+                          2: all truncated singular values
+    @param[in] is_vT  minimum number of singular values to keep
+    */
     void memcpyTruncation_cf(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                              const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
                              const bool &is_vT, const unsigned int &return_err,
@@ -90,7 +122,7 @@ namespace cytnx {
       }
       cytnx_uint64 trunc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->data())[i] < err and
+        if (((cytnx_float *)S._impl->storage()._impl->data())[i] < err and
             trunc_dim - 1 >= mindim) {
           trunc_dim--;
         } else {
@@ -104,8 +136,8 @@ namespace cytnx {
         // perform the manual truncation
 
         Tensor newS = Tensor({trunc_dim}, S.dtype(), S.device());
-        memcpy((cytnx_double *)newS._impl->storage()._impl->data(),
-               (cytnx_double *)S._impl->storage()._impl->data(), trunc_dim * sizeof(cytnx_double));
+        memcpy((cytnx_float *)newS._impl->storage()._impl->data(),
+               (cytnx_float *)S._impl->storage()._impl->data(), trunc_dim * sizeof(cytnx_float));
         if (is_U) {
           Tensor newU = Tensor({U.shape()[0], trunc_dim}, U.dtype(), U.device());
 
@@ -131,21 +163,37 @@ namespace cytnx {
         }
         if (return_err == 1) {
           Tensor newterr = Tensor({1}, S.dtype(), S.device());
-          ((cytnx_double *)newterr._impl->storage()._impl->data())[0] =
-            ((cytnx_double *)S._impl->storage()._impl->data())[trunc_dim];
+          ((cytnx_float *)newterr._impl->storage()._impl->data())[0] =
+            ((cytnx_float *)S._impl->storage()._impl->data())[trunc_dim];
           terr = newterr;
         } else if (return_err) {
           cytnx_uint64 discared_dim = S.shape()[0] - trunc_dim;
           Tensor newterr = Tensor({discared_dim}, S.dtype(), S.device());
-          memcpy((cytnx_double *)newterr._impl->storage()._impl->data(),
-                 (cytnx_double *)S._impl->storage()._impl->data() + trunc_dim,
-                 discared_dim * sizeof(cytnx_double));
+          memcpy((cytnx_float *)newterr._impl->storage()._impl->data(),
+                 (cytnx_float *)S._impl->storage()._impl->data() + trunc_dim,
+                 discared_dim * sizeof(cytnx_float));
           terr = newterr;
         }
         S = newS;
       }
     }
 
+    /**
+    @brief Truncate the singular values and the matrices U and vT inline
+    @param[in,out] U  UniTensor with type cytnx_double entries
+    @param[in,out] vT UniTensor with type cytnx_double entries
+    @param[in,out] S  UniTensor with type cytnx_double entries
+    @param[out] terr  truncated singular values, same type as S; depends on return_err
+    @param[in] keepdim  number of singular values to keep at most
+    @param[out] err   singular values < err are truncated
+    @param[in] is_U   truncate U?
+    @param[in] is_vT  truncate vT?
+    @param[in] return_err return type of terr;
+                          0: no error returned
+                          1: only first trunceted singular value
+                          2: all truncated singular values
+    @param[in] is_vT  minimum number of singular values to keep
+    */
     void memcpyTruncation_d(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                             const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
                             const bool &is_vT, const unsigned int &return_err,
@@ -214,6 +262,22 @@ namespace cytnx {
       }
     }
 
+    /**
+    @brief Truncate the singular values and the matrices U and vT inline
+    @param[in,out] U  UniTensor with type cytnx_float entries
+    @param[in,out] vT UniTensor with type cytnx_float entries
+    @param[in,out] S  UniTensor with type cytnx_float entries
+    @param[out] terr  truncated singular values, same type as S; depends on return_err
+    @param[in] keepdim  number of singular values to keep at most
+    @param[out] err   singular values < err are truncated
+    @param[in] is_U   truncate U?
+    @param[in] is_vT  truncate vT?
+    @param[in] return_err return type of terr;
+                          0: no error returned
+                          1: only first trunceted singular value
+                          2: all truncated singular values
+    @param[in] is_vT  minimum number of singular values to keep
+    */
     void memcpyTruncation_f(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
                             const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
                             const bool &is_vT, const unsigned int &return_err,
@@ -226,7 +290,7 @@ namespace cytnx {
       }
       cytnx_uint64 trunc_dim = Kdim;
       for (cytnx_int64 i = Kdim - 1; i >= 0; i--) {
-        if (((cytnx_double *)S._impl->storage()._impl->data())[i] < err and
+        if (((cytnx_float *)S._impl->storage()._impl->data())[i] < err and
             trunc_dim - 1 >= mindim) {
           trunc_dim--;
         } else {
@@ -240,8 +304,8 @@ namespace cytnx {
         // perform the manual truncation
 
         Tensor newS = Tensor({trunc_dim}, S.dtype(), S.device());
-        memcpy((cytnx_double *)newS._impl->storage()._impl->data(),
-               (cytnx_double *)S._impl->storage()._impl->data(), trunc_dim * sizeof(cytnx_double));
+        memcpy((cytnx_float *)newS._impl->storage()._impl->data(),
+               (cytnx_float *)S._impl->storage()._impl->data(), trunc_dim * sizeof(cytnx_float));
         if (is_U) {
           Tensor newU = Tensor({U.shape()[0], trunc_dim}, U.dtype(), U.device());
 
@@ -267,15 +331,15 @@ namespace cytnx {
         }
         if (return_err == 1) {
           Tensor newterr = Tensor({1}, S.dtype(), S.device());
-          ((cytnx_double *)newterr._impl->storage()._impl->data())[0] =
-            ((cytnx_double *)S._impl->storage()._impl->data())[trunc_dim];
+          ((cytnx_float *)newterr._impl->storage()._impl->data())[0] =
+            ((cytnx_float *)S._impl->storage()._impl->data())[trunc_dim];
           terr = newterr;
         } else if (return_err) {
           cytnx_uint64 discared_dim = S.shape()[0] - trunc_dim;
           Tensor newterr = Tensor({discared_dim}, S.dtype(), S.device());
-          memcpy((cytnx_double *)newterr._impl->storage()._impl->data(),
-                 (cytnx_double *)S._impl->storage()._impl->data() + trunc_dim,
-                 discared_dim * sizeof(cytnx_double));
+          memcpy((cytnx_float *)newterr._impl->storage()._impl->data(),
+                 (cytnx_float *)S._impl->storage()._impl->data() + trunc_dim,
+                 discared_dim * sizeof(cytnx_float));
           terr = newterr;
         }
         S = newS;

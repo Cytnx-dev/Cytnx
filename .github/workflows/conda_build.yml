@@ -22,7 +22,18 @@ jobs:
         shell: bash -l {0}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # When re-running a PR job, GitHub Actions uses the merge commit created at
+    # the time of the original run, not a fresh merge with the latest target branch.
+    # This step ensures we always test against the most recent target branch.
+    - name: Merge with latest target branch (pull_request only)
+      if: github.event_name == 'pull_request'
+      run: |
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
 
     - uses: conda-incubator/setup-miniconda@v3
       with:
