@@ -63,7 +63,6 @@ target_sources_local(cytnx
     Matmul_dg_internal.cpp
     Matvec_internal.cpp
     iMul_internal.cpp
-    Mod_internal.cpp
     Outer_internal.cpp
     Trace_internal.cpp
     Tridiag_internal.cpp
