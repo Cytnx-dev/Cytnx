@@ -5,6 +5,7 @@ doxygen_build()
 	git checkout $VTAG
 	doxygen docs.doxygen > /dev/null 2>&1
 	if [ "$VTAG" = master ]; then
+		mkdir docs/api_docs/versions
 		VTAG=latest
 	fi
 	mv docs/html docs/api_docs/versions/$VTAG
