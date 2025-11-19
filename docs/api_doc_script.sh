@@ -4,6 +4,8 @@ doxygen_build()
 	echo $VTAG
 	git checkout $VTAG
 	doxygen docs.doxygen > /dev/null 2>&1
+	pwd
+	ls
 	if [ "$VTAG" = master ]; then
 		mkdir docs/api_docs/versions
 		VTAG=latest
