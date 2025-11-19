@@ -27,7 +27,9 @@ jobs:
           sudo apt-get update && sudo apt-get install -y doxygen graphviz
       - name: Build api documentation
         working-directory: docs
-        run: sh api_doc_script.sh
+        run: |
+          pwd
+          sh api_doc_script.sh
       - name: Sphinx build
         working-directory: docs
         run: |
