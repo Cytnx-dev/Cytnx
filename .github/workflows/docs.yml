@@ -30,7 +30,7 @@ jobs:
         run: |
           pwd
           ls
-          sh api_doc_script.sh
+          bash api_doc_script.sh
       - name: Sphinx build
         working-directory: docs
         run: |
