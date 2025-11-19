@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 doxygen_build()
 {
 	VTAG=$1
