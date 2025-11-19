@@ -14,7 +14,7 @@ doxygen_build()
 branch=$(git rev-parse --abbrev-ref HEAD)
 echo "$branch"
 
-
+rm -r api_docs/versions
 cd ../
 doxygen_build master
 crit_ver=0.9.5
