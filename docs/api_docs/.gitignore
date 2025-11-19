@@ -1,0 +1,4 @@
+versions/*
+build_home/*
+home_source/index.rst
+*.swp
