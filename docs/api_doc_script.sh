@@ -6,6 +6,7 @@ doxygen_build()
 	doxygen docs.doxygen > /dev/null 2>&1
 	pwd
 	ls
+	ls docs/
 	if [ "$VTAG" = master ]; then
 		mkdir docs/api_docs/versions
 		VTAG=latest
