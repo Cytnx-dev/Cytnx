@@ -29,6 +29,7 @@ jobs:
         working-directory: docs
         run: |
           pwd
+          ls
           sh api_doc_script.sh
       - name: Sphinx build
         working-directory: docs
