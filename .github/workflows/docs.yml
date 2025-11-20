@@ -28,9 +28,6 @@ jobs:
       - name: Build api documentation
         working-directory: docs
         run: |
-          pwd
-          ls
-          uv sync --python 3.10
           uv run bash api_doc_script.sh
       - name: Sphinx build
         working-directory: docs
