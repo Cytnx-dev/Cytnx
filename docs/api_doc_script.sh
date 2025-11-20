@@ -17,6 +17,7 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 echo "$branch"
 
 rm -r api_docs/versions
+mkdir build
 cd ../
 doxygen_build master
 crit_ver=0.9.5
@@ -45,7 +46,7 @@ Cytnx API
 =================================
     Cytnx is a library design for Quantum physics simulation using GPUs and CPUs.
 
-* `Latest version <../../versions/latest/index.html>`__.
+* `Latest version <versions/latest/index.html>`__.
 
 Older versions:
 
@@ -53,9 +54,10 @@ EOF
 
 for ((i=${#versions[@]}-1; i>=0; i--)); do
   ver="v${versions[i]}"
-	echo '	* `'$ver' <../../versions/'$ver'/index.html>`__.' >> index.rst
+	echo '	* `'$ver' <versions/'$ver'/index.html>`__.' >> index.rst
 done
 cd ../
 make html
 
-
+mv versions ./build_home/html/ 
+mv build_home ../build/api_build 
