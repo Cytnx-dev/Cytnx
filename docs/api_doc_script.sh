@@ -56,6 +56,5 @@ for ((i=${#versions[@]}-1; i>=0; i--)); do
 	echo '	* `'$ver' <../../versions/'$ver'/index.html>`__.' >> index.rst
 done
 cd ../
-make html
 
 
