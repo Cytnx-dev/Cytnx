@@ -28,7 +28,7 @@ Cytnx user guide and examples
 
 .. toctree::
     API Documentation <apidoc_redirect>
-    Github <https://github.com/kaihsin/Cytnx>
+    Github <https://github.com/Cytnx-dev/Cytnx>
     5-mins Blitz intro slide <https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing>
 
 .. toctree::

@@ -100,8 +100,8 @@ html_theme_options = {
     # True indicates an external link.
     # False indicates path of pages in the document.
     'navbar_links' : [
-         ("User Guide", "https://kaihsinwu.gitlab.io/Cytnx_doc", True),
-         ("Github", "https://github.com/kaihsin/Cytnx", True)
+         ("User Guide", "https://cytnx-dev.github.io/Cytnx_doc", True),
+         ("Github", "https://github.com/Cytnx-dev/Cytnx", True)
     ],
 
     # Total width(%) of the document and the sidebar.
