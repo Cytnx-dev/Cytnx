@@ -1,7 +1,7 @@
 Linear algebra
 ===============
 
-Currently, Cytnx supports the following linear algebra functions. See https://kaihsin.github.io/Cytnx/docs/html/index.html for further documentation.
+Currently, Cytnx supports the following linear algebra functions. See A for further documentation.
 
 +-----------------------------------------------------------------------+---------+-----+------+-------------+----+----------------+
 |   func                                                                | Inplace | CPU | GPU  | Called by Tn| Tn | CyTn (xlinalg) |

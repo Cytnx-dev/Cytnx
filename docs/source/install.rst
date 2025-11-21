@@ -37,7 +37,7 @@ In the following we show how to install Cytnx with conda.
         :linenos:
 
         $conda config --add channels conda-forge
-        $conda create --channel conda-forge --name cytnx python=3.8 llvm-openmp
+        $conda create --channel conda-forge --name cytnx python=3.9 llvm-openmp
 
 
 .. note::
@@ -124,6 +124,7 @@ Let us consider the same example as before for Python. Here, we want to compile 
     #include "cytnx.hpp"
     #include <iostream>
     using namespace std;
+    using namespace cytnx;
 
     int main(){
         auto A = zeros(4);
