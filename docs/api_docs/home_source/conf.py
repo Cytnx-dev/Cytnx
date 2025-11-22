@@ -100,7 +100,7 @@ html_theme_options = {
     # True indicates an external link.
     # False indicates path of pages in the document.
     'navbar_links' : [
-         ("User Guide", "../../../build/html/index.html", True),
+         ("User Guide", "../../html/index.html", True),
          ("Github", "https://github.com/Cytnx-dev/Cytnx", True)
     ],
 
