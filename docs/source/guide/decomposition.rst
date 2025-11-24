@@ -1,19 +1,14 @@
-linalg extension
-==================
+Tensor decomposition
+=====================
 
 .. .. toctree::
 ..     :maxdepth: 3
 
-Tensor decomposition
-**************************
-
-
-
-As mention in the **Manipulate UniTensor**, the specification of **rowrank** makes it convinient to apply linear algebra operations on UniTensors.
+As mention in the :ref:`Manipulate UniTensor`, the specification of **rowrank** makes it convinient to apply linear algebra operations on UniTensors.
 
 
 Singular value decomposition
--------------------------------
+*****************************
 
 Here is an example where a **singular value decomposition (SVD)** is performed on a UniTensor:
 
@@ -70,7 +65,7 @@ We note that the singular values obtained by doing **Svd_truncate()** is truncat
 
 
 Eigenvalue decomposition
--------------------------------
+*****************************
 
 * In Python:
 
@@ -79,7 +74,7 @@ Eigenvalue decomposition
     :linenos:
 
 QR decomposition
--------------------------------
+*****************************
 
 The **QR decomposition** decomposes a matrix *M* to the form *M = QR*, where *Q* is an orthogonal matrix (*Q Q^T = I*), and *R* is a upper-right triangular matrix. One can perform a QR decomposition by using **Qr()**.
 
