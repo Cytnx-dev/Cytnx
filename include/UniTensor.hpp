@@ -672,12 +672,12 @@ namespace cytnx {
       if (this->is_diag()) {
         cytnx_error_msg(
           in.shape() != this->_block.shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in.clone();
       } else {
         cytnx_error_msg(
           in.shape() != this->shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in.clone();
       }
     }
@@ -699,12 +699,12 @@ namespace cytnx {
       if (this->is_diag()) {
         cytnx_error_msg(
           in.shape() != this->_block.shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in;
       } else {
         cytnx_error_msg(
           in.shape() != this->shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in;
       }
     }
@@ -721,10 +721,55 @@ namespace cytnx {
     }
     // this will only work on non-symm tensor (DenseUniTensor)
     boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
-      boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
-      out->Init_by_Tensor(this->_block.get(accessors), false, 0);  // wrapping around.
-      return out;
+      DenseUniTensor *out = this->clone_meta();
+      if (this->_is_diag) {
+        if (accessors.size() == 2) {
+          cytnx_error_msg(accessors[0] != accessors[1],
+                          "[ERROR][DenseUniTensor][get] for diagonal UniTensors, the two elements  "
+                          "of the accessor need to be equal.%s",
+                          "\n");
+          std::vector<Accessor> newacc(1, accessors[0]);
+          return this->get(newacc);
+        } else {
+          cytnx_error_msg(
+            accessors.size() != 1,
+            "[ERROR][DenseUniTensor][get] for diagonal UniTensors, only one or two accessor  "
+            "elements are allowed (in the latter case they need to be equal).%s",
+            "\n");
+        }
+        out->_block = this->_block.get(accessors);
+        // adapt dimensions on bonds
+        auto dim = out->_block.shape()[0];
+        if (dim != out->_bonds[0].dim()) {
+          out->_bonds[0]._impl->_dim = dim;
+          out->_bonds[1]._impl->_dim = dim;
+        }
+        return boost::intrusive_ptr<UniTensor_base>(out);
+      } else {
+        std::vector<cytnx_int64> removed;
+        out->_block = this->_block.get(accessors, removed);
+        for (cytnx_int64 idx = removed.size() - 1; idx >= 0; idx--) {
+          if (removed[idx] < this->_rowrank) out->_rowrank--;
+          out->_labels.erase(out->_labels.begin() + removed[idx]);
+          out->_bonds.erase(out->_bonds.begin() + removed[idx]);
+        }
+        // adapt dimensions on bonds
+        auto dims = out->_block.shape();
+        for (cytnx_int64 idx = 0; idx < out->_bonds.size(); idx++) {
+          if (dims[idx] != out->_bonds[idx].dim()) {
+            out->_bonds[idx]._impl->_dim = dims[idx];
+          }
+        }
+
+        // _update_braket
+        if (out->is_tag() && !out->_is_braket_form) {
+          out->_is_braket_form = out->_update_braket();
+        }
+
+        return boost::intrusive_ptr<UniTensor_base>(out);
+      }
     }
+
     // this will only work on non-symm tensor (DenseUniTensor)
     void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
       this->_block.set(accessors, rhs);
@@ -1680,7 +1725,7 @@ namespace cytnx {
         true,
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
 
@@ -1693,7 +1738,7 @@ namespace cytnx {
         true,
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
     void lSub_(const Scalar &lhs) {
@@ -1701,7 +1746,7 @@ namespace cytnx {
         true,
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
 
@@ -1710,7 +1755,7 @@ namespace cytnx {
         true,
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
     void Div_(const Scalar &rhs);
@@ -1719,7 +1764,7 @@ namespace cytnx {
         true,
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
@@ -2475,7 +2520,7 @@ namespace cytnx {
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
         "BlockFermionicUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
 
@@ -2489,7 +2534,7 @@ namespace cytnx {
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
         "BlockFermionicUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
     void lSub_(const Scalar &lhs) {
@@ -2498,7 +2543,7 @@ namespace cytnx {
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
         "BlockFermionicUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
 
@@ -2508,7 +2553,7 @@ namespace cytnx {
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
         "BlockFermionicUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
     void Div_(const Scalar &rhs);
@@ -2518,7 +2563,7 @@ namespace cytnx {
         "[ERROR] cannot perform elementwise arithmetic '+' btwn Scalar and "
         "BlockFermionicUniTensor.\n %s "
         "\n",
-        "This operation will destroy block structure. [Suggest] using get/set_block(s) to do "
+        "This operation will destroy block structure. [Suggest] using get/put_block(s) to do "
         "operation on the block(s).");
     }
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);

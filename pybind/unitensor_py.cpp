@@ -316,8 +316,26 @@ void unitensor_binding(py::module &m) {
            std::vector<cytnx::Accessor> accessors;
            if (self.is_diag()){
                if (py::isinstance<py::tuple>(locators)) {
-                    cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+                    py::tuple Args = locators.cast<py::tuple>();
+                    cytnx_error_msg(Args.size() > 2,
+                    "[ERROR][slicing] A diagonal UniTensor can only be accessed with one- or two dimensional slicing.%s", "\n");
+                    cytnx_uint64 cnt = 0;
+                    // mixing of slice and ints
+                    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+                         cnt++;
+                         // check type:
+                         if (py::isinstance<py::slice>(Args[axis])) {
+                         py::slice sls = Args[axis].cast<py::slice>();
+                         if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                         accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
+                                                                      cytnx_int64(step)));
+                         } else {
+                         accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                         }
+                    }
+                    // cytnx_error_msg(true,
+                    // "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
                } else if (py::isinstance<py::slice>(locators)) {
                     py::slice sls = locators.cast<py::slice>();
                     if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
@@ -385,8 +403,26 @@ void unitensor_binding(py::module &m) {
            std::vector<cytnx::Accessor> accessors;
           if (self.is_diag()){
                if (py::isinstance<py::tuple>(locators)) {
-                    cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+                    py::tuple Args = locators.cast<py::tuple>();
+                    cytnx_error_msg(Args.size() > 2,
+                    "[ERROR][slicing] A diagonal UniTensor can only be accessed with one- or two dimensional slicing.%s", "\n");
+                    cytnx_uint64 cnt = 0;
+                    // mixing of slice and ints
+                    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+                         cnt++;
+                         // check type:
+                         if (py::isinstance<py::slice>(Args[axis])) {
+                         py::slice sls = Args[axis].cast<py::slice>();
+                         if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                         accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
+                                                                      cytnx_int64(step)));
+                         } else {
+                         accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                         }
+                    }
+                    // cytnx_error_msg(true,
+                    // "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
                } else if (py::isinstance<py::slice>(locators)) {
                     py::slice sls = locators.cast<py::slice>();
                     if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
@@ -453,8 +489,26 @@ void unitensor_binding(py::module &m) {
            std::vector<cytnx::Accessor> accessors;
           if (self.is_diag()){
                if (py::isinstance<py::tuple>(locators)) {
-                    cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+                    py::tuple Args = locators.cast<py::tuple>();
+                    cytnx_error_msg(Args.size() > 2,
+                    "[ERROR][slicing] A diagonal UniTensor can only be accessed with one- or two dimensional slicing.%s", "\n");
+                    cytnx_uint64 cnt = 0;
+                    // mixing of slice and ints
+                    for (cytnx_uint32 axis = 0; axis < Args.size(); axis++) {
+                         cnt++;
+                         // check type:
+                         if (py::isinstance<py::slice>(Args[axis])) {
+                         py::slice sls = Args[axis].cast<py::slice>();
+                         if (!sls.compute((ssize_t)self.shape()[axis], &start, &stop, &step, &slicelength))
+                         throw py::error_already_set();
+                         accessors.push_back(cytnx::Accessor::range(cytnx_int64(start), cytnx_int64(stop),
+                                                                      cytnx_int64(step)));
+                         } else {
+                         accessors.push_back(cytnx::Accessor(Args[axis].cast<cytnx_int64>()));
+                         }
+                    }
+                    // cytnx_error_msg(true,
+                    // "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
                } else if (py::isinstance<py::slice>(locators)) {
                     py::slice sls = locators.cast<py::slice>();
                     if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
