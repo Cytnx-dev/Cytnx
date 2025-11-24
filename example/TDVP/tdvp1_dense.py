@@ -68,8 +68,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
     def get_energy(A, M):
         N = len(A)
-        L0 = cytnx.UniTensor(cytnx.zeros([5,1,1]), rowrank = 0) #Left boundary
-        R0 = cytnx.UniTensor(cytnx.zeros([5,1,1]), rowrank = 0) #Right boundary
+        L0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Left boundary
+        R0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Right boundary
         L0[0,0,0] = 1.; R0[4,0,0] = 1.
         L = L0
         anet = cytnx.Network()
@@ -106,8 +106,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
     M[0,3] = Jz*sz
     M = cytnx.UniTensor(M,0)
 
-    L0 = cytnx.UniTensor(cytnx.zeros([5,1,1]), rowrank = 0) #Left boundary
-    R0 = cytnx.UniTensor(cytnx.zeros([5,1,1]), rowrank = 0) #Right boundary
+    L0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Left boundary
+    R0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Right boundary
     L0[0,0,0] = 1.; R0[4,0,0] = 1.
 
     lbls = [] # List for storing the MPS labels
@@ -238,7 +238,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
 def Local_meas(A, B, Op, site):
     N = len(A)
-    l = cytnx.UniTensor(cytnx.eye(1), rowrank = 1)
+    l = cytnx.UniTensor.eye(1, rowrank = 1)
     anet = cytnx.Network()
     anet.FromString(["l: 0,3",\
                     "A: 0,1,2",\
@@ -263,14 +263,14 @@ def Local_meas(A, B, Op, site):
 def prepare_rand_init_MPS(Nsites, chi, d):
     lbls = []
     A = [None for i in range(Nsites)]
-    A[0] = cytnx.UniTensor(cytnx.random.normal([1, d, min(chi, d)], 0., 1., seed=0), rowrank = 2)
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0, rowrank = 2)
     A[0].relabels_(["0","1","2"])
     lbls.append(["0","1","2"]) # store the labels for later convinience.
 
     for k in range(1,Nsites):
         dim1 = A[k-1].shape()[2]; dim2 = d
         dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1))
-        A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1., seed=0), rowrank = 2)
+        A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3],0.,1., seed=0, rowrank = 2)
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
         A[k].relabels_(lbl)

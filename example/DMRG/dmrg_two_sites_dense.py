@@ -54,20 +54,20 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
     M[0,2] = M[1,3] = 2**0.5*sm.real()
     M = cytnx.UniTensor(M,0)
 
-    L0 = cytnx.UniTensor(cytnx.zeros([4,1,1]), rowrank = 0) #Left boundary
-    R0 = cytnx.UniTensor(cytnx.zeros([4,1,1]), rowrank = 0) #Right boundary
+    L0 = cytnx.UniTensor.zeros([4,1,1], rowrank = 0) #Left boundary
+    R0 = cytnx.UniTensor.zeros([4,1,1], rowrank = 0) #Right boundary
     L0[0,0,0] = 1.; R0[3,0,0] = 1.
 
     lbls = [] # List for storing the MPS labels
     A = [None for i in range(Nsites)]
-    A[0] = cytnx.UniTensor(cytnx.random.normal([1, d, min(chi, d)], 0., 1.), rowrank = 2)
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., rowrank = 2)
     A[0].relabels_(["0","1","2"])
     lbls.append(["0","1","2"]) # store the labels for later convinience.
 
     for k in range(1,Nsites):
         dim1 = A[k-1].shape()[2]; dim2 = d
         dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1))
-        A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1.), rowrank = 2)
+        A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3],0.,1., rowrank = 2)
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
         A[k].relabels_(lbl)

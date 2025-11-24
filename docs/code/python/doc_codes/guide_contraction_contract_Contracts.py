@@ -7,7 +7,7 @@ A1 = cytnx.UniTensor(
 
 A2 = A1.Conj();
 A2.set_name("A2");
-M = cytnx.UniTensor(cytnx.ones([2,2,4,4]),
+M = cytnx.UniTensor.ones([2,2,4,4],
                     name = "M")
 
 # Assign labels
