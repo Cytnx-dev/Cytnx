@@ -18,6 +18,10 @@ namespace cytnx {
   class Storage_base;
   class Tensor_base;
 
+  // The following two declarations are necessary for ADL.
+  void intrusive_ptr_add_ref(Storage_base *);
+  void intrusive_ptr_release(Storage_base *);
+
   // real implementation
   class Scalar_base {
    private:

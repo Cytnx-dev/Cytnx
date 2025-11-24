@@ -49,7 +49,6 @@ target_sources_local(cytnx
     Arithmetic_internal.cpp
     iArithmetic_internal.cpp
     Conj_inplace_internal.cpp
-    Cpr_internal.cpp
     Diag_internal.cpp
     Div_internal.cpp
     iDiv_internal.cpp
@@ -64,11 +63,9 @@ target_sources_local(cytnx
     Matmul_dg_internal.cpp
     Matvec_internal.cpp
     iMul_internal.cpp
-    Mod_internal.cpp
     Outer_internal.cpp
     Trace_internal.cpp
     Tridiag_internal.cpp
-    Sub_internal.cpp
     iSub_internal.cpp
     Sdd_internal.cpp
     Gesvd_internal.cpp
