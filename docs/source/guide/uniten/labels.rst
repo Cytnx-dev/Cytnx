@@ -20,13 +20,13 @@ Alternatively, if we don't know the index of the target bond in the current orde
 
 If we wish to change the labels of all legs, we can use:
 
-.. py:function:: UniTensor.relabels_( new_labels)
+.. py:function:: UniTensor.relabel_( new_labels)
 
     :param List[string] new_labels: a list of new labels
 
 or
 
-.. py:function:: UniTensor.relabels_(old_labels, new_labels)
+.. py:function:: UniTensor.relabel_(old_labels, new_labels)
 
     :param List[string] old_labels: a list of current labels
     :param List[string] new_labels: a list of the corresponding new labels
@@ -52,13 +52,13 @@ Output >>
 
 .. warning::
 
-    The previously provided method set_label(s) is deprecated and should be replaced by relabel(s)_.
+    The previously provided methods set_label, set_labels and relabels_ are deprecated and should all be replaced by relabel_.
 
 
-Creating UniTensors with different labels that share data
-*********************************************************
+Creating UniTensors with different labels that share the same data
+*******************************************************************
 
-In some scenarios, especially in contractions with *cytnx.Contract()* and *cytnx.Contracts()*, we want to create a UniTensor with changed labels. However, we might not want to modify the original tensor. Creating a copy of the tensor data is also not desired, since it would double the memory usage. In such a case one can use the function **relabel(s)** without underscore. This returns a new UniTensor with different meta (in this case  only the labels are changed), but the actual memory block(s) are still referring to the old ones. The arguments of **relabel(s)** are similar to **relabel(s)_**, see above. For example:
+In some scenarios, especially in contractions with *cytnx.Contract()* and *cytnx.Contracts()*, we want to create a UniTensor with changed labels. However, we might not want to modify the original tensor. Creating a copy of the tensor data is also not desired, since it would double the memory usage. In such a case one can use the function **relabel** without underscore. This returns a new UniTensor with different meta (in this case  only the labels are changed), but the actual memory block(s) are still referring to the old ones. The arguments of **relabel** are similar to **relabel_**, see above. For example:
 
 * In Python:
 

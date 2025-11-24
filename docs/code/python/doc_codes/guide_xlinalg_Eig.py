@@ -9,7 +9,7 @@ uD, uV = cytnx.linalg.Eig(uT)
 uV.relabel_(["in","a"]).set_name("eigenvectors")
 uD.relabel_(["a","b"]).set_name("eigenvalues")
 uV_inv = cytnx.linalg.InvM(uV).relabel_(["b","out"]) \
-                     .set_name("conjugated eigenvectors")
+                     .set_name("inverted eigenvectors")
 # Compare uT with Uv * uD * uV_inv
 uT_new = cytnx.Contracts([uV,uD,uV_inv]) \
               .permute(uT.labels()) \
