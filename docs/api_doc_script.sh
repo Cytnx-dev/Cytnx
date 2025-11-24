@@ -71,5 +71,5 @@ cd ../
 make html
 
 # move the api_build under build
-mv versions ./build_home/html/ 
-mv build_home ../build/api_build 
+mv versions ./build_home/html/
+mv build_home ../build/api_build

@@ -5276,7 +5276,8 @@ namespace cytnx {
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
-    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if is_diag is true (false).
+    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if
+    is_diag is true (false).
     */
     static UniTensor identity(const cytnx_uint64 &dim,
                               const std::vector<std::string> &in_labels = {},
@@ -5300,7 +5301,8 @@ namespace cytnx {
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
-    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if is_diag is true (false).
+    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if
+    is_diag is true (false).
     @see cytnx::UniTensor::identity
     @note This function is a alias of cytnx::UniTensor::identity().
     */

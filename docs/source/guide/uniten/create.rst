@@ -36,7 +36,7 @@ This gives us the first type of a UniTensor: an **untagged** UniTensor.
 
 .. note::
 
-    The generator **eye** expects the number of diagonal elements as a first argument instead of the shape of the resulting UniTensor. 
+    The generator **eye** expects the number of diagonal elements as a first argument instead of the shape of the resulting UniTensor.
 
 .. note::
 

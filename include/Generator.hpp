@@ -44,7 +44,8 @@ namespace cytnx {
   //@}
 
   /**
-  @brief Create a square rank-2 Tensor with the diagonal initialized to one and all other elements set to zero.
+  @brief Create a square rank-2 Tensor with the diagonal initialized to one and all other elements
+  set to zero.
   @param Dim the dimension of diagonal.
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -59,7 +60,8 @@ namespace cytnx {
                   const int &device = Device.cpu);
 
   /**
-  @brief Create a square rank-2 Tensor with the diagonal initialized to one and all other elements set to zero
+  @brief Create a square rank-2 Tensor with the diagonal initialized to one and all other elements
+  set to zero
   @param Dim the dimension of diagonal.
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
