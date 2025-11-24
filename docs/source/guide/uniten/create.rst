@@ -24,7 +24,7 @@ In the following, we will explain how to construct a UniTensor.
 
 Using generators
 ************************
-Similar to the initialization of a Tensor, one can create a UniTensor through generators such as zero, ones, eye, normal and uniform. The first argument provides shape information, which is used to construct the Bond objects and to determine the rank -- the number of tensor indices. Labels can be specified when creating a UniTensor, otherwise they are set to be "0", "1", "2", ... by default.
+Similar to the initialization of a Tensor, one can create a UniTensor through generators such as zero, ones, normal, uniform, arange and eye. The first argument provides shape information, which is used to construct the Bond objects and to determine the rank -- the number of tensor indices. Labels can be specified when creating a UniTensor, otherwise they are set to be "0", "1", "2", ... by default.
 
 This gives us the first type of a UniTensor: an **untagged** UniTensor.
 
@@ -38,6 +38,9 @@ This gives us the first type of a UniTensor: an **untagged** UniTensor.
 
     The generator **eye** expects the number of diagonal elements as a first argument instead of the shape of the resulting UniTensor. 
 
+.. note::
+
+    The generator **arange** creates a one-dimensional UniTensor. In order to obtain a desired shape, use **reshape** and **set_rowrank** (see :ref:`reshape` and :ref:`rowrank`). If arange receives one argument, it is the number of elements. If three arguments are given, these correspond to start, stop, and stepsize. This syntax is similar to numpy.arange().
 
 We can use **print_diagram()** to visualize a UniTensors in a more straightforward way as a diagram:
 
