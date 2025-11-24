@@ -1,5 +1,5 @@
 Save/Load a storage
------------------
+--------------------
 We can save/read a Storage instance to/from a file.
 
 Save a Storage

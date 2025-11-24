@@ -103,7 +103,7 @@ Output >>
     :language: text
 
 
-We leave the examples of linalg algebra operations incoporating the rowrank concept such as **singular value decomposition (SVD)** to the chapter :ref:`linalg extension`.
+We leave the examples of linalg algebra operations incoporating the rowrank concept such as **singular value decomposition (SVD)** to the chapter :ref:`Tensor decomposition`.
 
 
 Transpose
