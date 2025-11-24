@@ -252,10 +252,10 @@ The construction of trial state and optimization is done as follows:
     sR.relabel_(0,"1")
     sL.relabel_(1,"0")
     s0 = 1./s0
-    s0.relabels_(["0","1"])
+    s0.relabel_(["0","1"])
     s2 = cytnx.Contract(cytnx.Contract(sL,s0),sR)
 
-    s2.relabels_(["-10","-11"])
+    s2.relabel_(["-10","-11"])
     A.relabel_(2,"-10")
     B.relabel_(0,"-11")
     psi = cytnx.Contract(cytnx.Contract(A,s2),B)

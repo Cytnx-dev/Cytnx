@@ -11,9 +11,9 @@ M = cytnx.UniTensor.ones([2,2,4,4],
                     name = "M")
 
 # Assign labels
-A1.relabels_(["phy1","v1","v2"])
-M.relabels_(["phy1","phy2","v3","v4"])
-A2.relabels_(["phy2","v5","v6"])
+A1.relabel_(["phy1","v1","v2"])
+M.relabel_(["phy1","phy2","v3","v4"])
+A2.relabel_(["phy2","v5","v6"])
 
 # Use Contracts
 Res = cytnx.Contracts(TNs = [A1,M,A2],
