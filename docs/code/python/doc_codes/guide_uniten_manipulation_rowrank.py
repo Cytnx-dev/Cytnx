@@ -1,6 +1,8 @@
 # set the rowrank to be 2.
-T = cytnx.UniTensor.ones([5,5,5,5,5], rowrank = 2)
-T.print_diagram()
+uT = cytnx.UniTensor.ones([5,5,5,5,5]).set_rowrank(2) \
+         .relabel(["a", "b", "c", "d", "e"]) \
+         .set_name("uT")
+uT.print_diagram()
 
-T.set_rowrank(3)  # modify the rowrank.
-T.print_diagram()
+uT.set_rowrank_(3)  # modify the rowrank.
+uT.print_diagram()

@@ -1,5 +1,5 @@
-Manipulate UniTensor
---------------------
+Manipulating a UniTensor
+-------------------------
 
 After having introduced the initialization and structure of the three UniTensor types (un-tagged, tagged and tagged with symmetries),
 we show the basic functionalities to manipulate UniTensors.
