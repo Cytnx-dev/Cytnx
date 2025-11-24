@@ -14,7 +14,7 @@ namespace cytnx {
 
   //@{
   /**
-  @brief create an rank-1 Tensor with all the elements are initialized with zero.
+  @brief Create a rank-1 Tensor with all elements initialized to zero.
   @param Nelem the number of elements
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -28,7 +28,7 @@ namespace cytnx {
   Tensor zeros(const cytnx_uint64 &Nelem, const unsigned int &dtype = Type.Double,
                const int &device = Device.cpu);
   /**
-  @brief create an Tensor with all the elements are initialized with zero.
+  @brief Create a Tensor with all elements initialized to zero.
   @param Nelem the shape of the Tensor
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -44,7 +44,7 @@ namespace cytnx {
   //@}
 
   /**
-  @brief create an square rank-2 Tensor with all diagonal to be one.
+  @brief Create a square rank-2 Tensor with the diagonal initialized to one and all other elements set to zero.
   @param Dim the dimension of diagonal.
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -59,7 +59,7 @@ namespace cytnx {
                   const int &device = Device.cpu);
 
   /**
-  @brief create a square rank-2 Tensor with all diagonal to be one.
+  @brief Create a square rank-2 Tensor with the diagonal initialized to one and all other elements set to zero
   @param Dim the dimension of diagonal.
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -78,7 +78,7 @@ namespace cytnx {
 
   //@{
   /**
-  @brief create an rank-1 Tensor with all the elements are initialized with one.
+  @brief Create a rank-1 Tensor with all elements initialized to one.
   @param Nelem the number of elements
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -92,7 +92,7 @@ namespace cytnx {
   Tensor ones(const cytnx_uint64 &Nelem, const unsigned int &dtype = Type.Double,
               const int &device = Device.cpu);
   /**
-  @brief create an Tensor with all the elements are initialized with one.
+  @brief Create a Tensor with all elements initialized to one.
   @param Nelem the shape of the Tensor
   @param dtype the dtype of the Tensor. It can be any type defined in \link cytnx::Type cytnx::Type
   \endlink
@@ -109,7 +109,7 @@ namespace cytnx {
 
   //@{
   /**
-  @brief create an rank-1 Tensor with incremental unsigned integer elements start with [0,Nelem)
+  @brief Create a rank-1 Tensor with incremental unsigned integer elements in the range [0,Nelem)
   @param Nelem the number of incremental elements to create.
 
   @return
@@ -118,7 +118,7 @@ namespace cytnx {
   */
   Tensor arange(const cytnx_int64 &Nelem);
   /**
-  @brief create an rank-1 Tensor with elements defined in range [start,end) with assigned step-size
+  @brief Create an rank-1 Tensor with elements defined in range [start,end) with assigned step-size
   @param start the start value of the range
   @param end the end value of the range
   @param step the step-size of the range
