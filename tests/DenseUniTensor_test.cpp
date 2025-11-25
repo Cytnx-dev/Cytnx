@@ -2597,7 +2597,7 @@ TEST_F(DenseUniTensorTest, Sub_diag_diag) {
   auto ans = ut1_nondiag.Sub(ut2);
   EXPECT_TRUE(AreEqUniTensor(out, ans));
   ut2.Sub_(ut1);
-  EXPECT_TRUE(AreNearlyEqUniTensor(-ut2, ans, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(-1 * ut2, ans, tol));
   clone.Sub_(2 * ut1_nondiag);
   ut1_nondiag.Sub_(2 * ut1_nondiag);
   EXPECT_TRUE(AreEqUniTensor(clone, ut1_nondiag));
@@ -2775,7 +2775,7 @@ TEST_F(DenseUniTensorTest, Sub__diag_ndiag) {
   auto ans = ut1_nondiag.Sub(ut2);
   EXPECT_TRUE(AreEqUniTensor(out, ans));
   ut2.Sub_(ut1);
-  EXPECT_TRUE(AreNearlyEqUniTensor(-ut2, ans, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(-1 * ut2, ans, tol));
   ut1_clone.Sub_(ut1_nondiag);
   EXPECT_TRUE(AreNearlyEqUniTensor(ut1_clone, ut1_nondiag, tol));
 }
