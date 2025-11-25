@@ -1385,7 +1385,11 @@ namespace cytnx {
      * tensor is \f$A\f$, then the output tensor is \f$-A\f$.
      * @return The negation of the current tensor.
      */
-    Tensor operator-() { return this->Mul(-1.); }
+    Tensor operator-() {
+      // to avoid unwanted type conversion, this should be the least precise dtype that supports
+      // negative numbers
+      return this->Mul(cytnx_int16{-1});
+    }
 
     /**
      * @brief The flatten function.

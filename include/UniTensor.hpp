@@ -4689,6 +4689,18 @@ namespace cytnx {
     UniTensor Sub(const Scalar &rhs) const;
 
     /**
+     * @brief The negation function.
+     * @details This function is the negation function. Namely, if the current
+     * UniTensor is \f$A\f$, then the output UniTensor is \f$-A\f$.
+     * @return The negation of the current tensor.
+     */
+    UniTensor operator-() {
+      // to avoid unwanted type conversion, this should be the least precise dtype that supports
+      // negative numbers
+      return this->Mul(cytnx_int16{-1});
+    }
+
+    /**
     @brief Return the norm of the UniTensor.
         @details Norm() return the 2-norm of the UniTensor \f$UT\f$. Namely, it return
         \f[
