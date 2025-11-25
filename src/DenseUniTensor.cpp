@@ -99,7 +99,7 @@ namespace cytnx {
     } else {
       // check bonds & labels dim
       cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
-                      "[ERROR] labels must have same lenth as # of bonds.");
+                      "[ERROR] labels must have same length as # of bonds.");
 
       std::vector<std::string> tmp = vec_unique(in_labels);
       cytnx_error_msg(tmp.size() != in_labels.size(),
@@ -1293,8 +1293,14 @@ namespace cytnx {
                         i);
       }
     }
-
-    this->_block += rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block += rhs->get_block_();
+    } else if (this->_is_diag) {
+      this->to_dense_();
+      this->_block += rhs->get_block_();
+    } else {
+      this->_block += linalg::Diag(rhs->get_block_());
+    }
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
     // cout << rhs << endl;
@@ -1323,7 +1329,14 @@ namespace cytnx {
                         i);
       }
     }
-    this->_block -= rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block -= rhs->get_block_();
+    } else if (this->_is_diag) {
+      this->to_dense_();
+      this->_block -= rhs->get_block_();
+    } else {
+      this->_block -= linalg::Diag(rhs->get_block_());
+    }
   }
   void DenseUniTensor::Sub_(const Scalar &rhs) {
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
@@ -1356,7 +1369,14 @@ namespace cytnx {
                         i);
       }
     }
-    this->_block *= rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block *= rhs->get_block_();
+    } else if (this->_is_diag) {
+      this->to_dense_();
+      this->_block *= rhs->get_block_();
+    } else {
+      this->_block *= linalg::Diag(rhs->get_block_());
+    }
   }
   void DenseUniTensor::Mul_(const Scalar &rhs) {
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
@@ -1384,7 +1404,16 @@ namespace cytnx {
                         i);
       }
     }
-    this->_block /= rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block /= rhs->get_block_();
+    } else {
+      cytnx_error_msg(rhs->_is_diag,
+                      "[Div] Dividing a non-diagonal DenseUnitensor by a diagonal one would lead "
+                      "to divisions by zero!%s",
+                      "\n");
+      this->to_dense_();
+      this->_block /= rhs->get_block_();
+    }
   }
   void DenseUniTensor::Div_(const Scalar &rhs) {
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
