@@ -2572,7 +2572,7 @@ TEST_F(DenseUniTensorTest, Sub_diag_ndiag) {
   auto ans = ut1_nondiag.Sub(ut2);
   EXPECT_TRUE(AreEqUniTensor(out, ans));
   EXPECT_TRUE(AreNearlyEqUniTensor((2 * ut1) - ut1_nondiag, (2 * ut1_nondiag) - ut1_nondiag, tol));
-  EXPECT_TRUE(AreNearlyEqUniTensor(-outinv, ans, tol));  // we dont assume exact cummutivity here
+  EXPECT_TRUE(AreNearlyEqUniTensor(-1 * outinv, ans, tol));  // we dont assume exact cummutivity here
 }
 
 /*=====test info=====
