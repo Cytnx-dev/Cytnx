@@ -270,8 +270,6 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::ExpH(Tin, a, b);
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int16(0));
-  // m_linalg.def("ExpH", [](const UniTensor &Tin, const cytnx::Scalar &a, const cytnx::Scalar &b) {
-  // return cytnx::linalg::ExpH(Tin, a, b); }, py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
   m_linalg.def(
     "ExpH",
     [](const UniTensor &Tin, const py::numpy_scalar<std::complex<double>> &a,
@@ -416,8 +414,6 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::ExpH(Tin, a, b);
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_int16(0));
-  // m_linalg.def("ExpH", [](const Tensor &Tin, const cytnx::Scalar &a, const cytnx::Scalar &b) {
-  // return cytnx::linalg::ExpH(Tin, a, b); }, py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
   m_linalg.def(
     "ExpH",
     [](const Tensor &Tin, const py::numpy_scalar<std::complex<double>> &a,
@@ -553,8 +549,6 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("a"), py::arg("b") = cytnx_uint16(0));
   m_linalg.def(
     "ExpM", [](const UniTensor &Tin) { return cytnx::linalg::ExpM(Tin); }, py::arg("Tin"));
-  // m_linalg.def("ExpM", [](const Tensor &Tin, const cytnx::Scalar &a, const cytnx::Scalar &b) {
-  // return cytnx::linalg::ExpM(Tin, a, b); }, py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<std::complex<double>> &a,
@@ -684,8 +678,6 @@ void linalg_binding(py::module &m) {
       return cytnx::linalg::ExpM(Tin, a, b);
     },
     py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
-  // m_linalg.def("ExpM", [](const Tensor &Tin, const cytnx::Scalar &a, const cytnx::Scalar &b) {
-  // return cytnx::linalg::ExpM(Tin, a, b); }, py::arg("Tin"), py::arg("a"), py::arg("b") = 0);
   m_linalg.def(
     "ExpM",
     [](const Tensor &Tin, const py::numpy_scalar<std::complex<double>> &a,
