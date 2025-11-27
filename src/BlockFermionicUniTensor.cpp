@@ -2491,11 +2491,10 @@ namespace cytnx {
           this->_blocks[b] *= Rtn->_blocks[blockrhs];
           if (Rtn->_signflip[blockrhs]) {
             // 3 possibilities:
-            // 1) easy way: multiply by scalar -1
-            this->_blocks[b] = -this->_blocks[b];
-            // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
-            // could depend on the block and are not aware of this sign flip!
-            //  this->_signflip[b] = this->_signflip[b] ? true : false;
+            // 1) efficient way: change _signflip
+            this->_signflip[blockrhs] = !this->_signflip[blockrhs];
+            // 2) easy way: multiply by scalar -1
+            // this->_blocks[b] = -this->_blocks[b];
             // 3) fast way: TODOfermion: implement Tensor.negmul, which does the multiplication and
             // sign flip in one step
           }
@@ -2602,10 +2601,19 @@ namespace cytnx {
             std::cout << this->_blocks[a].shape() << std::endl;
             std::cout << "=============\n" << std::endl;
             */
-            new_blocks.back() = linalg::Directsum(
-              new_signs.back() ? -new_blocks.back() : new_blocks.back(),
-              this->_signflip[a] ? -this->_blocks[a] : this->_blocks[a], no_combine);
-            new_signs.back() = false;
+            if (new_signs.back() == this->_signflip[a]) {
+              new_blocks.back() =
+                linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
+              new_signs.back() = this->_signflip[a];
+            } else if (new_signs.back()) {
+              new_blocks.back() =
+                linalg::Directsum(-new_blocks.back(), this->_blocks[a], no_combine);
+              new_signs.back() = false;
+            } else {  // this->_signflip[a] == true
+              new_blocks.back() =
+                linalg::Directsum(new_blocks.back(), -this->_blocks[a], no_combine);
+              new_signs.back() = false;
+            }
           }
         }
       }  // traversal each block!
