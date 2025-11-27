@@ -15,7 +15,7 @@ Cytnx requires the following minimum dependencies:
 * make
 * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
 * openblas (or mkl, see below)
-* gcc v6+ (or icpc, see below) (recommand latest or equivalent clang on Mac/Linux with C++11 support) (required -std=c++11)
+* gcc v13+ (or icpc, see below) (recommand latest or equivalent clang on Mac/Linux with C++20 support) (required -std=c++20)
 
 In addition, you might want to install the following optional dependencies if you want Cytnx to compile with features like openmp, mkl and/or CUDA support.
 
