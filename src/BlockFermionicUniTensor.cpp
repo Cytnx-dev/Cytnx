@@ -2515,7 +2515,7 @@ namespace cytnx {
           if (Rtn->_signflip[blockrhs]) {
             // 3 possibilities:
             // 1) efficient way: change _signflip
-            this->_signflip[blockrhs] = !this->_signflip[blockrhs];
+            this->_signflip[b] = !(this->_signflip[b]);
             // 2) easy way: multiply by scalar -1
             // this->_blocks[b] = -this->_blocks[b];
             // 3) fast way: TODOfermion: implement Tensor.negmul, which does the multiplication and
