@@ -593,6 +593,29 @@ namespace cytnx {
     }
   }
 
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::applysigns_() {
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      if (this->_signflip[i]) {
+        this->_blocks[i] = -(this->_blocks[i]);
+        this->_signflip[i] = false;
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(this);
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::applysigns() {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      if (tmp->_signflip[i]) {
+        tmp->_blocks.push_back(-(this->_blocks[i]));
+        tmp->_signflip[i] = false;
+      } else {
+        tmp->_blocks.push_back(this->_blocks[i].clone());
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(tmp);
+  }
+
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     return this->_bonds[0].syms();

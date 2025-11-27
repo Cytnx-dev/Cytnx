@@ -205,6 +205,18 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> out(new UniTensor_base());
     return out;
   }
+
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::applysigns_() {
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+  }
+  boost::intrusive_ptr<UniTensor_base> UniTensor_base::applysigns() {
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+    boost::intrusive_ptr<UniTensor_base> out(new UniTensor_base());
+    return out;
+  }
+
   void UniTensor_base::print_diagram(const bool &bond_info) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
