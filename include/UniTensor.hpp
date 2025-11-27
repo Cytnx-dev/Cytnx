@@ -262,8 +262,8 @@ namespace cytnx {
     // -1);
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
-    virtual boost::intrusive_ptr<UniTensor_base> applysigns_();
-    virtual boost::intrusive_ptr<UniTensor_base> applysigns();
+    virtual boost::intrusive_ptr<UniTensor_base> apply_();
+    virtual boost::intrusive_ptr<UniTensor_base> apply();
     virtual void print_diagram(const bool &bond_info = false) const;
     virtual void print_blocks(const bool &full_info = true) const;
     virtual void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
@@ -606,10 +606,10 @@ namespace cytnx {
       }
     }
 
-    boost::intrusive_ptr<UniTensor_base> applysigns_() {
+    boost::intrusive_ptr<UniTensor_base> apply_() {
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
-    boost::intrusive_ptr<UniTensor_base> applysigns() {
+    boost::intrusive_ptr<UniTensor_base> apply() {
       // just return self
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
@@ -1387,10 +1387,10 @@ namespace cytnx {
     }
     boost::intrusive_ptr<UniTensor_base> contiguous();
 
-    boost::intrusive_ptr<UniTensor_base> applysigns_() {
+    boost::intrusive_ptr<UniTensor_base> apply_() {
       return boost::intrusive_ptr<UniTensor_base>(this);
     }
-    boost::intrusive_ptr<UniTensor_base> applysigns() {
+    boost::intrusive_ptr<UniTensor_base> apply() {
       // just return self
       boost::intrusive_ptr<UniTensor_base> out(this);
       return out;
@@ -2170,8 +2170,8 @@ namespace cytnx {
     }
     boost::intrusive_ptr<UniTensor_base> contiguous();
 
-    boost::intrusive_ptr<UniTensor_base> applysigns_();
-    boost::intrusive_ptr<UniTensor_base> applysigns();
+    boost::intrusive_ptr<UniTensor_base> apply_();
+    boost::intrusive_ptr<UniTensor_base> apply();
 
     void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
@@ -3731,21 +3731,21 @@ namespace cytnx {
     /**
     @brief Apply fermionic signflips to the UniTensor, such that all elements returned by signflip()
     are false.
-        @see applysigns_()
+        @see apply_()
     */
-    UniTensor applysigns() const {
+    UniTensor apply() const {
       UniTensor out;
-      out._impl = this->_impl->applysigns();
+      out._impl = this->_impl->apply();
       return out;
     }
 
     /**
     @brief Apply fermionic signflips to the UniTensor, inplacely. Subsequently, all elements
     returned by signflip() are false.
-        @see applysigns()
+        @see apply()
     */
-    UniTensor applysigns_() {
-      this->_impl = this->_impl->applysigns_();
+    UniTensor apply_() {
+      this->_impl = this->_impl->apply_();
       return *this;
     }
 

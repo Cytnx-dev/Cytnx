@@ -593,7 +593,7 @@ namespace cytnx {
     }
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::applysigns_() {
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply_() {
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       if (this->_signflip[i]) {
         this->_blocks[i] = -(this->_blocks[i]);
@@ -603,7 +603,7 @@ namespace cytnx {
     return boost::intrusive_ptr<UniTensor_base>(this);
   }
 
-  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::applysigns() {
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply() {
     BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       if (tmp->_signflip[i]) {
