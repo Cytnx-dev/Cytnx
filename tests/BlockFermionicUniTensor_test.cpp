@@ -10,64 +10,85 @@ TEST_F(BlockFermionicUniTensorTest, SimpleTensorContract) {
   EXPECT_TRUE(abs(BFUT3.contract(BFUT2).at({0, 0}) - 32) < 1e-13);
 }
 
-TEST_F(BlockFermionicUniTensorTest, LinAlogElementwise) {
+TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {
   const double tol = 1e-14;
   UniTensor T = BFUT3.permute({3, 1, 4, 2, 0}).contiguous();
-  EXPECT_TRUE(AreEqUniTensor(BFUT3PERM, T.applysigns()));
+  EXPECT_TRUE(AreEqUniTensor(BFUT3PERM, T.apply()));
   UniTensor res = T + T;
-  EXPECT_TRUE(AreNearlyEqUniTensor(2. * BFUT3PERM, res.applysigns_(), tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(2. * BFUT3PERM, res.apply_(), tol));
   res = T + BFUT3PERM;
-  EXPECT_TRUE(AreNearlyEqUniTensor(2. * BFUT3PERM, res.applysigns_(), tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(2. * BFUT3PERM, res.apply_(), tol));
   res = (T + T + T + T) / 4.;
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), BFUT3PERM, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), BFUT3PERM, tol));
   res = (T + T + BFUT3PERM + T) / 4.;
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), BFUT3PERM, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), BFUT3PERM, tol));
   res = (2 * T) - T;
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), BFUT3PERM, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), BFUT3PERM, tol));
   res = (2 * T) - BFUT3PERM;
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), BFUT3PERM, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), BFUT3PERM, tol));
   res = BFUT3PERM * BFUT3PERM;
   UniTensor ref = T * T;
   res.permute_(ref.labels());
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), ref.applysigns_(), tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol));
   res = BFUT3PERM * (-1. * BFUT3PERM);
   ref = -1 * ref;
   ref.permute_(res.labels());
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), ref.applysigns_(), tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol));
   res = (-1. * BFUT3PERM) * BFUT3PERM;
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), ref, tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref, tol));
   res = BFUT3PERM.permute_nosignflip(T.labels()) * T;
   ref = T * BFUT3PERM.permute_nosignflip(T.labels());
   ref.permute_(res.labels());
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), ref.applysigns_(), tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol));
   res = BFUT3PERM.permute_nosignflip(T.labels()).permute_(BFUT3PERM.labels()) * BFUT3PERM;
   ref = BFUT3PERM * BFUT3PERM.permute_nosignflip(T.labels()).permute_(BFUT3PERM.labels());
   ref.permute_(res.labels());
-  EXPECT_TRUE(AreNearlyEqUniTensor(res.applysigns_(), ref.applysigns_(), tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol));
 }
 
 TEST_F(BlockFermionicUniTensorTest, group_basis) {
   auto out = BFUT4.group_basis();
 
-  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 1}).real()), double(1));
-  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 2}).real()), double(2));
-  EXPECT_DOUBLE_EQ(double(out.at({0, 1, 0}).real()), double(3));
-  EXPECT_DOUBLE_EQ(double(out.at({1, 0, 0}).real()), double(4));
-  EXPECT_DOUBLE_EQ(double(out.at({2, 0, 0}).real()), double(5));
-  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 1}).real()), double(6));
-  EXPECT_DOUBLE_EQ(double(out.at({2, 1, 1}).real()), double(7));
-  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 2}).real()), double(8));
+  // careful: the quantum numbers are sorted; the last index such changes from (0,1,2) to (1,2,0)
+  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 0}).real()), double(1));
+  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 1}).real()), double(2));
+  EXPECT_DOUBLE_EQ(double(out.at({0, 1, 2}).real()), double(3));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 0, 2}).real()), double(4));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 0, 2}).real()), double(5));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 0}).real()), double(6));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 1, 0}).real()), double(7));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 1}).real()), double(8));
   EXPECT_DOUBLE_EQ(double(out.at({2, 1, 1}).real()), double(9));
 
-  auto outperm = BFUT4.permute({1, 0, 2});
-  outperm = outperm.group_basis();
-  outperm.permute_(out.labels());
-  EXPECT_TRUE(AreEqUniTensor(out, outperm));
+  out = BFUT4.permute({1, 0, 2});
+  out = out.group_basis();
+  out.permute_(BFUT4.labels());
+  out.apply_();
+  // the block indices can differ, therefore I compare the elements
+  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 0}).real()), double(1));
+  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 1}).real()), double(2));
+  EXPECT_DOUBLE_EQ(double(out.at({0, 1, 2}).real()), double(3));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 0, 2}).real()), double(4));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 0, 2}).real()), double(5));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 0}).real()), double(6));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 1, 0}).real()), double(7));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 1}).real()), double(8));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 1, 1}).real()), double(9));
 
-  outperm = BFUT4.permute({1, 2, 0});
-  outperm = outperm.group_basis();
-  outperm.permute_(out.labels());
-  EXPECT_TRUE(AreEqUniTensor(out, outperm));
+  out = BFUT4.permute({1, 2, 0});
+  out = out.group_basis();
+  out.permute_(BFUT4.labels());
+  out.apply_();
+  // the block indices can differ, therefore I compare the elements
+  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 0}).real()), double(1));
+  EXPECT_DOUBLE_EQ(double(out.at({0, 0, 1}).real()), double(2));
+  EXPECT_DOUBLE_EQ(double(out.at({0, 1, 2}).real()), double(3));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 0, 2}).real()), double(4));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 0, 2}).real()), double(5));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 0}).real()), double(6));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 1, 0}).real()), double(7));
+  EXPECT_DOUBLE_EQ(double(out.at({1, 1, 1}).real()), double(8));
+  EXPECT_DOUBLE_EQ(double(out.at({2, 1, 1}).real()), double(9));
 }
 
 TEST_F(BlockFermionicUniTensorTest, SaveLoad) {

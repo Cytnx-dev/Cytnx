@@ -19,12 +19,12 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
   Bond B1g = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   Bond B2g = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 1}, {Symmetry::FermionParity()});
   Bond B3g = Bond(BD_OUT, {Qs(1) >> 1, Qs(0) >> 1, Qs(0) >> 1}, {Symmetry::FermionParity()});
-  UniTensor BFUT1 = UniTensor({B1, B2, B12}, {"a", "b", "c"});
+  UniTensor BFUT1 = UniTensor({B1, B2, B12}, {"a", "b", "c"}).set_name("BFUT1");
   UniTensor BFUT2;
-  UniTensor BFUT3 = UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"});
-  UniTensor BFUT3PERM =
-    UniTensor({B3, B2, B4, B12, B1}, {"d", "b", "e", "c", "a"});  // permutation {3, 1, 4, 2, 0}
-  UniTensor BFUT4 = UniTensor({B1g, B2g, B3g}, {"a", "b", "c"});
+  UniTensor BFUT3 = UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"}).set_name("BFUT3");
+  UniTensor BFUT3PERM = UniTensor({B3, B2, B4, B12, B1}, {"d", "b", "e", "c", "a"})
+                          .set_name("BFUT3PERM");  // permutation {3, 1, 4, 2, 0}
+  UniTensor BFUT4 = UniTensor({B1g, B2g, B3g}, {"a", "b", "c"}).set_name("BFUT4");
 
   // UniTensor BFUTfparfnum; // fpar x fnum symmetries
 
@@ -43,6 +43,7 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     // BFUT2.permute_nosignflip_({2, 1, 0});
     BFUT2.Transpose_();
     BFUT2.set_rowrank_(1);
+    BFUT2.set_name("BFUT2");
 
     BFUT3.at({0, 0, 0, 0, 0}) = 1.;
     BFUT3.at({0, 0, 1, 0, 0}) = 2.;
@@ -63,10 +64,11 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     BFUT3PERM.at({0, 1, 0, 1, 1}) = -8.;
 
     // BFUTfparfnum = UniTensor::Load(data_dir + "ferm_fpar_fnum_F64.cytnx");
+
+    // BFUT:
     // 1st bond: e,o,o
     // 2nd bond: e,o
     // 3rd bond: o,e,e
-    BFUT4.normal_(1.0, 2.0, 5);
     BFUT4.at({0, 0, 1}) = 1;
     BFUT4.at({0, 0, 2}) = 2;
     BFUT4.at({0, 1, 0}) = 3;
@@ -75,7 +77,7 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     BFUT4.at({1, 1, 1}) = 6;
     BFUT4.at({2, 1, 1}) = 7;
     BFUT4.at({1, 1, 2}) = 8;
-    BFUT4.at({2, 1, 1}) = 9;
+    BFUT4.at({2, 1, 2}) = 9;
   }
   void TearDown() override {}
 };
