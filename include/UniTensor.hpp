@@ -4231,7 +4231,7 @@ namespace cytnx {
         */
     UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx, const bool &force) {
       this->_impl->put_block_(in, qidx, force);
-      return *this
+      return *this;
     }
 
     /**
