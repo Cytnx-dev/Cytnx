@@ -48,7 +48,7 @@ namespace CommonDataGen {
         return "U16";
       case Type.Bool:
         return "Bool";
-      defualt:
+      default:
         assert(false);
     }
   }

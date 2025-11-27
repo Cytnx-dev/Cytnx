@@ -3,7 +3,7 @@
 ######################################################################
 ### Find BLAS and LAPACK
 ######################################################################
-if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
+if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE_LIBRARIES))
   if (USE_MKL)
     #message(STATUS "ENV{MKLROOT}: $ENV{MKLROOT}")
     # Set MKL interface to LP64 by default, but allow ILP64
@@ -33,29 +33,29 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES))
   #  message( STATUS "MKL_LIBRARIES: ${MKL_LIBRARIES}" )
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
     target_compile_definitions(cytnx PUBLIC UNI_MKL)
-    if(MKL_INTERFACE STREQUAL "ilp64")
-      target_compile_definitions(cytnx PUBLIC MKL_ILP64)
-    else()
-      target_compile_definitions(cytnx PUBLIC MKL_LP64)
 
-    endif()
 
   else()
     set(BLA_VENDOR OpenBLAS)
+    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OPENBLAS")
+    message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
     find_package( LAPACKE REQUIRED)
-    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+    target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
     set(LAPACKE_INCLUDE_DIRS ${LAPACKE_DIR_FOUND}/include)
     target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
-    message( STATUS "LAPACKE found: ${LAPACKE_INCLUDE_DIRS}" )
+    message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
+    message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
   endif()
 
 else()
-  set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES})
+  set(LAPACK_LIBRARIES  ${BLAS_LIBRARIES}  ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
   message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}")
-  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES})
+  target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
+  message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )
+  message( STATUS "LAPACKE Library found: ${LAPACKE_LIBRARIES}" )
 endif()
 
 
@@ -66,14 +66,23 @@ if (USE_HPTT)
     option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
 
+    # Use absolute paths so Ninja can track the artifacts produced by the ExternalProject.
+    cmake_path(APPEND CMAKE_CURRENT_BINARY_DIR "hptt" OUTPUT_VARIABLE HPTT_PREFIX)
+    set(HPTT_STATIC_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}hptt${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(HPTT_SHARED_LIB_NAME "${CMAKE_SHARED_LIBRARY_PREFIX}hptt${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(HPTT_BYPRODUCTS "${HPTT_PREFIX}/lib/${HPTT_STATIC_LIB_NAME}")
+    if(NOT WIN32 AND NOT CMAKE_SHARED_LIBRARY_SUFFIX STREQUAL "")
+        list(APPEND HPTT_BYPRODUCTS "${HPTT_PREFIX}/lib/${HPTT_SHARED_LIB_NAME}")
+    endif()
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
     # TODO: Build HPTT from the submodule in the thirdparty folder.
     ExternalProject_Add(hptt
-    PREFIX hptt
+    PREFIX "${HPTT_PREFIX}"
     GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
     GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
+    BUILD_BYPRODUCTS ${HPTT_BYPRODUCTS}
     )
     message( STATUS " Build HPTT Support: YES")
     message( STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")

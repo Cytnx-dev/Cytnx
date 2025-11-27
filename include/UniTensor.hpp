@@ -1048,7 +1048,7 @@ namespace cytnx {
     std::vector<std::vector<cytnx_uint64>>
       _inner_to_outer_idx;  // stores the qindices for each block
     std::vector<Tensor> _blocks;
-    Tensor NullRefTensor;  // this returns when access block is not exists!
+    Tensor NullRefTensor;  // this returns when access block does not exists!
 
     // given an index list [loc], get qnums from this->_bonds[loc] and return the combined qnums
     // calculated from Symm object! this assume 1. symmetry are the same for each bond!

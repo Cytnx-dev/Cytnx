@@ -24,9 +24,15 @@ namespace cytnx {
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[ExpH] error, ExpH can only operator on square Tensor (#row = #col%s", "\n");
 
+      if (a == 0) {
+        if (b == 0)
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device());
+        else
+          return cytnx::identity(Tin.shape()[0], Tin.dtype(), Tin.device()) * exp(b);
+      }
+
       vector<Tensor> su = cytnx::linalg::Eigh(Tin, true);
       Tensor s, u, ut;
-      if (a == 0) return cytnx::linalg::Diag(cytnx::ones(Tin.shape()[0]));
 
       if (b == 0)
         s = cytnx::linalg::Exp(a * su[0]);
