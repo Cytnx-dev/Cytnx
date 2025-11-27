@@ -56,8 +56,9 @@ Cytnx API
     Cytnx is a library design for Quantum physics simulation using GPUs and CPUs.
 
 * `Latest version <versions/latest/index.html>`__.
+    This documentation is generated from the ``master`` branch (beta-quality).
 
-Older versions:
+* Released versions:
 
 EOF
 
