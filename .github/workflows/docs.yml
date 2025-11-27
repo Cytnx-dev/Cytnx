@@ -3,7 +3,7 @@ name: Publish Sphinx Documentation
 on:
   push:
     branches:
-      - haoti/doc_update
+      - master
 
 jobs:
   publish_sphinx_docs:
