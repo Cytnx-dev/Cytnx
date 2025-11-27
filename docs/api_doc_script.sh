@@ -58,7 +58,7 @@ Cytnx API
 * `Latest version <versions/latest/index.html>`__.
     This documentation is generated from the ``master`` branch (beta-quality).
 
-* Released versions:
+Released versions:
 
 EOF
 
