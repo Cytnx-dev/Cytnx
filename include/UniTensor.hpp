@@ -3714,7 +3714,9 @@ namespace cytnx {
 
     /**
     @brief Make the UniTensor contiguous by coalescing the memory (storage).
-        @see contiguous_()
+    @see contiguous_()
+    @warning If the input tensor is not contiguous, then the data will be stored in new memory;
+    otherwise, the input tensor is returned and no cloning of the data happens.
     */
     UniTensor contiguous() const {
       UniTensor out;
@@ -3729,9 +3731,12 @@ namespace cytnx {
     void contiguous_() { this->_impl = this->_impl->contiguous_(); }
 
     /**
-    @brief Apply fermionic signflips to the UniTensor, such that all elements returned by signflip()
-    are false.
-        @see apply_()
+    @brief Apply fermionic signflips to the UniTensor, such that all elements calling signflip() on
+    the output tensor will result in all elements to be false.
+    @warning Blocks that need to be flipped are  copied and inverted. Blocks where no signflip has
+    to be applied remain. Therefore, these correspond to a shared view and changing these blocks on
+    the output tensor will affect the elements of the input tensor as well.
+    @see apply_()
     */
     UniTensor apply() const {
       UniTensor out;
