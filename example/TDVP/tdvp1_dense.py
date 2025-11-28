@@ -296,7 +296,7 @@ if __name__ == '__main__':
     As, Es = tdvp1_XXZmodel_dense(J, Jz, hx, hz, MPS_rand, chi, tau, time_step)
     GS = As[time_step - 1]
 
-    # real tiem evoolution
+    # real time evolution
     J = 0.0
     Jz = 0.5
     hx = 0.3
