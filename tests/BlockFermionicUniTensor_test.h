@@ -22,10 +22,11 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
   UniTensor BFUT1 = UniTensor({B1, B2, B12}, {"a", "b", "c"}).set_name("BFUT1");
   UniTensor BFUT2;
   UniTensor BFUT3 = UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"}).set_name("BFUT3");
+  UniTensor BFUT3INV = UniTensor({B1, B2, B12, B3, B4}, {"a", "b", "c", "d", "e"})
+                          .set_name("BFUT3INV");;
   UniTensor BFUT3PERM = UniTensor({B3, B2, B4, B12, B1}, {"d", "b", "e", "c", "a"})
                           .set_name("BFUT3PERM");  // permutation {3, 1, 4, 2, 0}
   UniTensor BFUT4 = UniTensor({B1g, B2g, B3g}, {"a", "b", "c"}).set_name("BFUT4");
-
   // UniTensor BFUTfparfnum; // fpar x fnum symmetries
 
  protected:
@@ -53,6 +54,15 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     BFUT3.at({1, 0, 3, 0, 0}) = 6.;
     BFUT3.at({1, 1, 0, 0, 0}) = 7.;
     BFUT3.at({1, 1, 1, 0, 0}) = 8.;
+
+    BFUT3INV.at({0, 0, 0, 0, 0}) = 1. / 1.;
+    BFUT3INV.at({0, 0, 1, 0, 0}) = 1. / 2.;
+    BFUT3INV.at({0, 1, 2, 0, 0}) = 1. / 3.;
+    BFUT3INV.at({0, 1, 3, 0, 0}) = 1. / 4.;
+    BFUT3INV.at({1, 0, 2, 0, 0}) = 1. / 5.;
+    BFUT3INV.at({1, 0, 3, 0, 0}) = 1. / 6.;
+    BFUT3INV.at({1, 1, 0, 0, 0}) = 1. / 7.;
+    BFUT3INV.at({1, 1, 1, 0, 0}) = 1. / 8.;
 
     BFUT3PERM.at({0, 0, 0, 0, 0}) = 1.;
     BFUT3PERM.at({0, 0, 0, 1, 0}) = 2.;
