@@ -2,7 +2,6 @@
 #include "linalg.hpp"
 #include "utils/utils.hpp"
 #include "Tensor.hpp"
-#include "UniTensor.hpp"
 #include <numeric>
 using namespace std;
 

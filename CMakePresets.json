@@ -24,7 +24,8 @@
         "RUN_BENCHMARKS": "OFF",
         "USE_DEBUG": "OFF",
         "BUILD_DOC": "OFF",
-        "DEV_MODE": "OFF"
+        "DEV_MODE": "OFF",
+        "CMAKE_INSTALL_PREFIX": "~/.local/cytnx"
       }
     },
     {
@@ -61,6 +62,12 @@
       "inherits": ["mkl", "openblas-cuda"]
     },
     {
+      "name": "openblas-apple",
+      "description": "OpenBLAS as the BLAS vendor with CUDA support on Apple.",
+      "inherits": [ "default"]
+
+    },
+    {
       "name": "debug",
       "hidden": true,
       "description": "A base preset overriding release variables with debug variables.",
@@ -93,6 +100,11 @@
       "name": "debug-mkl-cuda",
       "description": "Debug build: Intel MKL as the BLAS vendor with CUDA support.",
       "inherits": ["debug", "mkl-cuda"]
+    },
+    {
+      "name": "debug-openblas-apple",
+      "description": "Debug build: OpenBLAS as the BLAS vendor with CUDA support on Apple.",
+      "inherits": ["debug", "openblas-apple"]
     }
   ],
   "buildPresets": [
@@ -129,6 +141,12 @@
       "inherits": "default"
     },
     {
+      "name": "openblas-apple",
+      "description": "Build using OpenBLAS with CUDA support on Apple.",
+      "configurePreset": "openblas-apple",
+      "inherits": "default"
+    },
+    {
       "name": "debug-openblas-cpu",
       "description": "Debug build using OpenBLAS with CPU-only support.",
       "configurePreset": "debug-openblas-cpu",
@@ -150,6 +168,12 @@
       "name": "debug-mkl-cuda",
       "description": "Debug build using Intel MKL with CUDA support.",
       "configurePreset": "debug-mkl-cuda",
+      "inherits": "default"
+    },
+    {
+      "name": "debug-openblas-apple",
+      "description": "Debug build using OpenBLAS with CUDA support on Apple.",
+      "configurePreset": "debug-openblas-apple",
       "inherits": "default"
     }
   ],
