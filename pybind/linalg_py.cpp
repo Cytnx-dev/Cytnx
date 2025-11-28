@@ -496,10 +496,10 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("clip"));
 
   m_linalg.def(
-    "Inv_", [](UniTensor &Tio, double clip) { cytnx::linalg::Inv_(Tio, clip); }, py::arg("Tio"),
+    "Inv_", [](UniTensor &Tin, double clip) { cytnx::linalg::Inv_(Tin, clip); }, py::arg("Tin"),
     py::arg("clip"));
   m_linalg.def(
-    "Inv_", [](Tensor &Tio, double clip) { cytnx::linalg::Inv_(Tio, clip); }, py::arg("Tio"),
+    "Inv_", [](Tensor &Tin, double clip) { cytnx::linalg::Inv_(Tin, clip); }, py::arg("Tin"),
     py::arg("clip"));
 
   m_linalg.def(
@@ -591,10 +591,10 @@ void linalg_binding(py::module &m) {
     py::arg("Tin"), py::arg("p"));
 
   m_linalg.def(
-    "Pow_", [](UniTensor &Tio, const double &p) { cytnx::linalg::Pow_(Tio, p); }, py::arg("Tio"),
+    "Pow_", [](UniTensor &Tin, const double &p) { cytnx::linalg::Pow_(Tin, p); }, py::arg("Tin"),
     py::arg("p"));
   m_linalg.def(
-    "Pow_", [](Tensor &Tio, const double &p) { cytnx::linalg::Pow_(Tio, p); }, py::arg("Tio"),
+    "Pow_", [](Tensor &Tin, const double &p) { cytnx::linalg::Pow_(Tin, p); }, py::arg("Tin"),
     py::arg("p"));
 
   m_linalg.def("Abs", &cytnx::linalg::Abs, py::arg("Tn"));

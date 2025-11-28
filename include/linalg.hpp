@@ -989,9 +989,9 @@ namespace cytnx {
      * @warning For fermionic UniTensors, the sign structure of the blocks remains unchanged. This
      * way, permute commutes with Pow. This can lead to unexpected behavior since T.Pow(2.0) can
      * differ by signs from T * T.
-     * @note Compared Pow_(UniTensor &Tio, const double &p), this function does not modify the input
+     * @note Compared Pow_(UniTensor &Tin, const double &p), this function does not modify the input
      * UniTensor but returns a new UniTensor.
-     * @see Pow_(UniTensor &Tio, const double &p)
+     * @see Pow_(UniTensor &Tin, const double &p)
      * @see Pow(const Tensor &Tin, const double &p)
      */
     cytnx::UniTensor Pow(const cytnx::UniTensor &Tin, const double &p);
@@ -999,22 +999,22 @@ namespace cytnx {
     /**
      * @brief Take the power \p p of all elements in a UniTensor, inplacely.
      * @details \f[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \f]
-     * @param[in,out] Tio the UniTensor
+     * @param[in,out] Tin the UniTensor
      * @param[in] p the power to take
-     * @pre If \p Tio is a real UniTensor containing negative elements, then \p p must be an
+     * @pre If \p Tin is a real UniTensor containing negative elements, then \p p must be an
      * integer.
      * @note For symmetric UniTensors, only the elements in the blocks are inverted.
      * @warning If \p p < 0 an inverse has to be taken. If elements could be zero (or close to it),
-     * use Inv_(UniTensor &Tio, double clip) for a pseudo-inverse instead.
+     * use Inv_(UniTensor &Tin, double clip) for a pseudo-inverse instead.
      * @warning For fermionic UniTensors, the sign structure of the blocks remains unchanged. This
      * way, permute commutes with Pow_. This can lead to unexpected behavior since T.Pow_(2.0) can
      * differ by signs from T * T.
      * @note Compared Pow(const UniTensor &Tin, const double &p), this is an inplace function, which
      * modifies the input UniTensor.
      * @see Pow(const UniTensor &Tin, const double &p),
-     * @see Pow_(Tensor &Tio, const double &p)
+     * @see Pow_(Tensor &Tin, const double &p)
      */
-    void Pow_(cytnx::UniTensor &Tio, const double &p);
+    void Pow_(cytnx::UniTensor &Tin, const double &p);
 
     // Inv:
     //==================================================
@@ -1039,9 +1039,9 @@ namespace cytnx {
      * clip.
      * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
      * 3. For symmetric UniTensors, only the elements in the blocks are inverted.
-     * @note Compared to Inv_(cytnx::UniTensor &Tio, double clip), this function does not modify the
+     * @note Compared to Inv_(cytnx::UniTensor &Tin, double clip), this function does not modify the
      * input UniTensor but returns a new UniTensor.
-     * @see Inv_(UniTensor &Tio, double clip)
+     * @see Inv_(UniTensor &Tin, double clip)
      * @see Inv(const Tensor &Tin, const double &clip)
      */
     cytnx::UniTensor Inv(const cytnx::UniTensor &Tin, double clip);
@@ -1058,7 +1058,7 @@ namespace cytnx {
      * \end{array}
      * \right.
      * \f]
-     * @param[in] Tio the UniTensor
+     * @param[in] Tin the UniTensor
      * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
      * pseudo-inverse
      * @return UniTensor
@@ -1070,9 +1070,9 @@ namespace cytnx {
      * @note Compared to Inv(const UniTensor &Tin, double clip), this is an inplace function, which
      * modifies the input UniTensor.
      * @see UniTensor Inv(const cytnx::UniTensor &Tin, double clip)
-     * @see Inv_(Tensor &Tio, const double &clip)
+     * @see Inv_(Tensor &Tin, const double &clip)
      */
-    void Inv_(cytnx::UniTensor &Tio, double clip);
+    void Inv_(cytnx::UniTensor &Tin, double clip);
 
     /**
      * @brief Elementwise conjugate of the UniTensor
@@ -2189,19 +2189,19 @@ namespace cytnx {
      * \end{array}
      * \right.
      * \f]
-     * @param[in] Tio the Tensor
+     * @param[in] Tin the Tensor
      * @param[in] clip elmements with absolute value <= clip are set to zero, corresponding to the
      * pseudo-inverse
      * @return Tensor
      * @note
      * 1. For complex type Tensors, the norm \f$ \sqrt{Re^2 + Im^2} \f$ is used to determine the
      * clip.
-     * 2. If Tio is integer type, it will automatically be promoted to Type.Double.
+     * 2. If Tin is integer type, it will automatically be promoted to Type.Double.
      * @note Compared to Inv(const Tensor &Tin, const double &clip), this is an inplace function,
      * which modifies the input Tensor.
      * @see Inv(const Tensor &Tin, const double &clip)
      */
-    void Inv_(Tensor &Tio, const double &clip);
+    void Inv_(Tensor &Tin, const double &clip);
 
     // Conj:
     //==================================================
@@ -2295,26 +2295,26 @@ namespace cytnx {
      * @pre If \p Tin is a real Tensor containing negative elements, then \p p must be an integer.
      * @warning If \p p < 0 an inverse has to be taken. If elements could be zero (or close to it),
      * use Inv(const Tensor &Tin, const double &clip) for a pseudo-inverse instead.
-     * @note Compared Pow_(Tensor &Tio, const double &p), this function does not modify the input
+     * @note Compared Pow_(Tensor &Tin, const double &p), this function does not modify the input
      * Tensor but returns a new Tensor.
-     * @see Pow_(Tensor &Tio, const double &p)
+     * @see Pow_(Tensor &Tin, const double &p)
      */
     Tensor Pow(const Tensor &Tin, const double &p);
 
     /**
      * @brief Take the power \p p of all elements in a Tensor, inplacely.
      * @details \f[ T_\text{in}[i] \rightarrow (T_\text{in}[i])^p \f]
-     * @param[in,out] Tio the Tensor
+     * @param[in,out] Tin the Tensor
      * @param[in] p the power to take
-     * @pre If \p Tio is a real UniTensor containing negative elements, then \p p must be an
+     * @pre If \p Tin is a real UniTensor containing negative elements, then \p p must be an
      * integer.
      * @warning If \p p < 0 an inverse has to be taken. If elements could be zero (or close to it),
-     * use Inv_(Tensor &Tio, const double &clip) for a pseudo-inverse instead.
+     * use Inv_(Tensor &Tin, const double &clip) for a pseudo-inverse instead.
      * @note Compared Pow(const Tensor &Tin, const double &p), this is an inplace function, which
      * modifies the input Tensor.
      * @see Pow(const Tensor &Tin, const double &p)
      */
-    void Pow_(Tensor &Tio, const double &p);
+    void Pow_(Tensor &Tin, const double &p);
 
     // Abs:
     //==================================================
