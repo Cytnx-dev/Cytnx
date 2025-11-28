@@ -80,8 +80,7 @@ namespace cytnx {
                                    const cytnx_uint64 &Nelem, const double &clip) {
       cytnx_uint32 NBlocks = Nelem / 256;
       if (Nelem % 256) NBlocks += 1;
-      const float clipsq =
-        (clip < float(0) ? float(-1) : clip * clip);  // because std::norm is squared norm
+      const float clipsq = (clip < 0.f ? -1.f : clip * clip);  // because std::norm is squared norm
       cuInv_internal_kernel_cf<<<NBlocks, 256>>>((cuFloatComplex *)ten->data(), Nelem, clipsq);
     }
 
