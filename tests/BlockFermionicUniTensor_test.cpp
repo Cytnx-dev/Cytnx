@@ -30,12 +30,16 @@ TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {
   UniTensor ref = T * T;
   res.permute_(ref.labels());
   EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol));
+  res = (T * T * T) / T;
+  EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), BFUT3PERM * BFUT3PERM, tol));
+  // negation
   res = BFUT3PERM * (-1. * BFUT3PERM);
   ref = -1 * ref;
   ref.permute_(res.labels());
   EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol));
   res = (-1. * BFUT3PERM) * BFUT3PERM;
   EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref, tol));
+  // commutative property
   res = BFUT3PERM.permute_nosignflip(T.labels()) * T;
   ref = T * BFUT3PERM.permute_nosignflip(T.labels());
   ref.permute_(res.labels());
@@ -44,6 +48,23 @@ TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {
   ref = BFUT3PERM * BFUT3PERM.permute_nosignflip(T.labels()).permute_(BFUT3PERM.labels());
   ref.permute_(res.labels());
   EXPECT_TRUE(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol));
+  // test inline
+  res = T;
+  res += T;
+  res /= 2.;
+  EXPECT_EQ(AreNearlyEqUniTensor(res.apply_(), T.apply(), tol), true);
+  // test Mul and Div for tensors
+  res = T.clone();
+  res *= T;
+  ref = T * T;
+  EXPECT_EQ(AreNearlyEqUniTensor(res.apply_(), ref.apply_(), tol), true);
+  res /= T;
+  EXPECT_EQ(AreNearlyEqUniTensor(res.apply_(), T.apply(), tol), true);
+  // check power, only works for unpermuted tensor (otherwise, sign structure of T*T and T.Pow(2.)
+  // differs)
+  res = BFUT3.clone();
+  res *= BFUT3;
+  EXPECT_EQ(AreNearlyEqUniTensor(res.apply_(), BFUT3.Pow(2.).apply(), tol), true);
 }
 
 TEST_F(BlockFermionicUniTensorTest, group_basis) {
