@@ -2737,10 +2737,10 @@ namespace cytnx {
               const cytnx_int64 &rowrank, const unsigned int &dtype, const int &device,
                           const bool &is_diag)
     */
-    void Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
-              const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
-              const int &device = Device.cpu, const bool &is_diag = false,
-              const std::string &name = "") {
+    UniTensor &Init(const std::vector<Bond> &bonds, const std::vector<std::string> &in_labels = {},
+                    const cytnx_int64 &rowrank = -1, const unsigned int &dtype = Type.Double,
+                    const int &device = Device.cpu, const bool &is_diag = false,
+                    const std::string &name = "") {
       // checking type:
       bool is_sym = false;
       int sym_fver = -1;
@@ -2804,6 +2804,7 @@ namespace cytnx {
         this->_impl = out;
       }
       this->_impl->Init(bonds, in_labels, rowrank, dtype, device, is_diag, false, name);
+      return *this;
     }
 
     /**
@@ -2880,7 +2881,7 @@ namespace cytnx {
     }
 
     /*
-    UniTensor& change_label(const cytnx_int64 &old_label, const cytnx_int64 &new_label){
+    UniTensor &change_label(const cytnx_int64 &old_label, const cytnx_int64 &new_label){
         this->_impl->change_label(old_label,new_label);
         return *this;
     }
@@ -3123,7 +3124,10 @@ namespace cytnx {
             any device defined in cytnx::Device.
         @see to_(const int &device)
     */
-    void to_(const int &device) { this->_impl->to_(device); }
+    UniTensor &to_(const int &device) {
+      this->_impl->to_(device);
+      return *this;
+    }
 
     /**
     @brief move the current UniTensor to the assigned device.
@@ -3639,9 +3643,10 @@ namespace cytnx {
     @param[in] rowrank the row rank after the permutation
           @warning \p by_label will be deprecated!
     */
-    void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
-                             const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
+                                   const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_nosignflip_(mapper, rowrank);
+      return *this;
     }
 
     /**
@@ -3653,9 +3658,10 @@ namespace cytnx {
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
-    void permute_nosignflip_(const std::vector<std::string> &mapper,
-                             const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_nosignflip_(const std::vector<std::string> &mapper,
+                                   const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_nosignflip_(mapper, rowrank);
+      return *this;
     }
 
     // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
@@ -3685,7 +3691,10 @@ namespace cytnx {
     @brief Make the UniTensor contiguous by coalescing the memory (storage), inplacely.
         @see contiguous()
     */
-    void contiguous_() { this->_impl = this->_impl->contiguous_(); }
+    UniTensor &contiguous_() {
+      this->_impl = this->_impl->contiguous_();
+      return *this;
+    }
 
     /**
     @brief Plot the diagram of the UniTensor.
@@ -3716,7 +3725,10 @@ namespace cytnx {
         group the basis with the same quantum number.
     @pre The UniTensor must be in block form. That is, the UniTensor is UTenType::Block.
     */
-    void group_basis_() { this->_impl->group_basis_(); }
+    UniTensor &group_basis_() {
+      this->_impl->group_basis_();
+      return *this;
+    }
 
     UniTensor group_basis() const {
       UniTensor out = this->clone();
@@ -4132,8 +4144,9 @@ namespace cytnx {
         @param[in] in the block you want to put into UniTensor
         @param[in] in the index of the UniTensor you want to put the block \p in in.
     */
-    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
+    UniTensor &put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
       this->_impl->put_block(in, idx);
+      return *this;
     }
 
     /**
@@ -4143,16 +4156,18 @@ namespace cytnx {
   in.
   @warning @p force will be deprecated soon!
     */
-    void put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx, const bool &force) {
+    UniTensor &put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx,
+                         const bool &force) {
       this->_impl->put_block(in_tens, qidx, force);
+      return *this;
     }
 
     /**
      * @brief Put the block into the UniTensor with given quantum indices, will copy the input
      * tensor.
      */
-    void put_block(Tensor &in, const std::vector<std::string> &lbls,
-                   const std::vector<cytnx_int64> &qidx, const bool &force = false) {
+    UniTensor &put_block(Tensor &in, const std::vector<std::string> &lbls,
+                         const std::vector<cytnx_int64> &qidx, const bool &force = false) {
       cytnx_error_msg(
         lbls.size() != qidx.size(),
         "[ERROR][put_block] length of lists must be the same for both lables and qnidices%s", "\n");
@@ -4176,6 +4191,7 @@ namespace cytnx {
         inv_order[new_loc] = i;
       }
       this->_impl->put_block(in.permute(inv_order), new_qidx, force);
+      return *this;
     }
 
     /**
@@ -4183,7 +4199,10 @@ namespace cytnx {
         @note the put block will have shared view with the internal block, i.e. non-clone.
         @see put_block(const Tensor &in, const cytnx_uint64 &idx)
         */
-    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) { this->_impl->put_block_(in, idx); }
+    UniTensor &put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
+      this->_impl->put_block_(in, idx);
+      return *this;
+    }
 
     /**
     @brief Put the block into the UniTensor with given quantum indices, inplacely.
@@ -4191,16 +4210,17 @@ namespace cytnx {
         @see put_block(const Tensor &in, const cytnx_uint64 &idx)
   @warning @p force will be deprecated soon!
         */
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx, const bool &force) {
+    UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx, const bool &force) {
       this->_impl->put_block_(in, qidx, force);
+      return *this;
     }
 
     /**
      * @brief Put the block into the UniTensor with given quantum indices, inplacely.
      * @note the put block will have shared view with the internal block, i.e. non-clone.
      */
-    void put_block_(Tensor &in, const std::vector<std::string> &lbls,
-                    const std::vector<cytnx_int64> &qidx, const bool &force = false) {
+    UniTensor &put_block_(Tensor &in, const std::vector<std::string> &lbls,
+                          const std::vector<cytnx_int64> &qidx, const bool &force = false) {
       cytnx_error_msg(
         lbls.size() != qidx.size(),
         "[ERROR][put_block_] length of lists must be the same for both lables and qnidices%s",
@@ -4227,16 +4247,18 @@ namespace cytnx {
       in.permute_(inv_order);
       this->_impl->put_block_(in, new_qidx, force);
       in.permute_(new_order);
+      return *this;
     }
     UniTensor get(const std::vector<Accessor> &accessors) const {
       UniTensor out;
       out._impl = this->_impl->get(accessors);
       return out;
     }
-    void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
+    UniTensor &set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
       this->_impl->set(accessors, rhs);
+      return *this;
     }
-    void set(const std::vector<Accessor> &accessors, const UniTensor &rhs) {
+    UniTensor &set(const std::vector<Accessor> &accessors, const UniTensor &rhs) {
       cytnx_error_msg(
         rhs.uten_type() != UTenType.Dense,
         "[ERROR] cannot set elements from UniTensor with symmetry. Use at() instead.%s", "\n");
@@ -4245,7 +4267,9 @@ namespace cytnx {
                       "[ERROR] cannot set UniTensor. incoming UniTensor is_diag=True.%s", "\n");
 
       this->_impl->set(accessors, rhs.get_block());
+      return *this;
     }
+
     /**
     @brief Reshape the UniTensor.
           @param[in] new_shape the new shape you want to reshape to.
@@ -4292,7 +4316,10 @@ namespace cytnx {
     @brief Convert the UniTensor to non-diagonal form, inplacely.
         @see to_dense(), is_diag()
         */
-    void to_dense_() { this->_impl->to_dense_(); }
+    UniTensor &to_dense_() {
+      this->_impl->to_dense_();
+      return *this;
+    }
 
     /**
      * @deprecated This function is deprecated. Please use \n
@@ -4344,8 +4371,9 @@ namespace cytnx {
             1. The size of \p indicators need to >= 2.
             2. The UniTensor cannot be diagonal form (that means is_diag cannot be true.)
         */
-    void combineBond(const std::vector<std::string> &indicators, const bool &force = false) {
+    UniTensor &combineBond(const std::vector<std::string> &indicators, const bool &force = false) {
       this->_impl->combineBond(indicators, force);
+      return *this;
     }
 
     /**
@@ -5052,9 +5080,10 @@ namespace cytnx {
      * @note C++: Deprecated soon, use at()
      */
     template <class T2>
-    void set_elem(const std::vector<cytnx_uint64> &locator, const T2 &rc) {
+    UniTensor &set_elem(const std::vector<cytnx_uint64> &locator, const T2 &rc) {
       // cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
       this->at(locator) = rc;
+      return *this;
     }
 
     /**
@@ -5511,8 +5540,8 @@ namespace cytnx {
       @see random::normal_(UniTensor &in, const double &mean, const double &std, const unsigned int
      &seed)
     */
-    void normal_(const double &mean, const double &std,
-                 const unsigned int &seed = cytnx::random::__static_random_device());
+    UniTensor &normal_(const double &mean, const double &std,
+                       const unsigned int &seed = cytnx::random::__static_random_device());
 
     /**
       @brief Generate a UniTensor with all elements are random numbers sampled from a uniform
@@ -5526,8 +5555,8 @@ namespace cytnx {
       @see random::uniform_(UniTensor &in, const double &low, const double &high, const unsigned int
       &seed)
      */
-    void uniform_(const double &low = 0, const double &high = 1,
-                  const unsigned int &seed = cytnx::random::__static_random_device());
+    UniTensor &uniform_(const double &low = 0, const double &high = 1,
+                        const unsigned int &seed = cytnx::random::__static_random_device());
 
   };  // class UniTensor
 
