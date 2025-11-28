@@ -1044,7 +1044,7 @@ namespace cytnx {
      * @see Inv_(UniTensor &Tin, double clip)
      * @see Inv(const Tensor &Tin, const double &clip)
      */
-    cytnx::UniTensor Inv(const cytnx::UniTensor &Tin, double clip);
+    cytnx::UniTensor Inv(const cytnx::UniTensor &Tin, double clip = -1.);
 
     /**
      * @brief Element-wise (pseudo-)inverse, inplacely.
@@ -1072,7 +1072,7 @@ namespace cytnx {
      * @see UniTensor Inv(const cytnx::UniTensor &Tin, double clip)
      * @see Inv_(Tensor &Tin, const double &clip)
      */
-    void Inv_(cytnx::UniTensor &Tin, double clip);
+    void Inv_(cytnx::UniTensor &Tin, double clip = -1.);
 
     /**
      * @brief Elementwise conjugate of the UniTensor
@@ -2175,7 +2175,7 @@ namespace cytnx {
      * input UniTensor but returns a new UniTensor.
      * @see Inv_(Tensor &Tin, const double &clip)
      */
-    Tensor Inv(const Tensor &Tin, const double &clip);
+    Tensor Inv(const Tensor &Tin, const double &clip = -1.);
 
     /**
      * @brief Element-wise (pseudo-)inverse, inplacely.
@@ -2201,7 +2201,7 @@ namespace cytnx {
      * which modifies the input Tensor.
      * @see Inv(const Tensor &Tin, const double &clip)
      */
-    void Inv_(Tensor &Tin, const double &clip);
+    void Inv_(Tensor &Tin, const double &clip = -1.);
 
     // Conj:
     //==================================================
