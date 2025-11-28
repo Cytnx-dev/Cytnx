@@ -1,7 +1,6 @@
 #include "linalg.hpp"
 
 #include "Tensor.hpp"
-#include "UniTensor.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -11,10 +10,10 @@ namespace cytnx {
 
     void iMul(Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[iMul] error, two tensor cannot on different devices.%s", "\n");
+                      "[iMul] The two tensors cannot be on different devices.%s", "\n");
       if (!(Rt.shape().size() == 1 && Rt.shape()[0] == 1)) {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[iMul] error, the two tensor does not have the same shape. Lt rank: [%d] "
+                        "[iMul] The two tensors do not have the same shape. Lt rank: [%d] "
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
