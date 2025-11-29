@@ -593,6 +593,29 @@ namespace cytnx {
     }
   }
 
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply_() {
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      if (this->_signflip[i]) {
+        this->_blocks[i] = -(this->_blocks[i]);
+        this->_signflip[i] = false;
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(this);
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply() {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      if (tmp->_signflip[i]) {
+        tmp->_blocks.push_back(-(this->_blocks[i]));
+        tmp->_signflip[i] = false;
+      } else {
+        tmp->_blocks.push_back(this->_blocks[i].clone());
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(tmp);
+  }
+
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     return this->_bonds[0].syms();
@@ -2491,11 +2514,10 @@ namespace cytnx {
           this->_blocks[b] *= Rtn->_blocks[blockrhs];
           if (Rtn->_signflip[blockrhs]) {
             // 3 possibilities:
-            // 1) easy way: multiply by scalar -1
-            this->_blocks[b] = -this->_blocks[b];
-            // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
-            // could depend on the block and are not aware of this sign flip!
-            //  this->_signflip[b] = this->_signflip[b] ? true : false;
+            // 1) efficient way: change _signflip
+            this->_signflip[b] = !(this->_signflip[b]);
+            // 2) easy way: multiply by scalar -1
+            // this->_blocks[b] = -this->_blocks[b];
             // 3) fast way: TODOfermion: implement Tensor.negmul, which does the multiplication and
             // sign flip in one step
           }
@@ -2647,10 +2669,19 @@ namespace cytnx {
             std::cout << this->_blocks[a].shape() << std::endl;
             std::cout << "=============\n" << std::endl;
             */
-            new_blocks.back() = linalg::Directsum(
-              new_signs.back() ? -new_blocks.back() : new_blocks.back(),
-              this->_signflip[a] ? -this->_blocks[a] : this->_blocks[a], no_combine);
-            new_signs.back() = false;
+            if (new_signs.back() == this->_signflip[a]) {
+              new_blocks.back() =
+                linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
+              new_signs.back() = this->_signflip[a];
+            } else if (new_signs.back()) {
+              new_blocks.back() =
+                linalg::Directsum(-new_blocks.back(), this->_blocks[a], no_combine);
+              new_signs.back() = false;
+            } else {  // this->_signflip[a] == true
+              new_blocks.back() =
+                linalg::Directsum(new_blocks.back(), -this->_blocks[a], no_combine);
+              new_signs.back() = false;
+            }
           }
         }
       }  // traversal each block!

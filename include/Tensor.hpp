@@ -728,6 +728,8 @@ namespace cytnx {
     @brief Make the Tensor contiguous by coalescing the memory (storage).
     @return [Tensor] a new Tensor that is with contiguous memory (storage).
     @see \link Tensor::contiguous_ Tensor::contiguous_() \endlink
+    @warning If the input tensor is not contiguous, then the data will be stored in new memory;
+    otherwise, the input tensor is returned and no cloning of the data happens.
 
     ## Example:
     ### c++ API:
