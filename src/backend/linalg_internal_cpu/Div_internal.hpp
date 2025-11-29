@@ -2,70 +2,753 @@
 #define CYTNX_BACKEND_LINALG_INTERNAL_CPU_DIV_INTERNAL_H_
 
 #include <assert.h>
+#include <iostream>
+#include <iomanip>
 #include <vector>
 #include "backend/Storage.hpp"
 #include "Type.hpp"
-#include "utils/utils.hpp"
 
 namespace cytnx {
+
   namespace linalg_internal {
-    template <typename TLin, typename TRin>
-    inline void DivInternalImpl(boost::intrusive_ptr<Storage_base> &out,
-                                boost::intrusive_ptr<Storage_base> &Lin,
-                                boost::intrusive_ptr<Storage_base> &Rin, const cytnx_uint64 &len,
-                                const std::vector<cytnx_uint64> &shape,
-                                const std::vector<cytnx_uint64> &invmapper_L,
-                                const std::vector<cytnx_uint64> &invmapper_R) {
-      using TOut = cytnx::Scalar_init_interface::type_promote_t<TLin, TRin>;
-      TOut *_out = reinterpret_cast<TOut *>(out->data());
-      const TLin *_Lin = reinterpret_cast<const TLin *>(Lin->data());
-      const TRin *_Rin = reinterpret_cast<const TRin *>(Rin->data());
 
-      if (Lin->size() == 1) {
-        for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-          _out[i] = static_cast<TOut>(static_cast<TOut>(_Lin[0]) / static_cast<TOut>(_Rin[i]));
-        }
-      } else if (Rin->size() == 1) {
-        for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-          _out[i] = static_cast<TOut>(static_cast<TOut>(_Lin[i]) / static_cast<TOut>(_Rin[0]));
-        }
-      } else {
-        if (shape.size() == 0) {
-          // Contiguous case
-          for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-            _out[i] = static_cast<TOut>(static_cast<TOut>(_Lin[i]) / static_cast<TOut>(_Rin[i]));
-          }
-        } else {
-          // Non-contiguous case: handle permutations
-          std::vector<cytnx::cytnx_uint64> accu_shape(shape.size());
-          std::vector<cytnx::cytnx_uint64> old_accu_shapeL(shape.size()),
-            old_accu_shapeR(shape.size());
-          cytnx::cytnx_uint64 tmp1 = 1, tmp2 = 1, tmp3 = 1;
+    /// Div
+    void Div_internal_cdtcd(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdtcf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdtd(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdtf(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdti64(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdtu64(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdti32(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdtu32(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdtu16(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdti16(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cdtb(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
 
-          for (cytnx::cytnx_uint64 i = 0; i < shape.size(); i++) {
-            accu_shape[shape.size() - 1 - i] = tmp1;
-            tmp1 *= shape[shape.size() - 1 - i];
+    void Div_internal_cftcd(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cftcf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cftd(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cftf(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cfti64(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cftu64(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cfti32(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cftu32(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cftu16(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cfti16(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_cftb(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
 
-            old_accu_shapeL[shape.size() - 1 - i] = tmp2;
-            tmp2 *= shape[invmapper_L[shape.size() - 1 - i]];
+    void Div_internal_dtcd(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dtcf(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dtd(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dtf(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dti64(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dtu64(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dti32(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dtu32(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dtu16(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dti16(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_dtb(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
 
-            old_accu_shapeR[shape.size() - 1 - i] = tmp3;
-            tmp3 *= shape[invmapper_R[shape.size() - 1 - i]];
-          }
+    void Div_internal_ftcd(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_ftcf(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_ftd(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_ftf(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_fti64(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_ftu64(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_fti32(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_ftu32(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_ftu16(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_fti16(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_ftb(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
 
-          // Handle non-contiguous memory access
-          for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-            std::vector<cytnx::cytnx_uint64> tmpv = cytnx::c2cartesian(i, accu_shape);
-            cytnx::cytnx_uint64 idx_L =
-              cytnx::cartesian2c(cytnx::vec_map(tmpv, invmapper_L), old_accu_shapeL);
-            cytnx::cytnx_uint64 idx_R =
-              cytnx::cartesian2c(cytnx::vec_map(tmpv, invmapper_R), old_accu_shapeR);
-            _out[i] =
-              static_cast<TOut>(static_cast<TOut>(_Lin[idx_L]) / static_cast<TOut>(_Rin[idx_R]));
-          }
-        }
-      }
-    }
+    void Div_internal_i64tcd(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64tcf(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64td(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64tf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64ti64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64tu64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64ti32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64tu32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64tu16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64ti16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i64tb(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+
+    void Div_internal_u64tcd(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64tcf(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64td(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64tf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64ti64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64tu64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64ti32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64tu32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64ti16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64tu16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u64tb(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+
+    void Div_internal_i32tcd(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32tcf(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32td(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32tf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32ti64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32tu64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32ti32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32tu32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32tu16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32ti16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i32tb(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+
+    void Div_internal_u32tcd(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32tcf(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32td(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32tf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32ti64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32tu64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32ti32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32tu32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32tu16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32ti16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u32tb(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+
+    void Div_internal_i16tcd(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16tcf(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16td(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16tf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16ti64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16tu64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16ti32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16tu32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16tu16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16ti16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_i16tb(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+
+    void Div_internal_u16tcd(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16tcf(boost::intrusive_ptr<Storage_base> &out,
+                             boost::intrusive_ptr<Storage_base> &Lin,
+                             boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                             const std::vector<cytnx_uint64> &shape,
+                             const std::vector<cytnx_uint64> &invmapper_L,
+                             const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16td(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16tf(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16ti64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16tu64(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16ti32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16tu32(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16tu16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16ti16(boost::intrusive_ptr<Storage_base> &out,
+                              boost::intrusive_ptr<Storage_base> &Lin,
+                              boost::intrusive_ptr<Storage_base> &Rin,
+                              const unsigned long long &len, const std::vector<cytnx_uint64> &shape,
+                              const std::vector<cytnx_uint64> &invmapper_L,
+                              const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_u16tb(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+
+    void Div_internal_btcd(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_btcf(boost::intrusive_ptr<Storage_base> &out,
+                           boost::intrusive_ptr<Storage_base> &Lin,
+                           boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                           const std::vector<cytnx_uint64> &shape,
+                           const std::vector<cytnx_uint64> &invmapper_L,
+                           const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_btd(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_btf(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_bti64(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_btu64(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_bti32(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_btu32(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_btu16(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_bti16(boost::intrusive_ptr<Storage_base> &out,
+                            boost::intrusive_ptr<Storage_base> &Lin,
+                            boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                            const std::vector<cytnx_uint64> &shape,
+                            const std::vector<cytnx_uint64> &invmapper_L,
+                            const std::vector<cytnx_uint64> &invmapper_R);
+    void Div_internal_btb(boost::intrusive_ptr<Storage_base> &out,
+                          boost::intrusive_ptr<Storage_base> &Lin,
+                          boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                          const std::vector<cytnx_uint64> &shape,
+                          const std::vector<cytnx_uint64> &invmapper_L,
+                          const std::vector<cytnx_uint64> &invmapper_R);
 
   }  // namespace linalg_internal
 }  // namespace cytnx

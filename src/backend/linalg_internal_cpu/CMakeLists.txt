@@ -50,6 +50,7 @@ target_sources_local(cytnx
     iArithmetic_internal.cpp
     Conj_inplace_internal.cpp
     Diag_internal.cpp
+    Div_internal.cpp
     iDiv_internal.cpp
     Eigh_internal.cpp
     Eig_internal.cpp
@@ -62,7 +63,6 @@ target_sources_local(cytnx
     Matmul_dg_internal.cpp
     Matvec_internal.cpp
     iMul_internal.cpp
-    Mod_internal.cpp
     Outer_internal.cpp
     Trace_internal.cpp
     Tridiag_internal.cpp
