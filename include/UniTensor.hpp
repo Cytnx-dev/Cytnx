@@ -3185,10 +3185,6 @@ namespace cytnx {
       this->_impl->to_(device);
       return *this;
     }
-    UniTensor &to_(const int &device) {
-      this->_impl->to_(device);
-      return *this;
-    }
 
     /**
     @brief move the current UniTensor to the assigned device.
