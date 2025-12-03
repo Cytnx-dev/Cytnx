@@ -146,7 +146,7 @@ endfunction()
 
 include(CMakeDependentOption)
 
-set(CMAKE_INSTALL_PREFIX "/usr/local/cytnx" CACHE PATH "Destination path for installation")
+set(CMAKE_INSTALL_PREFIX "~/.local/cytnx" CACHE PATH "Destination path for installation")
 option(BUILD_PYTHON "Build Python API. Requires Python and pybind11 installed." ON)
 option(BACKEND_TORCH "Use PyTorch as a backend container for tensors." OFF)
 cmake_dependent_option(USE_MKL "Use MKL as a BLAS provider otherwise use OpenBLAS." OFF "NOT BACKEND_TORCH" OFF)
@@ -339,7 +339,7 @@ IF(BUILD_PYTHON)
     endif()
   endif()
 
-  pybind11_add_module(pycytnx SHARED pybind/cytnx.cpp
+  pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
     pybind/generator_py.cpp
     pybind/storage_py.cpp
     pybind/tensor_py.cpp
@@ -357,13 +357,31 @@ IF(BUILD_PYTHON)
     pybind/ncon_py.cpp
   )
   target_link_libraries(pycytnx PUBLIC cytnx)
+
+  # On macOS, Python extensions should NOT link to libpython
+  # Use -undefined dynamic_lookup to resolve symbols from the running interpreter
+  if(APPLE)
+    target_link_options(pycytnx PRIVATE "-undefined" "dynamic_lookup")
+  endif()
   set_target_properties(pycytnx PROPERTIES OUTPUT_NAME cytnx)
   message(STATUS "pybind11 include dir: ${CUTENSOR_LIBRARY_DIRS}")
   message(STATUS "pybind11 include dir: ${CUQUANTUM_LIBRARY_DIRS}")
-  set_target_properties(pycytnx
-    PROPERTIES
-    INSTALL_RPATH "${CUTENSOR_LIBRARY_DIRS};${CUQUANTUM_LIBRARY_DIRS}"
-  )
+  message(STATUS "pybind11 include dir: ${LAPACK_LIBRARY_DIRS}")
+  message(STATUS "pybind11 include dir: ${LAPACKE_LIBRARY_DIRS}")
+  # Configure RPATH for macOS to make the Python extension relocatable
+  if(APPLE)
+    set_target_properties(pycytnx
+      PROPERTIES
+      BUILD_WITH_INSTALL_RPATH TRUE
+      INSTALL_RPATH_USE_LINK_PATH TRUE
+      INSTALL_RPATH "@loader_path;@loader_path/../../../lib;${CMAKE_INSTALL_PREFIX}/lib"
+    )
+  else()
+    set_target_properties(pycytnx
+      PROPERTIES
+      INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${CMAKE_INSTALL_PREFIX}/lib"
+    )
+  endif()
 
   message(STATUS " Build Python Wrapper: YES")
   message(STATUS "  - Python Excutable  : ${PYTHON_EXECUTABLE}")
