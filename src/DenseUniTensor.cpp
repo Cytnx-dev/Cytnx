@@ -1190,12 +1190,19 @@ namespace cytnx {
 
   void DenseUniTensor::Transpose_() {
     if (this->is_tag()) {
-      // this->_rowrank = this->rank() - this->_rowrank;
-      for (int i = 0; i < this->rank(); i++) {
-        this->_bonds[i].set_type((this->_bonds[i].type() == BD_KET) ? BD_BRA : BD_KET);
+      cytnx_int64 rank = this->bonds().size();
+      std::vector<cytnx_int64> idxorder(rank);
+      cytnx_int64 rowrank = this->_rowrank;
+      for (cytnx_int64 i = 0; i < rowrank; i++) {
+        this->bonds()[i].redirect_();
+        idxorder[i] = i + rowrank;
       }
-      this->_is_braket_form = this->_update_braket();
-
+      for (cytnx_int64 i = rowrank; i < rank; i++) {
+        this->bonds()[i].redirect_();
+        idxorder[i] = i - rowrank;
+      }
+      this->permute_(idxorder);
+      this->_rowrank = rank - rowrank;
     } else {
       std::vector<cytnx_int64> new_permute =
         vec_concatenate(vec_range<cytnx_int64>(this->rowrank(), this->rank()),
@@ -1203,7 +1210,8 @@ namespace cytnx {
       this->permute_(new_permute);
       this->_rowrank = this->rank() - this->_rowrank;
     }
-  }
+  };
+
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
 
   void DenseUniTensor::_save_dispatch(std::fstream &f) const { this->_block._Save(f); }
