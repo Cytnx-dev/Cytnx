@@ -181,16 +181,6 @@ namespace RsvdTest {
     return (relative_err < tol);
   }
 
-  // no use
-  void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
-    const UniTensor& U = Tout[1];
-    const UniTensor& V = Tout[2];
-    auto UD = U.Dagger();
-    UD.set_labels({"0", "1", "9"});
-    UD.permute_({2, 0, 1}, 1);
-    auto UUD = Contract(U, UD);
-  }
-
   bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
                    const cytnx_uint64& power_iteration) {
     // test data source file

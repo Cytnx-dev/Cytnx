@@ -15,17 +15,17 @@ class BlockUniTensorTest : public ::testing::Test {
   Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
   Bond B3 = Bond(BD_OUT, {Qs(0) >> 2, Qs(1) >> 3});
   Bond B4 = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2});
-  UniTensor BUT1 = UniTensor({B1, B2, B3, B4});
+  UniTensor BUT1 = UniTensor({B1, B2, B3, B4}).set_name("BUT1");
 
   Bond bd_sym_a = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
   Bond bd_sym_b = Bond(BD_BRA, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
-  UniTensor BUT2 = UniTensor({bd_sym_a, bd_sym_b});
+  UniTensor BUT2 = UniTensor({bd_sym_a, bd_sym_b}).set_name("BUT2");
 
   Bond bd_sym_c =
     Bond(BD_KET, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
   Bond bd_sym_d =
     Bond(BD_BRA, {{0, 2}, {1, 5}, {1, 6}, {0, 1}}, {4, 7, 2, 3}, {Symmetry::Zn(2), Symmetry::U1()});
-  UniTensor BUT3 = UniTensor({bd_sym_c, bd_sym_d});
+  UniTensor BUT3 = UniTensor({bd_sym_c, bd_sym_d}).set_name("BUT3");
 
   Bond B1p = Bond(BD_IN, {Qs(-1), Qs(0), Qs(1)}, {2, 1, 2});
   Bond B2p = Bond(BD_OUT, {Qs(-1), Qs(0), Qs(1)}, {4, 3, 4});
@@ -114,7 +114,7 @@ class BlockUniTensorTest : public ::testing::Test {
 
  protected:
   void SetUp() override {
-    BUT4 = UniTensor::Load(data_dir + "OriginalBUT.cytnx");
+    BUT4 = UniTensor::Load(data_dir + "OriginalBUT.cytnx").set_name("BUT4");
     BUT4_2 = UniTensor::Load(data_dir + "OriginalBUT2.cytnx");
     BUconjT4 = UniTensor::Load(data_dir + "BUconjT.cytnx");
     BUtrT4 = UniTensor::Load(data_dir + "BUtrT.cytnx");

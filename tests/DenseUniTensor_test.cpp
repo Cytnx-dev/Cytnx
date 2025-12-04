@@ -4004,7 +4004,7 @@ TEST_F(DenseUniTensorTest, Conj_utuninit) {
 }
 
 /*=====test info=====
-describe:test Trnaspose
+describe:test Transpose
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose) {
   auto row_rank = 2u;
@@ -4018,7 +4018,7 @@ TEST_F(DenseUniTensorTest, Transpose) {
   for (size_t i = 0; i < ut_t.rank(); i++) {
     EXPECT_EQ(ut_t.bonds()[i].type(), BD_REG);
   }
-  // a, b; c -> c;a, b
+  // a, b; c -> c; a, b
   EXPECT_EQ(ut.labels(), std::vector<std::string>({"a", "b", "c"}));
   EXPECT_EQ(ut_t.labels(), std::vector<std::string>({"c", "a", "b"}));
   EXPECT_EQ(ut.rowrank(), row_rank);
@@ -4035,7 +4035,7 @@ TEST_F(DenseUniTensorTest, Transpose) {
 }
 
 /*=====test info=====
-describe:test Trnaspose with diagonal UniTensor
+describe:test Transpose with diagonal UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose_diag) {
   auto row_rank = 1u;
@@ -4052,7 +4052,7 @@ TEST_F(DenseUniTensorTest, Transpose_diag) {
   for (size_t i = 0; i < ut_t.rank(); i++) {
     EXPECT_EQ(ut_t.bonds()[i].type(), BD_REG);
   }
-  // a, b; c -> c;a, b
+  // a; b -> b; a
   EXPECT_EQ(ut_diag.labels(), std::vector<std::string>({"a", "b"}));
   EXPECT_EQ(ut_t.labels(), std::vector<std::string>({"b", "a"}));
   EXPECT_EQ(ut_diag.rowrank(), row_rank);
@@ -4065,7 +4065,7 @@ TEST_F(DenseUniTensorTest, Transpose_diag) {
 }
 
 /*=====test info=====
-describe:test Trnaspose_
+describe:test Transpose_
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose_) {
   auto row_rank = 2u;
@@ -4081,7 +4081,7 @@ TEST_F(DenseUniTensorTest, Transpose_) {
 }
 
 /*=====test info=====
-describe:test Trnaspose with uninitialized UniTensor
+describe:test Transpose with uninitialized UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose_uninit) {
   EXPECT_ANY_THROW(ut_uninit.Transpose());
