@@ -42,10 +42,10 @@ def itebd_tfim(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
     #     |    |
     #   --A-la-B-lb--
     #
-    A = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(2),cytnx.Bond(chi)],labels=['a','0','b']);
-    B = cytnx.UniTensor(A.bonds(),rowrank=1,labels=['c','1','d']);
-    cytnx.random.normal_(B.get_block_(), mean=0, std=0.2, seed=0);
-    cytnx.random.normal_(A.get_block_(),mean=0, std=0.2, seed=0);
+    A = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(2),cytnx.Bond(chi)],labels=['a','0','b'])
+    B = cytnx.UniTensor(A.bonds(),labels=['c','1','d']).set_rowrank_(1)
+    cytnx.random.normal_(B.get_block_(), mean=0, std=0.2, seed=0)
+    cytnx.random.normal_(A.get_block_(),mean=0, std=0.2, seed=0)
     A.print_diagram()
     B.print_diagram()
     #print(A)
@@ -53,8 +53,8 @@ def itebd_tfim(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
 
     la = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=['b','c'],is_diag=True)
     lb = cytnx.UniTensor([cytnx.Bond(chi),cytnx.Bond(chi)],labels=['d','e'],is_diag=True)
-    la.put_block(cytnx.ones(chi));
-    lb.put_block(cytnx.ones(chi));
+    la.put_block(cytnx.ones(chi))
+    lb.put_block(cytnx.ones(chi))
     la.print_diagram()
     lb.print_diagram()
     #print(la)
@@ -132,7 +132,7 @@ def itebd_tfim(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
         #
         # again, but A' and B' are updated
         lb_inv = 1./lb
-        # lb_inv.print_diagram();
+        # lb_inv.print_diagram()
         lb_inv.set_labels(['e','d'])
 
         A = cytnx.Contract(lb_inv,A)

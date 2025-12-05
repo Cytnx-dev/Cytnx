@@ -68,9 +68,10 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
     def get_energy(A, M):
         N = len(A)
-        L0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Left boundary
-        R0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Right boundary
-        L0[0,0,0] = 1.; R0[4,0,0] = 1.
+        L0 = cytnx.UniTensor.zeros([5,1,1]).set_rowrank_(0) #Left boundary
+        R0 = cytnx.UniTensor.zeros([5,1,1]).set_rowrank_(0) #Right boundary
+        L0[0,0,0] = 1.
+        R0[4,0,0] = 1.
         L = L0
         anet = cytnx.Network()
         anet.FromString(["L: -2,-1,-3",\
@@ -106,9 +107,10 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
     M[0,3] = Jz*sz
     M = cytnx.UniTensor(M,0)
 
-    L0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Left boundary
-    R0 = cytnx.UniTensor.zeros([5,1,1], rowrank = 0) #Right boundary
-    L0[0,0,0] = 1.; R0[4,0,0] = 1.
+    L0 = cytnx.UniTensor.zeros([5,1,1]).set_rowrank_(0) #Left boundary
+    R0 = cytnx.UniTensor.zeros([5,1,1]).set_rowrank_(0) #Right boundary
+    L0[0,0,0] = 1.
+    R0[4,0,0] = 1.
 
     lbls = [] # List for storing the MPS labels
     Nsites = len(A)
@@ -166,7 +168,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
             psi.set_rowrank_(1) # maintain rowrank to perform the svd
             s,_,A[p] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].relabels_(lbls[p]); # set the label back to be consistent
+            A[p].relabels_(lbls[p]) # set the label back to be consistent
             # update LR from right to left:
             anet = cytnx.Network()
             anet.FromString(["R: -2,-1,-3",\
@@ -193,7 +195,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
         A[0].set_rowrank_(1)
         _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-        A[0].relabels_(lbls[0]); #set the label back to be consistent
+        A[0].relabels_(lbls[0]) #set the label back to be consistent
 
 
         for p in range(Nsites):
@@ -206,7 +208,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],_ = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].relabels_(lbls[p]); #set the label back to be consistent
+            A[p].relabels_(lbls[p]) #set the label back to be consistent
             # update LR from left to right:
             anet = cytnx.Network()
             anet.FromString(["L: -2,-1,-3",\
@@ -232,13 +234,13 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
         A[-1].set_rowrank_(2)
         _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-        A[-1].relabels_(lbls[-1]); #set the label back to be consistent
+        A[-1].relabels_(lbls[-1]) #set the label back to be consistent
         As.append(A.copy())
     return As, Es # all time step states
 
 def Local_meas(A, B, Op, site):
     N = len(A)
-    l = cytnx.UniTensor.eye(1, rowrank = 1)
+    l = cytnx.UniTensor.eye(1).set_rowrank_(1)
     anet = cytnx.Network()
     anet.FromString(["l: 0,3",\
                     "A: 0,1,2",\
@@ -263,14 +265,15 @@ def Local_meas(A, B, Op, site):
 def prepare_rand_init_MPS(Nsites, chi, d):
     lbls = []
     A = [None for i in range(Nsites)]
-    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0, rowrank = 2)
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0).set_rowrank_(2)
     A[0].relabels_(["0","1","2"])
     lbls.append(["0","1","2"]) # store the labels for later convinience.
 
     for k in range(1,Nsites):
-        dim1 = A[k-1].shape()[2]; dim2 = d
+        dim1 = A[k-1].shape()[2]
+        dim2 = d
         dim3 = min(min(chi, A[k-1].shape()[2] * d), d ** (Nsites - k - 1))
-        A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3],0.,1., seed=0, rowrank = 2)
+        A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3],0.,1., seed=0).set_rowrank(2)
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
         A[k].relabels_(lbl)
@@ -306,7 +309,7 @@ if __name__ == '__main__':
     As, Es = tdvp1_XXZmodel_dense(J, Jz, hx, hz, GS, chi, dt, time_step)
 
     # measure middle site <Sz>
-    Sz = cytnx.UniTensor(cytnx.physics.pauli('z').real(), rowrank = 1)
+    Sz = cytnx.UniTensor(cytnx.physics.pauli('z').real()).set_rowrank(1)
     Szs = []
     mid_site = int(Nsites/2)
     for i in range(0, len(As)):

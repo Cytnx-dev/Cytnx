@@ -5,14 +5,14 @@ contiguous  : True
 valid blocks: 6
 is diag     : False
 on device   : cytnx device: CPU
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    a  -->| 2     4 |-->  c
-         |         |    
-   b  -->| 2       |        
-         |         |    
-         -----------    
+         |         |
+   b  -->| 2       |
+         |         |
+         -----------
 
 Rowrank of T =  2
 -----------------------
@@ -22,13 +22,13 @@ contiguous  : False
 valid blocks: 6
 is diag     : False
 on device   : cytnx device: CPU
-      row           col 
-         -----------    
-         |         |    
+      row           col
+         -----------
+         |         |
    c  -->| 4     2 |-->  a
-         |         |    
+         |         |
          |       2 |-->  b
-         |         |    
-         -----------    
+         |         |
+         -----------
 
 Rowrank of transposed T =  1
