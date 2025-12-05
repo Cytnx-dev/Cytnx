@@ -112,42 +112,6 @@ TEST_F(BlockUniTensorTest, clone) {
       }
 }
 
-TEST_F(BlockUniTensorTest, relabels) {
-  BUT1 = BUT1.relabel({"a", "b", "cd", "d"});
-  EXPECT_EQ(BUT1.labels()[0], "a");
-  EXPECT_EQ(BUT1.labels()[1], "b");
-  EXPECT_EQ(BUT1.labels()[2], "cd");
-  EXPECT_EQ(BUT1.labels()[3], "d");
-  BUT1 = BUT1.relabel({"1", "-1", "2", "1000"});
-  EXPECT_EQ(BUT1.labels()[0], "1");
-  EXPECT_EQ(BUT1.labels()[1], "-1");
-  EXPECT_EQ(BUT1.labels()[2], "2");
-  EXPECT_EQ(BUT1.labels()[3], "1000");
-
-  EXPECT_THROW(BUT1.relabel({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel({"1", "2"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
-}
-TEST_F(BlockUniTensorTest, relabels_) {
-  BUT1.relabel_({"a", "b", "cd", "d"});
-  EXPECT_EQ(BUT1.labels()[0], "a");
-  EXPECT_EQ(BUT1.labels()[1], "b");
-  EXPECT_EQ(BUT1.labels()[2], "cd");
-  EXPECT_EQ(BUT1.labels()[3], "d");
-  BUT1.relabel_({"1", "-1", "2", "1000"});
-  EXPECT_EQ(BUT1.labels()[0], "1");
-  EXPECT_EQ(BUT1.labels()[1], "-1");
-  EXPECT_EQ(BUT1.labels()[2], "2");
-  EXPECT_EQ(BUT1.labels()[3], "1000");
-  EXPECT_THROW(BUT1.relabel_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel_({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
-}
-
 TEST_F(BlockUniTensorTest, relabel) {
   auto tmp = BUT1.clone();
   BUT1 = BUT1.relabel({"a", "b", "cd", "d"});
@@ -526,8 +490,8 @@ TEST_F(BlockUniTensorTest, reshape_) { EXPECT_ANY_THROW(Spf.reshape_({4, 1}, 1))
 TEST_F(BlockUniTensorTest, contract1) {
   // two sparse matrix
 
-  UT_contract_L1.set_labels({"a", "b"});
-  UT_contract_R1.set_labels({"b", "c"});
+  UT_contract_L1.relabel_({"a", "b"});
+  UT_contract_R1.relabel_({"b", "c"});
   UniTensor out = UT_contract_L1.contract(UT_contract_R1);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans1.get_blocks();
@@ -541,8 +505,8 @@ TEST_F(BlockUniTensorTest, contract1) {
 TEST_F(BlockUniTensorTest, contract2) {
   // two sparse matrix with degeneracy
 
-  UT_contract_L2.set_labels({"a", "b"});
-  UT_contract_R2.set_labels({"b", "c"});
+  UT_contract_L2.relabel_({"a", "b"});
+  UT_contract_R2.relabel_({"b", "c"});
   UniTensor out = UT_contract_L2.contract(UT_contract_R2);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans2.get_blocks();
@@ -556,8 +520,8 @@ TEST_F(BlockUniTensorTest, contract2) {
 TEST_F(BlockUniTensorTest, contract3) {
   //// two 3 legs tensor
 
-  UT_contract_L3.set_labels({"a", "b", "c"});
-  UT_contract_R3.set_labels({"c", "d", "e"});
+  UT_contract_L3.relabel_({"a", "b", "c"});
+  UT_contract_R3.relabel_({"c", "d", "e"});
   UniTensor out = UT_contract_L3.contract(UT_contract_R3);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans3.get_blocks();

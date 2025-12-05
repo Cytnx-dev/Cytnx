@@ -647,7 +647,7 @@ namespace cytnx {
       // std::cout<<std::endl;
 
       // modify the label of unitensor (shared):
-      //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
+      //  this->tensors[idx].relabel_(this->label_arr[idx]);//this conflict
       this->CtTree.base_nodes[idx]->utensor =
         this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
       // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
@@ -741,7 +741,7 @@ namespace cytnx {
 
     // //5. reset back the original labels:
     // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-    //     this->tensors[i].set_labels(old_labels[i]);
+    //     this->tensors[i].relabel_(old_labels[i]);
     // }
 
     // 6. permute accroding to pre-set labels:
