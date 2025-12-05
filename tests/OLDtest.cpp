@@ -91,8 +91,8 @@ int main(int argc, char *argv[]) {
   return 0;
 
   auto T1 = UniTensor(arange(30).reshape(2, 5, 3), 1);
-  auto T2 = T1.clone().relabels({0, 3, 4});
-  auto T3 = T1.clone().relabels({5, 3, 7});
+  auto T2 = T1.clone().relabel({0, 3, 4});
+  auto T3 = T1.clone().relabel({5, 3, 7});
 
   T1.print_diagram();
   T2.print_diagram();

@@ -153,8 +153,8 @@ Tensor A({3,4,5},Type.Double);
 UniTensor tA = UniTensor(A); // convert directly.
 UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{}); // init from scratch.
 // Relabel the tensor and then contract.
-tA.relabels_({"common_1", "common_2", "out_a"});
-tB.relabels_({"common_1", "common_2", "out_b"});
+tA.relabel_({"common_1", "common_2", "out_a"});
+tB.relabel_({"common_1", "common_2", "out_b"});
 UniTensor out = cytnx::Contract(tA,tB);
 tA.print_diagram();
 tB.print_diagram();
