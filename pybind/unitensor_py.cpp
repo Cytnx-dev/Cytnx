@@ -164,7 +164,7 @@ void unitensor_binding(py::module &m) {
 
 
     .def("c_set_labels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                            return self.set_labels(new_labels);
+                            return self.relabel_(new_labels);
                         },py::arg("new_labels"))
 
 

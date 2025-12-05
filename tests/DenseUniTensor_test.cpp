@@ -148,51 +148,6 @@ TEST_F(DenseUniTensorTest, set_label_not_exist_old_label) {
   EXPECT_ANY_THROW(utzero345.set_label("Not exist label", "testing label"));
 }
 
-/*=====test info=====
-describe:test set_labels.
-====================*/
-TEST_F(DenseUniTensorTest, set_labels_normal) {
-  // vector
-  std::vector<std::string> org_labels = {"org 1", "org 2", "org 3"};
-  std::vector<std::string> new_labels = {"testing 1", "testing 2", "testing 3"};
-  utzero345.set_labels(org_labels);
-  utzero345.set_labels(new_labels);
-  EXPECT_EQ(utzero345.labels(), new_labels);
-
-  // initilizer list
-  utzero345.set_labels({"org 1", "org 2", "org 3"});
-  utzero345.set_labels({"testing 1", "testing 2", "testing 3"});
-  EXPECT_EQ(utzero345.labels(), new_labels);
-}
-
-/*=====test info=====
-describe:set_labels to uninitialized unitensor
-====================*/
-TEST_F(DenseUniTensorTest, set_labels_un_init) {
-  std::vector<std::string> new_labels = {};
-  ut_uninit.set_labels(new_labels);
-  EXPECT_EQ(ut_uninit.labels(), new_labels);
-}
-
-/*=====test info=====
-describe:test set_labels length not match.
-====================*/
-TEST_F(DenseUniTensorTest, set_labels_len_not_match) {
-  // too long
-  std::vector<std::string> new_labels_long = {"test1", "test2", "test3", "test4"};
-  EXPECT_ANY_THROW(utzero345.set_labels(new_labels_long));
-  std::vector<std::string> new_labels_short = {"test1", "test2"};
-  EXPECT_ANY_THROW(utzero345.set_labels(new_labels_short));
-}
-
-/*=====test info=====
-describe:test set_labels duplicated.
-====================*/
-TEST_F(DenseUniTensorTest, set_labels_duplicated) {
-  std::vector<std::string> new_labels = {"test1", "test2", "test2", "test3"};
-  EXPECT_ANY_THROW(utzero345.set_labels(new_labels));
-}
-
 TEST_F(DenseUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
   const auto org_rowrank = Spf.rowrank();
@@ -540,44 +495,6 @@ TEST_F(DenseUniTensorTest, to_) {
   EXPECT_ANY_THROW(ut_uninit.to_(Device.cpu));
 }
 
-TEST_F(DenseUniTensorTest, relabels) {
-  auto ut = utzero3456.relabel({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "0");
-  EXPECT_EQ(utzero3456.labels()[1], "1");
-  EXPECT_EQ(utzero3456.labels()[2], "2");
-  EXPECT_EQ(utzero3456.labels()[3], "3");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabel({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabel({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
-}
-
-TEST_F(DenseUniTensorTest, relabels_) {
-  auto ut = utzero3456.relabel_({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "a");
-  EXPECT_EQ(utzero3456.labels()[1], "b");
-  EXPECT_EQ(utzero3456.labels()[2], "cd");
-  EXPECT_EQ(utzero3456.labels()[3], "d");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabel_({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabel_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
-}
-
 TEST_F(DenseUniTensorTest, relabel) {
   auto tmp = utzero3456.clone();
   auto ut = utzero3456.relabel({"a", "b", "cd", "d"});
@@ -639,6 +556,7 @@ TEST_F(DenseUniTensorTest, relabel) {
   // EXPECT_THROW(utzero3456.relabel(5,'a'),std::logic_error);
   EXPECT_THROW(ut_uninit.relabel(0, ""), std::logic_error);
 }
+
 TEST_F(DenseUniTensorTest, relabel_) {
   auto tmp = utzero3456.clone();
   auto ut = utzero3456.relabel_({"a", "b", "cd", "d"});
@@ -688,6 +606,52 @@ TEST_F(DenseUniTensorTest, relabel_) {
   EXPECT_THROW(utzero3456.relabel_(0, "a").relabel_(1, "a"), std::logic_error);
   EXPECT_THROW(ut_uninit.relabel_(0, ""), std::logic_error);
 }
+
+/*=====test info=====
+describe:test relabel_.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_normal) {
+  // vector
+  std::vector<std::string> org_labels = {"org 1", "org 2", "org 3"};
+  std::vector<std::string> new_labels = {"testing 1", "testing 2", "testing 3"};
+  utzero345.relabel_(org_labels);
+  utzero345.relabel_(new_labels);
+  EXPECT_EQ(utzero345.labels(), new_labels);
+
+  // initializer list
+  utzero345.relabel_({"org 1", "org 2", "org 3"});
+  utzero345.relabel_({"testing 1", "testing 2", "testing 3"});
+  EXPECT_EQ(utzero345.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:relabel_ to uninitialized unitensor
+====================*/
+TEST_F(DenseUniTensorTest, relabel_un_init) {
+  std::vector<std::string> new_labels = {};
+  ut_uninit.relabel_(new_labels);
+  EXPECT_EQ(ut_uninit.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:test relabel_ length not match.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_len_not_match) {
+  // too long
+  std::vector<std::string> new_labels_long = {"test1", "test2", "test3", "test4"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels_long));
+  std::vector<std::string> new_labels_short = {"test1", "test2"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels_short));
+}
+
+/*=====test info=====
+describe:test relabel_ duplicated.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_duplicated) {
+  std::vector<std::string> new_labels = {"test1", "test2", "test2", "test3"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels));
+}
+
 
 /*=====test info=====
 describe:test astype, input all possible dtype.
@@ -1962,8 +1926,8 @@ TEST_F(DenseUniTensorTest, combineBond_ut_uninit) {
 }
 
 TEST_F(DenseUniTensorTest, contract1) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "aa", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "aa", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres1.get_block_();
@@ -1971,8 +1935,8 @@ TEST_F(DenseUniTensorTest, contract1) {
 }
 
 TEST_F(DenseUniTensorTest, contract2) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres2.get_block_();
@@ -1980,8 +1944,8 @@ TEST_F(DenseUniTensorTest, contract2) {
 }
 
 TEST_F(DenseUniTensorTest, contract3) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "c", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "c", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres3.get_block_();
