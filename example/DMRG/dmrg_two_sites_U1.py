@@ -111,7 +111,7 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
     anet.FromString(["L: -2,-1,-3",\
                     "A: -1,-4,1",\
                     "M: -2,0,-4,-5",\
-                    "A_Conj: -3,-5,2",\
+                    "A_Conj: 2,-3,-5",\
                     "TOUT: 0;1,2"])
     for p in range(Nsites - 1):
         anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Dagger(),M])
@@ -143,7 +143,7 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
             anet.FromString(["R: -2,-1,-3",\
                         "B: 1,-4,-1",\
                         "M: 0,-2,-4,-5",\
-                        "B_Conj: 2,-5,-3",\
+                        "B_Conj: -3,2,-5",\
                         "TOUT: 0;1,2"])
             anet.PutUniTensors(["R","B","M","B_Conj"],[LR[p+2],A[p+1],M,A[p+1].Dagger()])
             LR[p+1] = anet.Launch()
@@ -177,7 +177,7 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
             anet.FromString(["L: -2,-1,-3",\
                         "A: -1,-4,1",\
                         "M: -2,0,-4,-5",\
-                        "A_Conj: -3,-5,2",\
+                        "A_Conj: 2,-3,-5",\
                         "TOUT: 0;1,2"])
             anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Dagger(),M])
             LR[p+1] = anet.Launch()
