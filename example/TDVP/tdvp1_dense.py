@@ -80,7 +80,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                         "TOUT: 0,1,2"])
         # or you can do: anet = cytnx.Network("L_AMAH.net")
         for p in range(0, N):
-            anet.PutUniTensors(["L","A","A_Conj","M"],[L,A[p],A[p].Conj(),M])
+            anet.PutUniTensors(["L","A","A_Conj","M"], \
+                               [L,A[p],A[p].Dagger().permute_(A[p].labels()),M])
             L = anet.Launch()
         E = cytnx.Contract(L, R0).item()
         print('energy:', E)
@@ -138,7 +139,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                         "A_Conj: -3,-5,2",\
                         "TOUT: 0,1,2"])
         # or you can do: anet = cytnx.Network("L_AMAH.net")
-        anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Conj(),M])
+        anet.PutUniTensors(["L","A","A_Conj","M"], \
+                           [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
         LR[p+1] = anet.Launch()
 
         # Recover the original MPS labels
@@ -175,7 +177,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                             "B_Conj: 2,-5,-3",\
                             "TOUT: ;0,1,2"])
             # or you can do: anet = cytnx.Network("R_AMAH.net")
-            anet.PutUniTensors(["R","B","M","B_Conj"],[LR[p+1],A[p],M,A[p].Conj()])
+            anet.PutUniTensors(["R","B","M","B_Conj"], \
+                               [LR[p+1],A[p],M,A[p].Dagger().permute_(A[p].labels())])
             old_LR = LR[p].clone()
             if p != 0:
                 LR[p] = anet.Launch()
@@ -215,7 +218,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                             "A_Conj: -3,-5,2",\
                             "TOUT: 0,1,2"])
 
-            anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Conj(),M])
+            anet.PutUniTensors(["L","A","A_Conj","M"], \
+                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
             old_LR = LR[p+1].clone()
 
 
@@ -246,7 +250,8 @@ def Local_meas(A, B, Op, site):
                     "TOUT: 2;4"])
     for i in range(0, N):
         if i != site:
-            anet.PutUniTensors(["l","A","B"],[l,A[i],B[i].Conj()])
+            anet.PutUniTensors(["l","A","B"], \
+                               [l,A[i],B[i].Dagger().permute_(B[i].labels())])
             l = anet.Launch()
         else:
             tmp = A[i].relabel(1, "_aux_up")
@@ -254,7 +259,8 @@ def Local_meas(A, B, Op, site):
             tmp = cytnx.Contract(tmp, Op)
             tmp.relabel_("_aux_low", A[i].labels()[1])
             tmp.permute_(A[i].labels())
-            anet.PutUniTensors(["l","A","B"],[l,tmp,B[i].Conj()])
+            anet.PutUniTensors(["l","A","B"], \
+                               [l,tmp,B[i].Dagger().permute_(B[i].labels())])
             l = anet.Launch()
 
     return l.reshape(1).item()
