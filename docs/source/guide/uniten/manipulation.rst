@@ -1,8 +1,7 @@
 Manipulating a UniTensor
 -------------------------
 
-After having introduced the initialization and structure of the three UniTensor types (un-tagged, tagged and tagged with symmetries),
-we show the basic functionalities to manipulate UniTensors.
+After having introduced the initialization and structure of the three UniTensor types (un-tagged, tagged, and tagged with symmetries), we show basic functionalities to manipulate UniTensors.
 
 Permutation, reshaping and arithmetic operations are accessed similarly to **Tensor** objects as introduced before, with slight modifications for symmetric UniTensors.
 
@@ -50,10 +49,10 @@ Output >>
 Combine bonds
 ************************************
 
-The tagged UniTensors include symmetric UniTensors cannot be reshaped, since the bonds to be combinded or splited now includes the direction and quantum number infomation,
-the reshape process involves the fusion or split of the qunatum basis, we provide combindBonds API for the tagged UniTensor as an alternative to the usual reshape function.
-Note that currently there is no API for splitting a bond, since the way to split the quantum basis will be ambiguous.
-Let's see the complete function usage for combining bonds:
+Tagged UniTensors, including symmetric UniTensors, cannot be reshaped. The reason for this is that the bonds to be combined or split include the direction and quantum number information.
+A reshape is therefore replaced by the fusion or splitting of indices, which takes into account the transformation of the quantum numbers for the given symmetries. For this, Cytnx provides the combineBonds API for tagged UniTensor as an alternative to the usual reshape.
+Note that there is currently no API for splitting bonds, since the way to split the quantum basis is ambiguous.
+The method to combine bonds can be used as follows:
 
 
 .. py:function:: UniTensor.combineBonds(indicators, force)
@@ -62,7 +61,7 @@ Let's see the complete function usage for combining bonds:
     :param bool force: If set to **True** the bonds will be combined regardless the direction or type of the bonds, otherwise the bond types will be checked. The default is **False**.
 
 
-Consider a specific example:
+The use is demonstrated in this example:
 
 * In Python:
 
@@ -80,16 +79,16 @@ Arithmetic
 ************************************
 
 
-Arithmetic operations for un-tagged UniTensors can be done exactly the same as with Tensors, see :ref:`Tensor arithmetic`. The supported arithmetic operations and further linear algebra functions are listed in :ref:`Linear algebra`.
+Arithmetic operations for un-tagged UniTensors can be done in the exact same way as for Tensors, see :ref:`Tensor arithmetic`. The supported arithmetic operations and further linear algebra functions are listed in :ref:`Linear algebra`.
 
 Rowrank
 *********
 
-Another property that we may want to maintain in UniTensor is its rowrank. It tells us how the legs of the a UniTensor are split into two halves, one part belongs to the rowspace and the other to the column space. A UniTensor can then be seen as a linear operator between these two spaces, or as a matrix. The matrix results in having the first *rowrank* indices combined to the first (row-)index and the other indices combined to the second (column-)index.
+Another property of a UniTensor that we need to control is its rowrank. It defines how the legs of the a UniTensor are split into two halves, one part belonging to the rowspace and the other to the column space. A UniTensor can then be seen as a linear operator between these two spaces, or as a matrix. The matrix form corresponds to combining the first *rowrank* indices to a single (row-)index and the remaining indices to a second (column-)index.
 
-Most of the linear algebra algorithms take a matrix as an input. We thus use rowrank to specify how to cast the input UniTensor into a matrix. In Cytnx, this specification makes it easy to use linear algebra operations on UniTensors.
+Most of the linear algebra algorithms assume this matrix form as an input. We thus use rowrank to specify how to interpret the input UniTensor as a matrix. This specification makes it easy to use linear algebra operations on UniTensors, even if they have more than two indices.
 
-The rowrank can be specified when initializing the UniTenosr, one can also use **.set_rowrank()** to modify the rowrank of a UniTensor:
+The rowrank can either be specified when initializing the UniTensor, or the **.set_rowrank()** method can be used to modify the rowrank of a UniTensor:
 
 * In Python:
 
@@ -103,13 +102,14 @@ Output >>
     :language: text
 
 
-We leave the examples of linalg algebra operations incoporating the rowrank concept such as **singular value decomposition (SVD)** to the chapter :ref:`Tensor decomposition`.
+How linear algebra functions such as the **singular value decomposition (SVD)** make use of the rowrank is described in chapter :ref:`Tensor decomposition`.
 
 
 Transpose
 **********************
 
-One common operation that is sensitive to the **rowrank** of a UniTensor is the tranpose, one can transpose a UniTensor using **.Transpose()** (or the in-placed method **.Transpose_()**), let's see the behavior of this operation, first consider the transpose of a **non-tagged** UniTensor:
+One common operation that is sensitive to the **rowrank** is transposing a tensor. This is possible for a UniTensor by the method **.Transpose()** (or the in-placed method **.Transpose_()**).
+We first show the behavior for a **non-tagged** UniTensor:
 
 * In Python:
 
@@ -123,9 +123,9 @@ Output >>
     :language: text
 
 
-We see that .Transpose() swap the legs in the row space and column space, also the *rowrank* itself is modified.
+We see that .Transpose() swap the legs in the row space and the column space, with the *rowrank* itself also being modified.
 
-Next we consider the tranposition of a tagged UniTensor:
+Next we consider the transposition of a tagged UniTensor:
 
 * In Python:
 
@@ -139,8 +139,15 @@ Output >>
     :language: text
 
 
-We see that for the tagged UniTensor the rowrank (and the row/column space the legs belong to) is not changed, instead the .Transpose() **inverted the direction of each bond**.
+In addition to exchanging the roles of row- and column-space as before, **the direction of each bond is inverted**.
 
 .. Note::
 
-    The operation **.Dagger()** (which is the transposition plus a conjugation) shows same behavior as transpose discussed above.
+    1. The method **Transpose_()** works similarly, but changes the UniTensor directly instead of generating a new UniTensor.
+    2. For a :ref:`Fermionic UniTensor`, the order of the indices after transposing the tensor is inverted.
+
+
+Dagger
+**********************
+
+The methods **.Dagger()** and **.Dagger_()** correspond to the conjugate-transpose of a tensor, similar to applying .Conj() and .Transpose(). See the previous section :ref:`Transpose` for the behavior.

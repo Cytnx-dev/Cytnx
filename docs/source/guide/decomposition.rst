@@ -4,7 +4,7 @@ Tensor decomposition
 .. .. toctree::
 ..     :maxdepth: 3
 
-As mention in the :ref:`Manipulate UniTensor`, the specification of **rowrank** makes it convinient to apply linear algebra operations on UniTensors.
+As mention in the :ref:`Manipulating a UniTensor`, the specification of **rowrank** makes it convinient to apply linear algebra operations on UniTensors.
 
 
 Singular value decomposition
@@ -42,7 +42,7 @@ Output >>
 If we contract :math:`U \cdot S \cdot Vt`, we get a tensor of the same shape as **T** and we can subtract the two tensors. The error :math:`\frac{|T-U \cdot S \cdot Vt|}{|T|}` is of the order of machine precision, as expected.
 
 
-Here we demonstrate the usage of a more important function **Svd_truncate()** which appears frequently in the tensor network algorithm for truncatiing the bond dimension. In this example we print the singular values from doing **Svd()** and compare it to the result of **Svd_truncate()**:
+Here we demonstrate the usage of a more important function **Svd_truncate()** which appears frequently in the tensor network algorithm for truncating the bond dimension. In this example we print the singular values from doing **Svd()** and compare it to the result of **Svd_truncate()**:
 
 * In Python:
 
