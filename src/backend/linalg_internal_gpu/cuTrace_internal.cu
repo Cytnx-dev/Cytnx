@@ -32,8 +32,7 @@ namespace cytnx {
 
       I_UT.relabel_({"0", "1"});
       UniTensor UTn = UniTensor(Tn, false, 2);
-      UTn.relabel_(
-        vec_cast<cytnx_uint64, cytnx_int64>(vec_range(100, 100 + UTn.labels().size())));
+      UTn.relabel_(vec_cast<cytnx_uint64, cytnx_int64>(vec_range(100, 100 + UTn.labels().size())));
       UTn._impl->_labels[ax1] = "0";
       UTn._impl->_labels[ax2] = "1";
       out = Contract(I_UT, UTn).get_block_();
