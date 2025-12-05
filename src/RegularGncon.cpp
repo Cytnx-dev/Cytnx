@@ -649,7 +649,7 @@ namespace cytnx {
       // modify the label of unitensor (shared):
       //  this->tensors[idx].set_labels(this->label_arr[idx]);//this conflict
       this->CtTree.base_nodes[idx]->utensor =
-        this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+        this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
       // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
       this->CtTree.base_nodes[idx]->is_assigned = true;
 

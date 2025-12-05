@@ -39,59 +39,59 @@ TEST_F(BlockUniTensorTest, gpu_Trace) {
 }
 
 TEST_F(BlockUniTensorTest, gpu_relabels) {
-  BUT1 = BUT1.relabels({"a", "b", "cd", "d"});
+  BUT1 = BUT1.relabel({"a", "b", "cd", "d"});
   EXPECT_EQ(BUT1.labels()[0], "a");
   EXPECT_EQ(BUT1.labels()[1], "b");
   EXPECT_EQ(BUT1.labels()[2], "cd");
   EXPECT_EQ(BUT1.labels()[3], "d");
-  BUT1 = BUT1.relabels({"1", "-1", "2", "1000"});
+  BUT1 = BUT1.relabel({"1", "-1", "2", "1000"});
   EXPECT_EQ(BUT1.labels()[0], "1");
   EXPECT_EQ(BUT1.labels()[1], "-1");
   EXPECT_EQ(BUT1.labels()[2], "2");
   EXPECT_EQ(BUT1.labels()[3], "1000");
 
-  EXPECT_THROW(BUT1.relabels({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"1", "2"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"a"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"1", "2"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
 }
 TEST_F(BlockUniTensorTest, gpu_relabels_) {
-  BUT1.relabels_({"a", "b", "cd", "d"});
+  BUT1.relabel_({"a", "b", "cd", "d"});
   EXPECT_EQ(BUT1.labels()[0], "a");
   EXPECT_EQ(BUT1.labels()[1], "b");
   EXPECT_EQ(BUT1.labels()[2], "cd");
   EXPECT_EQ(BUT1.labels()[3], "d");
-  BUT1.relabels_({"1", "-1", "2", "1000"});
+  BUT1.relabel_({"1", "-1", "2", "1000"});
   EXPECT_EQ(BUT1.labels()[0], "1");
   EXPECT_EQ(BUT1.labels()[1], "-1");
   EXPECT_EQ(BUT1.labels()[2], "2");
   EXPECT_EQ(BUT1.labels()[3], "1000");
-  EXPECT_THROW(BUT1.relabels_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"a"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"1", "2"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
 }
 
 TEST_F(BlockUniTensorTest, gpu_relabel) {
   auto tmp = BUT1.clone();
-  BUT1 = BUT1.relabels({"a", "b", "cd", "d"});
+  BUT1 = BUT1.relabel({"a", "b", "cd", "d"});
   EXPECT_EQ(BUT1.labels()[0], "a");
   EXPECT_EQ(BUT1.labels()[1], "b");
   EXPECT_EQ(BUT1.labels()[2], "cd");
   EXPECT_EQ(BUT1.labels()[3], "d");
-  BUT1 = BUT1.relabels({"1", "-1", "2", "1000"});
+  BUT1 = BUT1.relabel({"1", "-1", "2", "1000"});
   EXPECT_EQ(BUT1.labels()[0], "1");
   EXPECT_EQ(BUT1.labels()[1], "-1");
   EXPECT_EQ(BUT1.labels()[2], "2");
   EXPECT_EQ(BUT1.labels()[3], "1000");
 
-  EXPECT_THROW(BUT1.relabels({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"1", "2"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"a"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"1", "2"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
 
   BUT1 = tmp;
   BUT1 = BUT1.relabel("0", "a");
@@ -129,21 +129,21 @@ TEST_F(BlockUniTensorTest, gpu_relabel) {
 }
 TEST_F(BlockUniTensorTest, gpu_relabel_) {
   auto tmp = BUT1.clone();
-  BUT1.relabels_({"a", "b", "cd", "d"});
+  BUT1.relabel_({"a", "b", "cd", "d"});
   EXPECT_EQ(BUT1.labels()[0], "a");
   EXPECT_EQ(BUT1.labels()[1], "b");
   EXPECT_EQ(BUT1.labels()[2], "cd");
   EXPECT_EQ(BUT1.labels()[3], "d");
-  BUT1.relabels_({"1", "-1", "2", "1000"});
+  BUT1.relabel_({"1", "-1", "2", "1000"});
   EXPECT_EQ(BUT1.labels()[0], "1");
   EXPECT_EQ(BUT1.labels()[1], "-1");
   EXPECT_EQ(BUT1.labels()[2], "2");
   EXPECT_EQ(BUT1.labels()[3], "1000");
-  EXPECT_THROW(BUT1.relabels_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"a"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(BUT1.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"a"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"1", "2"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
 
   BUT1 = tmp;
   BUT1.relabel_("0", "a");
