@@ -650,7 +650,6 @@ TEST_F(DenseUniTensorTest, relabel_duplicated) {
   EXPECT_ANY_THROW(utzero345.relabel_(new_labels));
 }
 
-
 /*=====test info=====
 describe:test astype, input all possible dtype.
 ====================*/
