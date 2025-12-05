@@ -1,7 +1,9 @@
-#include <typeinfo>
 #include "UniTensor.hpp"
-#include "utils/utils.hpp"
 
+#include <typeinfo>
+#include <filesystem>
+
+#include "utils/utils.hpp"
 #include "linalg.hpp"
 #include "random.hpp"
 
@@ -156,28 +158,31 @@ namespace cytnx {
 
   void UniTensor::Save(const std::string &fname) const {
     fstream f;
-    f.open((fname + ".cytnx"), ios::out | ios::trunc | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::out | ios::trunc | ios::binary);
+    } else {
+      // add filename extension
+      f.open((fname + ".cytnx"), ios::out | ios::trunc | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Save(f);
     f.close();
   }
-  void UniTensor::Save(const char *fname) const {
-    fstream f;
-    string ffname = string(fname) + ".cytnx";
-    f.open((ffname), ios::out | ios::trunc | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
+  void UniTensor::Save(const char *fname) const { Save(string(fname)); }
 
   UniTensor UniTensor::Load(const std::string &fname) {
     UniTensor out;
     fstream f;
-    f.open(fname, ios::in | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::in | ios::binary);
+    } else {
+      // add filename extension
+      f.open((fname + ".cytnx"), ios::in | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
     }
@@ -185,17 +190,8 @@ namespace cytnx {
     f.close();
     return out;
   }
-  UniTensor UniTensor::Load(const char *fname) {
-    UniTensor out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname);
-    }
-    out._Load(f);
-    f.close();
-    return out;
-  }
+  UniTensor UniTensor::Load(const char *fname) { return UniTensor::Load(string(fname)); }
+
   // Random Generators:
   UniTensor UniTensor::normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,
                               const std::vector<std::string> &in_labels, const unsigned int &seed,

@@ -4568,23 +4568,15 @@ TEST_F(DenseUniTensorTest, Save) {
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
   ut.Save(temp_file_path);
-  UniTensor ut_load = UniTensor::Load(temp_file_path + ".cytnx");
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
-}
-
-/*=====test info=====
-describe:test Save and Load by charPtr
-====================*/
-TEST_F(DenseUniTensorTest, Save_chr) {
-  auto row_rank = 1u;
-  std::vector<Bond> bonds = {Bond(3), Bond(2)};
-  std::vector<std::string> labels = {"a", "b"};
-  auto seed = 0;
-  auto ut = UniTensor(bonds, labels, row_rank);
-  random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(temp_file_path.c_str());
-  UniTensor ut_load = UniTensor::Load((temp_file_path + ".cytnx").c_str());
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
+  UniTensor ut_loaded = UniTensor::Load(temp_file_path + ".cytnx");
+  EXPECT_TRUE(AreEqUniTensor(ut_loaded, ut));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  ut.Save(fname);
+  UniTensor ut_loaded_char_save = ut_loaded_char_save.Load(temp_file_path + ".cytnx");
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_save));
+  UniTensor ut_loaded_char_load = ut_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_load));
 }
 
 /*=====test info=====

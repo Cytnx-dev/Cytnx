@@ -187,7 +187,14 @@ TEST_F(BlockFermionicUniTensorTest, Pow) {
 describe:write to disc
 ====================*/
 TEST_F(BlockFermionicUniTensorTest, SaveLoad) {
-  BFUT1.Save("BFUT1");
-  UniTensor BFUTloaded = BFUTloaded.Load("BFUT1.cytnx");
-  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUTloaded));
+  BFUT1.Save(temp_file_path);
+  UniTensor BFUT1_loaded = BFUT1_loaded.Load(temp_file_path + ".cytnx");
+  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  BFUT1.Save(fname);
+  UniTensor BFUT1_loaded_char_save = BFUT1_loaded_char_save.Load(temp_file_path + ".cytnx");
+  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_save));
+  UniTensor BFUT1_loaded_char_load = BFUT1_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_load));
 }

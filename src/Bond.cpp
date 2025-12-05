@@ -1,7 +1,11 @@
 
 #include "Bond.hpp"
+
 #include <algorithm>
+#include <filesystem>
+
 #include "utils/utils.hpp"
+
 using namespace std;
 
 namespace cytnx {
@@ -469,28 +473,31 @@ namespace cytnx {
 
   void Bond::Save(const std::string &fname) const {
     fstream f;
-    f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::out | ios::trunc | ios::binary);
+    } else {
+      // add filename extension
+      f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Save(f);
     f.close();
   }
-  void Bond::Save(const char *fname) const {
-    fstream f;
-    string ffname = string(fname) + ".cybd";
-    f.open((ffname), ios::out | ios::trunc | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
+  void Bond::Save(const char *fname) const { this->Save(string(fname)); }
 
   Bond Bond::Load(const std::string &fname) {
     Bond out;
     fstream f;
-    f.open(fname, ios::in | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::in | ios::binary);
+    } else {
+      // add filename extension
+      f.open((fname + ".cybd"), ios::in | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
     }
@@ -498,18 +505,7 @@ namespace cytnx {
     f.close();
     return out;
   }
-
-  Bond Bond::Load(const char *fname) {
-    Bond out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
-    }
-    out._Load(f);
-    f.close();
-    return out;
-  }
+  Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
 
   void Bond::_Save(fstream &f) const {
     cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
