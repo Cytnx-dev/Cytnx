@@ -20,29 +20,30 @@ namespace cytnx {
     using namespace std;
 
     // <A|B>
-    static Scalar _Dot(const UniTensor &A, const UniTensor &B) {
+    static Scalar Dot_internal(const UniTensor &A, const UniTensor &B) {
       return Contract(A.Dagger(), B).item();
     }
 
     // project v to u
-    static UniTensor _Gram_Schimidt_proj(const UniTensor &v, const UniTensor &u) {
-      auto nu = _Dot(u, v);
-      auto de = _Dot(u, u);
+    static UniTensor Gram_Schmidt_proj_internal(const UniTensor &v, const UniTensor &u) {
+      auto nu = Dot_internal(u, v);
+      auto de = Dot_internal(u, u);
       auto coe = nu / de;
       return coe * u;
     }
 
-    static UniTensor _Gram_Schimidt(const std::vector<UniTensor> &vs) {
+    static UniTensor Gram_Schimidt_internal(const std::vector<UniTensor> &vs) {
       auto u = vs.at(0).clone();
       double low = -1.0, high = 1.0;
       random::uniform_(u, low, high);
       for (auto &v : vs) {
-        u -= _Gram_Schimidt_proj(u, v);
+        u -= Gram_Schmidt_proj_internal(u, v);
       }
       return u;
     }
 
-    static Tensor _resize_mat(const Tensor &src, const cytnx_uint64 r, const cytnx_uint64 c) {
+    static Tensor resize_mat_internal(const Tensor &src, const cytnx_uint64 r,
+                                      const cytnx_uint64 c) {
       const auto min_r = std::min(r, src.shape()[0]);
       const auto min_c = std::min(c, src.shape()[1]);
       // Tensor dst = src[{ac::range(0,min_r),ac::range(0,min_c)}];
@@ -61,9 +62,9 @@ namespace cytnx {
 
     // BiCGSTAB method to solve the linear equation
     // ref: https://en.wikipedia.org/wiki/Biconjugate_gradient_stabilized_method
-    UniTensor _invert_biCGSTAB(LinOp *Hop, const UniTensor &b, const UniTensor &Tin, const int &k,
-                               const double &CvgCrit = 1.0e-12,
-                               const unsigned int &Maxiter = 10000) {
+    static UniTensor invert_biCGSTAB_internal(LinOp *Hop, const UniTensor &b, const UniTensor &Tin,
+                                              const int &k, const double &CvgCrit = 1.0e-12,
+                                              const unsigned int &Maxiter = 10000) {
       // the operation (I + Hop/k) on A
       auto I_plus_A_Op = [&](UniTensor A) {
         return ((Hop->matvec(A)) / k + A).relabels_(b.labels());
@@ -74,7 +75,7 @@ namespace cytnx {
       auto r0 = r;
       auto x = Tin;
       // choose p = (r0_hat, r)
-      auto p = _Dot(r0, r);
+      auto p = Dot_internal(r0, r);
       // choose pv = r
       auto pv = r;
 
@@ -88,21 +89,21 @@ namespace cytnx {
       // as:https://en.wikipedia.org/wiki/Biconjugate_gradient_stabilized_method
       for (int i = 1; i < Maxiter; ++i) {
         auto v = I_plus_A_Op(pv_old);
-        auto a = p_old / _Dot(r0, v);
+        auto a = p_old / Dot_internal(r0, v);
         auto h = (x_old + a * pv_old).relabels_(b.labels());
         auto s = (r_old - a * v).relabels_(b.labels());
-        if (abs(_Dot(s, s)) < CvgCrit) {
+        if (abs(Dot_internal(s, s)) < CvgCrit) {
           x = h;
           break;
         }
         auto t = I_plus_A_Op(s);
-        auto w = _Dot(t, s) / _Dot(t, t);
+        auto w = Dot_internal(t, s) / Dot_internal(t, t);
         x = (h + w * s).relabels_(b.labels());
         r = (s - w * t).relabels_(b.labels());
-        if (abs(_Dot(r, r)) < CvgCrit) {
+        if (abs(Dot_internal(r, r)) < CvgCrit) {
           break;
         }
-        auto p = _Dot(r0, r);
+        auto p = Dot_internal(r0, r);
         auto beta = (p / p_old) * (a / w);
         pv = (r + beta * (pv_old - w * v)).relabels_(b.labels());
 
@@ -116,9 +117,9 @@ namespace cytnx {
     }
 
     // ref:  https://doi.org/10.48550/arXiv.1111.1491
-    void _Lanczos_Exp_Ut_positive(UniTensor &out, LinOp *Hop, const UniTensor &Tin,
-                                  const double &CvgCrit, const unsigned int &Maxiter,
-                                  const bool &verbose) {
+    static void Lanczos_Exp_Ut_internal_positive(UniTensor &out, LinOp *Hop, const UniTensor &Tin,
+                                                 const double &CvgCrit, const unsigned int &Maxiter,
+                                                 const bool &verbose) {
       double delta = CvgCrit;
       int k = static_cast<int>(std::log(1.0 / delta));
       k = k < Maxiter ? k : Maxiter;
@@ -143,13 +144,13 @@ namespace cytnx {
         // Call the procedure Invert_A (v[i], k, eps1). The procedure returns a vector w[i], such
         // that,
         // |(I + A / k )^(−1) v[i] − w[i]| ≤ eps1 |v[i]| .
-        auto w = _invert_biCGSTAB(Hop, v, v, k, eps1);
+        auto w = invert_biCGSTAB_internal(Hop, v, v, k, eps1);
         // auto resi = ((Hop->matvec(w))/k + w).relabels_(v.labels()) - v;
 
         // For j = 0 to i
         for (int j = 0; j <= i; ++j) {
           // Let a[j,i] = <v[j], w[i]>
-          as.at({(cytnx_uint64)j, (cytnx_uint64)i}) = _Dot(Vs.at(j), w);
+          as.at({(cytnx_uint64)j, (cytnx_uint64)i}) = Dot_internal(Vs.at(j), w);
         }
         // Define wp[i] = w[i] - \sum_{j=0}^{j=i} {a[j,i]v[j]}
         auto wp = w;
@@ -157,7 +158,7 @@ namespace cytnx {
           wp -= as.at({(cytnx_uint64)j, (cytnx_uint64)i}) * Vs.at(j);
         }
         // Let a[i+1, i] = |wp[i]|, v[i+1]=wp[i] / a[i+1, i]
-        auto b = std::sqrt(double(_Dot(wp, wp).real()));
+        auto b = std::sqrt(double(Dot_internal(wp, wp).real()));
         if (i < k) {
           as.at({(cytnx_uint64)i + 1, (cytnx_uint64)i}) = b;
           v = wp / b;
@@ -171,7 +172,7 @@ namespace cytnx {
       // Let V_k be the n × (k + 1) matrix whose columns are v[0],...,v[k] respectively.
       UniTensor Vk_ut(Vk);
       Vk_ut.set_rowrank_(1);
-      auto VkDag_ut = Vk_ut.Dagger();
+      auto VkDag_ut = Vk_ut.Dagger();  // left and right indices are exchanged here!
       // Let T_k be the (k + 1) × (k + 1) matrix a[i,j] i,j is {0,...,k} and Tk_hat = 1 / 2
       // (Tk^Dagger  + Tk).
       auto asT = as.permute({1, 0}).Conj().contiguous();
@@ -226,8 +227,9 @@ namespace cytnx {
       out.set_rowrank_(v0.rowrank());
     }
 
-    void _Lanczos_Exp_Ut(UniTensor &out, LinOp *Hop, const UniTensor &T, Scalar tau,
-                         const double &CvgCrit, const unsigned int &Maxiter, const bool &verbose) {
+    static void Lanczos_Exp_Ut_internal(UniTensor &out, LinOp *Hop, const UniTensor &T, Scalar tau,
+                                        const double &CvgCrit, const unsigned int &Maxiter,
+                                        const bool &verbose) {
       const double beta_tol = 1.0e-6;
       std::vector<UniTensor> vs;
       cytnx_uint32 vec_len = Hop->nx();
@@ -237,12 +239,12 @@ namespace cytnx {
       Tensor B_mat;
       // prepare initial tensor and normalize
       auto v = T.clone();
-      auto v_nrm = std::sqrt(double(_Dot(v, v).real()));
+      auto v_nrm = std::sqrt(double(Dot_internal(v, v).real()));
       v = v / v_nrm;
 
       // first iteration
       auto wp = (Hop->matvec(v)).relabels_(v.labels());
-      auto alpha = _Dot(wp, v);
+      auto alpha = Dot_internal(wp, v);
       Hp.at({0, 0}) = alpha;
       auto w = (wp - alpha * v).relabels_(v.labels());
 
@@ -259,7 +261,7 @@ namespace cytnx {
         if (verbose) {
           std::cout << "Lancos iteration:" << i << std::endl;
         }
-        auto beta = std::sqrt(double(_Dot(w, w).real()));
+        auto beta = std::sqrt(double(Dot_internal(w, w).real()));
         v_old = v.clone();
         if (beta > beta_tol) {
           v = (w / beta).relabels_(v.labels());
@@ -269,8 +271,8 @@ namespace cytnx {
             std::cout << "beta too small, pick another vector." << i << std::endl;
           }
           // pick a new vector perpendicular to all vector in Vs
-          v = _Gram_Schimidt(Vs).relabels_(v.labels());
-          auto v_norm = _Dot(v, v);
+          v = Gram_Schimidt_internal(Vs).relabels_(v.labels());
+          auto v_norm = Dot_internal(v, v);
           // if the picked vector also too small, break and construct expH
           if (abs(v_norm) <= beta_tol) {
             if (verbose) {
@@ -285,12 +287,12 @@ namespace cytnx {
         Hp.at({(cytnx_uint64)i, (cytnx_uint64)i - 1}) =
           Hp.at({(cytnx_uint64)i - 1, (cytnx_uint64)i}) = beta;
         wp = (Hop->matvec(v)).relabels_(v.labels());
-        alpha = _Dot(wp, v);
+        alpha = Dot_internal(wp, v);
         Hp.at({(cytnx_uint64)i, (cytnx_uint64)i}) = alpha;
         w = (wp - alpha * v - beta * v_old).relabels_(v.labels());
 
         // Converge check
-        Hp_sub = _resize_mat(Hp, i + 1, i + 1);
+        Hp_sub = resize_mat_internal(Hp, i + 1, i + 1);
         // We use ExpM since H*tau may not be Hermitian if tau is complex.
         B_mat = linalg::ExpM(Hp_sub * tau);
         // Set the error as the element of bottom left of the exp(H_sub*tau)
@@ -311,7 +313,7 @@ namespace cytnx {
       // Let V_k be the n × (k + 1) matrix whose columns are v[0],...,v[k] respectively.
       UniTensor Vk_ut(Vk);
       Vk_ut.set_rowrank_(1);
-      auto VkDag_ut = Vk_ut.Dagger();
+      auto VkDag_ut = Vk_ut.Dagger();  // left and right indices are exchanged here!
       /*
        *    |||
        *  |-----|
@@ -395,8 +397,8 @@ namespace cytnx {
         }
       }
 
-      //_Lanczos_Exp_Ut_positive(out, Hop, v0, _cvgcrit, Maxiter, verbose);
-      _Lanczos_Exp_Ut(out, Hop, v0, tau, _cvgcrit, Maxiter, verbose);
+      // Lanczos_Exp_Ut_internal_positive(out, Hop, v0, _cvgcrit, Maxiter, verbose);
+      Lanczos_Exp_Ut_internal(out, Hop, v0, tau, _cvgcrit, Maxiter, verbose);
 
       return out;
 
