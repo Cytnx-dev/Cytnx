@@ -67,13 +67,6 @@ namespace cytnx {
   #endif
       }
     }
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
-    using namespace std;
-    typedef Accessor ac;
 
     void _svd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_UvT,
@@ -85,17 +78,17 @@ namespace cytnx {
       // if(Tin.is_contiguous()) tmp = Tin.get_block_();
       // else{ tmp = Tin.get_block(); tmp.contiguous_();}
 
-      vector<cytnx_uint64> tmps = tmp.shape();
-      vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+      std::vector<cytnx_uint64> tmps = tmp.shape();
+      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
       tmps.clear();
-      vector<string> oldlabel = Tin.labels();
+      std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
       cytnx_int64 rowdim = 1;
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp = tmp.reshape({rowdim, -1});
 
-      vector<Tensor> outT =
+      std::vector<Tensor> outT =
         cytnx::linalg::Svd_truncate(tmp, keepdim, err, is_UvT, return_err, mindim);
 
       // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
@@ -109,7 +102,7 @@ namespace cytnx {
 
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[0].shape()[0]);
-      Cy_S.Init({newBond, newBond}, {string("_aux_L"), string("_aux_R")}, 1, Type.Double,
+      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
                 Tin.device(),
                 true);  // it is just reference so no hurt to alias ^^
       Cy_S.put_block_(outT[t]);
@@ -122,13 +115,13 @@ namespace cytnx {
                         "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
                         "contained tensor.%s",
                         "\n");
-        vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
+        std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
         shapeU.push_back(-1);
 
         outT[t].reshape_(shapeU);
 
         Cy_U.Init(outT[t], false, Tin.rowrank());
-        vector<string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
+        std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
         labelU.push_back(Cy_S.labels()[0]);
         Cy_U.set_labels(labelU);
         t++;  // U
@@ -138,14 +131,14 @@ namespace cytnx {
         cytnx::UniTensor &Cy_vT = outCyT[t];
 
         // shape
-        vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
+        std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
         shapevT[0] = -1;
         memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
 
         outT[t].reshape_(shapevT);
 
         Cy_vT.Init(outT[t], false, 1);
-        vector<string> labelvT(shapevT.size());
+        std::vector<std::string> labelvT(shapevT.size());
         labelvT[0] = Cy_S.labels()[1];
         std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
         Cy_vT.set_labels(labelvT);
@@ -634,7 +627,7 @@ namespace cytnx {
           min_blockdim.size() != 1,
           "[ERROR][Svd_truncate] min_blockdim must have one element for dense UniTensor%s", "\n");
         _svd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_UvT, return_err,
-                               max(mindim, min_blockdim[0]));
+                               std::max(mindim, min_blockdim[0]));
 
       } else if ((Tin.uten_type() == UTenType.Block) ||
                  (Tin.uten_type() == UTenType.BlockFermionic)) {
