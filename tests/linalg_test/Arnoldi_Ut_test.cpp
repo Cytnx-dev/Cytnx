@@ -23,7 +23,7 @@ namespace {
          const unsigned int& dtype = Type.Double, const int& device = Device.cpu);
     UniTensor matvec(const UniTensor& l) override {
       auto tmp = Contracts({A, l, B}, "", true);
-      tmp.relabels_(l.labels()).set_rowrank(l.rowrank());
+      tmp.relabel_(l.labels()).set_rowrank(l.rowrank());
       return tmp;
     }
 
@@ -48,15 +48,15 @@ namespace {
     std::vector<Bond> bonds = {Bond(D), Bond(d), Bond(D)};
     A = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("A")
-          .relabels_({"al", "phys", "ar"})
+          .relabel_({"al", "phys", "ar"})
           .set_rowrank(2);
     B = UniTensor(bonds, {}, -1, in_dtype, in_device)
           .set_name("B")
-          .relabels_({"bl", "phys", "br"})
+          .relabel_({"bl", "phys", "br"})
           .set_rowrank(2);
     T_init = UniTensor({Bond(D), Bond(D)}, {}, -1, in_dtype, in_device)
                .set_name("l")
-               .relabels_({"al", "bl"})
+               .relabel_({"al", "bl"})
                .set_rowrank(1);
     if (Type.is_float(this->dtype())) {
       double low = -1.0, high = 1.0;

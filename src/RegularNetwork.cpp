@@ -964,7 +964,7 @@ namespace cytnx {
 
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
         this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
         this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:
@@ -1083,7 +1083,7 @@ namespace cytnx {
     #else
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
         this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
         this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:

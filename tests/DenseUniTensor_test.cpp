@@ -541,7 +541,7 @@ TEST_F(DenseUniTensorTest, to_) {
 }
 
 TEST_F(DenseUniTensorTest, relabels) {
-  auto ut = utzero3456.relabels({"a", "b", "cd", "d"});
+  auto ut = utzero3456.relabel({"a", "b", "cd", "d"});
   EXPECT_EQ(utzero3456.labels()[0], "0");
   EXPECT_EQ(utzero3456.labels()[1], "1");
   EXPECT_EQ(utzero3456.labels()[2], "2");
@@ -550,17 +550,17 @@ TEST_F(DenseUniTensorTest, relabels) {
   EXPECT_EQ(ut.labels()[1], "b");
   EXPECT_EQ(ut.labels()[2], "cd");
   EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabels({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabels({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+  ut = utzero3456.relabel({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabel({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabel({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabel({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabel({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabel({"a", "b", "c", "d", "e"}), std::logic_error);
 }
 
 TEST_F(DenseUniTensorTest, relabels_) {
-  auto ut = utzero3456.relabels_({"a", "b", "cd", "d"});
+  auto ut = utzero3456.relabel_({"a", "b", "cd", "d"});
   EXPECT_EQ(utzero3456.labels()[0], "a");
   EXPECT_EQ(utzero3456.labels()[1], "b");
   EXPECT_EQ(utzero3456.labels()[2], "cd");
@@ -569,13 +569,13 @@ TEST_F(DenseUniTensorTest, relabels_) {
   EXPECT_EQ(ut.labels()[1], "b");
   EXPECT_EQ(ut.labels()[2], "cd");
   EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabels_({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabels_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+  ut = utzero3456.relabel_({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabel_({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabel_({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabel_({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabel_({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabel_({"a", "b", "c", "d", "e"}), std::logic_error);
 }
 
 TEST_F(DenseUniTensorTest, relabel) {
