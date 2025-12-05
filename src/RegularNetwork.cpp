@@ -1025,7 +1025,7 @@ namespace cytnx {
 
       // //5. reset back the original labels:
       // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-      //     this->tensors[i].set_labels(old_labels[i]);
+      //     this->tensors[i].relabel_(old_labels[i]);
       // }
 
       // 6. permute accroding to pre-set labels:

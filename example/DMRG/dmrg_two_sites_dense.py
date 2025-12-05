@@ -18,7 +18,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
             lbl = v.labels()
             self.anet.PutUniTensor("psi",v)
             out = self.anet.Launch()
-            out.relabels_(lbl)
+            out.relabel_(lbl)
             return out
 
     def optimize_psi(psi, functArgs, maxit=2, krydim=4):
@@ -61,7 +61,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
     lbls = [] # List for storing the MPS labels
     A = [None for i in range(Nsites)]
     A[0] = cytnx.UniTensor(cytnx.random.normal([1, d, min(chi, d)], 0., 1.), rowrank = 2)
-    A[0].relabels_(["0","1","2"])
+    A[0].relabel_(["0","1","2"])
     lbls.append(["0","1","2"]) # store the labels for later convinience.
 
     for k in range(1,Nsites):
@@ -70,7 +70,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
         A[k] = cytnx.UniTensor(cytnx.random.normal([dim1, dim2, dim3],0.,1.), rowrank = 2)
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
-        A[k].relabels_(lbl)
+        A[k].relabel_(lbl)
         lbls.append(lbl) # store the labels for later convinience.
 
     LR = [None for i in range(Nsites+1)]
@@ -96,11 +96,11 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
         LR[p+1] = anet.Launch()
 
         # Recover the original MPS labels
-        A[p].relabels_(lbls[p])
-        A[p+1].relabels_(lbls[p+1])
+        A[p].relabel_(lbls[p])
+        A[p+1].relabel_(lbls[p+1])
 
     _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-    A[-1].relabels_(lbls[-1]) # Recover the original MPS labels
+    A[-1].relabel_(lbls[-1]) # Recover the original MPS labels
 
     Ekeep = []
     for k in range(1, numsweeps+1):
@@ -116,12 +116,12 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p+1].relabels_(lbls[p+1]); # set the label back to be consistent
+            A[p+1].relabel_(lbls[p+1]); # set the label back to be consistent
 
             s = s/s.Norm().item() # normalize s
 
             A[p] = cytnx.Contract(A[p],s) # absorb s into next neighbor
-            A[p].relabels_(lbls[p]); # set the label back to be consistent
+            A[p].relabel_(lbls[p]); # set the label back to be consistent
 
             # update LR from right to left:
             anet = cytnx.Network()
@@ -138,7 +138,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
 
         A[0].set_rowrank_(1)
         _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-        A[0].relabels_(lbls[0]); #set the label back to be consistent
+        A[0].relabel_(lbls[0]); #set the label back to be consistent
 
         for p in range(Nsites-1):
             dim_l = A[p].shape()[0]
@@ -151,12 +151,12 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].relabels_(lbls[p]); #set the label back to be consistent
+            A[p].relabel_(lbls[p]); #set the label back to be consistent
 
             s = s/s.Norm().item() # normalize s
 
             A[p+1] = cytnx.Contract(s,A[p+1]) ## absorb s into next neighbor.
-            A[p+1].relabels_(lbls[p+1]); #set the label back to be consistent
+            A[p+1].relabel_(lbls[p+1]); #set the label back to be consistent
 
             # update LR from left to right:
             anet = cytnx.Network()
@@ -174,7 +174,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
 
         A[-1].set_rowrank_(2)
         _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-        A[-1].relabels_(lbls[-1]); #set the label back to be consistent
+        A[-1].relabel_(lbls[-1]); #set the label back to be consistent
     return Ekeep
 
 if __name__ == '__main__':

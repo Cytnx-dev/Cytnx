@@ -57,7 +57,7 @@ namespace cytnx {
           Scalar c = Contract(r.Dagger(), v).item();
           out += this->weight * c * r;
         }
-        out.set_labels(lbls);
+        out.relabel_(lbls);
 
         return out.contiguous();
       }
@@ -182,7 +182,7 @@ namespace cytnx {
         auto Lenv = this->LR[p].relabel({"-2", "-1", "-3"});
         auto tA = this->mps.data()[p].relabel({"-1", "-4", "1"});
         auto tAc = this->mps.data()[p].Conj();
-        tAc.set_labels({"-3", "-5", "2"});
+        tAc.relabel_({"-3", "-5", "2"});
         auto M = this->mpo.get_op(p).relabel({"-2", "0", "-4", "-5"});
         this->LR[p + 1] = Network::Contract({Lenv, tA, tAc, M}, ";0,1,2").Launch(true);
       }
@@ -303,7 +303,7 @@ namespace cytnx {
         psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p + 1),
                        dim_r);  // convert psi back to 4-leg form
         psi = UniTensor(psi_T, false, 2);
-        psi.set_labels(lbl);
+        psi.relabel_(lbl);
         // self.Ekeep.append(Entemp);
 
         auto outU = linalg::Svd_truncate(psi, new_dim);
@@ -313,7 +313,7 @@ namespace cytnx {
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
-        s.set_labels(slabel);
+        s.relabel_(slabel);
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
         this->mps.S_loc() = p;
@@ -419,7 +419,7 @@ namespace cytnx {
         psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p + 1),
                        dim_r);  // convert psi back to 4-leg form
         psi = UniTensor(psi_T, false, 2);
-        psi.set_labels(lbl);
+        psi.relabel_(lbl);
         // self.Ekeep.append(Entemp);
 
         auto outU = linalg::Svd_truncate(psi, new_dim);
@@ -430,7 +430,7 @@ namespace cytnx {
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
-        s.set_labels(slabel);
+        s.relabel_(slabel);
 
         this->mps.data()[p + 1] =
           Contract(s, this->mps.data()[p + 1]);  // absorb s into next neighbor.
@@ -545,7 +545,7 @@ namespace cytnx {
         // psi.print_diagram();
         // exit(1);
         // psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p+1), dim_r); //convert
-        // psi back to 4-leg form psi = UniTensor(psi_T,2); psi.set_labels(lbl);
+        // psi back to 4-leg form psi = UniTensor(psi_T,2); psi.relabel_(lbl);
 
         // self.Ekeep.append(Entemp);
 
@@ -556,7 +556,7 @@ namespace cytnx {
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
-        s.set_labels(slabel);
+        s.relabel_(slabel);
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
         this->mps.S_loc() = p;
@@ -660,7 +660,7 @@ namespace cytnx {
         psi = out[1];
         Entemp = out[0].item();
         // psi_T.reshape_(dim_l,this->mps.phys_dim(p),this->mps.phys_dim(p+1),dim_r);// convert psi
-        // back to 4-leg form psi = UniTensor(psi_T,2); psi.set_labels(lbl);
+        // back to 4-leg form psi = UniTensor(psi_T,2); psi.relabel_(lbl);
         // self.Ekeep.append(Entemp);
 
         auto outU = linalg::Svd_truncate(psi, new_dim);
@@ -671,7 +671,7 @@ namespace cytnx {
 
         auto slabel = s.labels();
         s = s / s.get_block_().Norm().item();
-        s.set_labels(slabel);
+        s.relabel_(slabel);
 
         this->mps.data()[p + 1] =
           Contract(s, this->mps.data()[p + 1]);  // absorb s into next neighbor.

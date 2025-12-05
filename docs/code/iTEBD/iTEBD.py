@@ -79,10 +79,10 @@ lb.print_diagram()
 Elast = 0
 for i in range(10000):
 
-    A.set_labels([-1,0,-2])
-    B.set_labels([-3,1,-4])
-    la.set_labels([-2,-3])
-    lb.set_labels([-4,-5])
+    A.relabel_([-1,0,-2])
+    B.relabel_([-3,1,-4])
+    la.relabel_([-2,-3])
+    lb.relabel_([-4,-5])
 
     ## contract all
     X = cyx.Contract(cyx.Contract(A,la),cyx.Contract(B,lb))
@@ -103,7 +103,7 @@ for i in range(10000):
     # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
     XNorm = cyx.Contract(X,Xt).item()
     XH = cyx.Contract(X,H)
-    XH.set_labels([-4,-5,0,1])
+    XH.relabel_([-4,-5,0,1])
     XHX = cyx.Contract(Xt,XH).item() ## rank-0
     E = XHX/XNorm
 
@@ -141,8 +141,8 @@ for i in range(10000):
     #       --lb-A'-la-B'-lb--
     #
     # again, but A' and B' are updated
-    A.set_labels([-1,0,-2]); A.set_rowrank(1);
-    B.set_labels([-3,1,-4]); B.set_rowrank(1);
+    A.relabel_([-1,0,-2]); A.set_rowrank(1);
+    B.relabel_([-3,1,-4]); B.set_rowrank(1);
 
     #A.print_diagram()
     #B.print_diagram()

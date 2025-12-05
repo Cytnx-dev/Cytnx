@@ -49,7 +49,7 @@ class MyOp2 : public LinOp {
     auto H = UniTensor(T, 1);
 
     auto out = Contract(H, in);
-    out.set_labels(in.labels());
+    out.relabel_(in.labels());
 
     return out;
   }
