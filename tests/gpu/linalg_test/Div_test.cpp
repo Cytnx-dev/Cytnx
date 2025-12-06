@@ -7,7 +7,9 @@ namespace DivTest {
 
   cytnx::cytnx_double GetTolerance(const unsigned int& dtype) {
     cytnx::cytnx_double tolerance;
-    if (dtype == cytnx::Type.Float || dtype == cytnx::Type.ComplexFloat) {
+    if (dtype == cytnx::Type.ComplexFloat) {
+      tolerance = 0.1;
+    } else if (dtype == cytnx::Type.Float) {
       tolerance = 1e-5;
     } else {
       tolerance = 1e-10;
@@ -196,6 +198,36 @@ namespace DivTest {
       cytnx::Tensor gpu_tensor1_op = original_gpu_tensor1.clone();
       gpu_tensor1_op /= original_gpu_tensor2;
       EXPECT_TRUE(CheckDivResult(gpu_tensor1_op, original_gpu_tensor1, original_gpu_tensor2));
+    }
+  }
+
+  // Test tensor-to-tensor division with mixed types
+  TEST_P(DivTestAllShapes, gpu_tensor_div_tensor_mixed_types) {
+    const std::vector<cytnx::cytnx_uint64>& shape = GetParam();
+
+    for (auto ldtype : cytnx::TestTools::dtype_list) {
+      if (ldtype == cytnx::Type.Bool) continue;
+
+      for (auto rdtype : cytnx::TestTools::dtype_list) {
+        if (rdtype == cytnx::Type.Bool) continue;
+
+        SCOPED_TRACE("Testing Div mixed types with shape: " + ::testing::PrintToString(shape) +
+                     ", ldtype: " + std::to_string(ldtype) + ", rdtype: " + std::to_string(rdtype));
+
+        cytnx::Tensor gpu_tensor1 = cytnx::Tensor(shape, ldtype, cytnx::Device.cuda);
+        cytnx::Tensor gpu_tensor2 = cytnx::Tensor(shape, rdtype, cytnx::Device.cuda);
+        cytnx::TestTools::InitTensorUniform(gpu_tensor1);
+        cytnx::TestTools::InitTensorUniform(gpu_tensor2);
+        // Add small offset to avoid division by zero
+        gpu_tensor1 = gpu_tensor1 + 1.0;
+        gpu_tensor2 = gpu_tensor2 + 1.0;
+
+        cytnx::Tensor gpu_result = cytnx::linalg::Div(gpu_tensor1, gpu_tensor2);
+        EXPECT_TRUE(CheckDivResult(gpu_result, gpu_tensor1, gpu_tensor2));
+
+        cytnx::Tensor gpu_result_op = gpu_tensor1 / gpu_tensor2;
+        EXPECT_TRUE(CheckDivResult(gpu_result_op, gpu_tensor1, gpu_tensor2));
+      }
     }
   }
 

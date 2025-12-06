@@ -1550,6 +1550,12 @@ namespace cytnx {
       else if (type == 3)
         cytnx::linalg_internal::cuDiv_internal_i64ti16(out, Lin, Rin, len, shape, invmapper_L,
                                                        invmapper_R);
+      else if (type == 4)
+        cytnx::linalg_internal::cuCpr_internal_i64ti16(out, Lin, Rin, len, shape, invmapper_L,
+                                                       invmapper_R);
+      else
+        cytnx::linalg_internal::cuMod_internal_i64ti16(out, Lin, Rin, len, shape, invmapper_L,
+                                                       invmapper_R);
     }
     void cuArithmetic_internal_i64tu16(
       boost::intrusive_ptr<Storage_base> &out, boost::intrusive_ptr<Storage_base> &Lin,

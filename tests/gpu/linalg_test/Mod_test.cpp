@@ -195,6 +195,36 @@ namespace ModTest {
     }
   }
 
+  // Test tensor-to-tensor modulo with mixed types
+  TEST_P(ModTestAllShapes, gpu_tensor_mod_tensor_mixed_types) {
+    const std::vector<cytnx::cytnx_uint64>& shape = GetParam();
+    auto supported_types = GetModSupportedTypes();
+
+    for (auto ldtype : supported_types) {
+      if (ldtype == cytnx::Type.Bool) continue;
+
+      for (auto rdtype : supported_types) {
+        if (rdtype == cytnx::Type.Bool) continue;
+
+        SCOPED_TRACE("Testing Mod mixed types with shape: " + ::testing::PrintToString(shape) +
+                     ", ldtype: " + std::to_string(ldtype) + ", rdtype: " + std::to_string(rdtype));
+
+        cytnx::Tensor gpu_tensor1 = cytnx::Tensor(shape, ldtype, cytnx::Device.cuda);
+        cytnx::Tensor gpu_tensor2 = cytnx::Tensor(shape, rdtype, cytnx::Device.cuda);
+        cytnx::TestTools::InitTensorUniform(gpu_tensor1);
+        cytnx::TestTools::InitTensorUniform(gpu_tensor2);
+        // Ensure divisor is not zero by adding a constant
+        gpu_tensor2 = gpu_tensor2 + 3.0;
+
+        cytnx::Tensor gpu_result = cytnx::linalg::Mod(gpu_tensor1, gpu_tensor2);
+        EXPECT_TRUE(CheckModResult(gpu_result, gpu_tensor1, gpu_tensor2));
+
+        cytnx::Tensor gpu_result_op = gpu_tensor1 % gpu_tensor2;
+        EXPECT_TRUE(CheckModResult(gpu_result_op, gpu_tensor1, gpu_tensor2));
+      }
+    }
+  }
+
   INSTANTIATE_TEST_SUITE_P(ModTests, ModTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
 }  // namespace ModTest

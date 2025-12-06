@@ -128,6 +128,33 @@ namespace SubTest {
     }
   }
 
+  // Test tensor-to-tensor subtraction with mixed types
+  TEST_P(SubTestAllShapes, gpu_tensor_sub_tensor_mixed_types) {
+    const std::vector<cytnx::cytnx_uint64>& shape = GetParam();
+
+    for (auto ldtype : cytnx::TestTools::dtype_list) {
+      if (ldtype == cytnx::Type.Bool) continue;
+
+      for (auto rdtype : cytnx::TestTools::dtype_list) {
+        if (rdtype == cytnx::Type.Bool) continue;
+
+        SCOPED_TRACE("Testing Sub mixed types with shape: " + ::testing::PrintToString(shape) +
+                     ", ldtype: " + std::to_string(ldtype) + ", rdtype: " + std::to_string(rdtype));
+
+        cytnx::Tensor gpu_tensor1 = cytnx::Tensor(shape, ldtype).to(cytnx::Device.cuda);
+        cytnx::Tensor gpu_tensor2 = cytnx::Tensor(shape, rdtype).to(cytnx::Device.cuda);
+        cytnx::TestTools::InitTensorUniform(gpu_tensor1);
+        cytnx::TestTools::InitTensorUniform(gpu_tensor2);
+
+        cytnx::Tensor gpu_result = cytnx::linalg::Sub(gpu_tensor1, gpu_tensor2);
+        EXPECT_TRUE(CheckSubResult(gpu_result, gpu_tensor1, gpu_tensor2));
+
+        cytnx::Tensor gpu_result_op = gpu_tensor1 - gpu_tensor2;
+        EXPECT_TRUE(CheckSubResult(gpu_result_op, gpu_tensor1, gpu_tensor2));
+      }
+    }
+  }
+
   INSTANTIATE_TEST_SUITE_P(SubTests, SubTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
   ::testing::AssertionResult CheckSubResult(const cytnx::Tensor& gpu_result,
