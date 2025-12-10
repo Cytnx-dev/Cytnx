@@ -677,6 +677,7 @@ namespace cytnx {
       } else {
         cytnx_error_msg(
           true, "[ERROR] Gesvd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",
+          "\n");
       }
       return outCyT;
 

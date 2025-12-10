@@ -1,3 +1,5 @@
+#include "linalg.hpp"
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -5,8 +7,6 @@
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "linalg.hpp"
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -77,16 +77,10 @@ namespace cytnx {
       }
     }
 
-  }  // namespace linalg
-
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
-
     // actual impls:
-    void _Gesvd_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                         const bool &is_U, const bool &is_vT) {
+    static void Gesvd_Dense_UT_internal(std::vector<cytnx::UniTensor> &outCyT,
+                                        const cytnx::UniTensor &Tin, const bool &is_U,
+                                        const bool &is_vT) {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
@@ -100,17 +94,17 @@ namespace cytnx {
         tmp.contiguous_();
       }
 
-      vector<cytnx_uint64> tmps = tmp.shape();
-      vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+      std::vector<cytnx_uint64> tmps = tmp.shape();
+      std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
       tmps.clear();
-      vector<string> oldlabel = Tin.labels();
+      std::vector<std::string> oldlabel = Tin.labels();
 
       // collapse as Matrix:
       cytnx_int64 rowdim = 1;
       for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
       tmp.reshape_({rowdim, -1});
 
-      vector<Tensor> outT = cytnx::linalg::Gesvd(tmp, is_U, is_vT);
+      std::vector<Tensor> outT = cytnx::linalg::Gesvd(tmp, is_U, is_vT);
       if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
       int t = 0;
@@ -123,35 +117,35 @@ namespace cytnx {
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
                 Tin.device(), true);  // it is just reference so no hurt to alias ^^
 
-      // cout << "[AFTER INIT]" << endl;
+      // std::cout << "[AFTER INIT]" << std::endl;
       Cy_S.put_block_(outT[t]);
       t++;
 
       if (is_U) {
         cytnx::UniTensor &Cy_U = outCyT[t];
         cytnx_error_msg(Tin.rowrank() > oldshape.size(),
-                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+                        "[ERROR] The rowrank of the input UniTensor is larger than the rank of the "
                         "contained tensor.%s",
                         "\n");
-        vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
+        std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
         shapeU.push_back(-1);
         outT[t].reshape_(shapeU);
         Cy_U.Init(outT[t], false, Tin.rowrank());
-        vector<string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
+        std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
         labelU.push_back(Cy_S.labels()[0]);
         Cy_U.set_labels(labelU);
         t++;  // U
       }
       if (is_vT) {
         cytnx::UniTensor &Cy_vT = outCyT[t];
-        vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
+        std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
         shapevT[0] = -1;
         memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
 
         outT[t].reshape_(shapevT);
         Cy_vT.Init(outT[t], false, 1);
-        // cout << shapevT.size() << endl;
-        vector<string> labelvT(shapevT.size());
+        // std::cout << shapevT.size() << std::endl;
+        std::vector<std::string> labelvT(shapevT.size());
         labelvT[0] = Cy_S.labels()[1];
         // memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() -
         // 1));
@@ -185,10 +179,11 @@ namespace cytnx {
         }
 
       }  // if tag
-    }
+    }  // Gesvd_Dense_UT_internal
 
-    void _Gesvd_Block_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                         const bool &is_U, const bool &is_vT) {
+    static void Gesvd_Block_UT_internal(std::vector<cytnx::UniTensor> &outCyT,
+                                        const cytnx::UniTensor &Tin, const bool &is_U,
+                                        const bool &is_vT) {
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
       // 1) getting the combineBond L and combineBond R for qnum list without grouping:
@@ -245,9 +240,9 @@ namespace cytnx {
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
-      // ->a initialize an empty shell of UniTensor!
+      // ->a initialize an empty shell of UniTensors!
       vec2d<cytnx_int64> aux_qnums;  // for sharing bond
-      std::vector<cytnx_uint64> aux_degs;  // forsharing bond
+      std::vector<cytnx_uint64> aux_degs;  // for sharing bond
       std::vector<Tensor> S_blocks;
 
       vec2d<cytnx_uint64> U_itoi;  // for U
@@ -259,7 +254,7 @@ namespace cytnx {
       int tr;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // cout << x.second.size() << "-------" << endl;
+        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
           // std::cout << new_itoi[x.second[i]] << std::endl;
@@ -350,13 +345,13 @@ namespace cytnx {
 
           tr++;
         }  // is_vT
-      }
+      }  // for each qcharge
 
       // process S:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
       BlockUniTensor *S_ptr = new BlockUniTensor();
       S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                  Device.cpu,  // this two will be overwrite later, so doesnt matter.
+                  Device.cpu,  // these two will be overwritten later, so doesnt matter.
                   true,  // is_diag!
                   true);  // no_alloc!
       S_ptr->_blocks = S_blocks;
@@ -402,11 +397,11 @@ namespace cytnx {
         outCyT.push_back(vT);
       }
 
-    }  // _Gesvd_Block_UT
+    }  // Gesvd_Block_UT_internal
 
-    void _Gesvd_BlockFermionic_UT(std::vector<cytnx::UniTensor> &outCyT,
-                                  const cytnx::UniTensor &Tin, const bool &is_U,
-                                  const bool &is_vT) {
+    static void Gesvd_BlockFermionic_UT_internal(std::vector<cytnx::UniTensor> &outCyT,
+                                                 const cytnx::UniTensor &Tin, const bool &is_U,
+                                                 const bool &is_vT) {
       //[8 Oct 2024] This is a copy from BlockUniTensor; signflips included
       // outCyT must be empty and Tin must be checked with proper rowrank!
 
@@ -479,7 +474,7 @@ namespace cytnx {
       int tr;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // cout << x.second.size() << "-------" << endl;
+        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
           // std::cout << new_itoi[x.second[i]] << std::endl;
@@ -583,7 +578,7 @@ namespace cytnx {
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
       BlockFermionicUniTensor *S_ptr = new BlockFermionicUniTensor();
       S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                  Device.cpu,  // this two will be overwrite later, so doesnt matter.
+                  Device.cpu,  // these two will be overwritten later, so doesnt matter.
                   true,  // is_diag!
                   true);  // no_alloc!
       S_ptr->_blocks = S_blocks;
@@ -631,7 +626,7 @@ namespace cytnx {
         outCyT.push_back(vT);
       }
 
-    }  // _Gesvd_BlockFermionic_UT
+    }  // Gesvd_BlockFermionic_UT_internal
 
     std::vector<cytnx::UniTensor> Gesvd(const cytnx::UniTensor &Tin, const bool &is_U,
                                         const bool &is_vT) {
@@ -642,23 +637,23 @@ namespace cytnx {
 
       cytnx_error_msg(Tin.is_diag(),
                       "[Gesvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
+                      "supported. Use other manipulations.%s",
                       "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _Gesvd_Dense_UT(outCyT, Tin, is_U, is_vT);
+        Gesvd_Dense_UT_internal(outCyT, Tin, is_U, is_vT);
 
       } else if (Tin.uten_type() == UTenType.Block) {
-        _Gesvd_Block_UT(outCyT, Tin, is_U, is_vT);
+        Gesvd_Block_UT_internal(outCyT, Tin, is_U, is_vT);
 
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        _Gesvd_BlockFermionic_UT(outCyT, Tin, is_U, is_vT);
+        Gesvd_BlockFermionic_UT_internal(outCyT, Tin, is_U, is_vT);
       } else {
         cytnx_error_msg(
           true, "[ERROR] Gesvd only supports Dense/Block/BlockFermionic UniTensors.%s", "\n");
 
-      }  // is block form ?
+      }  // ut type
 
       return outCyT;
 

@@ -143,7 +143,7 @@ namespace cytnx {
       if (is_U) {
         cytnx::UniTensor &Cy_U = outCyT[t];
         cytnx_error_msg(Tin.rowrank() > oldshape.size(),
-                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+                        "[ERROR] The rowrank of the input UniTensor is larger than the rank of the "
                         "contained tensor.%s",
                         "\n");
         std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());

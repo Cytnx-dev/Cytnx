@@ -1,11 +1,13 @@
+#include "linalg.hpp"
+
+#include <iostream>
 #include <string>
 #include <vector>
 
-#include "Accessor.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "linalg.hpp"
+#include "Accessor.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -135,11 +137,13 @@ namespace cytnx {
       }
     }  // Rsvd_truncate(Tensor)
 
-    void _rsvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                 cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
-                                 unsigned int return_err, cytnx_uint64 mindim,
-                                 cytnx_uint64 oversampling_summand, double oversampling_factor,
-                                 cytnx_uint64 power_iteration, unsigned int seed) {
+    static void Rsvd_truncate_Dense_UT_internal(std::vector<UniTensor> &outCyT,
+                                                const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                                double err, bool is_U, bool is_vT,
+                                                unsigned int return_err, cytnx_uint64 mindim,
+                                                cytnx_uint64 oversampling_summand,
+                                                double oversampling_factor,
+                                                cytnx_uint64 power_iteration, unsigned int seed) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -180,7 +184,7 @@ namespace cytnx {
         cytnx::UniTensor &Cy_U = outCyT[t];
         // shape
         cytnx_error_msg(Tin.rowrank() > oldshape.size(),
-                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+                        "[ERROR] The rowrank of the input UniTensor is larger than the rank of the "
                         "contained tensor.%s",
                         "\n");
         std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
@@ -241,7 +245,7 @@ namespace cytnx {
       }  // if tag
 
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
-    };  // _rsvd_truncate_Dense_UT
+    };  // Rsvd_truncate_Dense_UT_internal
 
     std::vector<cytnx::UniTensor> Rsvd_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
                                                 double err, bool is_U, bool is_vT,
@@ -268,14 +272,14 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _rsvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
-                                oversampling_summand, oversampling_factor, power_iteration, seed);
+        Rsvd_truncate_Dense_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+                                        oversampling_summand, oversampling_factor, power_iteration,
+                                        seed);
         // } else if (Tin.uten_type() == UTenType.Block) {
-        //   _rsvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT,
+        //   Rsvd_truncate_Block_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT,
         //   return_err, mindim);
       } else {
-        cytnx_error_msg(true, "[ERROR][Rsvd_truncate] only Dense UniTensors are supported.%s",
-                        "\n");
+        cytnx_error_msg(true, "[ERROR] Rsvd_truncate only supports Dense UniTensors.%s", "\n");
       }
       return outCyT;
 
