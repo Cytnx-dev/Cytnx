@@ -18,8 +18,15 @@ To save a Storage to file, simply call **Storage.Save(filepath)**.
     :language: c++
     :linenos:
 
-This will save Storage *A* to the current directory as **T1.cyst**, with extension *.cyst*
+This will save Storage *A* to the current directory as **S1.cyst**.
 
+.. Tip::
+
+    The common file extension for a Storage is *.cyst*.
+
+.. warning::
+
+    The file extension should be explicitly added. The previous behavior of attaching the extension *.cyst* automatically will be deprecated.
 
 Load a Storage
 ******************

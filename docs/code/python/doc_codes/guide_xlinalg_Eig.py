@@ -11,7 +11,7 @@ uD.relabel_(["a","b"]).set_name("eigenvalues")
 uV_inv = cytnx.linalg.InvM(uV).relabel_(["b","out"]) \
                      .set_name("inverted eigenvectors")
 # Compare uT with Uv * uD * uV_inv
-uT_new = cytnx.Contracts([uV,uD,uV_inv]) \
+uT_new = cytnx.Contract([uV,uD,uV_inv]) \
               .permute(uT.labels()) \
               .set_name("reconstruction from eigenvalues")
 diff = uT_new - uT

@@ -1,7 +1,7 @@
 Changing labels
 ------------------
 
-We can set and change the labels of the Bonds in a UniTensor as desired. This is particularly helpful for contractions with *cytnx.Contract()* and *cytnx.Contracts()*. As will be explained in :ref:`Contract(s)`, these functions contract bonds with the same name on different UniTensors. Therefore, we might need to change the labels for some bond(s) to initiate the correct tensor contraction.
+We can set and change the labels of the Bonds in a UniTensor as desired. This is particularly helpful for contractions with *cytnx.Contract()*. As will be explained in :ref:`Contract`, these functions contract bonds with the same name on different UniTensors. Therefore, we might need to change the labels for some bond(s) to initiate the correct tensor contraction.
 
 To change the label associated to a certain leg of a UniTensor, one can use:
 
@@ -59,7 +59,7 @@ Output >>
 Creating UniTensors with different labels that share the same data
 *******************************************************************
 
-In some scenarios, especially in contractions with *cytnx.Contract()* and *cytnx.Contracts()*, we want to create a UniTensor with changed labels. However, we might not want to modify the original tensor. Creating a copy of the tensor data is also not desired, since it would double the memory usage. In such a case one can use the function **relabel** without underscore. This returns a new UniTensor with different meta (in this case  only the labels are changed), but the actual memory block(s) are still referring to the old ones. The arguments of **relabel** are similar to **relabel_**, see above. For example:
+In some scenarios, especially in contractions with *cytnx.Contract()*, we want to create a UniTensor with changed labels. However, we might not want to modify the original tensor. Creating a copy of the tensor data is also not desired, since it would double the memory usage. In such a case one can use the function **relabel** without underscore. This returns a new UniTensor with different meta (in this case  only the labels are changed), but the actual memory block(s) are still referring to the old ones. The arguments of **relabel** are similar to **relabel_**, see above. For example:
 
 * In Python:
 
