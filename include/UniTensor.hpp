@@ -257,9 +257,13 @@ namespace cytnx {
                                      const cytnx_int64 &rowrank = -1);
     virtual void permute_nosignflip_(const std::vector<std::string> &mapper,
                                      const cytnx_int64 &rowrank = -1);
-
     // virtual void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank =
     // -1);
+
+    virtual void twist_(const cytnx_int64 &idx);
+    virtual void twist_(const std::string label);
+    virtual void fermion_twists_();
+
     virtual boost::intrusive_ptr<UniTensor_base> contiguous_();
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual boost::intrusive_ptr<UniTensor_base> apply_();
@@ -552,6 +556,20 @@ namespace cytnx {
      */
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+
+    void twist_(const cytnx_int64 &idx) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+    void twist_(const std::string label) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+
+    void fermion_twists_() override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
 
     boost::intrusive_ptr<UniTensor_base> relabel(const std::vector<std::string> &new_labels);
     boost::intrusive_ptr<UniTensor_base> relabels(const std::vector<std::string> &new_labels);
@@ -1381,6 +1399,19 @@ namespace cytnx {
     void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
     void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
 
+    void twist_(const cytnx_int64 &idx) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+    void fermion_twists_() override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+    void twist_(const std::string label) override {
+      // do nothing for bosonic UniTensor
+      return;
+    }
+
     boost::intrusive_ptr<UniTensor_base> contiguous_() {
       for (unsigned int b = 0; b < this->_blocks.size(); b++) this->_blocks[b].contiguous_();
       return boost::intrusive_ptr<UniTensor_base>(this);
@@ -2136,17 +2167,21 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> permute(const std::vector<std::string> &mapper,
                                                  const cytnx_int64 &rowrank = -1);
 
-    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1);
-    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1);
+    void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) override;
+    void permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) override;
 
-    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<cytnx_int64> &mapper,
-                                                            const cytnx_int64 &rowrank = -1);
-    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(const std::vector<std::string> &mapper,
-                                                            const cytnx_int64 &rowrank = -1);
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) override;
+    boost::intrusive_ptr<UniTensor_base> permute_nosignflip(
+      const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1) override;
     void permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
-                             const cytnx_int64 &rowrank = -1);
+                             const cytnx_int64 &rowrank = -1) override;
     void permute_nosignflip_(const std::vector<std::string> &mapper,
-                             const cytnx_int64 &rowrank = -1);
+                             const cytnx_int64 &rowrank = -1) override;
+
+    void twist_(const cytnx_int64 &idx) override;
+    void twist_(const std::string label) override;
+    void fermion_twists_() override;
 
     // Helper function; implements the sign flips when permuting indices
     std::vector<bool> _swapsigns_(const std::vector<cytnx_int64> &mapper) const;
@@ -3128,7 +3163,7 @@ namespace cytnx {
      * @details Length is the number of blocks in the UniTensor. If the return is true, the sign of
      * the elements of the corresponding block needs to be flipped.
      * @warning This is an inline version which returns a reference. Changes to the reference affect
-     * the tensor!
+     * the UniTensor!
      * @return std::vector<bool> &
      */
     std::vector<bool> &signflip_() { return this->_impl->signflip_(); }
@@ -3521,7 +3556,7 @@ namespace cytnx {
     }
 
     /**
-    @brief Return a new UniTensor that cast to different data type.
+    @brief Return a new UniTensor whose elements are casted to a different data type.
         @param[in] new_type the new data type. It an be any type defined in cytnx::Type.
         @return UniTensor
         @attention If the \p new_type is same as dtype of the original UniTensor, return self.
@@ -3612,10 +3647,10 @@ namespace cytnx {
      * usually not intended, since fermionic permutations create sign flips! This should typically
      * only be used to compare tensors in different sign conventions with each other.
      * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
-     *    \p by_label is false, otherwise it is mapped by bond label.
      * @param[in] rowrank the new rowrank after the permutation
      * @return UniTensor
-     * @warning \p by_label will be deprecated!
+     * @warning Usually, the signs should change when permuting a fermionic UniTensor. Use permute
+     * instead, unless you are really sure you want to permute without signflips!
      */
     UniTensor permute_nosignflip(const std::vector<cytnx_int64> &mapper,
                                  const cytnx_int64 &rowrank = -1) const {
@@ -3632,6 +3667,8 @@ namespace cytnx {
      * @param[in] mapper the mapper by babels
      * @param[in] rowrank the row rank
      * @return UniTensor
+     * @warning Usually, the signs should change when permuting a fermionic UniTensor. Use permute_
+     * instead, unless you are really sure you want to permute without signflips!
      */
     UniTensor permute_nosignflip(const std::vector<std::string> &mapper,
                                  const cytnx_int64 &rowrank = -1) const {
@@ -3663,7 +3700,8 @@ namespace cytnx {
       permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     @param[in] mapper the mapper by labels
     @param[in] rowrank the row rank after the permutation
-          @warning \p by_label will be deprecated!
+    @warning Usually, the signs should change when permuting a fermionic UniTensor. Use permute_
+    instead, unless you are really sure you want to permute without signflips!
     */
     UniTensor &permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
                                    const cytnx_int64 &rowrank = -1) {
@@ -3679,6 +3717,8 @@ namespace cytnx {
     @param[in] mapper the mapper by labels
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+    @warning Usually, the signs should change when permuting a fermionic UniTensor. Use permute
+    instead, unless you are really sure you want to permute without signflips!
     */
     UniTensor &permute_nosignflip_(const std::vector<std::string> &mapper,
                                    const cytnx_int64 &rowrank = -1) {
@@ -3698,6 +3738,80 @@ namespace cytnx {
     // void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
     //   this->_impl->permute_(mapper, rowrank);
     // }
+
+    /**
+    @brief Apply a twist (or braids/self-swap) operation to a given bond; No effect for bosonic
+    tensors; for a fermionic tensor, this means that a signflip occurs for all blocks where the
+    bond has odd fermion parity
+    @param[in] label bond label on which the twist shall be applied
+    @note This always applies the twist to the bond, ignoring its direction or weather they are
+    incoming or outgoing bonds.
+    */
+    UniTensor twist(const std::string label) const {
+      UniTensor out = this->clone();
+      out._impl->twist_(label);
+      return out;
+    }
+    /**
+    @brief Apply a twist (or braids/self-swap) operation to a given bond; No effect for bosonic
+    tensors; for a fermionic tensor, this means that a signflip occurs for all blocks where the
+    bond has odd fermion parity
+    @param[in] idx bond index on which the twist shall be applied
+    @note This always applies the twist to the bond, ignoring its direction or weather they are
+    incoming or outgoing bonds.
+    */
+    UniTensor twist(const cytnx_int64 &idx) const {
+      UniTensor out = this->clone();
+      out._impl->twist_(idx);
+      return out;
+    }
+    /**
+    @brief Inline version
+    @param[in] label bond label on which the twist shall be applied
+    @see twist(const std::string label)
+    */
+    UniTensor &twist_(const std::string label) {
+      this->_impl->twist_(label);
+      return *this;
+    }
+    /**
+    @brief Inline version
+    @param[in] idx bond index on which the twist shall be applied
+    @see twist(const cytnx_int64 &idx)
+    */
+    UniTensor &twist_(const cytnx_int64 &idx) {
+      this->_impl->twist_(idx);
+      return *this;
+    }
+
+    /**
+    @brief Apply twists to all bra bonds with type BD_KET
+    @details For bosonic tensors, nothing changes. For fermions, this makes sure that bra- and
+    ket-states can be contracted correctly. For example, a scalar product <A|B> between ket states A
+    and B represented by fermionic tensors with incoming and outgoing legs, can be calculated
+    correctly by contract(Adag.fermion_twists_(), B). This example asumes that Adag is the dagger of
+    A and has rowrank=0, while B has maximal rowrank. Applying fermion_twists_ to B would have no
+    effect in this case and is thus safe to do. Similarly, this can be applied to linear operators.
+    If M is an operator, then its first rowrank indices correspond to ket bonds and are not affected
+    by fermion_twists_. For the remaining bonds, a twist is applied if they are not of type BD_BRA.
+    The combination of this method to bra states, ket states and linear operators in a Hilbert
+    space, together with contractions, ensures that scalar products can be executed as desired.
+    @warning The rowrank must be set correctly before applying this method.
+    */
+    UniTensor fermion_twists() const {
+      UniTensor out = this->clone();
+      out._impl->fermion_twists_();
+      return out;
+    }
+    /**
+    @brief Inline version
+    @see fermion_twists()
+    @warning The rowrank must be set correctly before applying this method.
+    */
+    UniTensor &fermion_twists_() {
+      this->_impl->fermion_twists_();
+      return *this;
+    }
 
     /**
     @brief Make the UniTensor contiguous by coalescing the memory (storage).
@@ -3753,13 +3867,13 @@ namespace cytnx {
     }
 
     /**
-    @brief Print all of the blocks in the UniTensor.
+    @brief Print all blocks of the UniTensor.
         @param[in] full_info whether need to print the full information of the blocks
     */
     void print_blocks(const bool &full_info = true) const { this->_impl->print_blocks(full_info); }
 
     /**
-    @brief Given a index and print out the corresponding block of the UniTensor.
+    @brief Print out the block of the UniTensor with a given block index number.
         @param[in] idx the input index
         @param[in] full_info whether need to print the full information of the block
     */
@@ -3785,9 +3899,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Get an element at specific location.
+    @brief Get an element at a specific location.
         @param[in] locator the location of the element we want to access.
         @note this API is only for C++.
+        @warning For fermions, the signflip is not included and has to be multiplied by the user!
+    The reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator) {
@@ -3811,9 +3928,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Get an element at specific location.
+    @brief Get an element at a specific location.
         @param[in] locator the location of the element we want to access.
         @note this API is only for C++.
+        @warning For fermions, the signflip is not included and has to be multiplied by the user!
+    The reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
@@ -3881,8 +4001,11 @@ namespace cytnx {
     }
 
     /**
-    @brief Get an element at specific location.
+    @brief Get an element at a specific location.
     @details see more information at user guide 6.3.5.
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     const Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) const {
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
@@ -3900,8 +4023,11 @@ namespace cytnx {
     }
 
     /**
-    @brief Get an element at specific location.
+    @brief Get an element at a specific location.
     @details see more information at user guide 6.3.5.
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     Scalar::Sproxy at(const std::vector<cytnx_uint64> &locator) {
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
@@ -3962,11 +4088,15 @@ namespace cytnx {
       return this->at(new_locator);
     }
 
-    // return a clone of block
+    // return a copy of the block with the given block index
     /**
-    @brief Get the block of the UniTensor for a given index.
+    @brief Get the block of the UniTensor for a given block index.
         @param[in] idx the index of the block we want to get
         @return Tensor
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block. Use signflip() to get the sign
+    structure for each block.
     */
     Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_impl->get_block(idx); };
     //================================
@@ -3978,6 +4108,9 @@ namespace cytnx {
             corresponding block is empty, it will return void type tensor if \p force is
                 set as true. Otherwise, it will trow the exception.)
         @return Tensor
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     Tensor get_block(const std::vector<cytnx_int64> &qidx, const bool &force = false) const {
       return this->_impl->get_block(qidx, force);
@@ -4036,9 +4169,12 @@ namespace cytnx {
     }
 
     /**
-    @brief Get the shared view of block for the given index.
+    @brief Get the shared view of the block for the given block index.
         @param[in] idx input the index you want to get the corresponding block
         @return const Tensor&
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     const Tensor &get_block_(const cytnx_uint64 &idx = 0) const {
       return this->_impl->get_block_(idx);
@@ -4051,29 +4187,34 @@ namespace cytnx {
     Tensor &get_block_(const cytnx_uint64 &idx = 0) { return this->_impl->get_block_(idx); }
 
     /**
-    @brief Get the shared view of block for the given quantum indices.
+    @brief Get the shared view of the block for the given quantum indices.
         @param[in] qidx input the quantum indices you want to get the corresponding block.
         @param[in] force If force is true, it will return the tensor anyway (Even the
             corresponding block is empty, it will return void type tensor if \p force is
                 set as true. Otherwise, it will trow the exception.)
         @return Tensor&
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     Tensor &get_block_(const std::vector<cytnx_int64> &qidx, const bool &force = false) {
       return this->_impl->get_block_(qidx, force);
     }
 
     /**
-    @brief Get the shared (data) view of block for the given quantum indices on given labels
+    @brief Get the shared (data) view of the block for the given quantum indices on given labels
         @param[in] labels the labels of the bonds.
         @param[in] qidx input the quantum indices you want to get the corresponding block.
         @param[in] force If force is true, it will return the tensor anyway (Even the
             corresponding block is empty, it will return void type tensor if \p force is
                 set as true. Otherwise, it will trow the exception.)
         @return Tensor&
-
         @note labels and qidx forming one to one pairs. e.g. it means get `qidx[i]` qnum at Bond
     `labels[i]`. Also note that the return Tensor will have axes in the same order specified by
     labels.
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
 
     */
     // developer note: Tensor is not the same object (Thus Tensor instead of Tensor& ),
@@ -4165,6 +4306,9 @@ namespace cytnx {
     deep copy of blocks.
     2. For non-symmetric UniTensor, it will return the deep copy of blocks.
         @return std::vector<Tensor>
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     //[dev]
     std::vector<Tensor> get_blocks() const { return this->_impl->get_blocks(); }
@@ -4173,6 +4317,9 @@ namespace cytnx {
     @brief Get all the blocks of the UniTensor, inplacely.
         @see get_blocks()
         @param[in] silent whether need to print out the warning messages.
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! The
+    reason behind this is that several UniTensors in different permutations can share the same
+    memory. Use signflip() to get the sign structure for each block.
     */
     //[dev]
     const std::vector<Tensor> &get_blocks_(const bool &silent = false) const {
@@ -4191,6 +4338,10 @@ namespace cytnx {
     @brief Put the block into the UniTensor with given index.
         @param[in] in the block you want to put into UniTensor
         @param[in] in the index of the UniTensor you want to put the block \p in in.
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! Use
+    signflip() to get the sign, and multiply the block by -1 if the corresponding signflip is
+    true/ODD. The reason behind this is that several UniTensors in different permutations can share
+    the same memory.
     */
     UniTensor &put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
       this->_impl->put_block(in, idx);
@@ -4203,6 +4354,10 @@ namespace cytnx {
         @param[in] qidx the quantum indices of the UniTensor you want to put the block \p in_tens
   in.
   @warning @p force will be deprecated soon!
+  @warning For fermions, the signflip is not included and has to be multiplied by the user! Use
+  signflip() to get the sign, and multiply the block by -1 if the corresponding signflip is
+  true/ODD. The reason behind this is that several UniTensors in different permutations can share
+  the same memory.
     */
     UniTensor &put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx,
                          const bool &force) {
@@ -4213,6 +4368,10 @@ namespace cytnx {
     /**
      * @brief Put the block into the UniTensor with given quantum indices, will copy the input
      * tensor.
+     * @warning For fermions, the signflip is not included and has to be multiplied by the user! Use
+     * signflip() to get the sign, and multiply the block by -1 if the corresponding signflip is
+     * true/ODD. The reason behind this is that several UniTensors in different permutations can
+     * share the same memory.
      */
     UniTensor &put_block(Tensor &in, const std::vector<std::string> &lbls,
                          const std::vector<cytnx_int64> &qidx, const bool &force = false) {
@@ -4246,6 +4405,10 @@ namespace cytnx {
     @brief Put the block into the UniTensor with given index, inplacely.
         @note the put block will have shared view with the internal block, i.e. non-clone.
         @see put_block(const Tensor &in, const cytnx_uint64 &idx)
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! Use
+    signflip() to get the sign, and multiply the block by -1 if the corresponding signflip is
+    true/ODD. The reason behind this is that several UniTensors in different permutations can share
+    the same memory.
         */
     UniTensor &put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
       this->_impl->put_block_(in, idx);
@@ -4256,7 +4419,11 @@ namespace cytnx {
     @brief Put the block into the UniTensor with given quantum indices, inplacely.
         @note the put block will have shared view with the internal block, i.e. non-clone.
         @see put_block(const Tensor &in, const cytnx_uint64 &idx)
-  @warning @p force will be deprecated soon!
+    @warning @p force will be deprecated soon!
+    @warning For fermions, the signflip is not included and has to be multiplied by the user! Use
+    signflip() to get the sign, and multiply the block by -1 if the corresponding signflip is
+    true/ODD. The reason behind this is that several UniTensors in different permutations can share
+    the same memory.
         */
     UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx, const bool &force) {
       this->_impl->put_block_(in, qidx, force);
@@ -4266,6 +4433,10 @@ namespace cytnx {
     /**
      * @brief Put the block into the UniTensor with given quantum indices, inplacely.
      * @note the put block will have shared view with the internal block, i.e. non-clone.
+     * @warning For fermions, the signflip is not included and has to be multiplied by the user! Use
+     * signflip() to get the sign, and multiply the block by -1 if the corresponding signflip is
+     * true/ODD. The reason behind this is that several UniTensors in different permutations can
+     * share the same memory.
      */
     UniTensor &put_block_(Tensor &in, const std::vector<std::string> &lbls,
                           const std::vector<cytnx_int64> &qidx, const bool &force = false) {
@@ -4979,7 +5150,7 @@ namespace cytnx {
       the rowrank will not change. If the UniTensor is untagged (i.e. the Bonds are
       BondType::BD_REG), it will change the rowrank to the opposite side.
       For fermionic UniTensors, the index order will be reversed without sign flips, and the
-    direction of all Bonds will swapped.
+      direction of all Bonds will swapped.
         @return UniTensor
     @note Compared to Transpose_(), this function will return new UniTensor object.
         @see Transpose_()
@@ -5102,6 +5273,8 @@ namespace cytnx {
     @brief Take the conjugate transpose to the UniTensor.
         @return UniTensor
     @note Compared to Dagger_(), this function will create a new UniTensor ojbect.
+    @note For fermionic UniTensors, the index order will be reversed without sign flips, and the
+    direction of all Bonds will swapped.
         @see Dagger_(), Transpose()
         */
     UniTensor Dagger() const {
@@ -5114,6 +5287,8 @@ namespace cytnx {
     @brief Take the conjugate transpose to the UniTensor, inplacely.
         @return UniTensor&
     @note Compared to Dagger(), this is an inplace function.
+    @note For fermionic UniTensors, the index order will be reversed without sign flips, and the
+    direction of all Bonds will swapped.
         @see Dagger()
         */
     UniTensor &Dagger_() {
@@ -5391,7 +5566,7 @@ namespace cytnx {
     }
 
     /**
-    @brief Generate a identity UniTensor.
+    @brief Generate an identity UniTensor.
     @param[in] dim the dimension of the diagnal.
     @param[in] in_labels the labels of the UniTensor.
     @param[in] is_diag determine if the UniTensor is diagonal or not. Default is false.
@@ -5730,7 +5905,7 @@ namespace cytnx {
   /// @endcond
 
   /**
-  @brief Contract multiple UniTensor by tracing the ranks with common labels with pairwise
+  @brief Contract multiple UniTensor by tracing the indices with common labels with pairwise
   operation.
   @param in the Tensors.
   @param args the Tensors.

@@ -497,7 +497,7 @@ endif()
 # #####################################################################
 # Final Information Messages
 # #####################################################################
-message(STATUS "|= Final FLAGS infomation for install >>>>> ")
+message(STATUS "|= Final FLAGS information for install >>>>> ")
 message(STATUS "    CXX Compiler: ${CMAKE_CXX_COMPILER}")
 message(STATUS "    CXX Flags: ${CMAKE_CXX_FLAGS}")
 message(STATUS "    BLAS and LAPACK Libraries: ${LAPACK_LIBRARIES}")

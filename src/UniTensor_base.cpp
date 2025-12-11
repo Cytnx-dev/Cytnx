@@ -195,6 +195,25 @@ namespace cytnx {
                     "\n");
   }
 
+  void UniTensor_base::twist_(const cytnx_int64 &idx) {
+    // do nothing for bosonic UniTensor, override for fermionic!
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+    return;
+  }
+  void UniTensor_base::twist_(const std::string label) {
+    // do nothing for bosonic UniTensor, override for fermionic!
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+    return;
+  }
+  void UniTensor_base::fermion_twists_() {
+    // do nothing for bosonic UniTensor, override for fermionic!
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+    return;
+  }
+
   boost::intrusive_ptr<UniTensor_base> UniTensor_base::contiguous_() {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");

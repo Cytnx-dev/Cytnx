@@ -1,10 +1,13 @@
+#include "linalg.hpp"
+
+#include <iostream>
+#include <string>
 #include <vector>
 
-#include "Accessor.hpp"
 #include "Tensor.hpp"
 #include "UniTensor.hpp"
 #include "algo.hpp"
-#include "linalg.hpp"
+#include "Accessor.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -99,10 +102,12 @@ namespace cytnx {
       }
     }
 
-    void _gesvd_truncate_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                  const bool &is_vT, const unsigned int &return_err,
-                                  const cytnx_uint64 &mindim) {
+    static void Gesvd_truncate_Dense_UT_internal(std::vector<UniTensor> &outCyT,
+                                                 const cytnx::UniTensor &Tin,
+                                                 const cytnx_uint64 &keepdim, const double &err,
+                                                 const bool &is_U, const bool &is_vT,
+                                                 const unsigned int &return_err,
+                                                 const cytnx_uint64 &mindim) {
       // DenseUniTensor:
       cytnx_uint64 keep_dim = keepdim;
 
@@ -144,7 +149,7 @@ namespace cytnx {
         cytnx::UniTensor &Cy_U = outCyT[t];
         // shape
         cytnx_error_msg(Tin.rowrank() > oldshape.size(),
-                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+                        "[ERROR] The rowrank of the input UniTensor is larger than the rank of the "
                         "contained tensor.%s",
                         "\n");
         std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
@@ -205,12 +210,17 @@ namespace cytnx {
       }  // if tag
 
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
-    };  // svdt Dense
+    }  // Gesvd_truncate_Dense_UT_internal
 
-    void _gesvd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                  const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                  const bool &is_vT, const unsigned int &return_err,
-                                  const cytnx_uint64 &mindim) {
+    static void Gesvd_truncate_Block_UTs_internal(std::vector<UniTensor> &outCyT,
+                                                  const cytnx::UniTensor &Tin,
+                                                  const cytnx_uint64 &keepdim, const double &err,
+                                                  const bool &is_U, const bool &is_vT,
+                                                  const unsigned int &return_err,
+                                                  const cytnx_uint64 &mindim) {
+      // currently, Gesvd is used as a standard for the full SVD before truncation
+      // handles BlockFermionicUniTensor as well: elements of _signflip are removed if blocks are
+      // erased
       cytnx_uint64 keep_dim = keepdim;
 
       outCyT = linalg::Gesvd(Tin, is_U, is_vT);
@@ -283,8 +293,13 @@ namespace cytnx {
       // remove:
       // vec_erase_(S.get_itoi(),to_be_removed);
       S.get_itoi() = new_itoi;
-      vec_erase_(S.get_blocks_(), to_be_removed);
-      vec_erase_(S.bonds()[0].qnums(), to_be_removed);
+      if (!to_be_removed.empty()) {
+        vec_erase_(S.get_blocks_(), to_be_removed);
+        vec_erase_(S.bonds()[0].qnums(), to_be_removed);
+        if (Tin.uten_type() == UTenType.BlockFermionic) {
+          vec_erase_(S.signflip_(), to_be_removed);
+        }
+      }
       S.bonds()[0]._impl->_degs = new_dims;
       S.bonds()[0]._impl->_dim = tot_dim;
       S.bonds()[1] = S.bonds()[0].redirect();
@@ -311,8 +326,13 @@ namespace cytnx {
             U.get_qindices(b).back() = new_qid[U.get_qindices(b).back()];
           }
         }
-        vec_erase_(U.get_itoi(), to_be_removed);
-        vec_erase_(U.get_blocks_(), to_be_removed);
+        if (!to_be_removed.empty()) {
+          vec_erase_(U.get_itoi(), to_be_removed);
+          vec_erase_(U.get_blocks_(), to_be_removed);
+          if (Tin.uten_type() == UTenType.BlockFermionic) {
+            vec_erase_(U.signflip_(), to_be_removed);
+          }
+        }
 
         t++;
       }
@@ -337,8 +357,14 @@ namespace cytnx {
             vT.get_qindices(b)[0] = new_qid[vT.get_qindices(b)[0]];
           }
         }
-        vec_erase_(vT.get_itoi(), to_be_removed);
-        vec_erase_(vT.get_blocks_(), to_be_removed);
+        if (!to_be_removed.empty()) {
+          vec_erase_(vT.get_itoi(), to_be_removed);
+          vec_erase_(vT.get_blocks_(), to_be_removed);
+          if (Tin.uten_type() == UTenType.BlockFermionic) {
+            vec_erase_(vT.signflip_(), to_be_removed);
+          }
+        }
+
         t++;
       }
 
@@ -349,167 +375,7 @@ namespace cytnx {
       } else if (return_err) {
         outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
       }
-    }  // _gesvd_truncate_Block_UT
-
-    void _gesvd_truncate_BlockFermionic_UT(std::vector<UniTensor> &outCyT,
-                                           const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
-                                           const double &err, const bool &is_U, const bool &is_vT,
-                                           const unsigned int &return_err,
-                                           const unsigned int &mindim) {
-      //[9 Oct 2024] This is a copy from _gesvd_truncate_Block_UT;
-      // TODOfermionic: remove signs if blocks are deleted
-      cytnx_error_msg(true,
-                      "[ERROR][_gesvd_truncate_BlockFermionic_UT] not implemented yet. The "
-                      "signflips need to be removed if blocks are deleted in the truncation.%s",
-                      "\n") cytnx_uint64 keep_dim = keepdim;
-
-      outCyT = linalg::Gesvd(Tin, is_U, is_vT);
-
-      // process truncate:
-      // 1) concate all s vals from all blk
-      Tensor Sall = outCyT[0].get_block_(0);
-      for (int i = 1; i < outCyT[0].Nblocks(); i++) {
-        Sall = algo::Concatenate(Sall, outCyT[0].get_block_(i));
-      }
-      Sall = algo::Sort(Sall);
-
-      // 2) get the minimum base on the args input.
-      Scalar Smin;
-      cytnx_uint64 smidx;
-      if (keep_dim < Sall.shape()[0]) {
-        smidx = Sall.shape()[0] - keep_dim;
-        Smin = Sall.storage()(smidx);
-        while ((Smin < err) and keep_dim - 1 > mindim) {
-          keep_dim -= 1;
-          if (keep_dim == 0) break;
-          smidx = Sall.shape()[0] - keep_dim;
-          Smin = Sall.storage()(smidx);
-        }
-
-      } else {
-        keep_dim = Sall.shape()[0];
-        Smin = Sall.storage()(0);
-        smidx = 0;
-        while ((Smin < err)) {
-          keep_dim -= 1;
-          if (keep_dim == 0) break;
-          smidx = Sall.shape()[0] - keep_dim;
-          Smin = Sall.storage()(smidx);
-        }
-      }
-
-      // traversal each block and truncate!
-      UniTensor &S = outCyT[0];
-      std::vector<cytnx_uint64> new_dims;  // keep_dims for each block!
-      std::vector<cytnx_int64> keep_dims;
-      keep_dims.reserve(S.Nblocks());
-      std::vector<cytnx_int64> new_qid;
-      new_qid.reserve(S.Nblocks());
-
-      std::vector<std::vector<cytnx_uint64>> new_itoi;  // assume S block is in same order as qnum:
-      std::vector<cytnx_uint64> to_be_removed;
-
-      cytnx_uint64 tot_dim = 0;
-      cytnx_uint64 cnt = 0;
-      for (int b = 0; b < S.Nblocks(); b++) {
-        Storage stmp = S.get_block_(b).storage();
-        cytnx_int64 kdim = 0;
-        for (int i = stmp.size() - 1; i >= 0; i--) {
-          if (stmp(i) >= Smin) {
-            kdim = i + 1;
-            break;
-          }
-        }
-        keep_dims.push_back(kdim);
-        if (kdim == 0) {
-          to_be_removed.push_back(b);
-          new_qid.push_back(-1);
-
-        } else {
-          new_qid.push_back(new_dims.size());
-          new_itoi.push_back({new_dims.size(), new_dims.size()});
-          new_dims.push_back(kdim);
-          tot_dim += kdim;
-          if (kdim != S.get_blocks_()[b].shape()[0])
-            S.get_blocks_()[b] = S.get_blocks_()[b].get({Accessor::range(0, kdim)});
-        }
-      }
-
-      // remove:
-      // vec_erase_(S.get_itoi(),to_be_removed);
-      S.get_itoi() = new_itoi;
-      vec_erase_(S.get_blocks_(), to_be_removed);
-      // TODOfermionic: remove signs for this block
-      //  vec_erase_(S.signflip(), to_be_removed);
-      vec_erase_(S.bonds()[0].qnums(), to_be_removed);
-      S.bonds()[0]._impl->_degs = new_dims;
-      S.bonds()[0]._impl->_dim = tot_dim;
-      S.bonds()[1] = S.bonds()[0].redirect();
-
-      int t = 1;
-      if (is_U) {
-        UniTensor &U = outCyT[t];
-        to_be_removed.clear();
-        U.bonds().back() = S.bonds()[1].clone();
-        std::vector<Accessor> acs(U.rank());
-        for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
-
-        for (int b = 0; b < U.Nblocks(); b++) {
-          if (keep_dims[U.get_qindices(b).back()] == 0)
-            to_be_removed.push_back(b);
-          else {
-            /// process blocks:
-            if (keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()) {
-              acs.back() = Accessor::range(0, keep_dims[U.get_qindices(b).back()]);
-              U.get_blocks_()[b] = U.get_blocks_()[b].get(acs);
-            }
-
-            // change to new qindices:
-            U.get_qindices(b).back() = new_qid[U.get_qindices(b).back()];
-          }
-        }
-        vec_erase_(U.get_itoi(), to_be_removed);
-        vec_erase_(U.get_blocks_(), to_be_removed);
-        // TODOfermionic: remove signs for this block
-        //  vec_erase_(U.signflip(), to_be_removed);
-        t++;
-      }
-
-      if (is_vT) {
-        UniTensor &vT = outCyT[t];
-        to_be_removed.clear();
-        vT.bonds().front() = S.bonds()[0].clone();
-        std::vector<Accessor> acs(vT.rank());
-        for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
-
-        for (int b = 0; b < vT.Nblocks(); b++) {
-          if (keep_dims[vT.get_qindices(b)[0]] == 0)
-            to_be_removed.push_back(b);
-          else {
-            /// process blocks:
-            if (keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]) {
-              acs[0] = Accessor::range(0, keep_dims[vT.get_qindices(b)[0]]);
-              vT.get_blocks_()[b] = vT.get_blocks_()[b].get(acs);
-            }
-            // change to new qindices:
-            vT.get_qindices(b)[0] = new_qid[vT.get_qindices(b)[0]];
-          }
-        }
-        vec_erase_(vT.get_itoi(), to_be_removed);
-        vec_erase_(vT.get_blocks_(), to_be_removed);
-        // TODOfermionic: remove signs for this block
-        //  vec_erase_(vT.signflip(), to_be_removed);
-        t++;
-      }
-
-      // handle return_err!
-      if (return_err == 1) {
-        outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-        outCyT.back().get_block_().storage().at(0) = Smin;
-      } else if (return_err) {
-        outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
-      }
-    }  // _gesvd_truncate_BlockFermionic_UT
+    }  // Gesvd_truncate_Block_UTs_internal
 
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim, const double &err,
@@ -535,11 +401,11 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim);
-      } else if (Tin.uten_type() == UTenType.Block) {
-        _gesvd_truncate_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim);
-      } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        _gesvd_truncate_BlockFermionic_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
+        Gesvd_truncate_Dense_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
+                                         mindim);
+      } else if ((Tin.uten_type() == UTenType.Block) ||
+                 (Tin.uten_type() == UTenType.BlockFermionic)) {
+        Gesvd_truncate_Block_UTs_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
                                           mindim);
       } else {
         cytnx_error_msg(
@@ -550,12 +416,13 @@ namespace cytnx {
 
     }  // Gesvd_truncate
 
-    void _gesvd_truncate_Block_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                                  const cytnx_uint64 &keepdim,
-                                  std::vector<cytnx_uint64> min_blockdim, const double &err,
-                                  const bool &is_U, const bool &is_vT,
-                                  const unsigned int &return_err, const cytnx_uint64 &mindim) {
+    static void Gesvd_truncate_Block_UTs_internal(
+      std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin, const cytnx_uint64 &keepdim,
+      std::vector<cytnx_uint64> min_blockdim, const double &err, const bool &is_U,
+      const bool &is_vT, const unsigned int &return_err, const cytnx_uint64 &mindim) {
       // currently, Gesvd is used as a standard for the full SVD before truncation
+      // handles BlockFermionicUniTensor as well: elements of _signflip are removed if blocks are
+      // erased
       cytnx_int64 keep_dim = keepdim;  // these must be signed int, because they can become
                                        // negative!
       cytnx_int64 min_dim = (mindim < 1 ? 1 : mindim);
@@ -563,11 +430,10 @@ namespace cytnx {
       outCyT = linalg::Gesvd(Tin, is_U, is_vT);
       if (min_blockdim.size() == 1)  // if only one element given, make it a vector
         min_blockdim.resize(outCyT[0].Nblocks(), min_blockdim.front());
-      cytnx_error_msg(
-        min_blockdim.size() != outCyT[0].Nblocks(),
-        "[ERROR][Gesvd_truncate] min_blockdim must have the same number of elements as "
-        "blocks in the singular value UniTensor%s",
-        "\n");
+      cytnx_error_msg(min_blockdim.size() != outCyT[0].Nblocks(),
+                      "[ERROR][Gesvd_truncate] min_blockdim must have the same number of elements "
+                      "as blocks in the singular value UniTensor%s",
+                      "\n");
 
       // process truncation:
       // 1) concate all S vals from all blk but exclude the first min_blockdim Svals in each block
@@ -659,7 +525,7 @@ namespace cytnx {
 
         std::vector<std::vector<cytnx_uint64>>
           new_itoi;  // assume S block is in same order as qnum:
-        std::vector<cytnx_uint64> to_be_remove;
+        std::vector<cytnx_uint64> to_be_removed;
 
         cytnx_uint64 tot_dim = 0;
         cytnx_uint64 cnt = 0;
@@ -680,7 +546,7 @@ namespace cytnx {
           }
           keep_dims.push_back(kdim);
           if (kdim == 0) {
-            to_be_remove.push_back(b);
+            to_be_removed.push_back(b);
             new_qid.push_back(-1);
           } else {
             new_qid.push_back(new_dims.size());
@@ -693,10 +559,15 @@ namespace cytnx {
         }
 
         // remove:
-        // vec_erase_(S.get_itoi(),to_be_remove);
+        // vec_erase_(S.get_itoi(),to_be_removed);
         S.get_itoi() = new_itoi;
-        vec_erase_(S.get_blocks_(), to_be_remove);
-        vec_erase_(S.bonds()[0].qnums(), to_be_remove);
+        if (!to_be_removed.empty()) {
+          vec_erase_(S.get_blocks_(), to_be_removed);
+          vec_erase_(S.bonds()[0].qnums(), to_be_removed);
+          if (Tin.uten_type() == UTenType.BlockFermionic) {
+            vec_erase_(S.signflip_(), to_be_removed);
+          }
+        }
         S.bonds()[0]._impl->_degs = new_dims;
         S.bonds()[0]._impl->_dim = tot_dim;
         S.bonds()[1] = S.bonds()[0].redirect();
@@ -704,14 +575,14 @@ namespace cytnx {
         int t = 1;
         if (is_U) {
           UniTensor &U = outCyT[t];
-          to_be_remove.clear();
+          to_be_removed.clear();
           U.bonds().back() = S.bonds()[1].clone();
           std::vector<Accessor> acs(U.rank());
           for (int i = 0; i < U.rowrank(); i++) acs[i] = Accessor::all();
 
           for (int b = 0; b < U.Nblocks(); b++) {
             if (keep_dims[U.get_qindices(b).back()] == 0)
-              to_be_remove.push_back(b);
+              to_be_removed.push_back(b);
             else {
               /// process blocks:
               if (keep_dims[U.get_qindices(b).back()] != U.get_blocks_()[b].shape().back()) {
@@ -723,22 +594,27 @@ namespace cytnx {
               U.get_qindices(b).back() = new_qid[U.get_qindices(b).back()];
             }
           }
-          vec_erase_(U.get_itoi(), to_be_remove);
-          vec_erase_(U.get_blocks_(), to_be_remove);
+          if (!to_be_removed.empty()) {
+            vec_erase_(U.get_itoi(), to_be_removed);
+            vec_erase_(U.get_blocks_(), to_be_removed);
+            if (Tin.uten_type() == UTenType.BlockFermionic) {
+              vec_erase_(U.signflip_(), to_be_removed);
+            }
+          }
 
           t++;
         }
 
         if (is_vT) {
           UniTensor &vT = outCyT[t];
-          to_be_remove.clear();
+          to_be_removed.clear();
           vT.bonds().front() = S.bonds()[0].clone();
           std::vector<Accessor> acs(vT.rank());
           for (int i = 1; i < vT.rank(); i++) acs[i] = Accessor::all();
 
           for (int b = 0; b < vT.Nblocks(); b++) {
             if (keep_dims[vT.get_qindices(b)[0]] == 0)
-              to_be_remove.push_back(b);
+              to_be_removed.push_back(b);
             else {
               /// process blocks:
               if (keep_dims[vT.get_qindices(b)[0]] != vT.get_blocks_()[b].shape()[0]) {
@@ -749,12 +625,18 @@ namespace cytnx {
               vT.get_qindices(b)[0] = new_qid[vT.get_qindices(b)[0]];
             }
           }
-          vec_erase_(vT.get_itoi(), to_be_remove);
-          vec_erase_(vT.get_blocks_(), to_be_remove);
+          if (!to_be_removed.empty()) {
+            vec_erase_(vT.get_itoi(), to_be_removed);
+            vec_erase_(vT.get_blocks_(), to_be_removed);
+            if (Tin.uten_type() == UTenType.BlockFermionic) {
+              vec_erase_(vT.signflip_(), to_be_removed);
+            }
+          }
+
           t++;
         }
       }
-    }  // _gesvd_truncate_Block_UT
+    }  // Gesvd_truncate_Block_UTs_internal
 
     std::vector<cytnx::UniTensor> Gesvd_truncate(const cytnx::UniTensor &Tin,
                                                  const cytnx_uint64 &keepdim,
@@ -784,16 +666,18 @@ namespace cytnx {
         cytnx_error_msg(
           min_blockdim.size() != 1,
           "[ERROR][Gesvd_truncate] min_blockdim must have one element for dense UniTensor%s", "\n");
-        _gesvd_truncate_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
-                                 std::max(mindim, min_blockdim[0]));
+        Gesvd_truncate_Dense_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
+                                         std::max(mindim, min_blockdim[0]));
 
-      } else if (Tin.uten_type() == UTenType.Block) {
-        _gesvd_truncate_Block_UT(outCyT, Tin, keepdim, min_blockdim, err, is_U, is_vT, return_err,
-                                 mindim);
+      } else if ((Tin.uten_type() == UTenType.Block) ||
+                 (Tin.uten_type() == UTenType.BlockFermionic)) {
+        Gesvd_truncate_Block_UTs_internal(outCyT, Tin, keepdim, min_blockdim, err, is_U, is_vT,
+                                          return_err, mindim);
 
       } else {
         cytnx_error_msg(
-          true, "[ERROR][Gesvd_truncate] only Dense/Block UniTensors are supported.%s", "\n");
+          true, "[ERROR] Gesvd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",
+          "\n");
       }
       return outCyT;
 
