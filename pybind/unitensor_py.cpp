@@ -656,6 +656,8 @@ void unitensor_binding(py::module &m) {
 
     .def("make_contiguous", &UniTensor::contiguous)
     .def("contiguous_", &UniTensor::contiguous_)
+    .def("apply", &UniTensor::apply)
+    .def("apply_", &UniTensor::apply_)
     .def("print_diagram", &UniTensor::print_diagram, py::arg("bond_info") = false,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,
