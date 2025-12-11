@@ -3,7 +3,7 @@ T1 = cytnx.UniTensor.zeros([4,4],
                      rowrank=1,
                      labels=["a","b"],
                      name="Untagged_Unitensor")
-T1.Save("Untagged_ut")
+T1.Save("Untagged_ut.cytnx")
 
 # Create an unitensor with symmetry and save
 bd = cytnx.Bond(cytnx.BD_IN,[[1],[0],[-1]],[1,2,1])
@@ -12,4 +12,4 @@ T2 = cytnx.UniTensor([bd, bd.redirect()],
                      labels=["a","b"],
                      name="symmetric_Unitensor")
 T2.put_block(cytnx.ones([2,2]),1)
-T2.Save("sym_ut")
+T2.Save("sym_ut.cytnx")

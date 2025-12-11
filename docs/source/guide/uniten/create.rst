@@ -1,5 +1,6 @@
 Creating a UniTensor
 --------------------
+
 As mentioned in the introduction, a **UniTensor** consists of Block(s), Bond(s) and label(s). The Block(s) contain the data, while Bond(s) and label(s) are the meta data that describe the properties of the UniTensor.
 
 .. image:: image/utcomp.png
@@ -173,52 +174,10 @@ For example, let's create a UniTensor in the memory accessible by the CPU and tr
     :language: python
     :linenos:
 
->> Output:
+Output >>
 
-.. code-block:: text
-
-    -------- start of print ---------
-    Tensor name:
-    is_diag    : False
-    contiguous : True
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,2)
-    [[1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 ]]
-
-
-
-
-    -------- start of print ---------
-    Tensor name:
-    is_diag    : False
-    contiguous : True
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CUDA/GPU-id:0
-    Shape : (2,2)
-    [[1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 ]]
-
-
-
-
-    -------- start of print ---------
-    Tensor name:
-    is_diag    : False
-    contiguous : True
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CUDA/GPU-id:0
-    Shape : (2,2)
-    [[1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 ]]
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_create_to.out
+    :language: text
 
 .. Note::
 

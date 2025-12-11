@@ -1,10 +1,11 @@
 Save/Load a UniTensor
-----------------------
-Cyntx provides a way to save/read UniTensors to/from a file.
+-------------------------
+
+A UniTensor can be saved to and loaded from a file.
 
 Save a UniTensor
 *****************
-To save a Tensor to a file, simply call **UniTensor.Save(filepath)**.
+To save a UniTensor to a file, simply call **UniTensor.Save(filepath)**.
 
 * In Python:
 
@@ -12,12 +13,20 @@ To save a Tensor to a file, simply call **UniTensor.Save(filepath)**.
     :language: python
     :linenos:
 
-This will save UniTensors *T1* and *T2* to the current directory as **Untagged_ut.cytnx** and **sym_ut.cytnx**, with *.cytnx* as file extension.
+This saves UniTensors *T1* and *T2* in the current directory as **Untagged_ut.cytnx** and **sym_ut.cytnx**.
+
+.. Tip::
+
+    The common file extension for a UniTensor is *.cytnx*.
+
+.. warning::
+
+    The file extension should be explicitly added. The previous behavior of attaching the extension *.cytnx* automatically will be deprecated.
 
 
 Load a UniTensor
 ******************
-Now, let's load the UniTensor from the file.
+Similarly, a UniTensor can be loaded from a file:
 
 .. literalinclude:: ../../../code/python/doc_codes/guide_uniten_io_Load.py
     :language: python
@@ -28,6 +37,6 @@ Output >>
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_io_Load.out
     :language: text
 
-In this example we see how the block date and meta information (name, bonds, labels ... ) are kept when we save the UniTensor.
+In this example we see how the block data and meta information (name, bonds, labels ... ) are restored when saving and loading UniTensor.
 
 .. toctree::

@@ -1,5 +1,6 @@
 Changing labels
 ------------------
+
 We can set and change the labels of the Bonds in a UniTensor as desired. This is particularly helpful for contractions with *cytnx.Contract()* and *cytnx.Contracts()*. As will be explained in :ref:`Contract(s)`, these functions contract bonds with the same name on different UniTensors. Therefore, we might need to change the labels for some bond(s) to initiate the correct tensor contraction.
 
 To change the label associated to a certain leg of a UniTensor, one can use:
@@ -52,7 +53,7 @@ Output >>
 
 .. warning::
 
-    The previously provided methods set_label, set_labels and relabels_ are deprecated and should all be replaced by relabel_.
+    The previously provided methods *set_label*, *set_labels* and *relabels_* are deprecated and should all be replaced by *relabel_*.
 
 
 Creating UniTensors with different labels that share the same data
@@ -73,3 +74,7 @@ Output >>
 
 
 .. toctree::
+
+.. warning::
+
+    The previously provided method *relabels* is deprecated and should all be replaced by *relabel*.

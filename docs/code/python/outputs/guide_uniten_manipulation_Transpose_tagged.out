@@ -10,7 +10,7 @@ on device   : cytnx device: CPU
          |         |
    a  -->| 2     4 |-->  c
          |         |
-   b  -->| 2       |
+   b  <--| 2       |
          |         |
          -----------
 
@@ -27,7 +27,7 @@ on device   : cytnx device: CPU
          |         |
    c  -->| 4     2 |-->  a
          |         |
-         |       2 |-->  b
+         |       2 |<--  b
          |         |
          -----------
 
