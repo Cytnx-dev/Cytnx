@@ -1,5 +1,8 @@
 set -xe
 
+# Install core development tools first
+yum install -y gcc-c++ glibc-devel kernel-headers
+
 yum search lapack
 yum --showduplicates list "lapack*"
 # yum install -y arpack-devel boost-devel ccache lapack-devel libomp-devel openblas-devel
