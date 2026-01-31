@@ -11,7 +11,7 @@ ls /usr/include
 ln -s /usr/include/openblas/lapacke.h /usr/include/lapacke.h
 ln -s /usr/include/openblas/lapack.h /usr/include/lapack.h
 ln -s /usr/include/openblas/lapacke_mangling.h /usr/include/lapacke_mangling.h
-
+ln -s /usr/include/openblas/cblas.h /usr/include/cblas.h
 ls /usr/include/openblas
 #  boost1.78-devel
 # ls /usr/include/boost | head
