@@ -6,6 +6,9 @@ import packaging.tags
 tag = f'cp{sys.version_info.major}{sys.version_info.minor}'
 
 ccache_config_path = os.getenv('CCACHE_CONFIGPATH')
+
+# Expand ~ to actual home directory
+ccache_config_path = os.path.expanduser(ccache_config_path)
 if not ccache_config_path:
     raise RuntimeError('The CCACHE_CONFIGPATH environment variable must be set.')
 
