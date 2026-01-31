@@ -74,11 +74,11 @@ before-build = "python ./tools/cibuildwheel_before_build.py"
 # before-all = "apt-get install -y arpack boost ccache libomp openblas"
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
 # To include LAPACKE header.
-environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas:/usr/include", CCACHE_CONFIGPATH = "~/ccache.conf" }
+environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas:/usr/include", CFLAGS = "-I/usr/include", CXXFLAGS = "-I/usr/include", CCACHE_CONFIGPATH = "~/ccache.conf" }
 
 [tool.cibuildwheel.macos]
 before-all = "brew update; brew install arpack boost ccache libomp openblas"
-environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", CCACHE_CONFIGPATH = "~/ccache.conf" }
+environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", CFLAGS = "-I/usr/include", CXXFLAGS = "-I/usr/include", CCACHE_CONFIGPATH = "~/ccache.conf" }
 
 # [tool.cibuildwheel]
 # before-build = "bash {project}/tools/cibuildwheel_before_build.sh"
