@@ -1,6 +1,9 @@
 set -xe
-# Install ccache using pipx (available in manylinux images)
-pipx install ccache
+# Install ccache from GitHub releases
+CCACHE_VERSION=4.9.1
+curl -L https://github.com/ccache/ccache/releases/download/v${CCACHE_VERSION}/ccache-${CCACHE_VERSION}-linux-x86_64.tar.xz | tar -xJ
+cp ccache-${CCACHE_VERSION}-linux-x86_64/ccache /usr/local/bin/
+ccache --version
 
 # Create symlinks for OpenBLAS headers if available
 if [ -d /usr/include/openblas ]; then
