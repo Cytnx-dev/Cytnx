@@ -1,12 +1,12 @@
 set -xe
 
 # Install core development tools first
-dnf install -y gcc-c++ glibc-devel kernel-headers
+microdnf install -y gcc-c++ glibc-devel kernel-headers
 
-dnf search lapack
-dnf --showduplicates list "lapack*"
-# dnf install -y arpack-devel boost-devel ccache lapack-devel libomp-devel openblas-devel
-dnf install -y arpack-devel boost-devel ccache libomp-devel openblas-devel
+microdnf search lapack
+microdnf --showduplicates list "lapack*"
+# microdnf install -y arpack-devel boost-devel ccache lapack-devel libomp-devel openblas-devel
+microdnf install -y arpack-devel boost-devel ccache libomp-devel openblas-devel
 # On Red Hat/CentOS systems (which manylinux images are based on), the lapack-devel
 # package typically provides the Fortran bindings and miss the C-interface header, so
 # use lapacke.h shipped with openblas instead.
