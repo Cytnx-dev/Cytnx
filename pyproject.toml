@@ -67,7 +67,7 @@ result = "{major}.{minor}.{patch}"
 # architecture which is an extension of x86_64, so the wheels built with manylinux_2_34
 # may not support older machines. See https://github.com/pypa/manylinux?tab=readme-ov-file#manylinux_2_34-almalinux-9-based---alpha
 # for more information.
-manylinux-x86_64-image = "manylinux_2_34"
+manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
 
 [tool.cibuildwheel.linux]
