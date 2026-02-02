@@ -9,7 +9,12 @@
 #include <iostream>
 #include <stdexcept>
 
+#if defined(__GLIBC__)
 #include <execinfo.h>
+#define HAS_EXECINFO 1
+#else
+#define HAS_EXECINFO 0
+#endif
 
 #ifdef _MSC_VER
   #define __PRETTY_FUNCTION__ __FUNCTION__
@@ -34,6 +39,7 @@ static inline void error_msg(char const *const func, const char *const file, int
     va_end(args);
     // std::cerr << output_str << std::endl;
     std::cerr << output_str << std::endl;
+    #if HAS_EXECINFO
     std::cerr << "Stack trace:" << std::endl;
     void *array[10];
     size_t size;
@@ -43,6 +49,7 @@ static inline void error_msg(char const *const func, const char *const file, int
       std::cerr << strings[i] << std::endl;
     }
     free(strings);
+#endif
     throw std::logic_error(output_str);
   }
   // } catch (const char *output_msg) {
