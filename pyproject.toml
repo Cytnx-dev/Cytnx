@@ -38,12 +38,10 @@ wheel.packages = ["cytnx"]
 cmake.args = [
     # Use the default preset defined in CMakePresets.json
     "--preset=openblas-cpu",
-    "-DBoost_NO_BOOST_CMAKE=ON",
     # TODO: Remove setting of generator to support builuding on Windows.
     # scikit-build uses Ninja as the default cmake generator. However, Ninja
     # conflicts against the build process of HPTT.
     "-G Unix Makefiles",
-    "-DBoost_NO_BOOST_CMAKE=ON",
 ]
 # Force the build directory to be "build" instead of a random temp folder. This helps
 # ccache caches the compiler outputs successfully.
@@ -76,7 +74,7 @@ before-build = "python ./tools/cibuildwheel_before_build.py"
 # before-all = "apt-get install -y arpack boost ccache libomp openblas"
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
 # To include LAPACKE header.
-environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf" }
+environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf", CMAKE_ARGS = "-DBoost_NO_BOOST_CMAKE=ON" }
 
 [tool.cibuildwheel.macos]
 before-all = "brew update; brew install arpack boost ccache libomp openblas"

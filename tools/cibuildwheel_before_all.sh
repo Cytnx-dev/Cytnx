@@ -1,27 +1,15 @@
 set -xe
 
-# Install ccache
-CCACHE_VERSION=4.8.3
-curl -L https://github.com/ccache/ccache/releases/download/v${CCACHE_VERSION}/ccache-${CCACHE_VERSION}-linux-x86_64.tar.xz | tar -xJ
-cp ccache-${CCACHE_VERSION}-linux-x86_64/ccache /usr/local/bin/
-chmod +x /usr/local/bin/ccache
-if ! /usr/local/bin/ccache --version 2>/dev/null; then
-    echo '#!/bin/bash' > /usr/local/bin/ccache
-    echo 'exec "${@}"' >> /usr/local/bin/ccache
-    chmod +x /usr/local/bin/ccache
-    echo "WARNING: Using dummy ccache passthrough"
-fi
-
 # Install required packages based on distro
 if command -v apk &> /dev/null; then
     # musllinux (Alpine)
-    apk add --no-cache boost-dev openblas-dev arpack-dev
+    apk add --no-cache boost-dev openblas-dev arpack-dev ccache
 elif command -v dnf &> /dev/null; then
     # manylinux_2_28+ (AlmaLinux/RHEL)
-    dnf install -y boost-devel openblas-devel arpack-devel
+    dnf install -y boost-devel openblas-devel arpack-devel ccache
 elif command -v yum &> /dev/null; then
     # manylinux2014 (CentOS)
-    yum install -y boost-devel openblas-devel arpack-devel
+    yum install -y boost-devel openblas-devel arpack-devel ccache
 else
     echo "WARNING: No package manager found"
 fi
