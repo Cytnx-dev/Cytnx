@@ -665,90 +665,76 @@ void unitensor_binding(py::module &m) {
 
     .def("group_basis_", &UniTensor::group_basis_)
     .def("group_basis", &UniTensor::group_basis)
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const cytnx_uint64 &idx) { return self.get_block(idx); },
       py::arg("idx") = (cytnx_uint64)(0))
 
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
 
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block(label, qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block(label,qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block_(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block_(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
 
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block_(labels, qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block_(labels,qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
 
 
-    .def(
-      "get_block_", [](UniTensor &self, const cytnx_uint64 &idx) { return self.get_block_(idx); },
+    .def("get_block_", [](UniTensor &self, const cytnx_uint64 &idx) { return self.get_block_(idx); },
       py::arg("idx") = (cytnx_uint64)(0))
     .def("get_blocks", [](const UniTensor &self) { return self.get_blocks(); })
-    .def(
-      "get_blocks_",
+    .def("get_blocks_",
       [](const UniTensor& self, py::args args, py::kwargs kwargs) {
         return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
       }
-      // ,py::arg("silent") = false // Uncmment this line after removing the deprecated argument.
+      // ,py::arg("silent") = false // Uncomment this line after removing the deprecated argument.
     )
-    .def(
-      "get_blocks_",
+    .def("get_blocks_",
       [](UniTensor &self, py::args args, py::kwargs kwargs) {
         return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
     }
-    // ,py::arg("silent") = false // Uncmment this line after removing the deprecated argument.
+    // ,py::arg("silent") = false // Uncomment this line after removing the deprecated argument.
 )
-    .def(
-      "put_block",
+    .def("put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64 &idx) {
         self.put_block(in, idx);
       },
       py::arg("in"), py::arg("idx") = (cytnx_uint64)(0))
 
-    .def(
-      "put_block",
+    .def("put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) {
         self.put_block(in, qnum);
       },
@@ -758,8 +744,27 @@ void unitensor_binding(py::module &m) {
         self.put_block(in, lbls, qnum);
       },
       py::arg("in"), py::arg("labels"), py::arg("qidx"))
-    .def(
-      "put_block_",
+
+    // [Deprecated force argument!]
+    .def("put_block",
+      [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
+         const bool &force) {
+          py::warnings::warn("argument 'force' is deprecated and will be removed; use put_block(UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) instead.",
+                              PyExc_FutureWarning, 2);
+          self.put_block(in, qnum, force);
+      },
+      py::arg("in"), py::arg("qidx"), py::arg("force"))
+    // [Deprecated force argument!]
+    .def("put_block",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
+         const bool &force) {
+          py::warnings::warn("argument 'force' is deprecated and will be removed; use put_block((UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) instead",
+                              PyExc_FutureWarning, 2);
+          self.put_block(in, lbls, qnum, force);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+
+    .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const cytnx_uint64 &idx) { self.put_block_(in, idx); },
       py::arg("in"), py::arg("idx") = (cytnx_uint64)(0))
 
@@ -773,8 +778,27 @@ void unitensor_binding(py::module &m) {
         self.put_block_(in, lbls, qnum);
       },
       py::arg("in"), py::arg("labels"), py::arg("qidx"))
-    .def(
-      "__repr__",
+
+    // [Deprecated force argument!]
+    .def("put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
+         const bool &force) {
+          py::warnings::warn("argument 'force' is deprecated and will be removed; use put_block_(UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) instead.",
+                              PyExc_FutureWarning, 2);
+          self.put_block_(in, qnum, force);
+      },
+      py::arg("in"), py::arg("qidx"), py::arg("force"))
+    // [Deprecated force argument!]
+    .def("put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
+         const bool &force) {
+          py::warnings::warn("argument 'force' is deprecated and will be removed; use put_block_(UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) instead.",
+                              PyExc_FutureWarning, 2);
+          self.put_block_(in, lbls, qnum, force);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+
+    .def("__repr__",
       [](UniTensor &self) -> std::string {
         std::cout << self << std::endl;
         return std::string("");

@@ -667,7 +667,7 @@ namespace cytnx {
     }
 
     void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
-      // We don't check the dtype for DenseUniTensor, since it'll be more convinent to change
+      // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
 
       // cytnx_error_msg(in.dtype() != this->dtype(),
@@ -694,7 +694,7 @@ namespace cytnx {
     }
     // share view of the block
     void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
-      // We don't check the dtype for DenseUniTensor, since it'll be more convinent to change
+      // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
 
       // cytnx_error_msg(in.dtype() != this->dtype(),
@@ -4177,12 +4177,40 @@ namespace cytnx {
     }
 
     /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block(const Tensor &in, const cytnx_uint64 &idx) \n
+     *   instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block(const Tensor &in, const cytnx_uint64 &idx) "
+      "instead.")]] UniTensor &
+      put_block(const Tensor &in, const cytnx_uint64 &idx, const bool &force) {
+      this->_impl->put_block(in, idx);
+      return *this;
+    }
+
+    /**
     @brief Put the block into the UniTensor with given quantum number.
         @param[in] in_tens the block you want to put into UniTensor
         @param[in] qidx the quantum indices of the UniTensor you want to put the block \p in_tens
   in.
     */
     UniTensor &put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx) {
+      this->_impl->put_block(in_tens, qidx);
+      return *this;
+    }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx) \n
+     *   instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx, const bool &force) {
       this->_impl->put_block(in_tens, qidx);
       return *this;
     }
@@ -4220,6 +4248,21 @@ namespace cytnx {
     }
 
     /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block(Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64>
+     * &qidx) \n instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block(Tensor &in, const std::vector<std::string> &lbls, const "
+      "std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block(Tensor &in, const std::vector<std::string> &lbls,
+                const std::vector<cytnx_int64> &qidx, const bool &force) {
+      return put_block(in, lbls, qidx);
+    }
+
+    /**
     @brief Put the block into the UniTensor with given index, inplacely.
         @note the put block will have shared view with the internal block, i.e. non-clone.
         @see put_block(const Tensor &in, const cytnx_uint64 &idx)
@@ -4235,6 +4278,20 @@ namespace cytnx {
         @see put_block(const Tensor &in, const cytnx_uint64 &idx)
         */
     UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) {
+      this->_impl->put_block_(in, qidx);
+      return *this;
+    }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) \n
+     *   instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx, const bool &force) {
       this->_impl->put_block_(in, qidx);
       return *this;
     }
@@ -4273,6 +4330,22 @@ namespace cytnx {
       in.permute_(new_order);
       return *this;
     }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block_(Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64>
+     * &qidx) \n instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block_(Tensor &in, const std::vector<std::string> &lbls, const "
+      "std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block_(Tensor &in, const std::vector<std::string> &lbls,
+                 const std::vector<cytnx_int64> &qidx, const bool &force) {
+      return put_block_(in, lbls, qidx);
+    }
+
     UniTensor get(const std::vector<Accessor> &accessors) const {
       UniTensor out;
       out._impl = this->_impl->get(accessors);
