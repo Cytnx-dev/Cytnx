@@ -28,6 +28,12 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
   UniTensor BFUT3PERM = UniTensor({B3, B2, B4, B12, B1}, {"d", "b", "e", "c", "a"})
                           .set_name("BFUT3PERM");  // permutation {3, 1, 4, 2, 0}
   UniTensor BFUT4 = UniTensor({B1g, B2g, B3g}, {"a", "b", "c"}).set_name("BFUT4");
+  // BFUT5 has mixed in/out legs on both row and column spaces, and degeneracies.
+  Bond B5Li = Bond(BD_IN, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
+  Bond B5Lo = Bond(BD_OUT, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
+  Bond B5Ri = Bond(BD_IN, {Qs(0), Qs(1)}, {1, 2}, {Symmetry::FermionParity()});
+  Bond B5Ro = Bond(BD_OUT, {Qs(0), Qs(1)}, {2, 1}, {Symmetry::FermionParity()});
+  UniTensor BFUT5 = UniTensor({B5Li, B5Lo, B5Ri, B5Ro}, {"li", "lo", "ri", "ro"}).set_name("BFUT5");
   // UniTensor BFUTfparfnum; // fpar x fnum symmetries
 
  protected:
@@ -89,6 +95,20 @@ class BlockFermionicUniTensorTest : public ::testing::Test {
     BFUT4.at({2, 1, 1}) = 7;
     BFUT4.at({1, 1, 2}) = 8;
     BFUT4.at({2, 1, 2}) = 9;
+
+    BFUT5.set_rowrank_(2);
+    cytnx_double val = 1.0;
+    auto sh = BFUT5.shape();
+    for (cytnx_uint64 i = 0; i < sh[0]; i++)
+      for (cytnx_uint64 j = 0; j < sh[1]; j++)
+        for (cytnx_uint64 k = 0; k < sh[2]; k++)
+          for (cytnx_uint64 l = 0; l < sh[3]; l++) {
+            auto proxy = BFUT5.at({i, j, k, l});
+            if (proxy.exists()) {
+              proxy = val;
+              val += 1.0;
+            }
+          }
   }
   void TearDown() override {}
 };
