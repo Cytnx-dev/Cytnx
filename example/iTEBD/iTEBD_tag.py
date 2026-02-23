@@ -66,10 +66,10 @@ def itebd_tfim_tag(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
     Elast = 0
     for i in range(10000):
 
-        A.relabel(['a','0','b'])
-        B.relabel(['c','1','d'])
-        la.relabel(['b','c'])
-        lb.relabel(['d','e'])
+        A.relabel_(['a','0','b'])
+        B.relabel_(['c','1','d'])
+        la.relabel_(['b','c'])
+        lb.relabel_(['d','e'])
 
 
 
