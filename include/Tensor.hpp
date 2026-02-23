@@ -728,6 +728,8 @@ namespace cytnx {
     @brief Make the Tensor contiguous by coalescing the memory (storage).
     @return [Tensor] a new Tensor that is with contiguous memory (storage).
     @see \link Tensor::contiguous_ Tensor::contiguous_() \endlink
+    @warning If the input tensor is not contiguous, then the data will be stored in new memory;
+    otherwise, the input tensor is returned and no cloning of the data happens.
 
     ## Example:
     ### c++ API:
@@ -1619,16 +1621,24 @@ namespace cytnx {
     Tensor InvM() const;
 
     /**
-     * @brief the Inv_ member function. Same as
-     * \ref cytnx::linalg::Inv_(Tensor &Tin, const double &clip)
+      @brief Apply the inverse on each entry of the Tensor.
+        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+      pseudo-inverse
+        @return Tensor
+        @note Compared to Inv(), this function is an inplace function.
+        @see Inv(const double &clip)
      */
-    Tensor &Inv_(const double &clip);
+    Tensor &Inv_(const double &clip = -1.);
 
     /**
-     * @brief the Inv member function. Same as
-     * \ref cytnx::linalg::Inv(const Tensor &Tin, const double &clip)
+      @brief Apply the inverse on each entry of the Tensor.
+        @param[in] clip elmements with absolute value <= clip are set to zero; corresponds to the
+      pseudo-inverse
+        @return Tensor
+        @note Compared to Inv_(), this function will create a new Tensor.
+        @see Inv_(const double &clip)
      */
-    Tensor Inv(const double &clip) const;
+    Tensor Inv(const double &clip = -1.) const;
 
     /**
      * @brief the Conj_ member function. Same as
