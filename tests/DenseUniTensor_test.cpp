@@ -4065,6 +4065,43 @@ TEST_F(DenseUniTensorTest, Transpose_diag) {
 }
 
 /*=====test info=====
+describe:test Transpose with tagged UniTensor
+====================*/
+TEST_F(DenseUniTensorTest, Transpose_tagged) {
+  auto Spcd_t = Spcd.Transpose();
+  // test tag, rowrank, rank
+  EXPECT_TRUE(Spcd_t.is_tag());
+  EXPECT_EQ(Spcd.rowrank(), 1);
+  EXPECT_EQ(Spcd_t.rowrank(), 2);
+  EXPECT_EQ(Spcd_t.rank(), 3);
+  // test bond types
+  std::vector<Bond> bonds_t = Spcd_t.bonds();
+  EXPECT_EQ(bonds_t[0].type(), BD_IN);
+  EXPECT_EQ(bonds_t[1].type(), BD_OUT);
+  EXPECT_EQ(bonds_t[2].type(), BD_OUT);
+  // test labels
+  std::vector<string> labels = Spcd.labels();
+  std::vector<string> labels_t = Spcd_t.labels();
+  EXPECT_EQ(labels_t[0], labels[1]);
+  EXPECT_EQ(labels_t[1], labels[2]);
+  EXPECT_EQ(labels_t[2], labels[0]);
+  // test shape
+  auto shape = Spcd.shape();
+  auto shape_t = Spcd_t.shape();
+  EXPECT_EQ(shape_t[0], shape[1]);
+  EXPECT_EQ(shape_t[1], shape[2]);
+  EXPECT_EQ(shape_t[2], shape[0]);
+  // test tensors
+  EXPECT_TRUE(AreEqUniTensor(Spcd_t.Transpose(), Spcd));
+  auto Spcd_p = Spcd_t.permute(Spcd.labels());
+  std::vector<Bond> bonds_p = Spcd_p.bonds();
+  for (auto bond : bonds_p) {
+    bond.redirect_();
+  }
+  EXPECT_TRUE(AreEqUniTensor(Spcd_p, Spcd));
+}
+
+/*=====test info=====
 describe:test Transpose_
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose_) {
