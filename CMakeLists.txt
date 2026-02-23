@@ -251,7 +251,7 @@ endif()
 # #####################################################################
 
 # ## Boost
-find_package(Boost CONFIG REQUIRED)
+find_package(Boost REQUIRED)
 target_include_directories(cytnx SYSTEM
   PUBLIC
   ${Boost_INCLUDE_DIRS}

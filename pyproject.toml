@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core >=0.11", "pybind11 >=3.0"]
+requires = ["scikit-build-core >=0.11", "pybind11 >=3.0", "setuptools"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -67,14 +67,14 @@ result = "{major}.{minor}.{patch}"
 # architecture which is an extension of x86_64, so the wheels built with manylinux_2_34
 # may not support older machines. See https://github.com/pypa/manylinux?tab=readme-ov-file#manylinux_2_34-almalinux-9-based---alpha
 # for more information.
-manylinux-x86_64-image = "manylinux_2_34"
+manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
 
 [tool.cibuildwheel.linux]
 # before-all = "apt-get install -y arpack boost ccache libomp openblas"
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
 # To include LAPACKE header.
-environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf" }
+environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf", CMAKE_ARGS = "-DBoost_NO_BOOST_CMAKE=ON" }
 
 [tool.cibuildwheel.macos]
 before-all = "brew update; brew install arpack boost ccache libomp openblas"

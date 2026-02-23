@@ -1,18 +1,24 @@
 set -xe
 
-yum search lapack
-yum --showduplicates list "lapack*"
-# yum install -y arpack-devel boost-devel ccache lapack-devel libomp-devel openblas-devel
-yum install -y arpack-devel boost-devel ccache libomp-devel openblas-devel
-# On Red Hat/CentOS systems (which manylinux images are based on), the lapack-devel
-# package typically provides the Fortran bindings and miss the C-interface header, so
-# use lapacke.h shipped with openblas instead.
-ls /usr/include
-ln -s /usr/include/openblas/lapacke.h /usr/include/lapacke.h
-ln -s /usr/include/openblas/lapack.h /usr/include/lapack.h
-ln -s /usr/include/openblas/lapacke_mangling.h /usr/include/lapacke_mangling.h
+# Install required packages based on distro
+if command -v apk &> /dev/null; then
+    # musllinux (Alpine)
+    apk add --no-cache boost-dev openblas-dev arpack-dev ccache
+elif command -v dnf &> /dev/null; then
+    # manylinux_2_28+ (AlmaLinux/RHEL)
+    dnf install -y boost-devel openblas-devel arpack-devel ccache
+elif command -v yum &> /dev/null; then
+    # manylinux2014 (CentOS)
+    yum install -y boost-devel openblas-devel arpack-devel ccache
+else
+    echo "WARNING: No package manager found"
+fi
 
-ls /usr/include/openblas
-#  boost1.78-devel
-# ls /usr/include/boost | head
-# ls /usr/lib64/libboost_*.so
+# Create symlinks for OpenBLAS headers if available
+if [ -d /usr/include/openblas ]; then
+    ln -sf /usr/include/openblas/lapacke.h /usr/include/lapacke.h
+    ln -sf /usr/include/openblas/lapack.h /usr/include/lapack.h
+    ln -sf /usr/include/openblas/lapacke_mangling.h /usr/include/lapacke_mangling.h
+    ln -sf /usr/include/openblas/cblas.h /usr/include/cblas.h
+    ln -sf /usr/include/openblas/openblas_config.h /usr/include/openblas_config.h
+fi
