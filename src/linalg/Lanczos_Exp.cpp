@@ -33,7 +33,7 @@ namespace cytnx {
         return coe * u;
       }
 
-      UniTensor Gram_Schimidt_internal(const std::vector<UniTensor> &vs) {
+      UniTensor Gram_Schmidt_internal(const std::vector<UniTensor> &vs) {
         auto u = vs.at(0).clone();
         double low = -1.0, high = 1.0;
         random::uniform_(u, low, high);
@@ -271,7 +271,7 @@ namespace cytnx {
               std::cout << "beta too small, pick another vector." << i << std::endl;
             }
             // pick a new vector perpendicular to all vector in Vs
-            v = Gram_Schimidt_internal(Vs).relabels_(v.labels());
+            v = Gram_Schmidt_internal(Vs).relabels_(v.labels());
             auto v_norm = Dot_internal(v, v);
             // if the picked vector also too small, break and construct expH
             if (abs(v_norm) <= beta_tol) {
