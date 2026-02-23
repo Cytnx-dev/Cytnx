@@ -1,0 +1,21 @@
+services:
+  build:
+    image: cytnx:build
+    build:
+      context: .
+      dockerfile: docker/cytnx-cpu.Dockerfile
+      args:
+        - USE_OMP=OFF # This overrides everything
+      target: builder
+    env_file:
+      - docker/build_config.env # The base defaults
+  dev:
+    image: cytnx:dev
+    build:
+      context: .
+      dockerfile: docker/cytnx-cpu.Dockerfile
+      args:
+        - USE_OMP=OFF # This overrides everything
+      target: runtime
+    env_file:
+      - docker/build_config.env # The base defaults
