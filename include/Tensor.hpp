@@ -1008,10 +1008,13 @@ namespace cytnx {
     /**
     @brief get elements using Accessor (C++ API) / slices (python API)
     @param[in] accessors the Accessor (C++ API) / slices (python API) to get the elements.
+    @param[out] removed an ascending list of indices that were removed from the original shape of
+    the Tensor.
     @return [Tensor]
     @see \link cytnx::Accessor Accessor\endlink for cordinate with Accessor in C++ API.
     @note
-        1. the return will be a new Tensor instance, which not share memory with the current Tensor.
+        The return will be a new Tensor instance, which does not share memory with the current
+    Tensor.
 
     ## Equivalently:
         One can also using more intruisive way to get the slice using [] operator.
@@ -1026,9 +1029,10 @@ namespace cytnx {
     #### output>
     \verbinclude example/Tensor/get.py.out
     */
-    Tensor get(const std::vector<cytnx::Accessor> &accessors) const {
+    Tensor get(const std::vector<cytnx::Accessor> &accessors,
+               std::vector<cytnx_int64> &removed = *new std::vector<cytnx_int64>()) const {
       Tensor out;
-      out._impl = this->_impl->get(accessors);
+      out._impl = this->_impl->get(accessors, removed);
       return out;
     }
 
