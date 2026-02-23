@@ -66,10 +66,10 @@ namespace cytnx {
                                const unsigned int &Maxiter = 10000) {
       // the operation (I + Hop/k) on A
       auto I_plus_A_Op = [&](UniTensor A) {
-        return ((Hop->matvec(A)) / k + A).relabels_(b.labels());
+        return ((Hop->matvec(A)) / k + A).relabel_(b.labels());
       };
       // the residuals of (b - (I + Hop/k)x)
-      auto r = (b - I_plus_A_Op(Tin)).relabels_(b.labels());
+      auto r = (b - I_plus_A_Op(Tin)).relabel_(b.labels());
       // choose r0_hat = r
       auto r0 = r;
       auto x = Tin;
@@ -89,22 +89,22 @@ namespace cytnx {
       for (int i = 1; i < Maxiter; ++i) {
         auto v = I_plus_A_Op(pv_old);
         auto a = p_old / _Dot(r0, v);
-        auto h = (x_old + a * pv_old).relabels_(b.labels());
-        auto s = (r_old - a * v).relabels_(b.labels());
+        auto h = (x_old + a * pv_old).relabel_(b.labels());
+        auto s = (r_old - a * v).relabel_(b.labels());
         if (abs(_Dot(s, s)) < CvgCrit) {
           x = h;
           break;
         }
         auto t = I_plus_A_Op(s);
         auto w = _Dot(t, s) / _Dot(t, t);
-        x = (h + w * s).relabels_(b.labels());
-        r = (s - w * t).relabels_(b.labels());
+        x = (h + w * s).relabel_(b.labels());
+        r = (s - w * t).relabel_(b.labels());
         if (abs(_Dot(r, r)) < CvgCrit) {
           break;
         }
         auto p = _Dot(r0, r);
         auto beta = (p / p_old) * (a / w);
-        pv = (r + beta * (pv_old - w * v)).relabels_(b.labels());
+        pv = (r + beta * (pv_old - w * v)).relabel_(b.labels());
 
         // update
         pv_old = pv;
@@ -144,7 +144,7 @@ namespace cytnx {
         // that,
         // |(I + A / k )^(−1) v[i] − w[i]| ≤ eps1 |v[i]| .
         auto w = _invert_biCGSTAB(Hop, v, v, k, eps1);
-        // auto resi = ((Hop->matvec(w))/k + w).relabels_(v.labels()) - v;
+        // auto resi = ((Hop->matvec(w))/k + w).relabel_(v.labels()) - v;
 
         // For j = 0 to i
         for (int j = 0; j <= i; ++j) {
@@ -211,10 +211,10 @@ namespace cytnx {
       auto label_kr = B.labels()[1];
       auto Vk_labels = v0.labels();
       Vk_labels.insert(Vk_labels.begin(), label_kl);
-      Vk_ut.relabels_(Vk_labels);
+      Vk_ut.relabel_(Vk_labels);
       auto VkDag_labels = v0.labels();
       VkDag_labels.push_back(label_kr);
-      VkDag_ut.relabels_(VkDag_labels);
+      VkDag_ut.relabel_(VkDag_labels);
 
       // Vk_ut.print_diagram();
       // VkDag_ut.print_diagram();
@@ -241,10 +241,10 @@ namespace cytnx {
       v = v / v_nrm;
 
       // first iteration
-      auto wp = (Hop->matvec(v)).relabels_(v.labels());
+      auto wp = (Hop->matvec(v)).relabel_(v.labels());
       auto alpha = _Dot(wp, v);
       Hp.at({0, 0}) = alpha;
-      auto w = (wp - alpha * v).relabels_(v.labels());
+      auto w = (wp - alpha * v).relabel_(v.labels());
 
       // prepare U
       auto Vk_shape = v.shape();
@@ -262,14 +262,14 @@ namespace cytnx {
         auto beta = std::sqrt(double(_Dot(w, w).real()));
         v_old = v.clone();
         if (beta > beta_tol) {
-          v = (w / beta).relabels_(v.labels());
+          v = (w / beta).relabel_(v.labels());
         } else {  // beta too small -> the norm of new vector too small. This vector cannot span the
                   // new dimension
           if (verbose) {
             std::cout << "beta too small, pick another vector." << i << std::endl;
           }
           // pick a new vector perpendicular to all vector in Vs
-          v = _Gram_Schimidt(Vs).relabels_(v.labels());
+          v = _Gram_Schimidt(Vs).relabel_(v.labels());
           auto v_norm = _Dot(v, v);
           // if the picked vector also too small, break and construct expH
           if (abs(v_norm) <= beta_tol) {
@@ -284,10 +284,10 @@ namespace cytnx {
         Vs.push_back(v);
         Hp.at({(cytnx_uint64)i, (cytnx_uint64)i - 1}) =
           Hp.at({(cytnx_uint64)i - 1, (cytnx_uint64)i}) = beta;
-        wp = (Hop->matvec(v)).relabels_(v.labels());
+        wp = (Hop->matvec(v)).relabel_(v.labels());
         alpha = _Dot(wp, v);
         Hp.at({(cytnx_uint64)i, (cytnx_uint64)i}) = alpha;
-        w = (wp - alpha * v - beta * v_old).relabels_(v.labels());
+        w = (wp - alpha * v - beta * v_old).relabel_(v.labels());
 
         // Converge check
         Hp_sub = _resize_mat(Hp, i + 1, i + 1);
@@ -345,10 +345,10 @@ namespace cytnx {
       auto label_kr = B.labels()[1];
       auto Vk_labels = v.labels();
       Vk_labels.insert(Vk_labels.begin(), label_kl);
-      Vk_ut.relabels_(Vk_labels);
+      Vk_ut.relabel_(Vk_labels);
       auto VkDag_labels = v.labels();
       VkDag_labels.push_back(label_kr);
-      VkDag_ut.relabels_(VkDag_labels);
+      VkDag_ut.relabel_(VkDag_labels);
 
       out = Contracts({T, VkDag_ut, B}, "", true);
       out = Contract(out, Vk_ut);

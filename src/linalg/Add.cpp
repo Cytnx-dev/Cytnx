@@ -612,7 +612,7 @@ namespace cytnx {
         out = Lt.clone();
         out.Add_(Rt);
       }
-      out.set_labels(vec_range<std::string>(Lt.rank()));
+      out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       return out;
