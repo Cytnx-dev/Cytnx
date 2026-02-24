@@ -20,8 +20,9 @@
 
 namespace cytnx {
   namespace linalg {
-    std::vector<Tensor> Rsvd_notruncate(const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
-                             cytnx_uint64 power_iteration, unsigned int seed) {
+    std::vector<Tensor> Rsvd_notruncate(const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U,
+                                        bool is_vT, cytnx_uint64 power_iteration,
+                                        unsigned int seed) {
       std::vector<cytnx_uint64> shape = Tin.shape();
       cytnx_error_msg(shape.size() != 2, "[Rsvd] error, Rsvd can only operate on rank-2 Tensor.%s",
                       "\n");
@@ -96,9 +97,9 @@ namespace cytnx {
       }
     }  // Rsvd(Tensor)
 
-    void _Rsvd_notruncate_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                        cytnx_uint64 keepdim, bool is_U, bool is_vT, cytnx_uint64 power_iteration,
-                        unsigned int seed) {
+    void _Rsvd_notruncate_Dense_UT(std::vector<cytnx::UniTensor> &outCyT,
+                                   const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U,
+                                   bool is_vT, cytnx_uint64 power_iteration, unsigned int seed) {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
@@ -200,9 +201,9 @@ namespace cytnx {
       }  // if tag
     }  // _Rsvd_notruncate_Dense_UT
 
-    std::vector<cytnx::UniTensor> Rsvd_notruncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U,
-                                       bool is_vT, cytnx_uint64 power_iteration,
-                                       unsigned int seed) {
+    std::vector<cytnx::UniTensor> Rsvd_notruncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                                  bool is_U, bool is_vT,
+                                                  cytnx_uint64 power_iteration, unsigned int seed) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
                       "[Rsvd][ERROR] Rsvd for UniTensor should have rank>1 and rowrank>0%s", "\n");
@@ -219,7 +220,8 @@ namespace cytnx {
         //   _Rsvd_notruncate_Block_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
 
         // } else if (Tin.uten_type() == UTenType.BlockFermionic) {
-        //   _Rsvd_notruncate_BlockFermionic_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration, seed);
+        //   _Rsvd_notruncate_BlockFermionic_UT(outCyT, Tin, keepdim, is_U, is_vT, power_iteration,
+        //   seed);
       } else {
         cytnx_error_msg(true, "[ERROR] Rsvd currently only supports Dense UniTensors.%s", "\n");
 

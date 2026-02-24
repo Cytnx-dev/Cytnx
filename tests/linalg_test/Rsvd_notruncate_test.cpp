@@ -77,7 +77,8 @@ namespace RsvdNoTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 2); }, std::logic_error);
+    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 2); },
+                 std::logic_error);
   }
 
   /*=====test info=====
@@ -203,7 +204,8 @@ namespace RsvdNoTruncateTest {
     UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
 
     // Do Rsvd_notruncate
-    std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(src_T, keepdim, true, true, power_iteration, 0);
+    std::vector<UniTensor> Rsvds =
+      linalg::Rsvd_notruncate(src_T, keepdim, true, true, power_iteration, 0);
 
     // check labels
     if (!(CheckLabels(src_T, Rsvds))) {

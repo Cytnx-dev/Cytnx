@@ -131,113 +131,116 @@ namespace cytnx {
       }
     }  // Rsvd(Tensor)
 
-    void _Rsvd_Dense_UT(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
-                        cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
-                        unsigned int return_err, cytnx_uint64 mindim,
-                        cytnx_uint64 oversampling_summand, double oversampling_factor,
-                        cytnx_uint64 power_iteration, unsigned int seed) {
-      // DenseUniTensor:
-      cytnx_uint64 keep_dim = keepdim;
+    namespace {  // actual implementations:
+      void Rsvd_Dense_UT_internal(std::vector<UniTensor> &outCyT, const cytnx::UniTensor &Tin,
+                                  cytnx_uint64 keepdim, double err, bool is_U, bool is_vT,
+                                  unsigned int return_err, cytnx_uint64 mindim,
+                                  cytnx_uint64 oversampling_summand, double oversampling_factor,
+                                  cytnx_uint64 power_iteration, unsigned int seed) {
+        // DenseUniTensor:
+        cytnx_uint64 keep_dim = keepdim;
 
-      Tensor tmp = Tin.get_block_().contiguous();
-      // if(Tin.is_contiguous()) tmp = Tin.get_block_();
-      // else{ tmp = Tin.get_block(); tmp.contiguous_();}
+        Tensor tmp = Tin.get_block_().contiguous();
+        // if(Tin.is_contiguous()) tmp = Tin.get_block_();
+        // else{ tmp = Tin.get_block(); tmp.contiguous_();}
 
-      std::vector<cytnx_uint64> oldshape = tmp.shape();
-      std::vector<std::string> oldlabel = Tin.labels();
+        std::vector<cytnx_uint64> oldshape = tmp.shape();
+        std::vector<std::string> oldlabel = Tin.labels();
 
-      // collapse as Matrix:
-      cytnx_int64 rowdim = 1;
-      for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
-      tmp = tmp.reshape({rowdim, -1});
+        // collapse as Matrix:
+        cytnx_int64 rowdim = 1;
+        for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
+        tmp = tmp.reshape({rowdim, -1});
 
-      std::vector<Tensor> outT =
-        cytnx::linalg::Rsvd(tmp, keepdim, err, is_U, is_vT, return_err, mindim,
-                            oversampling_summand, oversampling_factor, power_iteration, seed);
+        std::vector<Tensor> outT =
+          cytnx::linalg::Rsvd(tmp, keepdim, err, is_U, is_vT, return_err, mindim,
+                              oversampling_summand, oversampling_factor, power_iteration, seed);
 
-      // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
+        // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
 
-      int t = 0;
-      outCyT.resize(outT.size());
+        int t = 0;
+        outCyT.resize(outT.size());
 
-      // s
-      // cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Rsvd] keepdim should <=
-      // dimension of singular tensor%s","\n");
+        // s
+        // cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Rsvd] keepdim should <=
+        // dimension of singular tensor%s","\n");
 
-      cytnx::UniTensor &Cy_S = outCyT[t];
-      cytnx::Bond newBond(outT[0].shape()[0]);
-      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-                Tin.device(),
-                true);  // it is just reference so no hurt to alias ^^
-      Cy_S.put_block_(outT[t]);
-      t++;
+        cytnx::UniTensor &Cy_S = outCyT[t];
+        cytnx::Bond newBond(outT[0].shape()[0]);
+        Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1,
+                  Type.Double, Tin.device(),
+                  true);  // it is just reference so no hurt to alias ^^
+        Cy_S.put_block_(outT[t]);
+        t++;
 
-      if (is_U) {
-        cytnx::UniTensor &Cy_U = outCyT[t];
-        // shape
-        cytnx_error_msg(Tin.rowrank() > oldshape.size(),
-                        "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
-                        "contained tensor.%s",
-                        "\n");
-        std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
-        shapeU.push_back(-1);
-
-        outT[t].reshape_(shapeU);
-
-        Cy_U.Init(outT[t], false, Tin.rowrank());
-        std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
-        labelU.push_back(Cy_S.labels()[0]);
-        Cy_U.set_labels(labelU);
-        t++;  // U
-      }
-
-      if (is_vT) {
-        cytnx::UniTensor &Cy_vT = outCyT[t];
-
-        // shape
-        std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
-        shapevT[0] = -1;
-        memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
-
-        outT[t].reshape_(shapevT);
-
-        Cy_vT.Init(outT[t], false, 1);
-        std::vector<std::string> labelvT(shapevT.size());
-        labelvT[0] = Cy_S.labels()[1];
-        std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
-        Cy_vT.set_labels(labelvT);
-        t++;  // vT
-      }
-
-      // if tag, then update  the tagging informations
-      if (Tin.is_tag()) {
-        Cy_S.tag();
-        t = 1;
         if (is_U) {
           cytnx::UniTensor &Cy_U = outCyT[t];
-          Cy_U._impl->_is_tag = true;
-          for (int i = 0; i < Cy_U.rowrank(); i++) {
-            Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
-          }
-          Cy_U.bonds().back().set_type(cytnx::BD_BRA);
-          Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
-          t++;
+          // shape
+          cytnx_error_msg(
+            Tin.rowrank() > oldshape.size(),
+            "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
+            "contained tensor.%s",
+            "\n");
+          std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
+          shapeU.push_back(-1);
+
+          outT[t].reshape_(shapeU);
+
+          Cy_U.Init(outT[t], false, Tin.rowrank());
+          std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
+          labelU.push_back(Cy_S.labels()[0]);
+          Cy_U.set_labels(labelU);
+          t++;  // U
         }
+
         if (is_vT) {
           cytnx::UniTensor &Cy_vT = outCyT[t];
-          Cy_vT._impl->_is_tag = true;
-          Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
-          for (int i = 1; i < Cy_vT.rank(); i++) {
-            Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
-          }
-          Cy_vT._impl->_is_braket_form = Cy_vT._impl->_update_braket();
-          t++;
+
+          // shape
+          std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
+          shapevT[0] = -1;
+          memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
+
+          outT[t].reshape_(shapevT);
+
+          Cy_vT.Init(outT[t], false, 1);
+          std::vector<std::string> labelvT(shapevT.size());
+          labelvT[0] = Cy_S.labels()[1];
+          std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
+          Cy_vT.set_labels(labelvT);
+          t++;  // vT
         }
 
-      }  // if tag
+        // if tag, then update  the tagging informations
+        if (Tin.is_tag()) {
+          Cy_S.tag();
+          t = 1;
+          if (is_U) {
+            cytnx::UniTensor &Cy_U = outCyT[t];
+            Cy_U._impl->_is_tag = true;
+            for (int i = 0; i < Cy_U.rowrank(); i++) {
+              Cy_U.bonds()[i].set_type(Tin.bonds()[i].type());
+            }
+            Cy_U.bonds().back().set_type(cytnx::BD_BRA);
+            Cy_U._impl->_is_braket_form = Cy_U._impl->_update_braket();
+            t++;
+          }
+          if (is_vT) {
+            cytnx::UniTensor &Cy_vT = outCyT[t];
+            Cy_vT._impl->_is_tag = true;
+            Cy_vT.bonds()[0].set_type(cytnx::BD_KET);
+            for (int i = 1; i < Cy_vT.rank(); i++) {
+              Cy_vT.bonds()[i].set_type(Tin.bonds()[Tin.rowrank() + i - 1].type());
+            }
+            Cy_vT._impl->_is_braket_form = Cy_vT._impl->_update_braket();
+            t++;
+          }
 
-      if (return_err) outCyT.back().Init(outT.back(), false, 0);
-    };  // _Rsvd_Dense_UT
+        }  // if tag
+
+        if (return_err) outCyT.back().Init(outT.back(), false, 0);
+      }  // Rsvd_Dense_UT_internal
+    }  // unnamed namespace
 
     std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
                                        double err, bool is_U, bool is_vT, unsigned int return_err,
@@ -262,8 +265,8 @@ namespace cytnx {
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
-        _Rsvd_Dense_UT(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
-                       oversampling_summand, oversampling_factor, power_iteration, seed);
+        Rsvd_Dense_UT_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err, mindim,
+                               oversampling_summand, oversampling_factor, power_iteration, seed);
         // } else if (Tin.uten_type() == UTenType.Block) {
         //   _Rsvd_Block_UT(outCyT, Tin, keepdim, err, is_U, is_vT,
         //   return_err, mindim);
