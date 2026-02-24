@@ -17,6 +17,13 @@ namespace cytnx {
     cytnx::linalg::Pow_(*this, p);
     return *this;
   }
+
+  UniTensor UniTensor::Inv(double clip) const { return cytnx::linalg::Inv(*this, clip); }
+  UniTensor &UniTensor::Inv_(double clip) {
+    cytnx::linalg::Inv_(*this, clip);
+    return *this;
+  }
+
   UniTensor UniTensor::Add(const UniTensor &rhs) const { return cytnx::linalg::Add(*this, rhs); }
   UniTensor UniTensor::Add(const Scalar &rhs) const {
     // cout << "lyer1: " << rhs << endl;
@@ -221,7 +228,7 @@ namespace cytnx {
   }
 
   // Inplace Random Generators:
-  void UniTensor::normal_(const double &mean, const double &std, const unsigned int &seed) {
+  UniTensor &UniTensor::normal_(const double &mean, const double &std, const unsigned int &seed) {
     if (this->uten_type() == UTenType.Dense) {
       cytnx::random::normal_(this->get_block_(), mean, std, seed);
     } else if (this->uten_type() == UTenType.Block ||
@@ -235,9 +242,10 @@ namespace cytnx {
                       "not Dense or Block.%s",
                       "\n");
     }
+    return *this;
   }
 
-  void UniTensor::uniform_(const double &low, const double &high, const unsigned int &seed) {
+  UniTensor &UniTensor::uniform_(const double &low, const double &high, const unsigned int &seed) {
     if (this->uten_type() == UTenType.Dense) {
       cytnx::random::uniform_(this->get_block_(), low, high, seed);
     } else if (this->uten_type() == UTenType.Block ||
@@ -251,6 +259,7 @@ namespace cytnx {
                       "not Dense or Block.%s",
                       "\n");
     }
+    return *this;
   }
 
 }  // namespace cytnx

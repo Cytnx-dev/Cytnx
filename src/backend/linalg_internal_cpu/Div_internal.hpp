@@ -2,6 +2,8 @@
 #define CYTNX_BACKEND_LINALG_INTERNAL_CPU_DIV_INTERNAL_H_
 
 #include <assert.h>
+#include <cmath>
+#include <type_traits>
 #include <vector>
 #include "backend/Storage.hpp"
 #include "Type.hpp"
@@ -9,6 +11,7 @@
 
 namespace cytnx {
   namespace linalg_internal {
+
     template <typename TLin, typename TRin>
     inline void DivInternalImpl(boost::intrusive_ptr<Storage_base> &out,
                                 boost::intrusive_ptr<Storage_base> &Lin,
@@ -16,24 +19,23 @@ namespace cytnx {
                                 const std::vector<cytnx_uint64> &shape,
                                 const std::vector<cytnx_uint64> &invmapper_L,
                                 const std::vector<cytnx_uint64> &invmapper_R) {
-      using TOut = cytnx::Scalar_init_interface::type_promote_t<TLin, TRin>;
+      using TOut = cytnx::Type_class::type_promote_t<TLin, TRin>;
       TOut *_out = reinterpret_cast<TOut *>(out->data());
       const TLin *_Lin = reinterpret_cast<const TLin *>(Lin->data());
       const TRin *_Rin = reinterpret_cast<const TRin *>(Rin->data());
 
       if (Lin->size() == 1) {
         for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-          _out[i] = static_cast<TOut>(static_cast<TOut>(_Lin[0]) / static_cast<TOut>(_Rin[i]));
+          _out[i] = static_cast<TOut>(_Lin[0]) / static_cast<TOut>(_Rin[i]);
         }
       } else if (Rin->size() == 1) {
         for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-          _out[i] = static_cast<TOut>(static_cast<TOut>(_Lin[i]) / static_cast<TOut>(_Rin[0]));
+          _out[i] = static_cast<TOut>(_Lin[i]) / static_cast<TOut>(_Rin[0]);
         }
       } else {
         if (shape.size() == 0) {
-          // Contiguous case
           for (cytnx::cytnx_uint64 i = 0; i < len; i++) {
-            _out[i] = static_cast<TOut>(static_cast<TOut>(_Lin[i]) / static_cast<TOut>(_Rin[i]));
+            _out[i] = static_cast<TOut>(_Lin[i]) / static_cast<TOut>(_Rin[i]);
           }
         } else {
           // Non-contiguous case: handle permutations
@@ -60,8 +62,7 @@ namespace cytnx {
               cytnx::cartesian2c(cytnx::vec_map(tmpv, invmapper_L), old_accu_shapeL);
             cytnx::cytnx_uint64 idx_R =
               cytnx::cartesian2c(cytnx::vec_map(tmpv, invmapper_R), old_accu_shapeR);
-            _out[i] =
-              static_cast<TOut>(static_cast<TOut>(_Lin[idx_L]) / static_cast<TOut>(_Rin[idx_R]));
+            _out[i] = static_cast<TOut>(_Lin[idx_L]) / static_cast<TOut>(_Rin[idx_R]);
           }
         }
       }
