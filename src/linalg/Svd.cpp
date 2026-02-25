@@ -6,7 +6,6 @@
 #include "UniTensor.hpp"
 #include "algo.hpp"
 #include "linalg.hpp"
-using namespace std;
 
 #ifdef BACKEND_TORCH
 #else
@@ -67,11 +66,11 @@ namespace cytnx {
         std::vector<Tensor> out;
         out.push_back(S);
         if (is_UvT) {
-          // cout << "Original:\n" << in << endl;
-          // cout << "S:\n" << S << endl;
-          // cout << "Recompose1!:\n" << Matmul(Matmul(U, Diag(S)), vT) << endl;
-          // cout << "Recompose2!:\n"
-          //      << Tensordot(Tensordot(U, Diag(S), {1}, {0}), vT, {1}, {0}) << endl;
+          // std::cout << "Original:\n" << in << std::endl;
+          // std::cout << "S:\n" << S << std::endl;
+          // std::cout << "Recompose1!:\n" << Matmul(Matmul(U, Diag(S)), vT) << std::endl;
+          // std::cout << "Recompose2!:\n"
+          //      << Tensordot(Tensordot(U, Diag(S), {1}, {0}), vT, {1}, {0}) << std::endl;
           out.push_back(U);
           out.push_back(vT);
         }
@@ -83,14 +82,14 @@ namespace cytnx {
         return std::vector<Tensor>();
   #endif
       }
-    }
+    }  // Svd(Tensor)
     namespace {  // actual implementations:
       void Svd_Dense_UT_internal(std::vector<cytnx::UniTensor> &outCyT, const cytnx::UniTensor &Tin,
                                  const bool &compute_uv) {
         //[Note] outCyT must be empty!
 
         // DenseUniTensor:
-        // cout << "entry Dense UT" << endl;
+        // std::cout << "entry Dense UT" << std::endl;
 
         Tensor tmp;
         if (Tin.is_contiguous())
@@ -100,17 +99,17 @@ namespace cytnx {
           tmp.contiguous_();
         }
 
-        vector<cytnx_uint64> tmps = tmp.shape();
-        vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
+        std::vector<cytnx_uint64> tmps = tmp.shape();
+        std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
         tmps.clear();
-        vector<string> oldlabel = Tin.labels();
+        std::vector<std::string> oldlabel = Tin.labels();
 
         // collapse as Matrix:
         cytnx_int64 rowdim = 1;
         for (cytnx_uint64 i = 0; i < Tin.rowrank(); i++) rowdim *= tmp.shape()[i];
         tmp.reshape_({rowdim, -1});
 
-        vector<Tensor> outT = cytnx::linalg::Svd(tmp, compute_uv);
+        std::vector<Tensor> outT = linalg::Svd(tmp, compute_uv);
         if (Tin.is_contiguous()) tmp.reshape_(oldshape);
 
         int t = 0;
@@ -123,7 +122,7 @@ namespace cytnx {
         Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1,
                   Type.Double, Tin.device(), true);  // it is just reference so no hurt to alias ^^
 
-        // cout << "[AFTER INIT]" << endl;
+        // std::cout << "[AFTER INIT]" << std::endl;
         Cy_S.put_block_(outT[t]);
         t++;
 
@@ -134,25 +133,25 @@ namespace cytnx {
             "[ERROR] The rowrank of the input unitensor is larger than the rank of the "
             "contained tensor.%s",
             "\n");
-          vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
+          std::vector<cytnx_int64> shapeU(oldshape.begin(), oldshape.begin() + Tin.rowrank());
           shapeU.push_back(-1);
           outT[t].reshape_(shapeU);
           Cy_U.Init(outT[t], false, Tin.rowrank());
-          vector<string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
+          std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
           labelU.push_back(Cy_S.labels()[0]);
           Cy_U.set_labels(labelU);
           t++;  // U
         }
         if (compute_uv) {
           cytnx::UniTensor &Cy_vT = outCyT[t];
-          vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
+          std::vector<cytnx_int64> shapevT(Tin.rank() - Tin.rowrank() + 1);
           shapevT[0] = -1;
           memcpy(&shapevT[1], &oldshape[Tin.rowrank()], sizeof(cytnx_int64) * (shapevT.size() - 1));
 
           outT[t].reshape_(shapevT);
           Cy_vT.Init(outT[t], false, 1);
-          // cout << shapevT.size() << endl;
-          vector<string> labelvT(shapevT.size());
+          // std::cout << shapevT.size() << std::endl;
+          std::vector<std::string> labelvT(shapevT.size());
           labelvT[0] = Cy_S.labels()[1];
           // memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() -
           // 1));
@@ -260,7 +259,7 @@ namespace cytnx {
         int tr;
         for (auto const &x : mgrp) {
           vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-          // cout << x.second.size() << "-------" << endl;
+          // std::cout << x.second.size() << "-------" << std::endl;
           for (int i = 0; i < x.second.size(); i++) {
             itoi_indicators[i] = new_itoi[x.second[i]];
             // std::cout << new_itoi[x.second[i]] << std::endl;
@@ -480,7 +479,7 @@ namespace cytnx {
         int tr;
         for (auto const &x : mgrp) {
           vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-          // cout << x.second.size() << "-------" << endl;
+          // std::cout << x.second.size() << "-------" << std::endl;
           for (int i = 0; i < x.second.size(); i++) {
             itoi_indicators[i] = new_itoi[x.second[i]];
             // std::cout << new_itoi[x.second[i]] << std::endl;
@@ -516,7 +515,7 @@ namespace cytnx {
 
           // Now we can perform linalg!
           aux_qnums.push_back(x.first);
-          auto out = linalg::Svd(BTen, compute_uv);
+          auto out = Svd(BTen, compute_uv);
           aux_degs.push_back(out[0].shape()[0]);
           S_blocks.push_back(out[0]);
           tr = 1;
@@ -659,11 +658,9 @@ namespace cytnx {
       } else {
         cytnx_error_msg(true, "[ERROR] Svd only supports Dense/Block/BlockFermionic UniTensors.%s",
                         "\n");
-
       }  // is block form ?
 
       return outCyT;
-
     }  // Svd
 
   }  // namespace linalg
