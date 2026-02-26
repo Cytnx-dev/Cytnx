@@ -708,6 +708,12 @@ namespace cytnx {
     subspace, and the smallest singular values are less reliable. Use truncation with oversampling.
     @param[in] is_U if \em true, the left-unitary UniTensor U (isometry) is returned.
     @param[in] is_vT if \em true, the right-unitary UniTensor vT (isometry) is returned.
+    @param[in] mindim at least this amount of singular values are kept in each block.
+    @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
+    keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
+    where d is the block dimension and D the full tensor dimension (each being the minimum of row
+    and column dimension of the block or tensor respectively).
+    @param[in] oversampling_factor see oversampling_summand
     @param[in] power_iteration number of iterations for the power method: Y = (A *
     Adag)^power_iteration * A * Tin
     @param[in] seed the seed for the random generator. [Default] Using device entropy.
@@ -715,12 +721,17 @@ namespace cytnx {
     &power_iteration, const unsigned int &seed)
     @see Rsvd()
     @see Gesvd()
+    @note At least one singular value per symmetry sector is always kept.
+    @note More than keepdim singular values might be returned (depending on mindim,
+    oversampling_summand, oversampling_factor, and symmetry sector sizes).
     @warning No truncation of the singular values is performed, and the smaller ones will be
     inaccurate. Use Rsvd() for a truncated version that drops small singular values.
     */
     std::vector<cytnx::UniTensor> Rsvd_notruncate(
       const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U = true, bool is_vT = true,
-      cytnx_uint64 power_iteration = 2, unsigned int seed = random::__static_random_device());
+      cytnx_uint64 mindim = 1, cytnx_uint64 oversampling_summand = 0,
+      double oversampling_factor = 0., cytnx_uint64 power_iteration = 2,
+      unsigned int seed = random::__static_random_device());
 
     /**
     @brief Perform Singular-Value decomposition on a UniTensor using ?gesvd method.
@@ -865,10 +876,12 @@ namespace cytnx {
     the largest error will be pushed back to the vector (The smallest singular value in the return
     singular values matrix \f$ S \f$.) If \p return_err is > 1, then the full list of truncated
     singular values will be returned.
-    @param[in] oversampling_summand the randomized SVD computes (1 + oversampling_fact) * keepdim +
-    oversampling_summand before further truncating to keepdim
-    @param[in] oversampling_fact the randomized SVD computes (1 + oversampling_fact) * keepdim +
-    oversampling_summand before further truncating to keepdim
+    @param[in] mindim at least this amount of singular values are kept in each block.
+    @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
+    keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
+    where d is the block dimension and D the full tensor dimension (each being the minimum of row
+    and column dimension of the block or tensor respectively).
+    @param[in] oversampling_factor see oversampling_summand
     @param[in] power_iteration number of iterations for the power method: Y = (A *
     Adag)^power_iteration * A * Tin
     @param[in] seed the seed for the random generator. [Default] Using device entropy.
@@ -1887,10 +1900,12 @@ namespace cytnx {
     the largest error will be pushed back to the vector (The smallest singular value in the return
     singular values matrix \f$ S \f$.) If \p return_err is a \em positive int, then the
     full list of truncated singular values will be returned.
-    @param[in] oversampling_summand the randomized SVD computes (1 + oversampling_fact) * keepdim +
-    oversampling_summand before further truncating to keepdim
-    @param[in] oversampling_fact the randomized SVD computes (1 + oversampling_fact) * keepdim +
-    oversampling_summand before further truncating to keepdim
+    @param[in] mindim at least this amount of singular values are kept in each block.
+    @param[in] oversampling_summand the randomized SVD computes [(1 + oversampling_factor) *
+    keepdim*d/D + oversampling_summand] singular values in each block before further truncating,
+    where d is the block dimension and D the full tensor dimension (each being the minimum of row
+    and column dimension of the block or tensor respectively).
+    @param[in] oversampling_factor see oversampling_summand
     @param[in] power_iteration number of iterations for the power method: Y = (A *
     Adag)^power_iteration * A * Tin
     @param[in] seed the seed for the random generator. [Default] Using device entropy.

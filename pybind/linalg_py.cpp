@@ -73,14 +73,17 @@ void linalg_binding(py::module &m) {
   m_linalg.def(
     "Rsvd_notruncate",
     [](const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, bool is_U, bool is_vT,
+       cytnx_uint64 mindim, cytnx_uint64 oversampling_summand, double oversampling_factor,
        cytnx_uint64 power_iteration, int64_t seed) {
       if (seed == -1) {
         // If user doesn't specify seed argument
         seed = cytnx::random::__static_random_device();
       }
-      return cytnx::linalg::Rsvd_notruncate(Tin, keepdim, is_U, is_vT, power_iteration, seed);
+      return cytnx::linalg::Rsvd_notruncate(Tin, keepdim, is_U, is_vT, mindim, oversampling_summand,
+                                            oversampling_factor, power_iteration, seed);
     },
     py::arg("Tin"), py::arg("keepdim"), py::arg("is_U") = true, py::arg("is_vT") = true,
+    py::arg("mindim") = 1, py::arg("oversampling_summand") = 0, py::arg("oversampling_factor") = 0.,
     py::arg("power_iteration") = 2, py::arg("seed") = -1);
 
   m_linalg.def(
