@@ -942,8 +942,10 @@ namespace cytnx {
      * @deprecated This function is deprecated, please use
      * Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b) instead.
      */
-    cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
-                           const cytnx_int64 &b = 1);
+    [[deprecated(
+      "Use Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b "
+      "instead")]] cytnx::UniTensor
+      Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0, const cytnx_int64 &b = 1);
 
     /**
      * @brief Perform trace over two legs of a UniTensor.
