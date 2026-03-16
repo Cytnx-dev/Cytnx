@@ -54,7 +54,7 @@ namespace RsvdNoTruncateTest {
     bool is_diag = false;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, -10, 0, 0);
+    random::uniform_(T, -10, 0, 0);
     std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 1);
     EXPECT_TRUE(CheckLabels(T, Rsvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Rsvds)) << fail_msg.TraceFailMsgs();
@@ -77,7 +77,7 @@ namespace RsvdNoTruncateTest {
     bool is_diag = true;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, 0, 10, 0);
+    random::uniform_(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 2); },
                  std::logic_error);
   }
@@ -102,7 +102,7 @@ namespace RsvdNoTruncateTest {
   ====================*/
   TEST(Rsvd_notruncate, err_rank1_unitensor) {
     UniTensor T = UniTensor({Bond(8)}, {"x"}, 0, Type.Double, Device.cpu, false);
-    random::Make_uniform(T, 0, 10, 0);
+    random::uniform_(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 2); },
                  std::logic_error);
   }
@@ -149,7 +149,7 @@ namespace RsvdNoTruncateTest {
     std::vector<Bond> bonds = {Bond(2), Bond(3), Bond(4), Bond(5)};
     std::vector<std::string> labels = {"a", "b", "c", "d"};
     UniTensor T(bonds, labels, 2, Type.Double, Device.cpu, false);
-    random::Make_uniform(T, -10, 0, 0);
+    random::uniform_(T, -10, 0, 0);
     T.tag();
 
     ASSERT_TRUE(T.is_tag());

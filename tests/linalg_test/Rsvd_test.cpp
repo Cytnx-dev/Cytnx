@@ -12,9 +12,13 @@ namespace RsvdTest {
 
   bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
                    const cytnx_uint64& power_iteration);
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                   const std::vector<cytnx_uint64> min_blockdim,
+                   const cytnx_uint64& power_iteration);
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
+  UniTensor BuildCombinedBlockFermionicTensorWithSignflip();
   std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
   std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
   // normal test
@@ -109,6 +113,55 @@ namespace RsvdTest {
       fail_msg.Init(test_case_name + ", " + case_name);
       EXPECT_TRUE(CheckResult(case_name, 5, 0)) << fail_msg.TraceFailMsgs();
     }
+  }
+
+  /*=====test info=====
+  describe:Test U(1) UniTensor with exponentially decaying singular values.
+  input:
+    T:U(1) UniTensor with real or complex real type.
+    is_U:true
+    is_VT:true
+  ====================*/
+  TEST(Rsvd, U1_exp_svals_test) {
+    std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128", "sym_UT_U1_exp_Svals_F64"};
+    for (const auto& case_name : case_list) {
+      std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+      fail_msg.Init(test_case_name + ", " + case_name);
+      EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
+    }
+  }
+
+  /*=====test info=====
+  describe:Test U(1) UniTensor with exponentially decaying singular values and use of min_blockdim;
+  input:
+    T:U(1) UniTensor with real or complex real type.
+    is_U:true
+    is_VT:true
+  ====================*/
+  TEST(Rsvd, U1_exp_svals_minblockdim_test) {
+    std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128", "sym_UT_U1_exp_Svals_F64"};
+    for (const auto& case_name : case_list) {
+      std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+      fail_msg.Init(test_case_name + ", " + case_name);
+      EXPECT_TRUE(CheckResult(case_name, 5, {1, 1, 0, 2, 0}, 2)) << fail_msg.TraceFailMsgs();
+    }
+  }
+
+  /*=====test info=====
+  describe:Test BlockFermionic UniTensor.
+  input:
+    T:BlockFermionic UniTensor.
+    is_U:true
+    is_VT:true
+  ====================*/
+  TEST(Rsvd, block_fermionic_test) {
+    std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+    fail_msg.Init(test_case_name);
+    UniTensor src_T = BuildCombinedBlockFermionicTensorWithSignflip();
+    std::vector<UniTensor> Rsvds = linalg::Rsvd(src_T, 10, 0., true, true, 0, 0, 2, 1, 2, 0);
+    EXPECT_TRUE(CheckLabels(src_T, Rsvds)) << fail_msg.TraceFailMsgs();
+    // Note: For truncated SVD, exact recomposition is not expected due to truncation
+    // EXPECT_TRUE(ReComposeCheck(src_T, Rsvds)) << fail_msg.TraceFailMsgs();
   }
 
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
@@ -231,5 +284,79 @@ namespace RsvdTest {
     }
 
     return true;
+  }
+
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                   const std::vector<cytnx_uint64> min_blockdim,
+                   const cytnx_uint64& power_iteration) {
+    // test data source file
+    std::string src_file_name = src_data_root + case_name + ".cytnx";
+    // anscer file
+    std::string ans_file_name = ans_data_root + case_name + "_minblockdim.cytnx";
+    // reconstructed matrix file
+    std::string rec_file_name = ans_data_root + case_name + "_minblockdim_reconstructed.cytnx";
+    // bool need_U, need_VT;
+    bool compute_uv;
+    UniTensor src_T = UniTensor::Load(src_file_name);
+    UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
+    UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
+
+    // Do Rsvd
+    std::vector<UniTensor> Rsvds =
+      linalg::Rsvd(src_T, keepdim, min_blockdim, 0., true, true, 0, 0, 2, 1, power_iteration, 0);
+
+    // check labels
+    if (!(CheckLabels(src_T, Rsvds))) {
+      fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
+      return false;
+    }
+
+    // check answer
+    if (!(SingularValsCorrect(Rsvds[0], ans_T))) {
+      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
+      return false;
+    }
+
+    // check recompose [M - USV*]
+    if (!ReComposeCheck(rec_T, Rsvds)) {
+      fail_msg.AppendMsg(
+        "The result is wrong after recomposing. "
+        "That's mean T not equal USV* ",
+        __func__, __LINE__);
+      return false;
+    }
+
+    return true;
+  }
+
+  UniTensor BuildCombinedBlockFermionicTensorWithSignflip() {
+    std::vector<std::vector<cytnx_int64>> qnums = {{0, 0}, {1, 1}};
+    auto syms = std::vector<Symmetry>{Symmetry::FermionParity(), Symmetry(SymmetryType::U)};
+    Bond l1 = Bond(BD_IN, qnums, {2, 3}, syms);
+    Bond l2 = Bond(BD_IN, qnums, {1, 2}, syms);
+    Bond r1 = l1.redirect();
+    Bond r2 = l2.redirect();
+
+    UniTensor T({l1, l2, r1, r2}, {"l1", "l2", "r1", "r2"}, 2, Type.Double, Device.cpu, false);
+    random::uniform_(T, -1, 1, 0);
+    std::vector<std::vector<cytnx_int64>> perms = {
+      {1, 0, 2, 3},
+      {0, 2, 1, 3},
+      {2, 1, 0, 3},
+      {0, 1, 3, 2},
+    };
+
+    for (const auto& p : perms) {
+      UniTensor cand = T.permute(p);
+      bool has_signflip = false;
+      for (auto sf : cand.signflip()) {
+        if (sf) {
+          has_signflip = true;
+          break;
+        }
+      }
+      if (has_signflip) return cand;
+    }
+    return T.permute({1, 0, 2, 3});
   }
 }  // namespace RsvdTest
