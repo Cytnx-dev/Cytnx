@@ -211,7 +211,7 @@ namespace cytnx {
         }  // if tag
 
         if (return_err) outCyT.back().Init(outT.back(), false, 0);
-      }  // Gesvd_truncate_Dense_UT_internal no minblockdim
+      }  // Gesvd_truncate_Dense_UT_internal
 
       void Gesvd_truncate_Block_UT_internal(std::vector<UniTensor> &outCyT,
                                             const cytnx::UniTensor &Tin,

@@ -853,8 +853,8 @@ namespace cytnx {
     // Rsvd:
     //==================================================
     /**
-     * @brief Perform a truncated Singular-Value decomposition of a UniTensor.
-    @details This function will perform a truncated Singular-Value decomposition
+     * @brief Perform a randomized truncated Singular-Value decomposition of a UniTensor.
+    @details This function will perform a randomized truncated Singular-Value decomposition
     of a UniTensor. It uses the ?gesvd method for the SVD. It will perform the randomized
     SVD first, and then truncate the singular values to the given cutoff \p err. That means, given a
     UniTensor \p Tin as \f$ M \f$, then the result will be: \f[ M = U S V^\dagger, \f] where \f$ S
@@ -901,6 +901,41 @@ namespace cytnx {
     @note Uses a full Gesvd if keepdim is as large as the rank of the tensor
     */
     std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                       double err = 0., bool is_U = true, bool is_vT = true,
+                                       unsigned int return_err = 0, cytnx_uint64 mindim = 1,
+                                       cytnx_uint64 oversampling_summand = 10,
+                                       double oversampling_factor = 1.,
+                                       cytnx_uint64 power_iteration = 0,
+                                       unsigned int seed = random::__static_random_device());
+
+    /**
+     * @brief Perform a truncated Singular-Value decomposition of a UniTensor and keep at most
+     * \p min_blockdim singular values in each block.
+     * @details For each block, the minimum dimension can be chosen for the truncation. This can be
+     * helpful to avoid loosing symmetry sectors in the truncated SVD. For more details, please
+     * refer to the documentation of the function \ref Rsvd(const cytnx::UniTensor &Tin,
+     * cytnx_uint64 keepdim, double err = 0., bool is_U = true, bool is_vT = true, unsigned int
+     * return_err = 0, cytnx_uint64 mindim = 1, cytnx_uint64 oversampling_summand = 10, double
+     * oversampling_factor = 1., cytnx_uint64 power_iteration = 0, unsigned int seed =
+     * random::__static_random_device()).
+     *
+     * The truncation order is as following (later constraints might be violated by previous
+     * ones):<br> 1) Keep the largest \p min_blockdim singular values in each block; reduce \p
+     * keepdim and \p mindim by the number of already kept singular values<br> 2) Keep at most \p
+     * keepdim singular values; there might be an exception in case of exact degeneracies where more
+     * singular values are kept<br> 3) Keep at least \p mindim singular values;<br> 4) Drop all
+     * singular values smaller than \p err (no normalization applied to the singular values)
+     *
+     * @param[in] min_blockdim a vector containing the minimum dimension of each block;
+     * alternatively, a vector with only one element can be given to have the same min_blockdim for
+     * each block
+     * @see Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim, double err = 0., bool is_U =
+     * true, bool is_vT = true, unsigned int return_err = 0, cytnx_uint64 mindim = 1, cytnx_uint64
+     * oversampling_summand = 10, double oversampling_factor = 1., cytnx_uint64 power_iteration = 0,
+     * unsigned int seed = random::__static_random_device())
+     */
+    std::vector<cytnx::UniTensor> Rsvd(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
+                                       const std::vector<cytnx_uint64> min_blockdim,
                                        double err = 0., bool is_U = true, bool is_vT = true,
                                        unsigned int return_err = 0, cytnx_uint64 mindim = 1,
                                        cytnx_uint64 oversampling_summand = 10,
