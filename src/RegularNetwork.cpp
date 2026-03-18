@@ -961,7 +961,7 @@ namespace cytnx {
     int tn_device = this->tensors[0].device();
 
   #if defined(UNI_GPU) && defined(UNI_CUQUANTUM)  // gpu workflow with cuquantum
-    if (tn_device == Device.cuda && this->tensors[0].uten_type() == UTenType.Dense) {
+    if (tn_device != Device.cpu && this->tensors[0].uten_type() == UTenType.Dense) {
       vector<cytnx_uint64> out_shape;
       for (int i = 0; i < this->TOUT_labels.size(); i++) {
         out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
