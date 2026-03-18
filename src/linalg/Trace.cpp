@@ -67,11 +67,18 @@ namespace cytnx {
       if (shape.size() == 0) {
         // 2d
         if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](true, out, Tn, Ndiag, Device.Ncpus, 0, {}, {},
-                                                    {}, 0,
+          linalg_internal::lii.Trace_ii[Tn.dtype()](true, out, Tn, Ndiag, 0, {}, {}, {}, 0,
                                                     0);  // only the first 4 args will be used.
         else {
-          cytnx_error_msg(true, "[ERROR][Trace] GPU is under developing.%s", "\n");
+  #ifdef UNI_GPU
+          checkCudaErrors(cudaSetDevice(Tn.device()));
+          linalg_internal::lii.cuTrace_ii[Tn.dtype()](true, out, Tn, Ndiag, 0, {}, {}, {}, 0,
+                                                      0);  // only the first 4 args will be used.
+  #else
+          cytnx_error_msg(true, "[Trace] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          return out;
+  #endif
         }
       } else {
         // nd
@@ -85,10 +92,18 @@ namespace cytnx {
         }
         // std::cout << "entry Trace" << std::endl;
         if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Ndiag, Nelem, Device.Ncpus,
-                                                    accu, remain_rank_id, shape, ax1, ax2);
+          linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Ndiag, Nelem, accu,
+                                                    remain_rank_id, shape, ax1, ax2);
         else {
-          cytnx_error_msg(true, "[ERROR][Trace] GPU is under developing.%s", "\n");
+  #ifdef UNI_GPU
+          checkCudaErrors(cudaSetDevice(Tn.device()));
+          linalg_internal::lii.cuTrace_ii[Tn.dtype()](false, out, Tn, Ndiag, Nelem, accu,
+                                                      remain_rank_id, shape, ax1, ax2);
+  #else
+          cytnx_error_msg(true, "[Trace] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          return out;
+  #endif
         }
         out.reshape_(shape);
       }
