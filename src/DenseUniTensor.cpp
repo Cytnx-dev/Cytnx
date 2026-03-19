@@ -1308,8 +1308,7 @@ namespace cytnx {
       cytnx_error_msg(this->_block.shape()[0] != rhs->get_block_().shape()[0],
                       "[ERROR][Add_] shape mismatch: non-diagonal block has dimension %lld but "
                       "diagonal block has length %lld.\n",
-                      (long long)this->_block.shape()[0],
-                      (long long)rhs->get_block_().shape()[0]);
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
       this->_block += linalg::Diag(rhs->get_block_());
     }
   }
@@ -1349,8 +1348,7 @@ namespace cytnx {
       cytnx_error_msg(this->_block.shape()[0] != rhs->get_block_().shape()[0],
                       "[ERROR][Sub_] shape mismatch: non-diagonal block has dimension %lld but "
                       "diagonal block has length %lld.\n",
-                      (long long)this->_block.shape()[0],
-                      (long long)rhs->get_block_().shape()[0]);
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
       this->_block -= linalg::Diag(rhs->get_block_());
     }
   }
@@ -1394,8 +1392,7 @@ namespace cytnx {
       cytnx_error_msg(this->_block.shape()[0] != rhs->get_block_().shape()[0],
                       "[ERROR][Mul_] shape mismatch: non-diagonal block has dimension %lld but "
                       "diagonal block has length %lld.\n",
-                      (long long)this->_block.shape()[0],
-                      (long long)rhs->get_block_().shape()[0]);
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
       this->_block *= linalg::Diag(rhs->get_block_());
     }
   }
