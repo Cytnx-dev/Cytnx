@@ -1302,6 +1302,10 @@ namespace cytnx {
     if (this->_is_diag == rhs->_is_diag) {
       this->_block += rhs->get_block_();
     } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Add_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
       this->to_dense_();
       this->_block += rhs->get_block_();
     } else {
@@ -1309,7 +1313,13 @@ namespace cytnx {
                       "[ERROR][Add_] shape mismatch: non-diagonal block has dimension %lld but "
                       "diagonal block has length %lld.\n",
                       (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
-      this->_block += linalg::Diag(rhs->get_block_());
+      const Tensor &rhs_diag = rhs->get_block_();
+      cytnx_uint64 n = rhs_diag.shape()[0];
+      for (cytnx_uint64 i = 0; i < n; i++) {
+        Scalar v = Scalar(this->_block.at({i, i}));
+        v += Scalar(rhs_diag.at({i}));
+        this->_block.at({i, i}) = v;
+      }
     }
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
@@ -1342,6 +1352,10 @@ namespace cytnx {
     if (this->_is_diag == rhs->_is_diag) {
       this->_block -= rhs->get_block_();
     } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Sub_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
       this->to_dense_();
       this->_block -= rhs->get_block_();
     } else {
@@ -1349,7 +1363,13 @@ namespace cytnx {
                       "[ERROR][Sub_] shape mismatch: non-diagonal block has dimension %lld but "
                       "diagonal block has length %lld.\n",
                       (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
-      this->_block -= linalg::Diag(rhs->get_block_());
+      const Tensor &rhs_diag = rhs->get_block_();
+      cytnx_uint64 n = rhs_diag.shape()[0];
+      for (cytnx_uint64 i = 0; i < n; i++) {
+        Scalar v = Scalar(this->_block.at({i, i}));
+        v -= Scalar(rhs_diag.at({i}));
+        this->_block.at({i, i}) = v;
+      }
     }
   }
   void DenseUniTensor::Sub_(const Scalar &rhs) {
@@ -1386,6 +1406,10 @@ namespace cytnx {
     if (this->_is_diag == rhs->_is_diag) {
       this->_block *= rhs->get_block_();
     } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Mul_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
       this->to_dense_();
       this->_block *= rhs->get_block_();
     } else {
@@ -1393,7 +1417,13 @@ namespace cytnx {
                       "[ERROR][Mul_] shape mismatch: non-diagonal block has dimension %lld but "
                       "diagonal block has length %lld.\n",
                       (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
-      this->_block *= linalg::Diag(rhs->get_block_());
+      cytnx_uint64 n = rhs->get_block_().shape()[0];
+      Tensor lhs_diag = linalg::Diag(this->_block);
+      lhs_diag *= rhs->get_block_();
+      this->_block.storage().set_zeros();
+      for (cytnx_uint64 i = 0; i < n; i++) {
+        this->_block.at({i, i}) = Scalar(lhs_diag.at({i}));
+      }
     }
   }
   void DenseUniTensor::Mul_(const Scalar &rhs) {
@@ -1425,6 +1455,10 @@ namespace cytnx {
     if (this->_is_diag == rhs->_is_diag) {
       this->_block /= rhs->get_block_();
     } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Div_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
       this->to_dense_();
       this->_block /= rhs->get_block_();
     } else {
