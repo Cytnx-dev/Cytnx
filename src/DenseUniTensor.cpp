@@ -1316,10 +1316,14 @@ namespace cytnx {
         "[ERROR][Add_] shape mismatch: dense block must be square with dimension matching "
         "diagonal length %lld.\n",
         (long long)n);
-      for (cytnx_uint64 i = 0; i < n; i++) {
-        Scalar v = Scalar(this->_block.at({i, i}));
-        v += Scalar(rhs_diag.at({i}));
-        this->_block.at({i, i}) = v;
+      if (this->_block.device() == Device.cpu) {
+        for (cytnx_uint64 i = 0; i < n; i++) {
+          Scalar v = Scalar(this->_block.at({i, i}));
+          v += Scalar(rhs_diag.at({i}));
+          this->_block.at({i, i}) = v;
+        }
+      } else {
+        this->_block += linalg::Diag(rhs_diag);
       }
     }
   }
@@ -1367,10 +1371,14 @@ namespace cytnx {
         "[ERROR][Sub_] shape mismatch: dense block must be square with dimension matching "
         "diagonal length %lld.\n",
         (long long)n);
-      for (cytnx_uint64 i = 0; i < n; i++) {
-        Scalar v = Scalar(this->_block.at({i, i}));
-        v -= Scalar(rhs_diag.at({i}));
-        this->_block.at({i, i}) = v;
+      if (this->_block.device() == Device.cpu) {
+        for (cytnx_uint64 i = 0; i < n; i++) {
+          Scalar v = Scalar(this->_block.at({i, i}));
+          v -= Scalar(rhs_diag.at({i}));
+          this->_block.at({i, i}) = v;
+        }
+      } else {
+        this->_block -= linalg::Diag(rhs_diag);
       }
     }
   }
@@ -1421,11 +1429,15 @@ namespace cytnx {
         "[ERROR][Mul_] shape mismatch: dense block must be square with dimension matching "
         "diagonal length %lld.\n",
         (long long)n);
-      Tensor lhs_diag = linalg::Diag(this->_block);
-      lhs_diag *= rhs->get_block_();
-      this->_block.storage().set_zeros();
-      for (cytnx_uint64 i = 0; i < n; i++) {
-        this->_block.at({i, i}) = Scalar(lhs_diag.at({i}));
+      if (this->_block.device() == Device.cpu) {
+        Tensor lhs_diag = linalg::Diag(this->_block);
+        lhs_diag *= rhs->get_block_();
+        this->_block.storage().set_zeros();
+        for (cytnx_uint64 i = 0; i < n; i++) {
+          this->_block.at({i, i}) = Scalar(lhs_diag.at({i}));
+        }
+      } else {
+        this->_block *= linalg::Diag(rhs->get_block_());
       }
     }
   }
