@@ -3502,7 +3502,10 @@ TEST_F(DenseUniTensorTest, Div_diag_ndiag) {
   auto ut1_nondiag = ut1.to_dense();
   auto ans = ut1_nondiag.Div(ut2);
   EXPECT_TRUE(AreEqUniTensor(out, ans));
-  EXPECT_TRUE(AreNearlyEqUniTensor((2 * ut1) / ut1_nondiag, (2 * ut1_nondiag) / ut1_nondiag, tol));
+  // Use ut2 (fully non-zero off-diagonal) as denominator so off-diagonal entries
+  // are 0/nonzero = 0 on both sides rather than 0/0 = NaN, which would pass
+  // AreNearlyEqUniTensor trivially regardless of correctness.
+  EXPECT_TRUE(AreNearlyEqUniTensor((2 * ut1) / ut2, (2 * ut1_nondiag) / ut2, tol));
   EXPECT_ANY_THROW(ut2.Div(ut1));
 }
 
