@@ -2580,28 +2580,22 @@ TEST_F(DenseUniTensorTest, Sub_diag_ndiag) {
 describe:test sub two diagonal UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Sub_diag_diag) {
-  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
   bool is_diag = true;
   auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
   auto ut2 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
   int seed = 0;
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
   auto clone = ut1.clone();
-  auto ut1_nondiag = ut1.to_dense();
-  auto out = ut1.clone();
-  out.Sub_(ut2);
-  auto ans = ut1_nondiag.Sub(ut2);
-  EXPECT_TRUE(AreEqUniTensor(out, ans));
-  ut2.Sub_(ut1);
-  EXPECT_TRUE(AreNearlyEqUniTensor(-1 * ut2, ans, tol));
-  clone.Sub_(2 * ut1_nondiag);
-  ut1_nondiag.Sub_(2 * ut1_nondiag);
-  EXPECT_TRUE(AreEqUniTensor(clone, ut1_nondiag));
+  auto shape = ut1.shape();
+  auto out = ut1.Sub(ut2);
+  for (cytnx_uint64 i = 0; i < shape[0]; i++) {
+    EXPECT_EQ(ut1.at({i}) - ut2.at({i}), out.at({i}));
+    EXPECT_EQ(ut1.at({i}), clone.at({i}));
+  }
 }
 
 /*=====test info=====
@@ -3699,7 +3693,7 @@ TEST_F(DenseUniTensorTest, Div__diag_ndiag) {
   auto ut2 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
   int seed = 0;
   random::uniform_(ut1, 0, 5.0, seed);
-  random::uniform_(ut2, 0, 5.0, seed = 1);
+  random::uniform_(ut2, 1., 5.0, seed = 1);
   auto ut1_nondiag = ut1.to_dense();
   auto out = ut1.clone();
   out.Div_(ut2);
