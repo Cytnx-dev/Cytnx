@@ -1305,6 +1305,11 @@ namespace cytnx {
       this->to_dense_();
       this->_block += rhs->get_block_();
     } else {
+      cytnx_error_msg(this->_block.shape()[0] != rhs->get_block_().shape()[0],
+                      "[ERROR][Add_] shape mismatch: non-diagonal block has dimension %lld but "
+                      "diagonal block has length %lld.\n",
+                      (long long)this->_block.shape()[0],
+                      (long long)rhs->get_block_().shape()[0]);
       this->_block += linalg::Diag(rhs->get_block_());
     }
   }
@@ -1341,6 +1346,11 @@ namespace cytnx {
       this->to_dense_();
       this->_block -= rhs->get_block_();
     } else {
+      cytnx_error_msg(this->_block.shape()[0] != rhs->get_block_().shape()[0],
+                      "[ERROR][Sub_] shape mismatch: non-diagonal block has dimension %lld but "
+                      "diagonal block has length %lld.\n",
+                      (long long)this->_block.shape()[0],
+                      (long long)rhs->get_block_().shape()[0]);
       this->_block -= linalg::Diag(rhs->get_block_());
     }
   }
@@ -1381,6 +1391,11 @@ namespace cytnx {
       this->to_dense_();
       this->_block *= rhs->get_block_();
     } else {
+      cytnx_error_msg(this->_block.shape()[0] != rhs->get_block_().shape()[0],
+                      "[ERROR][Mul_] shape mismatch: non-diagonal block has dimension %lld but "
+                      "diagonal block has length %lld.\n",
+                      (long long)this->_block.shape()[0],
+                      (long long)rhs->get_block_().shape()[0]);
       this->_block *= linalg::Diag(rhs->get_block_());
     }
   }
@@ -1412,13 +1427,14 @@ namespace cytnx {
     }
     if (this->_is_diag == rhs->_is_diag) {
       this->_block /= rhs->get_block_();
-    } else {
-      cytnx_error_msg(rhs->_is_diag,
-                      "[Div] Dividing a non-diagonal DenseUnitensor by a diagonal one would lead "
-                      "to divisions by zero!%s",
-                      "\n");
+    } else if (this->_is_diag) {
       this->to_dense_();
       this->_block /= rhs->get_block_();
+    } else {
+      cytnx_error_msg(true,
+                      "[ERROR][Div_] Dividing a non-diagonal DenseUniTensor by a diagonal one "
+                      "leads to divisions by zero off the diagonal!%s",
+                      "\n");
     }
   }
   void DenseUniTensor::Div_(const Scalar &rhs) {
