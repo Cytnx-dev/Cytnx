@@ -112,6 +112,50 @@ TEST_F(BlockUniTensorTest, clone) {
       }
 }
 
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+TEST_F(BlockUniTensorTest, relabels) {
+  BUT1 = BUT1.relabels({"a", "b", "cd", "d"});
+  EXPECT_EQ(BUT1.labels()[0], "a");
+  EXPECT_EQ(BUT1.labels()[1], "b");
+  EXPECT_EQ(BUT1.labels()[2], "cd");
+  EXPECT_EQ(BUT1.labels()[3], "d");
+  BUT1 = BUT1.relabels({"1", "-1", "2", "1000"});
+  EXPECT_EQ(BUT1.labels()[0], "1");
+  EXPECT_EQ(BUT1.labels()[1], "-1");
+  EXPECT_EQ(BUT1.labels()[2], "2");
+  EXPECT_EQ(BUT1.labels()[3], "1000");
+
+  EXPECT_THROW(BUT1.relabels({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels({"a"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels({"1", "2"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+TEST_F(BlockUniTensorTest, relabels_) {
+  BUT1.relabels_({"a", "b", "cd", "d"});
+  EXPECT_EQ(BUT1.labels()[0], "a");
+  EXPECT_EQ(BUT1.labels()[1], "b");
+  EXPECT_EQ(BUT1.labels()[2], "cd");
+  EXPECT_EQ(BUT1.labels()[3], "d");
+  BUT1.relabels_({"1", "-1", "2", "1000"});
+  EXPECT_EQ(BUT1.labels()[0], "1");
+  EXPECT_EQ(BUT1.labels()[1], "-1");
+  EXPECT_EQ(BUT1.labels()[2], "2");
+  EXPECT_EQ(BUT1.labels()[3], "1000");
+  EXPECT_THROW(BUT1.relabels_({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"a"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"1", "2"}), std::logic_error);
+  EXPECT_THROW(BUT1.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+#pragma GCC diagnostic pop
+
 TEST_F(BlockUniTensorTest, relabel) {
   auto tmp = BUT1.clone();
   BUT1 = BUT1.relabel({"a", "b", "cd", "d"});
