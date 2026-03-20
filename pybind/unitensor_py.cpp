@@ -164,7 +164,9 @@ void unitensor_binding(py::module &m) {
 
 
     .def("c_set_labels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                            return self.set_labels(new_labels);
+                            PyErr_WarnEx(PyExc_DeprecationWarning,
+                              "c_set_labels() is deprecated, use relabel_() instead.", 1);
+                            return self.relabel_(new_labels);
                         },py::arg("new_labels"))
 
 
@@ -175,14 +177,18 @@ void unitensor_binding(py::module &m) {
                         return self.relabel(new_labels);
                     }, py::arg("new_labels"))
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        return self.relabels(new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1);
+                        return self.relabel(new_labels);
                     }, py::arg("new_labels"))
 
      .def("c_relabel_",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         self.relabel_(new_labels);
                     }, py::arg("new_labels"))
      .def("c_relabels_",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        self.relabels_(new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "c_relabels_() is deprecated, use relabel_() instead.", 1);
+                        self.relabel_(new_labels);
                     }, py::arg("new_labels"))
 
 
@@ -211,11 +217,15 @@ void unitensor_binding(py::module &m) {
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        return self.relabels(old_labels,new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1);
+                        return self.relabel(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("c_relabels_",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        self.relabels_(old_labels,new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "c_relabels_() is deprecated, use relabel_() instead.", 1);
+                        self.relabel_(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
 

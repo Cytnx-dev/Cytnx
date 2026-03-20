@@ -196,11 +196,14 @@ namespace cytnx {
       this->_labels[inx] = new_label;
     }
 
+    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]]
     void set_labels(const std::vector<std::string> &new_labels);
     void relabel_(const std::vector<std::string> &new_labels);  // implemented
+    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]]
     void relabels_(const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::vector<std::string> &old_labels,
                   const std::vector<std::string> &new_labels);  // implemented
+    [[deprecated("Please use relabel_(const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) instead.")]]
     void relabels_(const std::vector<std::string> &old_labels,
                    const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::string &old_label, const std::string &new_label) {
@@ -2910,24 +2913,29 @@ namespace cytnx {
     */
 
     /**
-    @brief Set new labels for all the bonds.
-    @param[in] new_labels the new labels for each bond.
-    @note
-        1. the new assign label cannot be the same as the label of any other bonds in the
-    UniTensor. ( cannot have duplicate labels )
-        2. Compared to relabels(const std::vector<std::string> &new_labels) const, this
-        function set the new label and return self.
+    @deprecated This function is deprecated. Please use \n
+        UniTensor &relabel_(const std::vector<std::string> &new_labels)\n
+      instead.
     */
-    UniTensor &set_labels(const std::vector<std::string> &new_labels) {
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::vector<std::string> &new_labels) "
+      "instead.")]] UniTensor &
+      set_labels(const std::vector<std::string> &new_labels) {
       this->_impl->set_labels(new_labels);
       return *this;
     }
 
     /**
-          @see
-    set_labels(const std::vector<std::string> &new_labels)
-         */
-    UniTensor &set_labels(const std::initializer_list<char *> &new_labels) {
+    @deprecated This function is deprecated. Please use \n
+        UniTensor &relabel_(const std::initializer_list<char *> &new_labels)\n
+      instead.
+    */
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::initializer_list<char *> &new_labels) "
+      "instead.")]] UniTensor &
+      set_labels(const std::initializer_list<char *> &new_labels) {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
@@ -3191,14 +3199,12 @@ namespace cytnx {
     }
     /**
     @deprecated This function is deprecated. Please use \n
-        UniTensor &relabel_(const std::vector<std::string> &old_labels,
-                        const std::vector<std::string> &new_labels)\n
+        UniTensor &relabel_(const std::vector<std::string> &new_labels)\n
       instead.
     */
     [[deprecated(
       "Please use "
-      "UniTensor &relabel_(const std::vector<std::string> &old_labels, const "
-      "std::vector<std::string> &new_labels) "
+      "UniTensor &relabel_(const std::vector<std::string> &new_labels) "
       "instead.")]] UniTensor &
       relabels_(const std::vector<std::string> &new_labels) {
       this->_impl->relabels_(new_labels);

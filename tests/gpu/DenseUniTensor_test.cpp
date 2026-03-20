@@ -20,6 +20,11 @@ TEST_F(DenseUniTensorTest, gpu_Trace) {
   // EXPECT_THROW(utzero3456.Trace(-1,5),std::logic_error);
 }
 
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 TEST_F(DenseUniTensorTest, gpu_relabels) {
   utzero3456 = utzero3456.relabels({"a", "b", "cd", "d"});
   EXPECT_EQ(utzero3456.labels()[0], "a");
@@ -46,6 +51,8 @@ TEST_F(DenseUniTensorTest, gpu_relabels_) {
   EXPECT_THROW(utzero3456.relabels_({"1", "2"}), std::logic_error);
   EXPECT_THROW(utzero3456.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
 }
+
+#pragma GCC diagnostic pop
 
 TEST_F(DenseUniTensorTest, gpu_relabel) {
   auto tmp = utzero3456.clone();
@@ -478,8 +485,8 @@ TEST_F(DenseUniTensorTest, gpu_permute_2) {
 }
 
 TEST_F(DenseUniTensorTest, gpu_contract1) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "aa", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "aa", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres1.get_block_();
@@ -487,8 +494,8 @@ TEST_F(DenseUniTensorTest, gpu_contract1) {
 }
 
 TEST_F(DenseUniTensorTest, gpu_contract2) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres2.get_block_();
@@ -496,8 +503,8 @@ TEST_F(DenseUniTensorTest, gpu_contract2) {
 }
 
 TEST_F(DenseUniTensorTest, gpu_contract3) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "c", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "c", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres3.get_block_();
