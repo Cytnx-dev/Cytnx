@@ -609,9 +609,9 @@ namespace cytnx {
     Tensor get_block() const { return this->_block.clone(); }
     Tensor get_block(const cytnx_uint64 &idx) const {
       cytnx_error_msg(idx != 0,
-                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
                       "invalid. Use get_block(0).\n",
-                      idx);
+                      (unsigned long long)idx);
       return this->_block.clone();
     }
 
@@ -641,18 +641,18 @@ namespace cytnx {
     Tensor &get_block_() { return this->_block; }
     Tensor &get_block_(const cytnx_uint64 &idx) {
       cytnx_error_msg(idx != 0,
-                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
                       "invalid. Use get_block_(0).\n",
-                      idx);
+                      (unsigned long long)idx);
       return this->_block;
     }
     // return a share view of block, this only work for non-symm tensor.
     const Tensor &get_block_() const { return this->_block; }
     const Tensor &get_block_(const cytnx_uint64 &idx) const {
       cytnx_error_msg(idx != 0,
-                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
                       "invalid. Use get_block_(0).\n",
-                      idx);
+                      (unsigned long long)idx);
       return this->_block;
     }
 
@@ -676,14 +676,10 @@ namespace cytnx {
       return this->_interface_block;  // this will not share memory!!
     }
 
-    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
+    void put_block(const Tensor &in) {
       // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
 
-      cytnx_error_msg(idx != 0,
-                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
-                      "invalid. Use put_block(0).\n",
-                      idx);
       // cytnx_error_msg(in.dtype() != this->dtype(),
       //                 "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not
       //                 match.%s",
@@ -706,14 +702,17 @@ namespace cytnx {
         this->_block = in.clone();
       }
     }
+    void put_block(const Tensor &in, const cytnx_uint64 &idx) {
+      cytnx_error_msg(idx != 0,
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
+                      "invalid. Use put_block(0).\n",
+                      (unsigned long long)idx);
+      put_block(in);
+    }
     // share view of the block
-    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
+    void put_block_(Tensor &in) {
       // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
-      cytnx_error_msg(idx != 0,
-                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %d "
-                      "invalid. Use get_block_(0).\n",
-                      idx);
 
       // cytnx_error_msg(in.dtype() != this->dtype(),
       //                 "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not
@@ -736,6 +735,13 @@ namespace cytnx {
           "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
         this->_block = in;
       }
+    }
+    void put_block_(Tensor &in, const cytnx_uint64 &idx) {
+      cytnx_error_msg(idx != 0,
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
+                      "invalid. Use put_block_(0).\n",
+                      (unsigned long long)idx);
+      put_block_(in);
     }
 
     void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
