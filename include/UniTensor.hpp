@@ -3191,14 +3191,12 @@ namespace cytnx {
     }
     /**
     @deprecated This function is deprecated. Please use \n
-        UniTensor &relabel_(const std::vector<std::string> &old_labels,
-                        const std::vector<std::string> &new_labels)\n
+        UniTensor &relabel_(const std::vector<std::string> &new_labels)\n
       instead.
     */
     [[deprecated(
       "Please use "
-      "UniTensor &relabel_(const std::vector<std::string> &old_labels, const "
-      "std::vector<std::string> &new_labels) "
+      "UniTensor &relabel_(const std::vector<std::string> &new_labels) "
       "instead.")]] UniTensor &
       relabels_(const std::vector<std::string> &new_labels) {
       this->_impl->relabels_(new_labels);
