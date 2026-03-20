@@ -3722,7 +3722,7 @@ namespace cytnx {
     returned by signflip() are false.
         @see apply()
     */
-    UniTensor apply_() {
+    UniTensor &apply_() {
       this->_impl = this->_impl->apply_();
       return *this;
     }
