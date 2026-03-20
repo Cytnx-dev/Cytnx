@@ -656,8 +656,13 @@ void unitensor_binding(py::module &m) {
 
     .def("make_contiguous", &UniTensor::contiguous)
     .def("contiguous_", &UniTensor::contiguous_)
-    .def("apply", &UniTensor::apply)
-    .def("apply_", &UniTensor::apply_)
+    .def("apply", &UniTensor::apply,
+         "Apply fermionic signflips and return a new UniTensor. Blocks that require a signflip "
+         "are copied and inverted; blocks that do not are shared views. Non-fermionic tensors are "
+         "returned unchanged. See also: apply_()")
+    .def("apply_", &UniTensor::apply_,
+         "Apply fermionic signflips inplacely. Subsequently, signflip() returns False for all "
+         "elements. Non-fermionic tensors are left unchanged. See also: apply()")
     .def("print_diagram", &UniTensor::print_diagram, py::arg("bond_info") = false,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,
