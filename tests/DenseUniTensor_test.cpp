@@ -148,6 +148,58 @@ TEST_F(DenseUniTensorTest, set_label_not_exist_old_label) {
   EXPECT_ANY_THROW(utzero345.set_label("Not exist label", "testing label"));
 }
 
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+/*=====test info=====
+describe:test set_labels.
+====================*/
+TEST_F(DenseUniTensorTest, set_labels_normal) {
+  // vector
+  std::vector<std::string> org_labels = {"org 1", "org 2", "org 3"};
+  std::vector<std::string> new_labels = {"testing 1", "testing 2", "testing 3"};
+  utzero345.set_labels(org_labels);
+  utzero345.set_labels(new_labels);
+  EXPECT_EQ(utzero345.labels(), new_labels);
+
+  // initilizer list
+  utzero345.set_labels({"org 1", "org 2", "org 3"});
+  utzero345.set_labels({"testing 1", "testing 2", "testing 3"});
+  EXPECT_EQ(utzero345.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:set_labels to uninitialized unitensor
+====================*/
+TEST_F(DenseUniTensorTest, set_labels_un_init) {
+  std::vector<std::string> new_labels = {};
+  ut_uninit.set_labels(new_labels);
+  EXPECT_EQ(ut_uninit.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:test set_labels length not match.
+====================*/
+TEST_F(DenseUniTensorTest, set_labels_len_not_match) {
+  // too long
+  std::vector<std::string> new_labels_long = {"test1", "test2", "test3", "test4"};
+  EXPECT_ANY_THROW(utzero345.set_labels(new_labels_long));
+  std::vector<std::string> new_labels_short = {"test1", "test2"};
+  EXPECT_ANY_THROW(utzero345.set_labels(new_labels_short));
+}
+
+/*=====test info=====
+describe:test set_labels duplicated.
+====================*/
+TEST_F(DenseUniTensorTest, set_labels_duplicated) {
+  std::vector<std::string> new_labels = {"test1", "test2", "test2", "test3"};
+  EXPECT_ANY_THROW(utzero345.set_labels(new_labels));
+}
+
+#pragma GCC diagnostic pop
+
 TEST_F(DenseUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
   const auto org_rowrank = Spf.rowrank();
@@ -606,6 +658,51 @@ TEST_F(DenseUniTensorTest, relabel_) {
   EXPECT_THROW(utzero3456.relabel_(0, "a").relabel_(1, "a"), std::logic_error);
   EXPECT_THROW(ut_uninit.relabel_(0, ""), std::logic_error);
 }
+
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+TEST_F(DenseUniTensorTest, relabels) {
+  auto ut = utzero3456.relabels({"a", "b", "cd", "d"});
+  EXPECT_EQ(utzero3456.labels()[0], "0");
+  EXPECT_EQ(utzero3456.labels()[1], "1");
+  EXPECT_EQ(utzero3456.labels()[2], "2");
+  EXPECT_EQ(utzero3456.labels()[3], "3");
+  EXPECT_EQ(ut.labels()[0], "a");
+  EXPECT_EQ(ut.labels()[1], "b");
+  EXPECT_EQ(ut.labels()[2], "cd");
+  EXPECT_EQ(ut.labels()[3], "d");
+  ut = utzero3456.relabels({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabels({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+TEST_F(DenseUniTensorTest, relabels_) {
+  auto ut = utzero3456.relabels_({"a", "b", "cd", "d"});
+  EXPECT_EQ(utzero3456.labels()[0], "a");
+  EXPECT_EQ(utzero3456.labels()[1], "b");
+  EXPECT_EQ(utzero3456.labels()[2], "cd");
+  EXPECT_EQ(utzero3456.labels()[3], "d");
+  EXPECT_EQ(ut.labels()[0], "a");
+  EXPECT_EQ(ut.labels()[1], "b");
+  EXPECT_EQ(ut.labels()[2], "cd");
+  EXPECT_EQ(ut.labels()[3], "d");
+  ut = utzero3456.relabels_({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabels_({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+#pragma GCC diagnostic pop
 
 /*=====test info=====
 describe:test relabel_.
