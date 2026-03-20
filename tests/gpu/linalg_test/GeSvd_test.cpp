@@ -36,7 +36,7 @@ namespace GesvdTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cuda, is_diag)
                .to(cytnx::Device.cuda);
-    random::Make_uniform(T, -10, 0, 0);
+    random::uniform_(T, -10, 0, 0);
     std::vector<UniTensor> Gesvds = linalg::Gesvd(T);
     EXPECT_TRUE(CheckLabels(T, Gesvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Gesvds)) << fail_msg.TraceFailMsgs();
@@ -226,7 +226,7 @@ namespace GesvdTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cuda, is_diag)
                .to(cytnx::Device.cuda);
-    random::Make_uniform(T, 0, 10, 0);
+    random::uniform_(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(T); }, std::logic_error);
   }
 
@@ -249,7 +249,7 @@ namespace GesvdTest {
     std::vector<std::string> labels = {};
     auto UT =
       UniTensor(bonds, labels, row_rank, Type.Double, Device.cuda, is_diag).to(cytnx::Device.cuda);
-    random::Make_uniform(UT, 0, 10, 0);
+    random::uniform_(UT, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(UT); }, std::logic_error);
   }
 
