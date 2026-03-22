@@ -1,12 +1,18 @@
-# Create a rank-2 Tensor which represents a square matrix
-T = cytnx.arange(4*4).reshape(4,4)
+# Create a rank-2 UniTensor which represents a square matrix
+uT = cytnx.UniTensor.arange(4*4).reshape(4,4) \
+                    .set_rowrank(1) \
+                    .relabel(["in","out"]) \
+                    .set_name("initial tensor")
 # Eigenvalue decomposition
-eigvals, V = cytnx.linalg.Eig(T)
-# Create UniTensors corresponding to V, D, Inv(V), T
-uV=cytnx.UniTensor(V, labels=["a","b"], name="uV")
-uD=cytnx.UniTensor(eigvals, is_diag=True, labels=["b","c"], name="uD")
-uV_inv=cytnx.UniTensor(cytnx.linalg.InvM(V), labels=["c","d"], name="Inv(uV)")
-uT=cytnx.UniTensor(T, labels=["a","d"], name="uT")
+uD, uV = cytnx.linalg.Eig(uT)
+# Create uV, uD, uV_inv = Inv(V) with names and labels
+uV.relabel_(["in","a"]).set_name("eigenvectors")
+uD.relabel_(["a","b"]).set_name("eigenvalues")
+uV_inv = cytnx.linalg.InvM(uV).relabel_(["b","out"]) \
+                     .set_name("inverted eigenvectors")
 # Compare uT with Uv * uD * uV_inv
-diff = cytnx.Contracts([uV,uD,uV_inv]) - uT
-print(diff.Norm()) # 1.71516e-14
+uT_new = cytnx.Contract([uV,uD,uV_inv]) \
+              .permute(uT.labels()) \
+              .set_name("reconstruction from eigenvalues")
+diff = uT_new - uT
+print(diff.Norm()) # 1.53421e-14

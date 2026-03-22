@@ -1,1 +1,0 @@
-uT.print_diagram()

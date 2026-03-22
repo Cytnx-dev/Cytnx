@@ -22,14 +22,14 @@ Cytnx is a tensor network library designed for quantum physics simulations using
  **See also**
 [Release Note](misc_doc/version.log).
 
-## API Documentation:
-
-[https://kaihsinwu.gitlab.io/cytnx_api/](https://kaihsinwu.gitlab.io/cytnx_api/)
 
 ## User Guide [under construction]:
 
-[Cytnx User Guide](https://kaihsinwu.gitlab.io/Cytnx_doc/)
+[Cytnx User Guide](https://cytnx-dev.github.io/Cytnx_doc)
 
+## API Documentation:
+
+[API Documentation](https://cytnx-dev.github.io/Cytnx_doc/api_build/html)
 
 
 ## Objects:
@@ -243,17 +243,18 @@ You can contact us by:
 * Email, see below
 
 ## Developers & Maintainers
-Creator and Project manager | Affiliation     | Email
-----------------------------|-----------------|---------
-Kai-Hsin Wu                 |Boston Univ., USA|kaihsinwu@gmail.com
+Creator     | Affiliation        | Email
+------------|--------------------|--------------------
+Kai-Hsin Wu | QuEra, Boston, USA | kaihsinwu@gmail.com
 
 Developers      | Affiliation     | Roles
 ----------------|-----------------|---------
-Chang-Teng Lin  |NTU, Taiwan      |major maintainer and developer
-Ke Hsu          |NTU, Taiwan      |major maintainer and developer
-Ivana Gyro      |NTU, Taiwan      |major maintainer and developer
-Hao-Ti Hung     |NTU, Taiwan      |documentation and linalg
-Ying-Jer Kao    |NTU, Taiwan      |setuptool, cmake
+Chang-Teng Lin  | NTU, Taiwan     | major maintainer and developer
+Ke Hsu          | NTU, Taiwan     | major maintainer and developer
+Ivana Gyro      | NTU, Taiwan     | major maintainer and developer
+Hao-Ti Hung     | NTU, Taiwan     | documentation and linalg
+Manuel Schneider| NYCU, Taiwan    | developer, fermions, documentation
+Ying-Jer Kao    | NTU, Taiwan     | project manager, setuptool, cmake
 
 ## Contributors
 Contributors    | Affiliation
@@ -261,7 +262,6 @@ Contributors    | Affiliation
 PoChung Chen    | NTHU, Taiwan
 Chia-Min Chung  | NSYSU, Taiwan
 Ian McCulloch   | NTHU, Taiwan
-Manuel Schneider| NYCU, Taiwan
 Yen-Hsin Wu     | NTU, Taiwan
 Po-Kwan Wu      | OSU, USA
 Wen-Han Kao     | UMN, USA
@@ -271,10 +271,10 @@ Yu-Cheng Lin    | NTU, Taiwan
 
 ## References
 * Paper:
-[https://arxiv.org/abs/2401.01921](https://arxiv.org/abs/2401.01921)
+https://scipost.org/10.21468/SciPostPhysCodeb.53
 
 * Example/DMRG:
-[https://www.tensors.net/dmrg](https://www.tensors.net/dmrg)
+https://www.tensors.net/dmrg
 
 * hptt library:
-[https://github.com/springer13/hptt](https://github.com/springer13/hptt)
+https://github.com/springer13/hptt

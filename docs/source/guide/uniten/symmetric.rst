@@ -1,5 +1,5 @@
 UniTensor with Symmetries
----------------------------
+----------------------------
 
 Physical systems are often symmetric under certain transformations. Exploiting such symmetries can be advantageous in many cases. Cytnx allows to incorporate the symmetries on the level of the tensors directly.
 

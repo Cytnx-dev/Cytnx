@@ -1,19 +1,14 @@
-linalg extension
-==================
+Tensor decomposition
+=====================
 
 .. .. toctree::
 ..     :maxdepth: 3
 
-Tensor decomposition
-**************************
-
-
-
-As mention in the **Manipulate UniTensor**, the specification of **rowrank** makes it convinient to apply linear algebra operations on UniTensors.
+As mention in the :ref:`Manipulating a UniTensor`, the specification of **rowrank** makes it convinient to apply linear algebra operations on UniTensors.
 
 
 Singular value decomposition
--------------------------------
+*****************************
 
 Here is an example where a **singular value decomposition (SVD)** is performed on a UniTensor:
 
@@ -47,7 +42,7 @@ Output >>
 If we contract :math:`U \cdot S \cdot Vt`, we get a tensor of the same shape as **T** and we can subtract the two tensors. The error :math:`\frac{|T-U \cdot S \cdot Vt|}{|T|}` is of the order of machine precision, as expected.
 
 
-Here we demonstrate the usage of a more important function **Svd_truncate()** which appears frequently in the tensor network algorithm for truncatiing the bond dimension. In this example we print the singular values from doing **Svd()** and compare it to the result of **Svd_truncate()**:
+Here we demonstrate the usage of a more important function **Svd_truncate()** which appears frequently in the tensor network algorithm for truncating the bond dimension. In this example we print the singular values from doing **Svd()** and compare it to the result of **Svd_truncate()**:
 
 * In Python:
 
@@ -70,7 +65,7 @@ We note that the singular values obtained by doing **Svd_truncate()** is truncat
 
 
 Eigenvalue decomposition
--------------------------------
+*****************************
 
 * In Python:
 
@@ -79,7 +74,7 @@ Eigenvalue decomposition
     :linenos:
 
 QR decomposition
--------------------------------
+*****************************
 
 The **QR decomposition** decomposes a matrix *M* to the form *M = QR*, where *Q* is an orthogonal matrix (*Q Q^T = I*), and *R* is a upper-right triangular matrix. One can perform a QR decomposition by using **Qr()**.
 

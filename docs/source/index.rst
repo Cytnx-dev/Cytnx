@@ -20,15 +20,15 @@ Cytnx user guide and examples
 
    install.rst
    adv_install.rst
-   convention.rst
    Guide.rst
    Examples.rst
    CommApp.rst
    Perf_tune.rst
 
 .. toctree::
-    API Documentation <https://kaihsinwu.gitlab.io/cytnx_api/>
-    Github <https://github.com/kaihsin/Cytnx>
+    API Documentation <apidoc_redirect>
+    Paper <https://scipost.org/SciPostPhysCodeb.53>
+    Github <https://github.com/Cytnx-dev/Cytnx>
     5-mins Blitz intro slide <https://drive.google.com/file/d/1vuc_fTbwkL5t52glzvJ0nNRLPZxj5en6/view?usp=sharing>
 
 .. toctree::

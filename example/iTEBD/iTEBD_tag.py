@@ -27,11 +27,11 @@ def itebd_tfim_tag(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
     print(eH)
     H.reshape_(2,2,2,2)
 
-    eH = cytnx.UniTensor(eH,rowrank=2)
+    eH = cytnx.UniTensor(eH).set_rowrank_(2)
     eH.tag() # this will tag with in/out(ket/bra) on each bond.
     eH.print_diagram()
 
-    H = cytnx.UniTensor(H,rowrank=2)
+    H = cytnx.UniTensor(H).set_rowrank_(2)
     H.tag()
     H.print_diagram()
 
@@ -43,11 +43,11 @@ def itebd_tfim_tag(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
     #
     A = cytnx.UniTensor([cytnx.Bond(chi,BD_IN),
                         cytnx.Bond(2  ,BD_OUT),
-                        cytnx.Bond(chi,BD_OUT)],labels=['a','0','b']);
-    B = cytnx.UniTensor(A.bonds(),rowrank=1,labels=['c','1','d']);
+                        cytnx.Bond(chi,BD_OUT)],labels=['a','0','b'])
+    B = cytnx.UniTensor(A.bonds(),labels=['c','1','d']).set_rowrank_(1)
 
-    cytnx.random.normal_(B.get_block_(), mean=0, std=0.2, seed=0);
-    cytnx.random.normal_(A.get_block_(), mean=0, std=0.2, seed=0);
+    cytnx.random.normal_(B.get_block_(), mean=0, std=0.2, seed=0)
+    cytnx.random.normal_(A.get_block_(), mean=0, std=0.2, seed=0)
     A.print_diagram()
     B.print_diagram()
     #print(A)
@@ -55,8 +55,8 @@ def itebd_tfim_tag(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
 
     la = cytnx.UniTensor([cytnx.Bond(chi,BD_IN),cytnx.Bond(chi,BD_OUT)],labels=['b','c'],is_diag=True)
     lb = cytnx.UniTensor(la.bonds(),labels=['d','e'],is_diag=True)
-    la.put_block(cytnx.ones(chi));
-    lb.put_block(cytnx.ones(chi));
+    la.put_block(cytnx.ones(chi))
+    lb.put_block(cytnx.ones(chi))
     la.print_diagram()
     lb.print_diagram()
     #print(la)

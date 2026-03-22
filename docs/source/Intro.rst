@@ -25,7 +25,10 @@ Features
 Further references
 ----------------------------
     The source code can be found on github:
-    https://github.com/kaihsin/Cytnx
+    https://github.com/Cytnx-dev/Cytnx
 
     A technical documentation of the namespaces and classes is available here:
-    https://kaihsin.github.io/Cytnx/docs/html/index.html
+    https://cytnx-dev.github.io/Cytnx_doc/api_build/html/index.html
+
+    This user guide is available online:
+    https://cytnx-dev.github.io/Cytnx_doc/html/index.html

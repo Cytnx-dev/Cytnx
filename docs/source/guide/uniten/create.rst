@@ -1,5 +1,6 @@
 Creating a UniTensor
 --------------------
+
 As mentioned in the introduction, a **UniTensor** consists of Block(s), Bond(s) and label(s). The Block(s) contain the data, while Bond(s) and label(s) are the meta data that describe the properties of the UniTensor.
 
 .. image:: image/utcomp.png
@@ -22,11 +23,45 @@ Generally, there are two types of UniTensor types: **un-tagged** and **tagged**,
 
 In the following, we will explain how to construct a UniTensor.
 
+Using generators
+************************
+Similar to the initialization of a Tensor, one can create a UniTensor through generators such as zero, ones, normal, uniform, arange and eye. The first argument provides shape information, which is used to construct the Bond objects and to determine the rank -- the number of tensor indices. Labels can be specified when creating a UniTensor, otherwise they are set to be "0", "1", "2", ... by default.
+
+This gives us the first type of a UniTensor: an **untagged** UniTensor.
+
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_from_generator.py
+    :language: python
+    :linenos:
+
+.. note::
+
+    The generator **eye** expects the number of diagonal elements as a first argument instead of the shape of the resulting UniTensor.
+
+.. note::
+
+    The generator **arange** creates a one-dimensional UniTensor. In order to obtain a desired shape, use **reshape** and **set_rowrank** (see :ref:`reshape` and :ref:`rowrank`). If arange receives one argument, it is the number of elements. If three arguments are given, these correspond to start, stop, and stepsize. This syntax is similar to numpy.arange().
+
+We can use **print_diagram()** to visualize a UniTensors in a more straightforward way as a diagram:
+
+* In Python:
+
+.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_from_generators_print_diagram.py
+    :language: python
+    :linenos:
+
+Output >>
+
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_create_from_generators_print_diagram.out
+    :language: text
+
+The information provided by this output is explained in detail in :ref:`print_diagram()`.
 
 Constructing from Tensor
 ************************
 
-Before going into more complicated UniTensor structures, let's start with the most simple example. For this, we convert a **cytnx.Tensor** into a UniTensor. This gives us the first type of a UniTensor: an **untagged** UniTensor.
+We can also convert a **cytnx.Tensor** into a UniTensor to create an **untagged** UniTensor.
 
 In the following, we consider a simple rank-3 tensor as an example. The tensor diagram looks like:
 
@@ -51,22 +86,12 @@ If we want to create a UniTensor with different dtype, for example, a complex Un
     :language: python
     :linenos:
 
-We can use **print_diagram()** to visualize a UniTensor in a more straightforward way as a diagram:
-
-* In Python:
-
-.. literalinclude:: ../../../code/python/doc_codes/guide_uniten_create_print_diagram.py
-    :language: python
-    :linenos:
-
 Output >>
 
 .. literalinclude:: ../../../code/python/outputs/guide_uniten_create_print_diagram.out
     :language: text
 
-
-The information provided by this output is explained in detail in :ref:`print_diagram()`. We see that a UniTensor with the same shape as *T* was created. The bond labels are set to the default values "0", "1" and "2".
-
+We see that a UniTensor with the same shape as *T* was created. The bond labels are set to the default values "0", "1" and "2".
 
 From scratch
 **************
@@ -149,52 +174,10 @@ For example, let's create a UniTensor in the memory accessible by the CPU and tr
     :language: python
     :linenos:
 
->> Output:
+Output >>
 
-.. code-block:: text
-
-    -------- start of print ---------
-    Tensor name:
-    is_diag    : False
-    contiguous : True
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CPU
-    Shape : (2,2)
-    [[1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 ]]
-
-
-
-
-    -------- start of print ---------
-    Tensor name:
-    is_diag    : False
-    contiguous : True
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CUDA/GPU-id:0
-    Shape : (2,2)
-    [[1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 ]]
-
-
-
-
-    -------- start of print ---------
-    Tensor name:
-    is_diag    : False
-    contiguous : True
-
-    Total elem: 4
-    type  : Double (Float64)
-    cytnx device: CUDA/GPU-id:0
-    Shape : (2,2)
-    [[1.00000e+00 1.00000e+00 ]
-    [1.00000e+00 1.00000e+00 ]]
-
+.. literalinclude:: ../../../code/python/outputs/guide_uniten_create_to.out
+    :language: text
 
 .. Note::
 
