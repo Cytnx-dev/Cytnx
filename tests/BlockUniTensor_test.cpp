@@ -470,10 +470,10 @@ TEST_F(BlockUniTensorTest, put_block__byidx) {
 }
 
 TEST_F(BlockUniTensorTest, put_block_byqnum) {
-  UT_pB.put_block(t0, {0, 0, 0}, true);
-  UT_pB.put_block(t1a, {0, 1, 1}, true);
-  UT_pB.put_block(t1b, {1, 0, 1}, true);
-  UT_pB.put_block(t2, {1, 1, 2}, true);
+  UT_pB.put_block(t0, {0, 0, 0});
+  UT_pB.put_block(t1a, {0, 1, 1});
+  UT_pB.put_block(t1b, {1, 0, 1});
+  UT_pB.put_block(t2, {1, 1, 2});
   for (size_t i = 0; i < 5; i++)
     for (size_t j = 0; j < 9; j++)
       for (size_t k = 1; k < 30; k++) {
@@ -495,10 +495,10 @@ TEST_F(BlockUniTensorTest, put_block_byqnum) {
 }
 
 TEST_F(BlockUniTensorTest, put_block__byqnum) {
-  UT_pB.put_block_(t0, {0, 0, 0}, true);
-  UT_pB.put_block_(t1a, {0, 1, 1}, true);
-  UT_pB.put_block_(t1b, {1, 0, 1}, true);
-  UT_pB.put_block_(t2, {1, 1, 2}, true);
+  UT_pB.put_block_(t0, {0, 0, 0});
+  UT_pB.put_block_(t1a, {0, 1, 1});
+  UT_pB.put_block_(t1b, {1, 0, 1});
+  UT_pB.put_block_(t2, {1, 1, 2});
   for (size_t i = 0; i < 5; i++)
     for (size_t j = 0; j < 9; j++)
       for (size_t k = 1; k < 30; k++) {

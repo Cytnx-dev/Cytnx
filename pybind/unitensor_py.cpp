@@ -672,115 +672,140 @@ void unitensor_binding(py::module &m) {
 
     .def("group_basis_", &UniTensor::group_basis_)
     .def("group_basis", &UniTensor::group_basis)
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const cytnx_uint64 &idx) { return self.get_block(idx); },
       py::arg("idx") = (cytnx_uint64)(0))
 
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
 
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block(label, qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block",
+    .def("get_block",
       [](const UniTensor &self, const std::vector<std::string> &label, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block(label,qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block_(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block_(qnum, force);
       },
       py::arg("qnum"), py::arg("force") = false)
 
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_int64> &qnum, const bool &force) {
         return self.get_block_(labels, qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
-    .def(
-      "get_block_",
+    .def("get_block_",
       [](UniTensor &self, const std::vector<std::string> &labels, const std::vector<cytnx_uint64> &qnum, const bool &force) {
         return self.get_block_(labels,qnum, force);
       },
       py::arg("labels"), py::arg("qnum"), py::arg("force") = false)
 
 
-    .def(
-      "get_block_", [](UniTensor &self, const cytnx_uint64 &idx) { return self.get_block_(idx); },
+    .def("get_block_", [](UniTensor &self, const cytnx_uint64 &idx) { return self.get_block_(idx); },
       py::arg("idx") = (cytnx_uint64)(0))
     .def("get_blocks", [](const UniTensor &self) { return self.get_blocks(); })
-    .def(
-      "get_blocks_",
+    .def("get_blocks_",
       [](const UniTensor& self, py::args args, py::kwargs kwargs) {
         return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
       }
-      // ,py::arg("silent") = false // Uncmment this line after removing the deprecated argument.
+      // ,py::arg("silent") = false // Uncomment this line after removing the deprecated argument.
     )
-    .def(
-      "get_blocks_",
+    .def("get_blocks_",
       [](UniTensor &self, py::args args, py::kwargs kwargs) {
         return self.get_blocks_(parse_get_blocks_silent_arg(args, kwargs));
     }
-    // ,py::arg("silent") = false // Uncmment this line after removing the deprecated argument.
+    // ,py::arg("silent") = false // Uncomment this line after removing the deprecated argument.
 )
-    .def(
-      "put_block",
+    .def("put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const cytnx_uint64 &idx) {
         self.put_block(in, idx);
       },
       py::arg("in"), py::arg("idx") = (cytnx_uint64)(0))
 
-    .def(
-      "put_block",
+    .def("put_block",
+      [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) {
+        self.put_block(in, qnum);
+      },
+      py::arg("in"), py::arg("qidx"))
+    .def("put_block",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) {
+        self.put_block(in, lbls, qnum);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"))
+
+    // [Deprecated force argument!]
+    .def("put_block",
       [](UniTensor &self, const cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block(in, qnum, force); },
-      py::arg("in"), py::arg("qidx"), py::arg("force") = false)
-     .def(
-      "put_block",
+         const bool &force) {
+          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block(in, qnum) without force argument instead.",
+                              PyExc_FutureWarning, 2);
+          self.put_block(in, qnum, force);
+      },
+      py::arg("in"), py::arg("qidx"), py::arg("force"))
+    // [Deprecated force argument!]
+    .def("put_block",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block(in, lbls, qnum, force); },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force") = false)
-    .def(
-      "put_block_",
+         const bool &force) {
+          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block(in, lbls, qnum) without force argument instead.",
+                              PyExc_FutureWarning, 2);
+          self.put_block(in, lbls, qnum, force);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+
+    .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const cytnx_uint64 &idx) { self.put_block_(in, idx); },
       py::arg("in"), py::arg("idx") = (cytnx_uint64)(0))
 
-    .def(
-      "put_block_",
+    .def("put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum) {
+        self.put_block_(in, qnum);
+      },
+      py::arg("in"), py::arg("qidx"))
+    .def("put_block_",
+      [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum) {
+        self.put_block_(in, lbls, qnum);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"))
+
+    // [Deprecated force argument!]
+    .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block_(in, qnum, force); },
-      py::arg("in"), py::arg("qidx"), py::arg("force") = false)
-     .def(
-      "put_block_",
+         const bool &force) {
+          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block_(in, qnum) without force argument instead.",
+                              PyExc_FutureWarning, 2);
+          self.put_block_(in, qnum, force);
+      },
+      py::arg("in"), py::arg("qidx"), py::arg("force"))
+    // [Deprecated force argument!]
+    .def("put_block_",
       [](UniTensor &self, cytnx::Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64> &qnum,
-         const bool &force) { self.put_block_(in, lbls, qnum, force); },
-      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force") = false)
-    .def(
-      "__repr__",
+         const bool &force) {
+          py::warnings::warn("Argument 'force' is deprecated and will be removed; use put_block_(in, lbls, qnum) without force argument instead.",
+                              PyExc_FutureWarning, 2);
+          self.put_block_(in, lbls, qnum, force);
+      },
+      py::arg("in"), py::arg("labels"), py::arg("qidx"), py::arg("force"))
+
+    .def("__repr__",
       [](UniTensor &self) -> std::string {
         std::cout << self << std::endl;
         return std::string("");
@@ -1579,7 +1604,7 @@ void unitensor_binding(py::module &m) {
 							  const int &device, const std::string &name)
                 {
                     if(seed==-1){
-                         // If user doesn't specify seed argument
+                         // If no seed argument was specified by the user
                          seed = cytnx::random::__static_random_device();
                     }
                   return UniTensor::normal(Nelem, mean, std, in_labels, seed, dtype, device, name);
@@ -1594,7 +1619,7 @@ void unitensor_binding(py::module &m) {
 							  const int &device, const std::string &name)
                 {
                     if(seed==-1){
-                         // If user doesn't specify seed argument
+                         // If no seed argument was specified by the user
                          seed = cytnx::random::__static_random_device();
                     }
                   return UniTensor::normal(shape, mean, std, in_labels, seed, dtype, device, name);
@@ -1609,7 +1634,7 @@ void unitensor_binding(py::module &m) {
 							  const int &device, const std::string &name)
                 {
                     if(seed==-1){
-                         // If user doesn't specify seed argument
+                         // If no seed argument was specified by the user
                          seed = cytnx::random::__static_random_device();
                     }
                   return UniTensor::uniform(Nelem, low, high, in_labels, seed, dtype, device, name);
@@ -1624,7 +1649,7 @@ void unitensor_binding(py::module &m) {
 							  const int &device, const std::string &name)
                 {
                     if(seed==-1){
-                         // If user doesn't specify seed argument
+                         // If no seed argument was specified by the user
                          seed = cytnx::random::__static_random_device();
                     }
                   return UniTensor::uniform(shape, low, high, in_labels, seed, dtype, device, name);
@@ -1637,7 +1662,7 @@ void unitensor_binding(py::module &m) {
 					    int64_t &seed)
                 {
                     if(seed==-1){
-                         // If user doesn't specify seed argument
+                         // If no seed argument was specified by the user
                          seed = cytnx::random::__static_random_device();
                     }
                   self.normal_(mean, std, seed);
@@ -1647,7 +1672,7 @@ void unitensor_binding(py::module &m) {
 					     int64_t &seed)
                 {
                     if(seed==-1){
-                         // If user doesn't specify seed argument
+                         // If no seed argument was specified by the user
                          seed = cytnx::random::__static_random_device();
                     }
                   self.uniform_(low, high, seed);
