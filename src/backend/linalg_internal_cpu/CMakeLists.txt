@@ -3,7 +3,6 @@ target_sources_local(cytnx
     Norm_internal.hpp
     Add_internal.hpp
     iAdd_internal.hpp
-    Arithmetic_internal.hpp
     iArithmetic_internal.hpp
     Conj_inplace_internal.hpp
     Cpr_internal.hpp
@@ -46,7 +45,6 @@ target_sources_local(cytnx
     memcpyTruncation.hpp
 
     iAdd_internal.cpp
-    Arithmetic_internal.cpp
     iArithmetic_internal.cpp
     Conj_inplace_internal.cpp
     Diag_internal.cpp

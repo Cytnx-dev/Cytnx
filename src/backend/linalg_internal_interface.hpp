@@ -8,11 +8,13 @@
 #include "backend/Scalar.hpp"
 #include "backend/Storage.hpp"
 #include "linalg_internal_cpu/Abs_internal.hpp"
-#include "linalg_internal_cpu/Arithmetic_internal.hpp"
+#include "linalg_internal_cpu/Add_internal.hpp"
 #include "linalg_internal_cpu/Axpy_internal.hpp"
 #include "linalg_internal_cpu/Conj_inplace_internal.hpp"
+#include "linalg_internal_cpu/Cpr_internal.hpp"
 #include "linalg_internal_cpu/Det_internal.hpp"
 #include "linalg_internal_cpu/Diag_internal.hpp"
+#include "linalg_internal_cpu/Div_internal.hpp"
 #include "linalg_internal_cpu/Eig_internal.hpp"
 #include "linalg_internal_cpu/Eigh_internal.hpp"
 #include "linalg_internal_cpu/Exp_internal.hpp"
@@ -27,11 +29,14 @@
 #include "linalg_internal_cpu/Matmul_internal.hpp"
 #include "linalg_internal_cpu/Matvec_internal.hpp"
 #include "linalg_internal_cpu/MaxMin_internal.hpp"
+#include "linalg_internal_cpu/Mod_internal.hpp"
+#include "linalg_internal_cpu/Mul_internal.hpp"
 #include "linalg_internal_cpu/Norm_internal.hpp"
 #include "linalg_internal_cpu/Outer_internal.hpp"
 #include "linalg_internal_cpu/Pow_internal.hpp"
 #include "linalg_internal_cpu/QR_internal.hpp"
 #include "linalg_internal_cpu/Sdd_internal.hpp"
+#include "linalg_internal_cpu/Sub_internal.hpp"
 #include "linalg_internal_cpu/Sum_internal.hpp"
 #include "linalg_internal_cpu/Trace_internal.hpp"
 #include "linalg_internal_cpu/Tridiag_internal.hpp"
@@ -212,7 +217,6 @@ namespace cytnx {
 #endif
     class linalg_internal_interface {
      public:
-      std::vector<std::vector<Arithmeticfunc_oii>> Ari_ii;
       std::vector<std::vector<Arithmeticfunc_oii>> iAri_ii;
       std::vector<Svdfunc_oii> Sdd_ii;
       std::vector<Svdfunc_oii> Gesvd_ii;
