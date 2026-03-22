@@ -1,8 +1,9 @@
 name: Publish Sphinx Documentation
 
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - master
 
 jobs:
   publish_sphinx_docs:
@@ -20,18 +21,27 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - name: Install dependencies
+        working-directory: docs
         run: |
           uv sync --python 3.10
-      - name: Sphinx build
+          sudo apt-get update && sudo apt-get install -y doxygen graphviz
+      - name: Build api documentation
+        working-directory: docs
         run: |
-          uv run sphinx-multiversion source build
+          uv run bash api_doc_script.sh
+      - name: Sphinx build
+        working-directory: docs
+        run: |
+          uv run just doc
       - name: Create index.html
+        working-directory: docs
         run: |
           uv run python redirect.py ${{ github.ref_name }} > build/index.html
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/
+          publish_branch: gh-pages  
+          personal_token: ${{ secrets.PAGES_PAT }}
+          external_repository: Cytnx-dev/Cytnx_doc
+          publish_dir: docs/build/
           force_orphan: true
