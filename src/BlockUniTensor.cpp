@@ -1214,11 +1214,19 @@ namespace cytnx {
   };
 
   void BlockUniTensor::Transpose_() {
-    // modify tag
-    for (int i = 0; i < this->bonds().size(); i++) {
+    const cytnx_int64 rank = this->bonds().size();
+    std::vector<cytnx_int64> idxorder(rank);
+    const cytnx_int64 oldrowrank = this->_rowrank;
+    this->_rowrank = rank - oldrowrank;
+    for (cytnx_int64 i = 0; i < this->_rowrank; i++) {
       this->bonds()[i].redirect_();
-      // this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
+      idxorder[i] = i + oldrowrank;
     }
+    for (cytnx_int64 i = this->_rowrank; i < rank; i++) {
+      this->bonds()[i].redirect_();
+      idxorder[i] = i - this->_rowrank;
+    }
+    this->permute_(idxorder);
   };
 
   void BlockUniTensor::normalize_() {

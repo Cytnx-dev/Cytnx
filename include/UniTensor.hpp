@@ -4957,16 +4957,20 @@ namespace cytnx {
 
     /**
     @brief Take the transpose of the UniTensor.
-    @details This function will take the transpose of the UniTensor. If the UniTensor is
-      tagged (i.e. the Bonds are directional), it will swap the direction of the Bonds but
-      the rowrank will not change. If the UniTensor is untagged (i.e. the Bonds are
-      BondType::BD_REG), it will change the rowrank to the opposite side.
-      For fermionic UniTensors, the index order will be reversed without sign flips, and the
-    direction of all Bonds will swapped.
-        @return UniTensor
+    @details This function takes the transpose of a UniTensor:
+      1)  Swaps the roles of left and right indices: index numbers k < rowrank become k + rowrank,
+          indices k' >= rowrank become k' - rowrank. For fermions, the order of the indices is
+          inverted instead.
+      2)  Incoming legs become outgoing onces, and vice versa
+      3)  The rowrank is set to rank - old rowrank, such that left indices become right indices and
+          vice versa.
+    @return UniTensor
     @note Compared to Transpose_(), this function will return new UniTensor object.
-        @see Transpose_()
-        */
+    @warning For fermionic UniTensors, the order of the indices is inverted, while for bosonic
+    UniTensors the role of the left-and right indices is exchanged without inverting the orders in
+    these two groups.
+    @see Transpose_()
+    */
     UniTensor Transpose() const {
       UniTensor out;
       out._impl = this->_impl->Transpose();
