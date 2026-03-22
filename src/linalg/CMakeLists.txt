@@ -1,7 +1,8 @@
 
-# This must be before the target_sources_local(), so that the target is added as CUDA
+# Set Kron.cpp to compile with CUDA compiler when USE_CUDA is enabled
+# Use TARGET_DIRECTORY to explicitly specify the target scope (requires CMake 3.18+)
 if(USE_CUDA)
-  set_source_files_properties(Kron.cpp DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTIES LANGUAGE CUDA)
+  set_source_files_properties(Kron.cpp TARGET_DIRECTORY cytnx PROPERTIES LANGUAGE CUDA)
 endif()
 
 target_sources_local(cytnx
