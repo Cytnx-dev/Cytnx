@@ -988,6 +988,20 @@ namespace cytnx {
       cuVd_ii[Type.Uint16] = cuVectordot_internal_u16;
       cuVd_ii[Type.Bool] = cuVectordot_internal_b;
 
+      //=====================
+      cuTrace_ii = vector<Tracefunc_oii>(N_Type);
+
+      cuTrace_ii[Type.ComplexDouble] = cuTrace_internal_cd;
+      cuTrace_ii[Type.ComplexFloat] = cuTrace_internal_cf;
+      cuTrace_ii[Type.Double] = cuTrace_internal_d;
+      cuTrace_ii[Type.Float] = cuTrace_internal_f;
+      cuTrace_ii[Type.Uint64] = cuTrace_internal_u64;
+      cuTrace_ii[Type.Int64] = cuTrace_internal_i64;
+      cuTrace_ii[Type.Uint32] = cuTrace_internal_u32;
+      cuTrace_ii[Type.Int32] = cuTrace_internal_i32;
+      cuTrace_ii[Type.Uint16] = cuTrace_internal_u16;
+      cuTrace_ii[Type.Int16] = cuTrace_internal_i16;
+      cuTrace_ii[Type.Bool] = cuTrace_internal_b;
       //================
 
       cuOuter_ii = vector<vector<Outerfunc_oii>>(N_Type, vector<Outerfunc_oii>(N_Type, NULL));

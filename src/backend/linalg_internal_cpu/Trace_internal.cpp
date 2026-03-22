@@ -26,7 +26,7 @@ namespace cytnx {
                    const std::vector<cytnx_uint64> &remain_rank_id,
                    const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                    const cytnx_uint64 &ax2) {
-      cytnx::UniTensor I_UT = cytnx::UniTensor(eye(Ndiag, Tn.dtype()), false, -1);
+      cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
 
       UniTensor UTn = UniTensor(Tn, false, 2);
       I_UT.set_labels({UTn._impl->_labels[ax1], UTn._impl->_labels[ax2]});
@@ -50,9 +50,8 @@ namespace cytnx {
       // }
     }
 
-    // TODO: remove Nomp parameter
     void Trace_internal_cd(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                           const cytnx_uint64 &Ndiag, const int &Nomp, const cytnx_uint64 &Nelem,
+                           const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
                            const std::vector<cytnx_uint64> &accu,
                            const std::vector<cytnx_uint64> &remain_rank_id,
                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -65,7 +64,7 @@ namespace cytnx {
     }
 
     void Trace_internal_cf(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                           const cytnx_uint64 &Ndiag, const int &Nomp, const cytnx_uint64 &Nelem,
+                           const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
                            const std::vector<cytnx_uint64> &accu,
                            const std::vector<cytnx_uint64> &remain_rank_id,
                            const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -78,7 +77,7 @@ namespace cytnx {
     }
 
     void Trace_internal_d(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                          const cytnx_uint64 &Ndiag, const int &Nomp, const cytnx_uint64 &Nelem,
+                          const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
                           const std::vector<cytnx_uint64> &accu,
                           const std::vector<cytnx_uint64> &remain_rank_id,
                           const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -91,7 +90,7 @@ namespace cytnx {
     }
 
     void Trace_internal_f(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                          const cytnx_uint64 &Ndiag, const int &Nomp, const cytnx_uint64 &Nelem,
+                          const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
                           const std::vector<cytnx_uint64> &accu,
                           const std::vector<cytnx_uint64> &remain_rank_id,
                           const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -104,7 +103,7 @@ namespace cytnx {
     }
 
     void Trace_internal_u64(const bool &is_2d, Tensor &out, const Tensor &Tn,
-                            const cytnx_uint64 &Ndiag, const int &Nomp, const cytnx_uint64 &Nelem,
+                            const cytnx_uint64 &Ndiag, const cytnx_uint64 &Nelem,
                             const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -117,7 +116,7 @@ namespace cytnx {
     }
 
     void Trace_internal_i64(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const int &nomp, const cytnx_uint64 &nelem,
+                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
                             const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -130,7 +129,7 @@ namespace cytnx {
     }
 
     void Trace_internal_u32(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const int &nomp, const cytnx_uint64 &nelem,
+                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
                             const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -143,7 +142,7 @@ namespace cytnx {
     }
 
     void Trace_internal_i32(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const int &nomp, const cytnx_uint64 &nelem,
+                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
                             const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -156,7 +155,7 @@ namespace cytnx {
     }
 
     void Trace_internal_u16(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const int &nomp, const cytnx_uint64 &nelem,
+                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
                             const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -169,7 +168,7 @@ namespace cytnx {
     }
 
     void Trace_internal_i16(const bool &is_2d, Tensor &out, const Tensor &tn,
-                            const cytnx_uint64 &ndiag, const int &nomp, const cytnx_uint64 &nelem,
+                            const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
                             const std::vector<cytnx_uint64> &accu,
                             const std::vector<cytnx_uint64> &remain_rank_id,
                             const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
@@ -182,7 +181,7 @@ namespace cytnx {
     }
 
     void Trace_internal_b(const bool &is_2d, Tensor &out, const Tensor &tn,
-                          const cytnx_uint64 &ndiag, const int &nomp, const cytnx_uint64 &nelem,
+                          const cytnx_uint64 &ndiag, const cytnx_uint64 &nelem,
                           const std::vector<cytnx_uint64> &accu,
                           const std::vector<cytnx_uint64> &remain_rank_id,
                           const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
