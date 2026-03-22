@@ -264,8 +264,6 @@ namespace SvdTruncateTest {
       fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
       return false;
     }
-    Svds[1].print_diagram();
-    Svds[2].print_diagram();
 
     // check recompose [M - USV*]
     if (!ReComposeCheck(rec_T, Svds)) {
