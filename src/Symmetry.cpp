@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 using namespace std;
 
@@ -240,28 +241,31 @@ namespace cytnx {
 
   void cytnx::Symmetry::Save(const std::string &fname) const {
     fstream f;
-    f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::out | ios::trunc | ios::binary);
+    } else {
+      // add filename extension
+      f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Save(f);
     f.close();
   }
-  void cytnx::Symmetry::Save(const char *fname) const {
-    fstream f;
-    string ffname = string(fname) + ".cysym";
-    f.open((ffname), ios::out | ios::trunc | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
+  void cytnx::Symmetry::Save(const char *fname) const { this->Save(string(fname)); }
 
   cytnx::Symmetry cytnx::Symmetry::Load(const std::string &fname) {
     Symmetry out;
     fstream f;
-    f.open(fname, ios::in | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::in | ios::binary);
+    } else {
+      // add filename extension
+      f.open((fname + ".cysym"), ios::in | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
     }
@@ -269,17 +273,8 @@ namespace cytnx {
     f.close();
     return out;
   }
-
   cytnx::Symmetry cytnx::Symmetry::Load(const char *fname) {
-    Symmetry out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
-    }
-    out._Load(f);
-    f.close();
-    return out;
+    return cytnx::Symmetry::Load(string(fname));
   }
 
   //==================

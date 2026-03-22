@@ -10,6 +10,7 @@ using namespace TestTools;
 class BlockUniTensorTest : public ::testing::Test {
  public:
   std::string data_dir = CYTNX_TEST_DATA_DIR "/common/BlockUniTensor/";
+  const std::string temp_file_path = std::tmpnam(nullptr);
 
   Bond B1 = Bond(BD_IN, {Qs(0) >> 1, Qs(1) >> 2});
   Bond B2 = Bond(BD_IN, {Qs(0), Qs(1)}, {3, 4});
