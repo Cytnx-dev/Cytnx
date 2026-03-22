@@ -3,6 +3,7 @@
 #include <stack>
 #include <typeinfo>
 
+#include "Device.hpp"
 #include "Generator.hpp"
 #include "Network.hpp"
 #include "search_tree.hpp"
@@ -876,7 +877,7 @@ namespace cytnx {
     if (optimal) {
       check(this->tensors, this->names);
 
-      if (this->tensors[0].device() == -1) {
+      if (this->tensors[0].device() == Device.cpu) {
         string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
         _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
@@ -946,7 +947,7 @@ namespace cytnx {
     SearchTree Stree;
     Stree.base_nodes.resize(this->tensors.size());
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
-      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create psudotensors from base tensors
+      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create pseudotensors from base tensors
       // Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
       Stree.base_nodes[t].accu_str = this->names[t];
     }
@@ -959,196 +960,116 @@ namespace cytnx {
 
     int tn_device = this->tensors[0].device();
 
-    if (tn_device == -1) {
-      // cpu workflow
-
-      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
-        this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
-        this->CtTree.base_nodes[idx]->is_assigned = true;
+  #if defined(UNI_GPU) && defined(UNI_CUQUANTUM)  // gpu workflow with cuquantum
+    if (tn_device != Device.cpu && this->tensors[0].uten_type() == UTenType.Dense) {
+      vector<cytnx_uint64> out_shape;
+      for (int i = 0; i < this->TOUT_labels.size(); i++) {
+        out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
       }
-      // 1.5 contraction order:
-      if (ORDER_tokens.size() != 0) {
-        // *set by user or optimally found
-        CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+      UniTensor out =
+        UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
+      cutensornet cutn;
+      cutn.setDevice(this->tensors[0].device());
+      cutn.createStream();
+      cutn.createHandle();
+      cutn.parseLabels(this->int_out_mode, this->int_modes);
+      cutn.set_output_extents(out_shape);
+      cutn.set_extents(this->tensors);
+      this->descNet = cutn.createNetworkDescriptor();
+      cutn.setOutputMem(out);
+      cutn.setInputMem(this->tensors);
+      // cutn.setNetworkDescriptor(this->descNet);
+      if (this->optimizerInfo != nullptr) {
+        cutn.setOptimizerInfo(this->optimizerInfo);
       } else {
-        CtTree.build_default_contraction_tree();
+        this->optimizerInfo = cutn.createOptimizerInfo();
       }
+      cutn.setContractionPath(einsum_path);
 
-      // 2. contract using postorder traversal:
-      // cout << this->CtTree.nodes_container.size() << endl;
-      stack<std::shared_ptr<Node>> stk;
-      std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
-      root->set_root_ptrs();  // Add this line
-      int ly = 0;
-      bool ict;
+      // cutn.getContractionPath();
 
-      do {
-        // move the leftmost
-        while (root != nullptr) {
-          if (root->right) stk.push(root->right);
-          stk.push(root);
-          root = root->left;
-        }
+      cutn.createWorkspaceDescriptor();
+      cutn.initializePlan();
+      cutn.autotune();
+      cutn.executeContraction();
+      cutn.freePlan();
+      cutn.freeWorkspaceDescriptor();
+      cutn.freeHandle();
 
-        root = stk.top();
-        stk.pop();
-
-        ict = true;
-        if (root->right && !stk.empty()) {
-          if (stk.top() == root->right) {  // This comparison now works with shared_ptr
-            stk.pop();
-            stk.push(root);
-            root = root->right;
-            ict = false;
-          }
-        }
-
-        if (ict) {
-          if (root->right && root->left) {
-            root->utensor = Contract(root->left->utensor, root->right->utensor);
-            root->left->clear_utensor();
-            root->right->clear_utensor();
-            root->is_assigned = true;
-          }
-          root = nullptr;
-        }
-      } while (!stk.empty());
-
-      // 3. get result:
-      UniTensor out = this->CtTree.nodes_container.back()->utensor;
-      // cout << out << endl;
-      // out.print_diagram();
-
-      // 4. reset nodes:
-      this->CtTree.reset_nodes();
-
-      // //5. reset back the original labels:
-      // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-      //     this->tensors[i].set_labels(old_labels[i]);
-      // }
-
-      // 6. permute accroding to pre-set labels:
-      if (TOUT_labels.size()) {
-        out.permute_(TOUT_labels, TOUT_iBondNum);
-      }
-      // UniTensor out;
       return out;
-
-    } else {
-      // gpu workflow
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
-      if (this->tensors[0].uten_type() != UTenType.Dense) {
-        cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] Error,%s",
-                        "Sparse or Block type UniTensor network contraction is not support.\n");
-        return UniTensor();
-      } else {
-        vector<cytnx_uint64> out_shape;
-        for (int i = 0; i < this->TOUT_labels.size(); i++) {
-          out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
-        }
-        UniTensor out =
-          UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
-        cutensornet cutn;
-        cutn.setDevice(this->tensors[0].device());
-        cutn.createStream();
-        cutn.createHandle();
-        cutn.parseLabels(this->int_out_mode, this->int_modes);
-        cutn.set_output_extents(out_shape);
-        cutn.set_extents(this->tensors);
-        this->descNet = cutn.createNetworkDescriptor();
-        cutn.setOutputMem(out);
-        cutn.setInputMem(this->tensors);
-        // cutn.setNetworkDescriptor(this->descNet);
-        if (this->optimizerInfo != nullptr) {
-          cutn.setOptimizerInfo(this->optimizerInfo);
-        } else {
-          this->optimizerInfo = cutn.createOptimizerInfo();
-        }
-        cutn.setContractionPath(einsum_path);
-
-        // cutn.getContractionPath();
-
-        cutn.createWorkspaceDescriptor();
-        cutn.initializePlan();
-        cutn.autotune();
-        cutn.executeContraction();
-        cutn.freePlan();
-        cutn.freeWorkspaceDescriptor();
-        cutn.freeHandle();
-
-        return out;
-      }
-    #else
-      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
-        this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
-        this->CtTree.base_nodes[idx]->is_assigned = true;
-      }
-      // 1.5 contraction order:
-      if (ORDER_tokens.size() != 0) {
-        // *set by user or optimally found
-        CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-      } else {
-        CtTree.build_default_contraction_tree();
-      }
-      // 2. contract using postorder traversal:
-      // cout << this->CtTree.nodes_container.size() << endl;
-      stack<std::shared_ptr<Node>> stk;
-      std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
-      root->set_root_ptrs();  // Add this line
-      int ly = 0;
-      bool ict;
-
-      do {
-        // move the leftmost
-        while (root != nullptr) {
-          if (root->right) stk.push(root->right);
-          stk.push(root);
-          root = root->left;
-        }
-
-        root = stk.top();
-        stk.pop();
-
-        ict = true;
-        if (root->right && !stk.empty()) {
-          if (stk.top() == root->right) {  // This comparison now works with shared_ptr
-            stk.pop();
-            stk.push(root);
-            root = root->right;
-            ict = false;
-          }
-        }
-
-        if (ict) {
-          if (root->right && root->left) {
-            root->utensor = Contract(root->left->utensor, root->right->utensor);
-            root->left->clear_utensor();  // remove intermediate unitensor to save heap space
-            root->right->clear_utensor();  // remove intermediate unitensor to save heap space
-            root->is_assigned = true;
-          }
-          root = nullptr;
-        }
-      } while (!stk.empty());
-      // 3. get result:
-      UniTensor out = this->CtTree.nodes_container.back()->utensor;
-      // 4. reset nodes:
-      this->CtTree.reset_nodes();
-      // 6. permute accroding to pre-set labels:
-      if (TOUT_labels.size()) {
-        out.permute_(TOUT_labels, TOUT_iBondNum);
-      }
-      return out;
-    #endif
-
-  #else
-      cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] fatal error,%s",
-                      "try to call the gpu section without CUDA support.\n");
-      return UniTensor();
-  #endif
     }
+  #endif
+
+    // all other cases (CPU, without cuquantum, or not dense)
+    for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
+      this->CtTree.base_nodes[idx]->utensor =
+        this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+      this->CtTree.base_nodes[idx]->is_assigned = true;
+    }
+    // 1.5 contraction order:
+    if (ORDER_tokens.size() != 0) {
+      // *set by user or optimally found
+      CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+    } else {
+      CtTree.build_default_contraction_tree();
+    }
+
+    // 2. contract using postorder traversal:
+    stack<std::shared_ptr<Node>> stk;
+    std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
+    root->set_root_ptrs();  // Add this line
+    int ly = 0;
+    bool ict;
+
+    do {
+      // move the leftmost
+      while (root != nullptr) {
+        if (root->right) stk.push(root->right);
+        stk.push(root);
+        root = root->left;
+      }
+
+      root = stk.top();
+      stk.pop();
+
+      ict = true;
+      if (root->right && !stk.empty()) {
+        if (stk.top() == root->right) {  // This comparison now works with shared_ptr
+          stk.pop();
+          stk.push(root);
+          root = root->right;
+          ict = false;
+        }
+      }
+
+      if (ict) {
+        if (root->right && root->left) {
+          root->utensor = Contract(root->left->utensor, root->right->utensor);
+          root->left->clear_utensor();
+          root->right->clear_utensor();
+          root->is_assigned = true;
+        }
+        root = nullptr;
+      }
+    } while (!stk.empty());
+
+    // 3. get result:
+    UniTensor out = this->CtTree.nodes_container.back()->utensor;
+
+    // 4. reset nodes:
+    this->CtTree.reset_nodes();
+
+    // //5. reset back the original labels:
+    // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
+    //     this->tensors[i].set_labels(old_labels[i]);
+    // }
+
+    // 6. permute according to pre-set labels:
+    if (TOUT_labels.size()) {
+      out.permute_(TOUT_labels, TOUT_iBondNum);
+    }
+    // UniTensor out;
+    return out;
   }
 
   void RegularNetwork::construct(const vector<string> &alias, const vector<vector<string>> &labels,
