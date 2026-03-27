@@ -317,14 +317,14 @@ endif()
 # #######
 IF(BUILD_PYTHON)
   find_package (Python COMPONENTS Interpreter Development)
-  find_package(pybind11 REQUIRED)
+  find_package(pybind11 3.0 QUIET)
 
   if(NOT pybind11_FOUND)
     include(FetchContent)
     FetchContent_Declare(
       pybind11_sources
       GIT_REPOSITORY https://github.com/pybind/pybind11.git
-      GIT_TAG v2.11.1
+      GIT_TAG v3.0.0
     )
 
     FetchContent_GetProperties(pybind11_sources)
@@ -332,6 +332,7 @@ IF(BUILD_PYTHON)
     if(NOT pybind11_sources_POPULATED)
       FetchContent_Populate(pybind11_sources)
 
+      set(PYBIND11_FINDPYTHON ON)
       add_subdirectory(
         ${pybind11_sources_SOURCE_DIR}
         ${pybind11_sources_BINARY_DIR}
