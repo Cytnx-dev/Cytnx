@@ -1366,6 +1366,7 @@ namespace cytnx {
       // output instance;
       BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
       BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
+      const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
       std::vector<string> out_labels;
       std::vector<Bond> out_bonds;
       cytnx_int64 out_rowrank;
@@ -1381,7 +1382,7 @@ namespace cytnx {
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
       // cout << out_bonds;
-      tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false);
+      tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false);
 
       // tmp->_name = this->_name + "+" + rhs->_name;
 
@@ -1551,6 +1552,7 @@ namespace cytnx {
       } else {
         BlockFermionicUniTensor *tmp = new BlockFermionicUniTensor();
         BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
+        const unsigned int common_dtype = Type.type_promote(this->dtype(), rhs->dtype());
         std::vector<string> out_labels;
         std::vector<Bond> out_bonds;
         cytnx_int64 out_rowrank;
@@ -1575,13 +1577,12 @@ namespace cytnx {
             (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
               (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
             this->is_diag() or Rtn->is_diag()) {
-          tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false,
-                    false);
+          tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, false);
         } else {
-          tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, true);
+          tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, true);
         }
   #else
-        tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false, false);
+        tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, false);
   #endif
 
         // now, build the itoi table:
@@ -1675,6 +1676,7 @@ namespace cytnx {
           std::vector<Scalar> betas(Rtn->_blocks.size(), 0.0);
 
           BlockFermionicUniTensor *tmp_Rtn = Rtn;
+          bool tmp_rtn_is_casted = false;
 
           // check if all sub-tensor are same dtype and device
           if (User_debug) {
@@ -1709,13 +1711,14 @@ namespace cytnx {
           }
   #ifdef UNI_MKL
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
-          if (this->dtype() != Rtn->dtype()) {
+          if (Rtn->dtype() != common_dtype) {
             BlockFermionicUniTensor *tmpp = Rtn->clone_meta(true, true);
             tmpp->_blocks.resize(Rtn->_blocks.size());
             for (cytnx_int64 blk = 0; blk < Rtn->_blocks.size(); blk++) {
-              tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(this->dtype());
+              tmpp->_blocks[blk] = Rtn->_blocks[blk].astype(common_dtype);
             }
             tmp_Rtn = tmpp;
+            tmp_rtn_is_casted = true;
           }
           // First select left block to do gemm
           for (cytnx_int64 a = 0; a < this->_blocks.size(); a++) {
@@ -1793,7 +1796,7 @@ namespace cytnx {
                 linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas,
                                      (const void **)LMems.data(), (const void **)RMems.data(),
                                      betas, (void **)CMems.data(), group_count, group_size,
-                                     this->dtype(), tmp->device());
+                                     common_dtype, tmp->device());
             }
             // restore the shape&permutation of this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
@@ -1816,7 +1819,7 @@ namespace cytnx {
           }
 
           // if Rtn dtype is casted, delete the tmp_Rtn
-          if (this->dtype() != Rtn->dtype()) {
+          if (tmp_rtn_is_casted) {
             delete tmp_Rtn;
           }
         }
