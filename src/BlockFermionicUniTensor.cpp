@@ -740,7 +740,7 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
       cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
+                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
       mapper_i64.push_back(std::distance(this->_labels.begin(), it));
     }
     this->permute_(mapper_i64, rowrank);
@@ -868,7 +868,7 @@ namespace cytnx {
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
       cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
+                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
       mapper_i64.push_back(std::distance(this->_labels.begin(), it));
     }
     this->permute_nosignflip_(mapper_i64, rowrank);
@@ -1303,7 +1303,7 @@ namespace cytnx {
     std::vector<std::string>::iterator it;
     it = std::find(this->_labels.begin(), this->_labels.end(), label);
     cytnx_error_msg(it == this->_labels.end(),
-                    "[ERROR] label %d does not exist in current UniTensor.\n", label.c_str());
+                    "[ERROR] label %s does not exist in current UniTensor.\n", label.c_str());
     this->twist_(std::distance(this->_labels.begin(), it));
   }
 
@@ -1924,8 +1924,7 @@ namespace cytnx {
       // this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
       idxorder[i] = idxnum - i;
     }
-    this->permute_nosignflip_(idxorder);
-    this->_rowrank = this->_bonds.size() - this->_rowrank;
+    this->permute_nosignflip_(idxorder, this->_bonds.size() - this->_rowrank);
   };
 
   void BlockFermionicUniTensor::normalize_() {
