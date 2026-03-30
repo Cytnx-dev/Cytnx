@@ -41,7 +41,6 @@
 #include "linalg_internal_cpu/Trace_internal.hpp"
 #include "linalg_internal_cpu/Tridiag_internal.hpp"
 #include "linalg_internal_cpu/Vectordot_internal.hpp"
-#include "linalg_internal_cpu/iArithmetic_internal.hpp"
 #include "linalg_internal_cpu/memcpyTruncation.hpp"
 
 #ifdef UNI_GPU
@@ -217,7 +216,6 @@ namespace cytnx {
 #endif
     class linalg_internal_interface {
      public:
-      std::vector<std::vector<Arithmeticfunc_oii>> iAri_ii;
       std::vector<Svdfunc_oii> Sdd_ii;
       std::vector<Svdfunc_oii> Gesvd_ii;
       std::vector<Eighfunc_oii> Eigh_ii;
