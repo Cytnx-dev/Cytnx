@@ -37,10 +37,11 @@ namespace cytnx {
       }
 
       template <char op_code, typename TLin, typename TRin>
-      inline void ApplyInplaceArithmeticKernel(
-        TLin *lhs, const TRin *rhs, const cytnx_uint64 &len, const bool &rhs_is_scalar,
-        const std::vector<cytnx_uint64> &shape, const std::vector<cytnx_uint64> &invmapper_L,
-        const std::vector<cytnx_uint64> &invmapper_R) {
+      inline void ApplyInplaceArithmeticKernel(TLin *lhs, const TRin *rhs, const cytnx_uint64 &len,
+                                               const bool &rhs_is_scalar,
+                                               const std::vector<cytnx_uint64> &shape,
+                                               const std::vector<cytnx_uint64> &invmapper_L,
+                                               const std::vector<cytnx_uint64> &invmapper_R) {
         if (rhs_is_scalar) {
           for (cytnx_uint64 i = 0; i < len; i++) {
             ApplyInplaceArithmeticOp<op_code>(lhs[i], rhs[0]);
@@ -97,7 +98,7 @@ namespace cytnx {
                 using TR = std::remove_pointer_t<decltype(rptr)>;
                 static_assert(!std::is_same_v<TR, void>);
                 ApplyInplaceArithmeticKernel<op_code, TL, TR>(lptr, rptr, len, rhs_is_scalar, shape,
-                                                               invmapper_L, invmapper_R);
+                                                              invmapper_L, invmapper_R);
               },
               Rt.ptr());
           },
