@@ -939,17 +939,20 @@ namespace cytnx {
     cytnx::UniTensor ExpM(const cytnx::UniTensor &Tin);
 
     /**
-     * @deprecated This function is deprecated, please use
-     * Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b) instead.
+     * @brief Perform the trace over two legs of a UniTensor.
+     * @details This function performs the trace over two legs of a UniTensor \p Tin. The two legs
+     * are specified by the indices \p a and \p b.
+     * @see Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b)
+     * @warning It is recommended to use Trace(const cytnx::UniTensor &Tin, const std::string &a,
+     * const std::string &b) instead.
      */
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const cytnx_int64 &a = 0,
                            const cytnx_int64 &b = 1);
 
     /**
-     * @brief Perform trace over two legs of a UniTensor.
-     * @details This function performs trace over two legs of a UniTensor \p Tin. The two legs
-     * are specified by \p a and \p b. For more details, please refer to the documentation of the
-     * function Trace(const Tensor &Tin, const cytnx_int64 &a, const cytnx_int64 &b).
+     * @brief Perform the trace over two legs of a UniTensor.
+     * @details This function performs the trace over two legs of a UniTensor \p Tin. The two legs
+     * are specified by the labels \p a and \p b.
      * @see Trace(const Tensor &Tin, const cytnx_uint64 &a, const cytnx_uint64 &b)
      */
     cytnx::UniTensor Trace(const cytnx::UniTensor &Tin, const std::string &a, const std::string &b);

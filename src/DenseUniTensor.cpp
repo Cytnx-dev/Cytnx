@@ -99,7 +99,7 @@ namespace cytnx {
     } else {
       // check bonds & labels dim
       cytnx_error_msg(bonds.size() != in_labels.size(), "%s",
-                      "[ERROR] labels must have same lenth as # of bonds.");
+                      "[ERROR] labels must have same length as # of bonds.");
 
       std::vector<std::string> tmp = vec_unique(in_labels);
       cytnx_error_msg(tmp.size() != in_labels.size(),
@@ -1365,8 +1365,33 @@ namespace cytnx {
                         i);
       }
     }
-
-    this->_block += rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block += rhs->get_block_();
+    } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Add_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
+      this->to_dense_();
+      this->_block += rhs->get_block_();
+    } else {
+      const Tensor &rhs_diag = rhs->get_block_();
+      cytnx_uint64 n = rhs_diag.shape()[0];
+      cytnx_error_msg(
+        this->_block.shape() != std::vector<cytnx_uint64>({n, n}),
+        "[ERROR][Add_] shape mismatch: dense block must be square with dimension matching "
+        "diagonal length %lld.\n",
+        (long long)n);
+      if (this->_block.device() == Device.cpu) {
+        for (cytnx_uint64 i = 0; i < n; i++) {
+          Scalar v = Scalar(this->_block.at({i, i}));
+          v += Scalar(rhs_diag.at({i}));
+          this->_block.at({i, i}) = v;
+        }
+      } else {
+        this->_block += linalg::Diag(rhs_diag);
+      }
+    }
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
     // cout << rhs << endl;
@@ -1395,7 +1420,33 @@ namespace cytnx {
                         i);
       }
     }
-    this->_block -= rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block -= rhs->get_block_();
+    } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Sub_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
+      this->to_dense_();
+      this->_block -= rhs->get_block_();
+    } else {
+      const Tensor &rhs_diag = rhs->get_block_();
+      cytnx_uint64 n = rhs_diag.shape()[0];
+      cytnx_error_msg(
+        this->_block.shape() != std::vector<cytnx_uint64>({n, n}),
+        "[ERROR][Sub_] shape mismatch: dense block must be square with dimension matching "
+        "diagonal length %lld.\n",
+        (long long)n);
+      if (this->_block.device() == Device.cpu) {
+        for (cytnx_uint64 i = 0; i < n; i++) {
+          Scalar v = Scalar(this->_block.at({i, i}));
+          v -= Scalar(rhs_diag.at({i}));
+          this->_block.at({i, i}) = v;
+        }
+      } else {
+        this->_block -= linalg::Diag(rhs_diag);
+      }
+    }
   }
   void DenseUniTensor::Sub_(const Scalar &rhs) {
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
@@ -1428,7 +1479,33 @@ namespace cytnx {
                         i);
       }
     }
-    this->_block *= rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block *= rhs->get_block_();
+    } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Mul_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
+      this->to_dense_();
+      this->_block *= rhs->get_block_();
+    } else {
+      cytnx_uint64 n = rhs->get_block_().shape()[0];
+      cytnx_error_msg(
+        this->_block.shape() != std::vector<cytnx_uint64>({n, n}),
+        "[ERROR][Mul_] shape mismatch: dense block must be square with dimension matching "
+        "diagonal length %lld.\n",
+        (long long)n);
+      if (this->_block.device() == Device.cpu) {
+        Tensor lhs_diag = linalg::Diag(this->_block);
+        lhs_diag *= rhs->get_block_();
+        this->_block.storage().set_zeros();
+        for (cytnx_uint64 i = 0; i < n; i++) {
+          this->_block.at({i, i}) = Scalar(lhs_diag.at({i}));
+        }
+      } else {
+        this->_block *= linalg::Diag(rhs->get_block_());
+      }
+    }
   }
   void DenseUniTensor::Mul_(const Scalar &rhs) {
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
@@ -1456,7 +1533,21 @@ namespace cytnx {
                         i);
       }
     }
-    this->_block /= rhs->get_block_();
+    if (this->_is_diag == rhs->_is_diag) {
+      this->_block /= rhs->get_block_();
+    } else if (this->_is_diag) {
+      cytnx_error_msg(rhs->get_block_().shape()[0] != this->_block.shape()[0],
+                      "[ERROR][Div_] shape mismatch: diagonal block has length %lld but "
+                      "non-diagonal block has dimension %lld.\n",
+                      (long long)this->_block.shape()[0], (long long)rhs->get_block_().shape()[0]);
+      this->to_dense_();
+      this->_block /= rhs->get_block_();
+    } else {
+      cytnx_error_msg(true,
+                      "[ERROR][Div_] Dividing a non-diagonal DenseUniTensor by a diagonal one "
+                      "leads to divisions by zero off the diagonal!%s",
+                      "\n");
+    }
   }
   void DenseUniTensor::Div_(const Scalar &rhs) {
     // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor

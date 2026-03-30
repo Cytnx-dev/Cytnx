@@ -3531,11 +3531,11 @@ namespace cytnx {
 
     /**
      * @brief permute the legs of the UniTensor
-     * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
-     *    \p by_label is false, otherwise it is mapped by bond label.
+     * @param[in] mapper the mapper of the permutation by bond indices
      * @param[in] rowrank the new rowrank after the permutation
      * @return UniTensor
-     * @warning \p by_label will be deprecated!
+     * @warning It is recommended to use \ref permute(const std::vector<std::string> &mapper, const
+     * cytnx_int64 &rowrank) instead
      */
     UniTensor permute(const std::vector<cytnx_int64> &mapper,
                       const cytnx_int64 &rowrank = -1) const {
@@ -3546,7 +3546,7 @@ namespace cytnx {
 
     /**
      * @brief permute the legs of the UniTensor by labels
-     * @param[in] mapper the mapper by babels
+     * @param[in] mapper the mapper of the permutation by labels
      * @param[in] rowrank the row rank
      * @return UniTensor
      */
@@ -3559,6 +3559,8 @@ namespace cytnx {
 
     /**
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+        @warning It is recommended to use \ref permute(const std::vector<std::string> &mapper, const
+       cytnx_int64 &rowrank) instead
         */
     UniTensor permute(const std::initializer_list<char *> &mapper,
                       const cytnx_int64 &rowrank = -1) const {
@@ -3571,26 +3573,20 @@ namespace cytnx {
     }
 
     /**
-    @deprecated This function is deprecated. Please use \n
-      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank)\n
-          instead.
-    @brief permute the lags of the UniTensor, inplacely.
-    @param[in] mapper the mapper by labels
+    @brief permute the legs of the UniTensor, inplacely.
+    @param[in] mapper the mapper of the permutation by labels
     @param[in] rowrank the row rank after the permutation
-          @warning \p by_label will be deprecated!
+    @warning It is recommended to use \ref permute_(const std::vector<std::string> &mapper, const
+    cytnx_int64 &rowrank) instead
     */
-    [[deprecated(
-      "Please use "
-      "UniTensor &permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) "
-      "instead.")]] UniTensor &
-      permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
       return *this;
     }
 
     /**
     @brief permute the legs of the UniTensor, inplacely.
-    @param[in] mapper the mapper by labels
+    @param[in] mapper the mapper of the permutation by labels
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
@@ -3604,11 +3600,11 @@ namespace cytnx {
      * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
      * usually not intended, since fermionic permutations create sign flips! This should typically
      * only be used to compare tensors in different sign conventions with each other.
-     * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
-     *    \p by_label is false, otherwise it is mapped by bond label.
+     * @param[in] mapper the mapper of the permutation by indices
      * @param[in] rowrank the new rowrank after the permutation
      * @return UniTensor
-     * @warning \p by_label will be deprecated!
+     * @warning It is recommended to use \ref permute_nosignflip(const std::vector<std::string>
+     * &mapper, const cytnx_int64 &rowrank) instead
      */
     UniTensor permute_nosignflip(const std::vector<cytnx_int64> &mapper,
                                  const cytnx_int64 &rowrank = -1) const {
@@ -3622,7 +3618,7 @@ namespace cytnx {
      * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
      * usually not intended, since fermionic permutations create sign flips! This should typically
      * only be used to compare tensors in different sign conventions with each other.
-     * @param[in] mapper the mapper by babels
+     * @param[in] mapper the mapper of the permutation by labels
      * @param[in] rowrank the row rank
      * @return UniTensor
      */
@@ -3634,8 +3630,9 @@ namespace cytnx {
     }
 
     /**
-        @see permute_nosignflip(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank
-       = -1)
+        @see permute_nosignflip(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank)
+        @warning It is recommended to use \ref permute_nosignflip(const std::vector<std::string>
+       &mapper, const cytnx_int64 &rowrank) instead
         */
     UniTensor permute_nosignflip(const std::initializer_list<char *> &mapper,
                                  const cytnx_int64 &rowrank = -1) const {
@@ -3652,11 +3649,10 @@ namespace cytnx {
     @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
     usually not intended, since fermionic permutations create sign flips! This should typically only
     be used to compare tensors in different sign conventions with each other.
-    @deprecated It is recommended to use \ref
-      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
-    @param[in] mapper the mapper by labels
+    @param[in] mapper the mapper of the permutation by indices
     @param[in] rowrank the row rank after the permutation
-          @warning \p by_label will be deprecated!
+    @warning It is recommended to use \ref permute_(const std::vector<std::string> &mapper, const
+    cytnx_int64 &rowrank) instead
     */
     UniTensor &permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
                                    const cytnx_int64 &rowrank = -1) {
@@ -3669,7 +3665,7 @@ namespace cytnx {
     @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
     usually not intended, since fermionic permutations create sign flips! This should typically only
     be used to compare tensors in different sign conventions with each other.
-    @param[in] mapper the mapper by labels
+    @param[in] mapper the mapper of the permutation by labels
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
@@ -3678,19 +3674,6 @@ namespace cytnx {
       this->_impl->permute_nosignflip_(mapper, rowrank);
       return *this;
     }
-
-    // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
-    //     std::vector<char*> mprs = mapper;
-    //     std::vector<std::string> vs(mprs.size());
-    //     transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return
-    //     std::string(x); });
-
-    //     this->permute_(vs,rowrank);
-    // }
-
-    // void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
-    //   this->_impl->permute_(mapper, rowrank);
-    // }
 
     /**
     @brief Make the UniTensor contiguous by coalescing the memory (storage).
@@ -3732,7 +3715,7 @@ namespace cytnx {
     returned by signflip() are false.
         @see apply()
     */
-    UniTensor apply_() {
+    UniTensor &apply_() {
       this->_impl = this->_impl->apply_();
       return *this;
     }
@@ -4462,7 +4445,7 @@ namespace cytnx {
 
     /**
     @brief Combine the sevral bonds of the UniTensor.
-        @param[in] indicators the labels of the lags you want to combine.
+        @param[in] indicators the labels of the legs you want to combine.
         @param[in] force If force is true, it will combine the bonds anyway even the direction
       of the bonds are same. After combining, the direction of the bonds will be set as
       same as the first bond.
@@ -5235,7 +5218,7 @@ namespace cytnx {
      * @note C++: Deprecated soon, use at()
      */
     template <class T>
-    T get_elem(const std::vector<cytnx_uint64> &locator) const {
+    [[deprecated("Use at() instead.")]] T get_elem(const std::vector<cytnx_uint64> &locator) const {
       return this->at<T>(locator);
     }
 
@@ -5245,7 +5228,8 @@ namespace cytnx {
      * @note C++: Deprecated soon, use at()
      */
     template <class T2>
-    UniTensor &set_elem(const std::vector<cytnx_uint64> &locator, const T2 &rc) {
+    [[deprecated("Use at() instead.")]] UniTensor &set_elem(
+      const std::vector<cytnx_uint64> &locator, const T2 &rc) {
       // cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
       this->at(locator) = rc;
       return *this;

@@ -193,7 +193,8 @@ namespace cytnx {
       std::vector<cytnx_int64> removed;
       return this->get(accessors, removed);
     }
-    boost::intrusive_ptr<Tensor_impl> get_deprecated(const std::vector<cytnx::Accessor> &accessors);
+    [[deprecated("Use Tensor_impl::get instead")]] boost::intrusive_ptr<Tensor_impl> get_deprecated(
+      const std::vector<cytnx::Accessor> &accessors);
     void set(const std::vector<cytnx::Accessor> &accessors,
              const boost::intrusive_ptr<Tensor_impl> &rhs);
 
