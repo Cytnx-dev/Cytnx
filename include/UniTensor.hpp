@@ -196,16 +196,18 @@ namespace cytnx {
       this->_labels[inx] = new_label;
     }
 
-    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]]
-    void set_labels(const std::vector<std::string> &new_labels);
+    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]] void
+      set_labels(const std::vector<std::string> &new_labels);
     void relabel_(const std::vector<std::string> &new_labels);  // implemented
-    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]]
-    void relabels_(const std::vector<std::string> &new_labels);  // implemented
+    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]] void
+      relabels_(const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::vector<std::string> &old_labels,
                   const std::vector<std::string> &new_labels);  // implemented
-    [[deprecated("Please use relabel_(const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels) instead.")]]
-    void relabels_(const std::vector<std::string> &old_labels,
-                   const std::vector<std::string> &new_labels);  // implemented
+    [[deprecated(
+      "Please use relabel_(const std::vector<std::string> &old_labels, const "
+      "std::vector<std::string> &new_labels) instead.")]] void
+      relabels_(const std::vector<std::string> &old_labels,
+                const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::string &old_label, const std::string &new_label) {
       this->set_label(old_label, new_label);
     }
