@@ -136,12 +136,11 @@ namespace cytnx {
                          const std::vector<cytnx_uint64> &mapper,
                          const std::vector<cytnx_uint64> &len,
                          const std::vector<std::vector<cytnx_uint64>> &locators);
-    void SetElem_byShape(boost::intrusive_ptr<Storage_base> &in,
-                         const std::vector<cytnx_uint64> &shape,
-                         const std::vector<cytnx_uint64> &mapper,
-                         const std::vector<cytnx_uint64> &len,
-                         const std::vector<std::vector<cytnx_uint64>> &locators,
-                         const bool &is_scalar);
+
+    [[deprecated("Use SetElem_byShape_v2 instead")]] void SetElem_byShape(
+      boost::intrusive_ptr<Storage_base> &in, const std::vector<cytnx_uint64> &shape,
+      const std::vector<cytnx_uint64> &mapper, const std::vector<cytnx_uint64> &len,
+      const std::vector<std::vector<cytnx_uint64>> &locators, const bool &is_scalar);
     void SetElem_byShape_v2(boost::intrusive_ptr<Storage_base> &in,
                             const std::vector<cytnx_uint64> &shape,
                             const std::vector<std::vector<cytnx_uint64>> &locators,
@@ -156,7 +155,10 @@ namespace cytnx {
      * @return The pointer referencing the underlying storage.
      * @deprecated This method may be removed without any notification.
      */
-    virtual void *release() noexcept { return nullptr; }
+    [[deprecated("This method is deprecated and may be removed in the future.")]] virtual void *
+      release() noexcept {
+      return nullptr;
+    }
 
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);

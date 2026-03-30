@@ -107,8 +107,8 @@ namespace cytnx {
       // SparseUniTensor is under developing!!%s","\n");
       // this->_impl = boost::intrusive_ptr<UniTensor_base>(new SparseUniTensor());
       cytnx_error_msg(true,
-                      "[ERROR] the file is SparseUniTensor which is deprecated. Either it's from a "
-                      "erly version or something wrong!%s",
+                      "[ERROR] The file contains a SparseUniTensor, which is deprecated. It was "
+                      "either saved with an old Cytnx version or something went wrong!%s",
                       "\n");
     } else if (utentype == UTenType.Block) {
       this->_impl = boost::intrusive_ptr<UniTensor_base>(new BlockUniTensor());
