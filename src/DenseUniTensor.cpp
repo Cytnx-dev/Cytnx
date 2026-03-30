@@ -646,20 +646,7 @@ namespace cytnx {
     DenseUniTensor *out = this->clone_meta();
     std::vector<cytnx_int64> removed;  // bonds to be removed
     if (this->_is_diag) {
-      if (accessors.size() == 2) {
-        if (accessors[0] == accessors[1]) {
-          std::vector<Accessor> acc_in(1, accessors[0]);
-          return this->get(acc_in);
-        } else {  // convert to dense UniTensor
-          out->_block = this->_block;
-          out->to_dense_();
-          return out->get(accessors);
-        }
-      } else {  // for one accessor element, use this accessor for both bonds
-        cytnx_error_msg(accessors.size() > 2,
-                        "[ERROR][DenseUniTensor][get] For diagonal UniTensors, only one or two "
-                        "accessor elements are allowed.%s",
-                        "\n");
+      if (accessors.size() == 1) {
         out->_block = this->_block.get(accessors, removed);
         if (removed.empty()) {  // change dimension of bonds
           for (cytnx_int64 idx = out->_bonds.size() - 1; idx >= 0; idx--) {
@@ -672,6 +659,14 @@ namespace cytnx {
           out->_labels = std::vector<std::string>();
           out->_bonds = std::vector<Bond>();
         }
+      } else {  // convert to non-diagonal UniTensor
+        cytnx_error_msg(accessors.size() > 2,
+                        "[ERROR][DenseUniTensor][get] For diagonal UniTensors, only one or two "
+                        "accessor elements are allowed.%s",
+                        "\n");
+        out->_block = this->_block;
+        out->to_dense_();
+        return out->get(accessors);
       }
     } else {  // non-diagonal
       out->_block = this->_block.get(accessors, removed);
@@ -698,18 +693,13 @@ namespace cytnx {
     if (this->_is_diag) {
       if (accessors.size() == 1) {
         this->_block.set(accessors, rhs);
-      } else {  // for one accessor element, use this accessor for both bonds
+      } else {  // convert to non-diagonal UniTensor
         cytnx_error_msg(accessors.size() > 2,
                         "[ERROR][DenseUniTensor][get] For diagonal UniTensors, only one or two "
                         "accessor elements are allowed.%s",
                         "\n");
-        if (accessors[0] == accessors[1]) {
-          const std::vector<Accessor> &first_accessor = {accessors[0]};
-          this->_block.set(first_accessor, rhs);
-        } else {  // convert to dense UniTensor
-          this->to_dense_();
-          this->_block.set(accessors, rhs);
-        }
+        this->to_dense_();
+        this->_block.set(accessors, rhs);
       }
     } else {  // non-diagonal
       this->_block.set(accessors, rhs);
