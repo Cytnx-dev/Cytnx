@@ -318,6 +318,29 @@ TEST_F(linalg_Test, Tensor_Norm) {
   EXPECT_EQ(linalg::Norm(arange3x3cd).item(), ans);
 }
 
+TEST_F(linalg_Test, Tensor_Add_mixed_dtype_type_promote_cpu) {
+  Tensor lhs = arange(0, 4, 1, Type.Uint32).reshape(2, 2);
+  Tensor rhs = arange(0, 4, 1, Type.Int16).reshape(2, 2);
+
+  Tensor out = linalg::Add(lhs, rhs);
+  EXPECT_EQ(out.dtype(), Type.type_promote(lhs.dtype(), rhs.dtype()));
+  EXPECT_EQ((cytnx_int64)out(1, 1).item().real(), 6);
+}
+
+TEST_F(linalg_Test, Tensor_Add_scalar_mixed_dtype_type_promote_cpu) {
+  Tensor rhs = arange(0, 4, 1, Type.Int16).reshape(2, 2);
+  const cytnx_uint32 lhs_scalar = 5;
+
+  Tensor out_lhs = linalg::Add(lhs_scalar, rhs);
+  Tensor out_rhs = linalg::Add(rhs, lhs_scalar);
+  const unsigned int promoted = Type.type_promote(Type.Uint32, rhs.dtype());
+
+  EXPECT_EQ(out_lhs.dtype(), promoted);
+  EXPECT_EQ(out_rhs.dtype(), promoted);
+  EXPECT_EQ((cytnx_int64)out_lhs(1, 1).item().real(), 8);
+  EXPECT_EQ((cytnx_int64)out_rhs(1, 1).item().real(), 8);
+}
+
 TEST_F(linalg_Test, DenseUt_Norm) {
   cytnx_double ans = 0;
   for (cytnx_uint64 i = 0; i < 9; i++) {
