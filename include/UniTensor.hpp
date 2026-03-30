@@ -731,63 +731,9 @@ namespace cytnx {
         true, "[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s",
         "\n");
     }
-    // this will only work on non-symm tensor (DenseUniTensor)
-    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
-      if (accessors.empty()) return this;
-      DenseUniTensor *out = this->clone_meta();
-      std::vector<cytnx_int64> removed;  // bonds to be removed
-      if (this->_is_diag) {
-        if (accessors.size() == 2) {
-          if (accessors[0] == accessors[1]) {
-            std::vector<Accessor> acc_in(1, accessors[0]);
-            return this->get(acc_in);
-          } else {  // convert to dense UniTensor
-            out->_block = this->_block;
-            out->to_dense_();
-            return out->get(accessors);
-          }
-        } else {  // for one accessor element, use this accessor for both bonds
-          cytnx_error_msg(accessors.size() > 1,
-                          "[ERROR][DenseUniTensor][get] for diagonal UniTensors, only one or two "
-                          "accessor elements are allowed.%s",
-                          "\n");
-          out->_block = this->_block.get(accessors, removed);
-          if (removed.empty()) {  // change dimension of bonds
-            for (cytnx_int64 idx = out->_bonds.size() - 1; idx >= 0; idx--) {
-              out->_bonds[idx]._impl->_dim = out->_block.shape()[0];
-            }
-          } else {  // erase all bonds
-            out->_is_braket_form = false;
-            out->_is_diag = false;
-            out->_rowrank = 0;
-            out->_labels = std::vector<std::string>();
-            out->_bonds = std::vector<Bond>();
-          }
-        }
-      } else {  // non-diagonal
-        out->_block = this->_block.get(accessors, removed);
-        for (cytnx_int64 idx = removed.size() - 1; idx >= 0; idx--) {
-          out->_labels.erase(out->_labels.begin() + removed[idx]);
-          out->_bonds.erase(out->_bonds.begin() + removed[idx]);
-          if (removed[idx] < this->_rowrank) out->_rowrank--;
-        }
-        // adapt dimensions on bonds
-        auto dims = out->_block.shape();
-        for (cytnx_int64 idx = 0; idx < out->_bonds.size(); idx++) {
-          out->_bonds[idx]._impl->_dim = dims[idx];
-        }
-        // update_braket
-        if (out->is_tag() && !out->_is_braket_form) {
-          out->_is_braket_form = out->_update_braket();
-        }
-      }
-      return boost::intrusive_ptr<UniTensor_base>(out);
-    }
-
-    // this will only work on non-symm tensor (DenseUniTensor)
-    void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
-      this->_block.set(accessors, rhs);
-    }
+    // these two methods only work on non-symm tensor (DenseUniTensor)
+    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
+    void set(const std::vector<Accessor> &accessors, const Tensor &rhs);
 
     void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0);
     boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
@@ -4351,10 +4297,14 @@ namespace cytnx {
     @return [UniTensor]
     @see Tensor::get, UniTensor::operator[]
     @note
-        1. the return will be a new UniTensor instance, which does not share memory with the current
-    UniTensor.
+      1. The return will be a new UniTensor instance, which does not share memory with the current
+         UniTensor.
 
-        2. Equivalently, one can also use the [] operator to access elements.
+      2. Equivalently, one can also use the [] operator to access elements.
+
+      3. For diagonal UniTensors, the accessor list can have either one element (to address the
+         diagonal elements), or two elements (in this case, the output will be a non-diagonal
+         UniTensor).
     */
     UniTensor get(const std::vector<Accessor> &accessors) const {
       UniTensor out;
@@ -4387,6 +4337,22 @@ namespace cytnx {
       return (*this)[acc_in];
     }
 
+    /**
+    @brief set elements using Accessor (C++ API) / slices (python API)
+    @param[in] accessors the Accessor (C++ API) / slices (python API) to set the elements.
+    @param[in] rhs the tensor containing the values to set.
+    @return [UniTensor]
+    @see Tensor::set, UniTensor::operator[], UniTensor::get
+    @note
+      1. The return will be a new UniTensor instance, which does not share memory with the current
+         UniTensor.
+
+      2. Equivalently, one can also use the [] operator to access elements.
+
+      3. For diagonal UniTensors, the accessor list can have either one element (to address the
+         diagonal elements; rhs must be one-dimensional), or two elements (in this case, the
+         output will be a non-diagonal UniTensor; rhs must be two-dimensional).
+    */
     UniTensor &set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
       this->_impl->set(accessors, rhs);
       return *this;

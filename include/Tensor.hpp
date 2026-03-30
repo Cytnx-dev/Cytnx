@@ -1008,8 +1008,8 @@ namespace cytnx {
     /**
     @brief get elements using Accessor (C++ API) / slices (python API)
     @param[in] accessors the Accessor (C++ API) / slices (python API) to get the elements.
-    @param[out] removed an ascending list of indices that were removed from the original shape of
-    the Tensor.
+    @param[out] removed the indices that were removed from the original shape of the Tensor are
+    pushed to the end of this vector. Usually, an empty vector should be passed.
     @return [Tensor]
     @see \link cytnx::Accessor Accessor\endlink for cordinate with Accessor in C++ API.
     @note
@@ -1030,8 +1030,14 @@ namespace cytnx {
     \verbinclude example/Tensor/get.py.out
     */
     Tensor get(const std::vector<cytnx::Accessor> &accessors,
-               std::vector<cytnx_int64> &removed = *new std::vector<cytnx_int64>()) const {
+               std::vector<cytnx_int64> &removed) const {
       Tensor out;
+      out._impl = this->_impl->get(accessors, removed);
+      return out;
+    }
+    Tensor get(const std::vector<cytnx::Accessor> &accessors) const {
+      Tensor out;
+      std::vector<cytnx_int64> removed;
       out._impl = this->_impl->get(accessors, removed);
       return out;
     }
