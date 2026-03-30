@@ -42,7 +42,7 @@ namespace cytnx {
   void UniTensor::_Save(std::fstream &f) const {
     cytnx_error_msg(!f.is_open(), "[ERROR][UniTensor] invalid fstream!.%s", "\n");
     cytnx_error_msg(this->_impl->uten_type_id == UTenType.Void,
-                    "[ERROR][UniTensor] cannot save an uninitialized UniTensor.%s", "\n");
+                    "[ERROR][UniTensor] Cannot save an uninitialized UniTensor.%s", "\n");
 
     // temporary disable:
     // cytnx_error_msg(this->_impl->uten_type_id==UTenType.Sparse,"[ERROR] Save for SparseUniTensor
@@ -238,7 +238,7 @@ namespace cytnx {
       }
     } else {
       cytnx_error_msg(true,
-                      "[ERROR] cannot perform inplace random generation on a UniTensor which is "
+                      "[ERROR] Cannot perform inplace random generation on a UniTensor which is "
                       "not Dense or Block.%s",
                       "\n");
     }
@@ -255,7 +255,7 @@ namespace cytnx {
       }
     } else {
       cytnx_error_msg(true,
-                      "[ERROR] cannot perform inplace random generation on a UniTensor which is "
+                      "[ERROR] Cannot perform inplace random generation on a UniTensor which is "
                       "not Dense or Block.%s",
                       "\n");
     }

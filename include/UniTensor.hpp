@@ -669,18 +669,18 @@ namespace cytnx {
     std::vector<Tensor> get_blocks() const {
       std::vector<Tensor> out;
       cytnx_error_msg(
-        true, "[ERROR][DenseUniTensor] cannot use get_blocks(), use get_block() instead!%s", "\n");
+        true, "[ERROR][DenseUniTensor] Cannot use get_blocks(), use get_block() instead!%s", "\n");
       return out;  // this will not share memory!!
     }
     const std::vector<Tensor> &get_blocks_(const bool &silent = false) const {
       cytnx_error_msg(
-        true, "[ERROR][DenseUniTensor] cannot use get_blocks_(), use get_block_() instead!%s",
+        true, "[ERROR][DenseUniTensor] Cannot use get_blocks_(), use get_block_() instead!%s",
         "\n");
       return this->_interface_block;  // this will not share memory!!
     }
     std::vector<Tensor> &get_blocks_(const bool &silent = false) {
       cytnx_error_msg(
-        true, "[ERROR][DenseUniTensor] cannot use get_blocks_(), use get_block_() instead!%s",
+        true, "[ERROR][DenseUniTensor] Cannot use get_blocks_(), use get_block_() instead!%s",
         "\n");
       return this->_interface_block;  // this will not share memory!!
     }
@@ -1156,7 +1156,7 @@ namespace cytnx {
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
                         const cytnx_int64 &rowrank = -1, const std::string &name = "") {
       cytnx_error_msg(
-        true, "[ERROR][BlockUniTensor] cannot use Init_by_tensor() on a BlockUniTensor.%s", "\n");
+        true, "[ERROR][BlockUniTensor] Cannot use Init_by_tensor() on a BlockUniTensor.%s", "\n");
     }
 
     std::vector<cytnx_uint64> shape() const {
@@ -1451,11 +1451,11 @@ namespace cytnx {
     std::vector<Symmetry> syms() const;
 
     void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
-      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot reshape a UniTensor with symmetry.%s", "\n");
     }
     boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
                                                  const cytnx_uint64 &rowrank = 0) {
-      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot reshape a UniTensor with symmetry.%s", "\n");
       return nullptr;
     }
 
@@ -1473,7 +1473,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
       cytnx_error_msg(
         true,
-        "[ERROR][BlockUniTensor][get] cannot use get on a UniTensor with "
+        "[ERROR][BlockUniTensor][get] Cannot use get on a UniTensor with "
         "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
         "\n");
       return nullptr;
@@ -1483,7 +1483,7 @@ namespace cytnx {
     void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
       cytnx_error_msg(
         true,
-        "[ERROR][BlockUniTensor][get] cannot use get on a UniTensor with "
+        "[ERROR][BlockUniTensor][get] Cannot use get on a UniTensor with "
         "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
         "\n");
     }
@@ -1729,7 +1729,7 @@ namespace cytnx {
     void Add_(const Scalar &rhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '+' between Scalar and BlockUniTensor.\n %s "
+        "[ERROR] Cannot perform elementwise arithmetic '+' between Scalar and BlockUniTensor.\n %s "
         "\n",
         "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
         "to do operation on blocks.");
@@ -1742,7 +1742,7 @@ namespace cytnx {
     void Sub_(const Scalar &rhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
+        "[ERROR] Cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
         "\n",
         "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
         "to do operation on blocks.");
@@ -1750,7 +1750,7 @@ namespace cytnx {
     void lSub_(const Scalar &lhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
+        "[ERROR] Cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
         "\n",
         "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
         "to do operation on blocks.");
@@ -1761,7 +1761,7 @@ namespace cytnx {
     void lDiv_(const Scalar &lhs) {
       cytnx_error_msg(
         true,
-        "[ERROR] cannot perform elementwise arithmetic '/' between Scalar and BlockUniTensor.\n %s "
+        "[ERROR] Cannot perform elementwise arithmetic '/' between Scalar and BlockUniTensor.\n %s "
         "\n",
         "This operation would cause division by zero on non-block elements. [Suggest] Avoid or use "
         "get/set_block(s) to do operation on blocks.");
@@ -1887,7 +1887,7 @@ namespace cytnx {
     void Init_by_Tensor(const Tensor &in_tensor, const bool &is_diag = false,
                         const cytnx_int64 &rowrank = -1, const std::string &name = "") {
       cytnx_error_msg(true,
-                      "[ERROR][BlockFermionicUniTensor] cannot use Init_by_tensor() on a "
+                      "[ERROR][BlockFermionicUniTensor] Cannot use Init_by_tensor() on a "
                       "BlockFermionicUniTensor.%s",
                       "\n");
     }
@@ -2224,11 +2224,11 @@ namespace cytnx {
     std::vector<Symmetry> syms() const;
 
     void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0) {
-      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot reshape a UniTensor with symmetry.%s", "\n");
     }
     boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
                                                  const cytnx_uint64 &rowrank = 0) {
-      cytnx_error_msg(true, "[ERROR] cannot reshape a UniTensor with symmetry.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot reshape a UniTensor with symmetry.%s", "\n");
       return nullptr;
     }
 
@@ -2247,7 +2247,7 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
       cytnx_error_msg(
         true,
-        "[ERROR][BlockFermionicUniTensor][get] cannot use get on a UniTensor with "
+        "[ERROR][BlockFermionicUniTensor][get] Cannot use get on a UniTensor with "
         "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
         "\n");
       return nullptr;
@@ -2258,7 +2258,7 @@ namespace cytnx {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       cytnx_error_msg(
         true,
-        "[ERROR][BlockFermionicUniTensor][get] cannot use get on a UniTensor with "
+        "[ERROR][BlockFermionicUniTensor][get] Cannot use get on a UniTensor with "
         "Symmetry.\n suggestion: try get_block/get_block_/get_blocks/get_blocks_ first.%s",
         "\n");
     }
@@ -2521,7 +2521,7 @@ namespace cytnx {
     void Add_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Add_(const Scalar &rhs) {
       cytnx_error_msg(true,
-                      "[ERROR] cannot perform elementwise arithmetic '+' between Scalar and "
+                      "[ERROR] Cannot perform elementwise arithmetic '+' between Scalar and "
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would destroy the block structure. [Suggest] Avoid or use "
@@ -2534,7 +2534,7 @@ namespace cytnx {
     void Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs);
     void Sub_(const Scalar &rhs) {
       cytnx_error_msg(true,
-                      "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and "
+                      "[ERROR] Cannot perform elementwise arithmetic '-' between Scalar and "
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would destroy the block structure. [Suggest] Avoid or use "
@@ -2542,7 +2542,7 @@ namespace cytnx {
     }
     void lSub_(const Scalar &lhs) {
       cytnx_error_msg(true,
-                      "[ERROR] cannot perform elementwise arithmetic '-' between Scalar and "
+                      "[ERROR] Cannot perform elementwise arithmetic '-' between Scalar and "
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would destroy the block structure. [Suggest] Avoid or use "
@@ -2553,7 +2553,7 @@ namespace cytnx {
     void Div_(const Scalar &rhs);
     void lDiv_(const Scalar &lhs) {
       cytnx_error_msg(true,
-                      "[ERROR] cannot perform elementwise arithmetic '/' between Scalar and "
+                      "[ERROR] Cannot perform elementwise arithmetic '/' between Scalar and "
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would cause division by zero on non-block elements. "
@@ -2825,7 +2825,7 @@ namespace cytnx {
           }
         } else
           cytnx_error_msg(
-            is_sym, "[ERROR] cannot have bonds with mixing of symmetry and non-symmetry.%s", "\n");
+            is_sym, "[ERROR] Cannot have bonds with mixing of symmetry and non-symmetry.%s", "\n");
       }
 
       // dynamical dispatch:
@@ -2992,7 +2992,7 @@ namespace cytnx {
     template <class T>
     T &item() {
       cytnx_error_msg(this->is_blockform(),
-                      "[ERROR] cannot use item on UniTensor with Symmetry.\n suggestion: use "
+                      "[ERROR] Cannot use item on UniTensor with Symmetry.\n suggestion: use "
                       "get_block()/get_blocks() first.%s",
                       "\n");
 
@@ -3002,7 +3002,7 @@ namespace cytnx {
 
     Scalar::Sproxy item() const {
       cytnx_error_msg(this->is_blockform(),
-                      "[ERROR] cannot use item on UniTensor with Symmetry.\n suggestion: use "
+                      "[ERROR] Cannot use item on UniTensor with Symmetry.\n suggestion: use "
                       "get_block()/get_blocks() first.%s",
                       "\n");
 
@@ -4480,10 +4480,10 @@ namespace cytnx {
     UniTensor &set(const std::vector<Accessor> &accessors, const UniTensor &rhs) {
       cytnx_error_msg(
         rhs.uten_type() != UTenType.Dense,
-        "[ERROR] cannot set elements from UniTensor with symmetry. Use at() instead.%s", "\n");
-      cytnx_error_msg(this->is_diag(), "[ERROR] cannot set UniTensor with is_diag=True.%s", "\n");
+        "[ERROR] Cannot set elements from UniTensor with symmetry. Use at() instead.%s", "\n");
+      cytnx_error_msg(this->is_diag(), "[ERROR] Cannot set UniTensor with is_diag=True.%s", "\n");
       cytnx_error_msg(rhs.is_diag(),
-                      "[ERROR] cannot set UniTensor. incoming UniTensor is_diag=True.%s", "\n");
+                      "[ERROR] Cannot set UniTensor. incoming UniTensor is_diag=True.%s", "\n");
 
       this->_impl->set(accessors, rhs.get_block());
       return *this;

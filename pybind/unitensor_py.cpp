@@ -310,14 +310,14 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to getitem from a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
-             "[ERROR] cannot get element using [] from Block/SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] Cannot get element using [] from Block/SparseUniTensor. Use at() instead.%s", "\n");
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
            if (self.is_diag()){
                if (py::isinstance<py::tuple>(locators)) {
                     cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+                    "[ERROR] Cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
                } else if (py::isinstance<py::slice>(locators)) {
                     py::slice sls = locators.cast<py::slice>();
                     if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
@@ -379,14 +379,14 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to setelem to a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() == UTenType.Sparse,
-             "[ERROR] cannot set element using [] from SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] Cannot set element using [] from SparseUniTensor. Use at() instead.%s", "\n");
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
           if (self.is_diag()){
                if (py::isinstance<py::tuple>(locators)) {
                     cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+                    "[ERROR] Cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
                } else if (py::isinstance<py::slice>(locators)) {
                     py::slice sls = locators.cast<py::slice>();
                     if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))
@@ -447,14 +447,14 @@ void unitensor_binding(py::module &m) {
                            "[ERROR] try to setelem to a empty UniTensor%s", "\n");
            cytnx_error_msg(
              self.uten_type() != UTenType.Dense,
-             "[ERROR] cannot set element using [] from Blcok/SparseUniTensor. Use at() instead.%s", "\n");
+             "[ERROR] Cannot set element using [] from Blcok/SparseUniTensor. Use at() instead.%s", "\n");
 
            ssize_t start, stop, step, slicelength;
            std::vector<cytnx::Accessor> accessors;
           if (self.is_diag()){
                if (py::isinstance<py::tuple>(locators)) {
                     cytnx_error_msg(true,
-                    "[ERROR] cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
+                    "[ERROR] Cannot get element using [tuple] on is_diag=True UniTensor since the block is rank-1, consider [int] or [int:int] instead.%s", "\n");
                } else if (py::isinstance<py::slice>(locators)) {
                     py::slice sls = locators.cast<py::slice>();
                     if (!sls.compute((ssize_t)self.shape()[0], &start, &stop, &step, &slicelength))

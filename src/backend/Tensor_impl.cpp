@@ -30,7 +30,7 @@ namespace cytnx {
   }
   void Tensor_impl::Init(const Storage &in) {
     cytnx_error_msg(in.dtype() == Type.Void,
-                    "[ERROR] cannot init Tensor using un-initialized Storage%s", "\n");
+                    "[ERROR] Cannot init Tensor using un-initialized Storage%s", "\n");
     this->_storage = in;
     this->_shape.clear();
     this->_shape.push_back(in.size());

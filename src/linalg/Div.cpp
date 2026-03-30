@@ -903,7 +903,7 @@ namespace cytnx {
 
     template <class T>
     cytnx::UniTensor Div(const T &lc, const cytnx::UniTensor &Rt) {
-      // cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
+      // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
       UniTensor out;
@@ -936,7 +936,7 @@ namespace cytnx {
 
     template <class T>
     cytnx::UniTensor Div(const cytnx::UniTensor &Lt, const T &rc) {
-      // cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
+      // cytnx_error_msg(Lt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
       UniTensor out;
