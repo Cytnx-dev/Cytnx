@@ -458,26 +458,92 @@ describe:test get_index, but input is uninitialized UniTensor
 TEST_F(DenseUniTensorTest, get_index_uninit) { EXPECT_EQ(ut_uninit.get_index(""), -1); }
 
 /*=====test info=====
+describe:test get on diagonal UniTensor with one accessor keeps diagonal form
+====================*/
+TEST_F(DenseUniTensorTest, get_diag_single_accessor_keeps_diag) {
+  auto ut = ut_complex_diag.clone();
+  UniTensor out = ut.get({Accessor::range(1, 4, 2)});
+
+  EXPECT_TRUE(out.is_diag());
+  EXPECT_EQ(out.name(), ut.name());
+  EXPECT_EQ(out.labels(), ut.labels());
+  EXPECT_EQ(out.rowrank(), 1);
+  EXPECT_EQ(out.shape(), std::vector<cytnx_uint64>({2, 2}));
+  EXPECT_EQ(out.at({0}), cytnx_complex128(1.0, 0.0));
+  EXPECT_EQ(out.at({1}), cytnx_complex128(3.0, 0.0));
+
+  // source should remain unchanged
+  EXPECT_TRUE(AreEqUniTensorMeta(ut_complex_diag, ut));
+  EXPECT_TRUE(AreEqUniTensor(ut_complex_diag, ut));
+}
+
+/*=====test info=====
+describe:test set on diagonal UniTensor with one accessor keeps diagonal form
+====================*/
+TEST_F(DenseUniTensorTest, set_diag_single_accessor_keeps_diag) {
+  auto ut = ut_complex_diag.clone();
+  auto rhs = Tensor({2}, Type.ComplexDouble);
+  rhs.at({0}) = cytnx_complex128(10.0, 1.0);
+  rhs.at({1}) = cytnx_complex128(20.0, 2.0);
+
+  ut.set({Accessor::range(1, 4, 2)}, rhs);
+
+  EXPECT_TRUE(ut.is_diag());
+  EXPECT_EQ(ut.name(), ut_complex_diag.name());
+  EXPECT_EQ(ut.labels(), ut_complex_diag.labels());
+  EXPECT_EQ(ut.shape(), std::vector<cytnx_uint64>({4, 4}));
+  EXPECT_EQ(ut.rowrank(), 1);
+  EXPECT_EQ(ut.at({0}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(ut.at({1}), cytnx_complex128(10.0, 1.0));
+  EXPECT_EQ(ut.at({2}), cytnx_complex128(2.0, 0.0));
+  EXPECT_EQ(ut.at({3}), cytnx_complex128(20.0, 2.0));
+}
+
+/*=====test info=====
 describe:test slicing diagonal UniTensor with one accessor keeps metadata
 ====================*/
 TEST_F(DenseUniTensorTest, slice_diag_single_accessor) {
-  auto labels = ut_complex_diag.labels();
-  UniTensor out = ut_complex_diag[{Accessor::range(0, 3, 2)}];
+  auto ut = ut_complex_diag.clone();
+  UniTensor out = ut[{Accessor::range(0, 3, 2)}];
 
   EXPECT_TRUE(out.is_diag());
-  EXPECT_EQ(out.name(), ut_complex_diag.name());
-  EXPECT_EQ(out.labels(), ut_complex_diag.labels());
+  EXPECT_EQ(out.name(), ut.name());
+  EXPECT_EQ(out.labels(), ut.labels());
   EXPECT_EQ(out.rowrank(), 1);
   EXPECT_EQ(out.shape(), std::vector<cytnx_uint64>({2, 2}));
   EXPECT_EQ(out.at({0}), cytnx_complex128(0.0, 0.0));
   EXPECT_EQ(out.at({1}), cytnx_complex128(2.0, 0.0));
 
-  // source metadata should remain unchanged
-  EXPECT_TRUE(ut_complex_diag.is_diag());
-  EXPECT_EQ(ut_complex_diag.shape(), std::vector<cytnx_uint64>({4, 4}));
-  EXPECT_EQ(ut_complex_diag.name(), "ut_complex_diag");
-  EXPECT_EQ(ut_complex_diag.labels(), labels);
-  EXPECT_EQ(ut_complex_diag.rowrank(), 1);
+  // source should remain unchanged
+  EXPECT_TRUE(AreEqUniTensorMeta(ut_complex_diag, ut));
+  EXPECT_TRUE(AreEqUniTensor(ut_complex_diag, ut));
+}
+
+/*=====test info=====
+describe:test set on diagonal UniTensor with two accessors converts to dense
+====================*/
+TEST_F(DenseUniTensorTest, set_diag_two_accessors_convert_dense) {
+  auto ut = ut_complex_diag.clone();
+  auto rhs = Tensor({4}, Type.ComplexDouble);
+  rhs.at({0}) = cytnx_complex128(4.0, 1.0);
+  rhs.at({1}) = cytnx_complex128(5.0, 2.0);
+  rhs.at({2}) = cytnx_complex128(6.0, 3.0);
+  rhs.at({3}) = cytnx_complex128(7.0, 4.0);
+
+  ut.set({Accessor(1), Accessor::all()}, rhs);
+
+  EXPECT_FALSE(ut.is_diag());
+  EXPECT_EQ(ut.name(), ut_complex_diag.name());
+  EXPECT_EQ(ut.labels(), ut_complex_diag.labels());
+  EXPECT_EQ(ut.shape(), std::vector<cytnx_uint64>({4, 4}));
+  EXPECT_EQ(ut.rowrank(), 1);
+  EXPECT_EQ(ut.at({0, 0}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(ut.at({1, 0}), cytnx_complex128(4.0, 1.0));
+  EXPECT_EQ(ut.at({1, 1}), cytnx_complex128(5.0, 2.0));
+  EXPECT_EQ(ut.at({1, 2}), cytnx_complex128(6.0, 3.0));
+  EXPECT_EQ(ut.at({1, 3}), cytnx_complex128(7.0, 4.0));
+  EXPECT_EQ(ut.at({2, 2}), cytnx_complex128(2.0, 0.0));
+  EXPECT_EQ(ut.at({3, 3}), cytnx_complex128(3.0, 0.0));
 }
 
 /*=====test info=====
@@ -485,10 +551,11 @@ describe:test slicing diagonal UniTensor with two different accessors converts t
 metadata
 ====================*/
 TEST_F(DenseUniTensorTest, slice_diag_two_accessors_convert_dense) {
-  UniTensor out = ut_complex_diag[{Accessor(1), Accessor::all()}];
+  auto ut = ut_complex_diag.clone();
+  UniTensor out = ut[{Accessor(1), Accessor::all()}];
 
   EXPECT_FALSE(out.is_diag());
-  EXPECT_EQ(out.name(), ut_complex_diag.name());
+  EXPECT_EQ(out.name(), ut.name());
   std::vector<string> newlabels = {"col"};
   EXPECT_EQ(out.labels(), newlabels);
   EXPECT_EQ(out.rowrank(), 0);
@@ -497,16 +564,48 @@ TEST_F(DenseUniTensorTest, slice_diag_two_accessors_convert_dense) {
   EXPECT_EQ(out.at({1}), cytnx_complex128(1.0, 0.0));
   EXPECT_EQ(out.at({2}), cytnx_complex128(0.0, 0.0));
   EXPECT_EQ(out.at({3}), cytnx_complex128(0.0, 0.0));
+
+  // source should remain unchanged
+  EXPECT_TRUE(AreEqUniTensorMeta(ut_complex_diag, ut));
+  EXPECT_TRUE(AreEqUniTensor(ut_complex_diag, ut));
+}
+
+/*=====test info=====
+describe:test get on diagonal UniTensor with two accessors converts to dense
+====================*/
+TEST_F(DenseUniTensorTest, get_diag_two_accessors_convert_dense) {
+  auto ut_complex_diag_snapshot = ut_complex_diag.clone();
+  UniTensor out = ut_complex_diag.get({Accessor::all(), Accessor::range(1, 4, 2)});
+
+  EXPECT_FALSE(out.is_diag());
+  EXPECT_EQ(out.name(), ut_complex_diag.name());
+  std::vector<string> newlabels = {"row", "col"};
+  EXPECT_EQ(out.labels(), newlabels);
+  EXPECT_EQ(out.rowrank(), 1);
+  EXPECT_EQ(out.shape(), std::vector<cytnx_uint64>({4, 2}));
+  EXPECT_EQ(out.at({0, 0}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(out.at({1, 0}), cytnx_complex128(1.0, 0.0));
+  EXPECT_EQ(out.at({2, 0}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(out.at({3, 0}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(out.at({0, 1}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(out.at({1, 1}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(out.at({2, 1}), cytnx_complex128(0.0, 0.0));
+  EXPECT_EQ(out.at({3, 1}), cytnx_complex128(3.0, 0.0));
+
+  // source should remain unchanged
+  EXPECT_TRUE(AreEqUniTensorMeta(ut_complex_diag, ut_complex_diag_snapshot));
+  EXPECT_TRUE(AreEqUniTensor(ut_complex_diag, ut_complex_diag_snapshot));
 }
 
 /*=====test info=====
 describe:test slicing non-diagonal UniTensor keeps name labels and rowrank metadata
 ====================*/
 TEST_F(DenseUniTensorTest, slice_nondiag_keeps_metadata) {
-  UniTensor out = utar345[{Accessor::all(), Accessor::range(1, 4, 2), Accessor(3)}];
+  auto ut = utar345.clone();
+  UniTensor out = ut[{Accessor::all(), Accessor::range(1, 4, 2), Accessor(3)}];
 
   EXPECT_FALSE(out.is_diag());
-  EXPECT_EQ(out.name(), utar345.name());
+  EXPECT_EQ(out.name(), ut.name());
   std::vector<string> newlabels = {"a", "b"};
   EXPECT_EQ(out.labels(), newlabels);
   EXPECT_EQ(out.shape(), std::vector<cytnx_uint64>({3, 2}));
@@ -516,6 +615,10 @@ TEST_F(DenseUniTensorTest, slice_nondiag_keeps_metadata) {
   EXPECT_EQ(out.at({1, 1}), cytnx_complex128(38.0, 0.0));
   EXPECT_EQ(out.at({2, 0}), cytnx_complex128(48.0, 0.0));
   EXPECT_EQ(out.at({2, 1}), cytnx_complex128(58.0, 0.0));
+
+  // source should remain unchanged
+  EXPECT_TRUE(AreEqUniTensorMeta(utar345, ut));
+  EXPECT_TRUE(AreEqUniTensor(utar345, ut));
 }
 
 /*=====test info=====
