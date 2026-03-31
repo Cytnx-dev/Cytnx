@@ -1,8 +1,10 @@
-#include "cytnx.hpp"
-#include <gtest/gtest.h>
 #include <cmath>
 #include <map>
-#include "../test_tools.h"
+
+#include <gtest/gtest.h>
+
+#include "cytnx.hpp"
+#include "test_tools.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -55,10 +57,10 @@ namespace RsvdNoTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::uniform_(T, -10, 0, 0);
-    std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 1);
-    EXPECT_TRUE(CheckLabels(T, Rsvds)) << fail_msg.TraceFailMsgs();
-    EXPECT_TRUE(ReComposeCheck(T, Rsvds)) << fail_msg.TraceFailMsgs();
-    EXPECT_EQ(Rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
+    std::vector<UniTensor> rsvds = linalg::Rsvd_notruncate(T, 1);
+    EXPECT_TRUE(CheckLabels(T, rsvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(ReComposeCheck(T, rsvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_EQ(rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
       << "Singular value is wrong."
       << " line:" << __LINE__ << std::endl;
   }
@@ -78,7 +80,7 @@ namespace RsvdNoTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::uniform_(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 2); },
+    EXPECT_THROW({ std::vector<UniTensor> rsvds = linalg::Rsvd_notruncate(T, 2); },
                  std::logic_error);
   }
 
@@ -91,7 +93,7 @@ namespace RsvdNoTruncateTest {
     Bond bond_ket = Bond(BD_KET, {Qs(0), Qs(1), Qs(2)}, {2, 1, 2});
     Bond bond_bra = bond_ket.redirect();
     UniTensor UT = UniTensor({bond_ket, bond_bra}, {}, 1, Type.Double, Device.cpu, true);
-    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(UT, 2); },
+    EXPECT_THROW({ std::vector<UniTensor> rsvds = linalg::Rsvd_notruncate(UT, 2); },
                  std::logic_error);
   }
 
@@ -103,7 +105,7 @@ namespace RsvdNoTruncateTest {
   TEST(Rsvd_notruncate, err_rank1_unitensor) {
     UniTensor T = UniTensor({Bond(8)}, {"x"}, 0, Type.Double, Device.cpu, false);
     random::uniform_(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 2); },
+    EXPECT_THROW({ std::vector<UniTensor> rsvds = linalg::Rsvd_notruncate(T, 2); },
                  std::logic_error);
   }
 
@@ -155,12 +157,12 @@ namespace RsvdNoTruncateTest {
     ASSERT_TRUE(T.is_tag());
     ASSERT_TRUE(T.is_braket_form());
 
-    std::vector<UniTensor> Rsvds = linalg::Rsvd_notruncate(T, 1000, true, true, 1, 0, 0., 2, 0);
-    ASSERT_EQ(Rsvds.size(), 3);
+    std::vector<UniTensor> rsvds = linalg::Rsvd_notruncate(T, 1000, true, true, 1, 0, 0., 2, 0);
+    ASSERT_EQ(rsvds.size(), 3);
 
-    const UniTensor& S = Rsvds[0];
-    const UniTensor& U = Rsvds[1];
-    const UniTensor& vT = Rsvds[2];
+    const UniTensor& S = rsvds[0];
+    const UniTensor& U = rsvds[1];
+    const UniTensor& vT = rsvds[2];
 
     EXPECT_TRUE(S.is_tag());
     EXPECT_TRUE(U.is_tag());
@@ -182,8 +184,8 @@ namespace RsvdNoTruncateTest {
       EXPECT_EQ(vT.bonds()[i].type(), T.bonds()[T.rowrank() + i - 1].type());
     }
 
-    EXPECT_TRUE(CheckLabels(T, Rsvds));
-    EXPECT_TRUE(ReComposeCheck(T, Rsvds));
+    EXPECT_TRUE(CheckLabels(T, rsvds));
+    EXPECT_TRUE(ReComposeCheck(T, rsvds));
   }
 
   /*=====test info=====
@@ -441,17 +443,17 @@ namespace RsvdNoTruncateTest {
     const UniTensor& S = Tout[0];
     const UniTensor& U = Tout[1];
     const UniTensor& V = Tout[2];
-    UniTensor ReCompose = Contract(U, S);
-    ReCompose = Contract(ReCompose, V);
+    UniTensor recomposed = Contract(U, S);
+    recomposed = Contract(recomposed, V);
     const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
     auto T_float = Tin.clone();
     if (Tin.dtype() > Type.Float) {
       T_float = Tin.astype(Type.Double);
     }
     T_float.contiguous_();
-    ReCompose.permute_(T_float.labels());
-    ReCompose.contiguous_();
-    bool is_eq = AreNearlyEqUniTensor(T_float, ReCompose, tol);
+    recomposed.permute_(T_float.labels());
+    recomposed.contiguous_();
+    bool is_eq = AreNearlyEqUniTensor(T_float, recomposed, tol);
     return is_eq;
   }
 
@@ -514,27 +516,25 @@ namespace RsvdNoTruncateTest {
     UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
 
     // Do Rsvd_notruncate
-    std::vector<UniTensor> Rsvds =
+    std::vector<UniTensor> rsvds =
       linalg::Rsvd_notruncate(src_T, keepdim, true, true, 1, 0, 0., power_iteration, 0);
 
     // check labels
-    if (!(CheckLabels(src_T, Rsvds))) {
+    if (!(CheckLabels(src_T, rsvds))) {
       fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
       return false;
     }
 
     // check answer
-    if (!(SingularValsCorrect(Rsvds[0], ans_T))) {
-      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
+    if (!SingularValsCorrect(rsvds[0], ans_T)) {
+      fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
       return false;
     }
 
     // check recompose [M - USV*]
-    if (!ReComposeCheck(src_T, Rsvds)) {
-      fail_msg.AppendMsg(
-        "The result is wrong after recomposing. "
-        "That's mean T not equal USV* ",
-        __func__, __LINE__);
+    if (!ReComposeCheck(src_T, rsvds)) {
+      fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.", __func__,
+                         __LINE__);
       return false;
     }
 

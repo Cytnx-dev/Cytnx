@@ -1,6 +1,7 @@
-#include "cytnx.hpp"
 #include <gtest/gtest.h>
-#include "../test_tools.h"
+
+#include "cytnx.hpp"
+#include "test_tools.h"
 
 using namespace cytnx;
 using namespace testing;
@@ -40,10 +41,10 @@ namespace RsvdTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, -10, 0, 0);
-    std::vector<UniTensor> Rsvds = linalg::Rsvd(T, 1);
-    EXPECT_TRUE(CheckLabels(T, Rsvds)) << fail_msg.TraceFailMsgs();
-    EXPECT_TRUE(ReComposeCheck(T, Rsvds)) << fail_msg.TraceFailMsgs();
-    EXPECT_EQ(Rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
+    std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1);
+    EXPECT_TRUE(CheckLabels(T, rsvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(ReComposeCheck(T, rsvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_EQ(rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
       << "Singular value is wrong."
       << " line:" << __LINE__ << std::endl;
   }
@@ -81,7 +82,7 @@ namespace RsvdTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::Make_uniform(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd(T, 2); }, std::logic_error);
+    EXPECT_THROW({ std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2); }, std::logic_error);
   }
 
   /*=====test info=====
@@ -158,10 +159,10 @@ namespace RsvdTest {
     std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
     fail_msg.Init(test_case_name);
     UniTensor src_T = BuildCombinedBlockFermionicTensorWithSignflip();
-    std::vector<UniTensor> Rsvds = linalg::Rsvd(src_T, 10, 0., true, true, 0, 0, 2, 1, 2, 0);
-    EXPECT_TRUE(CheckLabels(src_T, Rsvds)) << fail_msg.TraceFailMsgs();
+    std::vector<UniTensor> rsvds = linalg::Rsvd(src_T, 10, 0., true, true, 0, 0, 2, 1, 2, 0);
+    EXPECT_TRUE(CheckLabels(src_T, rsvds)) << fail_msg.TraceFailMsgs();
     // Note: For truncated SVD, exact recomposition is not expected due to truncation
-    // EXPECT_TRUE(ReComposeCheck(src_T, Rsvds)) << fail_msg.TraceFailMsgs();
+    // EXPECT_TRUE(ReComposeCheck(src_T, rsvds)) << fail_msg.TraceFailMsgs();
   }
 
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
@@ -173,14 +174,14 @@ namespace RsvdTest {
     const UniTensor& S = Tout[0];
     const UniTensor& U = Tout[1];
     const UniTensor& V = Tout[2];
-    UniTensor ReCompose = Contract(U, S);
-    ReCompose = Contract(ReCompose, V);
+    UniTensor recomposed = Contract(U, S);
+    recomposed = Contract(recomposed, V);
     const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
     auto T_float = Tin.clone();
     if (Tin.dtype() > Type.Float) {
       T_float = Tin.astype(Type.Double);
     }
-    bool is_eq = AreNearlyEqUniTensor(T_float, ReCompose.permute_(T_float.labels()), tol);
+    bool is_eq = AreNearlyEqUniTensor(T_float, recomposed.permute_(T_float.labels()), tol);
     return is_eq;
   }
 
@@ -259,27 +260,25 @@ namespace RsvdTest {
     UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
 
     // Do Rsvd
-    std::vector<UniTensor> Rsvds =
+    std::vector<UniTensor> rsvds =
       linalg::Rsvd(src_T, keepdim, 0, true, true, 0, 0, 2, 1, power_iteration, 0);
 
     // check labels
-    if (!(CheckLabels(src_T, Rsvds))) {
+    if (!CheckLabels(src_T, rsvds)) {
       fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
       return false;
     }
 
     // check answer
-    if (!(SingularValsCorrect(Rsvds[0], ans_T))) {
-      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
+    if (!SingularValsCorrect(rsvds[0], ans_T)) {
+      fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
       return false;
     }
 
     // check recompose [M - USV*]
-    if (!ReComposeCheck(rec_T, Rsvds)) {
-      fail_msg.AppendMsg(
-        "The result is wrong after recomposing. "
-        "That's mean T not equal USV* ",
-        __func__, __LINE__);
+    if (!ReComposeCheck(rec_T, rsvds)) {
+      fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.", __func__,
+                         __LINE__);
       return false;
     }
 
@@ -302,27 +301,25 @@ namespace RsvdTest {
     UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
 
     // Do Rsvd
-    std::vector<UniTensor> Rsvds =
+    std::vector<UniTensor> rsvds =
       linalg::Rsvd(src_T, keepdim, min_blockdim, 0., true, true, 0, 0, 2, 1, power_iteration, 0);
 
     // check labels
-    if (!(CheckLabels(src_T, Rsvds))) {
+    if (!CheckLabels(src_T, rsvds)) {
       fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
       return false;
     }
 
     // check answer
-    if (!(SingularValsCorrect(Rsvds[0], ans_T))) {
-      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
+    if (!SingularValsCorrect(rsvds[0], ans_T)) {
+      fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
       return false;
     }
 
     // check recompose [M - USV*]
-    if (!ReComposeCheck(rec_T, Rsvds)) {
-      fail_msg.AppendMsg(
-        "The result is wrong after recomposing. "
-        "That's mean T not equal USV* ",
-        __func__, __LINE__);
+    if (!ReComposeCheck(rec_T, rsvds)) {
+      fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.", __func__,
+                         __LINE__);
       return false;
     }
 

@@ -69,6 +69,10 @@ namespace cytnx {
     #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
+        if (samplenum < n_singlu) {
+          Q = linalg::Rand_isometry(Tin, samplenum, power_iteration, seed);
+          in = Matmul(Q.Conj().permute_({1, 0}), in);
+        }
         // prepare U, S, vT
         Tensor U, S, vT, terr;
         S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
@@ -76,10 +80,6 @@ namespace cytnx {
         U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
         vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
         terr.Init({1}, in.dtype(), in.device());
-        if (samplenum < n_singlu) {
-          Q = linalg::Rand_isometry(Tin, samplenum, power_iteration, seed);
-          in = Matmul(Q.Conj().permute_({1, 0}), in);
-        }
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
                                                                   S, vT, terr);
 
@@ -104,7 +104,7 @@ namespace cytnx {
         if (samplenum < n_singlu) {
           Tensor in = Tin.contiguous();
           Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-          tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
+          tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);
         } else {
           tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
@@ -147,7 +147,7 @@ namespace cytnx {
         // if(Tin.is_contiguous()) tmp = Tin.get_block_();
         // else{ tmp = Tin.get_block(); tmp.contiguous_();}
 
-        std::vector<cytnx_uint64> oldshape = tmp.shape();
+        std::vector<cytnx_int64> oldshape(tmp.shape().begin(), tmp.shape().end());
         std::vector<std::string> oldlabel = Tin.labels();
 
         // collapse as Matrix:
@@ -159,12 +159,9 @@ namespace cytnx {
           cytnx::linalg::Rsvd(tmp, keepdim, err, is_U, is_vT, return_err, mindim,
                               oversampling_summand, oversampling_factor, power_iteration, seed);
 
-        // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
-
         int t = 0;
         outCyT.resize(outT.size());
 
-        // s
         // cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Rsvd] keepdim should <=
         // dimension of singular tensor%s","\n");
 
