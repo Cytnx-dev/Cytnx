@@ -11,12 +11,6 @@
 #else
   #include "backend/linalg_internal_interface.hpp"
 
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
-      #include "backend/linalg_internal_gpu/cuQuantumGeSvd_internal.hpp"
-    #endif
-  #endif
-
 namespace cytnx {
   namespace linalg {
     std::vector<Tensor> Rsvd_notruncate(const cytnx::Tensor &Tin, cytnx_uint64 keepdim, bool is_U,
@@ -69,20 +63,20 @@ namespace cytnx {
                         "try to call the gpu section without CUDA support.\n");
         return std::vector<Tensor>();
   #endif
-        std::vector<Tensor> out;
-        out.push_back(S);
-        if (is_U) {
-          if (applyQ) {
-            U = Matmul(Q, U);
-          }
-          out.push_back(U);
-        }
-        if (is_vT) {
-          out.push_back(vT);
-        }
-
-        return out;
       }
+      std::vector<Tensor> out;
+      out.push_back(S);
+      if (is_U) {
+        if (applyQ) {
+          U = Matmul(Q, U);
+        }
+        out.push_back(U);
+      }
+      if (is_vT) {
+        out.push_back(vT);
+      }
+
+      return out;
     }  // Rsvd(Tensor)
 
     namespace {  // actual implementations:
