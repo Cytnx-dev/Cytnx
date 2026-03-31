@@ -13,6 +13,13 @@ namespace cytnx {
   namespace linalg_internal {
 
     /// cuDiv
+    void cuDiv_dispatch(boost::intrusive_ptr<Storage_base> &out,
+                        boost::intrusive_ptr<Storage_base> &Lin,
+                        boost::intrusive_ptr<Storage_base> &Rin, const unsigned long long &len,
+                        const std::vector<cytnx_uint64> &shape,
+                        const std::vector<cytnx_uint64> &invmapper_L,
+                        const std::vector<cytnx_uint64> &invmapper_R);
+
     void cuDiv_internal_cdtcd(boost::intrusive_ptr<Storage_base> &out,
                               boost::intrusive_ptr<Storage_base> &Lin,
                               boost::intrusive_ptr<Storage_base> &Rin,
