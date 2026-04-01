@@ -250,7 +250,7 @@ def Local_meas(A, B, Op, site):
             l = anet.Launch()
         else:
             tmp = A[i].relabel(1, "_aux_up")
-            Op.relabel_(["_aux_up", "_aux_low"])
+            Op = Op.relabel(["_aux_up", "_aux_low"])
             tmp = cytnx.Contract(tmp, Op)
             tmp.relabel_("_aux_low", A[i].labels()[1])
             tmp.permute_(A[i].labels())

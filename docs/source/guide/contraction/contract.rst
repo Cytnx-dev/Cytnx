@@ -26,13 +26,13 @@ In order to define which indices shall be contracted without changing the labels
 
 * In Python:
 
-.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_contract_relabels.py
+.. literalinclude:: ../../../code/python/doc_codes/guide_contraction_contract_relabel.py
     :language: python
     :linenos:
 
 Output >>
 
-.. literalinclude:: ../../../code/python/outputs/guide_contraction_contract_relabels.out
+.. literalinclude:: ../../../code/python/outputs/guide_contraction_contract_relabel.out
     :language: text
 
 
