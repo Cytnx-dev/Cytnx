@@ -249,8 +249,14 @@ namespace cytnx {
       // 3) categorize:
       // key = qnum, val = list of block locations:
       std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64>> mgrp;
-      for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+      if (BdLeft.type() == bondType::BD_IN) {
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        }
+      } else {
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          mgrp[BdLeft.calc_reverse_qnums()[new_itoi[b][0]]].push_back(b);
+        }
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
@@ -468,8 +474,14 @@ namespace cytnx {
       // 3) categorize:
       // key = qnum, val = list of block locations:
       std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64>> mgrp;
-      for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+      if (BdLeft.type() == bondType::BD_IN) {
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        }
+      } else {
+        for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
+          mgrp[BdLeft.calc_reverse_qnums()[new_itoi[b][0]]].push_back(b);
+        }
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
