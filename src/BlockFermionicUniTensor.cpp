@@ -164,21 +164,13 @@ namespace cytnx {
 
         // if exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
-          // get size & init block!
+          // init block!
+          for (cytnx_int32 i = 0; i < Loc.size(); i++) {
+            size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+          }
           if (!no_alloc) {
-            // cytnx_uint64 blockNelem = 1;
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-              // blockNelem *= size[i];
-            }
             this->_blocks.push_back(zeros(size, dtype, device));
-            // blocklens.push_back(blockNelem);
-            // blocksizes.push_back(size);
-            // totblocksize += blockNelem;
           } else {
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-            }
             this->_blocks.push_back(Tensor(size, dtype, device, false));
           }
           // push its loc
@@ -1571,19 +1563,21 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < comm_idx2.size(); i++)
           if (comm_idx2[i] < rhs->_rowrank) out_rowrank--;
 
-  #ifdef UNI_MKL
-        // Initialize!!
-        if (true or
-            (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
-              (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
-            this->is_diag() or Rtn->is_diag()) {
-          tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, false);
-        } else {
-          tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, true);
-        }
-  #else
+        // #ifdef UNI_MKL
+        //       // Initialize!!
+        //       if (true or
+        //           (this->dtype() != Type.Double and this->dtype() != Type.ComplexDouble) and
+        //             (this->dtype() != Type.Float and this->dtype() != Type.ComplexFloat) or
+        //           this->is_diag() or Rtn->is_diag()) {
+        //         tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(),
+        //         false, false);
+        //       } else {
+        //         tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(),
+        //         false, true);
+        //       }
+        // #else
         tmp->Init(out_bonds, out_labels, out_rowrank, common_dtype, this->device(), false, false);
-  #endif
+        // #endif
 
         // now, build the itoi table:
         std::vector<std::vector<cytnx_uint64>> itoiL_common(this->_blocks.size()),
@@ -1760,44 +1754,46 @@ namespace cytnx {
                 reshaped[targ_b] = true;
                 betas[binx] = 0.0;
               }
-              // prepare to call gemm_batch
-              if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
-                  (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
-                   tmp_Rtn->dtype() != Type.Void)) {
-                ms[binx] = this->_blocks[a].shape()[0];
-                ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
-                ks[binx] = comm_dim;
-                LMems[binx] = this->_blocks[a].storage()._impl->data();
-                RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
-                CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
+              // // prepare to call gemm_batch
+              // if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4)
+              // and
+              //     (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
+              //      tmp_Rtn->dtype() != Type.Void)) {
+              //   ms[binx] = this->_blocks[a].shape()[0];
+              //   ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
+              //   ks[binx] = comm_dim;
+              //   LMems[binx] = this->_blocks[a].storage()._impl->data();
+              //   RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
+              //   CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
+              // } else {
+              // fermionic signs included here
+              if (signfliplhs[a] != signfliprhs[b]) {
+                tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
+                                          .reshape(tmp->_blocks[targ_b].shape());
               } else {
-                // fermionic signs included here
-                if (signfliplhs[a] != signfliprhs[b]) {
-                  tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                            .reshape(tmp->_blocks[targ_b].shape());
-                } else {
-                  tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                            .reshape(tmp->_blocks[targ_b].shape());
-                }
+                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
+                                          .reshape(tmp->_blocks[targ_b].shape());
               }
+              // }
             }
             // mkl_set_interface_layer(MKL_INTERFACE_ILP64);
 
-            blas_int group_count = itoiR_idx.size();
-            if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
-                (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
-                 tmp_Rtn->dtype() != Type.Void)) {
-              group_size.resize(group_count, 1);
-              // TODOfermions: alphas need to include sign factors!
-              cytnx_error_msg(true,
-                              "[ERROR] Fermionic sign flips not implemented yet in Gemm_Batch "
-                              "contracition. One needs to change the signs of the alphas.%s",
-                              "\n")
-                linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas,
-                                     (const void **)LMems.data(), (const void **)RMems.data(),
-                                     betas, (void **)CMems.data(), group_count, group_size,
-                                     common_dtype, tmp->device());
-            }
+            // if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4)
+            // and
+            //     (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
+            //      tmp_Rtn->dtype() != Type.Void)) {
+            //   blas_int group_count = itoiR_idx.size();
+            //   group_size.resize(group_count, 1);
+            //   // TODOfermions: alphas need to include sign factors!
+            //   cytnx_error_msg(true,
+            //                   "[ERROR] Fermionic sign flips not implemented yet in Gemm_Batch "
+            //                   "contracition. One needs to change the signs of the alphas.%s",
+            //                   "\n")
+            //     linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas,
+            //                          (const void **)LMems.data(), (const void **)RMems.data(),
+            //                          betas, (void **)CMems.data(), group_count, group_size,
+            //                          common_dtype, tmp->device());
+            // }
             // restore the shape&permutation of this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
               cytnx_uint64 b = itoiR_idx[binx];
