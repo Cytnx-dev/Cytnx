@@ -273,8 +273,8 @@ namespace RsvdTest {
       return false;
     }
     if (!ReComposeCheck(rec_T, rsvds)) {
-      fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.",
-                         __func__, __LINE__);
+      fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.", __func__,
+                         __LINE__);
       return false;
     }
 

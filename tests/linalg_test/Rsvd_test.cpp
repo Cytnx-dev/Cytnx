@@ -40,7 +40,7 @@ namespace RsvdTest {
     bool is_diag = false;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, -10, 0, 0);
+    random::uniform_(T, -10, 0, 0);
     std::vector<UniTensor> rsvds = linalg::Rsvd(T, 1);
     EXPECT_TRUE(CheckLabels(T, rsvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, rsvds)) << fail_msg.TraceFailMsgs();
@@ -81,7 +81,7 @@ namespace RsvdTest {
     bool is_diag = true;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, 0, 10, 0);
+    random::uniform_(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> rsvds = linalg::Rsvd(T, 2); }, std::logic_error);
   }
 

@@ -99,9 +99,10 @@ namespace RsvdNoTruncateTest {
         if (std::abs(r - g) / denom > tol) {
           std::cout << "rsvd_s:" << rsvd_s << std::endl;
           std::cout << "gesvd_s:" << gesvd_s << std::endl;
-          fail_msg.AppendMsg("The leading singular values differ from the truncated Gesvd "
-                           "reference beyond the randomized-SVD tolerance. ",
-                           __func__, __LINE__);
+          fail_msg.AppendMsg(
+            "The leading singular values differ from the truncated Gesvd "
+            "reference beyond the randomized-SVD tolerance. ",
+            __func__, __LINE__);
           matches_truncated_gesvd = false;
           break;
         }
@@ -208,8 +209,7 @@ namespace RsvdNoTruncateTest {
     ASSERT_TRUE(T.is_tag());
     ASSERT_TRUE(T.is_braket_form());
 
-    std::vector<UniTensor> rsvds =
-      linalg::Rsvd_notruncate(T, 1000, true, true, 1, 0, 0., 2, 0);
+    std::vector<UniTensor> rsvds = linalg::Rsvd_notruncate(T, 1000, true, true, 1, 0, 0., 2, 0);
     ASSERT_EQ(rsvds.size(), 3);
 
     const UniTensor& S = rsvds[0];
@@ -598,8 +598,8 @@ namespace RsvdNoTruncateTest {
       return false;
     }
     if (!ReComposeCheck(src_T, rsvds)) {
-      fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.",
-                         __func__, __LINE__);
+      fail_msg.AppendMsg("The result is wrong after recomposing, T is not equal to USV*.", __func__,
+                         __LINE__);
       return false;
     }
 

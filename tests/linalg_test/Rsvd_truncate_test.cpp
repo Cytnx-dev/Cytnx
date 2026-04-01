@@ -6,13 +6,12 @@ using namespace cytnx;
 using namespace testing;
 using namespace TestTools;
 
-namespace GesvdTruncateTest {
+namespace RsvdTruncateTest {
 
   static TestFailMsg fail_msg;
 
-  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim);
   bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                   const std::vector<cytnx_uint64> min_blockdim);
+                   const cytnx_uint64& power_iteration);
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
@@ -27,7 +26,7 @@ namespace GesvdTruncateTest {
     is_U:true
     is_VT:true
   ====================*/
-  TEST(Gesvd_truncate, dense_one_elem) {
+  TEST(Rsvd_truncate, dense_one_elem) {
     std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
     fail_msg.Init(test_case_name);
     int size = 1;
@@ -37,10 +36,10 @@ namespace GesvdTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::uniform_(T, -10, 0, 0);
-    std::vector<UniTensor> Svds = linalg::Gesvd_truncate(T, 1);
-    EXPECT_TRUE(CheckLabels(T, Svds)) << fail_msg.TraceFailMsgs();
-    EXPECT_TRUE(ReComposeCheck(T, Svds)) << fail_msg.TraceFailMsgs();
-    EXPECT_EQ(Svds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
+    std::vector<UniTensor> Rsvds = linalg::Rsvd_truncate(T, 1);
+    EXPECT_TRUE(CheckLabels(T, Rsvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(ReComposeCheck(T, Rsvds)) << fail_msg.TraceFailMsgs();
+    EXPECT_EQ(Rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
       << "Singular value is wrong."
       << " line:" << __LINE__ << std::endl;
   }
@@ -52,12 +51,12 @@ namespace GesvdTruncateTest {
   //   is_U:true
   //   is_VT:true
   // ====================*/
-  // TEST(Gesvd_truncate, dense_nondiag_test) {
+  // TEST(Rsvd_truncate, dense_nondiag_test) {
   //   std::vector<std::string> case_list = {"dense_nondiag_C128", "dense_nondiag_F64"};
   //   for (const auto& case_name : case_list) {
   //     std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
   //     fail_msg.Init(test_case_name + ", " + case_name);
-  //     EXPECT_TRUE(CheckResult(case_name, 4)) << fail_msg.TraceFailMsgs();
+  //     EXPECT_TRUE(CheckResult(case_name, 4, 2)) << fail_msg.TraceFailMsgs();
   //   }
   // }
 
@@ -70,7 +69,7 @@ namespace GesvdTruncateTest {
     is_U:true
     is_VT:true
   ====================*/
-  TEST(Gesvd_truncate, err_dense_diag_test) {
+  TEST(Rsvd_truncate, err_dense_diag_test) {
     int size = 5;
     std::vector<Bond> bonds = {Bond(size), Bond(size)};
     int rowrank = 1;
@@ -78,7 +77,7 @@ namespace GesvdTruncateTest {
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
     random::uniform_(T, 0, 10, 0);
-    EXPECT_THROW({ std::vector<UniTensor> Svds = linalg::Gesvd_truncate(T, 2); }, std::logic_error);
+    EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd_truncate(T, 2); }, std::logic_error);
   }
 
   /*=====test info=====
@@ -88,45 +87,27 @@ namespace GesvdTruncateTest {
     is_U:true
     is_VT:true
   ====================*/
-  TEST(Gesvd_truncate, dense_exp_svals_test) {
+  TEST(Rsvd_truncate, dense_exp_svals_test) {
     std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                           "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
-      EXPECT_TRUE(CheckResult(case_name, 5)) << fail_msg.TraceFailMsgs();
+      EXPECT_TRUE(CheckResult(case_name, 5, 2)) << fail_msg.TraceFailMsgs();
     }
   }
 
   /*=====test info=====
-  describe:Test U(1) UniTensor with exponentially decaying singular values.
-  input:
-    T:U(1) UniTensor with real or complex real type.
-    is_U:true
-    is_VT:true
+  describe:Test Dense UniTensor with exponentially decaying singular values. No power iteration in
+  Rsvd. input: T:Dense UniTensor with real or complex real type. is_U:true is_VT:true
   ====================*/
-  TEST(Gesvd_truncate, U1_exp_svals_test) {
-    std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128", "sym_UT_U1_exp_Svals_F64"};
+  TEST(Rsvd_truncate, dense_exp_svals_no_power_iteration_test) {
+    std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
+                                          "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
       std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
       fail_msg.Init(test_case_name + ", " + case_name);
-      EXPECT_TRUE(CheckResult(case_name, 5)) << fail_msg.TraceFailMsgs();
-    }
-  }
-
-  /*=====test info=====
-  describe:Test U(1) UniTensor with exponentially decaying singular values and use of min_blockdim;
-  input:
-    T:U(1) UniTensor with real or complex real type.
-    is_U:true
-    is_VT:true
-  ====================*/
-  TEST(Gesvd_truncate, U1_exp_svals_minblockdim_test) {
-    std::vector<std::string> case_list = {"sym_UT_U1_exp_Svals_C128", "sym_UT_U1_exp_Svals_F64"};
-    for (const auto& case_name : case_list) {
-      std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
-      fail_msg.Init(test_case_name + ", " + case_name);
-      EXPECT_TRUE(CheckResult(case_name, 5, {1, 1, 0, 2, 0})) << fail_msg.TraceFailMsgs();
+      EXPECT_TRUE(CheckResult(case_name, 5, 0)) << fail_msg.TraceFailMsgs();
     }
   }
 
@@ -141,7 +122,7 @@ namespace GesvdTruncateTest {
     const UniTensor& V = Tout[2];
     UniTensor ReCompose = Contract(U, S);
     ReCompose = Contract(ReCompose, V);
-    const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
+    const double tol = is_double_float_acc ? 1.0e-9 : 1.0e-2;
     auto T_float = Tin.clone();
     if (Tin.dtype() > Type.Float) {
       T_float = Tin.astype(Type.Double);
@@ -210,7 +191,8 @@ namespace GesvdTruncateTest {
     auto UUD = Contract(U, UD);
   }
 
-  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim) {
+  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
+                   const cytnx_uint64& power_iteration) {
     // test data source file
     std::string src_file_name = src_data_root + case_name + ".cytnx";
     // anscer file
@@ -223,23 +205,24 @@ namespace GesvdTruncateTest {
     UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
     UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
 
-    // Do Gesvd_truncate
-    std::vector<UniTensor> Svds = linalg::Gesvd_truncate(src_T, keepdim, 0., true, true, 0);
+    // Do Rsvd_truncate
+    std::vector<UniTensor> Rsvds =
+      linalg::Rsvd_truncate(src_T, keepdim, 0, true, true, 0, 0, 2, 1, power_iteration, 0);
 
     // check labels
-    if (!(CheckLabels(src_T, Svds))) {
+    if (!(CheckLabels(src_T, Rsvds))) {
       fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
       return false;
     }
 
     // check answer
-    if (!(SingularValsCorrect(Svds[0], ans_T))) {
-      fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
+    if (!(SingularValsCorrect(Rsvds[0], ans_T))) {
+      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
       return false;
     }
 
     // check recompose [M - USV*]
-    if (!ReComposeCheck(rec_T, Svds)) {
+    if (!ReComposeCheck(rec_T, Rsvds)) {
       fail_msg.AppendMsg(
         "The result is wrong after recomposing. "
         "That's mean T not equal USV* ",
@@ -249,50 +232,4 @@ namespace GesvdTruncateTest {
 
     return true;
   }
-
-  bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
-                   const std::vector<cytnx_uint64> min_blockdim) {
-    // test data source file
-    std::string src_file_name = src_data_root + case_name + ".cytnx";
-    // anscer file
-    std::string ans_file_name = ans_data_root + case_name + "_minblockdim.cytnx";
-    // reconstructed matrix file
-    std::string rec_file_name = ans_data_root + case_name + "_minblockdim_reconstructed.cytnx";
-    // bool need_U, need_VT;
-    bool compute_uv;
-    UniTensor src_T = UniTensor::Load(src_file_name);
-    UniTensor ans_T = UniTensor::Load(ans_file_name);  // singular values UniTensor
-    UniTensor rec_T = UniTensor::Load(rec_file_name);  // M = U * S * V after correct truncated SVD
-
-    // Do Gesvd_truncate
-    std::vector<UniTensor> Svds =
-      linalg::Gesvd_truncate(src_T, keepdim, min_blockdim, 0., true, true, 0);
-
-    // check labels
-    if (!(CheckLabels(src_T, Svds))) {
-      fail_msg.AppendMsg("The output labels are wrong. ", __func__, __LINE__);
-      return false;
-    }
-
-    ans_T.print_diagram();
-    Svds[0].print_diagram();
-    // check answer
-    if (!(SingularValsCorrect(Svds[0], ans_T))) {
-      fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
-      return false;
-    }
-    Svds[1].print_diagram();
-    Svds[2].print_diagram();
-
-    // check recompose [M - USV*]
-    if (!ReComposeCheck(rec_T, Svds)) {
-      fail_msg.AppendMsg(
-        "The result is wrong after recomposing. "
-        "That's mean T not equal USV* ",
-        __func__, __LINE__);
-      return false;
-    }
-
-    return true;
-  }
-}  // namespace GesvdTruncateTest
+}  // namespace RsvdTruncateTest
