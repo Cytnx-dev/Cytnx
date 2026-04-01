@@ -89,6 +89,10 @@ namespace cytnx {
       f.open(fname, ios::out | ios::trunc | ios::binary);
     } else {
       // add filename extension
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cyst'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.c_str());
       f.open((fname + ".cyst"), ios::out | ios::trunc | ios::binary);
     }
     if (!f.is_open()) {
@@ -198,7 +202,7 @@ namespace cytnx {
     // std::cout << fname << std::endl;
     jf.open(fname, ios::ate | ios::binary);
     if (!jf.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     Nbytes = jf.tellg();
     jf.close();
@@ -219,7 +223,7 @@ namespace cytnx {
 
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     out._Loadbinary(f, dtype, Nelem);
     f.close();
@@ -228,15 +232,9 @@ namespace cytnx {
   Storage Storage::Load(const std::string &fname) {
     Storage out;
     fstream f;
-    if (std::filesystem::path(fname).has_extension()) {
-      // filename extension is given
-      f.open(fname, ios::in | ios::binary);
-    } else {
-      // add filename extension
-      f.open((fname + ".cyst"), ios::in | ios::binary);
-    }
+    f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     out._Load(f);
     f.close();
