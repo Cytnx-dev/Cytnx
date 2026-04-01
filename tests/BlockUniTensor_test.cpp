@@ -52,6 +52,22 @@ TEST_F(BlockUniTensorTest, Init) {
   EXPECT_ANY_THROW(BkUt.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
 }
 
+/*=====test info=====
+describe:write to disc
+====================*/
+TEST_F(BlockUniTensorTest, SaveLoad) {
+  BUT1.Save(temp_file_path);
+  UniTensor BUT1_loaded = BUT1_loaded.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  BUT1.Save(fname);
+  UniTensor BUT1_loaded_char_save = BUT1_loaded_char_save.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded_char_save));
+  UniTensor BUT1_loaded_char_load = BUT1_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded_char_load));
+}
+
 TEST_F(BlockUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
   EXPECT_ANY_THROW(Spf.set_rowrank(-2));  // set_rowrank cannot be negative!
@@ -1012,7 +1028,7 @@ TEST_F(BlockUniTensorTest, elem_exist) {
           if (BUT4.elem_exists({i - 1, j - 1, k - 1, l - 1})) {
             cytnx_int64 _a;
             std::vector<cytnx_uint64> _b;
-            ((BlockUniTensor*)BUT4._impl.get())
+            ((BlockUniTensor *)BUT4._impl.get())
               ->_fx_locate_elem(_a, _b, {i - 1, j - 1, k - 1, l - 1});
             std::vector<cytnx_uint64> qind = BUT4.get_qindices(_a);
             EXPECT_EQ(BUT4.bonds()[0].qnums()[qind[0]][0] - BUT4.bonds()[1].qnums()[qind[1]][0] +
