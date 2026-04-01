@@ -283,14 +283,14 @@ namespace cytnx {
 
           // Now we can perform linalg!
           aux_qnums.push_back(x.first);
-          auto Bshape = BTen.shape();
-          auto BlockDim = std::min(Bshape[0], Bshape[1]);
+          auto BlockDim = std::min(BTen.shape()[0], BTen.shape()[1]);
           cytnx::cytnx_uint64 svalnum =
             std::max(static_cast<cytnx_int64>(mindim),
                      static_cast<cytnx_int64>(
                        std::ceil((1. + oversampling_factor) * keepdim * BlockDim / TenDim) +
                        static_cast<cytnx_int64>(oversampling_summand)));
-          auto out = Rsvd_notruncate(BTen, svalnum, is_U, is_vT, power_iteration, seed);
+          std::vector<Tensor> out =
+            Rsvd_notruncate(BTen, svalnum, is_U, is_vT, power_iteration, seed);
           aux_degs.push_back(out[0].shape()[0]);
           S_blocks.push_back(out[0]);
           tr = 1;
@@ -517,14 +517,14 @@ namespace cytnx {
 
           // Now we can perform linalg!
           aux_qnums.push_back(x.first);
-          auto Bshape = BTen.shape();
-          auto BlockDim = std::min(Bshape[0], Bshape[1]);
+          auto BlockDim = std::min(BTen.shape()[0], BTen.shape()[1]);
           cytnx::cytnx_uint64 svalnum =
             std::max(static_cast<cytnx_int64>(mindim),
                      static_cast<cytnx_int64>(
                        std::ceil((1. + oversampling_factor) * keepdim * BlockDim / TenDim) +
                        static_cast<cytnx_int64>(oversampling_summand)));
-          auto out = Rsvd_notruncate(BTen, svalnum, is_U, is_vT, power_iteration, seed);
+          std::vector<Tensor> out =
+            Rsvd_notruncate(BTen, svalnum, is_U, is_vT, power_iteration, seed);
           aux_degs.push_back(out[0].shape()[0]);
           S_blocks.push_back(out[0]);
           tr = 1;
