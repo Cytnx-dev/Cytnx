@@ -141,7 +141,7 @@ int main(int argc, char *argv[]) {
   print(U1);
 
   // U1.set_rowrank(3);
-  U1.Save("sps");
+  U1.Save("sps.cytnx");
 
   auto readU1 = UniTensor::Load("sps.cytnx");
 

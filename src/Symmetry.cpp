@@ -1,10 +1,10 @@
 #include "Symmetry.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <filesystem>
 
 using namespace std;
 

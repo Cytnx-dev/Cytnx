@@ -57,12 +57,12 @@ describe:write to disc
 ====================*/
 TEST_F(BlockUniTensorTest, SaveLoad) {
   BUT1.Save(temp_file_path);
-  UniTensor BUT1_loaded = BUT1_loaded.Load(temp_file_path + ".cytnx");
+  UniTensor BUT1_loaded = BUT1_loaded.Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded));
   // for char*
   const char *fname = temp_file_path.c_str();
   BUT1.Save(fname);
-  UniTensor BUT1_loaded_char_save = BUT1_loaded_char_save.Load(temp_file_path + ".cytnx");
+  UniTensor BUT1_loaded_char_save = BUT1_loaded_char_save.Load(temp_file_path);
   EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded_char_save));
   UniTensor BUT1_loaded_char_load = BUT1_loaded_char_load.Load(fname);
   EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded_char_load));
