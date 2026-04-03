@@ -199,6 +199,44 @@ namespace DivTest {
     }
   }
 
+  TEST(DivMixedDtypeTest, gpu_tensor_div_tensor_mixed_unsigned_signed_type_promote) {
+    cytnx::Tensor lhs = cytnx::arange(1, 7, 1, cytnx::Type.Uint32).reshape({2, 3});
+    cytnx::Tensor rhs = cytnx::arange(1, 7, 1, cytnx::Type.Int16).reshape({2, 3});
+    lhs = lhs.to(cytnx::Device.cuda);
+    rhs = rhs.to(cytnx::Device.cuda);
+
+    cytnx::Tensor gpu_result = cytnx::linalg::Div(lhs, rhs);
+    cytnx::Tensor expected_cpu =
+      cytnx::linalg::Div(lhs.to(cytnx::Device.cpu), rhs.to(cytnx::Device.cpu));
+    cytnx::Tensor gpu_result_cpu = gpu_result.to(cytnx::Device.cpu);
+
+    EXPECT_EQ(gpu_result.dtype(), expected_cpu.dtype());
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_cpu, expected_cpu,
+                                                    GetTolerance(gpu_result.dtype())));
+  }
+
+  TEST(DivMixedDtypeTest, gpu_scalar_div_tensor_mixed_unsigned_signed_type_promote) {
+    const cytnx::cytnx_uint32 scalar = 12;
+    cytnx::Tensor rhs =
+      cytnx::arange(1, 7, 1, cytnx::Type.Int16).reshape({2, 3}).to(cytnx::Device.cuda);
+
+    cytnx::Tensor gpu_result_l = cytnx::linalg::Div(scalar, rhs);
+    cytnx::Tensor gpu_result_r = cytnx::linalg::Div(rhs, scalar);
+
+    cytnx::Tensor rhs_cpu = rhs.to(cytnx::Device.cpu);
+    cytnx::Tensor expected_l = cytnx::linalg::Div(scalar, rhs_cpu);
+    cytnx::Tensor expected_r = cytnx::linalg::Div(rhs_cpu, scalar);
+    cytnx::Tensor gpu_result_l_cpu = gpu_result_l.to(cytnx::Device.cpu);
+    cytnx::Tensor gpu_result_r_cpu = gpu_result_r.to(cytnx::Device.cpu);
+
+    EXPECT_EQ(gpu_result_l.dtype(), expected_l.dtype());
+    EXPECT_EQ(gpu_result_r.dtype(), expected_r.dtype());
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_l_cpu, expected_l,
+                                                    GetTolerance(gpu_result_l.dtype())));
+    EXPECT_TRUE(cytnx::TestTools::AreNearlyEqTensor(gpu_result_r_cpu, expected_r,
+                                                    GetTolerance(gpu_result_r.dtype())));
+  }
+
   INSTANTIATE_TEST_SUITE_P(DivTests, DivTestAllShapes, ::testing::ValuesIn(GetTestShapes()));
 
 }  // namespace DivTest
