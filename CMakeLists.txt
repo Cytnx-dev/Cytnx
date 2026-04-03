@@ -332,7 +332,6 @@ IF(BUILD_PYTHON)
     if(NOT pybind11_sources_POPULATED)
       FetchContent_Populate(pybind11_sources)
 
-      set(PYBIND11_FINDPYTHON ON)
       add_subdirectory(
         ${pybind11_sources_SOURCE_DIR}
         ${pybind11_sources_BINARY_DIR}
