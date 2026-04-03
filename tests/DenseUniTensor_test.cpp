@@ -4094,10 +4094,6 @@ TEST_F(DenseUniTensorTest, Transpose_tagged) {
   // test tensors
   EXPECT_TRUE(AreEqUniTensor(Spcd_t.Transpose(), Spcd));
   auto Spcd_p = Spcd_t.permute(Spcd.labels());
-  std::vector<Bond> bonds_p = Spcd_p.bonds();
-  for (auto bond : bonds_p) {
-    bond.redirect_();
-  }
   EXPECT_TRUE(AreEqUniTensor(Spcd_p, Spcd));
 }
 

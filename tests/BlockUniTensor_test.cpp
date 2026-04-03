@@ -599,7 +599,7 @@ TEST_F(BlockUniTensorTest, Add) {
   BUT4 = BUT4.Load(data_dir + "OriginalBUT.cytnx");
   auto out2 = BUT4.Add(BUT4_2);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (out2.at({i, j, k, l}).exists()) {
@@ -610,7 +610,7 @@ TEST_F(BlockUniTensorTest, Add) {
           }
   BUT4.Add_(BUT4_2);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -624,7 +624,7 @@ TEST_F(BlockUniTensorTest, Add) {
 TEST_F(BlockUniTensorTest, Mul) {
   auto out = BUT4.Mul(9);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (out.at({i, j, k, l}).exists()) {
@@ -635,7 +635,7 @@ TEST_F(BlockUniTensorTest, Mul) {
           }
   BUT4.Mul_(9);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -670,7 +670,7 @@ TEST_F(BlockUniTensorTest, Sub) {
   BUT4 = BUT4.Load(data_dir + "OriginalBUT.cytnx");
   auto out2 = BUT4.Sub(BUT4_2);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (out2.at({i, j, k, l}).exists()) {
@@ -681,7 +681,7 @@ TEST_F(BlockUniTensorTest, Sub) {
           }
   BUT4.Sub_(BUT4_2);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -695,7 +695,7 @@ TEST_F(BlockUniTensorTest, Sub) {
 TEST_F(BlockUniTensorTest, Div) {
   auto out = BUT4.Div(9);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (out.at({i, j, k, l}).exists()) {
@@ -706,7 +706,7 @@ TEST_F(BlockUniTensorTest, Div) {
           }
   BUT4.Div_(9);
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -834,7 +834,7 @@ TEST_F(BlockUniTensorTest, Pow) {
 TEST_F(BlockUniTensorTest, Conj) {
   auto tmp = BUT4.Conj();
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -847,7 +847,7 @@ TEST_F(BlockUniTensorTest, Conj) {
   tmp = BUT4.clone();
   tmp.Conj_();
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -905,7 +905,7 @@ TEST_F(BlockUniTensorTest, Trace) {
   auto tmp = BUT4.Trace(0, 3);
   // std::cout<<BUtrT4<<std::endl;
   // std::cout<<tmp<<std::endl;
-  for (cytnx_int64 j = 0; j < 5; j++)
+  for (cytnx_int64 j = 0; j < 11; j++)
     for (cytnx_int64 k = 0; k < 3; k++)
       if (BUtrT4.at({j, k}).exists()) {
         // EXPECT_TRUE(Scalar(tmp.at({j-1,k-1})-BUtrT4.at({j-1,k-1})).abs()<1e-5);
@@ -966,7 +966,7 @@ TEST_F(BlockUniTensorTest, Dagger) {
 
   tmp = BUT4.Dagger().set_name("BUT4.Dagger");
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -988,7 +988,7 @@ TEST_F(BlockUniTensorTest, Dagger) {
   tmp = BUT4.clone();
   tmp.Dagger_();
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
@@ -1031,7 +1031,7 @@ TEST_F(BlockUniTensorTest, Dagger) {
 
 TEST_F(BlockUniTensorTest, elem_exist) {
   for (cytnx_int64 i = 0; i < 5; i++)
-    for (cytnx_int64 j = 0; j < 5; j++)
+    for (cytnx_int64 j = 0; j < 11; j++)
       for (cytnx_int64 k = 0; k < 3; k++)
         for (cytnx_int64 l = 0; l < 5; l++)
           if (BUT4.elem_exists({i, j, k, l})) {

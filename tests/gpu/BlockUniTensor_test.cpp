@@ -8,12 +8,12 @@ TEST_F(BlockUniTensorTest, gpu_Trace) {
   // std::cout<<tmp<<std::endl;
   for (cytnx_int64 j = 0; j < 11; j++)
     for (cytnx_int64 k = 0; k < 3; k++)
-      if (BUtrT4.at({j - 1, k - 1}).exists()) {
-        // EXPECT_TRUE(Scalar(tmp.at({j-1,k-1})-BUtrT4.at({j-1,k-1})).abs()<1e-5);
-        EXPECT_DOUBLE_EQ(double(tmp.at({j - 1, k - 1}).real()),
-                         double(BUtrT4.at({j - 1, k - 1}).real()));
-        EXPECT_DOUBLE_EQ(double(tmp.at({j - 1, k - 1}).imag()),
-                         double(BUtrT4.at({j - 1, k - 1}).imag()));
+      if (BUtrT4.at({j, k}).exists()) {
+        // EXPECT_TRUE(Scalar(tmp.at({j,k})-BUtrT4.at({j,k})).abs()<1e-5);
+        EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).real()),
+                         double(BUtrT4.at({j, k}).real()));
+        EXPECT_DOUBLE_EQ(double(tmp.at({j, k}).imag()),
+                         double(BUtrT4.at({j, k}).imag()));
       }
   // std::cout<<tmp<<std::endl;
   tmp = UT_diag.Trace(0, 1);

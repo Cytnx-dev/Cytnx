@@ -102,6 +102,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
                         "A_Conj: -3,-5,2",\
                         "TOUT: 0,1,2"])
         # or you can do: anet = cytnx.Network("L_AMAH.net")
+        # Dagger() swaps left/right index order; permute_ restores original label order
         anet.PutUniTensors(["L","A","A_Conj","M"], \
                            [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
         LR[p+1] = anet.Launch()
@@ -148,7 +149,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
                             "TOUT: 0;1,2"])
             # or you can do: anet = cytnx.Network("R_AMAH.net")
             anet.PutUniTensors(["R","B","M","B_Conj"], \
-                               [LR[p+2],A[p+1],M,A[p+1].Dagger().permute_(A[p+1].labels())])
+                               [LR[p+2],A[p+1],M,A[p+1].Dagger().permute_(A[p+1].labels())])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
             LR[p+1].set_name(f"LR{p+1}")
 
@@ -190,7 +191,7 @@ def dmrg_XXmodel_dense(Nsites, chi, numsweeps, maxit):
             # or you can do: anet = cytnx.Network("L_AMAH.net")
 
             anet.PutUniTensors(["L","A","A_Conj","M"], \
-                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
+                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
             LR[p+1].set_name(f"LR{p+1}")
 

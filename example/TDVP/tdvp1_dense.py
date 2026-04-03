@@ -80,6 +80,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                         "TOUT: 0,1,2"])
         # or you can do: anet = cytnx.Network("L_AMAH.net")
         for p in range(0, N):
+            # Dagger() swaps left/right index order; permute_ restores original label order
             anet.PutUniTensors(["L","A","A_Conj","M"], \
                                [L,A[p],A[p].Dagger().permute_(A[p].labels()),M])
             L = anet.Launch()
@@ -140,7 +141,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                         "TOUT: 0,1,2"])
         # or you can do: anet = cytnx.Network("L_AMAH.net")
         anet.PutUniTensors(["L","A","A_Conj","M"], \
-                           [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
+                           [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
         LR[p+1] = anet.Launch()
 
         # Recover the original MPS labels
@@ -178,7 +179,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                             "TOUT: ;0,1,2"])
             # or you can do: anet = cytnx.Network("R_AMAH.net")
             anet.PutUniTensors(["R","B","M","B_Conj"], \
-                               [LR[p+1],A[p],M,A[p].Dagger().permute_(A[p].labels())])
+                               [LR[p+1],A[p],M,A[p].Dagger().permute_(A[p].labels())])  # Dagger() swaps index order; permute_ restores it
             old_LR = LR[p].clone()
             if p != 0:
                 LR[p] = anet.Launch()
@@ -219,7 +220,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                             "TOUT: 0,1,2"])
 
             anet.PutUniTensors(["L","A","A_Conj","M"], \
-                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
+                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
             old_LR = LR[p+1].clone()
 
 
@@ -251,7 +252,7 @@ def Local_meas(A, B, Op, site):
     for i in range(0, N):
         if i != site:
             anet.PutUniTensors(["l","A","B"], \
-                               [l,A[i],B[i].Dagger().permute_(B[i].labels())])
+                               [l,A[i],B[i].Dagger().permute_(B[i].labels())])  # Dagger() swaps index order; permute_ restores it
             l = anet.Launch()
         else:
             tmp = A[i].relabel(1, "_aux_up")
@@ -260,7 +261,7 @@ def Local_meas(A, B, Op, site):
             tmp.relabel_("_aux_low", A[i].labels()[1])
             tmp.permute_(A[i].labels())
             anet.PutUniTensors(["l","A","B"], \
-                               [l,tmp,B[i].Dagger().permute_(B[i].labels())])
+                               [l,tmp,B[i].Dagger().permute_(B[i].labels())])  # Dagger() swaps index order; permute_ restores it
             l = anet.Launch()
 
     return l.reshape(1).item()

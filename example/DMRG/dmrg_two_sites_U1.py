@@ -119,6 +119,7 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
                     "A_Conj: -3,-5,2",\
                     "TOUT: 0;1,2"])
     for p in range(Nsites - 1):
+        # Dagger() swaps left/right index order; permute_ restores original label order
         anet.PutUniTensors(["L","A","A_Conj","M"], \
                            [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
         LR[p+1] = anet.Launch()
@@ -156,7 +157,7 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
                         "B_Conj: 2,-5,-3",\
                         "TOUT: 0;1,2"])
             anet.PutUniTensors(["R","B","M","B_Conj"], \
-                               [LR[p+2],A[p+1],M,A[p+1].Dagger().permute_(A[p+1].labels())])
+                               [LR[p+2],A[p+1],M,A[p+1].Dagger().permute_(A[p+1].labels())])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
             LR[p+1].set_name(f"LR{p+1}")
 
@@ -195,7 +196,7 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
                         "A_Conj: -3,-5,2",\
                         "TOUT: 0;1,2"])
             anet.PutUniTensors(["L","A","A_Conj","M"], \
-                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
+                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
             LR[p+1].set_name(f"LR{p+1}")
 

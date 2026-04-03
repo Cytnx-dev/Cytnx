@@ -4978,7 +4978,7 @@ namespace cytnx {
       1)  Swaps the roles of left and right indices: index numbers k < rowrank become k + rowrank,
           indices k' >= rowrank become k' - rowrank. For fermions, the order of the indices is
           inverted instead.
-      2)  Incoming legs become outgoing onces, and vice versa
+      2)  Incoming legs become outgoing ones, and vice versa
       3)  The rowrank is set to rank - old rowrank, such that left indices become right indices and
           vice versa.
     @return UniTensor
