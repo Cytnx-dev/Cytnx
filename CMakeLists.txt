@@ -317,7 +317,7 @@ endif()
 # #######
 IF(BUILD_PYTHON)
   find_package (Python COMPONENTS Interpreter Development)
-  find_package(pybind11 3.0.0 REQUIRED)
+  find_package(pybind11 3.0.0 QUIET)
 
   if(NOT pybind11_FOUND)
     include(FetchContent)
