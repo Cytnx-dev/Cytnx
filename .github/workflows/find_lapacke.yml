@@ -1,0 +1,63 @@
+name: Find LAPACKE
+
+on:
+  pull_request:
+
+jobs:
+  FindLAPACKE:
+    name: FindLAPACKE-${{ matrix.package }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # - {package: liblapack-dev, include: lapack}
+          # - {package: liblapack64-dev, include: lapack}
+          - {package: liblapacke-dev, include: lapacke} #lapacke.h
+          - {package: liblapacke64-dev, include: lapacke}  #  libblas64-3 libblas64-dev liblapack64-3 liblapack64-dev liblapacke64 liblapacke64-dev
+          # - {package: liblapack3, include: lapack} #?
+          # - {package: liblapack64-3, include: lapack} #?
+          # - {package: liblapacke, include: lapacke}
+          # - {package: liblapacke64, include: lapacke}
+          # - {package: libopenblas-dev, include: openblas}
+          # - {package: libopenblas64-dev, include: openblas} # libopenblas64-pthread-dev
+          - {package: libopenblas-openmp-dev, include: openblas}
+          - {package: libopenblas64-openmp-dev, include: openblas}
+          - {package: libopenblas-pthread-dev, include: openblas}
+          - {package: libopenblas64-pthread-dev, include: openblas}
+          # - {package: libopenblas0, include: openblas}
+          # - {package: libopenblas64-0, include: openblas}
+          # - {package: libopenblas0-openmp, include: openblas}
+          # - {package: libopenblas64-0-openmp, include: openblas}
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    # - name: probe LAPACK
+    #   run: |
+    #     sudo apt update
+    #     apt list --all-versions "*lapack*"
+    #     apt list --all-versions "*openblas*"
+
+    #     liblapack64-dev
+    #     liblapacke64-dev
+    #     liblapack64
+    #     liblapacke64
+    #     libopenblas64-dev
+    #     libopenblas64-openmp-dev
+    #     libopenblas64-0
+    #     libopenblas64-0-openmp
+      - name: install lapack
+        run: |
+          export BASH_XTRACEFD=1   # send xtrace to stdout
+          set -x
+          ls /usr/include
+          ls /usr/include/x86_64-linux-gnu
+          sudo apt update
+          sudo apt install ${{ matrix.package }}
+          dpkg -L ${{ matrix.package }}
+          # ls /usr/include
+          ls -l /usr/include/x86_64-linux-gnu
+          ls -l /etc/alternatives
+          # ls /usr/include/x86_64-linux-gnu/${{ matrix.include }}
