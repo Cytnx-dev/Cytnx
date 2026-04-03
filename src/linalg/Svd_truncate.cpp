@@ -12,6 +12,27 @@
   #include "backend/linalg_internal_interface.hpp"
 namespace cytnx {
   namespace linalg {
+    namespace {
+      UniTensor BuildBlockDiscardedSingularValues(const Tensor &Sall, const cytnx_uint64 smidx,
+                                                  const unsigned int return_err) {
+        Tensor terr({1}, Sall.dtype());
+        terr.storage().at(0) = 0;
+        if (smidx == 0) {
+          return UniTensor(terr);
+        }
+        if (return_err == 1) {
+          terr.storage().at(0) = Sall.storage()(smidx - 1);
+          return UniTensor(terr);
+        }
+
+        terr = Tensor({smidx}, Sall.dtype());
+        for (cytnx_uint64 i = 0; i < smidx; i++) {
+          terr.storage().at(i) = Sall.storage()(smidx - 1 - i);
+        }
+        return UniTensor(terr);
+      }
+    }  // namespace
+
     std::vector<Tensor> Svd_truncate(const Tensor &Tin, const cytnx_uint64 &keepdim,
                                      const double &err, const bool &is_UvT,
                                      const unsigned int &return_err, const cytnx_uint64 &mindim) {
@@ -331,10 +352,9 @@ namespace cytnx {
 
       // handle return_err!
       if (return_err == 1) {
-        outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-        outCyT.back().get_block_().storage().at(0) = Smin;
+        outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
       } else if (return_err) {
-        outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+        outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
       }
     }  // _svd_truncate_Block_UTs
 
@@ -464,10 +484,9 @@ namespace cytnx {
           }
           // handle return_err!
           if (return_err == 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-            outCyT.back().get_block_().storage().at(0) = Smin;
+            outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
           } else if (return_err) {
-            outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+            outCyT.push_back(BuildBlockDiscardedSingularValues(Sall, smidx, return_err));
           }
         } else {
           if (return_err >= 1) {
