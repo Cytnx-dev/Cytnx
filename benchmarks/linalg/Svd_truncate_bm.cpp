@@ -17,7 +17,7 @@ namespace BMTest_Svd_truncate {
     auto UT = UniTensor(bonds, labels, row_rank, dtype, device, is_diag);
     double low = -1000, high = 1000;
     int rnd_seed = 0;
-    random::Make_uniform(UT, low = -1000, high = 1000, rnd_seed);
+    random::uniform_(UT, low = -1000, high = 1000, rnd_seed);
     return UT;
   }
 
@@ -88,7 +88,7 @@ namespace BMTest_Svd_truncate {
     auto UT = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, is_diag = false);
     double l_bd, h_bd;
     int rnd_seed;
-    random::Make_uniform(UT, l_bd = -1000, h_bd = 1000, rnd_seed);
+    random::uniform_(UT, l_bd = -1000, h_bd = 1000, rnd_seed);
     return UT;
   }
 

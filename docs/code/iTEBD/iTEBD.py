@@ -60,8 +60,8 @@ H.print_diagram()
 #
 A = cyx.CyTensor([cyx.Bond(chi),cyx.Bond(2),cyx.Bond(chi)],rowrank=1,labels=[-1,0,-2]);
 B = cyx.CyTensor(A.bonds(),rowrank=1,labels=[-3,1,-4]);
-cytnx.random.Make_normal(B.get_block_(),0,0.2);
-cytnx.random.Make_normal(A.get_block_(),0,0.2);
+cytnx.random.normal_(B.get_block_(),0,0.2);
+cytnx.random.normal_(A.get_block_(),0,0.2);
 A.print_diagram()
 B.print_diagram()
 #print(A)

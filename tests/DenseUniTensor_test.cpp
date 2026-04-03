@@ -1,11 +1,13 @@
 #include "DenseUniTensor_test.h"
-using namespace std;
-using namespace cytnx;
-using namespace std::complex_literals;
 
 #include <cstdio>
 #include <filesystem>
+
 #include "test_tools.h"
+
+using namespace std;
+using namespace cytnx;
+using namespace std::complex_literals;
 
 #define FAIL_CASE_OPEN false
 
@@ -4606,23 +4608,15 @@ TEST_F(DenseUniTensorTest, Save) {
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
   ut.Save(temp_file_path);
-  UniTensor ut_load = UniTensor::Load(temp_file_path + ".cytnx");
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
-}
-
-/*=====test info=====
-describe:test Save and Load by charPtr
-====================*/
-TEST_F(DenseUniTensorTest, Save_chr) {
-  auto row_rank = 1u;
-  std::vector<Bond> bonds = {Bond(3), Bond(2)};
-  std::vector<std::string> labels = {"a", "b"};
-  auto seed = 0;
-  auto ut = UniTensor(bonds, labels, row_rank);
-  random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(temp_file_path.c_str());
-  UniTensor ut_load = UniTensor::Load((temp_file_path + ".cytnx").c_str());
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
+  UniTensor ut_loaded = UniTensor::Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(ut_loaded, ut));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  ut.Save(fname);
+  UniTensor ut_loaded_char_save = ut_loaded_char_save.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_save));
+  UniTensor ut_loaded_char_load = ut_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_load));
 }
 
 /*=====test info=====
@@ -4633,15 +4627,15 @@ TEST_F(DenseUniTensorTest, Save_path_incorrect) {
   std::filesystem::path temp_filename = std::tmpnam(nullptr);
   // std::tmpnam(nullptr) returns full temp file path, like /tmp/fileRandSuffix
   file_path_under_non_existent_folder /= temp_filename.filename();
+  file_path_under_non_existent_folder += ".cytnx";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder), std::logic_error);
-  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string() + ".cytnx"),
-               std::logic_error);
+  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder.string()), std::logic_error);
+  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string()), std::logic_error);
 }
 
 /*=====test info=====
