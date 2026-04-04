@@ -196,13 +196,18 @@ namespace cytnx {
       this->_labels[inx] = new_label;
     }
 
-    void set_labels(const std::vector<std::string> &new_labels);
+    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]] void
+      set_labels(const std::vector<std::string> &new_labels);
     void relabel_(const std::vector<std::string> &new_labels);  // implemented
-    void relabels_(const std::vector<std::string> &new_labels);  // implemented
+    [[deprecated("Please use relabel_(const std::vector<std::string> &new_labels) instead.")]] void
+      relabels_(const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::vector<std::string> &old_labels,
                   const std::vector<std::string> &new_labels);  // implemented
-    void relabels_(const std::vector<std::string> &old_labels,
-                   const std::vector<std::string> &new_labels);  // implemented
+    [[deprecated(
+      "Please use relabel_(const std::vector<std::string> &old_labels, const "
+      "std::vector<std::string> &new_labels) instead.")]] void
+      relabels_(const std::vector<std::string> &old_labels,
+                const std::vector<std::string> &new_labels);  // implemented
     void relabel_(const std::string &old_label, const std::string &new_label) {
       this->set_label(old_label, new_label);
     }
@@ -618,7 +623,14 @@ namespace cytnx {
     void print_diagram(const bool &bond_info = false) const;
     void print_blocks(const bool &full_info = true) const;
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
-    Tensor get_block(const cytnx_uint64 &idx = 0) const { return this->_block.clone(); }
+    Tensor get_block() const { return this->_block.clone(); }
+    Tensor get_block(const cytnx_uint64 &idx) const {
+      cytnx_error_msg(idx != 0,
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
+                      "invalid. Use get_block(0).\n",
+                      (unsigned long long)idx);
+      return this->_block.clone();
+    }
 
     Tensor get_block(const std::vector<cytnx_int64> &qnum, const bool &force) const {
       cytnx_error_msg(
@@ -643,9 +655,23 @@ namespace cytnx {
     }
 
     // return a share view of block, this only work for non-symm tensor.
-    Tensor &get_block_(const cytnx_uint64 &idx = 0) { return this->_block; }
+    Tensor &get_block_() { return this->_block; }
+    Tensor &get_block_(const cytnx_uint64 &idx) {
+      cytnx_error_msg(idx != 0,
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
+                      "invalid. Use get_block_(0).\n",
+                      (unsigned long long)idx);
+      return this->_block;
+    }
     // return a share view of block, this only work for non-symm tensor.
-    const Tensor &get_block_(const cytnx_uint64 &idx = 0) const { return this->_block; }
+    const Tensor &get_block_() const { return this->_block; }
+    const Tensor &get_block_(const cytnx_uint64 &idx) const {
+      cytnx_error_msg(idx != 0,
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
+                      "invalid. Use get_block_(0).\n",
+                      (unsigned long long)idx);
+      return this->_block;
+    }
 
     cytnx_uint64 Nblocks() const { return 1; };
     std::vector<Tensor> get_blocks() const {
@@ -667,8 +693,8 @@ namespace cytnx {
       return this->_interface_block;  // this will not share memory!!
     }
 
-    void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
-      // We don't check the dtype for DenseUniTensor, since it'll be more convinent to change
+    void put_block(const Tensor &in) {
+      // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
 
       // cytnx_error_msg(in.dtype() != this->dtype(),
@@ -693,9 +719,16 @@ namespace cytnx {
         this->_block = in.clone();
       }
     }
+    void put_block(const Tensor &in, const cytnx_uint64 &idx) {
+      cytnx_error_msg(idx != 0,
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
+                      "invalid. Use put_block(0).\n",
+                      (unsigned long long)idx);
+      put_block(in);
+    }
     // share view of the block
-    void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
-      // We don't check the dtype for DenseUniTensor, since it'll be more convinent to change
+    void put_block_(Tensor &in) {
+      // We don't check the dtype for DenseUniTensor, since it'll be more convenient to change
       // DenseUniTensor's dtype
 
       // cytnx_error_msg(in.dtype() != this->dtype(),
@@ -719,6 +752,13 @@ namespace cytnx {
           "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
         this->_block = in;
       }
+    }
+    void put_block_(Tensor &in, const cytnx_uint64 &idx) {
+      cytnx_error_msg(idx != 0,
+                      "[ERROR][DenseUniTensor] Dense tensor has only one block, block number %llu "
+                      "invalid. Use put_block_(0).\n",
+                      (unsigned long long)idx);
+      put_block_(in);
     }
 
     void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
@@ -2910,24 +2950,29 @@ namespace cytnx {
     */
 
     /**
-    @brief Set new labels for all the bonds.
-    @param[in] new_labels the new labels for each bond.
-    @note
-        1. the new assign label cannot be the same as the label of any other bonds in the
-    UniTensor. ( cannot have duplicate labels )
-        2. Compared to relabels(const std::vector<std::string> &new_labels) const, this
-        function set the new label and return self.
+    @deprecated This function is deprecated. Please use \n
+        UniTensor &relabel_(const std::vector<std::string> &new_labels)\n
+      instead.
     */
-    UniTensor &set_labels(const std::vector<std::string> &new_labels) {
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::vector<std::string> &new_labels) "
+      "instead.")]] UniTensor &
+      set_labels(const std::vector<std::string> &new_labels) {
       this->_impl->set_labels(new_labels);
       return *this;
     }
 
     /**
-          @see
-    set_labels(const std::vector<std::string> &new_labels)
-         */
-    UniTensor &set_labels(const std::initializer_list<char *> &new_labels) {
+    @deprecated This function is deprecated. Please use \n
+        UniTensor &relabel_(const std::initializer_list<char *> &new_labels)\n
+      instead.
+    */
+    [[deprecated(
+      "Please use "
+      "UniTensor &relabel_(const std::initializer_list<char *> &new_labels) "
+      "instead.")]] UniTensor &
+      set_labels(const std::initializer_list<char *> &new_labels) {
       std::vector<char *> new_lbls(new_labels);
       std::vector<std::string> vs(new_lbls.size());
       transform(new_lbls.begin(), new_lbls.end(), vs.begin(),
@@ -3191,14 +3236,12 @@ namespace cytnx {
     }
     /**
     @deprecated This function is deprecated. Please use \n
-        UniTensor &relabel_(const std::vector<std::string> &old_labels,
-                        const std::vector<std::string> &new_labels)\n
+        UniTensor &relabel_(const std::vector<std::string> &new_labels)\n
       instead.
     */
     [[deprecated(
       "Please use "
-      "UniTensor &relabel_(const std::vector<std::string> &old_labels, const "
-      "std::vector<std::string> &new_labels) "
+      "UniTensor &relabel_(const std::vector<std::string> &new_labels) "
       "instead.")]] UniTensor &
       relabels_(const std::vector<std::string> &new_labels) {
       this->_impl->relabels_(new_labels);
@@ -3538,11 +3581,11 @@ namespace cytnx {
 
     /**
      * @brief permute the legs of the UniTensor
-     * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
-     *    \p by_label is false, otherwise it is mapped by bond label.
+     * @param[in] mapper the mapper of the permutation by bond indices
      * @param[in] rowrank the new rowrank after the permutation
      * @return UniTensor
-     * @warning \p by_label will be deprecated!
+     * @warning It is recommended to use \ref permute(const std::vector<std::string> &mapper, const
+     * cytnx_int64 &rowrank) instead
      */
     UniTensor permute(const std::vector<cytnx_int64> &mapper,
                       const cytnx_int64 &rowrank = -1) const {
@@ -3553,7 +3596,7 @@ namespace cytnx {
 
     /**
      * @brief permute the legs of the UniTensor by labels
-     * @param[in] mapper the mapper by babels
+     * @param[in] mapper the mapper of the permutation by labels
      * @param[in] rowrank the row rank
      * @return UniTensor
      */
@@ -3566,6 +3609,8 @@ namespace cytnx {
 
     /**
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
+        @warning It is recommended to use \ref permute(const std::vector<std::string> &mapper, const
+       cytnx_int64 &rowrank) instead
         */
     UniTensor permute(const std::initializer_list<char *> &mapper,
                       const cytnx_int64 &rowrank = -1) const {
@@ -3578,26 +3623,20 @@ namespace cytnx {
     }
 
     /**
-    @deprecated This function is deprecated. Please use \n
-      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank)\n
-          instead.
-    @brief permute the lags of the UniTensor, inplacely.
-    @param[in] mapper the mapper by labels
+    @brief permute the legs of the UniTensor, inplacely.
+    @param[in] mapper the mapper of the permutation by labels
     @param[in] rowrank the row rank after the permutation
-          @warning \p by_label will be deprecated!
+    @warning It is recommended to use \ref permute_(const std::vector<std::string> &mapper, const
+    cytnx_int64 &rowrank) instead
     */
-    [[deprecated(
-      "Please use "
-      "UniTensor &permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank) "
-      "instead.")]] UniTensor &
-      permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
+    UniTensor &permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
       this->_impl->permute_(mapper, rowrank);
       return *this;
     }
 
     /**
     @brief permute the legs of the UniTensor, inplacely.
-    @param[in] mapper the mapper by labels
+    @param[in] mapper the mapper of the permutation by labels
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
@@ -3611,11 +3650,11 @@ namespace cytnx {
      * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
      * usually not intended, since fermionic permutations create sign flips! This should typically
      * only be used to compare tensors in different sign conventions with each other.
-     * @param[in] mapper the mapper of the permutation. This mapper is mapped by bond index if
-     *    \p by_label is false, otherwise it is mapped by bond label.
+     * @param[in] mapper the mapper of the permutation by indices
      * @param[in] rowrank the new rowrank after the permutation
      * @return UniTensor
-     * @warning \p by_label will be deprecated!
+     * @warning It is recommended to use \ref permute_nosignflip(const std::vector<std::string>
+     * &mapper, const cytnx_int64 &rowrank) instead
      */
     UniTensor permute_nosignflip(const std::vector<cytnx_int64> &mapper,
                                  const cytnx_int64 &rowrank = -1) const {
@@ -3629,7 +3668,7 @@ namespace cytnx {
      * @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
      * usually not intended, since fermionic permutations create sign flips! This should typically
      * only be used to compare tensors in different sign conventions with each other.
-     * @param[in] mapper the mapper by babels
+     * @param[in] mapper the mapper of the permutation by labels
      * @param[in] rowrank the row rank
      * @return UniTensor
      */
@@ -3641,8 +3680,9 @@ namespace cytnx {
     }
 
     /**
-        @see permute_nosignflip(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank
-       = -1)
+        @see permute_nosignflip(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank)
+        @warning It is recommended to use \ref permute_nosignflip(const std::vector<std::string>
+       &mapper, const cytnx_int64 &rowrank) instead
         */
     UniTensor permute_nosignflip(const std::initializer_list<char *> &mapper,
                                  const cytnx_int64 &rowrank = -1) const {
@@ -3659,11 +3699,10 @@ namespace cytnx {
     @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
     usually not intended, since fermionic permutations create sign flips! This should typically only
     be used to compare tensors in different sign conventions with each other.
-    @deprecated It is recommended to use \ref
-      permute_(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
-    @param[in] mapper the mapper by labels
+    @param[in] mapper the mapper of the permutation by indices
     @param[in] rowrank the row rank after the permutation
-          @warning \p by_label will be deprecated!
+    @warning It is recommended to use \ref permute_(const std::vector<std::string> &mapper, const
+    cytnx_int64 &rowrank) instead
     */
     UniTensor &permute_nosignflip_(const std::vector<cytnx_int64> &mapper,
                                    const cytnx_int64 &rowrank = -1) {
@@ -3676,7 +3715,7 @@ namespace cytnx {
     @details The indices are permuted, but no fermionic sign flips occur. Use with care! This is
     usually not intended, since fermionic permutations create sign flips! This should typically only
     be used to compare tensors in different sign conventions with each other.
-    @param[in] mapper the mapper by labels
+    @param[in] mapper the mapper of the permutation by labels
     @param[in] rowrank the row rank after the permutation
         @see permute(const std::vector<std::string> &mapper, const cytnx_int64 &rowrank = -1)
     */
@@ -3685,19 +3724,6 @@ namespace cytnx {
       this->_impl->permute_nosignflip_(mapper, rowrank);
       return *this;
     }
-
-    // void permute_( const std::initializer_list<char*> &mapper, const cytnx_int64 &rowrank= -1){
-    //     std::vector<char*> mprs = mapper;
-    //     std::vector<std::string> vs(mprs.size());
-    //     transform(mprs.begin(),mprs.end(),vs.begin(),[](char * x) -> std::string { return
-    //     std::string(x); });
-
-    //     this->permute_(vs,rowrank);
-    // }
-
-    // void permute_(const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank = -1) {
-    //   this->_impl->permute_(mapper, rowrank);
-    // }
 
     /**
     @brief Make the UniTensor contiguous by coalescing the memory (storage).
@@ -3739,7 +3765,7 @@ namespace cytnx {
     returned by signflip() are false.
         @see apply()
     */
-    UniTensor apply_() {
+    UniTensor &apply_() {
       this->_impl = this->_impl->apply_();
       return *this;
     }
@@ -4411,7 +4437,7 @@ namespace cytnx {
 
     /**
     @brief Combine the sevral bonds of the UniTensor.
-        @param[in] indicators the labels of the lags you want to combine.
+        @param[in] indicators the labels of the legs you want to combine.
         @param[in] force If force is true, it will combine the bonds anyway even the direction
       of the bonds are same. After combining, the direction of the bonds will be set as
       same as the first bond.
@@ -5188,7 +5214,7 @@ namespace cytnx {
      * @note C++: Deprecated soon, use at()
      */
     template <class T>
-    T get_elem(const std::vector<cytnx_uint64> &locator) const {
+    [[deprecated("Use at() instead.")]] T get_elem(const std::vector<cytnx_uint64> &locator) const {
       return this->at<T>(locator);
     }
 
@@ -5198,7 +5224,8 @@ namespace cytnx {
      * @note C++: Deprecated soon, use at()
      */
     template <class T2>
-    UniTensor &set_elem(const std::vector<cytnx_uint64> &locator, const T2 &rc) {
+    [[deprecated("Use at() instead.")]] UniTensor &set_elem(
+      const std::vector<cytnx_uint64> &locator, const T2 &rc) {
       // cytnx_error_msg(true,"[ERROR] invalid type%s","\n");
       this->at(locator) = rc;
       return *this;

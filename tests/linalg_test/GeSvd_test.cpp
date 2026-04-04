@@ -35,7 +35,7 @@ namespace GesvdTest {
     bool is_diag = false;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, -10, 0, 0);
+    random::uniform_(T, -10, 0, 0);
     std::vector<UniTensor> Gesvds = linalg::Gesvd(T);
     EXPECT_TRUE(CheckLabels(T, Gesvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Gesvds)) << fail_msg.TraceFailMsgs();
@@ -224,7 +224,7 @@ namespace GesvdTest {
     bool is_diag = true;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, 0, 10, 0);
+    random::uniform_(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(T); }, std::logic_error);
   }
 
@@ -246,7 +246,7 @@ namespace GesvdTest {
     bool is_diag = true;
     std::vector<std::string> labels = {};
     auto UT = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-    random::Make_uniform(UT, 0, 10, 0);
+    random::uniform_(UT, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(UT); }, std::logic_error);
   }
 
@@ -364,6 +364,16 @@ namespace GesvdTest {
 
     const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
     return (relative_err < tol);
+  }
+
+  // no use
+  void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    const UniTensor& U = Tout[1];
+    const UniTensor& V = Tout[2];
+    auto UD = U.Dagger();
+    UD.relabel_({"0", "1", "9"});
+    UD.permute_({2, 0, 1}, 1);
+    auto UUD = Contract(U, UD);
   }
 
   bool CheckResult(const std::string& case_name) {

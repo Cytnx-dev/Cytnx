@@ -1,17 +1,19 @@
 #include "DenseUniTensor_test.h"
+
+#include <cstdio>
+#include <filesystem>
+
+#include "test_tools.h"
+
 using namespace std;
 using namespace cytnx;
 using namespace std::complex_literals;
 
-#include <cstdio>
-#include <filesystem>
-#include "test_tools.h"
-
-#define FAIL_CASE_OPEN 0
+#define FAIL_CASE_OPEN false
 
 TEST_F(DenseUniTensorTest, Init_by_Tensor) {
-  // EXPECT_NO_THROW(dut.Init_by_Tensor(tar345, false, -1));
-  // EXPECT_TRUE(utar345.same_data());
+  EXPECT_NO_THROW(dut.Init_by_Tensor(tar345, false, -1));
+  // EXPECT_TRUE(AreEqUniTensor(dut_ut, utar345_ut));
 }
 
 TEST_F(DenseUniTensorTest, Init_tagged) {
@@ -146,6 +148,11 @@ TEST_F(DenseUniTensorTest, set_label_not_exist_old_label) {
   EXPECT_ANY_THROW(utzero345.set_label("Not exist label", "testing label"));
 }
 
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 /*=====test info=====
 describe:test set_labels.
 ====================*/
@@ -190,6 +197,8 @@ TEST_F(DenseUniTensorTest, set_labels_duplicated) {
   std::vector<std::string> new_labels = {"test1", "test2", "test2", "test3"};
   EXPECT_ANY_THROW(utzero345.set_labels(new_labels));
 }
+
+#pragma GCC diagnostic pop
 
 TEST_F(DenseUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
@@ -264,7 +273,7 @@ TEST_F(DenseUniTensorTest, row_rank) {
 }
 
 /*=====test info=====
-describe:test dtype. Test for all possible dypte
+describe:test dtype. Test for all possible dtype
 ====================*/
 TEST_F(DenseUniTensorTest, dtype) {
   auto row_rank = 1u;
@@ -277,12 +286,12 @@ TEST_F(DenseUniTensorTest, dtype) {
 }
 
 /*=====test info=====
-describe:test uten_type for dense tesnor.
+describe:test uten_type for dense tensor.
 ====================*/
 TEST_F(DenseUniTensorTest, uten_type) { EXPECT_EQ(utzero345.uten_type(), UTenType.Dense); }
 
 /*=====test info=====
-describe:test uten_type for uninitialized tesnor.
+describe:test uten_type for uninitialized tensor.
 ====================*/
 TEST_F(DenseUniTensorTest, uten_type_uninit) { EXPECT_EQ(ut_uninit.uten_type(), UTenType.Void); }
 
@@ -302,7 +311,7 @@ describe:test device. Test for uninitialized UniTensor
 TEST_F(DenseUniTensorTest, device_uninit) { EXPECT_ANY_THROW(ut_uninit.device()); }
 
 /*=====test info=====
-describe:test dtype_str. Test for all possible dypte
+describe:test dtype_str. Test for all possible dtype
 ====================*/
 TEST_F(DenseUniTensorTest, dtype_str) {
   auto row_rank = 1u;
@@ -332,12 +341,12 @@ describe:test dtype_str. Test for uninitialized UniTensor
 TEST_F(DenseUniTensorTest, dtype_str_uninit) { EXPECT_ANY_THROW(ut_uninit.dtype_str()); }
 
 /*=====test info=====
-describe:test uten_type_str for dense tesnor.
+describe:test uten_type_str for dense tensor.
 ====================*/
 TEST_F(DenseUniTensorTest, uten_type_str) { EXPECT_EQ(utzero345.uten_type_str(), "Dense"); }
 
 /*=====test info=====
-describe:test uten_type for uninitialized tesnor.
+describe:test uten_type for uninitialized tensor.
 ====================*/
 TEST_F(DenseUniTensorTest, uten_type_str_uninit) {
   EXPECT_EQ(ut_uninit.uten_type_str(), "Void (un-initialize UniTensor)");
@@ -453,7 +462,7 @@ TEST_F(DenseUniTensorTest, get_index_not_exist) {
 }
 
 /*=====test info=====
-describe:test get_index, but input is uninitialized UniTesnor
+describe:test get_index, but input is uninitialized Unitensor
 ====================*/
 TEST_F(DenseUniTensorTest, get_index_uninit) { EXPECT_EQ(ut_uninit.get_index(""), -1); }
 
@@ -466,7 +475,7 @@ TEST_F(DenseUniTensorTest, bonds) {
 }
 
 /*=====test info=====
-describe:test bonds with empty bonds an uninitialzed UniTensor
+describe:test bonds with empty bonds an uninitialized UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, bonds_empty) {
   std::vector<Bond> bonds = {};
@@ -493,7 +502,7 @@ TEST_F(DenseUniTensorTest, shape_empty_bonds) {
 }
 
 /*=====test info=====
-describe:test shape with uninitialzed UniTensor
+describe:test shape with uninitialized UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, shape_uninit) { EXPECT_ANY_THROW(ut_uninit.shape()); }
 
@@ -536,44 +545,6 @@ TEST_F(DenseUniTensorTest, to_) {
 
   // uninitialized
   EXPECT_ANY_THROW(ut_uninit.to_(Device.cpu));
-}
-
-TEST_F(DenseUniTensorTest, relabels) {
-  auto ut = utzero3456.relabels({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "0");
-  EXPECT_EQ(utzero3456.labels()[1], "1");
-  EXPECT_EQ(utzero3456.labels()[2], "2");
-  EXPECT_EQ(utzero3456.labels()[3], "3");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabels({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabels({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
-}
-
-TEST_F(DenseUniTensorTest, relabels_) {
-  auto ut = utzero3456.relabels_({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "a");
-  EXPECT_EQ(utzero3456.labels()[1], "b");
-  EXPECT_EQ(utzero3456.labels()[2], "cd");
-  EXPECT_EQ(utzero3456.labels()[3], "d");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabels_({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabels_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
 }
 
 TEST_F(DenseUniTensorTest, relabel) {
@@ -637,6 +608,7 @@ TEST_F(DenseUniTensorTest, relabel) {
   // EXPECT_THROW(utzero3456.relabel(5,'a'),std::logic_error);
   EXPECT_THROW(ut_uninit.relabel(0, ""), std::logic_error);
 }
+
 TEST_F(DenseUniTensorTest, relabel_) {
   auto tmp = utzero3456.clone();
   auto ut = utzero3456.relabel_({"a", "b", "cd", "d"});
@@ -685,6 +657,96 @@ TEST_F(DenseUniTensorTest, relabel_) {
   EXPECT_THROW(utzero3456.relabel_(-1, "a"), std::logic_error);
   EXPECT_THROW(utzero3456.relabel_(0, "a").relabel_(1, "a"), std::logic_error);
   EXPECT_THROW(ut_uninit.relabel_(0, ""), std::logic_error);
+}
+
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+TEST_F(DenseUniTensorTest, relabels) {
+  auto ut = utzero3456.relabels({"a", "b", "cd", "d"});
+  EXPECT_EQ(utzero3456.labels()[0], "0");
+  EXPECT_EQ(utzero3456.labels()[1], "1");
+  EXPECT_EQ(utzero3456.labels()[2], "2");
+  EXPECT_EQ(utzero3456.labels()[3], "3");
+  EXPECT_EQ(ut.labels()[0], "a");
+  EXPECT_EQ(ut.labels()[1], "b");
+  EXPECT_EQ(ut.labels()[2], "cd");
+  EXPECT_EQ(ut.labels()[3], "d");
+  ut = utzero3456.relabels({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabels({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+TEST_F(DenseUniTensorTest, relabels_) {
+  auto ut = utzero3456.relabels_({"a", "b", "cd", "d"});
+  EXPECT_EQ(utzero3456.labels()[0], "a");
+  EXPECT_EQ(utzero3456.labels()[1], "b");
+  EXPECT_EQ(utzero3456.labels()[2], "cd");
+  EXPECT_EQ(utzero3456.labels()[3], "d");
+  EXPECT_EQ(ut.labels()[0], "a");
+  EXPECT_EQ(ut.labels()[1], "b");
+  EXPECT_EQ(ut.labels()[2], "cd");
+  EXPECT_EQ(ut.labels()[3], "d");
+  ut = utzero3456.relabels_({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabels_({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+#pragma GCC diagnostic pop
+
+/*=====test info=====
+describe:test relabel_.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_normal) {
+  // vector
+  std::vector<std::string> org_labels = {"org 1", "org 2", "org 3"};
+  std::vector<std::string> new_labels = {"testing 1", "testing 2", "testing 3"};
+  utzero345.relabel_(org_labels);
+  utzero345.relabel_(new_labels);
+  EXPECT_EQ(utzero345.labels(), new_labels);
+
+  // initializer list
+  utzero345.relabel_({"org 1", "org 2", "org 3"});
+  utzero345.relabel_({"testing 1", "testing 2", "testing 3"});
+  EXPECT_EQ(utzero345.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:relabel_ to uninitialized unitensor
+====================*/
+TEST_F(DenseUniTensorTest, relabel_un_init) {
+  std::vector<std::string> new_labels = {};
+  ut_uninit.relabel_(new_labels);
+  EXPECT_EQ(ut_uninit.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:test relabel_ length not match.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_len_not_match) {
+  // too long
+  std::vector<std::string> new_labels_long = {"test1", "test2", "test3", "test4"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels_long));
+  std::vector<std::string> new_labels_short = {"test1", "test2"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels_short));
+}
+
+/*=====test info=====
+describe:test relabel_ duplicated.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_duplicated) {
+  std::vector<std::string> new_labels = {"test1", "test2", "test2", "test3"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels));
 }
 
 /*=====test info=====
@@ -867,7 +929,7 @@ TEST_F(DenseUniTensorTest, permute_rowrank) {
 }
 
 /*=====test info=====
-describe:test permute, input diagnol UniTensor
+describe:test permute, input diagonal UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, permute_diag) {
   std::vector<cytnx_int64> map = {1, 0};
@@ -997,7 +1059,7 @@ TEST_F(DenseUniTensorTest, permute__rowrank) {
 }
 
 /*=====test info=====
-describe:test permute, input diagnol UniTensor
+describe:test permute, input diagonal UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, permute__diag) {
   std::vector<cytnx_int64> map = {1, 0};
@@ -1266,11 +1328,9 @@ TEST_F(DenseUniTensorTest, get_block) {
 /*=====test info=====
 describe:test get_block out of range
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, get_block_out_of_range) {
   EXPECT_THROW(utzero345.get_block(3), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test get_block, diagonal
@@ -1386,11 +1446,9 @@ TEST_F(DenseUniTensorTest, get_block__uninit) {
 /*=====test info=====
 describe:test get_block out of range
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, get_block__out_of_range) {
   EXPECT_THROW(utzero345.get_block_(3), std::logic_error);
 }
-#endif
 
 TEST_F(DenseUniTensorTest, get_blocks) { EXPECT_THROW(utzero345.get_blocks(), std::logic_error); }
 
@@ -1496,7 +1554,6 @@ TEST_F(DenseUniTensorTest, put_block_rank_mismatch) {
 /*=====test info=====
 describe:test put_block_, out of index
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, put_block_out_of_idx) {
   constexpr cytnx_uint64 dim1 = 2, dim2 = 3;
   auto tens = zeros({dim1, dim2});
@@ -1507,7 +1564,6 @@ TEST_F(DenseUniTensorTest, put_block_out_of_idx) {
   auto ut = UniTensor({Bond(dim1), Bond(dim2)});
   EXPECT_THROW(ut.put_block(tens, 1), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test put_block_
@@ -1592,7 +1648,6 @@ TEST_F(DenseUniTensorTest, put_block__rank_mismatch) {
 /*=====test info=====
 describe:test put_block_, out of index
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, put_block__out_of_idx) {
   constexpr cytnx_uint64 dim1 = 2, dim2 = 3;
   auto tens = zeros({dim1, dim2});
@@ -1603,7 +1658,6 @@ TEST_F(DenseUniTensorTest, put_block__out_of_idx) {
   auto ut = UniTensor({Bond(dim1), Bond(dim2)});
   EXPECT_THROW(ut.put_block_(tens, 1), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test put_blocks, input uninitialized UniTensor
@@ -1960,8 +2014,8 @@ TEST_F(DenseUniTensorTest, combineBond_ut_uninit) {
 }
 
 TEST_F(DenseUniTensorTest, contract1) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "aa", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "aa", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres1.get_block_();
@@ -1969,8 +2023,8 @@ TEST_F(DenseUniTensorTest, contract1) {
 }
 
 TEST_F(DenseUniTensorTest, contract2) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres2.get_block_();
@@ -1978,8 +2032,8 @@ TEST_F(DenseUniTensorTest, contract2) {
 }
 
 TEST_F(DenseUniTensorTest, contract3) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "c", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "c", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres3.get_block_();
@@ -2087,26 +2141,30 @@ TEST_F(DenseUniTensorTest, Add_UT1_UT1) {
 /*=====test info=====
 describe:test add two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Add_diag_ndiag) {
+  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 0, 5.0, seed);
-  random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto clone = ut1.clone();
-  auto shape = ut1.shape();
-  auto out = ut1.Add(ut2);
-  auto ut1_nondiag = ut1.to_dense();
-  auto ans = ut1_nondiag.Add(ut2);
-  EXPECT_TRUE(AreEqUniTensor(out, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 0, 5.0, seed);
+    random::uniform_(ut2, 0, 5.0, seed = 1);
+    auto clone = ut1.clone();
+    auto out = ut1.Add(ut2);
+    EXPECT_FALSE(out.is_diag());
+    EXPECT_TRUE(AreEqUniTensor(ut1, clone));  // ut1 must not be mutated by Add
+    auto outinv = ut2.Add(ut1);
+    auto ut1_nondiag = ut1.to_dense();
+    auto ans = ut1_nondiag.Add(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    EXPECT_TRUE(AreEqUniTensor(ut1 + ut1_nondiag, ut1_nondiag + ut1_nondiag));
+    EXPECT_TRUE(AreNearlyEqUniTensor(outinv, ans, tol));  // we dont assume exact cummutivity here
+    EXPECT_TRUE(AreNearlyEqUniTensor(ut1 + ut1_nondiag, 2 * ut1_nondiag, tol));
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test add two diagonal UniTensor
@@ -2131,7 +2189,7 @@ TEST_F(DenseUniTensorTest, Add_diag_diag) {
 }
 
 /*=====test info=====
-describe:test adding two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test adding two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Add_UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -2283,24 +2341,31 @@ TEST_F(DenseUniTensorTest, Add__UT1_UT1) {
 /*=====test info=====
 describe:test Add_ two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Add__diag_ndiag) {
+  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 0, 5.0, seed);
-  random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto ut1_nondiag = ut1.to_dense();
-  ut1.Add_(ut2);
-  auto ans = ut1_nondiag.Add(ut2);
-  EXPECT_TRUE(AreEqUniTensor(ut1, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 0, 5.0, seed);
+    random::uniform_(ut2, 0, 5.0, seed = 1);
+    auto ut1_clone = ut1.clone();
+    auto ut1_nondiag = ut1.to_dense();
+    auto out = ut1.clone();
+    out.Add_(ut2);
+    EXPECT_FALSE(out.is_diag());
+    auto ans = ut1_nondiag.Add(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    ut2.Add_(ut1);
+    EXPECT_TRUE(AreNearlyEqUniTensor(ut2, ans, tol));
+    ut1_clone.Add_(ut1_nondiag);
+    ut1_nondiag.Add_(ut1_nondiag);
+    EXPECT_TRUE(AreEqUniTensor(ut1_clone, ut1_nondiag));
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test Add_ two diagonal UniTensor
@@ -2342,7 +2407,7 @@ TEST_F(DenseUniTensorTest, Add__self) {
 }
 
 /*=====test info=====
-describe:test adding two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test adding two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Add__UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -2545,26 +2610,31 @@ TEST_F(DenseUniTensorTest, Sub_UT1_UT1) {
 /*=====test info=====
 describe:test sub two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Sub_diag_ndiag) {
+  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 0, 5.0, seed);
-  random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto clone = ut1.clone();
-  auto shape = ut1.shape();
-  auto out = ut1.Sub(ut2);
-  auto ut1_nondiag = ut1.to_dense();
-  auto ans = ut1_nondiag.Sub(ut2);
-  EXPECT_TRUE(AreEqUniTensor(out, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 0, 5.0, seed);
+    random::uniform_(ut2, 0, 5.0, seed = 1);
+    auto clone = ut1.clone();
+    auto out = ut1.Sub(ut2);
+    EXPECT_FALSE(out.is_diag());
+    EXPECT_TRUE(AreEqUniTensor(ut1, clone));  // ut1 must not be mutated by Sub
+    auto outinv = ut2.Sub(ut1);
+    auto ut1_nondiag = ut1.to_dense();
+    auto ans = ut1_nondiag.Sub(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    EXPECT_TRUE(
+      AreNearlyEqUniTensor((2 * ut1) - ut1_nondiag, (2 * ut1_nondiag) - ut1_nondiag, tol));
+    EXPECT_TRUE(
+      AreNearlyEqUniTensor(-1 * outinv, ans, tol));  // we dont assume exact cummutivity here
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test sub two diagonal UniTensor
@@ -2589,7 +2659,7 @@ TEST_F(DenseUniTensorTest, Sub_diag_diag) {
 }
 
 /*=====test info=====
-describe:test subing two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test subing two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Sub_UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -2741,24 +2811,30 @@ TEST_F(DenseUniTensorTest, Sub__UT1_UT1) {
 /*=====test info=====
 describe:test Sub_ two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Sub__diag_ndiag) {
+  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 0, 5.0, seed);
-  random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto ut1_nondiag = ut1.to_dense();
-  ut1.Sub_(ut2);
-  auto ans = ut1_nondiag.Sub(ut2);
-  EXPECT_TRUE(AreEqUniTensor(ut1, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 0, 5.0, seed);
+    random::uniform_(ut2, 0, 5.0, seed = 1);
+    auto ut1_clone = 2 * ut1;
+    auto ut1_nondiag = ut1.to_dense();
+    auto out = ut1.clone();
+    out.Sub_(ut2);
+    EXPECT_FALSE(out.is_diag());
+    auto ans = ut1_nondiag.Sub(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    ut2.Sub_(ut1);
+    EXPECT_TRUE(AreNearlyEqUniTensor(-1 * ut2, ans, tol));
+    ut1_clone.Sub_(ut1_nondiag);
+    EXPECT_TRUE(AreNearlyEqUniTensor(ut1_clone, ut1_nondiag, tol));
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test Sub_ two diagonal UniTensor
@@ -2773,11 +2849,11 @@ TEST_F(DenseUniTensorTest, Sub__diag_diag) {
   int seed = 0;
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto clone = ut1.clone();
+  auto ut1_clone = ut1.clone();
   auto shape = ut1.shape();
   ut1.Sub_(ut2);
   for (cytnx_uint64 i = 0; i < shape[0]; i++) {
-    EXPECT_EQ(clone.at({i}) - ut2.at({i}), ut1.at({i}));
+    EXPECT_EQ(ut1_clone.at({i}) - ut2.at({i}), ut1.at({i}));
   }
 }
 
@@ -2800,7 +2876,7 @@ TEST_F(DenseUniTensorTest, Sub__self) {
 }
 
 /*=====test info=====
-describe:test subing two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test subing two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Sub__UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -3002,26 +3078,30 @@ TEST_F(DenseUniTensorTest, Mul_UT1_UT1) {
 /*=====test info=====
 describe:test mul two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Mul_diag_ndiag) {
+  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 0, 5.0, seed);
-  random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto clone = ut1.clone();
-  auto shape = ut1.shape();
-  auto out = ut1.Mul(ut2);
-  auto ut1_nondiag = ut1.to_dense();
-  auto ans = ut1_nondiag.Mul(ut2);
-  EXPECT_TRUE(AreEqUniTensor(out, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 0, 5.0, seed);
+    random::uniform_(ut2, 0, 5.0, seed = 1);
+    auto clone = ut1.clone();
+    auto out = ut1.Mul(ut2);
+    EXPECT_FALSE(out.is_diag());
+    EXPECT_TRUE(AreEqUniTensor(ut1, clone));  // ut1 must not be mutated by Mul
+    auto outinv = ut2.Mul(ut1);
+    auto ut1_nondiag = ut1.to_dense();
+    auto ans = ut1_nondiag.Mul(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    EXPECT_TRUE(AreEqUniTensor(ut1 * ut1_nondiag, ut1_nondiag * ut1_nondiag));
+    EXPECT_TRUE(AreNearlyEqUniTensor(outinv, ans, tol));  // we dont assume exact cummutivity here
+    EXPECT_TRUE(AreNearlyEqUniTensor(ut1 * ut1_nondiag, ut1_nondiag.Pow(2), tol));
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test mul two diagonal UniTensor
@@ -3046,7 +3126,7 @@ TEST_F(DenseUniTensorTest, Mul_diag_diag) {
 }
 
 /*=====test info=====
-describe:test muling two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test muling two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Mul_UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -3199,24 +3279,31 @@ TEST_F(DenseUniTensorTest, Mul__UT1_UT1) {
 /*=====test info=====
 describe:test Mul_ two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Mul__diag_ndiag) {
+  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 0, 5.0, seed);
-  random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto ut1_nondiag = ut1.to_dense();
-  ut1.Mul_(ut2);
-  auto ans = ut1_nondiag.Mul(ut2);
-  EXPECT_TRUE(AreEqUniTensor(ut1, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 0, 5.0, seed);
+    random::uniform_(ut2, 0, 5.0, seed = 1);
+    auto ut1_clone = ut1.clone();
+    auto ut1_nondiag = ut1.to_dense();
+    auto out = ut1.clone();
+    out.Mul_(ut2);
+    EXPECT_FALSE(out.is_diag());
+    auto ans = ut1_nondiag.Mul(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    ut2.Mul_(ut1);
+    EXPECT_TRUE(AreNearlyEqUniTensor(ut2, ans, tol));
+    ut1_clone.Mul_(ut1_nondiag);
+    ut1_nondiag.Mul_(ut1_nondiag);
+    EXPECT_TRUE(AreEqUniTensor(ut1_clone, ut1_nondiag));
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test Mul_ two diagonal UniTensor
@@ -3231,11 +3318,11 @@ TEST_F(DenseUniTensorTest, Mul__diag_diag) {
   int seed = 0;
   random::uniform_(ut1, 0, 5.0, seed);
   random::uniform_(ut2, 0, 5.0, seed = 1);
-  auto clone = ut1.clone();
+  auto ut1_clone = ut1.clone();
   auto shape = ut1.shape();
   ut1.Mul_(ut2);
   for (cytnx_uint64 i = 0; i < shape[0]; i++) {
-    EXPECT_EQ(clone.at({i}) * ut2.at({i}), ut1.at({i}));
+    EXPECT_EQ(ut1_clone.at({i}) * ut2.at({i}), ut1.at({i}));
   }
 }
 
@@ -3258,7 +3345,7 @@ TEST_F(DenseUniTensorTest, Mul__self) {
 }
 
 /*=====test info=====
-describe:test muling two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test muling two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Mul__UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -3462,26 +3549,30 @@ TEST_F(DenseUniTensorTest, Div_UT1_UT1) {
 /*=====test info=====
 describe:test div two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Div_diag_ndiag) {
+  constexpr double tol = 1.0e-12;
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 1, 5.0, seed);
-  random::uniform_(ut2, 1, 5.0, seed = 1);
-  auto clone = ut1.clone();
-  auto shape = ut1.shape();
-  auto out = ut1.Div(ut2);
-  auto ut1_nondiag = ut1.to_dense();
-  auto ans = ut1_nondiag.Div(ut2);
-  EXPECT_TRUE(AreEqUniTensor(out, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 1., 5.0, seed);
+    random::uniform_(ut2, 1., 5.0, seed = 1);
+    auto clone = ut1.clone();
+    auto out = ut1.Div(ut2);
+    EXPECT_FALSE(out.is_diag());
+    auto ut1_nondiag = ut1.to_dense();
+    auto ans = ut1_nondiag.Div(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    // Use ut2 (fully non-zero off-diagonal) as denominator so off-diagonal entries
+    // are 0/nonzero = 0 on both sides rather than 0/0 = NaN, which would pass
+    // AreNearlyEqUniTensor trivially regardless of correctness.
+    EXPECT_TRUE(AreNearlyEqUniTensor((2 * ut1) / ut2, (2 * ut1_nondiag) / ut2, tol));
+    EXPECT_ANY_THROW(ut2.Div(ut1));
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test div two diagonal UniTensor
@@ -3506,7 +3597,7 @@ TEST_F(DenseUniTensorTest, Div_diag_diag) {
 }
 
 /*=====test info=====
-describe:test diving two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test diving two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Div_UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -3659,24 +3750,25 @@ TEST_F(DenseUniTensorTest, Div__UT1_UT1) {
 /*=====test info=====
 describe:test Div_ two UniTensor, one is digonal and the onther is not
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, Div__diag_ndiag) {
   auto row_rank = 1u;
   std::vector<std::string> labels = {"1", "2"};
   std::vector<Bond> bonds = {Bond(3), Bond(3)};
-  bool is_diag = true;
-  auto ut1 = UniTensor(bonds, labels, row_rank, Type.Double, Device.cpu, is_diag);
-  is_diag = false;
-  auto ut2 = UniTensor(bonds, {"1"}, row_rank, Type.Double, Device.cpu, is_diag);
-  int seed = 0;
-  random::uniform_(ut1, 1, 5.0, seed);
-  random::uniform_(ut2, 1, 5.0, seed = 1);
-  auto ut1_nondiag = ut1.to_dense();
-  ut1.Div_(ut2);
-  auto ans = ut1_nondiag.Div(ut2);
-  EXPECT_TRUE(AreEqUniTensor(ut1, ans));
+  for (auto dtype : std::vector<unsigned int>{Type.Double, Type.ComplexDouble}) {
+    int seed = 0;
+    auto ut1 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, true);
+    auto ut2 = UniTensor(bonds, labels, row_rank, dtype, Device.cpu, false);
+    random::uniform_(ut1, 0, 5.0, seed);
+    random::uniform_(ut2, 1., 5.0, seed = 1);
+    auto ut1_nondiag = ut1.to_dense();
+    auto out = ut1.clone();
+    out.Div_(ut2);
+    EXPECT_FALSE(out.is_diag());
+    auto ans = ut1_nondiag.Div(ut2);
+    EXPECT_TRUE(AreEqUniTensor(out, ans));
+    EXPECT_ANY_THROW(ut2.Div_(ut1));
+  }
 }
-#endif
 
 /*=====test info=====
 describe:test Div_ two diagonal UniTensor
@@ -3718,7 +3810,7 @@ TEST_F(DenseUniTensorTest, Div__self) {
 }
 
 /*=====test info=====
-describe:test diving two UniTensor with different shape but not contain 1-element UniTesnor.
+describe:test diving two UniTensor with different shape but not contain 1-element Unitensor.
 ====================*/
 TEST_F(DenseUniTensorTest, Div__UT_UT_rank_error) {
   auto ut1 = UniTensor({Bond(1), Bond(2)});
@@ -4601,23 +4693,15 @@ TEST_F(DenseUniTensorTest, Save) {
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
   ut.Save(temp_file_path);
-  UniTensor ut_load = UniTensor::Load(temp_file_path + ".cytnx");
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
-}
-
-/*=====test info=====
-describe:test Save and Load by charPtr
-====================*/
-TEST_F(DenseUniTensorTest, Save_chr) {
-  auto row_rank = 1u;
-  std::vector<Bond> bonds = {Bond(3), Bond(2)};
-  std::vector<std::string> labels = {"a", "b"};
-  auto seed = 0;
-  auto ut = UniTensor(bonds, labels, row_rank);
-  random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(temp_file_path.c_str());
-  UniTensor ut_load = UniTensor::Load((temp_file_path + ".cytnx").c_str());
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
+  UniTensor ut_loaded = UniTensor::Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(ut_loaded, ut));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  ut.Save(fname);
+  UniTensor ut_loaded_char_save = ut_loaded_char_save.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_save));
+  UniTensor ut_loaded_char_load = ut_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_load));
 }
 
 /*=====test info=====
@@ -4628,15 +4712,15 @@ TEST_F(DenseUniTensorTest, Save_path_incorrect) {
   std::filesystem::path temp_filename = std::tmpnam(nullptr);
   // std::tmpnam(nullptr) returns full temp file path, like /tmp/fileRandSuffix
   file_path_under_non_existent_folder /= temp_filename.filename();
+  file_path_under_non_existent_folder += ".cytnx";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder), std::logic_error);
-  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string() + ".cytnx"),
-               std::logic_error);
+  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder.string()), std::logic_error);
+  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string()), std::logic_error);
 }
 
 /*=====test info=====

@@ -35,7 +35,7 @@ namespace RsvdTest {
     bool is_diag = false;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, -10, 0, 0);
+    random::uniform_(T, -10, 0, 0);
     std::vector<UniTensor> Rsvds = linalg::Rsvd(T, 1);
     EXPECT_TRUE(CheckLabels(T, Rsvds)) << fail_msg.TraceFailMsgs();
     EXPECT_TRUE(ReComposeCheck(T, Rsvds)) << fail_msg.TraceFailMsgs();
@@ -76,7 +76,7 @@ namespace RsvdTest {
     bool is_diag = true;
     auto labels = std::vector<std::string>();
     auto T = UniTensor(bonds, labels, rowrank, cytnx::Type.Double, cytnx::Device.cpu, is_diag);
-    random::Make_uniform(T, 0, 10, 0);
+    random::uniform_(T, 0, 10, 0);
     EXPECT_THROW({ std::vector<UniTensor> Rsvds = linalg::Rsvd(T, 2); }, std::logic_error);
   }
 
@@ -179,6 +179,16 @@ namespace RsvdTest {
 
     const double tol = is_double_float_acc ? 1.0e-10 : 1.0e-5;
     return (relative_err < tol);
+  }
+
+  // no use
+  void Check_UU_VV_Identity(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
+    const UniTensor& U = Tout[1];
+    const UniTensor& V = Tout[2];
+    auto UD = U.Dagger();
+    UD.relabel_({"0", "1", "9"});
+    UD.permute_({2, 0, 1}, 1);
+    auto UUD = Contract(U, UD);
   }
 
   bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,

@@ -38,6 +38,11 @@ TEST_F(BlockUniTensorTest, gpu_Trace) {
   EXPECT_THROW(BUT1.Trace("-1", "5"), std::logic_error);
 }
 
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 TEST_F(BlockUniTensorTest, gpu_relabels) {
   BUT1 = BUT1.relabels({"a", "b", "cd", "d"});
   EXPECT_EQ(BUT1.labels()[0], "a");
@@ -73,6 +78,8 @@ TEST_F(BlockUniTensorTest, gpu_relabels_) {
   EXPECT_THROW(BUT1.relabels_({"1", "2"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
 }
+
+#pragma GCC diagnostic pop
 
 TEST_F(BlockUniTensorTest, gpu_relabel) {
   auto tmp = BUT1.clone();
@@ -782,8 +789,8 @@ TEST_F(BlockUniTensorTest, gpu_permute_2) {
 TEST_F(BlockUniTensorTest, gpu_contract1) {
   // two sparse matrix
 
-  UT_contract_L1.set_labels({"a", "b"});
-  UT_contract_R1.set_labels({"b", "c"});
+  UT_contract_L1.relabel_({"a", "b"});
+  UT_contract_R1.relabel_({"b", "c"});
   UniTensor out = UT_contract_L1.contract(UT_contract_R1);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans1.get_blocks();
@@ -794,8 +801,8 @@ TEST_F(BlockUniTensorTest, gpu_contract1) {
 TEST_F(BlockUniTensorTest, gpu_contract2) {
   // two sparse matrix with degeneracy
 
-  UT_contract_L2.set_labels({"a", "b"});
-  UT_contract_R2.set_labels({"b", "c"});
+  UT_contract_L2.relabel_({"a", "b"});
+  UT_contract_R2.relabel_({"b", "c"});
   UniTensor out = UT_contract_L2.contract(UT_contract_R2);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans2.get_blocks();
@@ -806,8 +813,8 @@ TEST_F(BlockUniTensorTest, gpu_contract2) {
 TEST_F(BlockUniTensorTest, gpu_contract3) {
   //// two 3 legs tensor
 
-  UT_contract_L3.set_labels({"a", "b", "c"});
-  UT_contract_R3.set_labels({"c", "d", "e"});
+  UT_contract_L3.relabel_({"a", "b", "c"});
+  UT_contract_R3.relabel_({"c", "d", "e"});
   UniTensor out = UT_contract_L3.contract(UT_contract_R3);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans3.get_blocks();

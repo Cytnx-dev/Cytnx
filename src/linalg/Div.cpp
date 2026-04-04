@@ -893,7 +893,7 @@ namespace cytnx {
       if (Lt.dtype() > Rt.dtype()) {
         out = out.astype(Rt.dtype());
       }
-      out.set_labels(vec_range<std::string>(Lt.rank()));
+      out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       out.Div_(Rt);
@@ -947,7 +947,7 @@ namespace cytnx {
         out = Lt.clone();
         out.Div_(rc);
       }
-      // out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+      // out.relabel_(vec_range<cytnx_int64>(Lt.rank()));
       out.set_name("");
 
       return out;
