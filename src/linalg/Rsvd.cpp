@@ -39,10 +39,21 @@ namespace cytnx {
       Tensor Q;
       if (Tin.device() == Device.cpu) {
         std::vector<Tensor> tmps;
+        // when Tin is (m, n), then Q^\dagger is multiplied from right (m>n) or left (m<=n) to
+        // reduce the numerical costs in the SVD
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
         if (samplenum < n_singlu) {
           Tensor in = Tin.contiguous();
-          Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-          tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // multiply Q from left
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
+            apply_Q_to_U = true;
+          } else {  // multiply Q from right
+            Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
+            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run full SVD
+            apply_Q_to_V = true;
+          }
         } else {
           tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
@@ -54,12 +65,17 @@ namespace cytnx {
         std::vector<Tensor> outT;
         outT.push_back(tmps[0]);
         if (is_U) {
-          if (samplenum < n_singlu)
+          if (apply_Q_to_U)
             outT.push_back(Matmul(Q, tmps[1]));
           else
             outT.push_back(tmps[1]);
         }
-        if (is_vT) outT.push_back(tmps[2]);
+        if (is_vT) {
+          if (apply_Q_to_V)
+            outT.push_back(Matmul(tmps[2], Q.permute_({1, 0})));
+          else
+            outT.push_back(tmps[2]);
+        }
         if (return_err) outT.push_back(terr);
 
         return outT;
@@ -69,12 +85,21 @@ namespace cytnx {
     #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
-        bool q_applied = false;
+        // when Tin is (m, n), then Q^\dagger is multiplied from right (m>n) or left (m<=n) to
+        // reduce the numerical costs in the SVD
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
         if (samplenum < n_singlu) {
-          Q = linalg::Rand_isometry(Tin, samplenum, power_iteration, seed);
-          in = Matmul(Q.Conj().permute_({1, 0}), in);
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // multiply Q from left
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            in = Matmul(Q.Conj().permute_({1, 0}), in);
+            apply_Q_to_U = true;
+          } else {  // multiply Q from right
+            Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
+            in = Matmul(in, Q.Conj());
+            apply_Q_to_V = true;
+          }
           n_singlu = samplenum;
-          q_applied = true;
         }
         // prepare U, S, vT
         Tensor U, S, vT, terr;
@@ -92,22 +117,36 @@ namespace cytnx {
         std::vector<Tensor> outT;
         outT.push_back(S);
         if (is_U) {
-          if (q_applied)
+          if (apply_Q_to_U)
             outT.push_back(Matmul(Q, U));
           else
             outT.push_back(U);
         }
-        if (is_vT) outT.push_back(vT);
+        if (is_vT) {
+          if (apply_Q_to_V)
+            outT.push_back(Matmul(vT, Q.permute_({1, 0})));
+          else
+            outT.push_back(vT);
+        }
         if (return_err) outT.push_back(terr);
 
         return outT;
 
     #else
         std::vector<Tensor> tmps;
+        bool apply_Q_to_U = false;
+        bool apply_Q_to_V = false;
         if (samplenum < n_singlu) {
           Tensor in = Tin.contiguous();
-          Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-          tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);
+          if (Tin.shape()[0] <= Tin.shape()[1]) {  // multiply Q from left
+            Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
+            tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
+            apply_Q_to_U = true;
+          } else {  // multiply Q from right
+            Q = linalg::Rand_isometry(in.permute({1, 0}), samplenum, power_iteration, seed);
+            tmps = Gesvd(Matmul(in, Q.Conj()), is_U, is_vT);  // run full SVD
+            apply_Q_to_V = true;
+          }
         } else {
           tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
@@ -119,12 +158,17 @@ namespace cytnx {
         std::vector<Tensor> outT;
         outT.push_back(tmps[0]);
         if (is_U) {
-          if (samplenum < n_singlu)
+          if (apply_Q_to_U)
             outT.push_back(Matmul(Q, tmps[1]));
           else
             outT.push_back(tmps[1]);
         }
-        if (is_vT) outT.push_back(tmps[2]);
+        if (is_vT) {
+          if (apply_Q_to_V)
+            outT.push_back(Matmul(tmps[2], Q.permute_({1, 0})));
+          else
+            outT.push_back(tmps[2]);
+        }
         if (return_err) outT.push_back(terr);
 
         return outT;

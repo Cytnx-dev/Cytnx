@@ -20,6 +20,8 @@ namespace RsvdTest {
   bool CheckLabels(const UniTensor& Tin, const std::vector<UniTensor>& Tout);
   bool SingularValsCorrect(const UniTensor& res, const UniTensor& ans);
   UniTensor BuildCombinedBlockFermionicTensorWithSignflip();
+  UniTensor BuildLowRankRectangularDenseUniTensor(const int device);
+  void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T, const UniTensor& src_Tt);
   std::string src_data_root = CYTNX_TEST_DATA_DIR "/common/";
   std::string ans_data_root = CYTNX_TEST_DATA_DIR "/linalg/Svd_truncate/";
 
@@ -46,6 +48,19 @@ namespace RsvdTest {
     EXPECT_DOUBLE_EQ(rsvds[0].at<double>({0}), std::abs(T.at<double>({0, 0, 0})))
       << "Singular value is wrong."
       << " line:" << __LINE__ << std::endl;
+  }
+
+  TEST(Rsvd, gpu_dense_low_rank_rectangular_and_transposed_exact_reconstruction) {
+#ifndef UNI_CUQUANTUM
+    GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
+#endif
+    std::string test_case_name = UnitTest::GetInstance()->current_test_info()->name();
+    fail_msg.Init(test_case_name);
+
+    UniTensor src_T = BuildLowRankRectangularDenseUniTensor(Device.cuda);
+    UniTensor src_Tt = src_T.permute({2, 0, 1}, 1).contiguous_();
+
+    CheckLowRankRectangularDenseUniTensorCase(src_T, src_Tt);
   }
 
   /*=====test info=====
@@ -77,9 +92,6 @@ namespace RsvdTest {
 #ifndef UNI_CUQUANTUM
     GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
 #endif
-    GTEST_SKIP() << "GPU backend issue: randomized dense Rsvd currently triggers "
-                    "CUTENSORNET_STATUS_INVALID_VALUE in cuQuantum QR "
-                    "(cuQuantumQr_internal / cutensornetTensorQR).";
     std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                           "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
@@ -97,9 +109,6 @@ namespace RsvdTest {
 #ifndef UNI_CUQUANTUM
     GTEST_SKIP() << "GPU randomized SVD dense tests require cuQuantum-enabled GPU QR support.";
 #endif
-    GTEST_SKIP() << "GPU backend issue: randomized dense Rsvd currently triggers "
-                    "CUTENSORNET_STATUS_INVALID_VALUE in cuQuantum QR "
-                    "(cuQuantumQr_internal / cutensornetTensorQR).";
     std::vector<std::string> case_list = {"dense_nondiag_exp_Svals_C128",
                                           "dense_nondiag_exp_Svals_F64"};
     for (const auto& case_name : case_list) {
@@ -220,6 +229,46 @@ namespace RsvdTest {
     double relative_err = (diff_tens.storage()).at<double>(0) / ans_norm;
     const double tol = is_double_float_acc ? 1.0e-14 : 1.0e-6;
     return (relative_err < tol);
+  }
+
+  UniTensor BuildLowRankRectangularDenseUniTensor(const int device) {
+    Tensor left = arange(0, 18, 1, Type.Double, device).reshape({6, 3}) + 1.0;
+    Tensor right = arange(0, 15, 1, Type.Double, device).reshape({3, 5}) + 1.0;
+    Tensor src = linalg::Matmul(left, right).reshape({2, 3, 5});
+    return UniTensor(src, false, 2, {"a", "b", "c"});
+  }
+
+  void CheckLowRankRectangularDenseUniTensorCase(const UniTensor& src_T, const UniTensor& src_Tt) {
+    const cytnx_uint64 keepdim = 3;
+    std::vector<UniTensor> rsvd_src =
+      linalg::Rsvd(src_T, keepdim, 0., true, true, 0, 1, 0, 0., 0, 7);
+    std::vector<UniTensor> rsvd_src_t =
+      linalg::Rsvd(src_Tt, keepdim, 0., true, true, 0, 1, 0, 0., 0, 7);
+
+    ASSERT_EQ(rsvd_src.size(), 3UL);
+    ASSERT_EQ(rsvd_src_t.size(), 3UL);
+
+    EXPECT_TRUE(CheckLabels(src_T, rsvd_src)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(CheckLabels(src_Tt, rsvd_src_t)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(SingularValsCorrect(rsvd_src[0], rsvd_src_t[0])) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(ReComposeCheck(src_T, rsvd_src)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(ReComposeCheck(src_Tt, rsvd_src_t)) << fail_msg.TraceFailMsgs();
+
+    ASSERT_EQ(rsvd_src[1].shape().size(), 3UL);
+    EXPECT_EQ(rsvd_src[1].shape()[0], 2UL);
+    EXPECT_EQ(rsvd_src[1].shape()[1], 3UL);
+    EXPECT_EQ(rsvd_src[1].shape()[2], keepdim);
+    ASSERT_EQ(rsvd_src[2].shape().size(), 2UL);
+    EXPECT_EQ(rsvd_src[2].shape()[0], keepdim);
+    EXPECT_EQ(rsvd_src[2].shape()[1], 5UL);
+
+    ASSERT_EQ(rsvd_src_t[1].shape().size(), 2UL);
+    EXPECT_EQ(rsvd_src_t[1].shape()[0], 5UL);
+    EXPECT_EQ(rsvd_src_t[1].shape()[1], keepdim);
+    ASSERT_EQ(rsvd_src_t[2].shape().size(), 3UL);
+    EXPECT_EQ(rsvd_src_t[2].shape()[0], keepdim);
+    EXPECT_EQ(rsvd_src_t[2].shape()[1], 2UL);
+    EXPECT_EQ(rsvd_src_t[2].shape()[2], 3UL);
   }
 
   bool CheckResult(const std::string& case_name, const cytnx_uint64& keepdim,
