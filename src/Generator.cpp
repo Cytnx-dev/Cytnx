@@ -52,7 +52,7 @@ namespace cytnx {
                 const unsigned int &dtype, const int &device) {
     cytnx_error_msg((end - start) / step <= 0,
                     "[ERROR] arange(start=%f,end=%f,step=%f) "
-                    "No values in the sspecified range.\n",
+                    "No values in the specified range.\n",
                     start, end, step);
     cytnx_uint64 Nelem;
     Tensor out;
