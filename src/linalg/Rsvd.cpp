@@ -69,9 +69,12 @@ namespace cytnx {
     #ifdef UNI_CUQUANTUM
         Tensor in = Tin.contiguous();
         // if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
+        bool q_applied = false;
         if (samplenum < n_singlu) {
           Q = linalg::Rand_isometry(Tin, samplenum, power_iteration, seed);
           in = Matmul(Q.Conj().permute_({1, 0}), in);
+          n_singlu = samplenum;
+          q_applied = true;
         }
         // prepare U, S, vT
         Tensor U, S, vT, terr;
@@ -89,7 +92,7 @@ namespace cytnx {
         std::vector<Tensor> outT;
         outT.push_back(S);
         if (is_U) {
-          if (samplenum < n_singlu)
+          if (q_applied)
             outT.push_back(Matmul(Q, U));
           else
             outT.push_back(U);
