@@ -12,7 +12,7 @@ for k in range(0,singvals):
 Texp=cytnx.linalg.Matmul(Uex, Snew)
 Texp=cytnx.linalg.Matmul(Texp, vTex)
 uB = cytnx.UniTensor(Texp.reshape_(20, 4, 10), labels=["one", 'two', 'three']).set_name("Dense UniTensor with exponentially falling singular values in the range 1 to 10^-16")
-uB.Save(src_file_dir + "dense_nondiag_exp_Svals_F64")
+uB.Save(src_file_dir + "dense_nondiag_exp_Svals_F64.cytnx")
 
 #calculate truncated singular values and reconstructed matrix for Rsvd; F64 version
 src_file_name = "dense_nondiag_exp_Svals_F64"
@@ -23,8 +23,8 @@ keepdim = 5
 Mref = cytnx.Contract(Uref, Sref)
 Mref = cytnx.Contract(Mref, vTref)
 Mref.make_contiguous()
-Sref.Save(res_file_dir + src_file_name)
-Mref.Save(res_file_dir + src_file_name + "_reconstructed")
+Sref.Save(res_file_dir + src_file_name + ".cytnx")
+Mref.Save(res_file_dir + src_file_name + "_reconstructed.cytnx")
 
 #calculate truncated singular values for Rsvd; F64 version
 src_file_name = "dense_nondiag_exp_Svals_F64"
@@ -32,7 +32,7 @@ res_file_dir = "../test_data_base/linalg/Rsvd/"
 src_T = cytnx.UniTensor.Load(src_file_dir + src_file_name + ".cytnx");
 keepdim = 15
 [Sref, Uref, vTref] = cytnx.linalg.Gesvd_truncate(src_T,keepdim);
-Sref.Save(res_file_dir + src_file_name)
+Sref.Save(res_file_dir + src_file_name + ".cytnx")
 
 #create random matrix with exponential decaying singular values; C128 version
 singvals=20;
@@ -45,7 +45,7 @@ for k in range(0,singvals):
 Texp=cytnx.linalg.Matmul(Uex, Snew)
 Texp=cytnx.linalg.Matmul(Texp, vTex)
 uB = cytnx.UniTensor(Texp.reshape_(20, 4, 10), labels=["one", 'two', 'three']).set_name("Dense UniTensor with exponentially falling singular values in the range 1 to 10^-16")
-uB.Save(src_file_dir + "dense_nondiag_exp_Svals_C128")
+uB.Save(src_file_dir + "dense_nondiag_exp_Svals_C128.cytnx")
 
 #calculate truncated singular values and reconstructed matrix after truncated SVD; C128 version
 src_file_name = "dense_nondiag_exp_Svals_C128"
@@ -56,8 +56,8 @@ keepdim = 5
 Mref = cytnx.Contract(Uref, Sref)
 Mref = cytnx.Contract(Mref, vTref)
 Mref.make_contiguous()
-Sref.Save(res_file_dir + src_file_name)
-Mref.Save(res_file_dir + src_file_name + "_reconstructed")
+Sref.Save(res_file_dir + src_file_name + ".cytnx")
+Mref.Save(res_file_dir + src_file_name + "_reconstructed.cytnx")
 
 #calculate truncated singular values for Rsvd; C128 version
 src_file_name = "dense_nondiag_exp_Svals_C128"
@@ -65,4 +65,4 @@ res_file_dir = "../test_data_base/linalg/Rsvd/"
 src_T = cytnx.UniTensor.Load(src_file_dir + src_file_name + ".cytnx");
 keepdim = 15
 [Sref, Uref, vTref] = cytnx.linalg.Gesvd_truncate(src_T,keepdim);
-Sref.Save(res_file_dir + src_file_name)
+Sref.Save(res_file_dir + src_file_name + ".cytnx")

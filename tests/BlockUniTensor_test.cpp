@@ -52,6 +52,22 @@ TEST_F(BlockUniTensorTest, Init) {
   EXPECT_ANY_THROW(BkUt.Init({phy, phy}, {"a", "b"}, 1, Type.Float, Device.cpu, true, false));
 }
 
+/*=====test info=====
+describe:write to disc
+====================*/
+TEST_F(BlockUniTensorTest, SaveLoad) {
+  BUT1.Save(temp_file_path);
+  UniTensor BUT1_loaded = BUT1_loaded.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  BUT1.Save(fname);
+  UniTensor BUT1_loaded_char_save = BUT1_loaded_char_save.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded_char_save));
+  UniTensor BUT1_loaded_char_load = BUT1_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(BUT1, BUT1_loaded_char_load));
+}
+
 TEST_F(BlockUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
   EXPECT_ANY_THROW(Spf.set_rowrank(-2));  // set_rowrank cannot be negative!
@@ -112,6 +128,11 @@ TEST_F(BlockUniTensorTest, clone) {
       }
 }
 
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 TEST_F(BlockUniTensorTest, relabels) {
   BUT1 = BUT1.relabels({"a", "b", "cd", "d"});
   EXPECT_EQ(BUT1.labels()[0], "a");
@@ -130,6 +151,7 @@ TEST_F(BlockUniTensorTest, relabels) {
   EXPECT_THROW(BUT1.relabels({"1", "2"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
 }
+
 TEST_F(BlockUniTensorTest, relabels_) {
   BUT1.relabels_({"a", "b", "cd", "d"});
   EXPECT_EQ(BUT1.labels()[0], "a");
@@ -147,6 +169,8 @@ TEST_F(BlockUniTensorTest, relabels_) {
   EXPECT_THROW(BUT1.relabels_({"1", "2"}), std::logic_error);
   EXPECT_THROW(BUT1.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
 }
+
+#pragma GCC diagnostic pop
 
 TEST_F(BlockUniTensorTest, relabel) {
   auto tmp = BUT1.clone();
@@ -526,8 +550,8 @@ TEST_F(BlockUniTensorTest, reshape_) { EXPECT_ANY_THROW(Spf.reshape_({4, 1}, 1))
 TEST_F(BlockUniTensorTest, contract1) {
   // two sparse matrix
 
-  UT_contract_L1.set_labels({"a", "b"});
-  UT_contract_R1.set_labels({"b", "c"});
+  UT_contract_L1.relabel_({"a", "b"});
+  UT_contract_R1.relabel_({"b", "c"});
   UniTensor out = UT_contract_L1.contract(UT_contract_R1);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans1.get_blocks();
@@ -541,8 +565,8 @@ TEST_F(BlockUniTensorTest, contract1) {
 TEST_F(BlockUniTensorTest, contract2) {
   // two sparse matrix with degeneracy
 
-  UT_contract_L2.set_labels({"a", "b"});
-  UT_contract_R2.set_labels({"b", "c"});
+  UT_contract_L2.relabel_({"a", "b"});
+  UT_contract_R2.relabel_({"b", "c"});
   UniTensor out = UT_contract_L2.contract(UT_contract_R2);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans2.get_blocks();
@@ -556,8 +580,8 @@ TEST_F(BlockUniTensorTest, contract2) {
 TEST_F(BlockUniTensorTest, contract3) {
   //// two 3 legs tensor
 
-  UT_contract_L3.set_labels({"a", "b", "c"});
-  UT_contract_R3.set_labels({"c", "d", "e"});
+  UT_contract_L3.relabel_({"a", "b", "c"});
+  UT_contract_R3.relabel_({"c", "d", "e"});
   UniTensor out = UT_contract_L3.contract(UT_contract_R3);
   auto outbks = out.get_blocks();
   auto ansbks = UT_contract_ans3.get_blocks();
@@ -1012,7 +1036,7 @@ TEST_F(BlockUniTensorTest, elem_exist) {
           if (BUT4.elem_exists({i - 1, j - 1, k - 1, l - 1})) {
             cytnx_int64 _a;
             std::vector<cytnx_uint64> _b;
-            ((BlockUniTensor*)BUT4._impl.get())
+            ((BlockUniTensor *)BUT4._impl.get())
               ->_fx_locate_elem(_a, _b, {i - 1, j - 1, k - 1, l - 1});
             std::vector<cytnx_uint64> qind = BUT4.get_qindices(_a);
             EXPECT_EQ(BUT4.bonds()[0].qnums()[qind[0]][0] - BUT4.bonds()[1].qnums()[qind[1]][0] +

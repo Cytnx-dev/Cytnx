@@ -1,11 +1,13 @@
 #include "DenseUniTensor_test.h"
-using namespace std;
-using namespace cytnx;
-using namespace std::complex_literals;
 
 #include <cstdio>
 #include <filesystem>
+
 #include "test_tools.h"
+
+using namespace std;
+using namespace cytnx;
+using namespace std::complex_literals;
 
 #define FAIL_CASE_OPEN false
 
@@ -146,6 +148,11 @@ TEST_F(DenseUniTensorTest, set_label_not_exist_old_label) {
   EXPECT_ANY_THROW(utzero345.set_label("Not exist label", "testing label"));
 }
 
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 /*=====test info=====
 describe:test set_labels.
 ====================*/
@@ -190,6 +197,8 @@ TEST_F(DenseUniTensorTest, set_labels_duplicated) {
   std::vector<std::string> new_labels = {"test1", "test2", "test2", "test3"};
   EXPECT_ANY_THROW(utzero345.set_labels(new_labels));
 }
+
+#pragma GCC diagnostic pop
 
 TEST_F(DenseUniTensorTest, set_rowrank) {
   // Spf is a rank-3 tensor
@@ -538,44 +547,6 @@ TEST_F(DenseUniTensorTest, to_) {
   EXPECT_ANY_THROW(ut_uninit.to_(Device.cpu));
 }
 
-TEST_F(DenseUniTensorTest, relabels) {
-  auto ut = utzero3456.relabels({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "0");
-  EXPECT_EQ(utzero3456.labels()[1], "1");
-  EXPECT_EQ(utzero3456.labels()[2], "2");
-  EXPECT_EQ(utzero3456.labels()[3], "3");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabels({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabels({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
-}
-
-TEST_F(DenseUniTensorTest, relabels_) {
-  auto ut = utzero3456.relabels_({"a", "b", "cd", "d"});
-  EXPECT_EQ(utzero3456.labels()[0], "a");
-  EXPECT_EQ(utzero3456.labels()[1], "b");
-  EXPECT_EQ(utzero3456.labels()[2], "cd");
-  EXPECT_EQ(utzero3456.labels()[3], "d");
-  EXPECT_EQ(ut.labels()[0], "a");
-  EXPECT_EQ(ut.labels()[1], "b");
-  EXPECT_EQ(ut.labels()[2], "cd");
-  EXPECT_EQ(ut.labels()[3], "d");
-  ut = utzero3456.relabels_({"1", "-1", "2", "1000"});
-  EXPECT_THROW(ut.relabels_({"a", "a", "b", "c"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"1", "1", "0", "-1"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"a"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"1", "2"}), std::logic_error);
-  EXPECT_THROW(ut.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
-  EXPECT_THROW(ut_uninit.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
-}
-
 TEST_F(DenseUniTensorTest, relabel) {
   auto tmp = utzero3456.clone();
   auto ut = utzero3456.relabel({"a", "b", "cd", "d"});
@@ -637,6 +608,7 @@ TEST_F(DenseUniTensorTest, relabel) {
   // EXPECT_THROW(utzero3456.relabel(5,'a'),std::logic_error);
   EXPECT_THROW(ut_uninit.relabel(0, ""), std::logic_error);
 }
+
 TEST_F(DenseUniTensorTest, relabel_) {
   auto tmp = utzero3456.clone();
   auto ut = utzero3456.relabel_({"a", "b", "cd", "d"});
@@ -685,6 +657,96 @@ TEST_F(DenseUniTensorTest, relabel_) {
   EXPECT_THROW(utzero3456.relabel_(-1, "a"), std::logic_error);
   EXPECT_THROW(utzero3456.relabel_(0, "a").relabel_(1, "a"), std::logic_error);
   EXPECT_THROW(ut_uninit.relabel_(0, ""), std::logic_error);
+}
+
+// Deprecated-function tests: suppress warnings so the compiler does not error
+// on [[deprecated]] calls. These tests verify backward compatibility.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+TEST_F(DenseUniTensorTest, relabels) {
+  auto ut = utzero3456.relabels({"a", "b", "cd", "d"});
+  EXPECT_EQ(utzero3456.labels()[0], "0");
+  EXPECT_EQ(utzero3456.labels()[1], "1");
+  EXPECT_EQ(utzero3456.labels()[2], "2");
+  EXPECT_EQ(utzero3456.labels()[3], "3");
+  EXPECT_EQ(ut.labels()[0], "a");
+  EXPECT_EQ(ut.labels()[1], "b");
+  EXPECT_EQ(ut.labels()[2], "cd");
+  EXPECT_EQ(ut.labels()[3], "d");
+  ut = utzero3456.relabels({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabels({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabels({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+TEST_F(DenseUniTensorTest, relabels_) {
+  auto ut = utzero3456.relabels_({"a", "b", "cd", "d"});
+  EXPECT_EQ(utzero3456.labels()[0], "a");
+  EXPECT_EQ(utzero3456.labels()[1], "b");
+  EXPECT_EQ(utzero3456.labels()[2], "cd");
+  EXPECT_EQ(utzero3456.labels()[3], "d");
+  EXPECT_EQ(ut.labels()[0], "a");
+  EXPECT_EQ(ut.labels()[1], "b");
+  EXPECT_EQ(ut.labels()[2], "cd");
+  EXPECT_EQ(ut.labels()[3], "d");
+  ut = utzero3456.relabels_({"1", "-1", "2", "1000"});
+  EXPECT_THROW(ut.relabels_({"a", "a", "b", "c"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"1", "1", "0", "-1"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"a"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"1", "2"}), std::logic_error);
+  EXPECT_THROW(ut.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+  EXPECT_THROW(ut_uninit.relabels_({"a", "b", "c", "d", "e"}), std::logic_error);
+}
+
+#pragma GCC diagnostic pop
+
+/*=====test info=====
+describe:test relabel_.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_normal) {
+  // vector
+  std::vector<std::string> org_labels = {"org 1", "org 2", "org 3"};
+  std::vector<std::string> new_labels = {"testing 1", "testing 2", "testing 3"};
+  utzero345.relabel_(org_labels);
+  utzero345.relabel_(new_labels);
+  EXPECT_EQ(utzero345.labels(), new_labels);
+
+  // initializer list
+  utzero345.relabel_({"org 1", "org 2", "org 3"});
+  utzero345.relabel_({"testing 1", "testing 2", "testing 3"});
+  EXPECT_EQ(utzero345.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:relabel_ to uninitialized unitensor
+====================*/
+TEST_F(DenseUniTensorTest, relabel_un_init) {
+  std::vector<std::string> new_labels = {};
+  ut_uninit.relabel_(new_labels);
+  EXPECT_EQ(ut_uninit.labels(), new_labels);
+}
+
+/*=====test info=====
+describe:test relabel_ length not match.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_len_not_match) {
+  // too long
+  std::vector<std::string> new_labels_long = {"test1", "test2", "test3", "test4"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels_long));
+  std::vector<std::string> new_labels_short = {"test1", "test2"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels_short));
+}
+
+/*=====test info=====
+describe:test relabel_ duplicated.
+====================*/
+TEST_F(DenseUniTensorTest, relabel_duplicated) {
+  std::vector<std::string> new_labels = {"test1", "test2", "test2", "test3"};
+  EXPECT_ANY_THROW(utzero345.relabel_(new_labels));
 }
 
 /*=====test info=====
@@ -1266,11 +1328,9 @@ TEST_F(DenseUniTensorTest, get_block) {
 /*=====test info=====
 describe:test get_block out of range
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, get_block_out_of_range) {
   EXPECT_THROW(utzero345.get_block(3), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test get_block, diagonal
@@ -1386,11 +1446,9 @@ TEST_F(DenseUniTensorTest, get_block__uninit) {
 /*=====test info=====
 describe:test get_block out of range
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, get_block__out_of_range) {
   EXPECT_THROW(utzero345.get_block_(3), std::logic_error);
 }
-#endif
 
 TEST_F(DenseUniTensorTest, get_blocks) { EXPECT_THROW(utzero345.get_blocks(), std::logic_error); }
 
@@ -1496,7 +1554,6 @@ TEST_F(DenseUniTensorTest, put_block_rank_mismatch) {
 /*=====test info=====
 describe:test put_block_, out of index
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, put_block_out_of_idx) {
   constexpr cytnx_uint64 dim1 = 2, dim2 = 3;
   auto tens = zeros({dim1, dim2});
@@ -1507,7 +1564,6 @@ TEST_F(DenseUniTensorTest, put_block_out_of_idx) {
   auto ut = UniTensor({Bond(dim1), Bond(dim2)});
   EXPECT_THROW(ut.put_block(tens, 1), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test put_block_
@@ -1592,7 +1648,6 @@ TEST_F(DenseUniTensorTest, put_block__rank_mismatch) {
 /*=====test info=====
 describe:test put_block_, out of index
 ====================*/
-#if FAIL_CASE_OPEN
 TEST_F(DenseUniTensorTest, put_block__out_of_idx) {
   constexpr cytnx_uint64 dim1 = 2, dim2 = 3;
   auto tens = zeros({dim1, dim2});
@@ -1603,7 +1658,6 @@ TEST_F(DenseUniTensorTest, put_block__out_of_idx) {
   auto ut = UniTensor({Bond(dim1), Bond(dim2)});
   EXPECT_THROW(ut.put_block_(tens, 1), std::logic_error);
 }
-#endif
 
 /*=====test info=====
 describe:test put_blocks, input uninitialized UniTensor
@@ -1960,8 +2014,8 @@ TEST_F(DenseUniTensorTest, combineBond_ut_uninit) {
 }
 
 TEST_F(DenseUniTensorTest, contract1) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "aa", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "aa", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres1.get_block_();
@@ -1969,8 +2023,8 @@ TEST_F(DenseUniTensorTest, contract1) {
 }
 
 TEST_F(DenseUniTensorTest, contract2) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "bb", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "bb", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres2.get_block_();
@@ -1978,8 +2032,8 @@ TEST_F(DenseUniTensorTest, contract2) {
 }
 
 TEST_F(DenseUniTensorTest, contract3) {
-  ut1.set_labels({"a", "b", "c", "d"});
-  ut2.set_labels({"a", "b", "c", "cc"});
+  ut1.relabel_({"a", "b", "c", "d"});
+  ut2.relabel_({"a", "b", "c", "cc"});
   UniTensor out = ut1.contract(ut2);
   auto outbk = out.get_block_();
   auto ansbk = contres3.get_block_();
@@ -4606,23 +4660,15 @@ TEST_F(DenseUniTensorTest, Save) {
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
   ut.Save(temp_file_path);
-  UniTensor ut_load = UniTensor::Load(temp_file_path + ".cytnx");
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
-}
-
-/*=====test info=====
-describe:test Save and Load by charPtr
-====================*/
-TEST_F(DenseUniTensorTest, Save_chr) {
-  auto row_rank = 1u;
-  std::vector<Bond> bonds = {Bond(3), Bond(2)};
-  std::vector<std::string> labels = {"a", "b"};
-  auto seed = 0;
-  auto ut = UniTensor(bonds, labels, row_rank);
-  random::uniform_(ut, 0.0, 5.0, seed);
-  ut.Save(temp_file_path.c_str());
-  UniTensor ut_load = UniTensor::Load((temp_file_path + ".cytnx").c_str());
-  EXPECT_TRUE(AreEqUniTensor(ut_load, ut));
+  UniTensor ut_loaded = UniTensor::Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(ut_loaded, ut));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  ut.Save(fname);
+  UniTensor ut_loaded_char_save = ut_loaded_char_save.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_save));
+  UniTensor ut_loaded_char_load = ut_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(ut, ut_loaded_char_load));
 }
 
 /*=====test info=====
@@ -4633,15 +4679,15 @@ TEST_F(DenseUniTensorTest, Save_path_incorrect) {
   std::filesystem::path temp_filename = std::tmpnam(nullptr);
   // std::tmpnam(nullptr) returns full temp file path, like /tmp/fileRandSuffix
   file_path_under_non_existent_folder /= temp_filename.filename();
+  file_path_under_non_existent_folder += ".cytnx";
   auto row_rank = 1u;
   std::vector<Bond> bonds = {Bond(3), Bond(2)};
   std::vector<std::string> labels = {"a", "b"};
   auto seed = 0;
   auto ut = UniTensor(bonds, labels, row_rank);
   random::uniform_(ut, 0.0, 5.0, seed);
-  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder), std::logic_error);
-  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string() + ".cytnx"),
-               std::logic_error);
+  EXPECT_THROW(ut.Save(file_path_under_non_existent_folder.string()), std::logic_error);
+  EXPECT_THROW(UniTensor::Load(file_path_under_non_existent_folder.string()), std::logic_error);
 }
 
 /*=====test info=====
