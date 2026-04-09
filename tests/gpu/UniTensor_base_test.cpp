@@ -1,7 +1,7 @@
 #include "UniTensor_base_test.h"
 
 TEST_F(UniTensor_baseTest, gpu_get_index) {
-  utzero345.set_labels({"abc", "ABC", "CBA"});
+  utzero345.relabel_({"abc", "ABC", "CBA"});
   EXPECT_EQ(utzero345.get_index("abc"), 0);
   EXPECT_EQ(utzero345.get_index("ABC"), 1);
   EXPECT_EQ(utzero345.get_index("CBA"), 2);

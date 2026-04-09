@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <filesystem>
 #include <gtest/gtest.h>
+
 #include "cytnx.hpp"
 #include "test_tools.h"
 
@@ -13,7 +14,7 @@ using namespace TestTools;
 class DenseUniTensorTest : public ::testing::Test {
  public:
   std::string data_dir = CYTNX_TEST_DATA_DIR "/common/DenseUniTensor/";
-  const std::string temp_file_path = std::tmpnam(nullptr);
+  const std::string temp_file_path = std::string(std::tmpnam(nullptr)) + ".cytnx";
 
   UniTensor ut_uninit;
   UniTensor utzero345;

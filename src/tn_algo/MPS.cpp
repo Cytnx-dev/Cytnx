@@ -1,6 +1,9 @@
 #include "tn_algo/MPS.hpp"
+
+#include <filesystem>
 #include <fstream>
 #include <iostream>
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -61,7 +64,18 @@ namespace cytnx {
 
     void MPS::Save(const std::string& fname) const {
       fstream f;
-      f.open((fname + ".cymps"), ios::out | ios::trunc | ios::binary);
+      if (std::filesystem::path(fname).has_extension()) {
+        // filename extension is given
+        f.open(fname, ios::out | ios::trunc | ios::binary);
+      } else {
+        // add filename extension
+        cytnx_warning_msg(
+          true,
+          "Missing file extension in fname '%s'. I am adding the extension '.cymps'. This is "
+          "deprecated, please provide the file extension in the future.\n",
+          fname.c_str());
+        f.open((fname + ".cymps"), ios::out | ios::trunc | ios::binary);
+      }
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
       }
@@ -84,23 +98,13 @@ namespace cytnx {
       fstream f;
       f.open(fname, ios::in | ios::binary);
       if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
       }
       out._Load(f);
       f.close();
       return out;
     }
-    MPS MPS::Load(const char* fname) {
-      MPS out;
-      fstream f;
-      f.open(fname, ios::in | ios::binary);
-      if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
-      }
-      out._Load(f);
-      f.close();
-      return out;
-    }
+    MPS MPS::Load(const char* fname) { return MPS::Load(string(fname)); }
 
   }  // namespace tn_algo
 

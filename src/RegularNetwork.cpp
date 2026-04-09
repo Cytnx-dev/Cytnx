@@ -964,7 +964,7 @@ namespace cytnx {
 
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
         this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
         this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:
@@ -1025,7 +1025,7 @@ namespace cytnx {
 
       // //5. reset back the original labels:
       // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-      //     this->tensors[i].set_labels(old_labels[i]);
+      //     this->tensors[i].relabel_(old_labels[i]);
       // }
 
       // 6. permute accroding to pre-set labels:
@@ -1083,7 +1083,7 @@ namespace cytnx {
     #else
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
         this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
         this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:
