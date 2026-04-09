@@ -568,6 +568,31 @@ TEST_F(BlockUniTensorTest, contract3) {
   }
 }
 
+TEST_F(BlockUniTensorTest, contract_mixed_dtype_order_independent) {
+  // Reproduce issue #758: real(QN) x complex(QN) should not depend on argument order.
+  UniTensor left_real = UT_contract_L2.astype(Type.Double);
+  UniTensor right_complex = UT_contract_R2.astype(Type.ComplexDouble);
+
+  left_real.set_labels({"a", "b"});
+  right_complex.set_labels({"b", "c"});
+
+  UniTensor out_real_complex;
+  UniTensor out_complex_real;
+  EXPECT_NO_THROW(out_real_complex = left_real.contract(right_complex));
+  EXPECT_NO_THROW(out_complex_real = right_complex.contract(left_real));
+
+  EXPECT_EQ(out_real_complex.dtype(), Type.ComplexDouble);
+  EXPECT_EQ(out_complex_real.dtype(), Type.ComplexDouble);
+
+  // Cross-check against all-complex references for each contraction ordering.
+  UniTensor left_complex = left_real.astype(Type.ComplexDouble);
+  UniTensor right_complex_ref = right_complex.astype(Type.ComplexDouble);
+  UniTensor ref_real_complex = left_complex.contract(right_complex_ref);
+  UniTensor ref_complex_real = right_complex_ref.contract(left_complex);
+  EXPECT_TRUE(AreNearlyEqUniTensor(out_real_complex, ref_real_complex, 1e-10));
+  EXPECT_TRUE(AreNearlyEqUniTensor(out_complex_real, ref_complex_real, 1e-10));
+}
+
 TEST_F(BlockUniTensorTest, same_data) {
   UniTensor B = UT_pB_ans.permute({1, 0, 2});
   UniTensor C = B.contiguous();
