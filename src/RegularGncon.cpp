@@ -744,7 +744,7 @@ namespace cytnx {
     //     this->tensors[i].set_labels(old_labels[i]);
     // }
 
-    // 6. permute accroding to pre-set labels:
+    // 6. permute according to pre-set labels:
     if (TOUT_labels.size()) {
       out.permute_(TOUT_labels, TOUT_iBondNum);
     }
