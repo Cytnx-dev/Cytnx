@@ -5482,16 +5482,17 @@ namespace cytnx {
     }
 
     /**
-    @brief Generate a one-bond UniTensor with all elements are arange from 0 to Nelem-1.
-    @details Generate a UniTensor with all elements are arange from 0 to Nelem-1 with double data
-    type on cpu device. The step is 1.
-    @param[in] Nelem the number of elements.
-    @param[in] in_labels the labels of the UniTensor.
+    @brief Create a rank-1 UniTensor with incremental unsigned integer elements in the range
+    [0,Nelem).
+    @details The elements are 0, 1, 2, ..., \p Nelem - 1.
+    @param[in] Nelem number of incremental elements.
+    @param[in] in_labels the label of the UniTensor.
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
     @see arange(const cytnx_double &start, const cytnx_double &end, const cytnx_double &step, const
-    unsigned int &dtype, const int &device) \n
+    std::vector<std::string> &in_labels, const unsigned int &dtype, const int &device, const
+    std::string &name) \n
     @see arange(const cytnx_int64 &Nelem)
     */
     static UniTensor arange(const cytnx_int64 &Nelem,
@@ -5501,13 +5502,14 @@ namespace cytnx {
     }
 
     /**
-    @brief Generate a UniTensor with all elements are arange from \p start to \p end.
-    @details Generate a UniTensor with all elements are arange from \p start to \p end , the step is
-    \p step .
-    @param[in] start the start of the arange.
-    @param[in] end the end of the arange.
-    @param[in] step the step of the arange.
-    @param[in] in_labels the labels of the UniTensor.
+    @brief Create a rank-1 UniTensor with incremental elements in the range [\p start,\p end) with
+    given step-size \p step between elements.
+    @details The elements are \p start, \p start + \p step, \p start + 2 * \p step, ... The last
+    element is the largest one that is smaller than \p end.
+    @param[in] start start value of the range.
+    @param[in] end end value of the range (exclusive).
+    @param[in] step step-size between subsequent elements in the range.
+    @param[in] in_labels the label of the UniTensor.
     @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
     @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
     @param[in] name the name of the UniTensor.

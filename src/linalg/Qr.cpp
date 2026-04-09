@@ -75,8 +75,8 @@ namespace cytnx {
 
         return out;
     #else
-        cytnx_error_msg(true, "[QR] fatal error, %s",
-                        "try to call the cuQuantum section without cuQuantum support.\n");
+        cytnx_error_msg(
+          true, "QR decomposition on GPU not implemented without cuQuantum support!%s", "\n");
         return std::vector<Tensor>();
     #endif
   #else
