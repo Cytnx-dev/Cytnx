@@ -5001,17 +5001,14 @@ namespace cytnx {
     /**
     @brief Take the transpose of the UniTensor.
     @details This function takes the transpose of a UniTensor:
-      1)  Swaps the roles of left and right indices: index numbers k < rowrank become k + rowrank,
-          indices k' >= rowrank become k' - rowrank. For fermions, the order of the indices is
-          inverted instead.
-      2)  Incoming legs become outgoing ones, and vice versa
+      1)  The order of the indices is inverted.
+      2)  Incoming legs become outgoing ones, and vice versa.
       3)  The rowrank is set to rank - old rowrank, such that left indices become right indices and
           vice versa.
     @return UniTensor
+    @note This function does not only exchange left- and right indices, but inverts the order of all
+    indices.
     @note Compared to Transpose_(), this function will return new UniTensor object.
-    @warning For fermionic UniTensors, the order of the indices is inverted, while for bosonic
-    UniTensors the role of the left-and right indices is exchanged without inverting the orders in
-    these two groups.
     @see Transpose_()
     */
     UniTensor Transpose() const {
@@ -5022,10 +5019,11 @@ namespace cytnx {
 
     /**
     @brief Take the transpose of the UniTensor, inplacely.
-        @return UniTensor
+    @return UniTensor
+    @note This function inverts the order of all indices.
     @note Compared to Transpose(), this function is an inplace function.
-        @see Transpose()
-        */
+    @see Transpose()
+    */
     UniTensor &Transpose_() {
       this->_impl->Transpose_();
       return *this;
@@ -5130,10 +5128,11 @@ namespace cytnx {
 
     /**
     @brief Take the conjugate transpose to the UniTensor.
-        @return UniTensor
-    @note Compared to Dagger_(), this function will create a new UniTensor ojbect.
-        @see Dagger_(), Transpose()
-        */
+    @return UniTensor
+    @note This function inverts the order of all indices.
+    @note Compared to Dagger_(), this function will create a new UniTensor object.
+    @see Dagger_(), Transpose()
+    */
     UniTensor Dagger() const {
       UniTensor out;
       out._impl = this->_impl->Dagger();
@@ -5142,10 +5141,11 @@ namespace cytnx {
 
     /**
     @brief Take the conjugate transpose to the UniTensor, inplacely.
-        @return UniTensor&
+    @return UniTensor&
+    @note This function inverts the order of all indices.
     @note Compared to Dagger(), this is an inplace function.
-        @see Dagger()
-        */
+    @see Dagger()
+    */
     UniTensor &Dagger_() {
       this->_impl->Dagger_();
       return *this;

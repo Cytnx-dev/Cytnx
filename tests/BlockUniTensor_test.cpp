@@ -977,12 +977,12 @@ TEST_F(BlockUniTensorTest, Dagger) {
             // std::cout << "BUT4.Dagger(k=" << k << ", l=" << l << ", i=" << i << ", j=" << j
             //           << ") = " << double(tmp.at({k, l, i, j}).real()) << " + i * "
             //           << double(tmp.at({k, l, i, j}).imag()) << std::endl;
-            EXPECT_DOUBLE_EQ(double(tmp.at({k, l, i, j}).real()),
+            EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).real()),
                              double(BUT4.at({i, j, k, l}).real()));
-            EXPECT_DOUBLE_EQ(double(tmp.at({k, l, i, j}).imag()),
+            EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).imag()),
                              -double(BUT4.at({i, j, k, l}).imag()));
           } else {
-            EXPECT_FALSE(tmp.at({k, l, i, j}).exists());
+            EXPECT_FALSE(tmp.at({l, k, j, i}).exists());
           }
         }
   tmp = BUT4.clone();
@@ -994,11 +994,11 @@ TEST_F(BlockUniTensorTest, Dagger) {
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(BUT4.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
-                             double(tmp.at({k, l, i, j}).real()));
+                             double(tmp.at({l, k, j, i}).real()));
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).imag()),
-                             -double(tmp.at({k, l, i, j}).imag()));
+                             -double(tmp.at({l, k, j, i}).imag()));
           } else {
-            EXPECT_FALSE(tmp.at({k, l, i, j}).exists());
+            EXPECT_FALSE(tmp.at({l, k, j, i}).exists());
           }
         }
 
@@ -1011,9 +1011,9 @@ TEST_F(BlockUniTensorTest, Dagger) {
     for (cytnx_int64 j = 0; j < 9; j++)
       for (cytnx_int64 k = 0; k < 30; k++) {
         if (UT_pB.at({i, j, k}).exists()) {
-          EXPECT_DOUBLE_EQ(double(tmp.at({k, i, j}).real()), double(UT_pB.at({i, j, k}).real()));
+          EXPECT_DOUBLE_EQ(double(tmp.at({k, j, i}).real()), double(UT_pB.at({i, j, k}).real()));
         } else {
-          EXPECT_FALSE(tmp.at({k, i, j}).exists());
+          EXPECT_FALSE(tmp.at({k, j, i}).exists());
         }
       }
 

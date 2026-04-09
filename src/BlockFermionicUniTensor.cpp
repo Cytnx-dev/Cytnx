@@ -1902,8 +1902,7 @@ namespace cytnx {
       this->bonds()[i].redirect_();
       idxorder[i] = idxnum - i;
     }
-    this->permute_nosignflip_(idxorder);
-    this->_rowrank = idxnum + 1 - this->_rowrank;
+    this->permute_nosignflip_(idxorder, idxnum + 1 - this->_rowrank);
   };
 
   void BlockFermionicUniTensor::normalize_() {

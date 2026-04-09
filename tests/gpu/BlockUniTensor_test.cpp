@@ -336,12 +336,12 @@ TEST_F(BlockUniTensorTest, gpu_Dagger) {
         for (cytnx_int64 l = 0; l < 5; l++) {
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(tmp.at({i, j, k, l})-BUconjT4.at({i, j, k, l})).abs()<1e-5);
-            EXPECT_DOUBLE_EQ(double(tmp.at({k, l, i, j}).real()),
+            EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).real()),
                              double(BUT4.at({i, j, k, l}).real()));
-            EXPECT_DOUBLE_EQ(double(tmp.at({k, l, i, j}).imag()),
+            EXPECT_DOUBLE_EQ(double(tmp.at({l, k, j, i}).imag()),
                              -double(BUT4.at({i, j, k, l}).imag()));
           } else {
-            EXPECT_FALSE(tmp.at({k, l, i, j}).exists());
+            EXPECT_FALSE(tmp.at({l, k, j, i}).exists());
           }
         }
 
@@ -354,11 +354,11 @@ TEST_F(BlockUniTensorTest, gpu_Dagger) {
           if (BUT4.at({i, j, k, l}).exists()) {
             // EXPECT_TRUE(Scalar(BUT4.at({i, j, k, l})-BUconjT4.at({i, j, k, l})).abs()<1e-5);
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).real()),
-                             double(tmp.at({k, l, i, j}).real()));
+                             double(tmp.at({l, k, j, i}).real()));
             EXPECT_DOUBLE_EQ(double(BUT4.at({i, j, k, l}).imag()),
-                             -double(tmp.at({k, l, i, j}).imag()));
+                             -double(tmp.at({l, k, j, i}).imag()));
           } else {
-            EXPECT_FALSE(tmp.at({k, l, i, j}).exists());
+            EXPECT_FALSE(tmp.at({l, k, j, i}).exists());
           }
         }
 
