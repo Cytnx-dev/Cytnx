@@ -4096,7 +4096,7 @@ TEST_F(DenseUniTensorTest, Conj_utuninit) {
 }
 
 /*=====test info=====
-describe:test Trnaspose
+describe:test Transpose
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose) {
   auto row_rank = 2u;
@@ -4110,16 +4110,16 @@ TEST_F(DenseUniTensorTest, Transpose) {
   for (size_t i = 0; i < ut_t.rank(); i++) {
     EXPECT_EQ(ut_t.bonds()[i].type(), BD_REG);
   }
-  // a, b; c -> c;a, b
+  // a, b; c -> c; a, b
   EXPECT_EQ(ut.labels(), std::vector<std::string>({"a", "b", "c"}));
-  EXPECT_EQ(ut_t.labels(), std::vector<std::string>({"c", "a", "b"}));
+  EXPECT_EQ(ut_t.labels(), std::vector<std::string>({"c", "b", "a"}));
   EXPECT_EQ(ut.rowrank(), row_rank);
   EXPECT_EQ(ut_t.rowrank(), ut_t.rank() - row_rank);
   auto shape = ut.shape();
   for (cytnx_uint64 i = 0; i < shape[0]; i++) {
     for (cytnx_uint64 j = 0; j < shape[1]; j++) {
       for (cytnx_uint64 k = 0; k < shape[2]; k++) {
-        EXPECT_EQ(ut.at({i, j, k}), ut_t.at({k, i, j}));
+        EXPECT_EQ(ut.at({i, j, k}), ut_t.at({k, j, i}));
       }
     }
   }
@@ -4127,7 +4127,7 @@ TEST_F(DenseUniTensorTest, Transpose) {
 }
 
 /*=====test info=====
-describe:test Trnaspose with diagonal UniTensor
+describe:test Transpose with diagonal UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose_diag) {
   auto row_rank = 1u;
@@ -4144,7 +4144,7 @@ TEST_F(DenseUniTensorTest, Transpose_diag) {
   for (size_t i = 0; i < ut_t.rank(); i++) {
     EXPECT_EQ(ut_t.bonds()[i].type(), BD_REG);
   }
-  // a, b; c -> c;a, b
+  // a; b -> b; a
   EXPECT_EQ(ut_diag.labels(), std::vector<std::string>({"a", "b"}));
   EXPECT_EQ(ut_t.labels(), std::vector<std::string>({"b", "a"}));
   EXPECT_EQ(ut_diag.rowrank(), row_rank);
@@ -4157,7 +4157,40 @@ TEST_F(DenseUniTensorTest, Transpose_diag) {
 }
 
 /*=====test info=====
-describe:test Trnaspose_
+describe:test Transpose with tagged UniTensor
+====================*/
+TEST_F(DenseUniTensorTest, Transpose_tagged) {
+  auto Spcd_t = Spcd.Transpose();
+  // test tag, rowrank, rank
+  EXPECT_TRUE(Spcd_t.is_tag());
+  EXPECT_EQ(Spcd.rowrank(), 1);
+  EXPECT_EQ(Spcd_t.rowrank(), 2);
+  EXPECT_EQ(Spcd_t.rank(), 3);
+  // test bond types
+  std::vector<Bond> bonds_t = Spcd_t.bonds();
+  EXPECT_EQ(bonds_t[0].type(), BD_OUT);
+  EXPECT_EQ(bonds_t[1].type(), BD_IN);
+  EXPECT_EQ(bonds_t[2].type(), BD_OUT);
+  // test labels
+  std::vector<string> labels = Spcd.labels();
+  std::vector<string> labels_t = Spcd_t.labels();
+  EXPECT_EQ(labels_t[0], labels[2]);
+  EXPECT_EQ(labels_t[1], labels[1]);
+  EXPECT_EQ(labels_t[2], labels[0]);
+  // test shape
+  auto shape = Spcd.shape();
+  auto shape_t = Spcd_t.shape();
+  EXPECT_EQ(shape_t[0], shape[2]);
+  EXPECT_EQ(shape_t[1], shape[1]);
+  EXPECT_EQ(shape_t[2], shape[0]);
+  // test tensors
+  EXPECT_TRUE(AreEqUniTensor(Spcd_t.Transpose(), Spcd));
+  auto Spcd_p = Spcd_t.permute(Spcd.labels());
+  EXPECT_TRUE(AreEqUniTensor(Spcd_p, Spcd));
+}
+
+/*=====test info=====
+describe:test Transpose_
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose_) {
   auto row_rank = 2u;
@@ -4173,7 +4206,7 @@ TEST_F(DenseUniTensorTest, Transpose_) {
 }
 
 /*=====test info=====
-describe:test Trnaspose with uninitialized UniTensor
+describe:test Transpose with uninitialized UniTensor
 ====================*/
 TEST_F(DenseUniTensorTest, Transpose_uninit) {
   EXPECT_ANY_THROW(ut_uninit.Transpose());
@@ -4348,29 +4381,29 @@ TEST_F(DenseUniTensorTest, Dagger) {
   EXPECT_EQ(utzero3456.bonds()[3].type(), BD_REG);
 
   tmp = utarcomplex3456.Dagger();
-  for (size_t i = 1; i <= 3; i++)
-    for (size_t j = 1; j <= 4; j++)
-      for (size_t k = 1; k <= 5; k++)
-        for (size_t l = 1; l <= 6; l++)
-          if (utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).exists()) {
-            // EXPECT_TRUE(Scalar(tmp.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
-            EXPECT_DOUBLE_EQ(double(tmp.at({i - 1, j - 1, k - 1, l - 1}).real()),
-                             double(utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).real()));
-            EXPECT_DOUBLE_EQ(double(tmp.at({i - 1, j - 1, k - 1, l - 1}).imag()),
-                             -double(utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).imag()));
+  for (size_t i = 0; i < 3; i++)
+    for (size_t j = 0; j < 4; j++)
+      for (size_t k = 0; k < 5; k++)
+        for (size_t l = 0; l < 6; l++)
+          if (utarcomplex3456.at({i, j, k, l}).exists()) {
+            EXPECT_TRUE(tmp.at({l, k, j, i}).exists());
+            EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i, j, k, l}).real()),
+                             double(tmp.at({l, k, j, i}).real()));
+            EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i, j, k, l}).imag()),
+                             -double(tmp.at({l, k, j, i}).imag()));
           }
   tmp = utarcomplex3456.clone();
-  utarcomplex3456.Dagger_();
-  for (size_t i = 1; i <= 3; i++)
-    for (size_t j = 1; j <= 4; j++)
-      for (size_t k = 1; k <= 5; k++)
-        for (size_t l = 1; l <= 6; l++)
-          if (utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).exists()) {
-            // EXPECT_TRUE(Scalar(utarcomplex3456.at({i-1,j-1,k-1,l-1})-BUconjT4.at({i-1,j-1,k-1,l-1})).abs()<1e-5);
-            EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).real()),
-                             double(tmp.at({i - 1, j - 1, k - 1, l - 1}).real()));
-            EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i - 1, j - 1, k - 1, l - 1}).imag()),
-                             -double(tmp.at({i - 1, j - 1, k - 1, l - 1}).imag()));
+  tmp.Dagger_();
+  for (size_t i = 0; i < 3; i++)
+    for (size_t j = 0; j < 4; j++)
+      for (size_t k = 0; k < 5; k++)
+        for (size_t l = 0; l < 6; l++)
+          if (utarcomplex3456.at({i, j, k, l}).exists()) {
+            EXPECT_TRUE(tmp.at({l, k, j, i}).exists());
+            EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i, j, k, l}).real()),
+                             double(tmp.at({l, k, j, i}).real()));
+            EXPECT_DOUBLE_EQ(double(utarcomplex3456.at({i, j, k, l}).imag()),
+                             -double(tmp.at({l, k, j, i}).imag()));
           }
 }
 /*=====test info=====

@@ -1895,17 +1895,14 @@ namespace cytnx {
   };
 
   void BlockFermionicUniTensor::Transpose_() {
-    //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // modify tag
     // The index order is reversed without any sign flips!
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    std::size_t idxnum = this->bonds().size() - 1;
-    for (int i = 0; i <= idxnum; i++) {
+    cytnx_int64 idxnum = this->bonds().size() - 1;
+    for (cytnx_int64 i = 0; i <= idxnum; i++) {
       this->bonds()[i].redirect_();
-      // this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
       idxorder[i] = idxnum - i;
     }
-    this->permute_nosignflip_(idxorder);
+    this->permute_nosignflip_(idxorder, idxnum + 1 - this->_rowrank);
   };
 
   void BlockFermionicUniTensor::normalize_() {

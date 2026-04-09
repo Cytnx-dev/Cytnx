@@ -172,7 +172,7 @@ namespace cytnx {
         // Let V_k be the n × (k + 1) matrix whose columns are v[0],...,v[k] respectively.
         UniTensor Vk_ut(Vk);
         Vk_ut.set_rowrank_(1);
-        auto VkDag_ut = Vk_ut.Dagger();  // left and right indices are exchanged here!
+        auto VkDag_ut = Vk_ut.Dagger();  // index order is inverted here!
         // Let T_k be the (k + 1) × (k + 1) matrix a[i,j] i,j is {0,...,k} and Tk_hat = 1 / 2
         // (Tk^Dagger  + Tk).
         auto asT = as.permute({1, 0}).Conj().contiguous();
@@ -213,7 +213,8 @@ namespace cytnx {
         auto Vk_labels = v0.labels();
         Vk_labels.insert(Vk_labels.begin(), label_kl);
         Vk_ut.relabel_(Vk_labels);
-        auto VkDag_labels = v0.labels();
+        auto VkDag_labels =
+          std::vector<std::string>(v0.labels().rbegin(), v0.labels().rend());  // inverted order
         VkDag_labels.push_back(label_kr);
         VkDag_ut.relabel_(VkDag_labels);
 
@@ -259,7 +260,7 @@ namespace cytnx {
 
         for (int i = 1; i < imp_maxiter; ++i) {
           if (verbose) {
-            std::cout << "Lancos iteration:" << i << std::endl;
+            std::cout << "Lanczos iteration:" << i << std::endl;
           }
           auto beta = std::sqrt(double(Dot_internal(w, w).real()));
           v_old = v.clone();
@@ -313,7 +314,7 @@ namespace cytnx {
         // Let V_k be the n × (k + 1) matrix whose columns are v[0],...,v[k] respectively.
         UniTensor Vk_ut(Vk);
         Vk_ut.set_rowrank_(1);
-        auto VkDag_ut = Vk_ut.Dagger();  // left and right indices are exchanged here!
+        auto VkDag_ut = Vk_ut.Dagger();  // Index order is inverted here!
         /*
          *    |||
          *  |-----|
@@ -348,10 +349,10 @@ namespace cytnx {
         auto Vk_labels = v.labels();
         Vk_labels.insert(Vk_labels.begin(), label_kl);
         Vk_ut.relabel_(Vk_labels);
-        auto VkDag_labels = v.labels();
+        auto VkDag_labels =
+          std::vector<std::string>(v.labels().rbegin(), v.labels().rend());  // inverted order
         VkDag_labels.push_back(label_kr);
         VkDag_ut.relabel_(VkDag_labels);
-
         out = Contracts({T, VkDag_ut, B}, "", true);
         out = Contract(out, Vk_ut);
         out.set_rowrank_(v.rowrank());
