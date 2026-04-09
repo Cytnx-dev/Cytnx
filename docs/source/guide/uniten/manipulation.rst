@@ -107,7 +107,7 @@ How linear algebra functions such as the **singular value decomposition (SVD)** 
 Transpose
 **********************
 
-One common operation that is sensitive to the **rowrank** is transposing a tensor. This is possible for a UniTensor by the method **.Transpose()** (or the in-placed method **.Transpose_()**).
+A UniTensor can be transposed by the method **.Transpose()** (or the in-placed method **.Transpose_()**).
 We first show the behavior for a **non-tagged** UniTensor:
 
 * In Python:
@@ -122,7 +122,7 @@ Output >>
     :language: text
 
 
-We see that .Transpose() swaps the legs in the row space and the column space, with the *rowrank* itself also being modified.
+We see that `.Transpose()` inverts the index order and modifies the *rowrank*, such that the legs in the row space and the column space are swapped.
 
 Next we consider the transposition of a tagged UniTensor:
 
@@ -142,8 +142,7 @@ In addition to exchanging the roles of row- and column-space as before, **the di
 
 .. Note::
 
-    1. The method **Transpose_()** works similarly, but changes the UniTensor directly instead of generating a new UniTensor.
-    2. For a :ref:`Fermionic UniTensor`, the order of the indices after transposing the tensor is inverted.
+   The method **Transpose_()** works similarly, but changes the UniTensor directly instead of generating a new UniTensor.
 
 
 Dagger
