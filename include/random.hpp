@@ -217,13 +217,15 @@ namespace cytnx {
     ///@cond
     // this is going to deprecated:
     template <class T>
-    void Make_normal(T &In, const double &mean, const double &std,
-                     const unsigned int &seed = __static_random_device()) {
+    [[deprecated("Use random::normal_ instead")]] void Make_normal(
+      T &In, const double &mean, const double &std,
+      const unsigned int &seed = __static_random_device()) {
       normal_(In, mean, std, seed);
     }
     template <class T>
-    void Make_uniform(T &In, const double &low, const double &high,
-                      const unsigned int &seed = __static_random_device()) {
+    [[deprecated("Use random::uniform_ instead")]] void Make_uniform(
+      T &In, const double &low, const double &high,
+      const unsigned int &seed = __static_random_device()) {
       uniform_(In, low, high, seed);
     }
 

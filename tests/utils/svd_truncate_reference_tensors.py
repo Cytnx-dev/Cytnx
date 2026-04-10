@@ -22,7 +22,7 @@ for k in range(singvals):
 Texp=cytnx.Contract(Uex, S)
 Texp=cytnx.Contract(Texp, vTex)
 Texp.set_name("U(1) UniTensor with exponentially falling singular values in the range 1 to 10^-16")
-Texp.Save(src_file_dir + "sym_UT_U1_exp_Svals_F64")
+Texp.Save(src_file_dir + "sym_UT_U1_exp_Svals_F64.cytnx")
 
 #calculate truncated singular values and reconstructed matrix for truncated SVD; F64 version
 src_file_name = "sym_UT_U1_exp_Svals_F64"
@@ -33,8 +33,8 @@ keepdim = 5
 Mref = cytnx.Contract(Uref, Sref)
 Mref = cytnx.Contract(Mref, vTref)
 Mref.make_contiguous()
-Sref.Save(res_file_dir + src_file_name)
-Mref.Save(res_file_dir + src_file_name + "_reconstructed")
+Sref.Save(res_file_dir + src_file_name + ".cytnx")
+Mref.Save(res_file_dir + src_file_name + "_reconstructed.cytnx")
 
 #calculate truncated singular values and reconstructed matrix for truncated SVD with minblockdim set; F64 version
 src_file_name = "sym_UT_U1_exp_Svals_F64"
@@ -45,8 +45,8 @@ keepdim = 5
 Mref = cytnx.Contract(Uref, Sref)
 Mref = cytnx.Contract(Mref, vTref)
 Mref.make_contiguous();
-Sref.Save(res_file_dir + src_file_name + "_minblockdim")
-Mref.Save(res_file_dir + src_file_name + "_minblockdim_reconstructed")
+Sref.Save(res_file_dir + src_file_name + "_minblockdim.cytnx")
+Mref.Save(res_file_dir + src_file_name + "_minblockdim_reconstructed.cytnx")
 
 #create random matrix with exponential decaying singular values; U1 version, C128
 symms = [cytnx.Symmetry.U1()];
@@ -68,7 +68,7 @@ for k in range(singvals):
 Texp=cytnx.Contract(Uex, S)
 Texp=cytnx.Contract(Texp, vTex)
 Texp.set_name("U(1) UniTensor with exponentially falling singular values in the range 1 to 10^-16")
-Texp.Save(src_file_dir + "sym_UT_U1_exp_Svals_C128")
+Texp.Save(src_file_dir + "sym_UT_U1_exp_Svals_C128.cytnx")
 
 #calculate truncated singular values and reconstructed matrix for truncated SVD; C128 version
 src_file_name = "sym_UT_U1_exp_Svals_C128"
@@ -79,8 +79,8 @@ keepdim = 5
 Mref = cytnx.Contract(Uref, Sref)
 Mref = cytnx.Contract(Mref, vTref)
 Mref.make_contiguous()
-Sref.Save(res_file_dir + src_file_name)
-Mref.Save(res_file_dir + src_file_name + "_reconstructed")
+Sref.Save(res_file_dir + src_file_name + ".cytnx")
+Mref.Save(res_file_dir + src_file_name + "_reconstructed.cytnx")
 
 #calculate truncated singular values and reconstructed matrix for truncated SVD with minblockdim set; C128 version
 src_file_name = "sym_UT_U1_exp_Svals_C128"
@@ -91,5 +91,5 @@ keepdim = 5
 Mref = cytnx.Contract(Uref, Sref)
 Mref = cytnx.Contract(Mref, vTref)
 Mref.make_contiguous();
-Sref.Save(res_file_dir + src_file_name + "_minblockdim")
-Mref.Save(res_file_dir + src_file_name + "_minblockdim_reconstructed")
+Sref.Save(res_file_dir + src_file_name + "_minblockdim.cytnx")
+Mref.Save(res_file_dir + src_file_name + "_minblockdim_reconstructed.cytnx")

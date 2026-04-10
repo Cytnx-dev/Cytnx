@@ -37,6 +37,8 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
 
   else()
     set(BLA_VENDOR OpenBLAS)
+    set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_OPENBLAS")
+    message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
     find_package( LAPACKE REQUIRED)
@@ -64,14 +66,23 @@ if (USE_HPTT)
     option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
     option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
 
+    # Use absolute paths so Ninja can track the artifacts produced by the ExternalProject.
+    cmake_path(APPEND CMAKE_CURRENT_BINARY_DIR "hptt" OUTPUT_VARIABLE HPTT_PREFIX)
+    set(HPTT_STATIC_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}hptt${CMAKE_STATIC_LIBRARY_SUFFIX}")
+    set(HPTT_SHARED_LIB_NAME "${CMAKE_SHARED_LIBRARY_PREFIX}hptt${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    set(HPTT_BYPRODUCTS "${HPTT_PREFIX}/lib/${HPTT_STATIC_LIB_NAME}")
+    if(NOT WIN32 AND NOT CMAKE_SHARED_LIBRARY_SUFFIX STREQUAL "")
+        list(APPEND HPTT_BYPRODUCTS "${HPTT_PREFIX}/lib/${HPTT_SHARED_LIB_NAME}")
+    endif()
 
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
     # TODO: Build HPTT from the submodule in the thirdparty folder.
     ExternalProject_Add(hptt
-    PREFIX hptt
+    PREFIX "${HPTT_PREFIX}"
     GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
     GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
     CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
+    BUILD_BYPRODUCTS ${HPTT_BYPRODUCTS}
     )
     message( STATUS " Build HPTT Support: YES")
     message( STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")
@@ -115,6 +126,33 @@ if(USE_CUDA)
     #      -gencode=arch=compute_75,code=compute_75 ")
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+    # CUDA 12+/13 may place Thrust/CUB headers under include/cccl.
+    set(_cytnx_cccl_candidates)
+    if(DEFINED CUDAToolkit_TARGET_DIR AND NOT "${CUDAToolkit_TARGET_DIR}" STREQUAL "")
+      list(APPEND _cytnx_cccl_candidates "${CUDAToolkit_TARGET_DIR}/include/cccl")
+    endif()
+    foreach(_cuda_inc IN LISTS CUDAToolkit_INCLUDE_DIRS)
+      list(APPEND _cytnx_cccl_candidates
+        "${_cuda_inc}/cccl"
+        "${_cuda_inc}/../include/cccl"
+        "${_cuda_inc}/../../include/cccl"
+        "${_cuda_inc}/../../../include/cccl")
+    endforeach()
+    list(REMOVE_DUPLICATES _cytnx_cccl_candidates)
+
+    set(_cytnx_cccl_dir "")
+    foreach(_cccl_candidate IN LISTS _cytnx_cccl_candidates)
+      get_filename_component(_cccl_candidate_abs "${_cccl_candidate}" ABSOLUTE)
+      if(EXISTS "${_cccl_candidate_abs}")
+        set(_cytnx_cccl_dir "${_cccl_candidate_abs}")
+        break()
+      endif()
+    endforeach()
+    if(NOT "${_cytnx_cccl_dir}" STREQUAL "")
+      target_include_directories(cytnx PRIVATE "${_cytnx_cccl_dir}")
+      message(STATUS "Detected CCCL headers at: ${_cytnx_cccl_dir}")
+    endif()
+
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
     target_link_libraries(cytnx PUBLIC CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
     target_link_libraries(cytnx PUBLIC -lcudadevrt)
