@@ -19,7 +19,7 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
             lbl = v.labels()
             self.anet.PutUniTensor("psi",v)
             out = self.anet.Launch()
-            out.relabels_(lbl)
+            out.relabel_(lbl)
             return out
 
     def optimize_psi(psi, functArgs, maxit=2, krydim=4):
@@ -41,14 +41,15 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
         return psivec, energy[0].item()
 
 
-    ## Initialiaze MPO
+    ## Initialize MPO
     ##>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     d = 2
     s = 0.5
     bd_inner = cytnx.Bond(cytnx.BD_KET,[[0],[-2],[2],[0]],[1,1,1,1])
     bd_phys = cytnx.Bond(cytnx.BD_KET,[[1],[-1]],[1,1])
 
-    M = cytnx.UniTensor([bd_inner,bd_inner.redirect(),bd_phys, bd_phys.redirect()]).set_rowrank_(2)
+    M = cytnx.UniTensor([bd_inner,bd_inner.redirect(),bd_phys, bd_phys.redirect()]) \
+        .set_rowrank_(2).set_name("MPO")
 
     # I
     M.set_elem([0,0,0,0],1)
@@ -68,8 +69,10 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
     q = 0 # conserving glb Qn
     VbdL = cytnx.Bond(cytnx.BD_KET,[[0]],[1])
     VbdR = cytnx.Bond(cytnx.BD_KET,[[q]],[1])
-    L0 = cytnx.UniTensor([bd_inner.redirect(),VbdL.redirect(),VbdL]).set_rowrank_(1) #Left boundary
-    R0 = cytnx.UniTensor([bd_inner,VbdR,VbdR.redirect()]).set_rowrank_(1) #Right boundary
+    L0 = cytnx.UniTensor([bd_inner.redirect(),VbdL.redirect(),VbdL]) \
+                         .set_rowrank_(1).set_name("L0") #Left boundary
+    R0 = cytnx.UniTensor([bd_inner,VbdR,VbdR.redirect()]) \
+                         .set_rowrank_(1).set_name("R0") #Right boundary
     L0.set_elem([0,0,0],1)
     R0.set_elem([3,0,0],1)
 
@@ -81,7 +84,8 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
         cq = -1
     qcntr+=cq
 
-    A[0] = cytnx.UniTensor([VbdL,bd_phys.redirect(),cytnx.Bond(cytnx.BD_BRA,[[qcntr]],[1])]).set_rowrank_(2)
+    A[0] = cytnx.UniTensor([VbdL,bd_phys.redirect(),cytnx.Bond(cytnx.BD_BRA,[[qcntr]],[1])]) \
+                           .set_rowrank_(2).set_name("A0")
     A[0].get_block_()[0] = 1
 
     lbls = []
@@ -96,10 +100,10 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
         qcntr+=cq
         B3 = cytnx.Bond(cytnx.BD_BRA,[[qcntr]],[1])
 
-        A[k] = cytnx.UniTensor([B1,B2,B3]).set_rowrank_(2)
+        A[k] = cytnx.UniTensor([B1,B2,B3]).set_rowrank_(2).set_name(f"A{k}")
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
-        A[k].set_labels(lbl)
+        A[k].relabel_(lbl)
 
         A[k].get_block_()[0] = 1
         lbls.append(lbl) # store the labels for later convinience.
@@ -115,8 +119,11 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
                     "A_Conj: -3,-5,2",\
                     "TOUT: 0;1,2"])
     for p in range(Nsites - 1):
-        anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Dagger(),M])
+        # Dagger() swaps left/right index order; permute_ restores original label order
+        anet.PutUniTensors(["L","A","A_Conj","M"], \
+                           [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])
         LR[p+1] = anet.Launch()
+        LR[p+1].set_name(f"LR{p+1}")
 
     Ekeep = []
     for k in range(1, numsweeps+1):
@@ -132,12 +139,14 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p+1].relabels_(lbls[p+1]) # set the label back to be consistent
+            A[p+1].set_name(f"A{p+1}") \
+                  .relabel_(lbls[p+1]) # set the label back to be consistent
 
             s = s/s.Norm().item() # normalize s
 
             A[p] = cytnx.Contract(A[p],s) # absorb s into next neighbor
-            A[p].relabels_(lbls[p]) # set the label back to be consistent
+            A[p].set_name(f"A{p}") \
+                .relabel_(lbls[p]) # set the label back to be consistent
 
             # update LR from right to left:
             anet = cytnx.Network()
@@ -146,14 +155,16 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
                         "M: 0,-2,-4,-5",\
                         "B_Conj: 2,-5,-3",\
                         "TOUT: 0;1,2"])
-            anet.PutUniTensors(["R","B","M","B_Conj"],[LR[p+2],A[p+1],M,A[p+1].Dagger()])
+            anet.PutUniTensors(["R","B","M","B_Conj"], \
+                               [LR[p+2],A[p+1],M,A[p+1].Dagger().permute_(A[p+1].labels())])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
+            LR[p+1].set_name(f"LR{p+1}")
 
             print('Sweep[r->l]: %d/%d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
 
         A[0].set_rowrank_(1)
         _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-        A[0].relabels_(lbls[0]) #set the label back to be consistent
+        A[0].relabel_(lbls[0]) #set the label back to be consistent
 
         for p in range(Nsites-1):
             dim_l = A[p].shape()[0]
@@ -166,12 +177,15 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],A[p+1] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].relabels_(lbls[p]) #set the label back to be consistent
+            A[p].relabel_(lbls[p]) #set the label back to be consistent
 
             s = s/s.Norm().item() # normalize s
 
             A[p+1] = cytnx.Contract(s,A[p+1]) ## absorb s into next neighbor.
-            A[p+1].relabels_(lbls[p+1]) #set the label back to be consistent
+            A[p+1].relabel_(lbls[p+1]) #set the label back to be consistent
+
+            A[p].set_name(f"A{p}")
+            A[p+1].set_name(f"A{p+1}")
 
             # update LR from left to right:
             anet = cytnx.Network()
@@ -180,14 +194,17 @@ def dmrg_XXmodel_U1(Nsites, chi, numsweeps, maxit):
                         "M: -2,0,-4,-5",\
                         "A_Conj: -3,-5,2",\
                         "TOUT: 0;1,2"])
-            anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Dagger(),M])
+            anet.PutUniTensors(["L","A","A_Conj","M"], \
+                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
             LR[p+1] = anet.Launch()
+            LR[p+1].set_name(f"LR{p+1}")
 
             print('Sweep[l->r]: %d/%d, Loc: %d,Energy: %f' % (k, numsweeps, p, Ekeep[-1]))
 
         A[-1].set_rowrank_(2)
         _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-        A[-1].relabels_(lbls[-1]) #set the label back to be consistent
+        A[-1].set_name(f"A{Nsites-1}") \
+             .relabel_(lbls[-1]) #set the label back to be consistent
 
     return Ekeep
 

@@ -499,7 +499,7 @@ namespace cytnx {
         cytnx_error_msg(true, "[ERROR][Lanczos] 'which' should be 'LM', 'LA', 'SA'", "\n");
       }
 
-      // If the operator is complex hermaitian, just call Arnoldi algorthm since there is no
+      // If the operator is complex Hermitian, just call Arnoldi algorthm since there is no
       //     specific routine for complex Hermitian operaton in arpack.
       if (Type.is_complex(Hop->dtype())) {
         try {

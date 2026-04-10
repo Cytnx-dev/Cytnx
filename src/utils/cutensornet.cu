@@ -232,8 +232,10 @@ namespace cytnx {
       std::cout << "Cutensornet set device id =  " << deviceId << std::endl;
       printf("===== Cutensornet device info ======\n");
       printf("GPU-name:%s\n", prop.name);
+    #if (CUDART_VERSION < 13000)
       printf("GPU-clock:%d\n", prop.clockRate);
       printf("GPU-memoryClock:%d\n", prop.memoryClockRate);
+    #endif
       printf("GPU-nSM:%d\n", prop.multiProcessorCount);
       printf("GPU-major:%d\n", prop.major);
       printf("GPU-minor:%d\n", prop.minor);

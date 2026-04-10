@@ -64,10 +64,10 @@ def itebd_tfim(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
     Elast = 0
     for i in range(10000):
 
-        A.set_labels(['a','0','b'])
-        B.set_labels(['c','1','d'])
-        la.set_labels(['b','c'])
-        lb.set_labels(['d','e'])
+        A.relabel_(['a','0','b'])
+        B.relabel_(['c','1','d'])
+        la.relabel_(['b','c'])
+        lb.relabel_(['d','e'])
 
 
         ## contract all
@@ -89,7 +89,7 @@ def itebd_tfim(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
         # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
         XNorm = cytnx.Contract(X,Xt).item()
         XH = cytnx.Contract(X,H)
-        XH.set_labels(['d','e','0','1'])
+        XH.relabel_(['d','e','0','1'])
 
 
         XHX = cytnx.Contract(Xt,XH).item() ## rank-0
@@ -133,7 +133,7 @@ def itebd_tfim(chi = 20, J = 1.0, Hx = 1.0, dt = 0.1, CvgCrit = 1.0e-10):
         # again, but A' and B' are updated
         lb_inv = 1./lb
         # lb_inv.print_diagram()
-        lb_inv.set_labels(['e','d'])
+        lb_inv.relabel_(['e','d'])
 
         A = cytnx.Contract(lb_inv,A)
         B = cytnx.Contract(B,lb_inv)

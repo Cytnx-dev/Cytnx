@@ -61,8 +61,8 @@ Let's first create this two-site  MPS wave function (here, we set virtual bond d
 ..     bool is_diag = true;
 ..     auto A = UniTensor({Bond(chi),Bond(2),Bond(chi)},{"a","0","b"},-1,Type.Double,Device.cpu,is_diag);
 ..     auto B = UniTensor(A.bonds(),{"c","1","d"},-1,Type.Double,Device.cpu,is_diag);
-..     random::Make_normal(B.get_block_(),0,0.2);
-..     random::Make_normal(A.get_block_(),0,0.2);
+..     random::normal_(B.get_block_(),0,0.2);
+..     random::normal_(A.get_block_(),0,0.2);
 ..     A.print_diagram();
 ..     B.print_diagram();
 

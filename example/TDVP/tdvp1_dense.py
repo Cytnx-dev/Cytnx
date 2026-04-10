@@ -25,7 +25,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
         def matvec(self, v):
             self.anet.PutUniTensor("psi",v)
             out = self.anet.Launch()
-            out.relabels_(v.labels())
+            out.relabel_(v.labels())
             return out
 
     class ZeroSiteOp(cytnx.LinOp):
@@ -44,7 +44,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
         def matvec(self, v):
             self.anet.PutUniTensor("C",v)
             out = self.anet.Launch()
-            out.relabels_(v.labels())
+            out.relabel_(v.labels())
             return out
 
     def time_evolve_Lan_f(psi, functArgs, delta):
@@ -54,7 +54,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
         R = R.astype(cytnx.Type.ComplexDouble)
         op = OneSiteOp(L,M,R)
         exp_iH_v = cytnx.linalg.Lanczos_Exp(op, psi, -1.0j*delta*0.5, 1.0e-8)
-        exp_iH_v.relabels_(psi.labels())
+        exp_iH_v.relabel_(psi.labels())
         return exp_iH_v
 
     def time_evolve_Lan_b(psi, functArgs, delta):
@@ -63,7 +63,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
         R = R.astype(cytnx.Type.ComplexDouble)
         op = ZeroSiteOp(L,R)
         exp_iH_v = cytnx.linalg.Lanczos_Exp(op, psi, 1.0j*delta*0.5, 1.0e-8)
-        exp_iH_v.relabels_(psi.labels())
+        exp_iH_v.relabel_(psi.labels())
         return exp_iH_v
 
     def get_energy(A, M):
@@ -81,7 +81,9 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                         "TOUT: 0,1,2"])
         # or you can do: anet = cytnx.Network("L_AMAH.net")
         for p in range(0, N):
-            anet.PutUniTensors(["L","A","A_Conj","M"],[L,A[p],A[p].Conj(),M])
+            # Dagger() swaps left/right index order; permute_ restores original label order
+            anet.PutUniTensors(["L","A","A_Conj","M"], \
+                               [L,A[p],A[p].Dagger().permute_(A[p].labels()),M])
             L = anet.Launch()
         E = cytnx.Contract(L, R0).item()
         print('energy:', E)
@@ -118,7 +120,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
     for k in range(1,Nsites):
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
-        A[k].relabels_(lbl)
+        A[k].relabel_(lbl)
         lbls.append(lbl) # store the labels for later convinience.
 
     LR = [None for i in range(Nsites+1)]
@@ -140,12 +142,13 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                         "A_Conj: -3,-5,2",\
                         "TOUT: 0,1,2"])
         # or you can do: anet = cytnx.Network("L_AMAH.net")
-        anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Conj(),M])
+        anet.PutUniTensors(["L","A","A_Conj","M"], \
+                           [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
         LR[p+1] = anet.Launch()
 
         # Recover the original MPS labels
-        A[p].relabels_(lbls[p])
-        A[p+1].relabels_(lbls[p+1])
+        A[p].relabel_(lbls[p])
+        A[p+1].relabel_(lbls[p+1])
 
     As = []
     As.append(A.copy())
@@ -168,7 +171,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
             psi.set_rowrank_(1) # maintain rowrank to perform the svd
             s,_,A[p] = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].relabels_(lbls[p]) # set the label back to be consistent
+            A[p].relabel_(lbls[p]) # set the label back to be consistent
             # update LR from right to left:
             anet = cytnx.Network()
             anet.FromString(["R: -2,-1,-3",\
@@ -177,7 +180,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                             "B_Conj: 2,-5,-3",\
                             "TOUT: ;0,1,2"])
             # or you can do: anet = cytnx.Network("R_AMAH.net")
-            anet.PutUniTensors(["R","B","M","B_Conj"],[LR[p+1],A[p],M,A[p].Conj()])
+            anet.PutUniTensors(["R","B","M","B_Conj"], \
+                               [LR[p+1],A[p],M,A[p].Dagger().permute_(A[p].labels())])  # Dagger() swaps index order; permute_ restores it
             old_LR = LR[p].clone()
             if p != 0:
                 LR[p] = anet.Launch()
@@ -186,7 +190,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                 #C = time_evolve_b(C, (old_LR, LR[p]), dt)
                 C = time_evolve_Lan_b(C, (old_LR, LR[p]), dt)
 
-                A[p-1] = cytnx.Contract(A[p-1], C).relabels_(A[p-1].labels())
+                A[p-1] = cytnx.Contract(A[p-1], C).relabel_(A[p-1].labels())
 
 
 
@@ -195,7 +199,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
         A[0].set_rowrank_(1)
         _,A[0] = cytnx.linalg.Gesvd(A[0],is_U=False, is_vT=True)
-        A[0].relabels_(lbls[0]) #set the label back to be consistent
+        A[0].relabel_(lbls[0]) #set the label back to be consistent
 
 
         for p in range(Nsites):
@@ -208,7 +212,7 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
 
             psi.set_rowrank_(2) # maintain rowrank to perform the svd
             s,A[p],_ = cytnx.linalg.Svd_truncate(psi,new_dim)
-            A[p].relabels_(lbls[p]) #set the label back to be consistent
+            A[p].relabel_(lbls[p]) #set the label back to be consistent
             # update LR from left to right:
             anet = cytnx.Network()
             anet.FromString(["L: -2,-1,-3",\
@@ -217,7 +221,8 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                             "A_Conj: -3,-5,2",\
                             "TOUT: 0,1,2"])
 
-            anet.PutUniTensors(["L","A","A_Conj","M"],[LR[p],A[p],A[p].Conj(),M])
+            anet.PutUniTensors(["L","A","A_Conj","M"], \
+                               [LR[p],A[p],A[p].Dagger().permute_(A[p].labels()),M])  # Dagger() swaps index order; permute_ restores it
             old_LR = LR[p+1].clone()
 
 
@@ -228,13 +233,13 @@ def tdvp1_XXZmodel_dense(J, Jz, hx, hz, A, chi, dt, time_step):
                 C = time_evolve_Lan_b(C, (LR[p+1],old_LR), dt)
                 A[p+1] = cytnx.Contract(A[p+1], C)
                 A[p+1].permute_(['_aux_L', lbls[p+1][1], lbls[p+1][2]])
-                A[p+1].relabels_(lbls[p+1])
+                A[p+1].relabel_(lbls[p+1])
 
             print('Sweep[l->r]: %d/%d, Loc: %d' % (k, time_step, p))
 
         A[-1].set_rowrank_(2)
         _,A[-1] = cytnx.linalg.Gesvd(A[-1],is_U=True,is_vT=False) ## last one.
-        A[-1].relabels_(lbls[-1]) #set the label back to be consistent
+        A[-1].relabel_(lbls[-1]) #set the label back to be consistent
         As.append(A.copy())
     return As, Es # all time step states
 
@@ -248,15 +253,17 @@ def Local_meas(A, B, Op, site):
                     "TOUT: 2;4"])
     for i in range(0, N):
         if i != site:
-            anet.PutUniTensors(["l","A","B"],[l,A[i],B[i].Conj()])
+            anet.PutUniTensors(["l","A","B"], \
+                               [l,A[i],B[i].Dagger().permute_(B[i].labels())])  # Dagger() swaps index order; permute_ restores it
             l = anet.Launch()
         else:
             tmp = A[i].relabel(1, "_aux_up")
-            Op = Op.relabels(["_aux_up", "_aux_low"])
+            Op = Op.relabel(["_aux_up", "_aux_low"])
             tmp = cytnx.Contract(tmp, Op)
             tmp.relabel_("_aux_low", A[i].labels()[1])
             tmp.permute_(A[i].labels())
-            anet.PutUniTensors(["l","A","B"],[l,tmp,B[i].Conj()])
+            anet.PutUniTensors(["l","A","B"], \
+                               [l,tmp,B[i].Dagger().permute_(B[i].labels())])  # Dagger() swaps index order; permute_ restores it
             l = anet.Launch()
 
     return l.reshape(1).item()
@@ -265,8 +272,8 @@ def Local_meas(A, B, Op, site):
 def prepare_rand_init_MPS(Nsites, chi, d):
     lbls = []
     A = [None for i in range(Nsites)]
-    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0).set_rowrank_(2)
-    A[0].relabels_(["0","1","2"])
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., seed=0) \
+                                  .set_rowrank_(2).relabel_(["0","1","2"])
     lbls.append(["0","1","2"]) # store the labels for later convinience.
 
     for k in range(1,Nsites):
@@ -276,7 +283,7 @@ def prepare_rand_init_MPS(Nsites, chi, d):
         A[k] = cytnx.UniTensor.normal([dim1, dim2, dim3],0.,1., seed=0).set_rowrank(2)
 
         lbl = [str(2*k),str(2*k+1),str(2*k+2)]
-        A[k].relabels_(lbl)
+        A[k].relabel_(lbl)
         lbls.append(lbl) # store the labels for later convinience.
     return A
 

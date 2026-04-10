@@ -194,8 +194,8 @@ Next, we are going to prepare our variational ansatz (MPS). Here, **chi** is the
     Nsites = 20
     lbls = [] # List for storing the MPS labels
     A = [None for i in range(Nsites)]
-    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1., rowrank = 2)
-    A[0].relabel_(["0","1","2"])
+    A[0] = cytnx.UniTensor.normal([1, d, min(chi, d)], 0., 1.) \
+                                  .set_rowrank_(2).relabel_(["0","1","2"])
     lbls.append(["0","1","2"]) # store the labels for later convinience.
 
     for k in range(1,Nsites):

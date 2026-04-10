@@ -126,6 +126,33 @@ if(USE_CUDA)
     #      -gencode=arch=compute_75,code=compute_75 ")
     target_compile_definitions(cytnx PUBLIC UNI_GPU)
     target_include_directories(cytnx PRIVATE ${CUDAToolkit_INCLUDE_DIRS})
+    # CUDA 12+/13 may place Thrust/CUB headers under include/cccl.
+    set(_cytnx_cccl_candidates)
+    if(DEFINED CUDAToolkit_TARGET_DIR AND NOT "${CUDAToolkit_TARGET_DIR}" STREQUAL "")
+      list(APPEND _cytnx_cccl_candidates "${CUDAToolkit_TARGET_DIR}/include/cccl")
+    endif()
+    foreach(_cuda_inc IN LISTS CUDAToolkit_INCLUDE_DIRS)
+      list(APPEND _cytnx_cccl_candidates
+        "${_cuda_inc}/cccl"
+        "${_cuda_inc}/../include/cccl"
+        "${_cuda_inc}/../../include/cccl"
+        "${_cuda_inc}/../../../include/cccl")
+    endforeach()
+    list(REMOVE_DUPLICATES _cytnx_cccl_candidates)
+
+    set(_cytnx_cccl_dir "")
+    foreach(_cccl_candidate IN LISTS _cytnx_cccl_candidates)
+      get_filename_component(_cccl_candidate_abs "${_cccl_candidate}" ABSOLUTE)
+      if(EXISTS "${_cccl_candidate_abs}")
+        set(_cytnx_cccl_dir "${_cccl_candidate_abs}")
+        break()
+      endif()
+    endforeach()
+    if(NOT "${_cytnx_cccl_dir}" STREQUAL "")
+      target_include_directories(cytnx PRIVATE "${_cytnx_cccl_dir}")
+      message(STATUS "Detected CCCL headers at: ${_cytnx_cccl_dir}")
+    endif()
+
     target_link_libraries(cytnx PUBLIC CUDA::toolkit)
     target_link_libraries(cytnx PUBLIC CUDA::cudart CUDA::cublas CUDA::cusparse CUDA::curand CUDA::cusolver)
     target_link_libraries(cytnx PUBLIC -lcudadevrt)
