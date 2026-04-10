@@ -14,10 +14,6 @@ namespace cytnx {
 
     template <class T>
     void _trace_2d_gpu(Tensor &out, const Tensor &Tn, const cytnx_uint64 &Ndiag) {
-      cytnx_error_msg(Tn.shape()[0] < Ndiag || Tn.shape()[1] < Ndiag,
-                      "[ERROR] Tracing over indices with different dimensions is currently not "
-                      "supported on the GPU.%s",
-                      "\n");
       cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
       // similar to _trace_nd_gpu
       UniTensor UTn = UniTensor(Tn, false, 2);
@@ -33,10 +29,6 @@ namespace cytnx {
                        const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                        const cytnx_uint64 &ax2) {
       // currently identical to CPU version
-      cytnx_error_msg(shape[ax1] < Ndiag || shape[ax2] < Ndiag,
-                      "[ERROR] Tracing over indices with different dimensions is currently not "
-                      "supported in the presense of further indices.%s",
-                      "\n");
       cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
 
       UniTensor UTn = UniTensor(Tn, false, 2);

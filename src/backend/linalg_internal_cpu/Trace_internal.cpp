@@ -26,10 +26,6 @@ namespace cytnx {
                    const std::vector<cytnx_uint64> &remain_rank_id,
                    const std::vector<cytnx_int64> &shape, const cytnx_uint64 &ax1,
                    const cytnx_uint64 &ax2) {
-      cytnx_error_msg(shape[ax1] < Ndiag || shape[ax2] < Ndiag,
-                      "[ERROR] Tracing over indices with different dimensions is currently not "
-                      "supported in the presense of further indices.%s",
-                      "\n");
       cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
 
       UniTensor UTn = UniTensor(Tn, false, 2);
