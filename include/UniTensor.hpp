@@ -296,9 +296,8 @@ namespace cytnx {
 
     virtual void put_block(const Tensor &in, const cytnx_uint64 &idx = 0);
     virtual void put_block_(Tensor &in, const cytnx_uint64 &idx = 0);
-    virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum,
-                           const bool &force);
-    virtual void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force);
+    virtual void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum);
+    virtual void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum);
 
     // this will only work on non-symm tensor (DenseUniTensor)
     virtual boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
@@ -761,12 +760,12 @@ namespace cytnx {
       put_block_(in);
     }
 
-    void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &qnum) {
       cytnx_error_msg(
         true, "[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s",
         "\n");
     }
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum, const bool &force) {
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &qnum) {
       cytnx_error_msg(
         true, "[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s",
         "\n");
@@ -1535,7 +1534,7 @@ namespace cytnx {
 
       this->_blocks[idx] = in;
     }
-    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices) {
       cytnx_error_msg(in.dtype() != this->dtype(),
                       "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
@@ -1562,13 +1561,8 @@ namespace cytnx {
       }
 
       if (b < 0) {
-        if (check) {
-          cytnx_error_msg(true,
-                          "[ERROR][put_block][BlockUniTensor] no avaliable block exists, "
-                          "check=true, so error throws. \n    If you want without error when block "
-                          "is not avaliable, set check=false.%s",
-                          "\n");
-        }
+        cytnx_error_msg(true, "[ERROR][put_block][BlockUniTensor] no avaliable block exists.%s",
+                        "\n");
       } else {
         cytnx_error_msg(
           in.shape() != this->_blocks[b].shape(),
@@ -1579,7 +1573,7 @@ namespace cytnx {
         this->_blocks[b] = in.clone();
       }
     }
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices) {
       cytnx_error_msg(in.dtype() != this->dtype(),
                       "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
@@ -1606,13 +1600,8 @@ namespace cytnx {
       }
 
       if (b < 0) {
-        if (check) {
-          cytnx_error_msg(true,
-                          "[ERROR][put_block][BlockUniTensor] no avaliable block exists, "
-                          "check=true, so error throws. \n    If you want without error when block "
-                          "is not avaliable, set check=false.%s",
-                          "\n");
-        }
+        cytnx_error_msg(true, "[ERROR][put_block][BlockUniTensor] no avaliable block exists.%s",
+                        "\n");
       } else {
         cytnx_error_msg(
           in.shape() != this->_blocks[b].shape(),
@@ -2310,7 +2299,7 @@ namespace cytnx {
 
       this->_blocks[idx] = in;
     }
-    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+    void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       cytnx_error_msg(in.dtype() != this->dtype(),
                       "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
@@ -2339,13 +2328,8 @@ namespace cytnx {
       }
 
       if (b < 0) {
-        if (check) {
-          cytnx_error_msg(true,
-                          "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists, "
-                          "check=true, so error throws. \n    If you want without error when block "
-                          "is not avaliable, set check=false.%s",
-                          "\n");
-        }
+        cytnx_error_msg(
+          true, "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists.%s", "\n");
       } else {
         cytnx_error_msg(
           in.shape() != this->_blocks[b].shape(),
@@ -2356,7 +2340,7 @@ namespace cytnx {
         this->_blocks[b] = in.clone();
       }
     }
-    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices, const bool &check) {
+    void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
       cytnx_error_msg(in.dtype() != this->dtype(),
                       "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
@@ -2385,13 +2369,8 @@ namespace cytnx {
       }
 
       if (b < 0) {
-        if (check) {
-          cytnx_error_msg(true,
-                          "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists, "
-                          "check=true, so error throws. \n    If you want without error when block "
-                          "is not avaliable, set check=false.%s",
-                          "\n");
-        }
+        cytnx_error_msg(
+          true, "[ERROR][put_block][BlockFermionicUniTensor] no avaliable block exists.%s", "\n");
       } else {
         cytnx_error_msg(
           in.shape() != this->_blocks[b].shape(),
@@ -4224,15 +4203,41 @@ namespace cytnx {
     }
 
     /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block(const Tensor &in, const cytnx_uint64 &idx) \n
+     *   instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block(const Tensor &in, const cytnx_uint64 &idx) "
+      "instead.")]] UniTensor &
+      put_block(const Tensor &in, const cytnx_uint64 &idx, const bool &force) {
+      this->_impl->put_block(in, idx);
+      return *this;
+    }
+
+    /**
     @brief Put the block into the UniTensor with given quantum number.
         @param[in] in_tens the block you want to put into UniTensor
         @param[in] qidx the quantum indices of the UniTensor you want to put the block \p in_tens
   in.
-  @warning @p force will be deprecated soon!
     */
-    UniTensor &put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx,
-                         const bool &force) {
-      this->_impl->put_block(in_tens, qidx, force);
+    UniTensor &put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx) {
+      this->_impl->put_block(in_tens, qidx);
+      return *this;
+    }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx) \n
+     *   instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block(const Tensor &in_tens, const std::vector<cytnx_int64> &qidx, const bool &force) {
+      this->_impl->put_block(in_tens, qidx);
       return *this;
     }
 
@@ -4241,7 +4246,7 @@ namespace cytnx {
      * tensor.
      */
     UniTensor &put_block(Tensor &in, const std::vector<std::string> &lbls,
-                         const std::vector<cytnx_int64> &qidx, const bool &force = false) {
+                         const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(
         lbls.size() != qidx.size(),
         "[ERROR][put_block] length of lists must be the same for both lables and qnidices%s", "\n");
@@ -4264,8 +4269,23 @@ namespace cytnx {
         // new_order[i] = new_loc;
         inv_order[new_loc] = i;
       }
-      this->_impl->put_block(in.permute(inv_order), new_qidx, force);
+      this->_impl->put_block(in.permute(inv_order), new_qidx);
       return *this;
+    }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block(Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64>
+     * &qidx) \n instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block(Tensor &in, const std::vector<std::string> &lbls, const "
+      "std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block(Tensor &in, const std::vector<std::string> &lbls,
+                const std::vector<cytnx_int64> &qidx, const bool &force) {
+      return put_block(in, lbls, qidx);
     }
 
     /**
@@ -4282,10 +4302,23 @@ namespace cytnx {
     @brief Put the block into the UniTensor with given quantum indices, inplacely.
         @note the put block will have shared view with the internal block, i.e. non-clone.
         @see put_block(const Tensor &in, const cytnx_uint64 &idx)
-  @warning @p force will be deprecated soon!
         */
-    UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx, const bool &force) {
-      this->_impl->put_block_(in, qidx, force);
+    UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) {
+      this->_impl->put_block_(in, qidx);
+      return *this;
+    }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) \n
+     *   instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block_(Tensor &in, const std::vector<cytnx_int64> &qidx, const bool &force) {
+      this->_impl->put_block_(in, qidx);
       return *this;
     }
 
@@ -4294,7 +4327,7 @@ namespace cytnx {
      * @note the put block will have shared view with the internal block, i.e. non-clone.
      */
     UniTensor &put_block_(Tensor &in, const std::vector<std::string> &lbls,
-                          const std::vector<cytnx_int64> &qidx, const bool &force = false) {
+                          const std::vector<cytnx_int64> &qidx) {
       cytnx_error_msg(
         lbls.size() != qidx.size(),
         "[ERROR][put_block_] length of lists must be the same for both lables and qnidices%s",
@@ -4319,10 +4352,26 @@ namespace cytnx {
         inv_order[new_loc] = i;
       }
       in.permute_(inv_order);
-      this->_impl->put_block_(in, new_qidx, force);
+      this->_impl->put_block_(in, new_qidx);
       in.permute_(new_order);
       return *this;
     }
+
+    /**
+     * @deprecated This function is deprecated. Please use \n
+     *   put_block_(Tensor &in, const std::vector<std::string> &lbls, const std::vector<cytnx_int64>
+     * &qidx) \n instead.
+     */
+    [[deprecated(
+      "Please use "
+      "UniTensor &put_block_(Tensor &in, const std::vector<std::string> &lbls, const "
+      "std::vector<cytnx_int64> &qidx) "
+      "instead.")]] UniTensor &
+      put_block_(Tensor &in, const std::vector<std::string> &lbls,
+                 const std::vector<cytnx_int64> &qidx, const bool &force) {
+      return put_block_(in, lbls, qidx);
+    }
+
     UniTensor get(const std::vector<Accessor> &accessors) const {
       UniTensor out;
       out._impl = this->_impl->get(accessors);
