@@ -799,7 +799,7 @@ namespace cytnx {
 
     /**
     @brief Group the duplicated quantum number and return the new instance
-            of the Bond ojbect.
+            of the Bond object.
         @details This function will group the duplicated quantum number and return
             the new instance of the Bond object. It will also the \p mapper, where
                 \p mapper is about the new index from old index via\n

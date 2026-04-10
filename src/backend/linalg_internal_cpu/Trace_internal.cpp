@@ -29,7 +29,7 @@ namespace cytnx {
       cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
 
       UniTensor UTn = UniTensor(Tn, false, 2);
-      I_UT.set_labels({UTn._impl->_labels[ax1], UTn._impl->_labels[ax2]});
+      I_UT.relabel_({UTn._impl->_labels[ax1], UTn._impl->_labels[ax2]});
 
       out = Contract(I_UT, UTn).get_block_();
 

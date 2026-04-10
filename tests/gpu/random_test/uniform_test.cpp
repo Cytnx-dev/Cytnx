@@ -94,7 +94,7 @@ namespace cytnx {
     unsigned int dtype = Type_struct_t<TypeParam>::cy_typeid;
 
     Storage storage(kCount, dtype, Device.cuda);
-    random::Make_uniform(storage, /*low=*/-2.0, /*high=*/5.0, /*seed=*/3);
+    random::uniform_(storage, /*low=*/-2.0, /*high=*/5.0, /*seed=*/3);
     // call typed data<T>() to trigger cudaDeviceSynchronize()
     start = reinterpret_cast<MemoryLayout<TypeParam>*>(storage.data<TypeParam>());
     std::copy(start, start + kCountInValueType, copied_numbers.begin());
@@ -104,7 +104,7 @@ namespace cytnx {
     EXPECT_THAT(copied_numbers, Not(Contains(Gt(5.0))));
 
     Tensor tensor({kCount}, dtype, Device.cuda);
-    random::Make_uniform(tensor, /*low=*/-2.0, /*high=*/5.0, /*seed=*/4);
+    random::uniform_(tensor, /*low=*/-2.0, /*high=*/5.0, /*seed=*/4);
     // call typed data<T>() to trigger cudaDeviceSynchronize()
     start = reinterpret_cast<MemoryLayout<TypeParam>*>(tensor.storage().data<TypeParam>());
     std::copy(start, start + kCountInValueType, copied_numbers.begin());

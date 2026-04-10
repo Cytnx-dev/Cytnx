@@ -18,7 +18,6 @@ namespace cytnx {
       // similar to _trace_nd_gpu
       UniTensor UTn = UniTensor(Tn, false, 2);
       I_UT.set_labels({UTn._impl->_labels[0], UTn._impl->_labels[1]});
-
       out = Contract(I_UT, UTn).get_block_();
     }
 
