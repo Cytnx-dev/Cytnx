@@ -157,6 +157,40 @@ namespace SvdTest {
   }
 
   /*=====test info=====
+  describe:Regression test for a rank-3 U1 symmetric UniTensor with rowrank=2.
+  input:
+    T:UniTensor with bonds a(OUT,qnums={0,1}), b(IN,qnums={4}), c(OUT,qnums={4}).
+    is_U:true
+    is_VT:true
+  ====================*/
+  TEST(Svd, U1_sym_regression_mixed_in_out_qnums) {
+    UniTensor T(
+      {Bond(BD_OUT, {{0}, {1}}, {1, 1}, {Symmetry::U1()}),
+       Bond(BD_IN, {{4}}, {1}, {Symmetry::U1()}), Bond(BD_OUT, {{4}}, {1}, {Symmetry::U1()})},
+      {"a", "b", "c"}, 2, Type.Double, Device.cpu, false);
+    random::uniform_(T, -1.0, 1.0, 0);
+
+    std::vector<UniTensor> svds = linalg::Svd(T);
+
+    ASSERT_EQ(svds.size(), 3);
+    EXPECT_TRUE(CheckLabels(T, svds)) << fail_msg.TraceFailMsgs();
+    EXPECT_TRUE(ReComposeCheck(T, svds)) << fail_msg.TraceFailMsgs();
+
+    const std::vector<std::vector<cytnx_int64>> expected_aux_qnums = {{4}};
+    const std::vector<cytnx_uint64> expected_aux_degs = {1};
+
+    EXPECT_EQ(svds[0].bonds()[0].qnums(), expected_aux_qnums);
+    EXPECT_EQ(svds[0].bonds()[1].qnums(), expected_aux_qnums);
+    EXPECT_EQ(svds[1].bonds().back().qnums(), expected_aux_qnums);
+    EXPECT_EQ(svds[2].bonds().front().qnums(), expected_aux_qnums);
+
+    EXPECT_EQ(svds[0].bonds()[0].getDegeneracies(), expected_aux_degs);
+    EXPECT_EQ(svds[0].bonds()[1].getDegeneracies(), expected_aux_degs);
+    EXPECT_EQ(svds[1].bonds().back().getDegeneracies(), expected_aux_degs);
+    EXPECT_EQ(svds[2].bonds().front().getDegeneracies(), expected_aux_degs);
+  }
+
+  /*=====test info=====
   describe:Test the input parameters 'is_U' or 'is_VT' may be false.
   input:
     T:Tensor with U1 symmetry contains only one element..
