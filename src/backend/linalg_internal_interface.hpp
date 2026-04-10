@@ -61,6 +61,7 @@
   #include "linalg_internal_gpu/cuOuter_internal.hpp"
   #include "linalg_internal_gpu/cuPow_internal.hpp"
   #include "linalg_internal_gpu/cuSum_internal.hpp"
+  #include "linalg_internal_gpu/cuTrace_internal.hpp"
   #include "linalg_internal_gpu/cuSvd_internal.hpp"
   #include "linalg_internal_gpu/cuVectordot_internal.hpp"
   #include "linalg_internal_gpu/cudaMemcpyTruncation.hpp"
@@ -174,8 +175,7 @@ namespace cytnx {
                                 const boost::intrusive_ptr<Storage_base> &, const cytnx_uint64 &);
 
     typedef void (*Tracefunc_oii)(const bool &, Tensor &, const Tensor &, const cytnx_uint64 &,
-                                  const int &, const cytnx_uint64 &,
-                                  const std::vector<cytnx_uint64> &,
+                                  const cytnx_uint64 &, const std::vector<cytnx_uint64> &,
                                   const std::vector<cytnx_uint64> &,
                                   const std::vector<cytnx_int64> &, const cytnx_uint64 &,
                                   const cytnx_uint64 &);
@@ -270,6 +270,7 @@ namespace cytnx {
       std::vector<Detfunc_oii> cuDet_ii;
       std::vector<MaxMinfunc_oii> cuMM_ii;
       std::vector<Sumfunc_oii> cuSum_ii;
+      std::vector<Tracefunc_oii> cuTrace_ii;
       std::vector<Tensordotfunc_oii> cuTensordot_ii;
 
       std::vector<cudaMemcpyTruncation_oii> cudaMemcpyTruncation_ii;
