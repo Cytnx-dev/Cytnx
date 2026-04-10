@@ -164,7 +164,9 @@ void unitensor_binding(py::module &m) {
 
 
     .def("c_set_labels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                            return self.set_labels(new_labels);
+                            PyErr_WarnEx(PyExc_DeprecationWarning,
+                              "c_set_labels() is deprecated, use relabel_() instead.", 1);
+                            return self.relabel_(new_labels);
                         },py::arg("new_labels"))
 
 
@@ -175,14 +177,18 @@ void unitensor_binding(py::module &m) {
                         return self.relabel(new_labels);
                     }, py::arg("new_labels"))
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        return self.relabels(new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1);
+                        return self.relabel(new_labels);
                     }, py::arg("new_labels"))
 
      .def("c_relabel_",[](UniTensor &self, const std::vector<std::string> &new_labels){
                         self.relabel_(new_labels);
                     }, py::arg("new_labels"))
      .def("c_relabels_",[](UniTensor &self, const std::vector<std::string> &new_labels){
-                        self.relabels_(new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "c_relabels_() is deprecated, use relabel_() instead.", 1);
+                        self.relabel_(new_labels);
                     }, py::arg("new_labels"))
 
 
@@ -211,11 +217,15 @@ void unitensor_binding(py::module &m) {
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("relabels",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        return self.relabels(old_labels,new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "relabels() is deprecated, use relabel() instead.", 1);
+                        return self.relabel(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
     .def("c_relabels_",[](UniTensor &self, const std::vector<std::string> &old_labels, const std::vector<std::string> &new_labels){
-                        self.relabels_(old_labels,new_labels);
+                        PyErr_WarnEx(PyExc_DeprecationWarning,
+                          "c_relabels_() is deprecated, use relabel_() instead.", 1);
+                        self.relabel_(old_labels,new_labels);
                     } ,py::arg("old_labels"), py::arg("new_labels"))
 
 
@@ -656,6 +666,13 @@ void unitensor_binding(py::module &m) {
 
     .def("make_contiguous", &UniTensor::contiguous)
     .def("contiguous_", &UniTensor::contiguous_)
+    .def("apply", &UniTensor::apply,
+         "Apply fermionic signflips and return a new UniTensor. Blocks that require a signflip "
+         "are copied and inverted; blocks that do not are shared views. Non-fermionic tensors are "
+         "returned unchanged. See also: apply_()")
+    .def("apply_", &UniTensor::apply_,
+         "Apply fermionic signflips inplacely. Subsequently, signflip() returns False for all "
+         "elements. Non-fermionic tensors are left unchanged. See also: apply()")
     .def("print_diagram", &UniTensor::print_diagram, py::arg("bond_info") = false,
          py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,

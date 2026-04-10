@@ -20,13 +20,13 @@ Alternatively, if we don't know the index of the target bond in the current orde
 
 If we wish to change the labels of all legs, we can use:
 
-.. py:function:: UniTensor.relabels_( new_labels)
+.. py:function:: UniTensor.relabel_( new_labels)
 
     :param List[string] new_labels: a list of new labels
 
 or
 
-.. py:function:: UniTensor.relabels_(old_labels, new_labels)
+.. py:function:: UniTensor.relabel_(old_labels, new_labels)
 
     :param List[string] old_labels: a list of current labels
     :param List[string] new_labels: a list of the corresponding new labels
