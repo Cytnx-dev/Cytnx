@@ -127,7 +127,7 @@ namespace cytnx {
     if (len_name != 0) {
       char *cname = (char *)malloc(sizeof(char) * len_name);
       f.read(cname, sizeof(char) * len_name);
-      this->_impl->_name = std::string(cname);
+      this->_impl->_name = std::string(cname, len_name);
       free(cname);
     }
 
