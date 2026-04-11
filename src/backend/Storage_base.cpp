@@ -192,7 +192,7 @@ namespace cytnx {
                       "internal, the output dtype does not match current storage dtype.\n");
 
     cytnx_error_msg(this->device() != out->device(),
-                    "[ERROR] cannot GetElem_byShape_v2 between different device.%s", "\n");
+                    "[ERROR] Cannot GetElem_byShape_v2 between different device.%s", "\n");
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < locators.size(); i++) {
       if (locators[i].size())
@@ -251,7 +251,7 @@ namespace cytnx {
                       "internal, the output dtype does not match current storage dtype.\n");
     }
     cytnx_error_msg(this->device() != out->device(),
-                    "[ERROR] cannot GetElem_byShape between different device.%s", "\n");
+                    "[ERROR] Cannot GetElem_byShape between different device.%s", "\n");
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
@@ -308,7 +308,7 @@ namespace cytnx {
                       "[ERROR][DEBUG] internal Storage, shape.size() != len.size()");
 
     cytnx_error_msg(this->device() != in->device(),
-                    "[ERROR] cannot SetElem_byShape between different device.%s", "\n");
+                    "[ERROR] Cannot SetElem_byShape between different device.%s", "\n");
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
     cytnx_uint64 TotalElem = 1;
@@ -370,7 +370,7 @@ namespace cytnx {
     //
 
     cytnx_error_msg(this->device() != in->device(),
-                    "[ERROR] cannot SetElem_byShape_v2 between different device.%s", "\n");
+                    "[ERROR] Cannot SetElem_byShape_v2 between different device.%s", "\n");
 
     // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
@@ -834,7 +834,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Float,
                     "[ERROR] type mismatch. try to get <float> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
@@ -847,7 +847,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Double,
                     "[ERROR] type mismatch. try to get <double> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -860,7 +860,7 @@ namespace cytnx {
       this->dtype() != Type.ComplexFloat,
       "[ERROR] type mismatch. try to get < complex<float> > type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -874,7 +874,7 @@ namespace cytnx {
       this->dtype() != Type.ComplexDouble,
       "[ERROR] type mismatch. try to get < complex<double> > type from raw data of type %s",
       Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -886,7 +886,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Uint32,
                     "[ERROR] type mismatch. try to get <uint32_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -898,7 +898,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Int32,
                     "[ERROR] type mismatch. try to get <int32_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -910,7 +910,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Uint64,
                     "[ERROR] type mismatch. try to get <uint64_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -922,7 +922,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Int64,
                     "[ERROR] type mismatch. try to get <int64_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -934,7 +934,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Uint16,
                     "[ERROR] type mismatch. try to get <uint16_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -946,7 +946,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Int16,
                     "[ERROR] type mismatch. try to get <int16_t> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
@@ -958,7 +958,7 @@ namespace cytnx {
     cytnx_error_msg(this->dtype() != Type.Bool,
                     "[ERROR] type mismatch. try to get <bool> type from raw data of type %s",
                     Type.getname(this->dtype()).c_str());
-    cytnx_error_msg(this->size() == 0, "[ERROR] cannot call back on empty stoarge.%s", "\n");
+    cytnx_error_msg(this->size() == 0, "[ERROR] Cannot call back on empty stoarge.%s", "\n");
 #ifdef UNI_GPU
     cudaDeviceSynchronize();
 #endif
