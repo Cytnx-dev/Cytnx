@@ -292,6 +292,20 @@ void tensor_binding(py::module &m) {
     .def_static(
       "Load", [](const std::string &fname) { return cytnx::Tensor::Load(fname); }, py::arg("fname"))
 
+    .def(py::pickle(
+      [](const cytnx::Tensor &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+        std::string data = state;
+        std::istringstream iss(data, std::ios::binary);
+        cytnx::Tensor out;
+        out.from_binary(iss);
+        return out;
+      }))
+
     .def(
       "Tofile", [](cytnx::Tensor &self, const std::string &fname) { self.Tofile(fname); },
       py::arg("fname"))

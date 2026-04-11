@@ -606,6 +606,22 @@ void unitensor_binding(py::module &m) {
       "Save", [](UniTensor &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
       "Load", [](const std::string &fname) { return UniTensor::Load(fname); }, py::arg("fname"))
+
+    .def(py::pickle(
+      [](const UniTensor &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+            std::string data = state;
+            std::istringstream iss(data, std::ios::binary);
+            UniTensor out;
+            out.from_binary(iss);
+            return out;
+        }
+     ))
+
     //.def("permute",&UniTensor::permute,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
     //.def("permute_",&UniTensor::permute_,py::arg("mapper"),py::arg("rowrank")=(cytnx_int64)-1,py::arg("by_label")=false)
     .def(

@@ -274,6 +274,21 @@ void storage_binding(py::module &m) {
         return cytnx::Storage::Fromfile(fname, dtype, count);
       },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1))
+
+    .def(py::pickle(
+      [](const cytnx::Storage &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+        std::string data = state;
+        std::istringstream iss(data, std::ios::binary);
+        cytnx::Storage out;
+        out.from_binary(iss);
+        return out;
+      }))
+
     .def("real", &cytnx::Storage::real)
     .def("imag", &cytnx::Storage::imag)
 
