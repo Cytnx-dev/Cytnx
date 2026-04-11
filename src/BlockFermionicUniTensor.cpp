@@ -817,8 +817,6 @@ namespace cytnx {
                       mapper[i].c_str(), this->_name.c_str());
       mapper_i64.push_back(std::distance(out_raw->_labels.begin(), it));
     }
-    cout << "Mapper: " << mapper_i64 << endl;
-    cout << "labels: " << _labels << endl;
 
     return this->permute_nosignflip(mapper_i64, rowrank);
   }
@@ -1294,8 +1292,8 @@ namespace cytnx {
 
     // Check for invalid index
     cytnx_error_msg(idx >= this->_labels.size() || idx < 0,
-                    "[ERROR][BlockFermionicUniTensor::twist_] index %d out of bounds [0, %d].\n",
-                    idx, this->_labels.size() - 1);
+                    "[ERROR][BlockFermionicUniTensor::twist_] index %d out of bounds [0, %d).\n",
+                    idx, this->_labels.size());
     Bond bnd = this->_bonds[idx];
 
     for (cytnx_int64 b = 0; b < this->_inner_to_outer_idx.size(); b++) {
@@ -1307,7 +1305,7 @@ namespace cytnx {
         this->_signflip[b] = !this->_signflip[b];
     }
   }
-  void BlockFermionicUniTensor::twist_(const std::string label) {
+  void BlockFermionicUniTensor::twist_(const std::string &label) {
     std::vector<std::string>::iterator it;
     it = std::find(this->_labels.begin(), this->_labels.end(), label);
     cytnx_error_msg(
