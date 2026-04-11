@@ -74,8 +74,8 @@ namespace cytnx {
       virtual void S_mvleft();
       virtual void S_mvright();
 
-      virtual void _save_dispatch(std::fstream &f);
-      virtual void _load_dispatch(std::fstream &f);
+      virtual void to_binary_dispatch(std::ostream &f);
+      virtual void from_binary_dispatch(std::istream &f);
     };
 
     // finite size:
@@ -116,8 +116,8 @@ namespace cytnx {
         return out;
       }
 
-      void _save_dispatch(std::fstream &f);
-      void _load_dispatch(std::fstream &f);
+      void to_binary_dispatch(std::ostream &f);
+      void from_binary_dispatch(std::istream &f);
     };
 
     // infinite size:
@@ -160,8 +160,8 @@ namespace cytnx {
         return out;
       }
       Scalar norm() const;
-      void _save_dispatch(std::fstream &f);
-      void _load_dispatch(std::fstream &f);
+      void to_binary_dispatch(std::ostream &f);
+      void from_binary_dispatch(std::istream &f);
     };
     ///@endcond
 
@@ -287,8 +287,8 @@ namespace cytnx {
       cytnx_int64 &S_loc() { return this->_impl->S_loc; }
 
       ///@cond
-      void _Save(std::fstream &f) const;
-      void _Load(std::fstream &f);
+      void to_binary(std::ostream &f) const;
+      void from_binary(std::istream &f);
       ///@endcond
 
       void Save(const std::string &fname) const;

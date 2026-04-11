@@ -255,7 +255,7 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Save(f);
+    this->to_binary(f);
     f.close();
   }
   void cytnx::Symmetry::Save(const char *fname) const { this->Save(string(fname)); }
@@ -267,7 +267,7 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    out._Load(f);
+    out.from_binary(f);
     f.close();
     return out;
   }
@@ -276,15 +276,13 @@ namespace cytnx {
   }
 
   //==================
-  void cytnx::Symmetry::_Save(fstream &f) const {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid fstream%s", "\n");
+  void cytnx::Symmetry::to_binary(std::ostream &f) const {
     unsigned int IDDs = 777;
     f.write((char *)&IDDs, sizeof(unsigned int));
     f.write((char *)&this->_impl->stype_id, sizeof(int));
     f.write((char *)&this->_impl->n, sizeof(int));
   }
-  void cytnx::Symmetry::_Load(fstream &f) {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Symmetry] invalid fstream%s", "\n");
+  void cytnx::Symmetry::from_binary(std::istream &f) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 777, "[ERROR] the object is not a cytnx symmetry!%s", "\n");

@@ -673,12 +673,12 @@ namespace cytnx {
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
 
-  void UniTensor_base::_save_dispatch(std::fstream &f) const {
+  void UniTensor_base::to_binary_dispatch(std::ostream &f) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
 
-  void UniTensor_base::_load_dispatch(std::fstream &f) {
+  void UniTensor_base::from_binary_dispatch(std::istream &f) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
