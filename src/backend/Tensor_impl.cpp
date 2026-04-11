@@ -371,7 +371,7 @@ namespace cytnx {
       // permute input to currect pos
       std::vector<cytnx_int64> new_mapper(this->_mapper.begin(), this->_mapper.end());
       std::vector<cytnx_uint64> new_shape;
-      std::vector<cytnx_int32> removed;
+      std::vector<cytnx_int64> removed;
       for (unsigned int i = 0; i < get_shape.size(); i++) {
         if (acc[i].type() == Accessor::Singl)
           removed.push_back(this->_mapper[this->_invmapper[i]]);
