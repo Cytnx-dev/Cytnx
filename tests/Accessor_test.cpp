@@ -144,3 +144,19 @@ TEST_F(AccessorTest, AllGenerator) {
   cytnx::Accessor acc = cytnx::Accessor::all();
   ASSERT_EQ(acc.type(), cytnx::Accessor::All);
 }
+
+TEST_F(AccessorTest, Equality) {
+  EXPECT_TRUE(single == cytnx::Accessor(5));
+  EXPECT_TRUE(all == cytnx::Accessor::all());
+  EXPECT_TRUE(range == cytnx::Accessor::range(1, 4, 2));
+  EXPECT_TRUE(tilend == cytnx::Accessor::tilend(2, 1));
+  EXPECT_TRUE(step == cytnx::Accessor::step(3));
+  EXPECT_TRUE(list == cytnx::Accessor({0, 2, 3}));
+  EXPECT_FALSE(single == cytnx::Accessor(4));
+  EXPECT_FALSE(range == cytnx::Accessor::range(1, 6, 2));
+  EXPECT_FALSE(tilend == cytnx::Accessor::tilend(2, 2));
+  EXPECT_FALSE(step == cytnx::Accessor::step(4));
+  EXPECT_FALSE(list == cytnx::Accessor({0, 1, 3}));
+  EXPECT_FALSE(range == all);
+  EXPECT_FALSE(tilend == single);
+}
