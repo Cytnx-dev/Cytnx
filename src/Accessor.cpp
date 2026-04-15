@@ -114,6 +114,14 @@ namespace cytnx {
     return *this;
   }
 
+  // check equality
+  bool Accessor::operator==(const Accessor &rhs) const {
+    bool out = (this->_type == rhs._type) && (this->_min == rhs._min) && (this->_max == rhs._max) &&
+               (this->loc == rhs.loc) && (this->_step == rhs._step) &&
+               (this->idx_list == rhs.idx_list);
+    return out;
+  }
+
   // get the real len from dim
   // if _type is all, pos will be null, and len == dim
   // if _type is range, pos will be the locator, and len == len(pos)

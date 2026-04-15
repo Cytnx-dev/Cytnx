@@ -728,12 +728,12 @@ namespace cytnx {
       if (this->is_diag()) {
         cytnx_error_msg(
           in.shape() != this->_block.shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in.clone();
       } else {
         cytnx_error_msg(
           in.shape() != this->shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in.clone();
       }
     }
@@ -762,12 +762,12 @@ namespace cytnx {
       if (this->is_diag()) {
         cytnx_error_msg(
           in.shape() != this->_block.shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in;
       } else {
         cytnx_error_msg(
           in.shape() != this->shape(),
-          "[ERROR][DenseUniTensor] put_block, the input tensor shape does not match.%s", "\n");
+          "[ERROR][DenseUniTensor][put_block] the input tensor shape does not match.%s", "\n");
         this->_block = in;
       }
     }
@@ -789,16 +789,9 @@ namespace cytnx {
         true, "[ERROR][DenseUniTensor] try to put_block using qnum on a non-symmetry UniTensor%s",
         "\n");
     }
-    // this will only work on non-symm tensor (DenseUniTensor)
-    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors) {
-      boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
-      out->Init_by_Tensor(this->_block.get(accessors), false, 0);  // wrapping around.
-      return out;
-    }
-    // this will only work on non-symm tensor (DenseUniTensor)
-    void set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
-      this->_block.set(accessors, rhs);
-    }
+    // these two methods only work on non-symm tensor (DenseUniTensor)
+    boost::intrusive_ptr<UniTensor_base> get(const std::vector<Accessor> &accessors);
+    void set(const std::vector<Accessor> &accessors, const Tensor &rhs);
 
     void reshape_(const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank = 0);
     boost::intrusive_ptr<UniTensor_base> reshape(const std::vector<cytnx_int64> &new_shape,
@@ -1771,7 +1764,7 @@ namespace cytnx {
         true,
         "[ERROR] Cannot perform elementwise arithmetic '+' between Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
+        "This operation would destroy the block structure. [Suggest] Avoid or use get/put_block(s) "
         "to do operation on blocks.");
     }
 
@@ -1784,7 +1777,7 @@ namespace cytnx {
         true,
         "[ERROR] Cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
+        "This operation would destroy the block structure. [Suggest] Avoid or use get/put_block(s) "
         "to do operation on blocks.");
     }
     void lSub_(const Scalar &lhs) {
@@ -1792,7 +1785,7 @@ namespace cytnx {
         true,
         "[ERROR] Cannot perform elementwise arithmetic '-' between Scalar and BlockUniTensor.\n %s "
         "\n",
-        "This operation would destroy the block structure. [Suggest] Avoid or use get/set_block(s) "
+        "This operation would destroy the block structure. [Suggest] Avoid or use get/put_block(s) "
         "to do operation on blocks.");
     }
 
@@ -1804,7 +1797,7 @@ namespace cytnx {
         "[ERROR] Cannot perform elementwise arithmetic '/' between Scalar and BlockUniTensor.\n %s "
         "\n",
         "This operation would cause division by zero on non-block elements. [Suggest] Avoid or use "
-        "get/set_block(s) to do operation on blocks.");
+        "get/put_block(s) to do operation on blocks.");
     }
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
                const cytnx_double &tol);
@@ -2565,7 +2558,7 @@ namespace cytnx {
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would destroy the block structure. [Suggest] Avoid or use "
-                      "get/set_block(s) to do operation on blocks.");
+                      "get/put_block(s) to do operation on blocks.");
     }
 
     void Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -2578,7 +2571,7 @@ namespace cytnx {
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would destroy the block structure. [Suggest] Avoid or use "
-                      "get/set_block(s) to do operation on blocks.");
+                      "get/put_block(s) to do operation on blocks.");
     }
     void lSub_(const Scalar &lhs) {
       cytnx_error_msg(true,
@@ -2586,7 +2579,7 @@ namespace cytnx {
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would destroy the block structure. [Suggest] Avoid or use "
-                      "get/set_block(s) to do operation on blocks.");
+                      "get/put_block(s) to do operation on blocks.");
     }
 
     void Div_(const boost::intrusive_ptr<UniTensor_base> &rhs);
@@ -2597,7 +2590,7 @@ namespace cytnx {
                       "BlockFermionicUniTensor.\n %s "
                       "\n",
                       "This operation would cause division by zero on non-block elements. "
-                      "[Suggest] Avoid or use get/set_block(s) to do operation on blocks.");
+                      "[Suggest] Avoid or use get/put_block(s) to do operation on blocks.");
     }
     void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
 
@@ -4495,11 +4488,69 @@ namespace cytnx {
       in.permute_(new_order);
       return *this;
     }
+
+    /**
+    @brief get elements using Accessor (C++ API) / slices (python API)
+    @param[in] accessors the Accessor (C++ API) / slices (python API) to get the elements.
+    @return [UniTensor]
+    @see Tensor::get, UniTensor::operator[]
+    @note
+      1. The return will be a new UniTensor instance, which does not share memory with the current
+         UniTensor.
+
+      2. Equivalently, one can also use the [] operator to access elements.
+
+      3. For diagonal UniTensors, the accessor list can have either one element (to address the
+         diagonal elements), or two elements (in this case, the output will be a non-diagonal
+         UniTensor).
+    */
     UniTensor get(const std::vector<Accessor> &accessors) const {
       UniTensor out;
       out._impl = this->_impl->get(accessors);
       return out;
     }
+
+    /**
+    @brief get elements using Accessor (C++ API) / slices (python API)
+    @see get()
+    */
+    UniTensor operator[](const std::vector<cytnx::Accessor> &accessors) const {
+      UniTensor out;
+      out._impl = this->_impl->get(accessors);
+      return out;
+    }
+    UniTensor operator[](const std::initializer_list<cytnx::Accessor> &accessors) const {
+      std::vector<cytnx::Accessor> acc_in = accessors;
+      return this->get(acc_in);
+    }
+    UniTensor operator[](const std::vector<cytnx_int64> &accessors) const {
+      std::vector<cytnx::Accessor> acc_in;
+      for (cytnx_int64 i = 0; i < accessors.size(); i++) {
+        acc_in.push_back(cytnx::Accessor(accessors[i]));
+      }
+      return this->get(acc_in);
+    }
+    UniTensor operator[](const std::initializer_list<cytnx_int64> &accessors) const {
+      std::vector<cytnx_int64> acc_in = accessors;
+      return (*this)[acc_in];
+    }
+
+    /**
+    @brief set elements using Accessor (C++ API) / slices (python API)
+    @param[in] accessors the Accessor (C++ API) / slices (python API) to set the elements.
+    @param[in] rhs the tensor containing the values to set.
+    @return [UniTensor]
+    @see Tensor::set, UniTensor::operator[], UniTensor::get
+    @note
+      1. The return will be a new UniTensor instance, which does not share memory with the current
+         UniTensor.
+
+      2. Equivalently, one can also use the [] operator to access elements.
+
+      3. For diagonal UniTensors, the accessor list can have either one element (to address the
+         diagonal elements; rhs must be one-dimensional), or two elements (in this case, the
+         output will be a non-diagonal UniTensor; rhs must be two-dimensional).
+    */
     UniTensor &set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
       this->_impl->set(accessors, rhs);
       return *this;
