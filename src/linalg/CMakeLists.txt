@@ -11,6 +11,7 @@ target_sources_local(cytnx
     Axpy.cpp
     Ger.cpp
     Arnoldi.cpp
+    Arnoldi_Exp.cpp
     Axpy.cpp
     Ger.cpp
     iAdd.cpp

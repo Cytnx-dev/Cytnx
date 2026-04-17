@@ -944,6 +944,14 @@ void linalg_binding(py::module &m) {
     py::arg("Hop"), py::arg("Tin"), py::arg("which") = "LM", py::arg("Maxiter") = 10000,
     py::arg("CvgCrit") = 0, py::arg("k") = 1, py::arg("is_V") = true, py::arg("ncv") = 0,
     py::arg("verbose") = false);
+  m_linalg.def(
+    "Arnoldi_Exp",
+    [](LinOp *Hop, const UniTensor &v, const Scalar &tau, const double &CvgCrit,
+       const unsigned int &Maxiter, const bool &verbose) {
+      return cytnx::linalg::Arnoldi_Exp(Hop, v, tau, CvgCrit, Maxiter, verbose);
+    },
+    py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-10,
+    py::arg("Maxiter") = 10000, py::arg("verbose") = false);
 
   m_linalg.def(
     "Lanczos",
@@ -995,7 +1003,7 @@ void linalg_binding(py::module &m) {
        const unsigned int &Maxiter, const bool &verbose) {
       return cytnx::linalg::Lanczos_Exp(Hop, v, tau, CvgCrit, Maxiter, verbose);
     },
-    py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-14,
+    py::arg("Hop"), py::arg("v"), py::arg("tau"), py::arg("CvgCrit") = 1.0e-10,
     py::arg("Maxiter") = 10000, py::arg("verbose") = false);
 
   m_linalg.def(

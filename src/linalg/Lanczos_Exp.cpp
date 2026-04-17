@@ -298,7 +298,7 @@ namespace cytnx {
           // Set the error as the element of bottom left of the exp(H_sub*tau)
           auto error = abs(B_mat.at({(cytnx_uint64)i, 0}));
           if (error < CvgCrit || i == imp_maxiter - 1) {
-            if (i == imp_maxiter - 1 && error > CvgCrit) {
+            if (i == imp_maxiter - 1 && error > CvgCrit && i < vec_len) {
               cytnx_warning_msg(
                 true,
                 "[WARNING][Lanczos_Exp] Fail to converge at eigv [%d], try increasing "

@@ -91,4 +91,20 @@ namespace BMTest_Arnoldi {
     ->Args({40, 4})
     ->Unit(benchmark::kMillisecond);
 
+  static void BM_Arnoldi_Exp_F64(benchmark::State& state) {
+    // prepare data
+    int d = 2;
+    int dw = 3;
+    auto D = state.range(0);
+    auto op = TMOp(d, D, dw, Type.Double);
+    const double crit = 1.0e-8;
+    double tau = 0.1;
+    const int maxiter = 1000;
+    // start test here
+    for (auto _ : state) {
+      auto x = linalg::Arnoldi_Exp(&op, op.T_init, tau, crit, maxiter);
+    }
+  }
+  BENCHMARK(BM_Arnoldi_Exp_F64)->Args({10})->Args({30})->Unit(benchmark::kMillisecond);
+
 }  // namespace BMTest_Arnoldi
