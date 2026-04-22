@@ -22,7 +22,7 @@ namespace cytnx {
   template <class T>
   void vec_tofile(const std::string &filepath, const std::vector<T> &in) {
     std::fstream f(filepath, std::ios::out | std::ios::binary);
-    cytnx_error_msg(!f.is_open(), "[ERROR][vec_tofile] cannot open filepath: %s\n", filepath);
+    cytnx_error_msg(!f.is_open(), "[ERROR][vec_tofile] Cannot open filepath: %s\n", filepath);
     vec_tofile(f, in);
     f.close();
   }
@@ -31,7 +31,7 @@ namespace cytnx {
   template <class T>
   std::vector<T> vec_fromfile(const std::string &filepath) {
     std::fstream f(filepath, std::ios::in | std::ios::binary);
-    cytnx_error_msg(!f.is_open(), "[ERROR][vec_fromfile] cannot open filepath: %s\n", filepath);
+    cytnx_error_msg(!f.is_open(), "[ERROR][vec_fromfile] Cannot open filepath: %s\n", filepath);
     auto fsize = FileSize(filepath.c_str());
     cytnx_error_msg(fsize % sizeof(T),
                     "[ERROR][vec_fromfile] the total size of file %lu is not multiple of size %lu "

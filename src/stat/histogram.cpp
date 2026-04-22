@@ -10,7 +10,7 @@ namespace cytnx {
     Histogram::Histogram(const unsigned long long &Nbins, const double &min_val,
                          const double &max_val) {
       if (min_val >= max_val) {
-        std::cout << "[ERROR] cannot have min >= max" << std::endl;
+        std::cout << "[ERROR] Cannot have min >= max" << std::endl;
         exit(1);
       }
       this->min = min_val;
@@ -50,11 +50,11 @@ namespace cytnx {
                              const double &min_x, const double &max_x, const double &min_y,
                              const double &max_y) {
       if (min_x >= max_x) {
-        std::cout << "[ERROR] cannot have min >= max [x axis]" << std::endl;
+        std::cout << "[ERROR] Cannot have min >= max [x axis]" << std::endl;
         exit(1);
       }
       if (min_y >= max_y) {
-        std::cout << "[ERROR] cannot have min >= max [y axis]" << std::endl;
+        std::cout << "[ERROR] Cannot have min >= max [y axis]" << std::endl;
         exit(1);
       }
       this->minx = min_x;
