@@ -557,11 +557,11 @@ void unitensor_binding(py::module &m) {
                         return self.permute_nosignflip(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
      .def("permute_nosignflip_", [](UniTensor &self, const std::vector<cytnx_int64> &mapper, const cytnx_int64 &rowrank){
-                        return self.permute_nosignflip_(mapper,rowrank);
+                        return &self.permute_nosignflip_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
     .def("permute_nosignflip_", [](UniTensor &self, const std::vector<std::string> &mapper, const cytnx_int64 &rowrank){
-                        return self.permute_nosignflip_(mapper,rowrank);
+                        return &self.permute_nosignflip_(mapper,rowrank);
                 },py::arg("mapper"), py::arg("rowrank")=(cytnx_int64)(-1))
 
      .def("twist", [](UniTensor &self, const cytnx_int64 &idx){
