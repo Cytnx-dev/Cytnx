@@ -52,11 +52,26 @@ void tnalgo_binding(py::module &m) {
     .def("c_S_mvleft", &tn_algo::MPS::S_mvleft)
     .def("c_S_mvright", &tn_algo::MPS::S_mvright)
     .def(
-      "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },
+      "Save", [](tn_algo::MPS &self, const std::string &fname) { self.Save(fname); },
       py::arg("fname"))
     .def_static(
       "Load", [](const std::string &fname) { return cytnx::tn_algo::MPS::Load(fname); },
       py::arg("fname"))
+
+    .def(py::pickle(
+      [](const tn_algo::MPS &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+        std::string data = state;
+        std::istringstream iss(data, std::ios::binary);
+        tn_algo::MPS out;
+        out.from_binary(iss);
+        return out;
+      }))
+
     .def(
       "__repr__",
       [](cytnx::tn_algo::MPS &self) -> std::string {

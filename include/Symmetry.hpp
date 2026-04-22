@@ -517,8 +517,8 @@ namespace cytnx {
     static Symmetry Load(const char *fname);
 
     /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
+    void to_binary(std::ostream &f) const;
+    void from_binary(std::istream &f);
     /// @endcond
 
     /**

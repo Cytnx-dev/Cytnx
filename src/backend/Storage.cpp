@@ -98,7 +98,7 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Save(f);
+    this->to_binary(f);
     f.close();
   }
   void Storage::Save(const char *fname) const { this->Save(string(fname)); }
@@ -128,11 +128,7 @@ namespace cytnx {
     this->_Savebinary(f);
   }
 
-  void Storage::_Save(fstream &f) const {
-    // header
-    // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
-
+  void Storage::to_binary(std::ostream &f) const {
     unsigned int IDDs = 999;
     f.write((char *)&IDDs, sizeof(unsigned int));
     auto write_number = [&f](auto number) {
@@ -236,20 +232,15 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    out._Load(f);
+    out.from_binary(f);
     f.close();
     return out;
   }
   Storage Storage::Load(const char *fname) { return Storage::Load(string(fname)); }
-  void Storage::_Load(fstream &f) {
-    // header
+  void Storage::from_binary(std::istream &f) {
     unsigned long long sz;
     unsigned int dt;
     int dv;
-
-    // check:
-    cytnx_error_msg(!f.is_open(), "[ERROR] invalid fstream!.%s", "\n");
-
     // checking IDD
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));

@@ -17,8 +17,7 @@ namespace cytnx {
       return os;
     }
 
-    void MPS::_Save(std::fstream& f) const {
-      cytnx_error_msg(!f.is_open(), "[ERROR][MPS] invalid fstream!.%s", "\n");
+    void MPS::to_binary(std::ostream& f) const {
       cytnx_error_msg(this->_impl->mps_type_id == MPSType.Void,
                       "[ERROR][MPS] Cannot save an uninitialize MPS.%s", "\n");
 
@@ -33,11 +32,10 @@ namespace cytnx {
       f.write((char*)&this->_impl->S_loc, sizeof(this->_impl->S_loc));
 
       // second, dispatch to do remaining saving:
-      this->_impl->_save_dispatch(f);
+      this->_impl->to_binary_dispatch(f);
     }
 
-    void MPS::_Load(std::fstream& f) {
-      cytnx_error_msg(!f.is_open(), "[ERROR][MPS] invalid fstream%s", "\n");
+    void MPS::from_binary(std::istream& f) {
       unsigned int tmpIDDs;
       f.read((char*)&tmpIDDs, sizeof(unsigned int));
       cytnx_error_msg(tmpIDDs != 109, "[ERROR] the object is not a cytnx MPS!%s", "\n");
@@ -59,7 +57,7 @@ namespace cytnx {
       f.read((char*)&this->_impl->S_loc, sizeof(this->_impl->S_loc));
 
       // second, let dispatch to do remaining loading.
-      this->_impl->_load_dispatch(f);
+      this->_impl->from_binary_dispatch(f);
     }
 
     void MPS::Save(const std::string& fname) const {
@@ -79,7 +77,7 @@ namespace cytnx {
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
       }
-      this->_Save(f);
+      this->to_binary(f);
       f.close();
     }
     void MPS::Save(const char* fname) const {
@@ -89,7 +87,7 @@ namespace cytnx {
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
       }
-      this->_Save(f);
+      this->to_binary(f);
       f.close();
     }
 
@@ -100,7 +98,7 @@ namespace cytnx {
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
       }
-      out._Load(f);
+      out.from_binary(f);
       f.close();
       return out;
     }

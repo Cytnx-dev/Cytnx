@@ -443,8 +443,8 @@ namespace cytnx {
     virtual const vec2d<cytnx_uint64> &get_itoi() const;
     virtual vec2d<cytnx_uint64> &get_itoi();
 
-    virtual void _save_dispatch(std::fstream &f) const;
-    virtual void _load_dispatch(std::fstream &f);
+    virtual void to_binary_dispatch(std::ostream &f) const;
+    virtual void from_binary_dispatch(std::istream &f);
 
     virtual ~UniTensor_base(){};
   };
@@ -1078,8 +1078,8 @@ namespace cytnx {
                         "\n");
     }
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f);
 
     const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const {
       cytnx_error_msg(true, "[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s",
@@ -1751,8 +1751,8 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -2544,8 +2544,8 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -5577,8 +5577,8 @@ namespace cytnx {
     vec2d<cytnx_uint64> &get_itoi() { return this->_impl->get_itoi(); }
 
     /// @cond
-    void _Load(std::fstream &f);
-    void _Save(std::fstream &f) const;
+    void from_binary(std::istream &f);
+    void to_binary(std::ostream &f) const;
     /// @endcond
 
     UniTensor &convert_from(const UniTensor &rhs, const bool &force = false,

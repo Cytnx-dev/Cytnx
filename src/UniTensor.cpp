@@ -41,8 +41,7 @@ namespace cytnx {
   UniTensor UniTensor::Mul(const UniTensor &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
   UniTensor UniTensor::Mul(const Scalar &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
 
-  void UniTensor::_Save(std::fstream &f) const {
-    cytnx_error_msg(!f.is_open(), "[ERROR][UniTensor] invalid fstream!.%s", "\n");
+  void UniTensor::to_binary(std::ostream &f) const {
     cytnx_error_msg(this->_impl->uten_type_id == UTenType.Void,
                     "[ERROR][UniTensor] Cannot save an uninitialized UniTensor.%s", "\n");
 
@@ -85,15 +84,13 @@ namespace cytnx {
     }
     // f.write((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      this->_impl->_bonds[i]._Save(f);
+      this->_impl->_bonds[i].to_binary(f);
     }
 
     // second, let dispatch to do remaining saving.
-    this->_impl->_save_dispatch(f);
+    this->_impl->to_binary_dispatch(f);
   }
-  void UniTensor::_Load(std::fstream &f) {
-    cytnx_error_msg(!f.is_open(), "[ERROR][UniTensor] invalid fstream%s", "\n");
-
+  void UniTensor::from_binary(std::istream &f) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 555, "[ERROR] the object is not a cytnx UniTensor!%s", "\n");
@@ -130,7 +127,7 @@ namespace cytnx {
     if (len_name != 0) {
       char *cname = (char *)malloc(sizeof(char) * len_name);
       f.read(cname, sizeof(char) * len_name);
-      this->_impl->_name = std::string(cname);
+      this->_impl->_name = std::string(cname, len_name);
       free(cname);
     }
 
@@ -149,11 +146,11 @@ namespace cytnx {
     }
     // f.read((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      this->_impl->_bonds[i]._Load(f);
+      this->_impl->_bonds[i].from_binary(f);
     }
 
     // second, let dispatch to do remaining loading.
-    this->_impl->_load_dispatch(f);
+    this->_impl->from_binary_dispatch(f);
   }
 
   void UniTensor::Save(const std::string &fname) const {
@@ -172,7 +169,7 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Save(f);
+    this->to_binary(f);
     f.close();
   }
   void UniTensor::Save(const char *fname) const { Save(string(fname)); }
@@ -184,7 +181,7 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
     }
-    out._Load(f);
+    out.from_binary(f);
     f.close();
     return out;
   }

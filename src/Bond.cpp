@@ -483,7 +483,7 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Save(f);
+    this->to_binary(f);
     f.close();
   }
   void Bond::Save(const char *fname) const { this->Save(string(fname)); }
@@ -495,14 +495,13 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    out._Load(f);
+    out.from_binary(f);
     f.close();
     return out;
   }
   Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
 
-  void Bond::_Save(fstream &f) const {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
+  void Bond::to_binary(std::ostream &f) const {
     unsigned int IDDs = 666;
     f.write((char *)&IDDs, sizeof(unsigned int));
 
@@ -546,13 +545,12 @@ namespace cytnx {
 
     if (Nsym != 0) {
       for (int j = 0; j < Nsym; j++) {
-        this->_impl->_syms[j]._Save(f);
+        this->_impl->_syms[j].to_binary(f);
       }
     }
   }
 
-  void Bond::_Load(fstream &f) {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
+  void Bond::from_binary(std::istream &f) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 666, "[ERROR] the object is not a cytnx Bond!%s", "\n");
@@ -605,7 +603,7 @@ namespace cytnx {
     if (Nsym_in != 0) {
       this->_impl->_syms.resize(Nsym_in);
       for (int j = 0; j < Nsym_in; j++) {
-        this->_impl->_syms[j]._Load(f);
+        this->_impl->_syms[j].from_binary(f);
       }
     }
   }

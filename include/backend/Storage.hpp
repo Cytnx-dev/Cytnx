@@ -524,8 +524,8 @@ namespace cytnx {
     ///@endcond
 
     /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
+    void to_binary(std::ostream &f) const;
+    void from_binary(std::istream &f);
     void _Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem);
     void _Savebinary(std::fstream &f) const;
 
