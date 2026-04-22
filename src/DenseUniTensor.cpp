@@ -640,6 +640,73 @@ namespace cytnx {
     free(rlbl);
     free(buffer);
   }
+
+  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::get(const std::vector<Accessor> &accessors) {
+    if (accessors.empty()) return this->clone_meta();
+    DenseUniTensor *out_raw = this->clone_meta();
+    std::vector<cytnx_int64> removed;  // bonds to be removed
+    if (this->_is_diag) {
+      if (accessors.size() == 1) {
+        out_raw->_block = this->_block.get(accessors, removed);
+        if (removed.empty()) {  // change dimension of bonds
+          for (cytnx_int64 idx = out_raw->_bonds.size() - 1; idx >= 0; idx--) {
+            out_raw->_bonds[idx]._impl->_dim = out_raw->_block.shape()[0];
+          }
+        } else {  // erase all bonds
+          out_raw->_is_braket_form = false;
+          out_raw->_is_diag = false;
+          out_raw->_rowrank = 0;
+          out_raw->_labels = std::vector<std::string>();
+          out_raw->_bonds = std::vector<Bond>();
+        }
+      } else {  // convert to non-diagonal UniTensor
+        cytnx_error_msg(accessors.size() > 2,
+                        "[ERROR][DenseUniTensor][get] For diagonal UniTensors, only one or two "
+                        "accessor elements are allowed.%s",
+                        "\n");
+        out_raw->_block = this->_block;
+        out_raw->to_dense_();
+        boost::intrusive_ptr<UniTensor_base> out(out_raw);
+        return out->get(accessors);
+      }
+    } else {  // non-diagonal
+      out_raw->_block = this->_block.get(accessors, removed);
+      for (cytnx_int64 idx = removed.size() - 1; idx >= 0; idx--) {
+        out_raw->_labels.erase(out_raw->_labels.begin() + removed[idx]);
+        out_raw->_bonds.erase(out_raw->_bonds.begin() + removed[idx]);
+        if (removed[idx] < this->_rowrank) out_raw->_rowrank--;
+      }
+      // adapt dimensions on bonds
+      auto dims = out_raw->_block.shape();
+      for (cytnx_int64 idx = 0; idx < out_raw->_bonds.size(); idx++) {
+        out_raw->_bonds[idx]._impl->_dim = dims[idx];
+      }
+      // update_braket
+      if (out_raw->is_tag() && !out_raw->_is_braket_form) {
+        out_raw->_is_braket_form = out_raw->_update_braket();
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(out_raw);
+  }
+
+  void DenseUniTensor::set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
+    if (accessors.empty()) return;
+    if (this->_is_diag) {
+      if (accessors.size() == 1) {
+        this->_block.set(accessors, rhs);
+      } else {  // convert to non-diagonal UniTensor
+        cytnx_error_msg(accessors.size() > 2,
+                        "[ERROR][DenseUniTensor][set] For diagonal UniTensors, only one or two "
+                        "accessor elements are allowed.%s",
+                        "\n");
+        this->to_dense_();
+        this->_block.set(accessors, rhs);
+      }
+    } else {  // non-diagonal
+      this->_block.set(accessors, rhs);
+    }
+  }
+
   void DenseUniTensor::reshape_(const std::vector<cytnx_int64> &new_shape,
                                 const cytnx_uint64 &rowrank) {
     cytnx_error_msg(this->is_tag(),

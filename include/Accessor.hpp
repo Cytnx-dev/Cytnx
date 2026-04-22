@@ -84,6 +84,9 @@ namespace cytnx {
     Accessor(const Accessor &rhs);
     // copy assignment:
     Accessor &operator=(const Accessor &rhs);
+
+    // check equality
+    bool operator==(const Accessor &rhs) const;
     ///@endcond
 
     int type() const { return this->_type; }
