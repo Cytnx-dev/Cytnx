@@ -67,7 +67,7 @@ namespace cytnx {
     this->size_ = len_in;
 
     // check:
-    // cytnx_error_msg(len_in < 1, "%s", "[ERROR] cannot init a Storage with zero element");
+    // cytnx_error_msg(len_in < 1, "%s", "[ERROR] Cannot init a Storage with zero element");
     dtype_ = Type.cy_typeid(DType());
 
     if (this->size_ % STORAGE_DEFT_SZ) {
@@ -89,7 +89,7 @@ namespace cytnx {
       this->start_ = utils_internal::cuCalloc_gpu(this->capacity_, sizeof(DType));
 
 #else
-      cytnx_error_msg(1, "%s", "[ERROR] cannot init a Storage on gpu without CUDA support.");
+      cytnx_error_msg(1, "%s", "[ERROR] Cannot init a Storage on gpu without CUDA support.");
 #endif
     }
     this->device_ = device;
@@ -140,7 +140,7 @@ namespace cytnx {
       checkCudaErrors(cudaMemcpy(out->data(), this->start_, sizeof(DType) * this->size_,
                                  cudaMemcpyDeviceToDevice));
 #else
-      cytnx_error_msg(1, "%s", "[ERROR] cannot clone a Storage on gpu without CUDA support.");
+      cytnx_error_msg(1, "%s", "[ERROR] Cannot clone a Storage on gpu without CUDA support.");
 #endif
     }
     return out;
@@ -738,7 +738,7 @@ namespace cytnx {
   template <typename OtherDType>
   void StorageImplementation<DType>::Fill(const OtherDType &value) {
     if constexpr (!std::is_constructible_v<DType, OtherDType>) {
-      cytnx_error_msg(true, "[ERROR] cannot fill %s value into %s container",
+      cytnx_error_msg(true, "[ERROR] Cannot fill %s value into %s container",
                       Type.getname(Type.cy_typeid(OtherDType())).c_str(),
                       Type.getname(Type.cy_typeid(DType())).c_str());
       return;
@@ -769,7 +769,7 @@ namespace cytnx {
       }
       this->at<DType>(this->size_ - 1) = value;
     } else {
-      cytnx_error_msg(true, "[ERROR] cannot append %s value into %s container",
+      cytnx_error_msg(true, "[ERROR] Cannot append %s value into %s container",
                       Type.getname(Type.cy_typeid(OtherDType())).c_str(),
                       Type.getname(Type.cy_typeid(DType())).c_str());
     }
@@ -797,7 +797,7 @@ namespace cytnx {
     if constexpr (std::is_constructible_v<DType, OtherDType>) {
       this->at<DType>(index) = value;
     } else {
-      cytnx_error_msg(true, "[ERROR] cannot set %s to %s",
+      cytnx_error_msg(true, "[ERROR] Cannot set %s to %s",
                       Type.getname(Type.cy_typeid(OtherDType())).c_str(),
                       Type.getname(Type.cy_typeid(DType())).c_str());
     }
