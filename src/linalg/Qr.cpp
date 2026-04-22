@@ -129,7 +129,7 @@ namespace cytnx {
       Qlbl.push_back(newlbl);
       outT[0].reshape_(Qshape);
       outCyT[0] = UniTensor(outT[0], false, Qshape.size() - 1);
-      outCyT[0].set_labels(Qlbl);
+      outCyT[0].relabel_(Qlbl);
 
       // R
       Qshape.clear();
@@ -142,7 +142,7 @@ namespace cytnx {
       }
       outT[1].reshape_(Qshape);
       outCyT[1] = UniTensor(outT[1], false, 1);
-      outCyT[1].set_labels(Qlbl);
+      outCyT[1].relabel_(Qlbl);
 
       // tau
       if (is_tau) {

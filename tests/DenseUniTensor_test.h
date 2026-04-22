@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <filesystem>
 #include <gtest/gtest.h>
+
 #include "cytnx.hpp"
 #include "test_tools.h"
 
@@ -13,7 +14,7 @@ using namespace TestTools;
 class DenseUniTensorTest : public ::testing::Test {
  public:
   std::string data_dir = CYTNX_TEST_DATA_DIR "/common/DenseUniTensor/";
-  const std::string temp_file_path = std::tmpnam(nullptr);
+  const std::string temp_file_path = std::string(std::tmpnam(nullptr)) + ".cytnx";
 
   UniTensor ut_uninit;
   UniTensor utzero345;
@@ -27,6 +28,7 @@ class DenseUniTensorTest : public ::testing::Test {
   UniTensor ut_complex_diag;
   Bond phy = Bond(2, BD_IN);
   Bond aux = Bond(1, BD_IN);
+  Bond bond4 = Bond(4, BD_IN);
   DenseUniTensor dut;
   Tensor tzero345 = zeros({3, 4, 5}).astype(Type.ComplexDouble);
   Tensor tar345 = arange({3 * 4 * 5}).reshape({3, 4, 5}).astype(Type.ComplexDouble);
@@ -56,6 +58,7 @@ class DenseUniTensorTest : public ::testing::Test {
     utzero345 = UniTensor(zeros(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
     utone345 = UniTensor(ones(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
     utar345 = UniTensor(arange(3 * 4 * 5)).reshape({3, 4, 5}).astype(Type.ComplexDouble);
+    utar345.set_labels({"a", "b", "c"}).set_name("utar345").set_rowrank_(2);
     utzero3456 = UniTensor(zeros(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
     utone3456 = UniTensor(ones(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
     utar3456 = UniTensor(arange(3 * 4 * 5 * 6)).reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
@@ -66,7 +69,9 @@ class DenseUniTensorTest : public ::testing::Test {
     for (size_t i = 0; i < 3 * 4 * 5 * 6; i++) utarcomplex3456.at({i}) = cytnx_complex128(i, i);
     utarcomplex3456 = utarcomplex3456.reshape({3, 4, 5, 6}).astype(Type.ComplexDouble);
     ut_complex_diag =
-      UniTensor({phy, phy.redirect()}, {"1", "2"}, 1, Type.ComplexDouble, Device.cpu, true);
+      UniTensor({bond4, bond4.redirect()}, {"row", "col"}, 1, Type.ComplexDouble, Device.cpu, true);
+    ut_complex_diag.put_block(arange(4).astype(Type.ComplexDouble));
+    ut_complex_diag.set_name("ut_complex_diag");
 
     ut1 = ut1.Load(data_dir + "denseutensor1.cytnx").astype(Type.ComplexDouble);
     ut2 = ut2.Load(data_dir + "denseutensor2.cytnx").astype(Type.ComplexDouble);

@@ -187,7 +187,62 @@ TEST_F(BlockFermionicUniTensorTest, Pow) {
 describe:write to disc
 ====================*/
 TEST_F(BlockFermionicUniTensorTest, SaveLoad) {
-  BFUT1.Save("BFUT1");
-  UniTensor BFUTloaded = BFUTloaded.Load("BFUT1.cytnx");
-  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUTloaded));
+  BFUT1.Save(temp_file_path);
+  UniTensor BFUT1_loaded = BFUT1_loaded.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded));
+  // for char*
+  const char *fname = temp_file_path.c_str();
+  BFUT1.Save(fname);
+  UniTensor BFUT1_loaded_char_save = BFUT1_loaded_char_save.Load(temp_file_path);
+  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_save));
+  UniTensor BFUT1_loaded_char_load = BFUT1_loaded_char_load.Load(fname);
+  EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_load));
+}
+
+/*=====test info=====
+describe:test Transpose and Transpose_ for BlockFermionicUniTensor:
+  rowrank is updated, index order is reversed, bonds are redirected,
+  and element values are preserved without sign flips.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, Transpose) {
+  // BFUT1: rank=3, rowrank=2, bonds=[BD_IN(a), BD_IN(b), BD_OUT(c)], shape=(2,2,4)
+  EXPECT_EQ(BFUT1.rowrank(), 2);
+
+  auto tmp = BFUT1.Transpose();
+
+  // rowrank must be rank - old_rowrank = 3 - 2 = 1
+  EXPECT_EQ(tmp.rowrank(), 1);
+  EXPECT_EQ(tmp.rank(), 3);
+
+  // index order is reversed: new [0,1,2] = old [c,b,a]
+  EXPECT_EQ(tmp.labels()[0], "c");
+  EXPECT_EQ(tmp.labels()[1], "b");
+  EXPECT_EQ(tmp.labels()[2], "a");
+
+  // bonds are redirected: old BD_OUT(c)->BD_IN, old BD_IN(b)->BD_OUT, old BD_IN(a)->BD_OUT
+  EXPECT_EQ(tmp.bonds()[0].type(), BD_IN);
+  EXPECT_EQ(tmp.bonds()[1].type(), BD_OUT);
+  EXPECT_EQ(tmp.bonds()[2].type(), BD_OUT);
+
+  // element at old {a,b,c} appears at new {c,b,a}; no sign flips
+  EXPECT_DOUBLE_EQ(double(tmp.at({0, 0, 0}).real()), 1.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({1, 0, 0}).real()), 2.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({2, 1, 0}).real()), 3.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({3, 1, 0}).real()), 4.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({2, 0, 1}).real()), 5.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({3, 0, 1}).real()), 6.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({0, 1, 1}).real()), 7.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({1, 1, 1}).real()), 8.);
+
+  // Transpose is an involution: T.Transpose().Transpose() == T
+  EXPECT_TRUE(AreEqUniTensor(tmp.Transpose(), BFUT1));
+
+  // in-place version must match
+  auto tmp2 = BFUT1.clone();
+  tmp2.Transpose_();
+  EXPECT_EQ(tmp2.rowrank(), 1);
+  EXPECT_EQ(tmp2.bonds()[0].type(), BD_IN);
+  EXPECT_EQ(tmp2.bonds()[1].type(), BD_OUT);
+  EXPECT_EQ(tmp2.bonds()[2].type(), BD_OUT);
+  EXPECT_TRUE(AreEqUniTensor(tmp2, tmp));
 }
