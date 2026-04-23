@@ -522,6 +522,20 @@ namespace cytnx {
       return AreNearlyEqUniTensor(Ut1, Ut2, 0);
     }
 
+    bool AreEqUniTensorMeta(const UniTensor& Ut1, const UniTensor& Ut2) {
+      if (Ut1.uten_type() != Ut2.uten_type()) return false;
+      if (Ut1.name() != Ut2.name()) return false;
+      if (Ut1.labels() != Ut2.labels()) return false;
+      if (Ut1.rowrank() != Ut2.rowrank()) return false;
+      if (Ut1.rank() != Ut2.rank()) return false;
+      if (Ut1.shape() != Ut2.shape()) return false;
+      if (Ut1.is_diag() != Ut2.is_diag()) return false;
+      if (Ut1.is_tag() != Ut2.is_tag()) return false;
+      if (Ut1.is_braket_form() != Ut2.is_braket_form()) return false;
+      if (Ut1.bonds() != Ut2.bonds()) return false;
+      return true;
+    }
+
     // UniTensor
     void InitUniTensorUniform(UniTensor& UT, unsigned int rand_seed) {
       auto dtype = UT.dtype();
