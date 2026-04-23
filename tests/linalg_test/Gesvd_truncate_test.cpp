@@ -234,7 +234,7 @@ namespace GesvdTruncateTest {
 
     // check answer
     if (!(SingularValsCorrect(Svds[0], ans_T))) {
-      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
+      fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
       return false;
     }
 
@@ -278,7 +278,7 @@ namespace GesvdTruncateTest {
     Svds[0].print_diagram();
     // check answer
     if (!(SingularValsCorrect(Svds[0], ans_T))) {
-      fail_msg.AppendMsg("The singular values are wrong.. ", __func__, __LINE__);
+      fail_msg.AppendMsg("The singular values are wrong. ", __func__, __LINE__);
       return false;
     }
     Svds[1].print_diagram();

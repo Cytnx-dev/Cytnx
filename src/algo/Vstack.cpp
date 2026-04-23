@@ -16,8 +16,6 @@ namespace cytnx {
     typedef Accessor ac;
 
     Tensor Vstack(const std::vector<Tensor> &In_tensors) {
-      Tensor out;
-
       std::vector<Tensor> _Ins;
 
       // check:
@@ -82,7 +80,7 @@ namespace cytnx {
       }
 
       // allocate out!
-      out = zeros({Dcomb, Dshare}, dtype_id, device_id);
+      Tensor out = zeros({Dcomb, Dshare}, dtype_id, device_id);
 
       std::vector<void *> rawPtr(In_tensors.size());
       for (int i = 0; i < _Ins.size(); i++) {
