@@ -89,10 +89,20 @@ namespace cytnx {
         cytnx_error_msg(true, "[Qdr for sparse UniTensor is developling%s]", "\n");
       } else {
         // using rowrank to split the bond to form a matrix.
-        cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                        "[Qdr][ERROR] Qdr for DenseUniTensor should have rank>1 and rowrank>0%s",
+        cytnx_error_msg(Tin.rank() <= 1,
+                        "[Qdr][ERROR] Qdr for UniTensor should have rank>1, but rank is %d\n",
+                        Tin.rank());
+        cytnx_error_msg(Tin.rowrank() < 1,
+                        "[Qdr][ERROR] Qdr for UniTensor should have rowrank>0, but rowrank is %d\n",
+                        Tin.rowrank());
+        cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                        "[Qdr][ERROR] Qdr for UniTensor should have rowrank<rank, but rowrank is "
+                        "%d and rank is %d\n",
+                        Tin.rowrank(), Tin.rank());
+        cytnx_error_msg(Tin.is_diag(),
+                        "[Qdr][ERROR] Qdr for diagonal UniTensor is trivial and currently not "
+                        "support. Use other manipulation.%s",
                         "\n");
-
         Tensor tmp;
         if (Tin.is_contiguous())
           tmp = Tin.get_block_();

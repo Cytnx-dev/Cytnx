@@ -204,9 +204,16 @@ namespace cytnx {
                                        bool is_vT, cytnx_uint64 power_iteration,
                                        unsigned int seed) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[Rsvd][ERROR] Rsvd for UniTensor should have rank>1 and rowrank>0%s", "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[Rsvd][ERROR] Rsvd for UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[Rsvd][ERROR] Rsvd for UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[Rsvd][ERROR] Rsvd for UniTensor should have rowrank<rank, but rowrank is "
+                      "%d and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
                       "[Rsvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
                       "supported. Use other manipulations.%s",

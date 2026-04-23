@@ -634,9 +634,16 @@ namespace cytnx {
 
     std::vector<cytnx::UniTensor> Svd(const cytnx::UniTensor &Tin, const bool &is_UvT) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[Svd][ERROR] Svd for UniTensor should have rank>1 and rowrank>0%s", "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[Svd][ERROR] Svd for UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[Svd][ERROR] Svd for UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[Svd][ERROR] Svd for UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
                       "[Svd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
                       "supported. Use other manipulations.%s",

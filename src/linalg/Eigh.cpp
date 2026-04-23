@@ -481,9 +481,16 @@ namespace cytnx {
 
     std::vector<cytnx::UniTensor> Eigh(const UniTensor &Tin, const bool &is_V, const bool &row_v) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[Eigh][ERROR] Eigh for UniTensor should have rank>1 and rowrank>0%s", "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[Eigh][ERROR] Eigh for UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[Eigh][ERROR] Eigh for UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[Eigh][ERROR] Eigh for UniTensor should have rowrank<rank, but rowrank is "
+                      "%d and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
                       "[Eigh][ERROR] Eigh for diagonal UniTensor is trivial and currently not "
                       "support. Use other manipulation.%s",

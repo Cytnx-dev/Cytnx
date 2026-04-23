@@ -74,11 +74,18 @@ namespace cytnx {
     }
 
     UniTensor InvM(const UniTensor &Tin) {
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[InvM_][ERROR] InvM for UniTensor should have rank>1 and rowrank>0%s", "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[InvM][ERROR] InvM for UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[InvM][ERROR] InvM for UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[InvM][ERROR] InvM for UniTensor should have rowrank<rank, but rowrank is "
+                      "%d and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[InvM_[ERROR] InvM for diagonal UniTensor is trivial and currently not "
+                      "[InvM][ERROR] InvM for diagonal UniTensor is trivial and currently not "
                       "support. Use other manipulation.%s",
                       "\n");
       UniTensor outCyT;

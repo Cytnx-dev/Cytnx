@@ -631,10 +631,17 @@ namespace cytnx {
     std::vector<cytnx::UniTensor> Gesvd(const cytnx::UniTensor &Tin, const bool &is_U,
                                         const bool &is_vT) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1,
-                      "[Gesvd][ERROR] Gesvd for UniTensor should have rank>1 and rowrank>0%s",
-                      "\n");
-
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[Gesvd][ERROR] Gesvd for UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(
+        Tin.rowrank() < 1,
+        "[Gesvd][ERROR] Gesvd for UniTensor should have rowrank>0, but rowrank is %d\n",
+        Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[Gesvd][ERROR] Gesvd for UniTensor should have rowrank<rank, but rowrank is "
+                      "%d and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
                       "[Gesvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
                       "supported. Use other manipulations.%s",
