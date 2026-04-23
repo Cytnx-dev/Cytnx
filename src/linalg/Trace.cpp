@@ -40,6 +40,10 @@ namespace cytnx {
       cytnx_error_msg(
         Tn.dtype() == Type.Bool,
         "[ERROR][Trace] Bool type cannot perform Trace, use .astype() to promote first.%s", "\n");
+      cytnx_error_msg(Tn.shape()[axisA] != Tn.shape()[axisB],
+                      "[ERROR][Trace] Index size of traced indices needs to match, but "
+                      "shape(%d) = %ld and shape(%d) = %ld do not match.%s",
+                      axisA, Tn.shape()[axisA], axisB, Tn.shape()[axisB], "\n");
 
       cytnx_uint64 ax1, ax2;
       if (axisA < axisB) {
@@ -55,11 +59,9 @@ namespace cytnx {
       vector<cytnx_uint64> accu;
       shape.erase(shape.begin() + ax2);
       shape.erase(shape.begin() + ax1);
-      // 2) get out put elementsize.
+      // 2) get output element size.
       cytnx_uint64 Nelem = 1;
       for (int i = 0; i < shape.size(); i++) Nelem *= shape[i];
-      // 3) get diagonal element numbers:
-      cytnx_uint64 Ndiag = Tn.shape()[ax1] < Tn.shape()[ax2] ? Tn.shape()[ax1] : Tn.shape()[ax2];
 
       Tensor out = Tensor({Nelem}, Tn.dtype(), Tn.device());
       out.storage().set_zeros();
@@ -67,11 +69,20 @@ namespace cytnx {
       if (shape.size() == 0) {
         // 2d
         if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](true, out, Tn, Ndiag, Device.Ncpus, 0, {}, {},
-                                                    {}, 0,
+          linalg_internal::lii.Trace_ii[Tn.dtype()](true, out, Tn, Tn.shape()[ax1], 0, {}, {}, {},
+                                                    0,
                                                     0);  // only the first 4 args will be used.
         else {
-          cytnx_error_msg(true, "[ERROR][Trace] GPU is under developing.%s", "\n");
+  #ifdef UNI_GPU
+          checkCudaErrors(cudaSetDevice(Tn.device()));
+          linalg_internal::lii.cuTrace_ii[Tn.dtype()](true, out, Tn, Tn.shape()[ax1], 0, {}, {}, {},
+                                                      0,
+                                                      0);  // only the first 4 args will be used.
+  #else
+          cytnx_error_msg(true, "[Trace] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          return out;
+  #endif
         }
       } else {
         // nd
@@ -83,12 +94,19 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < Tn.shape().size(); i++) {
           if (i != ax1 && i != ax2) remain_rank_id.push_back(i);
         }
-        // std::cout << "entry Trace" << std::endl;
         if (Tn.device() == Device.cpu)
-          linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Ndiag, Nelem, Device.Ncpus,
-                                                    accu, remain_rank_id, shape, ax1, ax2);
+          linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Tn.shape()[ax1], Nelem, accu,
+                                                    remain_rank_id, shape, ax1, ax2);
         else {
-          cytnx_error_msg(true, "[ERROR][Trace] GPU is under developing.%s", "\n");
+  #ifdef UNI_GPU
+          checkCudaErrors(cudaSetDevice(Tn.device()));
+          linalg_internal::lii.cuTrace_ii[Tn.dtype()](false, out, Tn, Tn.shape()[ax1], Nelem, accu,
+                                                      remain_rank_id, shape, ax1, ax2);
+  #else
+          cytnx_error_msg(true, "[Trace] fatal error,%s",
+                          "try to call the gpu section without CUDA support.\n");
+          return out;
+  #endif
         }
         out.reshape_(shape);
       }
