@@ -211,7 +211,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -249,8 +248,10 @@ namespace cytnx {
       // 3) categorize:
       // key = qnum, val = list of block locations:
       std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64>> mgrp;
+      const auto left_qnums =
+        (BdLeft.type() == bondType::BD_IN) ? BdLeft.qnums() : BdLeft.calc_reverse_qnums();
       for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        mgrp[left_qnums[new_itoi[b][0]]].push_back(b);
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
@@ -430,7 +431,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -468,8 +468,10 @@ namespace cytnx {
       // 3) categorize:
       // key = qnum, val = list of block locations:
       std::map<std::vector<cytnx_int64>, std::vector<cytnx_int64>> mgrp;
+      const auto left_qnums =
+        (BdLeft.type() == bondType::BD_IN) ? BdLeft.qnums() : BdLeft.calc_reverse_qnums();
       for (cytnx_uint64 b = 0; b < Tin.Nblocks(); b++) {
-        mgrp[BdLeft.qnums()[new_itoi[b][0]]].push_back(b);
+        mgrp[left_qnums[new_itoi[b][0]]].push_back(b);
       }
 
       // 4) for each qcharge in key, combining the blocks into a big chunk!
