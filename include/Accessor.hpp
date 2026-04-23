@@ -130,7 +130,7 @@ namespace cytnx {
     };
 
     static Accessor tilend(const cytnx_int64 &min, const cytnx_int64 &step = 1) {
-      cytnx_error_msg(step == 0, "[ERROR] cannot have _step=0 for tilend%s", "\n");
+      cytnx_error_msg(step == 0, "[ERROR] Cannot have _step=0 for tilend%s", "\n");
       Accessor out;
       out._type = Accessor::Tilend;
       out._min = min;
@@ -139,7 +139,7 @@ namespace cytnx {
     };
 
     static Accessor step(const cytnx_int64 &step) {
-      cytnx_error_msg(step == 0, "[ERROR] cannot have _step=0 for _step%s", "\n");
+      cytnx_error_msg(step == 0, "[ERROR] Cannot have _step=0 for _step%s", "\n");
       Accessor out;
       out._type = Accessor::Step;
       // out._min = 0;
@@ -148,7 +148,7 @@ namespace cytnx {
     };
 
     static Accessor qns(const std::vector<std::vector<cytnx_int64>> &qns) {
-      cytnx_error_msg(qns.size() == 0, "[ERROR] cannot have empty qnums.%s", "\n");
+      cytnx_error_msg(qns.size() == 0, "[ERROR] Cannot have empty qnums.%s", "\n");
       Accessor out;
 
       out._type = Accessor::Qns;
