@@ -1924,12 +1924,12 @@ namespace cytnx {
         boost::intrusive_ptr<UniTensor_base> out(tmp);
         return out;
 
-      }  // does it contract all the bond?
+      }  // does it contract all the bonds?
 
       cytnx_error_msg(
         true, "[ERROR][BlockFermionicUniTensor][contract] Something is fatally wrong!%s", "\n");
 
-    }  // does it contract all the bond?
+    }  // does it contract all the bonds?
   };
 
   void BlockFermionicUniTensor::Transpose_() {

@@ -3,6 +3,7 @@
 #include <stack>
 #include <typeinfo>
 
+#include "Device.hpp"
 #include "Generator.hpp"
 #include "Network.hpp"
 #include "search_tree.hpp"
@@ -14,299 +15,303 @@ using namespace std;
 
 namespace cytnx {
 
-  // these two are internal functions:
-  void _parse_ORDER_line_(vector<string> &tokens, const string &line,
-                          const cytnx_uint64 &line_num) {
-    cytnx_error_msg((line.find_first_of("\t;\n:") != string::npos),
-                    "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
-                    "\n");
-    cytnx_error_msg((line.find_first_of("(),") == string::npos),
-                    "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
-                    " tensors should be seperate by delimiter \',\' (comma), and/or wrapped with "
-                    "\'(\' and \')\'");
-
-    // check mismatch:
-    size_t lbrac_n = count(line.begin(), line.end(), '(');
-    size_t rbrac_n = count(line.begin(), line.end(), ')');
-    cytnx_error_msg(lbrac_n != rbrac_n, "[ERROR][Network][Fromfile] parentheses mismatch.%s", "\n");
-
-    // slice the line into pieces by parentheses and comma
-    tokens = str_findall(line, "(),");
-
-    cytnx_error_msg(tokens.size() == 0, "[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s",
-                    line_num, "\n");
-  }
-
-  void _parse_TOUT_line_(vector<string> &labels, cytnx_uint64 &TOUT_iBondNum, const string &line,
-                         const cytnx_uint64 &line_num) {
-    labels.clear();
-
-    vector<string> tmp = str_split(line, false, ";");
-    // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-    //                 "Invalid TOUT line");
-    if (tmp.size() == 1) {
-      // no ; provided
-      vector<string> tout_lbls = str_split(line, false, ",");
-      cytnx_uint64 default_rowrank = tout_lbls.size() / 2;
-      // handle col-space label
-      for (cytnx_uint64 i = 0; i < default_rowrank; i++) {
-        string tmp_ = str_strip(tout_lbls[i]);
-        cytnx_error_msg(tmp_.length() == 0,
-                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                        line_num, "\n");
-        labels.push_back(tmp_);
-      }
-      TOUT_iBondNum = labels.size();
-      // handle row-space label
-      for (cytnx_uint64 i = default_rowrank; i < tout_lbls.size(); i++) {
-        string tmp_ = str_strip(tout_lbls[i]);
-        cytnx_error_msg(tmp_.length() == 0,
-                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                        line_num, "\n");
-        labels.push_back(tmp_);
-      }
-    } else if (tmp.size() == 2) {
-      // one ;
-      // handle col-space label
-      vector<string> ket_labels = str_split(tmp[0], false, ",");
-      if (ket_labels.size() == 1)
-        if (ket_labels[0].length() == 0) ket_labels.clear();
-      for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
-        string tmp = str_strip(ket_labels[i]);
-        cytnx_error_msg(tmp.length() == 0,
-                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                        line_num, "\n");
-        labels.push_back(tmp);
-      }
-      TOUT_iBondNum = labels.size();
-      // handle row-space label
-      vector<string> bra_labels = str_split(tmp[1], false, ",");
-      if (bra_labels.size() == 1)
-        if (bra_labels[0].length() == 0) bra_labels.clear();
-      for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
-        string tmp = str_strip(bra_labels[i]);
-        cytnx_error_msg(tmp.length() == 0,
-                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-                        line_num, "\n");
-        labels.push_back(tmp);
-      }
-    } else if (tmp.size() > 2) {
-      // more than one ;
-      cytnx_error_msg(true, "[ERROR][Network] line:%d Invalid TOUT line.%s", line_num, "\n");
-    }
-  }
-
-  /// This is debug function for printing special characters
-  void tri(const char *text) {
-    for (const char *p = text; *p != '\0'; ++p) {
-      int c = (unsigned char)*p;
-
-      switch (c) {
-        case '\\':
-          printf("\\\\");
-          break;
-        case '\n':
-          printf("\\n");
-          break;
-        case '\r':
-          printf("\\r");
-          break;
-        case '\t':
-          printf("\\t");
-          break;
-
-          // TODO: Add other C character escapes here.  See:
-          // <https://en.wikipedia.org/wiki/Escape_sequences_in_C#Table_of_escape_sequences>
-
-        default:
-          if (isprint(c)) {
-            putchar(c);
-          } else {
-            printf("\\x%X", c);
-          }
-          break;
-      }
-    }
-  }
-
-  void _parse_TN_line_(vector<string> &labels, cytnx_uint64 &TN_iBondNum, const string &line,
-                       const cytnx_uint64 &line_num) {
-    labels.clear();
-    // vector<string> tmp = str_split(line, false, ";");
-    // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-    //                 "Invalid TN line. A \';\' should be used to indicate the rowrank.\nexample1>
-    //                 "
-    //                 "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
-
-    // // handle col-space label
-    // vector<string> ket_labels = str_split(tmp[0], false, ",");
-    // if (ket_labels.size() == 1)
-    //   if (ket_labels[0].length() == 0) ket_labels.clear();
-    // for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
-    //   string tmp = str_strip(ket_labels[i]);
-    //   cytnx_error_msg(tmp.length() == 0,
-    //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s",
-    //                   line_num,
-    //                   "\n");
-    //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-    //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-    //                   "Invalid TN line. label contain non integer.");
-    //   labels.push_back(tmp);
-    // }
-    // TN_iBondNum = labels.size();
-
-    // // handle row-space label
-    // vector<string> bra_labels = str_split(tmp[1], false, ",");
-    // if (bra_labels.size() == 1)
-    //   if (bra_labels[0].length() == 0) bra_labels.clear();
-    // for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
-    //   string tmp = str_strip(bra_labels[i]);
-    //   cytnx_error_msg(tmp.length() == 0,
-    //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
-    //                   line_num, "\n");
-
-    //   // tri(tmp.c_str());
-
-    //   // cout << tmp.size() << endl;
-    //   // cout << tmp.find_first_not_of("0123456789-") << endl;
-    //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-    //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-    //                   "Invalid TN line. label contain non integer.");
-    //   labels.push_back(tmp);
-    // }
-
-    vector<string> alllabels = str_split(line, false, ",");
-    if (alllabels.size() == 1)
-      if (alllabels[0].length() == 0) alllabels.clear();
-    for (cytnx_uint64 i = 0; i < alllabels.size(); i++) {
-      string tmp = str_strip(alllabels[i]);
-      cytnx_error_msg(tmp.length() == 0,
-                      "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s", line_num,
+  namespace {
+    void parse_order_line_internal_(vector<string> &tokens, const string &line,
+                                    const cytnx_uint64 &line_num) {
+      cytnx_error_msg((line.find_first_of("\t;\n:") != string::npos),
+                      "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
                       "\n");
-      // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
-      //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-      //                 "Invalid TN line. label contain non integer.");
-      labels.push_back(tmp);
+      cytnx_error_msg((line.find_first_of("(),") == string::npos),
+                      "[ERROR][Network][Fromfile] line:%d invalid ORDER line format.%s", line_num,
+                      " tensors should be seperate by delimiter \',\' (comma), and/or wrapped with "
+                      "\'(\' and \')\'");
+
+      // check mismatch:
+      size_t lbrac_n = count(line.begin(), line.end(), '(');
+      size_t rbrac_n = count(line.begin(), line.end(), ')');
+      cytnx_error_msg(lbrac_n != rbrac_n, "[ERROR][Network][Fromfile] parentheses mismatch.%s",
+                      "\n");
+
+      // slice the line into pieces by parentheses and comma
+      tokens = str_findall(line, "(),");
+
+      cytnx_error_msg(tokens.size() == 0,
+                      "[ERROR][Network][Fromfile] line:%d invalid ORDER line.%s", line_num, "\n");
     }
 
-    TN_iBondNum = labels.size();
+    void parse_tout_line_internal_(vector<string> &labels, cytnx_uint64 &TOUT_iBondNum,
+                                   const string &line, const cytnx_uint64 &line_num) {
+      labels.clear();
 
-    cytnx_error_msg(labels.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
-                    "Invalid TN line. no label present in this line, which is invalid.%s", "\n");
-  }
-
-  void _extract_TNs_from_ORDER_(vector<string> &TN_names, const vector<string> &tokens) {
-    TN_names.clear();
-    for (cytnx_uint64 i = 0; i < tokens.size(); i++) {
-      string tok = str_strip(tokens[i]);  // remove space.
-      if (tok.length() == 0) continue;
-      if ((tok != "(") && (tok != ")") && (tok != ",")) {
-        TN_names.push_back(tok);
+      vector<string> tmp = str_split(line, false, ";");
+      // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                 "Invalid TOUT line");
+      if (tmp.size() == 1) {
+        // no ; provided
+        vector<string> tout_lbls = str_split(line, false, ",");
+        cytnx_uint64 default_rowrank = tout_lbls.size() / 2;
+        // handle col-space label
+        for (cytnx_uint64 i = 0; i < default_rowrank; i++) {
+          string tmp_ = str_strip(tout_lbls[i]);
+          cytnx_error_msg(tmp_.length() == 0,
+                          "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                          line_num, "\n");
+          labels.push_back(tmp_);
+        }
+        TOUT_iBondNum = labels.size();
+        // handle row-space label
+        for (cytnx_uint64 i = default_rowrank; i < tout_lbls.size(); i++) {
+          string tmp_ = str_strip(tout_lbls[i]);
+          cytnx_error_msg(tmp_.length() == 0,
+                          "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                          line_num, "\n");
+          labels.push_back(tmp_);
+        }
+      } else if (tmp.size() == 2) {
+        // one ;
+        // handle col-space label
+        vector<string> ket_labels = str_split(tmp[0], false, ",");
+        if (ket_labels.size() == 1)
+          if (ket_labels[0].length() == 0) ket_labels.clear();
+        for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
+          string tmp = str_strip(ket_labels[i]);
+          cytnx_error_msg(tmp.length() == 0,
+                          "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                          line_num, "\n");
+          labels.push_back(tmp);
+        }
+        TOUT_iBondNum = labels.size();
+        // handle row-space label
+        vector<string> bra_labels = str_split(tmp[1], false, ",");
+        if (bra_labels.size() == 1)
+          if (bra_labels[0].length() == 0) bra_labels.clear();
+        for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
+          string tmp = str_strip(bra_labels[i]);
+          cytnx_error_msg(tmp.length() == 0,
+                          "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+                          line_num, "\n");
+          labels.push_back(tmp);
+        }
+      } else if (tmp.size() > 2) {
+        // more than one ;
+        cytnx_error_msg(true, "[ERROR][Network] line:%d Invalid TOUT line.%s", line_num, "\n");
       }
     }
-  }
 
-  string einsumpath_to_string(vector<pair<cytnx_int64, cytnx_int64>> path, vector<string> tns) {
-    string res;
-    for (int i = 0; i < path.size(); i++) {
-      int id1 = path[i].first;
-      int id2 = path[i].second;
-      res.clear();
-      res.append("(");
-      res.append(tns[id1]);
-      res.append(",");
-      res.append(tns[id2]);
-      res.append(")");
-      tns.erase(tns.begin() + id1);
-      if (id1 > id2)
-        tns.erase(tns.begin() + id2);
-      else
-        tns.erase(tns.begin() + id2 - 1);
-      tns.push_back(res);
-    }
-    return res;
-  }
+    /// This is debug function for printing special characters
+    void tri_internal(const char *text) {
+      for (const char *p = text; *p != '\0'; ++p) {
+        int c = (unsigned char)*p;
 
-  vector<pair<cytnx_int64, cytnx_int64>> CtTree_to_eisumpath(ContractionTree CtTree,
-                                                             vector<string> tns) {
-    vector<pair<cytnx_int64, cytnx_int64>> path;
-    stack<std::shared_ptr<Node>> stk;
-    std::shared_ptr<Node> root = CtTree.nodes_container.back();
-    int ly = 0;
-    bool ict;
-    do {
-      while ((root != nullptr)) {
-        if (root->right != nullptr) stk.push(root->right);
-        stk.push(root);
-        root = root->left;
+        switch (c) {
+          case '\\':
+            printf("\\\\");
+            break;
+          case '\n':
+            printf("\\n");
+            break;
+          case '\r':
+            printf("\\r");
+            break;
+          case '\t':
+            printf("\\t");
+            break;
+
+            // TODO: Add other C character escapes here.  See:
+            // <https://en.wikipedia.org/wiki/Escape_sequences_in_C#Table_of_escape_sequences>
+
+          default:
+            if (isprint(c)) {
+              putchar(c);
+            } else {
+              printf("\\x%X", c);
+            }
+            break;
+        }
       }
-      root = stk.top();
-      stk.pop();
-      ict = true;
-      if ((root->right != nullptr) && !stk.empty()) {
-        if (stk.top() == root->right) {
-          stk.pop();
+    }
+
+    void parse_tn_line_internal_(vector<string> &labels, cytnx_uint64 &TN_iBondNum,
+                                 const string &line, const cytnx_uint64 &line_num) {
+      labels.clear();
+      // vector<string> tmp = str_split(line, false, ";");
+      // cytnx_error_msg(tmp.size() != 2, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                 "Invalid TN line. A \';\' should be used to indicate the
+      //                 rowrank.\nexample1>
+      //                 "
+      //                 "\'Tn: 0, 1; 2, 3\'\nexample2> \'Tn: ; -1, 2, 3\'");
+
+      // // handle col-space label
+      // vector<string> ket_labels = str_split(tmp[0], false, ",");
+      // if (ket_labels.size() == 1)
+      //   if (ket_labels[0].length() == 0) ket_labels.clear();
+      // for (cytnx_uint64 i = 0; i < ket_labels.size(); i++) {
+      //   string tmp = str_strip(ket_labels[i]);
+      //   cytnx_error_msg(tmp.length() == 0,
+      //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s",
+      //                   line_num,
+      //                   "\n");
+      //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+      //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                   "Invalid TN line. label contain non integer.");
+      //   labels.push_back(tmp);
+      // }
+      // TN_iBondNum = labels.size();
+
+      // // handle row-space label
+      // vector<string> bra_labels = str_split(tmp[1], false, ",");
+      // if (bra_labels.size() == 1)
+      //   if (bra_labels[0].length() == 0) bra_labels.clear();
+      // for (cytnx_uint64 i = 0; i < bra_labels.size(); i++) {
+      //   string tmp = str_strip(bra_labels[i]);
+      //   cytnx_error_msg(tmp.length() == 0,
+      //                   "[ERROR][Network][Fromfile] line:%d Invalid labels for TOUT line.%s",
+      //                   line_num, "\n");
+
+      //   // tri_internal(tmp.c_str());
+
+      //   // cout << tmp.size() << endl;
+      //   // cout << tmp.find_first_not_of("0123456789-") << endl;
+      //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+      //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+      //                   "Invalid TN line. label contain non integer.");
+      //   labels.push_back(tmp);
+      // }
+
+      vector<string> alllabels = str_split(line, false, ",");
+      if (alllabels.size() == 1)
+        if (alllabels[0].length() == 0) alllabels.clear();
+      for (cytnx_uint64 i = 0; i < alllabels.size(); i++) {
+        string tmp = str_strip(alllabels[i]);
+        cytnx_error_msg(tmp.length() == 0,
+                        "[ERROR][Network][Fromfile] line:%d Invalid labels for TN line.%s",
+                        line_num, "\n");
+        // cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
+        //                 "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+        //                 "Invalid TN line. label contain non integer.");
+        labels.push_back(tmp);
+      }
+
+      TN_iBondNum = labels.size();
+
+      cytnx_error_msg(labels.size() == 0, "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
+                      "Invalid TN line. no label present in this line, which is invalid.%s", "\n");
+    }
+
+    void extract_tns_from_order_internal_(vector<string> &TN_names, const vector<string> &tokens) {
+      TN_names.clear();
+      for (cytnx_uint64 i = 0; i < tokens.size(); i++) {
+        string tok = str_strip(tokens[i]);  // remove space.
+        if (tok.length() == 0) continue;
+        if ((tok != "(") && (tok != ")") && (tok != ",")) {
+          TN_names.push_back(tok);
+        }
+      }
+    }
+
+    string einsumpath_to_string_internal(vector<pair<cytnx_int64, cytnx_int64>> path,
+                                         vector<string> tns) {
+      string res;
+      for (int i = 0; i < path.size(); i++) {
+        int id1 = path[i].first;
+        int id2 = path[i].second;
+        res.clear();
+        res.append("(");
+        res.append(tns[id1]);
+        res.append(",");
+        res.append(tns[id2]);
+        res.append(")");
+        tns.erase(tns.begin() + id1);
+        if (id1 > id2)
+          tns.erase(tns.begin() + id2);
+        else
+          tns.erase(tns.begin() + id2 - 1);
+        tns.push_back(res);
+      }
+      return res;
+    }
+
+    vector<pair<cytnx_int64, cytnx_int64>> ct_tree_to_eisumpath_internal(ContractionTree CtTree,
+                                                                         vector<string> tns) {
+      vector<pair<cytnx_int64, cytnx_int64>> path;
+      stack<std::shared_ptr<Node>> stk;
+      std::shared_ptr<Node> root = CtTree.nodes_container.back();
+      int ly = 0;
+      bool ict;
+      do {
+        while ((root != nullptr)) {
+          if (root->right != nullptr) stk.push(root->right);
           stk.push(root);
-          root = root->right;
-          ict = false;
+          root = root->left;
         }
-      }
-      if (ict) {
-        if ((root->right != nullptr) && (root->left != nullptr)) {
-          auto it = find(tns.begin(), tns.end(), root->left->name);
-          int id1 = it - tns.begin();
-          it = find(tns.begin(), tns.end(), root->right->name);
-          int id2 = it - tns.begin();
-          tns.erase(tns.begin() + id1);
-          if (id1 > id2)
-            tns.erase(tns.begin() + id2);
-          else
-            tns.erase(tns.begin() + id2 - 1);
-          tns.push_back("(" + root->left->name + "," + root->right->name + ")");
-          root->name = "(" + root->left->name + "," + root->right->name + ")";
-          path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1, id2));
+        root = stk.top();
+        stk.pop();
+        ict = true;
+        if ((root->right != nullptr) && !stk.empty()) {
+          if (stk.top() == root->right) {
+            stk.pop();
+            stk.push(root);
+            root = root->right;
+            ict = false;
+          }
         }
-        root = nullptr;
-      }
-    } while (!stk.empty());
-    // for (int i = 0; i < path.size(); i++) {
-    //   std::cout << path[i].first << ", " << path[i].second << std::endl;
-    // }
-    return path;
-  }
-
-  void check(vector<UniTensor> &tns, vector<string> &tn_names) {
-    // check tensors are all set, and put all unitensor on node for contraction:
-    cytnx_error_msg(
-      tns.size() == 0,
-      "[ERROR][RegularNetwork] Cannot find optimal order/Launch for an un-initialize network.%s",
-      "\n");
-    cytnx_error_msg(tns.size() < 2,
-                    "[ERROR][RegularNetwork] Network should contain >=2 tensors to find "
-                    "optimal order/Launch.%s",
-                    "\n");
-    for (cytnx_uint64 idx = 0; idx < tns.size(); idx++) {
-      cytnx_error_msg(tns[idx].uten_type() == UTenType.Void,
-                      "[ERROR][RegularNetwork] tensor at [%d], name: [%s] is not set.\n", idx,
-                      tn_names[idx].c_str());
+        if (ict) {
+          if ((root->right != nullptr) && (root->left != nullptr)) {
+            auto it = find(tns.begin(), tns.end(), root->left->name);
+            int id1 = it - tns.begin();
+            it = find(tns.begin(), tns.end(), root->right->name);
+            int id2 = it - tns.begin();
+            tns.erase(tns.begin() + id1);
+            if (id1 > id2)
+              tns.erase(tns.begin() + id2);
+            else
+              tns.erase(tns.begin() + id2 - 1);
+            tns.push_back("(" + root->left->name + "," + root->right->name + ")");
+            root->name = "(" + root->left->name + "," + root->right->name + ")";
+            path.push_back(std::pair<cytnx_int64, cytnx_int64>(id1, id2));
+          }
+          root = nullptr;
+        }
+      } while (!stk.empty());
+      // for (int i = 0; i < path.size(); i++) {
+      //   std::cout << path[i].first << ", " << path[i].second << std::endl;
+      // }
+      return path;
     }
 
-    // check same device and uten_type
-    int tn_device = tns[0].device();
-    int utentype = tns[0].uten_type();
-    for (int i = 1; i < tns.size(); i++) {
-      cytnx_error_msg(tns[i].device() != tn_device,
-                      "[ERROR][Launch][RegularNetwork] Cannot find optimal order/launch with "
-                      "tensors on different devices, tensor "
-                      "at [0] is on device %d while tensor at [%d] in on device %d. %s",
-                      tn_device, i, tns[i].device(), "\n");
-      cytnx_error_msg(tns[i].uten_type() != utentype,
-                      "[ERROR][Launch][RegularNetwork] Cannot find optimal order/launch with "
-                      "tensors of different unitensor types, tensor "
-                      "at [0] is uten_type %d while tensor at [%d] in uten_type %d. %s",
-                      utentype, i, tns[i].uten_type(), "\n");
+    void check_internal(vector<UniTensor> &tns, vector<string> &tn_names) {
+      // check tensors are all set, and put all unitensor on node for contraction:
+      cytnx_error_msg(
+        tns.size() == 0,
+        "[ERROR][RegularNetwork] Cannot find optimal order/Launch for an un-initialize network.%s",
+        "\n");
+      cytnx_error_msg(tns.size() < 2,
+                      "[ERROR][RegularNetwork] Network should contain >=2 tensors to find "
+                      "optimal order/Launch.%s",
+                      "\n");
+      for (cytnx_uint64 idx = 0; idx < tns.size(); idx++) {
+        cytnx_error_msg(tns[idx].uten_type() == UTenType.Void,
+                        "[ERROR][RegularNetwork] tensor at [%d], name: [%s] is not set.\n", idx,
+                        tn_names[idx].c_str());
+      }
+
+      // check same device and uten_type
+      int tn_device = tns[0].device();
+      int utentype = tns[0].uten_type();
+      for (int i = 1; i < tns.size(); i++) {
+        cytnx_error_msg(tns[i].device() != tn_device,
+                        "[ERROR][Launch][RegularNetwork] Cannot find optimal order/launch with "
+                        "tensors on different devices, tensor "
+                        "at [0] is on device %d while tensor at [%d] in on device %d. %s",
+                        tn_device, i, tns[i].device(), "\n");
+        cytnx_error_msg(tns[i].uten_type() != utentype,
+                        "[ERROR][Launch][RegularNetwork] Cannot find optimal order/launch with "
+                        "tensors of different unitensor types, tensor "
+                        "at [0] is uten_type %d while tensor at [%d] in uten_type %d. %s",
+                        utentype, i, tns[i].uten_type(), "\n");
+      }
     }
-  }
+  }  // namespace
 
   void RegularNetwork::Contract_plan(const vector<UniTensor> &utensors, const string &Tout,
                                      const vector<string> &alias, const string &contract_order) {
@@ -330,12 +335,12 @@ namespace cytnx {
     // reading
     if (contract_order.length()) {
       // ORDER assigned
-      _parse_ORDER_line_(this->ORDER_tokens, contract_order, 0);
+      parse_order_line_internal_(this->ORDER_tokens, contract_order, 0);
       isORDER_exist = true;
     }
     if (Tout.length()) {
       // TOUT assigned
-      _parse_TOUT_line_(this->TOUT_labels, this->TOUT_iBondNum, Tout, 0);
+      parse_tout_line_internal_(this->TOUT_labels, this->TOUT_iBondNum, Tout, 0);
     }
 
     // assign input tensors into slots:
@@ -368,8 +373,8 @@ namespace cytnx {
       // this is an internal function that is defined in this cpp file.
       this->label_arr.back() = utensors[i].labels();
       this->iBondNums.push_back(utensors[i].rowrank());
-      //_parse_TN_line_(this->label_arr.back(),tmp_iBN,content,lnum);
-      // this->iBondNums.push_back(tmp_iBN);
+      // parse_tn_line_internal_(this->label_arr.back(),tmp_iBN,content,lnum);
+      //  this->iBondNums.push_back(tmp_iBN);
 
     }  // traversal input tensor list
 
@@ -380,7 +385,7 @@ namespace cytnx {
     //  only alias assigned will activate order
     if (isORDER_exist) {
       vector<string> TN_names;  // this should be integer!
-      _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
+      extract_tns_from_order_internal_(TN_names, this->ORDER_tokens);
       cytnx_error_msg(TN_names.size() != utensors.size(),
                       "[ERROR][Network][Contract--planning] order assigned but the [%d] tensors "
                       "appears in ORDER does not match the # input tensors [%d]\n",
@@ -485,14 +490,14 @@ namespace cytnx {
           // cut the line into tokens,
           // and leave it to process by CtTree after read all lines.
           this->order_line = content;
-          _parse_ORDER_line_(this->ORDER_tokens, content, i);
+          parse_order_line_internal_(this->ORDER_tokens, content, i);
           isORDER_exist = true;
         }
       } else if (name == "TOUT") {
         // if content has length, then pass to process.
         if (content.length()) {
           // this is an internal function that is defined in this cpp file.
-          _parse_TOUT_line_(this->TOUT_labels, this->TOUT_iBondNum, content, i);
+          parse_tout_line_internal_(this->TOUT_labels, this->TOUT_iBondNum, content, i);
         }
       } else {
         this->names.push_back(name);
@@ -520,7 +525,7 @@ namespace cytnx {
         this->label_arr.push_back(vector<string>());
         cytnx_uint64 tmp_iBN;
         // this is an internal function that is defined in this cpp file.
-        _parse_TN_line_(this->label_arr.back(), tmp_iBN, content, i);
+        parse_tn_line_internal_(this->label_arr.back(), tmp_iBN, content, i);
         this->iBondNums.push_back(tmp_iBN);
       }
 
@@ -548,7 +553,7 @@ namespace cytnx {
     // checking if all TN are set in ORDER.
     if (isORDER_exist) {
       vector<string> TN_names;
-      _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
+      extract_tns_from_order_internal_(TN_names, this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {
         auto it = find(TN_names.begin(), TN_names.end(), this->names[i]);
         cytnx_error_msg(
@@ -647,7 +652,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    this->einsum_path = ct_tree_to_eisumpath_internal(CtTree, names);
   }  // end of FromString
 
   void RegularNetwork::Fromfile(const string &fname) {
@@ -874,18 +879,19 @@ namespace cytnx {
                       "\n");
     this->ORDER_tokens.clear();
     if (optimal) {
-      check(this->tensors, this->names);
+      check_internal(this->tensors, this->names);
 
-      if (this->tensors[0].device() == -1) {
+      if (this->tensors[0].device() == Device.cpu) {
         string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
-        _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+        parse_order_line_internal_(ORDER_tokens, Optim_ORDERline, 999999);
       } else {
   #ifdef UNI_GPU
     #ifdef UNI_CUQUANTUM
         if (this->tensors[0].uten_type() != UTenType.Dense) {
-          cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] Error,%s",
-                          "Sparse or Block type UniTensor network optimization is not support.\n");
+          string Optim_ORDERline = this->getOptimalOrder();
+          this->order_line = Optim_ORDERline;
+          parse_order_line_internal_(ORDER_tokens, Optim_ORDERline, 999999);
         } else {
           vector<cytnx_uint64> out_shape;
           for (int i = 0; i < this->TOUT_labels.size(); i++) {
@@ -912,7 +918,7 @@ namespace cytnx {
             names.push_back(this->names[i]);
           }
           this->einsum_path = path;
-          this->order_line = einsumpath_to_string(path, names);
+          this->order_line = einsumpath_to_string_internal(path, names);
         }
     #else
         // cytnx_error_msg(true, "[ERROR][setOrder][RegularNetwork] fatal error,%s",
@@ -920,7 +926,7 @@ namespace cytnx {
         //                 without " "CUQUANTUM support.\n");
         string Optim_ORDERline = this->getOptimalOrder();
         this->order_line = Optim_ORDERline;
-        _parse_ORDER_line_(ORDER_tokens, Optim_ORDERline, 999999);
+        parse_order_line_internal_(ORDER_tokens, Optim_ORDERline, 999999);
     #endif
 
   #else
@@ -932,9 +938,9 @@ namespace cytnx {
     } else {
       this->order_line = contract_order;
       if (contract_order != "") {
-        _parse_ORDER_line_(ORDER_tokens, contract_order, 999999);
+        parse_order_line_internal_(ORDER_tokens, contract_order, 999999);
         CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-        this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+        this->einsum_path = ct_tree_to_eisumpath_internal(CtTree, names);
       } else {
         CtTree.build_default_contraction_tree();
       }
@@ -946,7 +952,7 @@ namespace cytnx {
     SearchTree Stree;
     Stree.base_nodes.resize(this->tensors.size());
     for (cytnx_uint64 t = 0; t < this->tensors.size(); t++) {
-      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create psudotensors from base tensors
+      Stree.base_nodes[t].from_utensor(this->tensors[t]);  // create pseudotensors from base tensors
       // Stree.base_nodes[t].from_utensor(CtTree.base_nodes[t].utensor);
       Stree.base_nodes[t].accu_str = this->names[t];
     }
@@ -955,200 +961,120 @@ namespace cytnx {
   }
 
   UniTensor RegularNetwork::Launch() {
-    check(this->tensors, this->names);
+    check_internal(this->tensors, this->names);
 
     int tn_device = this->tensors[0].device();
 
-    if (tn_device == -1) {
-      // cpu workflow
-
-      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
-        this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
-        this->CtTree.base_nodes[idx]->is_assigned = true;
+  #if defined(UNI_GPU) && defined(UNI_CUQUANTUM)  // gpu workflow with cuquantum
+    if (tn_device != Device.cpu && this->tensors[0].uten_type() == UTenType.Dense) {
+      vector<cytnx_uint64> out_shape;
+      for (int i = 0; i < this->TOUT_labels.size(); i++) {
+        out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
       }
-      // 1.5 contraction order:
-      if (ORDER_tokens.size() != 0) {
-        // *set by user or optimally found
-        CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+      UniTensor out =
+        UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
+      cutensornet cutn;
+      cutn.setDevice(this->tensors[0].device());
+      cutn.createStream();
+      cutn.createHandle();
+      cutn.parseLabels(this->int_out_mode, this->int_modes);
+      cutn.set_output_extents(out_shape);
+      cutn.set_extents(this->tensors);
+      this->descNet = cutn.createNetworkDescriptor();
+      cutn.setOutputMem(out);
+      cutn.setInputMem(this->tensors);
+      // cutn.setNetworkDescriptor(this->descNet);
+      if (this->optimizerInfo != nullptr) {
+        cutn.setOptimizerInfo(this->optimizerInfo);
       } else {
-        CtTree.build_default_contraction_tree();
+        this->optimizerInfo = cutn.createOptimizerInfo();
       }
+      cutn.setContractionPath(einsum_path);
 
-      // 2. contract using postorder traversal:
-      // cout << this->CtTree.nodes_container.size() << endl;
-      stack<std::shared_ptr<Node>> stk;
-      std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
-      root->set_root_ptrs();  // Add this line
-      int ly = 0;
-      bool ict;
+      // cutn.getContractionPath();
 
-      do {
-        // move the leftmost
-        while (root != nullptr) {
-          if (root->right) stk.push(root->right);
-          stk.push(root);
-          root = root->left;
-        }
+      cutn.createWorkspaceDescriptor();
+      cutn.initializePlan();
+      cutn.autotune();
+      cutn.executeContraction();
+      cutn.freePlan();
+      cutn.freeWorkspaceDescriptor();
+      cutn.freeHandle();
 
-        root = stk.top();
-        stk.pop();
-
-        ict = true;
-        if (root->right && !stk.empty()) {
-          if (stk.top() == root->right) {  // This comparison now works with shared_ptr
-            stk.pop();
-            stk.push(root);
-            root = root->right;
-            ict = false;
-          }
-        }
-
-        if (ict) {
-          if (root->right && root->left) {
-            root->utensor = Contract(root->left->utensor, root->right->utensor);
-            root->left->clear_utensor();
-            root->right->clear_utensor();
-            root->is_assigned = true;
-          }
-          root = nullptr;
-        }
-      } while (!stk.empty());
-
-      // 3. get result:
-      UniTensor out = this->CtTree.nodes_container.back()->utensor;
-      // cout << out << endl;
-      // out.print_diagram();
-
-      // 4. reset nodes:
-      this->CtTree.reset_nodes();
-
-      // //5. reset back the original labels:
-      // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-      //     this->tensors[i].relabel_(old_labels[i]);
-      // }
-
-      // 6. permute accroding to pre-set labels:
-      if (TOUT_labels.size()) {
-        out.permute_(TOUT_labels, TOUT_iBondNum);
-      }
-      // UniTensor out;
       return out;
-
-    } else {
-      // gpu workflow
-  #ifdef UNI_GPU
-    #ifdef UNI_CUQUANTUM
-      if (this->tensors[0].uten_type() != UTenType.Dense) {
-        cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] Error,%s",
-                        "Sparse or Block type UniTensor network contraction is not support.\n");
-        return UniTensor();
-      } else {
-        vector<cytnx_uint64> out_shape;
-        for (int i = 0; i < this->TOUT_labels.size(); i++) {
-          out_shape.push_back(this->tensors[TOUT_pos[i].first].shape()[TOUT_pos[i].second]);
-        }
-        UniTensor out =
-          UniTensor(zeros(out_shape, this->tensors[0].dtype(), this->tensors[0].device()));
-        cutensornet cutn;
-        cutn.setDevice(this->tensors[0].device());
-        cutn.createStream();
-        cutn.createHandle();
-        cutn.parseLabels(this->int_out_mode, this->int_modes);
-        cutn.set_output_extents(out_shape);
-        cutn.set_extents(this->tensors);
-        this->descNet = cutn.createNetworkDescriptor();
-        cutn.setOutputMem(out);
-        cutn.setInputMem(this->tensors);
-        // cutn.setNetworkDescriptor(this->descNet);
-        if (this->optimizerInfo != nullptr) {
-          cutn.setOptimizerInfo(this->optimizerInfo);
-        } else {
-          this->optimizerInfo = cutn.createOptimizerInfo();
-        }
-        cutn.setContractionPath(einsum_path);
-
-        // cutn.getContractionPath();
-
-        cutn.createWorkspaceDescriptor();
-        cutn.initializePlan();
-        cutn.autotune();
-        cutn.executeContraction();
-        cutn.freePlan();
-        cutn.freeWorkspaceDescriptor();
-        cutn.freeHandle();
-
-        return out;
-      }
-    #else
-      for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
-        this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
-        this->CtTree.base_nodes[idx]->is_assigned = true;
-      }
-      // 1.5 contraction order:
-      if (ORDER_tokens.size() != 0) {
-        // *set by user or optimally found
-        CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
-      } else {
-        CtTree.build_default_contraction_tree();
-      }
-      // 2. contract using postorder traversal:
-      // cout << this->CtTree.nodes_container.size() << endl;
-      stack<std::shared_ptr<Node>> stk;
-      std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
-      root->set_root_ptrs();  // Add this line
-      int ly = 0;
-      bool ict;
-
-      do {
-        // move the leftmost
-        while (root != nullptr) {
-          if (root->right) stk.push(root->right);
-          stk.push(root);
-          root = root->left;
-        }
-
-        root = stk.top();
-        stk.pop();
-
-        ict = true;
-        if (root->right && !stk.empty()) {
-          if (stk.top() == root->right) {  // This comparison now works with shared_ptr
-            stk.pop();
-            stk.push(root);
-            root = root->right;
-            ict = false;
-          }
-        }
-
-        if (ict) {
-          if (root->right && root->left) {
-            root->utensor = Contract(root->left->utensor, root->right->utensor);
-            root->left->clear_utensor();  // remove intermediate unitensor to save heap space
-            root->right->clear_utensor();  // remove intermediate unitensor to save heap space
-            root->is_assigned = true;
-          }
-          root = nullptr;
-        }
-      } while (!stk.empty());
-      // 3. get result:
-      UniTensor out = this->CtTree.nodes_container.back()->utensor;
-      // 4. reset nodes:
-      this->CtTree.reset_nodes();
-      // 6. permute accroding to pre-set labels:
-      if (TOUT_labels.size()) {
-        out.permute_(TOUT_labels, TOUT_iBondNum);
-      }
-      return out;
-    #endif
-
-  #else
-      cytnx_error_msg(true, "[ERROR][Launch][RegularNetwork] fatal error,%s",
-                      "try to call the gpu section without CUDA support.\n");
-      return UniTensor();
-  #endif
     }
+  #endif
+
+    // all other cases (CPU, without cuquantum, or not dense)
+    for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
+      this->CtTree.base_nodes[idx]->utensor =
+        this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
+      this->CtTree.base_nodes[idx]->is_assigned = true;
+    }
+    // 1.5 contraction order:
+    if (ORDER_tokens.size() != 0) {
+      // *set by user or optimally found
+      CtTree.build_contraction_tree_by_tokens(this->name2pos, ORDER_tokens);
+    } else {
+      CtTree.build_default_contraction_tree();
+    }
+
+    // 2. contract using postorder traversal:
+    stack<std::shared_ptr<Node>> stk;
+    std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
+    root->set_root_ptrs();  // Add this line
+    int ly = 0;
+    bool ict;
+
+    do {
+      // move the leftmost
+      while (root != nullptr) {
+        if (root->right) stk.push(root->right);
+        stk.push(root);
+        root = root->left;
+      }
+
+      root = stk.top();
+      stk.pop();
+
+      ict = true;
+      if (root->right && !stk.empty()) {
+        if (stk.top() == root->right) {  // This comparison now works with shared_ptr
+          stk.pop();
+          stk.push(root);
+          root = root->right;
+          ict = false;
+        }
+      }
+
+      if (ict) {
+        if (root->right && root->left) {
+          root->utensor = Contract(root->left->utensor, root->right->utensor);
+          root->left->clear_utensor();
+          root->right->clear_utensor();
+          root->is_assigned = true;
+        }
+        root = nullptr;
+      }
+    } while (!stk.empty());
+
+    // 3. get result:
+    UniTensor out = this->CtTree.nodes_container.back()->utensor;
+
+    // 4. reset nodes:
+    this->CtTree.reset_nodes();
+
+    // //5. reset back the original labels:
+    // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
+    //     this->tensors[i].relabel_(old_labels[i]);
+    // }
+
+    // 6. permute according to pre-set labels:
+    if (TOUT_labels.size()) {
+      out.permute_(TOUT_labels, TOUT_iBondNum);
+    }
+    // UniTensor out;
+    return out;
   }
 
   void RegularNetwork::construct(const vector<string> &alias, const vector<vector<string>> &labels,
@@ -1169,9 +1095,9 @@ namespace cytnx {
     if (order.length()) {
       this->order_line = order;
       // checking if all TN are set in ORDER.
-      _parse_ORDER_line_(this->ORDER_tokens, order, 0);
+      parse_order_line_internal_(this->ORDER_tokens, order, 0);
       vector<string> TN_names;
-      _extract_TNs_from_ORDER_(TN_names, this->ORDER_tokens);
+      extract_tns_from_order_internal_(TN_names, this->ORDER_tokens);
       for (int i = 0; i < this->names.size(); i++) {
         auto it = find(TN_names.begin(), TN_names.end(), this->names[i]);
         cytnx_error_msg(
@@ -1290,7 +1216,7 @@ namespace cytnx {
     } else {
       CtTree.build_default_contraction_tree();
     }
-    this->einsum_path = CtTree_to_eisumpath(CtTree, names);
+    this->einsum_path = ct_tree_to_eisumpath_internal(CtTree, names);
   }  // end construct
 
 }  // namespace cytnx
