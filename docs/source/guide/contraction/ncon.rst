@@ -15,7 +15,7 @@ Following this, the **ncon** routine is called as:
     :param list connect_list_in: 1D array of vectors. The kth element contains the integer index labels of the kth tensor in tensor_list_in. These integers are defined by the diagram. Their order must correspond to the ordering of indices on the corresponding tensor.
     :param list cont_order: a vector containing the positive integer labels of the diagram. It is used to specify the order in which **ncon** contracts the indices. Note that cont_order is an optional input that can be omitted if desired, in which case ncon will contract in ascending order of the integer values.
 
-For example, we want to contract the following tensor network (as before with *Contracts()*) consisting of tensors **A1**, **A2** and **M**:
+For example, we want to contract the following tensor network (as before with *Contract()*) consisting of tensors **A1**, **A2** and **M**:
 
 .. image:: image/ncon.png
     :width: 300
@@ -32,7 +32,7 @@ In the figure we labelled the internal bonds using unique positive numbers. Exte
 .. literalinclude:: ../../../code/python/outputs/guide_contraction_ncon_ncon.out
     :language: text
 
-We see that **ncon** accomplishes contractions similar to **Contracts** or a contraction **Network**. While the code becomes very compact with *ncon*, the user must take care of the correct index order of all tensors.
+We see that **ncon** accomplishes contractions similar to **Contract** or a contraction **Network**. While the code becomes very compact with *ncon*, the user must take care of the correct index order of all tensors.
 
 .. bibliography:: ref.ncon.bib
     :cited:

@@ -1,5 +1,6 @@
 #include "backend/Storage.hpp"
 
+#include <filesystem>
 #include <iostream>
 
 using namespace std;
@@ -83,23 +84,24 @@ namespace cytnx {
 
   void Storage::Save(const std::string &fname) const {
     fstream f;
-    f.open((fname + ".cyst"), ios::out | ios::trunc | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::out | ios::trunc | ios::binary);
+    } else {
+      // add filename extension
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cyst'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.c_str());
+      f.open((fname + ".cyst"), ios::out | ios::trunc | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Save(f);
     f.close();
   }
-  void Storage::Save(const char *fname) const {
-    fstream f;
-    string ffname = string(fname) + ".cyst";
-    f.open(ffname, ios::out | ios::trunc | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
+  void Storage::Save(const char *fname) const { this->Save(string(fname)); }
   void Storage::Tofile(const std::string &fname) const {
     fstream f;
     f.open(fname, ios::out | ios::trunc | ios::binary);
@@ -200,7 +202,7 @@ namespace cytnx {
     // std::cout << fname << std::endl;
     jf.open(fname, ios::ate | ios::binary);
     if (!jf.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     Nbytes = jf.tellg();
     jf.close();
@@ -221,7 +223,7 @@ namespace cytnx {
 
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     out._Loadbinary(f, dtype, Nelem);
     f.close();
@@ -232,23 +234,13 @@ namespace cytnx {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     out._Load(f);
     f.close();
     return out;
   }
-  Storage Storage::Load(const char *fname) {
-    Storage out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
-    }
-    out._Load(f);
-    f.close();
-    return out;
-  }
+  Storage Storage::Load(const char *fname) { return Storage::Load(string(fname)); }
   void Storage::_Load(fstream &f) {
     // header
     unsigned long long sz;

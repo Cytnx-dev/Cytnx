@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
   Tensor DD1 = arange(1., 5., 1.);
   cout << DD1 << endl;
 
-  DD1.Save("test");
+  DD1.Save("test.cytn");
   Tensor DD2;
   DD2.Load("test.cytn");
   cout << DD2 << endl;
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]) {
       ut1.combineBonds({2,0},true,false);
       ut1.print_diagram();
       ut2.print_diagram();
-      ut2.set_label(2,-4);
+      ut2.relabel_(2,-4);
       ut2.print_diagram();
 
       CyTensor ut3 = Contract(ut1,ut2);

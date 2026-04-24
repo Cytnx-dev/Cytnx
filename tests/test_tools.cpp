@@ -222,7 +222,7 @@ namespace cytnx {
                         ? Type.ComplexDouble
                         : Type.Double;
       Tensor tmp = Tensor(T.shape(), tmp_type, T.device());
-      random::Make_uniform(tmp, l_bd, h_bd, rand_seed);
+      random::uniform_(tmp, l_bd, h_bd, rand_seed);
       if (dtype == Type.Bool) {
         // bool type prepare:double in range (0, 2) -> uint32 [0, 1] ->bool
         //   bool type prepare:1.X -> 1 ->true; 0.X -> 0 ->false
@@ -424,7 +424,11 @@ namespace cytnx {
         Tensor block1 = Ut1.get_block();
         Tensor block2 = Ut2.get_block();
         if (!AreNearlyEqTensor(block1, block2, tol)) {
-          std::cout << "[AreNearlyEqUniTensor] two block not the same. " << std::endl;
+          std::cout << "[AreNearlyEqUniTensor] The entries of the dense UniTensor are not the same."
+                    << std::endl;
+          std::cout << block1 << std::endl;
+          std::cout << block2 << std::endl;
+
           return false;
         }
       }
@@ -530,7 +534,7 @@ namespace cytnx {
                         ? Type.ComplexDouble
                         : Type.Double;
       UniTensor tmp = UT.astype(tmp_type);
-      random::Make_uniform(tmp, l_bd, h_bd, rand_seed);
+      random::uniform_(tmp, l_bd, h_bd, rand_seed);
       if (dtype == Type.Bool) {
         // bool type prepare:double in range (0, 2) -> uint32 [0, 1] ->bool
         //   bool type prepare:1.X -> 1 ->true; 0.X -> 0 ->false

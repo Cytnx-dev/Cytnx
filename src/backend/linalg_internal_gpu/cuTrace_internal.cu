@@ -30,10 +30,9 @@ namespace cytnx {
                        const cytnx_uint64 &ax2) {
       cytnx::UniTensor I_UT = cytnx::UniTensor(zeros(Ndiag, Tn.dtype(), Tn.device()), true, -1);
 
-      I_UT.set_labels({"0", "1"});
+      I_UT.relabel_({"0", "1"});
       UniTensor UTn = UniTensor(Tn, false, 2);
-      UTn.set_labels(
-        vec_cast<cytnx_uint64, cytnx_int64>(vec_range(100, 100 + UTn.labels().size())));
+      UTn.relabel_(vec_cast<cytnx_uint64, cytnx_int64>(vec_range(100, 100 + UTn.labels().size())));
       UTn._impl->_labels[ax1] = "0";
       UTn._impl->_labels[ax2] = "1";
       out = Contract(I_UT, UTn).get_block_();

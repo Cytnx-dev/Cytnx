@@ -593,6 +593,29 @@ namespace cytnx {
     }
   }
 
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply_() {
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      if (this->_signflip[i]) {
+        this->_blocks[i] = -(this->_blocks[i]);
+        this->_signflip[i] = false;
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(this);
+  }
+
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::apply() {
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
+      if (tmp->_signflip[i]) {
+        tmp->_blocks.push_back(-(this->_blocks[i]));
+        tmp->_signflip[i] = false;
+      } else {
+        tmp->_blocks.push_back(this->_blocks[i].clone());
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(tmp);
+  }
+
   std::vector<Symmetry> BlockFermionicUniTensor::syms() const {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
     return this->_bonds[0].syms();
@@ -1872,17 +1895,14 @@ namespace cytnx {
   };
 
   void BlockFermionicUniTensor::Transpose_() {
-    //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // modify tag
     // The index order is reversed without any sign flips!
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
-    std::size_t idxnum = this->bonds().size() - 1;
-    for (int i = 0; i <= idxnum; i++) {
+    cytnx_int64 idxnum = this->bonds().size() - 1;
+    for (cytnx_int64 i = 0; i <= idxnum; i++) {
       this->bonds()[i].redirect_();
-      // this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
       idxorder[i] = idxnum - i;
     }
-    this->permute_nosignflip_(idxorder);
+    this->permute_nosignflip_(idxorder, idxnum + 1 - this->_rowrank);
   };
 
   void BlockFermionicUniTensor::normalize_() {
@@ -2491,6 +2511,50 @@ namespace cytnx {
           this->_blocks[b] *= Rtn->_blocks[blockrhs];
           if (Rtn->_signflip[blockrhs]) {
             // 3 possibilities:
+            // 1) efficient way: change _signflip
+            this->_signflip[b] = !(this->_signflip[b]);
+            // 2) easy way: multiply by scalar -1
+            // this->_blocks[b] = -this->_blocks[b];
+            // 3) fast way: TODOfermion: implement Tensor.negmul, which does the multiplication and
+            // sign flip in one step
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  void BlockFermionicUniTensor::Div_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
+    //[26 Sep 2025] This is a copy from Mul_ with *= replaced by /=
+    // checking Type:
+    cytnx_int64 blockrhs;
+    cytnx_error_msg(rhs->uten_type() != UTenType.BlockFermionic,
+                    "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
+
+    BlockFermionicUniTensor *Rtn = (BlockFermionicUniTensor *)rhs.get();
+
+    // 1) check each bond.
+    cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
+                    "[ERROR] cannot add two BlockFermionicUniTensor with different rank!%s", "\n");
+    for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
+      cytnx_error_msg(
+        this->_bonds[i] != Rtn->_bonds[i],
+        "[ERROR] Bond @ index: %d does not match. Therefore cannot perform Add of two UniTensor\n",
+        i);
+    }
+
+    cytnx_error_msg(
+      this->is_diag() != Rtn->is_diag(),
+      "[ERROR] cannot add BlockFermionicUniTensor with is_diag=true and is_diag=false.%s", "\n");
+
+    // 2) finding the blocks (they might be not in the same order!)
+    for (cytnx_int64 b = 0; b < this->_blocks.size(); b++) {
+      for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
+        blockrhs = (b + a) % Rtn->_blocks.size();
+        if (this->_inner_to_outer_idx[b] == Rtn->_inner_to_outer_idx[blockrhs]) {
+          this->_blocks[b] /= Rtn->_blocks[blockrhs];
+          if (Rtn->_signflip[blockrhs]) {
+            // 3 possibilities:
             // 1) easy way: multiply by scalar -1
             this->_blocks[b] = -this->_blocks[b];
             // 2) dirty way: change _signflip; this is dirty because other BlockFermionicUniTensors
@@ -2602,10 +2666,19 @@ namespace cytnx {
             std::cout << this->_blocks[a].shape() << std::endl;
             std::cout << "=============\n" << std::endl;
             */
-            new_blocks.back() = linalg::Directsum(
-              new_signs.back() ? -new_blocks.back() : new_blocks.back(),
-              this->_signflip[a] ? -this->_blocks[a] : this->_blocks[a], no_combine);
-            new_signs.back() = false;
+            if (new_signs.back() == this->_signflip[a]) {
+              new_blocks.back() =
+                linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
+              new_signs.back() = this->_signflip[a];
+            } else if (new_signs.back()) {
+              new_blocks.back() =
+                linalg::Directsum(-new_blocks.back(), this->_blocks[a], no_combine);
+              new_signs.back() = false;
+            } else {  // this->_signflip[a] == true
+              new_blocks.back() =
+                linalg::Directsum(new_blocks.back(), -this->_blocks[a], no_combine);
+              new_signs.back() = false;
+            }
           }
         }
       }  // traversal each block!
@@ -2662,6 +2735,7 @@ namespace cytnx {
     // get the mapper:
     int cnt = 0;
     int idor;
+    int newrowrank = this->_rowrank;
     for (int i = 0; i < this->rank(); i++) {
       if (cnt == indicators.size()) {
         idx_mapper.push_back(i);
@@ -2674,7 +2748,11 @@ namespace cytnx {
           if (i == indicators[0]) {
             // new_shape_aft_perm.push_back(-1);
             idor = idx_mapper.size();  // new_shape_aft_perm.size();
-            for (int j = 0; j < indicators.size(); j++) idx_mapper.push_back(indicators[j]);
+            idx_mapper.push_back(indicators[0]);
+            for (auto ind = indicators.begin() + 1; ind != indicators.end(); ++ind) {
+              idx_mapper.push_back(*ind);
+              if (*ind < this->_rowrank) newrowrank--;
+            }
           }
           cnt += 1;
         }
@@ -2759,8 +2837,8 @@ namespace cytnx {
     }
     // std::cout << this->_inner_to_outer_idx << std::endl;
 
-    // check rowrank:
-    if (this->_rowrank >= this->rank()) this->_rowrank = this->rank();
+    // change rowrank:
+    this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
 
@@ -2780,8 +2858,8 @@ namespace cytnx {
     // find the index of label:
     for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
-      cytnx_error_msg(it == this->_labels.end(), "[ERROR] labels not found in current UniTensor%s",
-                      "\n");
+      cytnx_error_msg(it == this->_labels.end(),
+                      "[ERROR] label '%s' not found in current UniTensor\n", indicators[i].c_str());
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
     this->combineBonds(idx_mapper, force);

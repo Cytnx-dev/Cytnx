@@ -1,5 +1,5 @@
 Save/Load a Tensor
------------------
+-------------------
 Cyntx provides a way to save/read Tensors to/from a file.
 
 Save a Tensor
@@ -18,7 +18,17 @@ To save a Tensor to a file, simply call **Tensor.Save(filepath)**.
     :language: c++
     :linenos:
 
-This will save Tensor *A* to the current directory as **T1.cytn**, with *.cytn* as file extension.
+This will save Tensor *A* to the current directory as **T1.cytn**.
+
+
+.. Tip::
+
+    The common file extension for a Tensor is *.cytn*.
+
+.. warning::
+
+    The file extension should be explicitly added. The previous behavior of attaching the extension *.cytn* automatically will be deprecated.
+
 
 
 Load a Tensor

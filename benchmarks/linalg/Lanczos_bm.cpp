@@ -27,7 +27,7 @@ namespace BMTest_Lanczos {
      *         | |         +          | |             "pi"
      *         |_|--"vol" "po" "vor"--|_|
      *
-     * Then relabels ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
+     * Then relabel ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
      *
      * "vil":virtual in bond left
      * "po":physical out bond

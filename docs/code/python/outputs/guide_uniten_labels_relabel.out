@@ -1,5 +1,5 @@
 -----------------------
-tensor Name :
+tensor Name : uT
 tensor Rank : 3
 block_form  : False
 is_diag     : False
@@ -12,7 +12,7 @@ on device   : cytnx device: CPU
          \         /
           ---------
 -----------------------
-tensor Name :
+tensor Name : uT
 tensor Rank : 3
 block_form  : False
 is_diag     : False

@@ -10,7 +10,7 @@ namespace cytnx {
   namespace linalg {
     Tensor Sub(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[Sub] error, two tensor cannot on different devices.%s", "\n");
+                      "[Sub] The two tensors cannot be on different devices.%s", "\n");
 
       Tensor out;
       bool icnst = false;
@@ -28,7 +28,7 @@ namespace cytnx {
         icnst = true;
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[Sub] error, the two tensor does not have the same shape.%s", "\n");
+                        "[Sub] The two tensors do not have the same shape.%s", "\n");
         out.Init(Lt.shape(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Lt.device());
       }
 
@@ -905,7 +905,7 @@ namespace cytnx {
       if (Lt.dtype() > Rt.dtype()) {
         out = out.astype(Rt.dtype());
       }
-      out.set_labels(vec_range<std::string>(Lt.rank()));
+      out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       out.Sub_(Rt);
@@ -926,7 +926,6 @@ namespace cytnx {
         out = Rt.clone();
         out._impl->lSub_(lc);
       }
-      // out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
       out.set_name("");
 
       return out;
@@ -960,7 +959,7 @@ namespace cytnx {
         out = Lt.clone();
         out.Sub_(rc);
       }
-      // out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+      // out.relabel_(vec_range<cytnx_int64>(Lt.rank()));
       out.set_name("");
 
       return out;
