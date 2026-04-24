@@ -889,7 +889,7 @@ namespace cytnx {
   #ifdef UNI_GPU
     #ifdef UNI_CUQUANTUM
         if (this->tensors[0].uten_type() != UTenType.Dense) {
-          cstring Optim_ORDERline = this->getOptimalOrder();
+          string Optim_ORDERline = this->getOptimalOrder();
           this->order_line = Optim_ORDERline;
           parse_order_line_internal_(ORDER_tokens, Optim_ORDERline, 999999);
         } else {
