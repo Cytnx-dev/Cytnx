@@ -5354,6 +5354,7 @@ namespace cytnx {
     @return UniTensor
     @note This function inverts the order of all indices.
     @note Compared to Dagger_(), this function will create a new UniTensor object.
+    @note For fermionic UniTensors, the index order is reversed without sign flips.
     @see Dagger_(), Transpose()
     */
     UniTensor Dagger() const {
@@ -5367,6 +5368,7 @@ namespace cytnx {
     @return UniTensor&
     @note This function inverts the order of all indices.
     @note Compared to Dagger(), this is an inplace function.
+    @note For fermionic UniTensors, the index order is reversed without sign flips.
     @see Dagger()
     */
     UniTensor &Dagger_() {

@@ -296,6 +296,15 @@ namespace GesvdTest {
       << __LINE__ << std::endl;
   }
 
+  TEST(Gesvd, err_rowrank_equal_rank_dense_UT) {
+    std::vector<Bond> bonds = {Bond(2), Bond(3)};
+    auto src_T = UniTensor(bonds, {}, 2, Type.Double, Device.cpu, false);
+    random::uniform_(src_T, 0, 10, 0);
+    EXPECT_THROW({ std::vector<UniTensor> Gesvds = linalg::Gesvd(src_T); }, std::logic_error)
+      << "Should throw error when rowrank is not smaller than rank."
+      << " Line:" << __LINE__ << std::endl;
+  }
+
   bool ReComposeCheck(const UniTensor& Tin, const std::vector<UniTensor>& Tout) {
     bool is_double_float_acc = true;
     auto dtype = Tin.dtype();

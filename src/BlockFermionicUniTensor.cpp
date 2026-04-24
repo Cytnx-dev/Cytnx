@@ -1934,8 +1934,8 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::Transpose_() {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // The bonds are redirected, as in the bosonic case. Additionally, the order of the indices is
-    // reversed and a permutation WITHOUT signflips is applied.
+    // The bonds are redirected, and the order of the indices is reversed with a permutation WITHOUT
+    // signflips.
 
     // modify tag
     std::vector<cytnx_int64> idxorder(this->_bonds.size());

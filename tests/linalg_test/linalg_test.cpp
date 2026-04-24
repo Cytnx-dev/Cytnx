@@ -1,4 +1,9 @@
 #include "linalg_test.h"
+#include "test_tools.h"
+
+using namespace cytnx;
+using namespace testing;
+using namespace TestTools;
 
 TEST_F(linalg_Test, BkUt_Svd_truncate1) {
   std::vector<UniTensor> res = linalg::Svd_truncate(svd_T, 200, 0, true);
@@ -356,6 +361,23 @@ TEST_F(linalg_Test, Tensor_Eig) {
   EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
 }
 
+TEST_F(linalg_Test, Tensor_Eig_RowV) {
+  const double tol = 1e-13;
+  auto row_v = linalg::Eig(arange3x3cd, true, true);
+  // auto col_v = linalg::Eig(arange3x3cd, true, false);
+
+  // EXPECT_TRUE(AreNearlyEqTensor(row_v[0], col_v[0], tol));
+  // EXPECT_TRUE(AreNearlyEqTensor(row_v[1], linalg::InvM(col_v[1]), tol));
+
+  auto e = UniTensor(row_v[0], true);
+  e.relabel_({"a", "b"});
+  auto v = UniTensor(row_v[1].Conj().permute({1, 0}));
+  v.relabel_({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.relabel_({"b", "j"});
+  EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < tol);
+}
+
 TEST_F(linalg_Test, Tensor_Eigh) {
   auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
   auto res = linalg::Eigh(her);
@@ -366,6 +388,24 @@ TEST_F(linalg_Test, Tensor_Eigh) {
   auto vt = UniTensor(linalg::InvM(v.get_block()));
   vt.relabel_({"b", "j"});
   EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+}
+
+TEST_F(linalg_Test, Tensor_Eigh_RowV) {
+  const double tol = 1e-13;
+  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
+  auto row_v = linalg::Eigh(her, true, true);
+  auto col_v = linalg::Eigh(her, true, false);
+
+  EXPECT_TRUE(AreNearlyEqTensor(row_v[0], col_v[0], tol));
+  EXPECT_TRUE(AreNearlyEqTensor(row_v[1], linalg::InvM(col_v[1]), tol));
+
+  auto e = UniTensor(row_v[0], true);
+  e.relabel_({"a", "b"});
+  auto v = UniTensor(row_v[1].Conj().permute({1, 0}));
+  v.relabel_({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.relabel_({"b", "j"});
+  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < tol);
 }
 
 TEST_F(linalg_Test, DenseUt_Eig) {
@@ -379,7 +419,25 @@ TEST_F(linalg_Test, DenseUt_Eig) {
   EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
 }
 
+TEST_F(linalg_Test, DenseUt_Eig_RowV) {
+  const double tol = 1e-13;
+  auto row_v = linalg::Eig(arange3x3cd_ut, true, true);
+  // auto col_v = linalg::Eig(arange3x3cd_ut, true, false);
+
+  // EXPECT_TRUE(AreNearlyEqUniTensor(row_v[0], col_v[0], tol));
+  // EXPECT_TRUE(AreNearlyEqUniTensor(row_v[1], linalg::InvM(col_v[1]), tol));
+
+  auto e = row_v[0];
+  e.relabel_({"a", "b"});
+  auto v = UniTensor(row_v[1].get_block_().Conj().permute({1, 0}));
+  v.relabel_({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.relabel_({"b", "j"});
+  EXPECT_TRUE((UniTensor(arange3x3cd) - Contract(Contract(e, v), vt)).Norm().item() < tol);
+}
+
 TEST_F(linalg_Test, DenseUt_Eigh) {
+  const double tol = 1e-13;
   auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
   auto res = linalg::Eigh(UniTensor(her));
   auto e = res[0];
@@ -388,7 +446,36 @@ TEST_F(linalg_Test, DenseUt_Eigh) {
   v.relabel_({"i", "a"});
   auto vt = UniTensor(linalg::InvM(v.get_block()));
   vt.relabel_({"b", "j"});
-  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < 1e-13);
+  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < tol);
+}
+
+TEST_F(linalg_Test, DenseUt_Eigh_RowV) {
+  const double tol = 1e-13;
+  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
+  auto row_v = linalg::Eigh(UniTensor(her), true, true);
+  auto col_v = linalg::Eigh(UniTensor(her), true, false);
+
+  EXPECT_TRUE(AreNearlyEqUniTensor(row_v[0], col_v[0], tol));
+  EXPECT_TRUE(AreNearlyEqUniTensor(row_v[1], linalg::InvM(col_v[1]), tol));
+
+  auto e = row_v[0];
+  e.relabel_({"a", "b"});
+  auto v = UniTensor(row_v[1].get_block_().Conj().permute({1, 0}));
+  v.relabel_({"i", "a"});
+  auto vt = UniTensor(linalg::InvM(v.get_block()));
+  vt.relabel_({"b", "j"});
+  EXPECT_TRUE((UniTensor(her) - Contract(Contract(e, v), vt)).Norm().item() < tol);
+}
+
+TEST_F(linalg_Test, DenseUt_Eig_RowrankMustBeLessThanRank) {
+  UniTensor invalid = UniTensor(arange(0, 4, 1, Type.ComplexDouble).reshape(2, 2), false, 2);
+  EXPECT_THROW({ linalg::Eig(invalid); }, std::logic_error);
+}
+
+TEST_F(linalg_Test, DenseUt_Eigh_RowrankMustBeLessThanRank) {
+  auto her = arange3x3cd + arange3x3cd.Conj().permute({1, 0});
+  UniTensor invalid = UniTensor(her, false, 2);
+  EXPECT_THROW({ linalg::Eigh(invalid); }, std::logic_error);
 }
 
 // TEST_F(linalg_Test, Tensor_Inv) { EXPECT_TRUE(false); }
