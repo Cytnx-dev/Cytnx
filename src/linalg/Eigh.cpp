@@ -144,6 +144,9 @@ namespace cytnx {
       //
       //   BDLeft -[ ]- BDRight
       //
+      cytnx_error_msg(
+        row_v, "[ERROR] Currently Eigh with row_v = true is not supported for BlockUniTensor.%s",
+        "\n");
       std::vector<cytnx_uint64> strides;
       strides.reserve(Tin.rank());
       auto BdLeft = Tin.bonds()[0].clone();
@@ -312,6 +315,11 @@ namespace cytnx {
       //
       //   BDLeft -[ ]- BDRight
       //
+      cytnx_error_msg(
+        row_v,
+        "[ERROR] Currently Eigh with row_v = true is not supported for BlockFermionicUniTensor.%s",
+        "\n");
+
       std::vector<cytnx_uint64> strides;
       std::vector<bool> signflip = Tin.signflip();
       strides.reserve(Tin.rank());
