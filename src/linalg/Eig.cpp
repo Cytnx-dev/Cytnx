@@ -153,8 +153,8 @@ namespace cytnx {
       //   BDLeft -[ ]- BDRight
       //
       cytnx_error_msg(
-        row_v, "[ERROR] Currently Eig with row_v = true is not supported for BlockUniTensor.%s",
-        "\n");
+        row_v && is_V,
+        "[ERROR] Currently Eig with row_v = true is not supported for BlockUniTensor.%s", "\n");
 
       std::vector<cytnx_uint64> strides;
       strides.reserve(Tin.rank());
@@ -163,7 +163,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -171,8 +170,6 @@ namespace cytnx {
         BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
       strides.push_back(1);
-      // std::cout << BdRight << std::endl;
-      // std::cout << strides << std::endl;
 
       // 2) making new inner_to_outer_idx lists for each block:
       // -> a. get stride:
@@ -182,8 +179,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
-      //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
       int cnt;
@@ -196,7 +191,6 @@ namespace cytnx {
           new_itoi[b][1] += tmpv[cnt] * strides[cnt];
         }
       }
-      // std::cout << new_itoi <<  std::endl;
 
       // 3) categorize:
       // key = qnum, val = list of block locations:
@@ -213,9 +207,6 @@ namespace cytnx {
 
       vec2d<cytnx_uint64> v_itoi;  // for eigen vectors
       std::vector<Tensor> v_blocks;
-
-      // vec2d<cytnx_uint64> vT_itoi;  // for vT
-      // std::vector<Tensor> vT_blocks;
 
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
@@ -244,7 +235,6 @@ namespace cytnx {
         // BTen is the big block!!
         cytnx_uint64 Cblk_dim = Tlist.size() / Rblk_dim;
         Tensor BTen = algo::_fx_Matric_combine(Tlist, Rblk_dim, Cblk_dim);
-        // std::cout << BTen;
         //  Now we can perform linalg!
         aux_qnums.push_back(x.first);
         auto out = linalg::Eig(BTen, is_V, row_v);
@@ -252,14 +242,11 @@ namespace cytnx {
         e_blocks.push_back(out[0]);
 
         if (is_V) {
-          // std::cout << row_szs << std::endl;
-          // std::cout << out[tr].shape() << std::endl;
           std::vector<cytnx_uint64> split_dims;
           for (int i = 0; i < Rblk_dim; i++) {
             split_dims.push_back(row_szs[i * Cblk_dim]);
           }
           std::vector<Tensor> blks;
-          // std::cout<<out[1];
           algo::Vsplit_(blks, out[1], split_dims);
           out[1] = Tensor();
           std::vector<cytnx_int64> new_shape(Tin.rowrank() + 1);
@@ -336,7 +323,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -344,8 +330,6 @@ namespace cytnx {
         BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
       strides.push_back(1);
-      // std::cout << BdRight << std::endl;
-      // std::cout << strides << std::endl;
 
       // 2) making new inner_to_outer_idx lists for each block:
       // -> a. get stride:
@@ -355,7 +339,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
       //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
@@ -369,7 +352,6 @@ namespace cytnx {
           new_itoi[b][1] += tmpv[cnt] * strides[cnt];
         }
       }
-      // std::cout << new_itoi <<  std::endl;
 
       // 3) categorize:
       // key = qnum, val = list of block locations:
@@ -387,15 +369,10 @@ namespace cytnx {
       vec2d<cytnx_uint64> v_itoi;  // for eigen vectors
       std::vector<Tensor> v_blocks;
 
-      // vec2d<cytnx_uint64> vT_itoi;  // for vT
-      // std::vector<Tensor> vT_blocks;
-
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());
@@ -415,7 +392,6 @@ namespace cytnx {
           }
           if (signflip[current_block]) {
             Tlist[i] = -Tlist[i];  // copies Tensor
-            // Tlist[i] = Tlist[i].Mul(-1); // copies Tensor
             Tlist[i].reshape_({row_szs[i], -1});
           } else
             Tlist[i] = Tlist[i].reshape({row_szs[i], -1});
@@ -424,7 +400,6 @@ namespace cytnx {
         // BTen is the big block!!
         cytnx_uint64 Cblk_dim = Tlist.size() / Rblk_dim;
         Tensor BTen = algo::_fx_Matric_combine(Tlist, Rblk_dim, Cblk_dim);
-        // std::cout << BTen;
         //  Now we can perform linalg!
         aux_qnums.push_back(x.first);
         auto out = linalg::Eig(BTen, is_V, row_v);
@@ -432,14 +407,11 @@ namespace cytnx {
         e_blocks.push_back(out[0]);
 
         if (is_V) {
-          // std::cout << row_szs << std::endl;
-          // std::cout << out[tr].shape() << std::endl;
           std::vector<cytnx_uint64> split_dims;
           for (int i = 0; i < Rblk_dim; i++) {
             split_dims.push_back(row_szs[i * Cblk_dim]);
           }
           std::vector<Tensor> blks;
-          // std::cout<<out[1];
           algo::Vsplit_(blks, out[1], split_dims);
           out[1] = Tensor();
           std::vector<cytnx_int64> new_shape(Tin.rowrank() + 1);

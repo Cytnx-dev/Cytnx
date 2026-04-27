@@ -24,8 +24,6 @@ namespace cytnx {
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
-      // std::cout << n_singlu << std::endl;
-
       Tensor U, S, vT;
       S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(),
              in.device());  // if type is complex, S should be real
@@ -90,7 +88,6 @@ namespace cytnx {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
-      // std::cout << "entry Dense UT" << std::endl;
 
       Tensor tmp;
       if (Tin.is_contiguous())
@@ -123,7 +120,6 @@ namespace cytnx {
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
                 Tin.device(), true);  // it is just reference so no hurt to alias ^^
 
-      // std::cout << "[AFTER INIT]" << std::endl;
       Cy_S.put_block_(outT[t]);
       t++;
 
@@ -150,7 +146,6 @@ namespace cytnx {
 
         outT[t].reshape_(shapevT);
         Cy_vT.Init(outT[t], false, 1);
-        // std::cout << shapevT.size() << std::endl;
         std::vector<std::string> labelvT(shapevT.size());
         labelvT[0] = Cy_S.labels()[1];
         // memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() -
@@ -202,7 +197,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -210,8 +204,6 @@ namespace cytnx {
         BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
       strides.push_back(1);
-      // std::cout << BdRight << std::endl;
-      // std::cout << strides << std::endl;
 
       // 2) making new inner_to_outer_idx lists for each block:
       // -> a. get stride:
@@ -221,7 +213,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
       //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
@@ -235,7 +226,6 @@ namespace cytnx {
           new_itoi[b][1] += tmpv[cnt] * strides[cnt];
         }
       }
-      // std::cout << new_itoi <<  std::endl;
 
       // 3) categorize:
       // key = qnum, val = list of block locations:
@@ -259,10 +249,8 @@ namespace cytnx {
       int tr;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());
@@ -293,8 +281,6 @@ namespace cytnx {
         tr = 1;
 
         if (compute_uv) {
-          // std::cout << row_szs << std::endl;
-          // std::cout << out[tr].shape() << std::endl;
           std::vector<cytnx_uint64> split_dims;
           for (int i = 0; i < Rblk_dim; i++) {
             split_dims.push_back(row_szs[i * Cblk_dim]);
@@ -422,7 +408,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -430,8 +415,6 @@ namespace cytnx {
         BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
       strides.push_back(1);
-      // std::cout << BdRight << std::endl;
-      // std::cout << strides << std::endl;
 
       // 2) making new inner_to_outer_idx lists for each block:
       // -> a. get stride:
@@ -441,7 +424,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
       //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
@@ -455,7 +437,6 @@ namespace cytnx {
           new_itoi[b][1] += tmpv[cnt] * strides[cnt];
         }
       }
-      // std::cout << new_itoi <<  std::endl;
 
       // 3) categorize:
       // key = qnum, val = list of block locations:
@@ -479,10 +460,8 @@ namespace cytnx {
       int tr;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());
@@ -502,7 +481,6 @@ namespace cytnx {
           }
           if (signflip[current_block]) {
             Tlist[i] = -Tlist[i];  // copies Tensor
-            // Tlist[i] = Tlist[i].Mul(-1); // copies Tensor
             Tlist[i].reshape_({row_szs[i], -1});
           } else
             Tlist[i] = Tlist[i].reshape({row_szs[i], -1});  // copies Tensor
@@ -520,8 +498,6 @@ namespace cytnx {
         tr = 1;
 
         if (compute_uv) {
-          // std::cout << row_szs << std::endl;
-          // std::cout << out[tr].shape() << std::endl;
           std::vector<cytnx_uint64> split_dims;
           for (int i = 0; i < Rblk_dim; i++) {
             split_dims.push_back(row_szs[i * Cblk_dim]);

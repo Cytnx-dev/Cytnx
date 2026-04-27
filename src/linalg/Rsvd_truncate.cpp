@@ -245,7 +245,7 @@ namespace cytnx {
       }  // if tag
 
       if (return_err) outCyT.back().Init(outT.back(), false, 0);
-    };  // Rsvd_truncate_Dense_UT_internal
+    }  // Rsvd_truncate_Dense_UT_internal
 
     std::vector<cytnx::UniTensor> Rsvd_truncate(const cytnx::UniTensor &Tin, cytnx_uint64 keepdim,
                                                 double err, bool is_U, bool is_vT,

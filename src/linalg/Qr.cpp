@@ -28,8 +28,6 @@ namespace cytnx {
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
-      // std::cout << n_singlu << std::endl;
-
       Tensor tau, Q, R, D;  // D is not used here.
       tau.Init({n_tau}, in.dtype(), in.device());
       tau.storage().set_zeros();
@@ -181,7 +179,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -189,8 +186,6 @@ namespace cytnx {
         BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
       strides.push_back(1);
-      // std::cout << BdRight << std::endl;
-      // std::cout << strides << std::endl;
 
       // 2) making new inner_to_outer_idx lists for each block:
       // -> a. get stride:
@@ -200,7 +195,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
       //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
@@ -214,7 +208,6 @@ namespace cytnx {
           new_itoi[b][1] += tmpv[cnt] * strides[cnt];
         }
       }
-      // std::cout << new_itoi <<  std::endl;
 
       // 3) categorize:
       // key = qnum, val = list of block locations:
@@ -238,10 +231,8 @@ namespace cytnx {
       cytnx_uint64 trcntr = 0;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());
@@ -394,7 +385,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -402,8 +392,6 @@ namespace cytnx {
         BdRight._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
       strides.push_back(1);
-      // std::cout << BdRight << std::endl;
-      // std::cout << strides << std::endl;
 
       // 2) making new inner_to_outer_idx lists for each block:
       // -> a. get stride:
@@ -413,7 +401,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
       //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
@@ -427,7 +414,6 @@ namespace cytnx {
           new_itoi[b][1] += tmpv[cnt] * strides[cnt];
         }
       }
-      // std::cout << new_itoi <<  std::endl;
 
       // 3) categorize:
       // key = qnum, val = list of block locations:
@@ -451,10 +437,8 @@ namespace cytnx {
       cytnx_uint64 trcntr = 0;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());
@@ -474,7 +458,6 @@ namespace cytnx {
           }
           if (signflip[current_block]) {
             Tlist[i] = -Tlist[i];  // copies Tensor
-            // Tlist[i] = Tlist[i].Mul(-1); // copies Tensor
             Tlist[i].reshape_({row_szs[i], -1});
           } else
             Tlist[i] = Tlist[i].reshape({row_szs[i], -1});  // copies Tensor
