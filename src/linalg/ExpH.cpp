@@ -42,10 +42,7 @@ namespace cytnx {
       u = su[1];
 
       //[Optim required]
-      // cout << s << endl;
       s = cytnx::linalg::Diag(s);
-      // cout << s << endl;
-      // cout << u;
       ut = su[1].clone();
       if (Type.is_complex(ut.dtype())) {
         ut.permute_({1, 0}).Conj_();
@@ -53,7 +50,6 @@ namespace cytnx {
         ut.permute_({1, 0});
       }
       ut.contiguous_();
-      // cout << ut;
 
       ut = cytnx::linalg::Matmul(s, ut);
       ut = cytnx::linalg::Matmul(u, ut);
@@ -123,7 +119,6 @@ namespace cytnx {
         strides.push_back(Tin.bonds()[i].qnums().size());
         BdLeft._impl->force_combineBond_(Tin.bonds()[i]._impl, false);  // no grouping
       }
-      // std::cout << BdLeft << std::endl;
       strides.push_back(1);
       auto BdRight = Tin.bonds()[Tin.rowrank()].clone();
       for (int i = Tin.rowrank() + 1; i < Tin.rank(); i++) {
@@ -140,7 +135,6 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
-      // std::cout << strides << std::endl;
       //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
@@ -167,10 +161,8 @@ namespace cytnx {
       std::vector<Tensor> &out_blocks_ = ((BlockUniTensor *)out._impl.get())->_blocks;
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // cout << x.second.size() << "-------" << endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());

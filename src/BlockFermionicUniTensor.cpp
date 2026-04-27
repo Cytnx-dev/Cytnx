@@ -1934,8 +1934,8 @@ namespace cytnx {
 
   void BlockFermionicUniTensor::Transpose_() {
     //[21 Aug 2024] This is a copy from BlockUniTensor;
-    // The bonds are redirected, as in the bosonic case. Additionally, the order of the indices is
-    // reversed and a permutation WITHOUT signflips is applied.
+    // The bonds are redirected, and the order of the indices is reversed with a permutation WITHOUT
+    // signflips.
 
     // modify tag
     std::vector<cytnx_int64> idxorder(this->_bonds.size());
@@ -2864,9 +2864,6 @@ namespace cytnx {
       this->_blocks[b].reshape_(new_shape);
     }
 
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->get_qindices(2)<<endl;
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->bonds()<<endl;
-
     for (int b = 0; b < this->_blocks.size(); b++) {
       this->_inner_to_outer_idx[b][idor] *= cb_stride[0];
       for (int i = idor + 1; i < idor + indicators.size(); i++) {
@@ -2886,10 +2883,6 @@ namespace cytnx {
     this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
-
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->get_qindices(2)<<endl;
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->bonds()<<endl;
-    // regroup:
     this->group_basis_();
   }
 
