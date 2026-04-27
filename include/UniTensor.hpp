@@ -1522,10 +1522,10 @@ namespace cytnx {
 
     void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
       cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "[ERROR][BlockUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
       cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "[ERROR][BlockUniTensor][put_block] The input tensor device does not "
                       "match.%s",
                       "\n");
       // We shouldn't check the contiguous
@@ -1541,10 +1541,10 @@ namespace cytnx {
     }
     void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
       cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "[ERROR][BlockUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
       cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "[ERROR][BlockUniTensor][put_block] The input tensor device does not "
                       "match.%s",
                       "\n");
       // We shouldn't check the contiguous
@@ -1560,10 +1560,10 @@ namespace cytnx {
     }
     void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices) {
       cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "[ERROR][BlockUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
       cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "[ERROR][BlockUniTensor][put_block] The input tensor device does not "
                       "match.%s",
                       "\n");
       // We shouldn't check the contiguous
@@ -1599,10 +1599,10 @@ namespace cytnx {
     }
     void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices) {
       cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
+                      "[ERROR][BlockUniTensor][put_block] The input tensor dtype does not match.%s",
                       "\n");
       cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
+                      "[ERROR][BlockUniTensor][put_block] The input tensor device does not "
                       "match.%s",
                       "\n");
       // We shouldn't check the contiguous
@@ -2287,13 +2287,15 @@ namespace cytnx {
 
     void put_block(const Tensor &in, const cytnx_uint64 &idx = 0) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
-                      "\n");
-      cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
-                      "match.%s",
-                      "\n");
+      cytnx_error_msg(
+        in.dtype() != this->dtype(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor dtype does not match.%s",
+        "\n");
+      cytnx_error_msg(
+        in.device() != this->device(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor device does not "
+        "match.%s",
+        "\n");
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
       cytnx_error_msg(idx >= this->_blocks.size(),
@@ -2308,13 +2310,15 @@ namespace cytnx {
     }
     void put_block_(Tensor &in, const cytnx_uint64 &idx = 0) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
-                      "\n");
-      cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
-                      "match.%s",
-                      "\n");
+      cytnx_error_msg(
+        in.dtype() != this->dtype(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor dtype does not match.%s",
+        "\n");
+      cytnx_error_msg(
+        in.device() != this->device(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor device does not "
+        "match.%s",
+        "\n");
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
       cytnx_error_msg(idx >= this->_blocks.size(),
@@ -2329,13 +2333,15 @@ namespace cytnx {
     }
     void put_block(const Tensor &in, const std::vector<cytnx_int64> &indices) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
-                      "\n");
-      cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
-                      "match.%s",
-                      "\n");
+      cytnx_error_msg(
+        in.dtype() != this->dtype(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor dtype does not match.%s",
+        "\n");
+      cytnx_error_msg(
+        in.device() != this->device(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor device does not "
+        "match.%s",
+        "\n");
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
       cytnx_error_msg(
@@ -2370,13 +2376,15 @@ namespace cytnx {
     }
     void put_block_(Tensor &in, const std::vector<cytnx_int64> &indices) {
       //[21 Aug 2024] This is a copy from BlockUniTensor;
-      cytnx_error_msg(in.dtype() != this->dtype(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor dtype does not match.%s",
-                      "\n");
-      cytnx_error_msg(in.device() != this->device(),
-                      "[ERROR][DenseUniTensor][put_block] The input tensor device does not "
-                      "match.%s",
-                      "\n");
+      cytnx_error_msg(
+        in.dtype() != this->dtype(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor dtype does not match.%s",
+        "\n");
+      cytnx_error_msg(
+        in.device() != this->device(),
+        "[ERROR][BlockFermionicUniTensor][put_block] The input tensor device does not "
+        "match.%s",
+        "\n");
       // We shouldn't check the contiguous
       // cytnx_error_msg(!in.contiguous());
       cytnx_error_msg(
