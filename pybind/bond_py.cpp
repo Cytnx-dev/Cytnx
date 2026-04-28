@@ -182,6 +182,9 @@ void bond_binding(py::module &m) {
       "Save", [](Bond &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
       "Load", [](const std::string &fname) { return Bond::Load(fname); }, py::arg("fname"))
+    .def(
+      "Load_", [](cytnx::Bond &self, const std::string &fname) { return self.Load_(fname); },
+      py::arg("fname"))
 
     .def(py::pickle(
       [](const Bond &self) {  // __getstate__

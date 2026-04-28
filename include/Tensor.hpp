@@ -317,7 +317,7 @@ namespace cytnx {
 
     /// @cond
     void to_binary(std::ostream &f) const;
-    void from_binary(std::istream &f);
+    void from_binary(std::istream &f, const bool restore_device = true);
 
     /// @endcond
     /**
@@ -327,7 +327,7 @@ namespace cytnx {
     @details
         save the Tensor to file with file path specify with input param \p fname with postfix
     ".cytn"
-    @see Load(const std::string &fname)
+    @see Load(const std::string &fname, const bool restore_device)
     */
     void Save(const std::string &fname) const;
     /**
@@ -356,18 +356,34 @@ namespace cytnx {
     void Tofile(std::fstream &f) const;
 
     /**
-    @brief Load current Tensor from file
+    @brief Load Tensor from file and create new instance
     @param fname[in] file name
-    @details
-        load the Storage from file with file path specify with input param 'fname'
-    @pre the file must be a Tensor object which is saved by cytnx::Tensor::Save.
+    @param[in] restore_device whether to try restoring the device on which the data is stored; if
+    false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+    loading.
+    @pre The file must be a Tensor object which is saved by cytnx::Tensor::Save.
+    @note This function creates a new Tensor and keeps the original Tensor unchanged. See \link
+    Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
+    Tensor to the current Tensor.
     */
 
-    static Tensor Load(const std::string &fname);
+    static Tensor Load(const std::string &fname, const bool restore_device = true);
     /**
      * @see Load(const std::string &fname)
      */
-    static Tensor Load(const char *fname);
+    static Tensor Load(const char *fname, const bool restore_device = true);
+
+    /**
+    @brief Load Tensor from file and overwrite current instance
+    @note This function overwrites the existing Tensor. See \link Load(const std::string &fname,
+    const bool restore_device) Load() \endlink for creating a new Tensor.
+    @see Load(const std::string &fname, const bool restore_device)
+    */
+    void Load_(const std::string &fname, const bool restore_device = true);
+    /**
+     * @see Load_(const std::string &fname, const bool restore_device)
+     */
+    void Load_(const char *fname, const bool restore_device = true);
 
     /**
      * @brief Load current Tensor from the binary file
@@ -380,6 +396,9 @@ namespace cytnx {
      *   cytnx::Type.
      * @param count[in] the number of elements to be loaded from the binary file. If set to -1,
      *  all elements in the binary file will be loaded.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
      * @return Tensor
      * @pre
      *  1. The @p dtype cannot be Type.Void.
@@ -390,9 +409,9 @@ namespace cytnx {
      * @see cytnx::Tensor::Tofile
      */
     static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1);
+                           const cytnx_int64 &count = -1, const bool restore_device = true);
     static Tensor Fromfile(const char *fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1);
+                           const cytnx_int64 &count = -1, const bool restore_device = true);
 
     // static Tensor Frombinary(const std::string &fname);
 
@@ -448,7 +467,7 @@ namespace cytnx {
     \verbinclude example/Tensor/Init.py.out
     */
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              const int &device = -1, const bool &init_zero = true) {
+              const int &device = Device.cpu, const bool &init_zero = true) {
       boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
       this->_impl = tmp;
       this->_impl->Init(shape, dtype, device, init_zero);
@@ -459,7 +478,7 @@ namespace cytnx {
     //   this->_impl->Init(storage);
     // }
     // void Init(const Storage& storage, const std::vector<cytnx_uint64> &shape,
-    //   const unsigned int &dtype = Type.Double, const int &device = -1) {
+    //   const unsigned int &dtype = Type.Double, const int &device = Device.cpu) {
     //   boost::intrusive_ptr<Tensor_impl> tmp(new Tensor_impl());
     //   this->_impl = tmp;
     //   this->_impl->Init(storage, shape, dtype, device);
@@ -478,7 +497,7 @@ namespace cytnx {
      * @see cytnx::Tensor::Init
      */
     Tensor(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-           const int &device = -1, const bool &init_zero = 1)
+           const int &device = Device.cpu, const bool &init_zero = 1)
         : _impl(new Tensor_impl()) {
       this->Init(shape, dtype, device, init_zero);
     }
@@ -487,7 +506,7 @@ namespace cytnx {
     //   this->Init(storage);
     // }
     // Tensor(const Storage& storage, const std::vector<cytnx_uint64> &shape,
-    //   const unsigned int &dtype = Type.Double, const int &device = -1)
+    //   const unsigned int &dtype = Type.Double, const int &device = Device.cpu)
     //     : _impl(new Tensor_impl()) {
     //   this->Init(storage, shape, dtype, device);
     // }

@@ -262,18 +262,23 @@ namespace cytnx {
 
   cytnx::Symmetry cytnx::Symmetry::Load(const std::string &fname) {
     Symmetry out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
-    }
-    out.from_binary(f);
-    f.close();
+    out.Load_(fname);
     return out;
   }
   cytnx::Symmetry cytnx::Symmetry::Load(const char *fname) {
     return cytnx::Symmetry::Load(string(fname));
   }
+
+  void cytnx::Symmetry::Load_(const std::string &fname) {
+    fstream f;
+    f.open(fname, ios::in | ios::binary);
+    if (!f.is_open()) {
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+    }
+    this->from_binary(f);
+    f.close();
+  }
+  void cytnx::Symmetry::Load_(const char *fname) { this->Load_(string(fname)); }
 
   //==================
   void cytnx::Symmetry::to_binary(std::ostream &f) const {

@@ -2343,7 +2343,7 @@ namespace cytnx {
     }
   }
 
-  void SparseUniTensor::from_binary_dispatch(std::istream &f) {
+  void SparseUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks;
@@ -2354,7 +2354,7 @@ namespace cytnx {
                     "\n");
 
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i].from_binary(f);
+      this->_blocks[i].from_binary(f, restore_device);
     }
   }
 

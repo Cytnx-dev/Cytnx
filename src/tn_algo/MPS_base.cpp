@@ -79,7 +79,7 @@ namespace cytnx {
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }
 
-    void MPS_impl::from_binary_dispatch(std::istream &f) {
+    void MPS_impl::from_binary_dispatch(std::istream &f, const bool restore_device) {
       cytnx_error_msg(
         true, "[ERROR] MPS_Base should not be called. Please initialize the MPS first.%s", "\n");
     }

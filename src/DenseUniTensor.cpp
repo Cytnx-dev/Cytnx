@@ -1207,7 +1207,9 @@ namespace cytnx {
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
 
   void DenseUniTensor::to_binary_dispatch(std::ostream &f) const { this->_block.to_binary(f); }
-  void DenseUniTensor::from_binary_dispatch(std::istream &f) { this->_block.from_binary(f); }
+  void DenseUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
+    this->_block.from_binary(f, restore_device);
+  }
 
   void DenseUniTensor::truncate_(const std::string &bond_label, const cytnx_uint64 &dim) {
     // if it is diagonal tensor, truncate will be done on both index!

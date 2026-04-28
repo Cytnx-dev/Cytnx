@@ -90,7 +90,7 @@ namespace cytnx {
     // second, let dispatch to do remaining saving.
     this->_impl->to_binary_dispatch(f);
   }
-  void UniTensor::from_binary(std::istream &f) {
+  void UniTensor::from_binary(std::istream &f, const bool restore_device) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 555, "[ERROR] the object is not a cytnx UniTensor!%s", "\n");
@@ -150,7 +150,7 @@ namespace cytnx {
     }
 
     // second, let dispatch to do remaining loading.
-    this->_impl->from_binary_dispatch(f);
+    this->_impl->from_binary_dispatch(f, restore_device);
   }
 
   void UniTensor::Save(const std::string &fname) const {
@@ -174,18 +174,27 @@ namespace cytnx {
   }
   void UniTensor::Save(const char *fname) const { Save(string(fname)); }
 
-  UniTensor UniTensor::Load(const std::string &fname) {
+  UniTensor UniTensor::Load(const std::string &fname, const bool restore_device) {
     UniTensor out;
+    out.Load_(fname, restore_device);
+    return out;
+  }
+  UniTensor UniTensor::Load(const char *fname, const bool restore_device) {
+    return UniTensor::Load(string(fname), restore_device);
+  }
+
+  void UniTensor::Load_(const std::string &fname, const bool restore_device) {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
     }
-    out.from_binary(f);
+    this->from_binary(f, restore_device);
     f.close();
-    return out;
   }
-  UniTensor UniTensor::Load(const char *fname) { return UniTensor::Load(string(fname)); }
+  void UniTensor::Load_(const char *fname, const bool restore_device) {
+    this->Load_(string(fname), restore_device);
+  }
 
   // Random Generators:
   UniTensor UniTensor::normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,

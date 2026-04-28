@@ -504,17 +504,30 @@ namespace cytnx {
     void Save(const char *fname) const;
 
     /**
-     * @brief Load a Symmetry object from a file.
-     * @param[in] fname the file name.
-     * @pre the file extension must be ".cysym".
-     * @return the loaded Symmetry object.
-     */
-    static Symmetry Load(const std::string &fname);
+    @brief Load Symmetry from file and create new instance
+    @param fname[in] file name
+    @pre The file must be a Symmetry object which is saved by cytnx::Symmetry::Save.
+    @note This function creates a new Symmetry and keeps the original Symmetry unchanged. See \link
+    Load_(const std::string &fname) Load_() \endlink for loading the Symmetry to the current
+    Symmetry.
+    */
+    static cytnx::Symmetry Load(const std::string &fname);
+    /**
+    @see Load(const std::string &fname)
+    */
+    static cytnx::Symmetry Load(const char *fname);
 
     /**
-     * @brief Same as static Symmetry Load(const std::string &fname);
+    @brief Load Symmetry from file and overwrite current instance
+    @note This function overwrites the existing Symmetry. See \link Load(const std::string &fname)
+    Load() \endlink for creating a new Symmetry.
+    @see Load(const std::string &fname)
+    */
+    void Load_(const std::string &fname);
+    /**
+     * @see Load_(const std::string &fname)
      */
-    static Symmetry Load(const char *fname);
+    void Load_(const char *fname);
 
     /// @cond
     void to_binary(std::ostream &f) const;

@@ -490,16 +490,21 @@ namespace cytnx {
 
   Bond Bond::Load(const std::string &fname) {
     Bond out;
+    out.Load_(fname);
+    return out;
+  }
+  Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
+
+  void Bond::Load_(const std::string &fname) {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    out.from_binary(f);
+    this->from_binary(f);
     f.close();
-    return out;
   }
-  Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
+  void Bond::Load_(const char *fname) { this->Load_(string(fname)); }
 
   void Bond::to_binary(std::ostream &f) const {
     unsigned int IDDs = 666;

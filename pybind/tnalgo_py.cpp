@@ -57,6 +57,10 @@ void tnalgo_binding(py::module &m) {
     .def_static(
       "Load", [](const std::string &fname) { return cytnx::tn_algo::MPS::Load(fname); },
       py::arg("fname"))
+    .def(
+      "Load_",
+      [](cytnx::tn_algo::MPS &self, const std::string &fname) { return self.Load_(fname); },
+      py::arg("fname"))
 
     .def(py::pickle(
       [](const tn_algo::MPS &self) {  // __getstate__

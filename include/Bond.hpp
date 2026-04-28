@@ -862,17 +862,29 @@ namespace cytnx {
     void Save(const char *fname) const;
 
     /**
-    @brief Load the Bond object from the file.
-          @param[in] fname the file name of the Bond object.
-          @pre The file need to be the file of Bond object, which is saved by the
-      function Bond::Save(const std::string &fname) const.
+    @brief Load Bond from file and create new instance
+    @param fname[in] file name
+    @pre The file must be a Bond object which is saved by cytnx::Bond::Save.
+    @note This function creates a new Bond and keeps the original Bond unchanged. See \link
+    Load_(const std::string &fname) Load_() \endlink for loading the Bond to the current Bond.
     */
     static cytnx::Bond Load(const std::string &fname);
-
     /**
     @see Load(const std::string &fname)
     */
     static cytnx::Bond Load(const char *fname);
+
+    /**
+    @brief Load Bond from file and overwrite current instance
+    @note This function overwrites the existing Bond. See \link Load(const std::string &fname)
+    Load() \endlink for creating a new Bond.
+    @see Load(const std::string &fname)
+    */
+    void Load_(const std::string &fname);
+    /**
+     * @see Load_(const std::string &fname)
+     */
+    void Load_(const char *fname);
 
     /// @cond
     void to_binary(std::ostream &f) const;

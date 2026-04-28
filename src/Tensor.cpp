@@ -485,25 +485,37 @@ namespace cytnx {
   }
 
   Tensor Tensor::Fromfile(const std::string &fname, const unsigned int &dtype,
-                          const cytnx_int64 &count) {
-    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count));
+                          const cytnx_int64 &count, const bool restore_device) {
+    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, restore_device));
   }
-  Tensor Tensor::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count) {
-    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count));
+  Tensor Tensor::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count,
+                          const bool restore_device) {
+    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, restore_device));
   }
-  Tensor Tensor::Load(const std::string &fname) {
+
+  Tensor Tensor::Load(const std::string &fname, const bool restore_device) {
     Tensor out;
+    out.Load_(fname, restore_device);
+    return out;
+  }
+  Tensor Tensor::Load(const char *fname, const bool restore_device) {
+    return Tensor::Load(string(fname), restore_device);
+  }
+
+  void Tensor::Load_(const std::string &fname, const bool restore_device) {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    out.from_binary(f);
+    this->from_binary(f, restore_device);
     f.close();
-    return out;
   }
-  Tensor Tensor::Load(const char *fname) { return Tensor::Load(string(fname)); }
-  void Tensor::from_binary(std::istream &f) {
+  void Tensor::Load_(const char *fname, const bool restore_device) {
+    this->Load(string(fname), restore_device);
+  }
+
+  void Tensor::from_binary(std::istream &f, const bool restore_device) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 888, "[ERROR] the object is not a cytnx tensor!%s", "\n");
@@ -522,7 +534,7 @@ namespace cytnx {
     f.read((char *)&this->_impl->_invmapper[0], sizeof(cytnx_uint64) * shp);
 
     // pass to storage for save:
-    this->_impl->_storage.from_binary(f);
+    this->_impl->_storage.from_binary(f, restore_device);
   }
 
   Tensor Tensor::real() {

@@ -605,7 +605,17 @@ void unitensor_binding(py::module &m) {
     .def(
       "Save", [](UniTensor &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
-      "Load", [](const std::string &fname) { return UniTensor::Load(fname); }, py::arg("fname"))
+      "Load",
+      [](const std::string &fname, const bool restore_device) {
+        return cytnx::UniTensor::Load(fname, restore_device);
+      },
+      py::arg("fname"), py::arg("restore_device") = true)
+    .def(
+      "Load_",
+      [](cytnx::UniTensor &self, const std::string &fname, const bool restore_device) {
+        return self.Load_(fname, restore_device);
+      },
+      py::arg("fname"), py::arg("restore_device") = true)
 
     .def(py::pickle(
       [](const UniTensor &self) {  // __getstate__

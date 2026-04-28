@@ -69,6 +69,9 @@ void symmetry_binding(py::module &m) {
       "Save", [](Symmetry &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
       "Load", [](const std::string &fname) { return Symmetry::Load(fname); }, py::arg("fname"))
+    .def(
+      "Load_", [](cytnx::Symmetry &self, const std::string &fname) { return self.Load_(fname); },
+      py::arg("fname"))
 
     .def(py::pickle(
       [](const Symmetry &self) {  // __getstate__

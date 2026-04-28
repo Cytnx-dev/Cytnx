@@ -266,8 +266,17 @@ void storage_binding(py::module &m) {
       "Tofile", [](cytnx::Storage &self, const std::string &fname) { self.Tofile(fname); },
       py::arg("fname"))
     .def_static(
-      "Load", [](const std::string &fname) { return cytnx::Storage::Load(fname); },
-      py::arg("fname"))
+      "Load",
+      [](const std::string &fname, const bool restore_device) {
+        return cytnx::Storage::Load(fname, restore_device);
+      },
+      py::arg("fname"), py::arg("restore_device") = true)
+    .def(
+      "Load_",
+      [](cytnx::Storage &self, const std::string &fname, const bool restore_device) {
+        return self.Load_(fname, restore_device);
+      },
+      py::arg("fname"), py::arg("restore_device") = true)
     .def_static(
       "Fromfile",
       [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count) {
@@ -275,19 +284,20 @@ void storage_binding(py::module &m) {
       },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1))
 
-    .def(py::pickle(
-      [](const cytnx::Storage &self) {  // __getstate__
-        std::ostringstream oss(std::ios::binary);
-        self.to_binary(oss);
-        return py::bytes(oss.str());
-      },
-      [](py::bytes state) {  // __setstate__
-        std::string data = state;
-        std::istringstream iss(data, std::ios::binary);
-        cytnx::Storage out;
-        out.from_binary(iss);
-        return out;
-      }))
+    .def(
+      py::pickle(
+        [](const cytnx::Storage &self) {  // __getstate__
+          std::ostringstream oss(std::ios::binary);
+          self.to_binary(oss);
+          return py::bytes(oss.str());
+        },
+        [](py::bytes state) {  // __setstate__
+          std::string data = state;
+          std::istringstream iss(data, std::ios::binary);
+          cytnx::Storage out;
+          out.from_binary(iss);
+          return out;
+        }))
 
     .def("real", &cytnx::Storage::real)
     .def("imag", &cytnx::Storage::imag)

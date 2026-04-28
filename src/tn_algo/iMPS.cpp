@@ -69,7 +69,7 @@ namespace cytnx {
         this->_TNs[i].to_binary(f);
       }
     }
-    void iMPS::from_binary_dispatch(std::istream &f) {
+    void iMPS::from_binary_dispatch(std::istream &f, const bool restore_device) {
       cytnx_uint64 N;
 
       f.read((char *)&N, sizeof(cytnx_uint64));
@@ -77,7 +77,7 @@ namespace cytnx {
 
       // Load UniTensor one by one:
       for (cytnx_uint64 i = 0; i < N; i++) {
-        this->_TNs[i].from_binary(f);
+        this->_TNs[i].from_binary(f, restore_device);
       }
     }
 

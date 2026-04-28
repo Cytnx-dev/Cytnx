@@ -162,10 +162,11 @@ namespace cytnx {
 
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);
-    virtual void Init(const unsigned long long &len_in, const int &device = -1,
+    virtual void Init(const unsigned long long &len_in, const int &device = Device.cpu,
                       const bool &init_zero = true);
-    virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
-                             const bool &iscap = false, const unsigned long long &cap_in = 0);
+    virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in,
+                             const int &device = Device.cpu, const bool &iscap = false,
+                             const unsigned long long &cap_in = 0);
 
     // this function will return a new storage with the same type as the one
     // that initiate this function.
@@ -242,9 +243,9 @@ namespace cytnx {
    public:
     StorageImplementation()
         : capacity_(0), size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
-    void Init(const unsigned long long &len_in, const int &device = -1,
+    void Init(const unsigned long long &len_in, const int &device = Device.cpu,
               const bool &init_zero = true);
-    void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
+    void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = Device.cpu,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
     boost::intrusive_ptr<Storage_base> clone();
@@ -435,7 +436,7 @@ namespace cytnx {
   extern Storage_init_interface __SII;
   ///@endcond;
 
-  ///@brief an memeory storage with multi-type/multi-device support
+  ///@brief a memory storage with multi-type/multi-device support
   class Storage {
    private:
     // Interface:
@@ -465,13 +466,13 @@ namespace cytnx {
     \verbinclude example/Storage/Init.py.out
     */
     void Init(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-              int device = -1, const bool &init_zero = true) {
+              int device = Device.cpu, const bool &init_zero = true) {
       cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
       this->_impl = __SII.USIInit[dtype]();
       this->_impl->Init(size, device, init_zero);
     }
     // void _Init_byptr(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype =
-    // Type.Double, const int &device = -1,
+    // Type.Double, const int &device = Device.cpu,
     //                              const bool &iscap = false, const unsigned long long &cap_in =
     //                              0){
     //   cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
@@ -488,12 +489,12 @@ namespace cytnx {
      * &init_zero)
      */
     Storage(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-            int device = -1, const bool &init_zero = true)
+            int device = Device.cpu, const bool &init_zero = true)
         : _impl(new Storage_base()) {
       Init(size, dtype, device, init_zero);
     }
     // Storage(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype =
-    // Type.Double, const int &device = -1,
+    // Type.Double, const int &device = Device.cpu,
     //       const bool &iscap = false, const unsigned long long &cap_in = 0)
     //       : _impl(new Storage_base()){
     //   _Init_byptr(rawptr,len_in,dtype,device,iscap,cap_in);
@@ -525,9 +526,10 @@ namespace cytnx {
 
     /// @cond
     void to_binary(std::ostream &f) const;
-    void from_binary(std::istream &f);
-    void _Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem);
-    void _Savebinary(std::fstream &f) const;
+    void from_binary(std::istream &f, const bool restore_device = true);
+    void data_to_binary(std::ostream &f) const;
+    void data_from_binary(std::istream &f, const cytnx_uint64 &Nelem, const unsigned int &dtype,
+                          const int &device = Device.cpu);
 
     /// @endcond
 
@@ -556,45 +558,63 @@ namespace cytnx {
     void Tofile(std::fstream &f) const;
 
     /**
-    @brief Load current Storage from file
-    @param[in] fname file name
-    @details
-        load the Storage from file with file path specify with input param 'fname'.
-    @pre The file must be a Storage object, which is saved by the function
-        Save(const std::string &fname) const.
+    @brief Load Storage from file and create new instance
+    @param fname[in] file name
+    @param[in] restore_device whether to try restoring the device on which the data is stored; if
+    false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+    loading.
+    @pre The file must be a Storage object which is saved by cytnx::Storage::Save.
+    @note This function creates a new Storage and keeps the original Storage unchanged. See \link
+    Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
+    Storage to the current Storage.
     */
-    static Storage Load(const std::string &fname);
+
+    static Storage Load(const std::string &fname, const bool restore_device = true);
+    /**
+     * @see Load(const std::string &fname)
+     */
+    static Storage Load(const char *fname, const bool restore_device = true);
 
     /**
-     * @brief Load current Storage from file, same as \ref Load(const std::string &fname)
-     */
-    static Storage Load(const char *fname);
+    @brief Load Storage from file and overwrite current instance
+    @note This function overwrites the existing Storage. See \link Load(const std::string &fname,
+    const bool restore_device) Load() \endlink for creating a new Storage.
+    @see Load(const std::string &fname, const bool restore_device)
+    */
+    void Load_(const std::string &fname, const bool restore_device = true);
     /**
-     * @brief Load the binary file, which only contains the raw data, to current Storage.
+     * @see Load_(const std::string &fname, const bool restore_device)
+     */
+    void Load_(const char *fname, const bool restore_device = true);
+
+    /**
+     * @brief Load the binary file, which only contains the raw data.
      * @details This function will load the binary file, which only contains the raw data,
      *     to current Storage with specified dtype and number of elements.
      * @param[in] fname file name
-     * @param[in] dtype the data type of the binary file. See cytnx::Type.
-     * @param[in] Nelem the number of elements you want to load from the binary file. If
-     *   \p Nelem is -1, then it will load all the elements in the binary file.
-     * @pre
+     * @param[in] dtype the data type of the binary file. See cytnx.Type.
+     * @param[in] count the number of elements you want to load from the binary file. If
+     *   \p count is -1, then it will load all the elements in the binary file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
      *  1. The @p dtype cannot be Type.Void.
      *  2. The @p dtype must be the same as the data type of the binary file.
-     *  3. The @p Nelem cannot be 0.
-     *  4. The @p Nelem cannot be larger than the number of elements in the binary file.
+     *  3. The @p count cannot be 0.
+     *  4. The @p count cannot be larger than the number of elements in the binary file.
      *  5. The file name @p fname must be valid.
      *
      * @see Tofile(const std::string &fname) const
      */
     static Storage Fromfile(const std::string &fname, const unsigned int &dtype,
-                            const cytnx_int64 &count = -1);
+                            const cytnx_int64 &count = -1, const bool restore_device = true);
 
     /**
      * @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count =
      * -1)
      */
     static Storage Fromfile(const char *fname, const unsigned int &dtype,
-                            const cytnx_int64 &count = -1);
+                            const cytnx_int64 &count = -1, const bool restore_device = true);
 
     /**
     @brief cast the type of current Storage
@@ -824,7 +844,7 @@ namespace cytnx {
     @note This function is C++ only
     */
     template <class T>
-    static Storage from_vector(const std::vector<T> &vin, const int device = -1) {
+    static Storage from_vector(const std::vector<T> &vin, const int device = Device.cpu) {
       Storage out;
       out._from_vector(vin, device);
       return out;
@@ -867,7 +887,7 @@ namespace cytnx {
     /// @cond
 
     template <class T>
-    void _from_vector(const std::vector<T> &vin, const int device = -1) {
+    void _from_vector(const std::vector<T> &vin, const int device = Device.cpu) {
       // auto dispatch:
       // check:
       cytnx_error_msg(1, "[FATAL] ERROR unsupport type%s", "\n");
@@ -875,57 +895,57 @@ namespace cytnx {
       // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
     }
 
-    void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.ComplexDouble]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex128) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.ComplexFloat]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_double> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_double> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Double]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_double) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_float> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_float> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Float]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_float) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Uint64]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int64> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Int64]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Uint32]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint32) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int32> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int32> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Int32]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int32) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Uint16]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint16) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int16> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int16> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Int16]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int16) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_bool> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_bool> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Bool]();
       this->_impl->Init(vin.size(), device);
       this->_impl->_cpy_bool(this->_impl->data(), vin);

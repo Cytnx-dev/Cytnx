@@ -1588,7 +1588,7 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::from_binary_dispatch(std::istream &f) {
+  void BlockUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
 
@@ -1601,7 +1601,7 @@ namespace cytnx {
     this->_blocks.resize(Nblocks);
 
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i].from_binary(f);
+      this->_blocks[i].from_binary(f, restore_device);
     }
   }
 
