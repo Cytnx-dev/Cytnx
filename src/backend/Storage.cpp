@@ -3,6 +3,8 @@
 #include <filesystem>
 #include <iostream>
 
+#include "H5Cpp.h"
+
 using namespace std;
 
 namespace cytnx {
@@ -86,15 +88,31 @@ namespace cytnx {
     fstream f;
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
-    } else {
-      // add filename extension
+      auto ext = std::filesystem::path(fname).extension().string();
+      if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+          ext == ".HDF") {
+        // save as hdf5
+        H5::H5File h5file;
+        try {
+          h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+        } catch (H5::FileIException &error) {
+          error.printErrorStack();
+          cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
+        }
+        this->to_hdf5(h5file);
+        h5file.close();
+        return;
+      } else {  // create binary file
+        f.open(fname, ios::out | ios::trunc | ios::binary);
+      }
+    } else {  // create binary file with standard extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cyst'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
       f.open((fname + ".cyst"), ios::out | ios::trunc | ios::binary);
     }
+    // write binary
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
@@ -127,6 +145,37 @@ namespace cytnx {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->data_to_binary(f);
+  }
+
+  void Storage::to_hdf5(H5::Group &location, const std::string &name) const {
+    hsize_t Nelem = this->size();
+    H5::DataSpace dataspace(1, &Nelem);
+    H5::DataType datatype = Type.to_hdf5_type(this->dtype());
+    H5::DataSet dataset = location.createDataSet(name, datatype, dataspace);
+    this->data_to_hdf5(dataset, datatype);
+    if (this->device() != Device.cpu) {
+      H5::Attribute attr =
+        dataset.createAttribute("device", H5::PredType::NATIVE_INT, H5::DataSpace(H5S_SCALAR));
+      int device = this->device();
+      attr.write(H5::PredType::NATIVE_INT, &device);
+    }
+  }
+  void Storage::data_to_hdf5(H5::DataSet &dataset, H5::DataType &hdf5type) const {
+    if (this->device() == Device.cpu) {
+      dataset.write(this->data(), hdf5type);
+    } else {
+#ifdef UNI_GPU
+      checkCudaErrors(cudaSetDevice(this->device()));
+      void *htmp = malloc(Type.typeSize(this->dtype()) * this->size());
+      checkCudaErrors(cudaMemcpy(htmp, this->_impl->data(),
+                                 Type.typeSize(this->dtype()) * this->size(),
+                                 cudaMemcpyDeviceToHost));
+      dataset.write(htmp, hdf5type);
+      free(htmp);
+#else
+      cytnx_error_msg(true, "ERROR internal fatal error in Save Storage%s", "\n");
+#endif
+    }
   }
 
   void Storage::to_binary(std::ostream &f) const {
@@ -174,7 +223,6 @@ namespace cytnx {
 
     // check size:
     ifstream jf;
-    // std::cout << fname << std::endl;
     jf.open(fname, ios::ate | ios::binary);
     if (!jf.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
@@ -215,16 +263,68 @@ namespace cytnx {
   }
 
   void Storage::Load_(const std::string &fname, const bool restore_device) {
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+    auto ext = std::filesystem::path(fname).extension().string();
+    if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+        ext == ".HDF") {
+      // load hdf5
+      H5::H5File h5file;
+      try {
+        h5file = H5::H5File(fname, H5F_ACC_RDONLY);
+      } catch (H5::FileIException &error) {
+        error.printErrorStack();
+        cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
+      }
+      this->from_hdf5(h5file, "Storage", restore_device);
+      h5file.close();
+    } else {  // load binary
+      fstream f;
+      f.open(fname, ios::in | ios::binary);
+      if (!f.is_open()) {
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+      }
+      this->from_binary(f, restore_device);
+      f.close();
     }
-    this->from_binary(f, restore_device);
-    f.close();
   }
   void Storage::Load_(const char *fname, const bool restore_device) {
     this->Load_(string(fname), restore_device);
+  }
+
+  void Storage::from_hdf5(H5::Group &location, const std::string &name, const bool restore_device) {
+    H5::DataSet dataset = location.openDataSet(name);
+    H5::DataType datatype = dataset.getDataType();
+    unsigned int dtype = Type.from_hdf5_type(datatype);
+    H5::DataSpace dataspace = dataset.getSpace();
+    auto Nelem = dataspace.getSimpleExtentNpoints();
+
+    int device = Device.cpu;
+    if (restore_device && dataset.attrExists("device")) {
+      H5::Attribute attr = dataset.openAttribute("device");
+      attr.read(H5::PredType::NATIVE_INT, &device);
+    }
+
+    this->data_from_hdf5(dataset, Nelem, dtype, datatype, device);
+  }
+  void Storage::data_from_hdf5(H5::DataSet &dataset, const cytnx_uint64 &Nelem,
+                               const unsigned int &dtype, H5::DataType &hdf5type,
+                               const int &device) {
+    this->_impl = __SII.USIInit[dtype]();
+    this->_impl->Init(Nelem, device, false);
+
+    if (device == Device.cpu) {
+      dataset.read(this->_impl->data(), hdf5type);
+    } else {
+#ifdef UNI_GPU
+      checkCudaErrors(cudaSetDevice(device));
+      void *htmp = malloc(Type.typeSize(dtype) * Nelem);
+      dataset.read(htmp, hdf5type);
+      checkCudaErrors(cudaMemcpy(this->_impl->data(), htmp, Type.typeSize(dtype) * Nelem,
+                                 cudaMemcpyHostToDevice));
+      free(htmp);
+#else
+      cytnx_error_msg(true, "ERROR internal fatal error in Load Storage%s", "\n");
+#endif
+    }
   }
 
   void Storage::from_binary(std::istream &f, const bool restore_device) {

@@ -26,7 +26,6 @@ namespace cytnx {
     this->_mapper = vec_range(shape.size());
     this->_invmapper = this->_mapper;
     this->_contiguous = true;
-    // cout << shape << endl;
   }
   void Tensor_impl::Init(const Storage &in) {
     cytnx_error_msg(in.dtype() == Type.Void,
@@ -55,9 +54,6 @@ namespace cytnx {
     std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
     std::vector<cytnx_uint64> new_shape(this->_shape.size());
     std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
-
-    // for(int i=0;i<this->_shape.size();i++)
-    //     std::cout << this->_mapper[i] << " " << this->_invmapper[i] << std::endl;
 
     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
 
@@ -124,7 +120,6 @@ namespace cytnx {
       if (rnks[i] >= rnks.size()) {
         cytnx_error_msg(1, "%s", "reshape a tensor with invalid rank index.");
       }
-      // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       // new_idxmap[this->_mapper[rnks[i]]] = i;
       this->_invmapper[this->_mapper[rnks[i]]] = i;
       new_fwdmap[i] = this->_mapper[rnks[i]];
@@ -168,24 +163,10 @@ namespace cytnx {
       acc.push_back(Accessor::all());
     }
 
-    /*
-    cout << "acc type bef" << endl;
-    for(int i=0;i<acc.size();i++){
-        cout << acc[i].type() << " ";
-    }
-    */
     acc = vec_map(acc, this->_invmapper);  // contiguous.
-    /*
-    cout << "acc type aft" << endl;
-    for(int i=0;i<acc.size();i++){
-        cout << acc[i].type() << " ";
-    }
-    */
 
     //[1] curr_shape:
     auto curr_shape = vec_map(this->_shape, this->_invmapper);
-    // cout << "curr_shape" << endl;
-    // cout << curr_shape << endl;
 
     //[2] from back to front, check until last all:
     cytnx_uint64 Nunit = 1;
@@ -199,9 +180,6 @@ namespace cytnx {
         break;
       }
     }
-    // cout << "tmpidx" << tmpidx << endl;
-    // cout << "Nunit" << Nunit << endl;
-    // cout << acc.size() << endl;
 
     // acc-> locators
 
@@ -212,8 +190,6 @@ namespace cytnx {
                       "[ERROR] Tensor cannot accept accessor with qnum list.%s", "\n");
       acc[i].get_len_pos(curr_shape[i], get_shape[i], locators[i]);
     }
-    // cout << "get_shape" << endl;
-    // cout << get_shape << endl;
 
     // create Tensor:
     for (cytnx_uint64 i = 0; i < tmpidx; i++) {
@@ -221,7 +197,6 @@ namespace cytnx {
     }
     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
     out->Init(get_shape, this->dtype(), this->device());
-    // cout << get_shape << endl;
 
     if (locators.size() == 0) {
       locators.resize(1);
@@ -242,19 +217,6 @@ namespace cytnx {
         new_shape.push_back(out->shape()[i]);
     }
 
-    // cout << "mapper" << endl;
-    // cout << new_mapper << endl;
-    // cout << "inv_mapper" << endl;
-    // cout << this->_invmapper << endl;
-
-    // cout << "remove_id" << endl;
-    // cout << remove_id << endl;
-    // cout << "out shape raw" << endl;
-    // cout << out->shape() << endl;
-
-    // cout << "perm" << endl;
-    // cout << perm << endl;
-    // cout << new_shape << endl;
     if (new_shape.size()) {  // exclude the case where only single element exists!
 
       out->reshape_(new_shape);  // remove size-1 axis
@@ -291,13 +253,9 @@ namespace cytnx {
 
     vector<cytnx_uint64> get_shape(acc.size());
 
-    // vector<cytnx_uint64> new_shape;
     std::vector<std::vector<cytnx_uint64>> locators(this->_shape.size());
     for (cytnx_uint32 i = 0; i < acc.size(); i++) {
       acc[i].get_len_pos(this->_shape[i], get_shape[i], locators[i]);
-      // std::cout << this->_shape[i] << " " << get_shape[i] << "|";
-      // for(int j=0;j<locators[i].size();j++) std::cout << locators[i][j] << " ";
-      // std::cout << std::endl;
     }
 
     boost::intrusive_ptr<Tensor_impl> out(new Tensor_impl());
@@ -319,7 +277,6 @@ namespace cytnx {
 
   void Tensor_impl::set(const std::vector<cytnx::Accessor> &accessors,
                         const boost::intrusive_ptr<Tensor_impl> &rhs) {
-    // cout << "calling set" << endl;
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
@@ -359,14 +316,11 @@ namespace cytnx {
     if (rhs->storage().size() == 1) {
       this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl, curr_shape, locators, Nunit,
                                                 true);
-      // std::cout << "Scalar" << endl;
 
     } else {
       for (cytnx_uint64 i = 0; i < tmpidx; i++) {
         get_shape.push_back(curr_shape[acc.size() + i]);
       }
-
-      // std::cout << get_shape << endl;
 
       // permute input to currect pos
       std::vector<cytnx_int64> new_mapper(this->_mapper.begin(), this->_mapper.end());
@@ -399,9 +353,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> iperm(perm.size());
       for (unsigned int i = 0; i < iperm.size(); i++) iperm[perm[i]] = i;
 
-      // std::cout << new_shape << endl;
       boost::intrusive_ptr<Tensor_impl> tmp;
-      // std::cout << iperm << std::endl;
       tmp = rhs->permute(iperm)->contiguous();
       cytnx_error_msg(new_shape != tmp->shape(), "[ERROR][Tensor.set_elems]%s",
                       "inconsistent shape");
@@ -437,9 +389,6 @@ namespace cytnx {
         break;
       }
     }
-    // cout << "tmpidx" << tmpidx << endl;
-    // cout << "Nunit" << Nunit << endl;
-    // cout << acc.size() << endl;
 
     // acc-> locators
 
@@ -450,8 +399,6 @@ namespace cytnx {
                       "[ERROR] Tensor cannot accept accessor with qnum list.%s", "\n");
       acc[i].get_len_pos(curr_shape[i], get_shape[i], locators[i]);
     }
-    // cout << "get_shape" << endl;
-    // cout << get_shape << endl;
 
     // call storage
     Scalar c = rc;

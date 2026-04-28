@@ -78,6 +78,16 @@ namespace cytnx {
 
     const std::vector<cytnx_uint64> &shape() const { return _shape; }
 
+    const std::vector<cytnx_uint64> strides() const {
+      std::vector<cytnx_uint64> strides(this->_shape.size());
+      cytnx_uint64 accu = 1;
+      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+        strides[this->_mapper[i]] = accu;  // calculate strides here
+        accu *= this->_shape[this->_invmapper[i]];
+      }
+      return strides;
+    }
+
     const bool &is_contiguous() const { return this->_contiguous; }
 
     const std::vector<cytnx_uint64> &mapper() const { return this->_mapper; }

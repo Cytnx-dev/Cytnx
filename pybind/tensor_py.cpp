@@ -159,6 +159,7 @@ void tensor_binding(py::module &m) {
     .def("device", &cytnx::Tensor::device)
     .def("device_str", &cytnx::Tensor::device_str)
     .def("shape", &cytnx::Tensor::shape)
+    .def("strides", &cytnx::Tensor::strides)
     .def("rank", &cytnx::Tensor::rank)
     .def("clone", &cytnx::Tensor::clone)
     .def("__copy__", &cytnx::Tensor::clone)
@@ -301,6 +302,18 @@ void tensor_binding(py::module &m) {
         return self.Load_(fname, restore_device);
       },
       py::arg("fname"), py::arg("restore_device") = true)
+
+    .def(
+      "to_hdf5",
+      [](cytnx::Tensor &self, H5::Group &location, const std::string &name) {
+        self.to_hdf5(location, name);
+      },
+      py::arg("location"), py::arg("name") = "Tensor")
+    .def(
+      "from_hdf5",
+      [](cytnx::Tensor &self, H5::Group &location, const std::string &name,
+         const bool restore_device) { self.from_hdf5(location, name, restore_device); },
+      py::arg("location"), py::arg("name") = "Tensor", py::arg("restore_device") = true)
 
     .def(py::pickle(
       [](const cytnx::Tensor &self) {  // __getstate__

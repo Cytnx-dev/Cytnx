@@ -16,6 +16,7 @@
   #include "backend/Scalar.hpp"
   #include "cytnx_error.hpp"
   #include "Device.hpp"
+  #include "H5Cpp.h"
   #include "intrusive_ptr_base.hpp"
   #include "Type.hpp"
 
@@ -525,6 +526,13 @@ namespace cytnx {
     ///@endcond
 
     /// @cond
+    void to_hdf5(H5::Group &location, const std::string &name = "Storage") const;
+    void from_hdf5(H5::Group &location, const std::string &name = "Tensor",
+                   const bool restore_device = true);
+    void data_to_hdf5(H5::DataSet &dataset, H5::DataType &hdf5type) const;
+    void data_from_hdf5(H5::DataSet &dataset, const cytnx_uint64 &Nelem, const unsigned int &dtype,
+                        H5::DataType &hdf5type, const int &device = Device.cpu);
+
     void to_binary(std::ostream &f) const;
     void from_binary(std::istream &f, const bool restore_device = true);
     void data_to_binary(std::ostream &f) const;

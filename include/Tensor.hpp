@@ -1,18 +1,21 @@
 #ifndef CYTNX_TENSOR_H_
 #define CYTNX_TENSOR_H_
 
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "intrusive_ptr_base.hpp"
-#include <iostream>
 #include <fstream>
-#include "utils/dynamic_arg_resolver.hpp"
-#include "Accessor.hpp"
+#include <initializer_list>
+#include <iostream>
+#include <string>
 #include <utility>
 #include <vector>
-#include <initializer_list>
-#include <string>
+
+#include "H5Cpp.h"
+#include "intrusive_ptr_base.hpp"
+
+#include "Accessor.hpp"
+#include "cytnx_error.hpp"
+#include "Device.hpp"
+#include "Type.hpp"
+#include "utils/dynamic_arg_resolver.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -315,11 +318,15 @@ namespace cytnx {
     ///@endcond
     //-------------------------------------------
 
+    void to_hdf5(H5::Group &location, const std::string &name = "Tensor") const;
+    void from_hdf5(H5::Group &location, const std::string &name = "Tensor",
+                   const bool restore_device = true);
+
     /// @cond
     void to_binary(std::ostream &f) const;
     void from_binary(std::istream &f, const bool restore_device = true);
-
     /// @endcond
+
     /**
     @brief Save current Tensor to file
     @param[in] fname file name (without file extension)
@@ -366,7 +373,6 @@ namespace cytnx {
     Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
     Tensor to the current Tensor.
     */
-
     static Tensor Load(const std::string &fname, const bool restore_device = true);
     /**
      * @see Load(const std::string &fname)
@@ -618,6 +624,12 @@ namespace cytnx {
     @return [std::vector<cytnx_uint64>] the shape of the Tensor
     */
     const std::vector<cytnx_uint64> &shape() const { return this->_impl->shape(); }
+
+    /**
+    @brief the strides of the Tensor
+    @return [std::vector<cytnx_uint64>] the strides of the Tensor
+    */
+    const std::vector<cytnx_uint64> strides() const { return this->_impl->strides(); }
 
     /**
         @brief the rank of the Tensor

@@ -285,6 +285,32 @@ void storage_binding(py::module &m) {
       py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1))
 
     .def(
+      "to_hdf5",
+      [](cytnx::Storage &self, H5::Group &location, const std::string &name) {
+        self.to_hdf5(location, name);
+      },
+      py::arg("location"), py::arg("name") = "Storage")
+    .def(
+      "from_hdf5",
+      [](cytnx::Storage &self, H5::Group &location, const std::string &name,
+         const bool restore_device) { self.from_hdf5(location, name, restore_device); },
+      py::arg("location"), py::arg("name") = "Storage", py::arg("restore_device") = true)
+    .def(
+      "data_to_hdf5",
+      [](cytnx::Storage &self, H5::DataSet &dataset, H5::DataType &hdf5type) {
+        self.data_to_hdf5(dataset, hdf5type);
+      },
+      py::arg("dataset"), py::arg("hdf5type"))
+    .def(
+      "data_from_hdf5",
+      [](cytnx::Storage &self, H5::DataSet &dataset, const cytnx_uint64 &Nelem,
+         const unsigned int &dtype, H5::DataType &hdf5type, const int &device = Device.cpu) {
+        self.data_from_hdf5(dataset, Nelem, dtype, hdf5type, device);
+      },
+      py::arg("dataset"), py::arg("Nelem"), py::arg("dtype"), py::arg("hdf5type"),
+      py::arg("device") = (int)cytnx::Device.cpu)
+
+    .def(
       py::pickle(
         [](const cytnx::Storage &self) {  // __getstate__
           std::ostringstream oss(std::ios::binary);
