@@ -296,12 +296,12 @@ namespace cytnx {
     int utentype = tns[0].uten_type();
     for (int i = 1; i < tns.size(); i++) {
       cytnx_error_msg(tns[i].device() != tn_device,
-                      "[ERROR][Launch][RegularNetwork] cannot find optimal order/launch with "
+                      "[ERROR][Launch][RegularNetwork] Cannot find optimal order/launch with "
                       "tensors on different devices, tensor "
                       "at [0] is on device %d while tensor at [%d] in on device %d. %s",
                       tn_device, i, tns[i].device(), "\n");
       cytnx_error_msg(tns[i].uten_type() != utentype,
-                      "[ERROR][Launch][RegularNetwork] cannot find optimal order/launch with "
+                      "[ERROR][Launch][RegularNetwork] Cannot find optimal order/launch with "
                       "tensors of different unitensor types, tensor "
                       "at [0] is uten_type %d while tensor at [%d] in uten_type %d. %s",
                       utentype, i, tns[i].uten_type(), "\n");
@@ -725,7 +725,7 @@ namespace cytnx {
       idx = this->name2pos.at(name);
     } catch (out_of_range) {
       cytnx_error_msg(true,
-                      "[ERROR][RegularNetwork][RmUniTensor] cannot find the tensor name: [%s] in "
+                      "[ERROR][RegularNetwork][RmUniTensor] Cannot find the tensor name: [%s] in "
                       "current network.\n",
                       name.c_str());
     }
@@ -741,12 +741,12 @@ namespace cytnx {
   void RegularNetwork::Savefile(const string &fname) {
     cytnx_error_msg(
       this->label_arr.size() == 0,
-      "[ERROR][RegularNetwork][Savefile] cannot save empty network to network file!%s", "\n");
+      "[ERROR][RegularNetwork][Savefile] Cannot save empty network to network file!%s", "\n");
 
     fstream fo;
     fo.open(fname + ".net", ios::out | ios::trunc);
     if (!fo.is_open()) {
-      cytnx_error_msg(true, "[ERROR][RegularNetwork][Savefile] cannot open/create file:%s\n",
+      cytnx_error_msg(true, "[ERROR][RegularNetwork][Savefile] Cannot open/create file:%s\n",
                       fname.c_str());
     }
 
@@ -798,7 +798,7 @@ namespace cytnx {
       idx = this->name2pos.at(name);
     } catch (out_of_range) {
       cytnx_error_msg(true,
-                      "[ERROR][RegularNetwork][PutUniTensor] cannot find the tensor name: [%s] in "
+                      "[ERROR][RegularNetwork][PutUniTensor] Cannot find the tensor name: [%s] in "
                       "current network.\n",
                       name.c_str());
     }
@@ -964,7 +964,7 @@ namespace cytnx {
 
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
         this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
         this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:
@@ -1025,7 +1025,7 @@ namespace cytnx {
 
       // //5. reset back the original labels:
       // for(cytnx_uint64 i=0;i<this->tensors.size();i++){
-      //     this->tensors[i].set_labels(old_labels[i]);
+      //     this->tensors[i].relabel_(old_labels[i]);
       // }
 
       // 6. permute accroding to pre-set labels:
@@ -1083,7 +1083,7 @@ namespace cytnx {
     #else
       for (cytnx_uint64 idx = 0; idx < this->tensors.size(); idx++) {
         this->CtTree.base_nodes[idx]->utensor =
-          this->tensors[idx].relabels(this->label_arr[idx]);  // this conflict
+          this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
         this->CtTree.base_nodes[idx]->is_assigned = true;
       }
       // 1.5 contraction order:

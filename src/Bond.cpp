@@ -77,17 +77,17 @@ namespace cytnx {
                                      const bool &is_grp) {
     // check:
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with different symmetry.");
+                    "[ERROR] Cannot combine two Bonds with different symmetry.");
 
     this->_dim *= bd_in->dim();  // update to new total dimension
 
     if (this->Nsym() != 0) {
       cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
-                      "[ERROR] cannot combine two Bonds with different symmetry.");
+                      "[ERROR] Cannot combine two Bonds with different symmetry.");
 
       // checking the qnum format:
       cytnx_error_msg((this->_degs.size() != 0) ^ (bd_in->_degs.size() != 0), "%s\n",
-                      "[ERROR] cannot combine two symmetry bond with different format!");
+                      "[ERROR] Cannot combine two symmetry bond with different format!");
 
       std::vector<std::vector<cytnx_int64>> new_qnums;
       if (this->_degs.size()) {
@@ -188,19 +188,19 @@ namespace cytnx {
   void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp) {
     // check:
     cytnx_error_msg(this->type() != bd_in->type(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with different types.");
+                    "[ERROR] Cannot combine two Bonds with different types.");
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with different symmetry.");
+                    "[ERROR] Cannot combine two Bonds with different symmetry.");
 
     this->_dim *= bd_in->dim();  // update to new total dimension
 
     if (this->Nsym() != 0) {
       cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
-                      "[ERROR] cannot combine two Bonds with different symmetry.");
+                      "[ERROR] Cannot combine two Bonds with different symmetry.");
 
       // checking the qnum format:
       cytnx_error_msg((this->_degs.size() != 0) ^ (bd_in->_degs.size() != 0), "%s\n",
-                      "[ERROR] cannot combine two symmetry bond with different format!");
+                      "[ERROR] Cannot combine two symmetry bond with different format!");
 
       std::vector<std::vector<cytnx_int64>> new_qnums;
       if (this->_degs.size()) {
@@ -284,7 +284,7 @@ namespace cytnx {
   std::vector<std::vector<cytnx_int64>> Bond_impl::getUniqueQnums(std::vector<cytnx_uint64> &counts,
                                                                   const bool &return_counts) {
     cytnx_error_msg(this->_qnums.size() == 0,
-                    "[ERROR][getUniqueQnums] cannot call this on a non-symmetry bond!%s", "\n");
+                    "[ERROR][getUniqueQnums] Cannot call this on a non-symmetry bond!%s", "\n");
 
     vector<vector<cytnx_int64>> tmp_qnums = this->_qnums;
     if (this->_degs.size()) {

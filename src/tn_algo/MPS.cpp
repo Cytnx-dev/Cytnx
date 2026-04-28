@@ -19,7 +19,7 @@ namespace cytnx {
 
     void MPS::to_binary(std::ostream& f) const {
       cytnx_error_msg(this->_impl->mps_type_id == MPSType.Void,
-                      "[ERROR][MPS] cannot save an uninitialize MPS.%s", "\n");
+                      "[ERROR][MPS] Cannot save an uninitialize MPS.%s", "\n");
 
       unsigned int IDDs = 109;
       f.write((char*)&IDDs, sizeof(unsigned int));
