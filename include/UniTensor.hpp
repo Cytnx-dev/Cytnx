@@ -443,8 +443,8 @@ namespace cytnx {
     virtual const vec2d<cytnx_uint64> &get_itoi() const;
     virtual vec2d<cytnx_uint64> &get_itoi();
 
-    virtual void _save_dispatch(std::fstream &f) const;
-    virtual void _load_dispatch(std::fstream &f);
+    virtual void to_binary_dispatch(std::ostream &f) const;
+    virtual void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     virtual ~UniTensor_base(){};
   };
@@ -1078,8 +1078,8 @@ namespace cytnx {
                         "\n");
     }
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const {
       cytnx_error_msg(true, "[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s",
@@ -1751,8 +1751,8 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -2544,8 +2544,8 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -5455,40 +5455,48 @@ namespace cytnx {
     }
 
     /**
-    @brief save a UniTensor to file
-    @details Save a UniTensor to file. The file extension will be extended as '.cytnx'
-    @param[in] fname the file name (exclude the file extension).
-    @see Load(const std::string &fname)
+    @brief Save UniTensor to file
+    @param[in] fname the file name
+    @see Load(const std::string &fname, const bool restore_device)
     */
     void Save(const std::string &fname) const;
 
     /**
-    @brief save a UniTensor to file
-    @details Save a UniTensor to file. The file extension will be extended as '.cytnx'
-    @param[in] fname the file name (exclude the file extension).
-    @see Load(const char *fname)
+    @brief Save UniTensor to file
+    @param[in] fname the file name
+    @see Load(const char *fname, const bool restore_device)
     */
     void Save(const char *fname) const;
 
     /**
-    @brief load a UniTensor from file
-    @param[in] fname the file name
-    @return the loaded UniTensor
-    @pre The file must be a UniTensor object. That is, the file must be created by
-    UniTensor::Save().
-    @see Save(const std::string &fname) const
+    @brief Load UniTensor from file and create new instance
+    @param fname[in] file name
+    @param[in] restore_device whether to try restoring the device on which the data is stored; if
+    false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+    loading.
+    @pre The file must be a UniTensor object which is saved by cytnx::UniTensor::Save.
+    @note This function creates a new UniTensor and keeps the original UniTensor unchanged. See
+    \link Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading
+    the UniTensor to the current UniTensor.
     */
-    static UniTensor Load(const std::string &fname);
+
+    static UniTensor Load(const std::string &fname, const bool restore_device = true);
+    /**
+     * @see Load(const std::string &fname)
+     */
+    static UniTensor Load(const char *fname, const bool restore_device = true);
 
     /**
-    @brief load a UniTensor from file
-    @param[in] fname: the file name
-    @return the loaded UniTensor
-    @pre The file must be a UniTensor object. That is, the file must be created by
-    UniTensor::Save().
-    @see Save(const char* fname) const
+    @brief Load UniTensor from file and overwrite current instance
+    @note This function overwrites the existing UniTensor. See \link Load(const std::string &fname,
+    const bool restore_device) Load() \endlink for creating a new UniTensor.
+    @see Load(const std::string &fname, const bool restore_device)
     */
-    static UniTensor Load(const char *fname);
+    void Load_(const std::string &fname, const bool restore_device = true);
+    /**
+     * @see Load_(const std::string &fname, const bool restore_device)
+     */
+    void Load_(const char *fname, const bool restore_device = true);
 
     /**
      * @brief truncate bond dimension of the UniTensor by the given bond label and dimension.
@@ -5577,8 +5585,8 @@ namespace cytnx {
     vec2d<cytnx_uint64> &get_itoi() { return this->_impl->get_itoi(); }
 
     /// @cond
-    void _Load(std::fstream &f);
-    void _Save(std::fstream &f) const;
+    void from_binary(std::istream &f, const bool restore_device = true);
+    void to_binary(std::ostream &f) const;
     /// @endcond
 
     UniTensor &convert_from(const UniTensor &rhs, const bool &force = false,

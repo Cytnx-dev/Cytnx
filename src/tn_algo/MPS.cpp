@@ -17,8 +17,7 @@ namespace cytnx {
       return os;
     }
 
-    void MPS::_Save(std::fstream& f) const {
-      cytnx_error_msg(!f.is_open(), "[ERROR][MPS] invalid fstream!.%s", "\n");
+    void MPS::to_binary(std::ostream& f) const {
       cytnx_error_msg(this->_impl->mps_type_id == MPSType.Void,
                       "[ERROR][MPS] Cannot save an uninitialize MPS.%s", "\n");
 
@@ -33,11 +32,10 @@ namespace cytnx {
       f.write((char*)&this->_impl->S_loc, sizeof(this->_impl->S_loc));
 
       // second, dispatch to do remaining saving:
-      this->_impl->_save_dispatch(f);
+      this->_impl->to_binary_dispatch(f);
     }
 
-    void MPS::_Load(std::fstream& f) {
-      cytnx_error_msg(!f.is_open(), "[ERROR][MPS] invalid fstream%s", "\n");
+    void MPS::from_binary(std::istream& f, const bool restore_device) {
       unsigned int tmpIDDs;
       f.read((char*)&tmpIDDs, sizeof(unsigned int));
       cytnx_error_msg(tmpIDDs != 109, "[ERROR] the object is not a cytnx MPS!%s", "\n");
@@ -59,7 +57,7 @@ namespace cytnx {
       f.read((char*)&this->_impl->S_loc, sizeof(this->_impl->S_loc));
 
       // second, let dispatch to do remaining loading.
-      this->_impl->_load_dispatch(f);
+      this->_impl->from_binary_dispatch(f, restore_device);
     }
 
     void MPS::Save(const std::string& fname) const {
@@ -79,7 +77,7 @@ namespace cytnx {
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
       }
-      this->_Save(f);
+      this->to_binary(f);
       f.close();
     }
     void MPS::Save(const char* fname) const {
@@ -89,22 +87,31 @@ namespace cytnx {
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
       }
-      this->_Save(f);
+      this->to_binary(f);
       f.close();
     }
 
-    MPS MPS::Load(const std::string& fname) {
+    MPS MPS::Load(const std::string& fname, const bool restore_device) {
       MPS out;
+      out.Load_(fname, restore_device);
+      return out;
+    }
+    MPS MPS::Load(const char* fname, const bool restore_device) {
+      return MPS::Load(string(fname), restore_device);
+    }
+
+    void MPS::Load_(const std::string& fname, const bool restore_device) {
       fstream f;
       f.open(fname, ios::in | ios::binary);
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
       }
-      out._Load(f);
+      this->from_binary(f, restore_device);
       f.close();
-      return out;
     }
-    MPS MPS::Load(const char* fname) { return MPS::Load(string(fname)); }
+    void MPS::Load_(const char* fname, const bool restore_device) {
+      this->Load_(string(fname), restore_device);
+    }
 
   }  // namespace tn_algo
 

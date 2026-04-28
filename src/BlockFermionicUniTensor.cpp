@@ -2372,7 +2372,7 @@ namespace cytnx {
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
-  void BlockFermionicUniTensor::_save_dispatch(std::fstream &f) const {
+  void BlockFermionicUniTensor::to_binary_dispatch(std::ostream &f) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; saves signs as well
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
@@ -2383,7 +2383,7 @@ namespace cytnx {
     }
 
     for (unsigned int b = 0; b < Nblocks; b++) {
-      this->_blocks[b]._Save(f);
+      this->_blocks[b].to_binary(f);
     }
 
     // Saving signs; each sign is saved as a char
@@ -2394,7 +2394,7 @@ namespace cytnx {
     }
   }
 
-  void BlockFermionicUniTensor::_load_dispatch(std::fstream &f) {
+  void BlockFermionicUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
     //[21 Aug 2024] This is a copy from BlockUniTensor; reads signs as well
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
@@ -2408,7 +2408,7 @@ namespace cytnx {
 
     this->_blocks.resize(Nblocks);
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i]._Load(f);
+      this->_blocks[i].from_binary(f, restore_device);
     }
 
     // Loading signs; each sign is assumed to be saved as a char, with 0 being false

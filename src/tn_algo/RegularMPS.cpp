@@ -266,16 +266,16 @@ namespace cytnx {
       }
     }
 
-    void RegularMPS::_save_dispatch(fstream &f) {
+    void RegularMPS::to_binary_dispatch(std::ostream &f) {
       cytnx_uint64 N = this->_TNs.size();
       f.write((char *)&N, sizeof(cytnx_uint64));
 
       // save UniTensor one by one:
       for (cytnx_uint64 i = 0; i < N; i++) {
-        this->_TNs[i]._Save(f);
+        this->_TNs[i].to_binary(f);
       }
     }
-    void RegularMPS::_load_dispatch(fstream &f) {
+    void RegularMPS::from_binary_dispatch(std::istream &f, const bool restore_device) {
       cytnx_uint64 N;
 
       f.read((char *)&N, sizeof(cytnx_uint64));
@@ -283,7 +283,7 @@ namespace cytnx {
 
       // Load UniTensor one by one:
       for (cytnx_uint64 i = 0; i < N; i++) {
-        this->_TNs[i]._Load(f);
+        this->_TNs[i].from_binary(f, restore_device);
       }
     }
 

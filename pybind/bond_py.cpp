@@ -182,6 +182,23 @@ void bond_binding(py::module &m) {
       "Save", [](Bond &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
       "Load", [](const std::string &fname) { return Bond::Load(fname); }, py::arg("fname"))
+    .def(
+      "Load_", [](cytnx::Bond &self, const std::string &fname) { return self.Load_(fname); },
+      py::arg("fname"))
+
+    .def(py::pickle(
+      [](const Bond &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+        std::string data = state;
+        std::istringstream iss(data, std::ios::binary);
+        Bond out;
+        out.from_binary(iss);
+        return out;
+      }))
 
     ;  // end of object line
 }

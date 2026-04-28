@@ -8,7 +8,6 @@ using namespace std;
 namespace cytnx {
 
   Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
-    // cout << "init_device class!" << endl;
 #ifdef UNI_GPU
 
     // get all available gpus
@@ -49,7 +48,6 @@ namespace cytnx {
     if (device_id == this->cpu) {
       return string("cytnx device: CPU");
     } else if (device_id >= 0) {
-      // cout << device_id << Ngpus << endl;
       if (device_id >= Ngpus) {
         cytnx_error_msg(true, "%s", "[ERROR] invalid device_id, gpuid exceed limit");
         return string("");
