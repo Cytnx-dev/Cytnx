@@ -1,15 +1,17 @@
 #ifndef CYTNX_TYPE_H_
 #define CYTNX_TYPE_H_
 
+#include <array>
 #include <complex>
 #include <cstdint>
 #include <string>
-#include <type_traits>
 #include <tuple>
-#include <array>
+#include <type_traits>
 #include <utility>
-#include <vector>
 #include <variant>
+#include <vector>
+
+#include "H5Cpp.h"
 
 #include "cytnx_error.hpp"  // also brings in cuComplex.h
 
@@ -393,6 +395,81 @@ namespace cytnx {
     using type_promote_from_gpu_pointer_t = typename type_promote_from_gpu_pointer<TL, TR>::type;
 #endif
 
+    H5::DataType to_hdf5_type(unsigned int type_id) const {
+      switch (type_id) {
+        case Type::Double:
+          return H5::PredType::NATIVE_DOUBLE;
+
+        case Type::Float:
+          return H5::PredType::NATIVE_FLOAT;
+
+        case Type::Int64:
+          return H5::PredType::NATIVE_INT64;
+
+        case Type::Uint64:
+          return H5::PredType::NATIVE_UINT64;
+
+        case Type::Int32:
+          return H5::PredType::NATIVE_INT32;
+
+        case Type::Uint32:
+          return H5::PredType::NATIVE_UINT32;
+
+        case Type::Int16:
+          return H5::PredType::NATIVE_INT16;
+
+        case Type::Uint16:
+          return H5::PredType::NATIVE_UINT16;
+
+        case Type::Bool:
+          return H5::PredType::NATIVE_HBOOL;
+
+        case Type::ComplexDouble: {
+          static const H5::CompType ct = [] {
+            H5::CompType tmp(sizeof(cytnx_complex128));
+            tmp.insertMember("r", 0, H5::PredType::NATIVE_DOUBLE);
+            tmp.insertMember("i", sizeof(double), H5::PredType::NATIVE_DOUBLE);
+            return tmp;
+          }();
+          return ct;
+        }
+
+        case Type::ComplexFloat: {
+          static const H5::CompType ct = [] {
+            H5::CompType tmp(sizeof(cytnx_complex64));
+            tmp.insertMember("r", 0, H5::PredType::NATIVE_FLOAT);
+            tmp.insertMember("i", sizeof(float), H5::PredType::NATIVE_FLOAT);
+            return tmp;
+          }();
+          return ct;
+        }
+
+        case Type::Void:
+          cytnx_error_msg(true, "[ERROR] Void dtype cannot be mapped to HDF5%s", "\n");
+
+        default:
+          cytnx_error_msg(true, "[ERROR] Unsupported Cytnx dtype: %s\n", getname(type_id).c_str());
+      }
+    }
+
+    unsigned int from_hdf5_type(const H5::DataType& h5_type) const {
+      if (h5_type == H5::PredType::NATIVE_DOUBLE) return Type::Double;
+      if (h5_type == H5::PredType::NATIVE_FLOAT) return Type::Float;
+      if (h5_type == H5::PredType::NATIVE_INT64) return Type::Int64;
+      if (h5_type == H5::PredType::NATIVE_UINT64) return Type::Uint64;
+      if (h5_type == H5::PredType::NATIVE_INT32) return Type::Int32;
+      if (h5_type == H5::PredType::NATIVE_UINT32) return Type::Uint32;
+      if (h5_type == H5::PredType::NATIVE_INT16) return Type::Int16;
+      if (h5_type == H5::PredType::NATIVE_UINT16) return Type::Uint16;
+      if (h5_type == H5::PredType::NATIVE_HBOOL) return Type::Bool;
+      if (h5_type.getClass() == H5T_COMPOUND) {
+        H5::CompType ct(h5_type.getId());
+        if (ct.getSize() == sizeof(cytnx_complex128)) return Type::ComplexDouble;
+        if (ct.getSize() == sizeof(cytnx_complex64)) return Type::ComplexFloat;
+      }
+      cytnx_error_msg(true, "[ERROR] HDF5 DataType cannot be mapped to Cytnx dtype.%s", "\n");
+    }
+
   };  // Type_class
   /// @endcond
 
@@ -402,7 +479,7 @@ namespace cytnx {
    * @details This is the variable about the data type of the UniTensor, Tensor, ... .\n
    *     You can use it as following:
    *     \code
-   *     int type = Type.Double;
+   *     int type = Type::Double;
    *     \endcode
    *
    *     The supported enumerations are as following:
