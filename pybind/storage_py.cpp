@@ -279,10 +279,10 @@ void storage_binding(py::module &m) {
       py::arg("fname"), py::arg("restore_device") = true)
     .def_static(
       "Fromfile",
-      [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count) {
-        return cytnx::Storage::Fromfile(fname, dtype, count);
-      },
-      py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1))
+      [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count,
+         const int device) { return cytnx::Storage::Fromfile(fname, dtype, count, device); },
+      py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1),
+      py::arg("device") = cytnx::Device.cpu)
 
     .def(
       py::pickle(

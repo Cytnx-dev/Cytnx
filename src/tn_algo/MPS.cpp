@@ -110,7 +110,7 @@ namespace cytnx {
       f.close();
     }
     void MPS::Load_(const char* fname, const bool restore_device) {
-      this->Load(string(fname), restore_device);
+      this->Load_(string(fname), restore_device);
     }
 
   }  // namespace tn_algo

@@ -409,9 +409,9 @@ namespace cytnx {
      * @see cytnx::Tensor::Tofile
      */
     static Tensor Fromfile(const std::string &fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1, const bool restore_device = true);
+                           const cytnx_int64 &count = -1, const int device = Device.cpu);
     static Tensor Fromfile(const char *fname, const unsigned int &dtype,
-                           const cytnx_int64 &count = -1, const bool restore_device = true);
+                           const cytnx_int64 &count = -1, const int device = Device.cpu);
 
     // static Tensor Frombinary(const std::string &fname);
 
