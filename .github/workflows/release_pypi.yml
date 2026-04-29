@@ -74,25 +74,6 @@ jobs:
           sudo apt-get install -y ccache
         fi
 
-        cp CMakeLists.txt CMakeLists.txt.full
-        trap 'mv -f CMakeLists.txt.full CMakeLists.txt; rm -f src/ccache_probe.cpp; rm -rf .ccache-probe' EXIT
-        cat > CMakeLists.txt <<'EOF'
-        cmake_minimum_required(VERSION 3.18)
-        project(cytnx_ccache_probe LANGUAGES CXX)
-        add_library(cytnx_ccache_probe SHARED src/ccache_probe.cpp)
-        target_compile_features(cytnx_ccache_probe PRIVATE cxx_std_17)
-        EOF
-        cat > src/ccache_probe.cpp <<'EOF'
-        #include <vector>
-        int cytnx_ccache_probe() {
-          std::vector<int> values{1, 2, 3, 4};
-          int sum = 0;
-          for (const int v : values) {
-            sum += v;
-          }
-          return sum;
-        }
-        EOF
         ccache --zero-stats
         CIBW_BUILD='cp39-manylinux_x86_64'         CIBW_ARCHS_LINUX='x86_64'         CIBW_BEFORE_ALL_LINUX='bash {package}/tools/cibuildwheel_before_all.sh'         CIBW_BEFORE_BUILD_LINUX='python {package}/tools/cibuildwheel_before_build.py && bash {package}/tools/ccache_cross_version_probe.sh'         CIBW_CONTAINER_ENGINE="docker; create_args: --volume $HOME/.ccache:/host_ccache"         CIBW_ENVIRONMENT_LINUX='CCACHE_DIR=/host_ccache CCACHE_CONFIGPATH=/host_ccache/ccache.conf CCACHE_COMPILERCHECK=none CMAKE_C_COMPILER_LAUNCHER=ccache CMAKE_CXX_COMPILER_LAUNCHER=ccache'         CIBW_REPAIR_WHEEL_COMMAND_LINUX='cp {wheel} {dest_dir}'         python -m cibuildwheel --platform linux --output-dir wheelhouse-cp39
 
