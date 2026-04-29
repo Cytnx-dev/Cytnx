@@ -138,8 +138,6 @@ jobs:
             raise SystemExit('No ccache hits detected in cp310 build stats; cache likely not shared across versions.')
         PY2
 
-        echo 'Force failing this validation step temporarily by request.'
-        exit 1
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
       env:
