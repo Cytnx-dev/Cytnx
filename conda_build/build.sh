@@ -7,10 +7,17 @@ start_time=$(date +%s)
 # `--config-settings` overwrites the whole list setting, like
 # `skbuild.cmake.args`, so the whole list setting have to be re-assigned even if
 # only one value in the list is changed.
-$PYTHON -m pip install . -vv --no-deps --ignore-installed \
+install_log=$(mktemp)
+if ! $PYTHON -m pip install . -vv --no-deps --ignore-installed \
   --config-settings skbuild.build-dir=build \
   --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
-  --config-settings "skbuild.cmake.args=-G Unix Makefiles"
+  --config-settings "skbuild.cmake.args=-G Unix Makefiles" 2>&1 | tee "$install_log"; then
+  echo "pip install failed."
+  echo "pip version: $($PYTHON -m pip --version 2>&1 || echo 'unavailable')"
+  echo "Last 200 lines of pip install output:"
+  tail -n 200 "$install_log"
+  exit 1
+fi
 
 end_time=$(date +%s)
 echo "Execution time: $((end_time - start_time)) seconds"
