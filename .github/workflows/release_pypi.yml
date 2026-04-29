@@ -76,30 +76,30 @@ jobs:
         CIBW_BUILD='cp310-manylinux_x86_64' CIBW_ARCHS_LINUX='x86_64' python -m cibuildwheel --platform linux --output-dir wheelhouse-cp310
 
         python - <<'PY2'
-import subprocess
-
-raw = subprocess.check_output(['ccache', '--print-stats'], text=True)
-stats = {}
-for line in raw.splitlines():
-    if '	' not in line:
-        continue
-    key, value = line.split('	', 1)
-    stats[key.strip()] = value.strip()
-
-def to_int(v):
-    try:
-        return int(float(v))
-    except Exception:
-        return 0
-
-direct_hits = to_int(stats.get('cache_hit_direct', '0'))
-preprocessed_hits = to_int(stats.get('cache_hit_preprocessed', '0'))
-total_hits = direct_hits + preprocessed_hits
-print(f'cache_hit_direct={direct_hits}')
-print(f'cache_hit_preprocessed={preprocessed_hits}')
-if total_hits <= 0:
-    raise SystemExit('No ccache hits detected during second Python-version build; cache is likely not shared.')
-PY2
+        import subprocess
+        
+        raw = subprocess.check_output(['ccache', '--print-stats'], text=True)
+        stats = {}
+        for line in raw.splitlines():
+            if '	' not in line:
+                continue
+            key, value = line.split('	', 1)
+            stats[key.strip()] = value.strip()
+        
+        def to_int(v):
+            try:
+                return int(float(v))
+            except Exception:
+                return 0
+        
+        direct_hits = to_int(stats.get('cache_hit_direct', '0'))
+        preprocessed_hits = to_int(stats.get('cache_hit_preprocessed', '0'))
+        total_hits = direct_hits + preprocessed_hits
+        print(f'cache_hit_direct={direct_hits}')
+        print(f'cache_hit_preprocessed={preprocessed_hits}')
+        if total_hits <= 0:
+            raise SystemExit('No ccache hits detected during second Python-version build; cache is likely not shared.')
+        PY2
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
       env:
