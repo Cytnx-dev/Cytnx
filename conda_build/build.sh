@@ -61,14 +61,14 @@ PYV
 )
 export SKBUILD_BUILD_DIR="build-py${PY_MM}"
 echo "Using skbuild.build-dir: ${SKBUILD_BUILD_DIR}"
-echo "Using skbuild.cmake.args: --preset=${CMAKE_PRESET}"
+echo "Using skbuild.cmake.args: --preset=${CMAKE_PRESET};-G;Unix Makefiles"
 "$PYTHON" -m pip show scikit-build-core || true
 cmake --version || true
 
 run_pip_install() {
   "$PYTHON" -m pip install . -vv --no-deps --ignore-installed --no-build-isolation \
     --config-settings "skbuild.build-dir=${SKBUILD_BUILD_DIR}" \
-    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
+    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET;-G;Unix Makefiles" \
     --config-settings "build.verbose=true"
 }
 
