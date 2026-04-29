@@ -17,6 +17,8 @@ if platform.system() == 'Linux':
         raise RuntimeError(f"Missing required Linux ccache env vars: {', '.join(missing)}")
 
 # Expand ~ to actual home directory before writing config.
+# Even when CCACHE_CONFIGPATH is provided via env, we still write this file
+# to control base_dir/hash_dir behavior consistently across build environments.
 ccache_config_abspath = pathlib.Path(os.path.expanduser(ccache_config_path)).resolve()
 ccache_config_abspath.parent.mkdir(parents=True, exist_ok=True)
 
@@ -30,6 +32,9 @@ else:
 print('ccache_config_path:', ccache_config_path)
 print('ccache_config_path_absolute:', ccache_config_abspath)
 print('ccache_base_dir:', ccache_base_dir)
+print('current_working_directory:', pathlib.Path.cwd())
+build_dir_guess = pathlib.Path.cwd().joinpath('build').resolve()
+print('build_dir_guess:', build_dir_guess)
 
 with open(ccache_config_abspath, 'w', encoding='utf-8') as f:
     f.writelines([

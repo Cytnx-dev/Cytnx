@@ -46,7 +46,7 @@ jobs:
       run: |
         echo "Start building---------------------------------"
         export CCACHE_DIR="${HOME}/.ccache"
-        echo "CCACHE_HOST_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
+        echo "CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
 
     - name: Setup macOS
       if: matrix.os == 'macos-15-intel' || matrix.os == 'macos-14'
@@ -68,15 +68,13 @@ jobs:
         # executed in a interactive shell, and "~" will not be expanded to the
         # home directory. Export CCACHE_DIR in the run command instead.
         # CCACHE_DIR: ~/.ccache
-        CCACHE_DIR: /host_ccache
-        CCACHE_CONFIGPATH: /host_ccache/ccache.conf
-        CCACHE_COMPILERCHECK: none
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
         # Pass environment variables into cibuildwheel build environments
         # This is only needed on Linux becuase the wheels are built in docker
         # images only on Linux.
-        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_HOST_DIR }}:/host_ccache"
-        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_DIR CCACHE_CONFIGPATH CCACHE_COMPILERCHECK CCACHE_MAXSIZE
+        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_DIR }}:/host_ccache"
+        CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_CONFIGPATH=/host_ccache/ccache.conf CCACHE_COMPILERCHECK=content
+        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_MAXSIZE
 
     - uses: actions/upload-artifact@v4
       with:
