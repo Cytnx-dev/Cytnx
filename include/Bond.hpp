@@ -100,11 +100,11 @@ namespace cytnx {
       if ((this->_type != BD_REG)) {
         if (new_bondType == BD_REG) {
           cytnx_error_msg(this->_qnums.size(),
-                          "[ERROR] cannot change type to BD_REG for a symmetry bond.%s", "\n");
+                          "[ERROR] Cannot change type to BD_REG for a symmetry bond.%s", "\n");
         }
         if (std::abs(int(this->_type)) != std::abs(int(new_bondType))) {
           cytnx_error_msg(this->_qnums.size(),
-                          "[ERROR] cannot exchange BDtype between BD_* <-> gBD_* .%s", "\n");
+                          "[ERROR] Cannot exchange BDtype between BD_* <-> gBD_* .%s", "\n");
         }
       }
 
@@ -113,7 +113,7 @@ namespace cytnx {
 
     void clear_type() {
       if (this->_type != BD_REG) {
-        cytnx_error_msg(this->_qnums.size(), "[ERROR] cannot clear type for a symmetry bond.%s",
+        cytnx_error_msg(this->_qnums.size(), "[ERROR] Cannot clear type for a symmetry bond.%s",
                         "\n");
       }
       this->_type = bondType::BD_REG;
@@ -806,7 +806,7 @@ namespace cytnx {
 
     /**
     @brief Group the duplicated quantum number and return the new instance
-            of the Bond ojbect.
+            of the Bond object.
         @details This function will group the duplicated quantum number and return
             the new instance of the Bond object. It will also the \p mapper, where
                 \p mapper is about the new index from old index via\n

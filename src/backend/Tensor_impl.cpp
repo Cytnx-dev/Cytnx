@@ -29,7 +29,7 @@ namespace cytnx {
   }
   void Tensor_impl::Init(const Storage &in) {
     cytnx_error_msg(in.dtype() == Type.Void,
-                    "[ERROR] cannot init Tensor using un-initialized Storage%s", "\n");
+                    "[ERROR] Cannot init Tensor using un-initialized Storage%s", "\n");
     this->_storage = in;
     this->_shape.clear();
     this->_shape.push_back(in.size());
@@ -153,8 +153,8 @@ namespace cytnx {
   // shadow new:
   //
 
-  boost::intrusive_ptr<Tensor_impl> Tensor_impl::get(
-    const std::vector<cytnx::Accessor> &accessors) {
+  boost::intrusive_ptr<Tensor_impl> Tensor_impl::get(const std::vector<cytnx::Accessor> &accessors,
+                                                     std::vector<cytnx_int64> &removed) {
     cytnx_error_msg(accessors.size() > this->_shape.size(), "%s",
                     "The input indexes rank is out of range! (>Tensor's rank).");
 
@@ -209,10 +209,10 @@ namespace cytnx {
     // permute back:
     std::vector<cytnx_int64> new_mapper(this->_mapper.begin(), this->_mapper.end());
     std::vector<cytnx_int64> new_shape;
-    std::vector<cytnx_int32> remove_id;
+    // std::vector<cytnx_int64> removed;
     for (unsigned int i = 0; i < out->_shape.size(); i++) {
       if (out->shape()[i] == 1 && (acc[i].type() == Accessor::Singl))
-        remove_id.push_back(this->_mapper[this->_invmapper[i]]);
+        removed.push_back(this->_mapper[this->_invmapper[i]]);
       else
         new_shape.push_back(out->shape()[i]);
     }
@@ -224,10 +224,10 @@ namespace cytnx {
       std::vector<cytnx_uint64> perm;
       for (unsigned int i = 0; i < new_mapper.size(); i++) {
         perm.push_back(new_mapper[i]);
-        for (unsigned int j = 0; j < remove_id.size(); j++) {
-          if (new_mapper[i] > remove_id[j])
+        for (unsigned int j = 0; j < removed.size(); j++) {
+          if (new_mapper[i] > removed[j])
             perm.back() -= 1;
-          else if (new_mapper[i] == remove_id[j]) {
+          else if (new_mapper[i] == removed[j]) {
             perm.pop_back();
             break;
           }
@@ -325,10 +325,10 @@ namespace cytnx {
       // permute input to currect pos
       std::vector<cytnx_int64> new_mapper(this->_mapper.begin(), this->_mapper.end());
       std::vector<cytnx_uint64> new_shape;
-      std::vector<cytnx_int32> remove_id;
+      std::vector<cytnx_int64> removed;
       for (unsigned int i = 0; i < get_shape.size(); i++) {
         if (acc[i].type() == Accessor::Singl)
-          remove_id.push_back(this->_mapper[this->_invmapper[i]]);
+          removed.push_back(this->_mapper[this->_invmapper[i]]);
         else
           new_shape.push_back(get_shape[i]);
       }
@@ -340,10 +340,10 @@ namespace cytnx {
       for (unsigned int i = 0; i < new_mapper.size(); i++) {
         perm.push_back(new_mapper[i]);
 
-        for (unsigned int j = 0; j < remove_id.size(); j++) {
-          if (new_mapper[i] > remove_id[j])
+        for (unsigned int j = 0; j < removed.size(); j++) {
+          if (new_mapper[i] > removed[j])
             perm.back() -= 1;
-          else if (new_mapper[i] == remove_id[j]) {
+          else if (new_mapper[i] == removed[j]) {
             perm.pop_back();
             break;
           }

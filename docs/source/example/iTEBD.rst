@@ -304,10 +304,10 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 .. code-block:: python
     :linenos:
 
-    A.relabels_(["a","0","b"])
-    B.relabels_(["c","1","d"])
-    la.relabels_(["b","c"])
-    lb.relabels_(["d","e"])
+    A.relabel_(["a","0","b"])
+    B.relabel_(["c","1","d"])
+    la.relabel_(["b","c"])
+    lb.relabel_(["d","e"])
 
 
     ## contract all
@@ -329,7 +329,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
     # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
     XNorm = cytnx.Contract(X,Xt).item()
     XH = cytnx.Contract(X,H)
-    XH.relabels_(["d","e","0","1"])
+    XH.relabel_(["d","e","0","1"])
 
 
     XHX = cytnx.Contract(Xt,XH).item() ## rank-0
@@ -348,10 +348,10 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 .. .. code-block:: c++
 ..     :linenos:
 
-..     A.relabels_({"a","0","b"});
-..     B.relabels_({"c","1","d"});
-..     la.relabels_({"b","c"});
-..     lb.relabels_({"d","e"});
+..     A.relabel_({"a","0","b"});
+..     B.relabel_({"c","1","d"});
+..     la.relabel_({"b","c"});
+..     lb.relabel_({"d","e"});
 
 
 ..     // contract all
@@ -366,7 +366,7 @@ At the beginning of each iteration, we evaluate the energy expectation value :ma
 ..     Scalar XNorm = cyx::Contract(X,Xt).item();
 ..     UniTensor XH = cyx::Contract(X,H);
 
-..     XH.relabels_({"d","e","0","1"});
+..     XH.relabel_({"d","e","0","1"});
 ..     Scalar XHX = cyx::Contract(Xt,XH).item();
 ..     double E = double(XHX/XNorm);
 
@@ -439,7 +439,7 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
     :linenos:
 
     lb_inv = 1./lb
-    lb_inv.relabels_(["e","d"])
+    lb_inv.relabel_(["e","d"])
     A = cytnx.Contract(lb_inv,A)
     B = cytnx.Contract(B,lb_inv)
     # translation symmetry, exchange A and B site
@@ -453,7 +453,7 @@ Now we have the envolved :math:`\Gamma_A`, :math:`\Gamma_B` and :math:`\lambda_A
 
 ..     UniTensor lb_inv = 1./lb;
 
-..     lb_inv.relabels_({"e","d"});
+..     lb_inv.relabel_({"e","d"});
 ..     A = cyx.Contract(lb_inv,A);
 ..     B = cyx.Contract(B,lb_inv);
 
@@ -473,10 +473,10 @@ Let's put everything together in a loop for iteration:
 
     for i in range(10000):
 
-        A.relabels_(["a","0","b"])
-        B.relabels_(["c","1","d"])
-        la.relabels_(["b","c"])
-        lb.relabels_(["d","e"])
+        A.relabel_(["a","0","b"])
+        B.relabel_(["c","1","d"])
+        la.relabel_(["b","c"])
+        lb.relabel_(["d","e"])
 
         ## contract all
         X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
@@ -488,7 +488,7 @@ Let's put everything together in a loop for iteration:
         # Note that X,Xt contract will result a rank-0 tensor, which can use item() toget element
         XNorm = cytnx.Contract(X,Xt).item()
         XH = cytnx.Contract(X,H)
-        XH.relabels_(["d","e","0","1"])
+        XH.relabel_(["d","e","0","1"])
 
         XHX = cytnx.Contract(Xt,XH).item() ## rank-0
         E = XHX/XNorm
@@ -512,7 +512,7 @@ Let's put everything together in a loop for iteration:
         la.normalize_()
 
         lb_inv = 1./lb
-        lb_inv.relabels_(["e","d"])
+        lb_inv.relabel_(["e","d"])
 
         A = cytnx.Contract(lb_inv,A)
         B = cytnx.Contract(B,lb_inv)
@@ -532,10 +532,10 @@ Let's put everything together in a loop for iteration:
 
 ..     for(unsigned int i=0;i<10000;i++){
 
-..         A.relabels_({"a","0","b"});
-..         B.relabels_({"c","1","d"});
-..         la.relabels_({"b","c"});
-..         lb.relabels_({"d","e"});
+..         A.relabel_({"a","0","b"});
+..         B.relabel_({"c","1","d"});
+..         la.relabel_({"b","c"});
+..         lb.relabel_({"d","e"});
 
 
 ..         // contract all
@@ -550,7 +550,7 @@ Let's put everything together in a loop for iteration:
 ..         Scalar XNorm = cyx::Contract(X,Xt).item();
 ..         UniTensor XH = cyx::Contract(X,H);
 
-..         XH.relabels_({"d","e","0","1"});
+..         XH.relabel_({"d","e","0","1"});
 ..         Scalar XHX = cyx::Contract(Xt,XH).item();
 ..         double E = double(XHX/XNorm);
 
@@ -582,7 +582,7 @@ Let's put everything together in a loop for iteration:
 ..         // again, but A' and B' are updated
 
 ..         UniTensor lb_inv = 1./lb;
-..         lb_inv.relabels_({"e","d"});
+..         lb_inv.relabel_({"e","d"});
 ..         A = cyx::Contract(lb_inv,A);
 ..         B = cyx::Contract(B,lb_inv);
 

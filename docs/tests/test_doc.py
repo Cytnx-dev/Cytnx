@@ -346,8 +346,8 @@ def test_guide_contraction_network_label_ord(capsys):
 def test_guide_contraction_contract_Contract(capsys):
     excute_and_output('guide_contraction_contract_Contract', capsys)
 
-def test_guide_contraction_contract_relabes(capsys):
-    excute_and_output('guide_contraction_contract_relabels', capsys)
+def test_guide_contraction_contract_relabel(capsys):
+    excute_and_output('guide_contraction_contract_relabel', capsys)
 
 def test_guide_contraction_contract_Contracts(capsys):
     excute_and_output('guide_contraction_contract_Contracts', capsys)

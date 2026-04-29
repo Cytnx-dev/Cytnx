@@ -520,12 +520,12 @@ namespace cytnx {
   }
 
   Tensor Tensor::Fromfile(const std::string &fname, const unsigned int &dtype,
-                          const cytnx_int64 &count, const bool restore_device) {
-    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, restore_device));
+                          const cytnx_int64 &count, const int device) {
+    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
   }
   Tensor Tensor::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count,
-                          const bool restore_device) {
-    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, restore_device));
+                          const int device) {
+    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
   }
   Tensor Tensor::Load(const std::string &fname, const bool restore_device) {
     Tensor out;

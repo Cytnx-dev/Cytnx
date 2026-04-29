@@ -197,7 +197,12 @@ namespace cytnx {
       return this->_storage.at(RealRank);
     }
 
-    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors);
+    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors,
+                                          std::vector<cytnx_int64> &removed);
+    boost::intrusive_ptr<Tensor_impl> get(const std::vector<cytnx::Accessor> &accessors) {
+      std::vector<cytnx_int64> removed;
+      return this->get(accessors, removed);
+    }
     [[deprecated("Use Tensor_impl::get instead")]] boost::intrusive_ptr<Tensor_impl> get_deprecated(
       const std::vector<cytnx::Accessor> &accessors);
     void set(const std::vector<cytnx::Accessor> &accessors,

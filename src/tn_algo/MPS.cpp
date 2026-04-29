@@ -21,7 +21,7 @@ namespace cytnx {
 
     void MPS::to_binary(std::ostream& f) const {
       cytnx_error_msg(this->_impl->mps_type_id == MPSType.Void,
-                      "[ERROR][MPS] cannot save an uninitialize MPS.%s", "\n");
+                      "[ERROR][MPS] Cannot save an uninitialize MPS.%s", "\n");
 
       unsigned int IDDs = 109;
       f.write((char*)&IDDs, sizeof(unsigned int));
@@ -134,7 +134,7 @@ namespace cytnx {
       }
     }
     void MPS::Load_(const char* fname, const bool restore_device) {
-      this->Load(string(fname), restore_device);
+      this->Load_(string(fname), restore_device);
     }
 
     void MPS::to_hdf5(H5::Group& location, const std::string& name) const {

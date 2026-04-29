@@ -18,7 +18,7 @@ namespace cytnx {
 
   bool Storage::operator==(const Storage &rhs) {
     cytnx_error_msg(this->dtype() != rhs.dtype(),
-                    "[ERROR] cannot compare two Storage with different type.%s", "\n");
+                    "[ERROR] Cannot compare two Storage with different type.%s", "\n");
     if (this->size() != rhs.size()) return false;
 
     switch (this->dtype()) {
@@ -209,12 +209,12 @@ namespace cytnx {
   }
 
   Storage Storage::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count,
-                            const bool restore_device) {
-    return Storage::Fromfile(string(fname), dtype, count, restore_device);
+                            const int device) {
+    return Storage::Fromfile(string(fname), dtype, count, device);
   }
   Storage Storage::Fromfile(const std::string &fname, const unsigned int &dtype,
-                            const cytnx_int64 &count, const bool restore_device) {
-    cytnx_error_msg(dtype == Type.Void, "[ERROR] cannot have Void dtype.%s", "\n");
+                            const cytnx_int64 &count, const int device) {
+    cytnx_error_msg(dtype == Type.Void, "[ERROR] Cannot have Void dtype.%s", "\n");
     cytnx_error_msg(count == 0, "[ERROR] count cannot be zero!%s", "\n");
 
     Storage out;
@@ -248,7 +248,7 @@ namespace cytnx {
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
-    out.data_from_binary(f, Nelem, dtype, restore_device);
+    out.data_from_binary(f, Nelem, dtype, device);
     f.close();
     return out;
   }

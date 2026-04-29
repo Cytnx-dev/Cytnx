@@ -685,9 +685,7 @@ namespace cytnx {
      * @param[in] dtype the data type of the binary file. See cytnx.Type.
      * @param[in] count the number of elements you want to load from the binary file. If
      *   \p count is -1, then it will load all the elements in the binary file.
-     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
-     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
-     * loading.
+     * @param[in] device the device on which the data will be loaded.
      *  1. The @p dtype cannot be Type.Void.
      *  2. The @p dtype must be the same as the data type of the binary file.
      *  3. The @p count cannot be 0.

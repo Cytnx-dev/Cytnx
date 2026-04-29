@@ -9,10 +9,10 @@ int main(int argc, char* argv[]) {
   auto tc = UniTensor(arange(24).reshape(2, 3, 4), 1);
   auto td = UniTensor(arange(24).reshape(2, 3, 4), 1);
 
-  ta.set_labels({0, 1, 2});
-  tb.set_labels({0, 3, 4});
-  tc.set_labels({5, 1, 6});
-  td.set_labels({5, 7, 8});
+  ta.relabel_({0, 1, 2});
+  tb.relabel_({0, 3, 4});
+  tc.relabel_({5, 1, 6});
+  td.relabel_({5, 7, 8});
 
   UniTensor oot =
     Network::Contract(
