@@ -20,6 +20,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS " CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+message(STATUS " PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 
 # #####################################################################
 # ## DISABLING IN-SOURCE BUILD
