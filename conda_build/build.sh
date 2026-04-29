@@ -8,6 +8,7 @@ start_time=$(date +%s)
 # `skbuild.cmake.args`, so the whole list setting have to be re-assigned even if
 # only one value in the list is changed.
 install_log=$(mktemp)
+set -o pipefail
 if ! $PYTHON -m pip install . -vv --no-deps --ignore-installed \
   --config-settings skbuild.build-dir=build \
   --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
@@ -18,6 +19,7 @@ if ! $PYTHON -m pip install . -vv --no-deps --ignore-installed \
   tail -n 200 "$install_log"
   exit 1
 fi
+set +o pipefail
 
 end_time=$(date +%s)
 echo "Execution time: $((end_time - start_time)) seconds"
