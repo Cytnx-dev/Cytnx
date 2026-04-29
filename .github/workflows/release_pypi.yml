@@ -11,8 +11,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        # os: [ubuntu-latest, macos-14, macos-15-intel]
+        os: [ubuntu-latest, macos-14, macos-15-intel]
+        # os: [ubuntu-latest]
     defaults:
       run:
         shell: bash -l {0}
@@ -70,6 +70,43 @@ jobs:
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_DIR }}:/host_ccache"
         CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build
         CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_COMPILERCHECK CCACHE_MAXSIZE
+
+
+    - name: Validate ccache stats after build
+      run: |
+        set -euo pipefail
+        if ! command -v ccache >/dev/null 2>&1; then
+          echo "ccache is not installed on this runner; skipping ccache validation."
+          exit 0
+        fi
+
+        python - <<'PY2'
+        import subprocess
+
+        raw = subprocess.check_output(['ccache', '--print-stats'], text=True)
+        stats = {}
+        for line in raw.splitlines():
+            if '	' not in line:
+                continue
+            key, value = line.split('	', 1)
+            stats[key.strip()] = value.strip()
+
+        def to_num(v):
+            token = v.split()[0] if v else '0'
+            try:
+                return float(token)
+            except Exception:
+                return 0.0
+
+        direct = to_num(stats.get('direct_cache_hit', stats.get('cache_hit_direct', '0')))
+        preprocessed = to_num(stats.get('preprocessed_cache_hit', stats.get('cache_hit_preprocessed', '0')))
+        total = direct + preprocessed
+        print(f'cache_hit_direct={direct}')
+        print(f'cache_hit_preprocessed={preprocessed}')
+        print(f'cache_hit_total={total}')
+        if total <= 0:
+            raise SystemExit('No ccache hits detected after build.')
+        PY2
 
     - uses: actions/upload-artifact@v4
       with:
