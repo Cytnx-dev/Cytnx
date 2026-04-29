@@ -31,6 +31,9 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - python {{ python }}
+    # For Python 3.9 specifically, ensure pip>=23.1 so repeated
+    # --config-settings keys append correctly for skbuild.cmake.args.
+    - pip >=23.1      # [py==39]
     - scikit-build-core
     - pybind11
     - boost >=1.82.0
