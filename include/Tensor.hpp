@@ -334,7 +334,7 @@ namespace cytnx {
 
     /**
      * @brief Load Tensor from file and create new instance
-     * @param fname[in] file name
+     * @param[in] fname file name
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
@@ -429,14 +429,13 @@ namespace cytnx {
      *    cytnx::Tensor::Tofile. Given the file name \p fname , data type \p dtype and
      *    number of elements \p count, this function will load the first \p count elements
      *    from the binary file \p fname with data type \p dtype.
-     * @param fname[in] the file name of the binary file.
-     * @param dtype[in] the data type of the binary file. This can be any of the type defined in
+     * @param[in] fname the file name of the binary file.
+     * @param[in] dtype the data type of the binary file. This can be any of the type defined in
      *   cytnx::Type.
-     * @param count[in] the number of elements to be loaded from the binary file. If set to -1,
+     * @param[in] count the number of elements to be loaded from the binary file. If set to -1,
      *  all elements in the binary file will be loaded.
-     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
-     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
-     * loading.
+     * @param[in] device the device that tensor to be created. This can be cytnx::Device.cpu or
+     * cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.
      * @return Tensor
      * @pre
      *  1. The @p dtype cannot be Type.Void.
@@ -450,10 +449,10 @@ namespace cytnx {
      */
     [[deprecated("Please use Save/Load functions instead.")]] static Tensor Fromfile(
       const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
-      const bool restore_device = true);
+      const int device = Device.cpu);
     [[deprecated("Please use Save/Load functions instead.")]] static Tensor Fromfile(
       const char *fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
-      const bool restore_device = true);
+      const int device = Device.cpu);
     // static Tensor Frombinary(const std::string &fname);
 
     ///@cond
@@ -488,6 +487,7 @@ namespace cytnx {
     @param[in] shape the shape of tensor.
     @param[in] dtype the dtype of tensor. This can be any of type defined in cytnx::Type
     @param[in] device the device that tensor to be created. This can be cytnx::Device.cpu or
+    cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.
     @param[in] init_zero if true, the content of Tensor will be initialized to zero. if false, the
     content of Tensor will be un-initialize.
     cytnx::Device.cuda+<gpuid>, see cytnx::Device for more detail.

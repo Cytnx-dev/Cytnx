@@ -304,32 +304,6 @@ void tensor_binding(py::module &m) {
       },
       py::arg("fname"), py::arg("restore_device") = true)
 
-    .def(
-      "to_hdf5",
-      [](cytnx::Tensor &self, py::object location, const std::string &name) {
-        // Extract raw ID from the h5py object's .id.id attribute
-        hid_t raw_id = location.attr("id").attr("id").cast<hid_t>();
-        if (H5Iinc_ref(raw_id) < 0) {
-          throw std::runtime_error("Failed to increment HDF5 reference count.");
-        }
-        H5::Group cpplocation(raw_id);
-        self.to_hdf5(cpplocation, name);
-      },
-      py::arg("location"), py::arg("name") = "Tensor")
-    .def(
-      "from_hdf5",
-      [](cytnx::Tensor &self, py::object location, const std::string &name,
-         const bool restore_device) {
-        // Extract raw ID from the h5py object's .id.id attribute
-        hid_t raw_id = location.attr("id").attr("id").cast<hid_t>();
-        if (H5Iinc_ref(raw_id) < 0) {
-          throw std::runtime_error("Failed to increment HDF5 reference count.");
-        }
-        H5::Group cpplocation(raw_id);
-        self.from_hdf5(cpplocation, name, restore_device);
-      },
-      py::arg("location"), py::arg("name") = "Tensor", py::arg("restore_device") = true)
-
     .def(py::pickle(
       [](const cytnx::Tensor &self) {  // __getstate__
         std::ostringstream oss(std::ios::binary);
@@ -350,9 +324,9 @@ void tensor_binding(py::module &m) {
     .def_static(
       "Fromfile",
       [](const std::string &fname, const unsigned int &dtype, const cytnx::cytnx_int64 &count,
-         const bool restore_device) { return cytnx::Tensor::Load(fname, restore_device); },
+         const int device) { return cytnx::Tensor::Fromfile(fname, dtype, count, device); },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = cytnx::cytnx_int64(-1),
-      py::arg("restore_device") = true)
+      py::arg("device") = (int)cytnx::Device.cpu)
 
     .def_static(
       "from_storage",

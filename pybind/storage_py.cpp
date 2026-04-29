@@ -77,10 +77,10 @@ void storage_binding(py::module &m) {
     .def(py::init<const cytnx::Storage &>())
     .def(py::init<boost::intrusive_ptr<cytnx::Storage_base>>())
     .def(py::init<const unsigned long long &, const unsigned int &, int, const bool &>(),
-         py::arg("size"), py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
-         py::arg("init_zero") = true)
+         py::arg("size"), py::arg("dtype") = (cytnx_uint64)Type.Double,
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("Init", &cytnx::Storage::Init, py::arg("size"),
-         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
+         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = (int)cytnx::Device.cpu,
          py::arg("init_zero") = true)
 
     .def("dtype", &cytnx::Storage::dtype)
@@ -283,32 +283,6 @@ void storage_binding(py::module &m) {
       [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count,
          const int device) { return cytnx::Storage::Fromfile(fname, dtype, count, device); },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1),
-      py::arg("device") = cytnx::Device.cpu)
-
-    .def(
-      "to_hdf5",
-      [](cytnx::Storage &self, H5::Group &location, const std::string &name) {
-        self.to_hdf5(location, name);
-      },
-      py::arg("location"), py::arg("name") = "Storage")
-    .def(
-      "from_hdf5",
-      [](cytnx::Storage &self, H5::Group &location, const std::string &name,
-         const bool restore_device) { self.from_hdf5(location, name, restore_device); },
-      py::arg("location"), py::arg("name") = "Storage", py::arg("restore_device") = true)
-    .def(
-      "data_to_hdf5",
-      [](cytnx::Storage &self, H5::DataSet &dataset, H5::DataType &hdf5type) {
-        self.data_to_hdf5(dataset, hdf5type);
-      },
-      py::arg("dataset"), py::arg("hdf5type"))
-    .def(
-      "data_from_hdf5",
-      [](cytnx::Storage &self, H5::DataSet &dataset, const cytnx_uint64 &Nelem,
-         const unsigned int &dtype, H5::DataType &hdf5type, const int &device = Device.cpu) {
-        self.data_from_hdf5(dataset, Nelem, dtype, hdf5type, device);
-      },
-      py::arg("dataset"), py::arg("Nelem"), py::arg("dtype"), py::arg("hdf5type"),
       py::arg("device") = (int)cytnx::Device.cpu)
 
     .def(

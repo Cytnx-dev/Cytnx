@@ -698,11 +698,11 @@ namespace cytnx {
      */
     [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
       const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
-      const bool restore_device = true);
+      const int device = Device.cpu);
     // @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count)
     [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
       const char *fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
-      const bool restore_device = true);
+      const int device = Device.cpu);
 
     /**
     @brief cast the type of current Storage
