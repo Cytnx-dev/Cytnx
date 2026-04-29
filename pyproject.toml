@@ -59,7 +59,7 @@ manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
 
 [tool.cibuildwheel.config-settings]
-"build-dir" = "build/{wheel_tag}"
+"build-dir" = "build"
 
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
