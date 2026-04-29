@@ -57,13 +57,14 @@ result = "{major}.{minor}.{patch}"
 [tool.cibuildwheel]
 manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
+environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHER = "ccache", CMAKE_CUDA_COMPILER_LAUNCHER = "ccache", CCACHE_DIR = "${PWD}/.ccache", CCACHE_BASEDIR = "${PWD}" }
 
 [tool.cibuildwheel.config-settings]
 "build-dir" = "build"
 
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
-environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_BASEDIR = "/project/build" }
+environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
 
 [tool.cibuildwheel.macos]
 before-all = "brew update; brew install arpack boost ccache libomp openblas"
