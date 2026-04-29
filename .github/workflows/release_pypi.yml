@@ -45,7 +45,6 @@ jobs:
     - name: Set Ccache Directory
       run: |
         echo "Start building---------------------------------"
-        export CCACHE_DIR="${HOME}/.ccache"
         echo "CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
 
     - name: Setup macOS
@@ -56,7 +55,6 @@ jobs:
         elif [[ ${{ matrix.os }} == 'macos-14' ]]; then
           echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
         fi
-
 
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
@@ -70,7 +68,7 @@ jobs:
         # This is only needed on Linux becuase the wheels are built in docker
         # images only on Linux.
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_DIR }}:/host_ccache"
-        CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build CCACHE_NOHASHDIR=1
+        CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build
         CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_COMPILERCHECK CCACHE_MAXSIZE
 
     - uses: actions/upload-artifact@v4

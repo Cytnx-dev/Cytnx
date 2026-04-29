@@ -8,7 +8,6 @@ if platform.system() == 'Linux':
         'CMAKE_CXX_COMPILER_LAUNCHER',
         'CCACHE_COMPILERCHECK',
         'CCACHE_BASEDIR',
-        'CCACHE_NOHASHDIR',
     ]
     missing = [k for k in required if not os.getenv(k)]
     if missing:
@@ -17,4 +16,3 @@ if platform.system() == 'Linux':
 print('current_working_directory:', pathlib.Path.cwd())
 print('build_dir_guess:', pathlib.Path.cwd().joinpath('build').resolve())
 print('CCACHE_BASEDIR:', os.getenv('CCACHE_BASEDIR', ''))
-print('CCACHE_NOHASHDIR:', os.getenv('CCACHE_NOHASHDIR', ''))
