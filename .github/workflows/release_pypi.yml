@@ -70,7 +70,7 @@ jobs:
         # Pass environment variables into cibuildwheel build environments
         # This is only needed on Linux becuase the wheels are built in docker
         # images only on Linux.
-        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_MAXSIZE
+        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_MAXSIZE CCACHE_CONFIGPATH CCACHE_BASEDIR
 
     - uses: actions/upload-artifact@v4
       with:
