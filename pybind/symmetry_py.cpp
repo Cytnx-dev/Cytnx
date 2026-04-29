@@ -45,6 +45,7 @@ void symmetry_binding(py::module &m) {
     .def_static("FermionNumber", &Symmetry::FermionNumber)
     .def("clone", &Symmetry::clone)
     .def("stype", &Symmetry::stype)
+    .def("name", &Symmetry::name)
     .def("stype_str", &Symmetry::stype_str)
     .def("n", &Symmetry::n)
     .def("clone", &Symmetry::clone)

@@ -1,18 +1,20 @@
 #ifndef CYTNX_TN_ALGO_MPS_H_
 #define CYTNX_TN_ALGO_MPS_H_
 
-#include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "intrusive_ptr_base.hpp"
-#include "UniTensor.hpp"
-#include <iostream>
 #include <fstream>
-
-#include "utils/vec_clone.hpp"
-#include "Accessor.hpp"
-#include <vector>
 #include <initializer_list>
+#include <iostream>
 #include <string>
+#include <vector>
+
+#include "H5Cpp.h"
+
+#include "Accessor.hpp"
+#include "Device.hpp"
+#include "UniTensor.hpp"
+#include "cytnx_error.hpp"
+#include "intrusive_ptr_base.hpp"
+#include "utils/vec_clone.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -286,42 +288,91 @@ namespace cytnx {
 
       cytnx_int64 &S_loc() { return this->_impl->S_loc; }
 
-      ///@cond
-      void to_binary(std::ostream &f) const;
-      void from_binary(std::istream &f, const bool restore_device = true);
-      ///@endcond
-
+      /**
+       * @brief Save MPS to file
+       * @param[in] fname file name
+       * @details Save the MPS to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
+       * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+       * @note The common file ending for saving a MPS in binary format is ".cymps".
+       * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+       * readability, and future-proofing.
+       * @see Load(const std::string &fname, const bool restore_device)
+       */
       void Save(const std::string &fname) const;
+      // @see Save(const std::string &fname) const
       void Save(const char *fname) const;
 
       /**
-      @brief Load MPS from file and create new instance
-      @param fname[in] file name
-      @param[in] restore_device whether to try restoring the device on which the data is stored; if
-      false, the data will be kept on the CPU. Use .to_() to move it to the target device after
-      loading.
-      @pre The file must be an MPS object which is saved by cytnx::MPS::Save.
-      @note This function creates a new MPS and keeps the original MPS unchanged. See \link
-      Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
-      MPS to the current MPS.
-      */
-      static MPS Load(const std::string &fname, const bool restore_device = true);
-      /**
-       * @see Load(const std::string &fname)
+       * @brief Load MPS from file and create new instance
+       * @param fname[in] file name
+       * @param[in] restore_device whether to try restoring the device on which the data is stored;
+       * if false, the data will be kept on the CPU. Use .to_() to move it to the target device
+       * after loading.
+       * @pre The file must be a MPS object which is saved by cytnx::MPS::Save.
+       * @note This function creates a new MPS and keeps the original MPS unchanged. See \link
+       * Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
+       * MPS to the current MPS.
+       * @details For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5",
+       * ".hdf" is expected. For binary format, the common file ending for a MPS is ".cymps".
        */
+      static MPS Load(const std::string &fname, const bool restore_device = true);
+      // @see Load(const std::string &fname)
       static MPS Load(const char *fname, const bool restore_device = true);
 
       /**
-      @brief Load MPS from file and overwrite current instance
-      @note This function overwrites the existing MPS. See \link Load(const std::string &fname,
-      const bool restore_device) Load() \endlink for creating a new MPS.
-      @see Load(const std::string &fname, const bool restore_device)
-      */
-      void Load_(const std::string &fname, const bool restore_device = true);
-      /**
-       * @see Load_(const std::string &fname, const bool restore_device)
+       * @brief Load MPS from file and overwrite current instance
+       * @note This function overwrites the existing MPS. See \link Load(const std::string &fname,
+       * const bool restore_device) Load() \endlink for creating a new MPS.
+       * @see Load(const std::string &fname, const bool restore_device)
        */
+      void Load_(const std::string &fname, const bool restore_device = true);
+      // @see Load_(const std::string &fname, const bool restore_device)
       void Load_(const char *fname, const bool restore_device = true);
+
+      /**
+       * @brief Save MPS to HDF5 file
+       * @param[in] location the HDF5 group where the MPS will be saved.
+       * @param[in] name the name of the MPS in the HDF5 file.
+       * @warning This function is only available in C++. Use \link Save(const std::string &fname)
+       * Save() \endlink for saving to file in C++ or Python.
+       * @see from_hdf5(H5::Group &location, const std::string &name, const bool restore_device)
+       */
+      void to_hdf5(H5::Group &location, const std::string &name = "MPS") const;
+      /**
+       * @brief Load MPS from HDF5 file (inline)
+       * @param[in] location the HDF5 group where the MPS will be loaded from.
+       * @param[in] name the name of the MPS in the HDF5 file.
+       * @param[in] restore_device whether to try restoring the device on which the data is stored;
+       * if false, the data will be kept on the CPU. Use .to_() to move it to the target device
+       * after loading.
+       * @warning This function is only available in C++. Use \link Load(const std::string &fname,
+       * const bool restore_device) Load() \endlink for loading from file in C++ or Python.
+       * @see to_hdf5(H5::Group &location, const std::string &name) const
+       */
+      void from_hdf5(H5::Group &location, const std::string &name = "MPS",
+                     const bool restore_device = true);
+
+      /**
+       * @brief Save MPS to binary file
+       * @param[in] f the output stream where the MPS will be saved.
+       * @warning This function is only available in C++. In Python, use pickle for the same binary
+       * file format. Use \link Save(const std::string &fname) Save() \endlink for saving to file in
+       * C++ or Python.
+       * @see from_binary(std::istream &f, const bool restore_device)
+       */
+      void to_binary(std::ostream &f) const;
+      /**
+       * @brief Load MPS from binary file
+       * @param[in] f the input stream from which the MPS will be loaded.
+       * @param[in] restore_device whether to try restoring the device on which the data is stored;
+       * if false, the data will be kept on the CPU. Use .to_() to move it to the target device
+       * after loading.
+       * @warning This function is only available in C++. In Python, use pickle for the same binary
+       * file format. Use \link Load(const std::string &fname, const bool restore_device) Load()
+       * \endlink for loading from file in C++ or Python.
+       * @see to_binary(std::ostream &f) const
+       */
+      void from_binary(std::istream &f, const bool restore_device = true);
     };
 
     std::ostream &operator<<(std::ostream &os, const MPS &in);

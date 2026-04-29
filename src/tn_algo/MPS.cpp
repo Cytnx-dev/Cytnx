@@ -4,6 +4,8 @@
 #include <fstream>
 #include <iostream>
 
+#include "H5Cpp.h"
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -61,12 +63,27 @@ namespace cytnx {
     }
 
     void MPS::Save(const std::string& fname) const {
-      fstream f;
+      fstream f;  // only for binary saving, not used for hdf5
       if (std::filesystem::path(fname).has_extension()) {
         // filename extension is given
-        f.open(fname, ios::out | ios::trunc | ios::binary);
-      } else {
-        // add filename extension
+        auto ext = std::filesystem::path(fname).extension().string();
+        if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+            ext == ".HDF") {
+          // save as hdf5
+          H5::H5File h5file;
+          try {
+            h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+          } catch (H5::FileIException& error) {
+            error.printErrorStack();
+            cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
+          }
+          this->to_hdf5(h5file);
+          h5file.close();
+          return;
+        } else {  // create binary file
+          f.open(fname, ios::out | ios::trunc | ios::binary);
+        }
+      } else {  // create binary file with standard extension
         cytnx_warning_msg(
           true,
           "Missing file extension in fname '%s'. I am adding the extension '.cymps'. This is "
@@ -74,22 +91,14 @@ namespace cytnx {
           fname.c_str());
         f.open((fname + ".cymps"), ios::out | ios::trunc | ios::binary);
       }
+      // write binary
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
       }
       this->to_binary(f);
       f.close();
     }
-    void MPS::Save(const char* fname) const {
-      fstream f;
-      string ffname = string(fname) + ".cymps";
-      f.open((ffname), ios::out | ios::trunc | ios::binary);
-      if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-      }
-      this->to_binary(f);
-      f.close();
-    }
+    void MPS::Save(const char* fname) const { this->Save(string(fname)); }
 
     MPS MPS::Load(const std::string& fname, const bool restore_device) {
       MPS out;
@@ -101,16 +110,38 @@ namespace cytnx {
     }
 
     void MPS::Load_(const std::string& fname, const bool restore_device) {
-      fstream f;
-      f.open(fname, ios::in | ios::binary);
-      if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+      auto ext = std::filesystem::path(fname).extension().string();
+      if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+          ext == ".HDF") {
+        // load hdf5
+        H5::H5File h5file;
+        try {
+          h5file = H5::H5File(fname, H5F_ACC_RDONLY);
+        } catch (H5::FileIException& error) {
+          error.printErrorStack();
+          cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
+        }
+        this->from_hdf5(h5file);
+        h5file.close();
+      } else {  // load binary
+        fstream f;
+        f.open(fname, ios::in | ios::binary);
+        if (!f.is_open()) {
+          cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+        }
+        this->from_binary(f);
+        f.close();
       }
-      this->from_binary(f, restore_device);
-      f.close();
     }
     void MPS::Load_(const char* fname, const bool restore_device) {
       this->Load(string(fname), restore_device);
+    }
+
+    void MPS::to_hdf5(H5::Group& location, const std::string& name) const {
+      cytnx_error_msg(true, "[ERROR] Saving MPS to HDF5 is not implemented yet!%s", "\n");
+    }
+    void MPS::from_hdf5(H5::Group& location, const std::string& name, const bool restore_device) {
+      cytnx_error_msg(true, "[ERROR] Loading MPS from HDF5 is not implemented yet!%s", "\n");
     }
 
   }  // namespace tn_algo

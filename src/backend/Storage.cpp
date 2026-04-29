@@ -150,7 +150,7 @@ namespace cytnx {
   void Storage::to_hdf5(H5::Group &location, const std::string &name) const {
     hsize_t Nelem = this->size();
     H5::DataSpace dataspace(1, &Nelem);
-    H5::DataType datatype = Type.to_hdf5_type(this->dtype());
+    H5::DataType datatype = Type.dtype_to_hdf5_type(this->dtype());
     H5::DataSet dataset = location.createDataSet(name, datatype, dataspace);
     this->data_to_hdf5(dataset, datatype);
     if (this->device() != Device.cpu) {

@@ -1,18 +1,19 @@
-#include <vector>
+#include "cytnx.hpp"
+
 #include <map>
 #include <random>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
 
-#include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
 #include "complex.h"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -305,14 +306,28 @@ void tensor_binding(py::module &m) {
 
     .def(
       "to_hdf5",
-      [](cytnx::Tensor &self, H5::Group &location, const std::string &name) {
-        self.to_hdf5(location, name);
+      [](cytnx::Tensor &self, py::object location, const std::string &name) {
+        // Extract raw ID from the h5py object's .id.id attribute
+        hid_t raw_id = location.attr("id").attr("id").cast<hid_t>();
+        if (H5Iinc_ref(raw_id) < 0) {
+          throw std::runtime_error("Failed to increment HDF5 reference count.");
+        }
+        H5::Group cpplocation(raw_id);
+        self.to_hdf5(cpplocation, name);
       },
       py::arg("location"), py::arg("name") = "Tensor")
     .def(
       "from_hdf5",
-      [](cytnx::Tensor &self, H5::Group &location, const std::string &name,
-         const bool restore_device) { self.from_hdf5(location, name, restore_device); },
+      [](cytnx::Tensor &self, py::object location, const std::string &name,
+         const bool restore_device) {
+        // Extract raw ID from the h5py object's .id.id attribute
+        hid_t raw_id = location.attr("id").attr("id").cast<hid_t>();
+        if (H5Iinc_ref(raw_id) < 0) {
+          throw std::runtime_error("Failed to increment HDF5 reference count.");
+        }
+        H5::Group cpplocation(raw_id);
+        self.from_hdf5(cpplocation, name, restore_device);
+      },
       py::arg("location"), py::arg("name") = "Tensor", py::arg("restore_device") = true)
 
     .def(py::pickle(

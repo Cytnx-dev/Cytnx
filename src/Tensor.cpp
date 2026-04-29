@@ -449,6 +449,7 @@ namespace cytnx {
       this->storage().Tofile(f);
     }
   }
+
   void Tensor::Save(const std::string &fname) const {
     fstream f;  // only for binary saving, not used for hdf5
     if (std::filesystem::path(fname).has_extension()) {
@@ -491,7 +492,7 @@ namespace cytnx {
     std::vector<hsize_t> dims(this->shape().begin(), this->shape().end());
 
     H5::DataSpace dataspace(dims.size(), dims.data());
-    H5::DataType datatype = Type.to_hdf5_type(this->dtype());
+    H5::DataType datatype = Type.dtype_to_hdf5_type(this->dtype());
     H5::DataSet dataset = location.createDataSet(name, datatype, dataspace);
     ten.storage().data_to_hdf5(dataset, datatype);
 

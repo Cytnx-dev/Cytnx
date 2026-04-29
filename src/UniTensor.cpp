@@ -3,9 +3,11 @@
 #include <filesystem>
 #include <typeinfo>
 
-#include "utils/utils.hpp"
+#include "H5Cpp.h"
+
 #include "linalg.hpp"
 #include "random.hpp"
+#include "utils/utils.hpp"
 
 using namespace std;
 
@@ -40,6 +42,88 @@ namespace cytnx {
 
   UniTensor UniTensor::Mul(const UniTensor &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
   UniTensor UniTensor::Mul(const Scalar &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
+
+  void UniTensor::Save(const std::string &fname) const {
+    fstream f;  // only for binary saving, not used for hdf5
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      auto ext = std::filesystem::path(fname).extension().string();
+      if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+          ext == ".HDF") {
+        // save as hdf5
+        H5::H5File h5file;
+        try {
+          h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+        } catch (H5::FileIException &error) {
+          error.printErrorStack();
+          cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
+        }
+        this->to_hdf5(h5file);
+        h5file.close();
+        return;
+      } else {  // create binary file
+        f.open(fname, ios::out | ios::trunc | ios::binary);
+      }
+    } else {  // create binary file with standard extension
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.c_str());
+      f.open((fname + ".cytnx"), ios::out | ios::trunc | ios::binary);
+    }
+    // write binary
+    if (!f.is_open()) {
+      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
+    }
+    this->to_binary(f);
+    f.close();
+  }
+  void UniTensor::Save(const char *fname) const { Save(string(fname)); }
+
+  UniTensor UniTensor::Load(const std::string &fname, const bool restore_device) {
+    UniTensor out;
+    out.Load_(fname, restore_device);
+    return out;
+  }
+  UniTensor UniTensor::Load(const char *fname, const bool restore_device) {
+    return UniTensor::Load(string(fname), restore_device);
+  }
+
+  void UniTensor::Load_(const std::string &fname, const bool restore_device) {
+    auto ext = std::filesystem::path(fname).extension().string();
+    if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+        ext == ".HDF") {
+      // load hdf5
+      H5::H5File h5file;
+      try {
+        h5file = H5::H5File(fname, H5F_ACC_RDONLY);
+      } catch (H5::FileIException &error) {
+        error.printErrorStack();
+        cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
+      }
+      this->from_hdf5(h5file, "Tensor", restore_device);
+      h5file.close();
+    } else {  // load binary
+      fstream f;
+      f.open(fname, ios::in | ios::binary);
+      if (!f.is_open()) {
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+      }
+      this->from_binary(f, restore_device);
+      f.close();
+    }
+  }
+  void UniTensor::Load_(const char *fname, const bool restore_device) {
+    this->Load_(string(fname), restore_device);
+  }
+
+  void UniTensor::to_hdf5(H5::Group &location, const std::string &name) const {
+    cytnx_error_msg(true, "[ERROR] Saving UniTensor to HDF5 is not implemented yet!%s", "\n");
+  }
+  void UniTensor::from_hdf5(H5::Group &location, const std::string &name,
+                            const bool restore_device) {
+    cytnx_error_msg(true, "[ERROR] Loading UniTensor from HDF5 is not implemented yet!%s", "\n");
+  }
 
   void UniTensor::to_binary(std::ostream &f) const {
     cytnx_error_msg(this->_impl->uten_type_id == UTenType.Void,
@@ -151,49 +235,6 @@ namespace cytnx {
 
     // second, let dispatch to do remaining loading.
     this->_impl->from_binary_dispatch(f, restore_device);
-  }
-
-  void UniTensor::Save(const std::string &fname) const {
-    fstream f;
-    if (std::filesystem::path(fname).has_extension()) {
-      // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
-    } else {
-      // add filename extension
-      cytnx_warning_msg(true,
-                        "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
-                        "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
-      f.open((fname + ".cytnx"), ios::out | ios::trunc | ios::binary);
-    }
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->to_binary(f);
-    f.close();
-  }
-  void UniTensor::Save(const char *fname) const { Save(string(fname)); }
-
-  UniTensor UniTensor::Load(const std::string &fname, const bool restore_device) {
-    UniTensor out;
-    out.Load_(fname, restore_device);
-    return out;
-  }
-  UniTensor UniTensor::Load(const char *fname, const bool restore_device) {
-    return UniTensor::Load(string(fname), restore_device);
-  }
-
-  void UniTensor::Load_(const std::string &fname, const bool restore_device) {
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
-    }
-    this->from_binary(f, restore_device);
-    f.close();
-  }
-  void UniTensor::Load_(const char *fname, const bool restore_device) {
-    this->Load_(string(fname), restore_device);
   }
 
   // Random Generators:

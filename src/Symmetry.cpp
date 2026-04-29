@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "H5Cpp.h"
+
 using namespace std;
 
 namespace cytnx {
@@ -61,6 +63,10 @@ namespace cytnx {
   }
 
   void cytnx::Symmetry_base::print_info() const {
+    cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
+  }
+
+  std::string cytnx::Symmetry_base::name() const {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
@@ -190,7 +196,7 @@ namespace cytnx {
     cout << "--------------------\n";
     cout << "[Symmetry]" << endl;
     cout << "type : fermionic, FermionParity" << endl;
-    cout << "combine rule : (Q1 + Q2)\2" << endl;
+    cout << "combine rule : (Q1 + Q2)\%2" << endl;
     cout << "reverse rule : Q*(-1) " << endl;
     cout << "--------------------\n";
   }
@@ -240,18 +246,34 @@ namespace cytnx {
   //==================================================
 
   void cytnx::Symmetry::Save(const std::string &fname) const {
-    fstream f;
+    fstream f;  // only for binary saving, not used for hdf5
     if (std::filesystem::path(fname).has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
-    } else {
-      // add filename extension
+      auto ext = std::filesystem::path(fname).extension().string();
+      if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+          ext == ".HDF") {
+        // save as hdf5
+        H5::H5File h5file;
+        try {
+          h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+        } catch (H5::FileIException &error) {
+          error.printErrorStack();
+          cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
+        }
+        this->to_hdf5(h5file);
+        h5file.close();
+        return;
+      } else {  // create binary file
+        f.open(fname, ios::out | ios::trunc | ios::binary);
+      }
+    } else {  // create binary file with standard extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cysym'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
       f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
     }
+    // write binary
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
@@ -270,17 +292,42 @@ namespace cytnx {
   }
 
   void cytnx::Symmetry::Load_(const std::string &fname) {
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+    auto ext = std::filesystem::path(fname).extension().string();
+    if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+        ext == ".HDF") {
+      // load hdf5
+      H5::H5File h5file;
+      try {
+        h5file = H5::H5File(fname, H5F_ACC_RDONLY);
+      } catch (H5::FileIException &error) {
+        error.printErrorStack();
+        cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
+      }
+      this->from_hdf5(h5file);
+      h5file.close();
+    } else {  // load binary
+      fstream f;
+      f.open(fname, ios::in | ios::binary);
+      if (!f.is_open()) {
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+      }
+      this->from_binary(f);
+      f.close();
     }
-    this->from_binary(f);
-    f.close();
   }
   void cytnx::Symmetry::Load_(const char *fname) { this->Load_(string(fname)); }
 
-  //==================
+  void cytnx::Symmetry::to_hdf5(H5::Group &location, const std::string &name) const {
+    std::string typestr = this->name();
+    H5::StrType str_type(H5::PredType::C_S1, typestr.length() + 1);
+    H5::DataSpace dataspace = H5::DataSpace(H5S_SCALAR);
+    H5::Attribute attr = location.createAttribute(name, str_type, dataspace);
+    attr.write(str_type, typestr);
+  }
+  void cytnx::Symmetry::from_hdf5(H5::Group &location, const std::string &name) {
+    cytnx_error_msg(true, "[ERROR] Loading Symmetry from HDF5 is not implemented yet!%s", "\n");
+  }
+
   void cytnx::Symmetry::to_binary(std::ostream &f) const {
     unsigned int IDDs = 777;
     f.write((char *)&IDDs, sizeof(unsigned int));

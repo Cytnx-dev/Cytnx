@@ -1,14 +1,17 @@
 #ifndef CYTNX_BOND_H_
 #define CYTNX_BOND_H_
 
+#include <algorithm>
+#include <fstream>
+#include <initializer_list>
+#include <map>
+#include <vector>
+
+#include "H5Cpp.h"
+
+#include "Symmetry.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Symmetry.hpp"
-#include <initializer_list>
-#include <vector>
-#include <fstream>
-#include <map>
-#include <algorithm>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 
@@ -36,6 +39,8 @@ namespace cytnx {
     BD_IN = -1, /*!< -1, same as BD_KET */
     BD_OUT = 1 /*!< 1, same as BD_BRA */
   };
+  static const std::map<bondType, std::string> bondtype_to_string = {
+    {BD_REG, "REG"}, {BD_IN, "IN"}, {BD_OUT, "OUT"}};
 
   /// @cond
   class Bond_impl : public intrusive_ptr_base<Bond_impl> {
@@ -848,48 +853,82 @@ namespace cytnx {
     }
 
     /**
-    @brief Save the Bond object to the file.
-    @details Save the Bond object to the file. The file extension will be automatically
-      added as ".cybd".
-          @param[in] fname the file name of the Bond object (exclude the file extension).
-    @see Load(const std::string &fname)
-    */
+     * @brief Save Bond to file
+     * @param[in] fname file name
+     * @details Save the Bond to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
+     * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @note The common file ending for saving a Bond in binary format is ".cybd".
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
+     * @see Load(const std::string &fname, const bool restore_device)
+     */
     void Save(const std::string &fname) const;
-
-    /**
-        @see Save(const std::string &fname) const;
-    */
+    // @see Save(const std::string &fname) const;
     void Save(const char *fname) const;
 
     /**
-    @brief Load Bond from file and create new instance
-    @param fname[in] file name
-    @pre The file must be a Bond object which is saved by cytnx::Bond::Save.
-    @note This function creates a new Bond and keeps the original Bond unchanged. See \link
-    Load_(const std::string &fname) Load_() \endlink for loading the Bond to the current Bond.
-    */
+     * @brief Load Bond from file and create new instance
+     * @param fname[in] file name
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @pre The file must be a Bond object which is saved by cytnx::Bond::Save.
+     * @note This function creates a new Bond and keeps the original Bond unchanged. See \link
+     * Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
+     * Bond to the current Bond.
+     * @details For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf"
+     * is expected. For binary format, the common file ending for a Bond is ".cybd".
+     */
     static cytnx::Bond Load(const std::string &fname);
-    /**
-    @see Load(const std::string &fname)
-    */
+    // @see Load(const std::string &fname)
     static cytnx::Bond Load(const char *fname);
 
     /**
-    @brief Load Bond from file and overwrite current instance
-    @note This function overwrites the existing Bond. See \link Load(const std::string &fname)
-    Load() \endlink for creating a new Bond.
-    @see Load(const std::string &fname)
-    */
-    void Load_(const std::string &fname);
-    /**
-     * @see Load_(const std::string &fname)
+     * @brief Load Bond from file and overwrite current instance
+     * @note This function overwrites the existing Bond. See \link Load(const std::string &fname,
+     * const bool restore_device) Load() \endlink for creating a new Bond.
+     * @see Load(const std::string &fname, const bool restore_device)
      */
+    void Load_(const std::string &fname);
+    // @see Load_(const std::string &fname)
     void Load_(const char *fname);
 
-    /// @cond
+    /**
+     * @brief Save Bond to HDF5 file
+     * @param[in] location the HDF5 group where the Bond will be saved.
+     * @param[in] save_symmetries whether to save the symmetry information in the HDF5 file.
+     * @warning This function is only available in C++. Use \link Save(const std::string &fname)
+     * Save() \endlink for saving to file in C++ or Python.
+     * @see from_hdf5(H5::Group &location, const std::string &name, const bool restore_device)
+     */
+    void to_hdf5(H5::Group &location, const bool save_symmetries = true) const;
+    /**
+     * @brief Load Bond from HDF5 file (inline)
+     * @param[in] location the HDF5 group where the Bond will be loaded from.
+     * @warning This function is only available in C++. Use \link Load(const std::string &fname,
+     * const bool restore_device) Load() \endlink for loading from file in C++ or Python.
+     * @see to_hdf5(H5::Group &location, const std::string &name) const
+     */
+    void from_hdf5(H5::Group &location);
+
+    /**
+     * @brief Save Bond to binary file
+     * @param[in] f the output stream where the Bond will be saved.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use \link Save(const std::string &fname) Save() \endlink for saving to file in
+     * C++ or Python.
+     * @see from_binary(std::istream &f)
+     */
     void to_binary(std::ostream &f) const;
+    /**
+     * @brief Load Bond from binary file
+     * @param[in] f the input stream from which the Bond will be loaded.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use \link Load(const std::string &fname, const bool restore_device) Load()
+     * \endlink for loading from file in C++ or Python.
+     * @see to_binary(std::ostream &f) const
+     */
     void from_binary(std::istream &f);
-    /// @endcond
 
     /**
     @brief The comparison operator 'equal to'.

@@ -1,23 +1,26 @@
 #ifndef CYTNX_UNITENSOR_H_
 #define CYTNX_UNITENSOR_H_
 
+#include <algorithm>
+#include <fstream>
+#include <initializer_list>
+#include <iostream>
+#include <map>
+#include <random>
+#include <utility>
+#include <vector>
+
+#include "H5Cpp.h"
+
+#include "Bond.hpp"
+#include "Device.hpp"
+#include "Generator.hpp"
+#include "Symmetry.hpp"
+#include "Tensor.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "Tensor.hpp"
-#include "utils/utils.hpp"
 #include "intrusive_ptr_base.hpp"
-#include <iostream>
-#include <vector>
-#include <map>
-#include <utility>
-#include <initializer_list>
-#include <fstream>
-#include <algorithm>
-#include "Symmetry.hpp"
-#include "Bond.hpp"
-#include "Generator.hpp"
-#include <random>
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -5185,48 +5188,90 @@ namespace cytnx {
     }
 
     /**
-    @brief Save UniTensor to file
-    @param[in] fname the file name
-    @see Load(const std::string &fname, const bool restore_device)
-    */
+     * @brief Save UniTensor to file
+     * @param[in] fname file name
+     * @details Save the UniTensor to a file. The file ending should be one of ".h5", ".hdf5",
+     * ".H5", ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @note The common file ending for saving a UniTensor in binary format is ".cytn".
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
+     * @see Load(const std::string &fname, const bool restore_device)
+     */
     void Save(const std::string &fname) const;
-
-    /**
-    @brief Save UniTensor to file
-    @param[in] fname the file name
-    @see Load(const char *fname, const bool restore_device)
-    */
+    // @see Save(const std::string &fname) const
     void Save(const char *fname) const;
 
     /**
-    @brief Load UniTensor from file and create new instance
-    @param fname[in] file name
-    @param[in] restore_device whether to try restoring the device on which the data is stored; if
-    false, the data will be kept on the CPU. Use .to_() to move it to the target device after
-    loading.
-    @pre The file must be a UniTensor object which is saved by cytnx::UniTensor::Save.
-    @note This function creates a new UniTensor and keeps the original UniTensor unchanged. See
-    \link Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading
-    the UniTensor to the current UniTensor.
-    */
-
-    static UniTensor Load(const std::string &fname, const bool restore_device = true);
-    /**
-     * @see Load(const std::string &fname)
+     * @brief Load UniTensor from file and create new instance
+     * @param fname[in] file name
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @pre The file must be a UniTensor object which is saved by cytnx::UniTensor::Save.
+     * @note This function creates a new UniTensor and keeps the original UniTensor unchanged. See
+     * \link Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading
+     * the UniTensor to the current UniTensor.
+     * @details For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf"
+     * is expected. For binary format, the common file ending for a UniTensor is ".cytn".
      */
+    static UniTensor Load(const std::string &fname, const bool restore_device = true);
+    // @see Load(const std::string &fname, const bool restore_device = true)
     static UniTensor Load(const char *fname, const bool restore_device = true);
 
     /**
-    @brief Load UniTensor from file and overwrite current instance
-    @note This function overwrites the existing UniTensor. See \link Load(const std::string &fname,
-    const bool restore_device) Load() \endlink for creating a new UniTensor.
-    @see Load(const std::string &fname, const bool restore_device)
-    */
-    void Load_(const std::string &fname, const bool restore_device = true);
-    /**
-     * @see Load_(const std::string &fname, const bool restore_device)
+     * @brief Load UniTensor from file and overwrite current instance
+     * @note This function overwrites the existing UniTensor. See \link Load(const std::string
+     * &fname, const bool restore_device) Load() \endlink for creating a new UniTensor.
+     * @see Load(const std::string &fname, const bool restore_device)
      */
+    void Load_(const std::string &fname, const bool restore_device = true);
+    // @see Load_(const std::string &fname, const bool restore_device)
     void Load_(const char *fname, const bool restore_device = true);
+
+    /**
+     * @brief Save UniTensor to HDF5 file
+     * @param[in] location the HDF5 group where the UniTensor will be saved.
+     * @param[in] name the name of the UniTensor in the HDF5 file.
+     * @warning This function is only available in C++. Use \link Save(const std::string &fname)
+     * Save() \endlink for saving to file in C++ or Python.
+     * @see from_hdf5(H5::Group &location, const std::string &name, const bool restore_device)
+     */
+    void to_hdf5(H5::Group &location, const std::string &name = "UniTensor") const;
+    /**
+     * @brief Load UniTensor from HDF5 file (inline)
+     * @param[in] location the HDF5 group where the UniTensor will be loaded from.
+     * @param[in] name the name of the UniTensor in the HDF5 file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. Use \link Load(const std::string &fname,
+     * const bool restore_device) Load() \endlink for loading from file in C++ or Python.
+     * @see to_hdf5(H5::Group &location, const std::string &name) const
+     */
+    void from_hdf5(H5::Group &location, const std::string &name = "UniTensor",
+                   const bool restore_device = true);
+
+    /**
+     * @brief Save UniTensor to binary file
+     * @param[in] f the output stream where the UniTensor will be saved.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use \link Save(const std::string &fname) Save() \endlink for saving to file in
+     * C++ or Python.
+     * @see from_binary(std::istream &f, const bool restore_device)
+     */
+    void to_binary(std::ostream &f) const;
+    /**
+     * @brief Load UniTensor from binary file
+     * @param[in] f the input stream from which the UniTensor will be loaded.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use \link Load(const std::string &fname, const bool restore_device) Load()
+     * \endlink for loading from file in C++ or Python.
+     * @see to_binary(std::ostream &f) const
+     */
+    void from_binary(std::istream &f, const bool restore_device = true);
 
     /**
      * @brief truncate bond dimension of the UniTensor by the given bond label and dimension.
@@ -5313,11 +5358,6 @@ namespace cytnx {
     */
     const vec2d<cytnx_uint64> &get_itoi() const { return this->_impl->get_itoi(); }
     vec2d<cytnx_uint64> &get_itoi() { return this->_impl->get_itoi(); }
-
-    /// @cond
-    void from_binary(std::istream &f, const bool restore_device = true);
-    void to_binary(std::ostream &f) const;
-    /// @endcond
 
     UniTensor &convert_from(const UniTensor &rhs, const bool &force = false,
                             const cytnx_double &tol = 1e-14) {

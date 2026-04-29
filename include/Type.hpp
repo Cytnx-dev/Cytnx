@@ -395,7 +395,7 @@ namespace cytnx {
     using type_promote_from_gpu_pointer_t = typename type_promote_from_gpu_pointer<TL, TR>::type;
 #endif
 
-    H5::DataType to_hdf5_type(unsigned int type_id) const {
+    H5::DataType dtype_to_hdf5_type(unsigned int type_id) const {
       switch (type_id) {
         case Type::Double:
           return H5::PredType::NATIVE_DOUBLE;
@@ -450,6 +450,10 @@ namespace cytnx {
         default:
           cytnx_error_msg(true, "[ERROR] Unsupported Cytnx dtype: %s\n", getname(type_id).c_str());
       }
+    }
+    template <typename T>
+    H5::DataType get_hdf5_type(const T& rc) const {
+      return dtype_to_hdf5_type(cy_typeid(rc));
     }
 
     unsigned int from_hdf5_type(const H5::DataType& h5_type) const {
