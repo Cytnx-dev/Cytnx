@@ -54,21 +54,19 @@ fi
 # `skbuild.cmake.args`, so the whole list setting have to be re-assigned even if
 # only one value in the list is changed.
 echo "scikit-build-core diagnostics--------------------------"
-PY_MM=$("$PYTHON" - <<'PYV'
-import sys
-print(f"{sys.version_info.major}.{sys.version_info.minor}")
-PYV
-)
-export SKBUILD_BUILD_DIR="build-py${PY_MM}"
+export SKBUILD_BUILD_DIR="build"
 echo "Using skbuild.build-dir: ${SKBUILD_BUILD_DIR}"
-echo "Using skbuild.cmake.args: --preset=${CMAKE_PRESET};-G;Unix Makefiles"
+echo "Using skbuild.cmake.args[0]: --preset=${CMAKE_PRESET}"
+echo "Using skbuild.cmake.args[1]: -G Unix Makefiles"
 "$PYTHON" -m pip show scikit-build-core || true
 cmake --version || true
 
 run_pip_install() {
   "$PYTHON" -m pip install . -vv --no-deps --ignore-installed --no-build-isolation \
     --config-settings "skbuild.build-dir=${SKBUILD_BUILD_DIR}" \
-    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET;-G;Unix Makefiles" \
+    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
+    --config-settings "skbuild.cmake.args=-G" \
+    --config-settings "skbuild.cmake.args=Unix Makefiles" \
     --config-settings "build.verbose=true"
 }
 
