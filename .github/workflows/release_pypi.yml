@@ -127,6 +127,14 @@ jobs:
         print(f'cache_hit_direct={direct_hits}')
         print(f'cache_hit_preprocessed={preprocessed_hits}')
         if total_hits <= 0:
+            debug_files = sorted((Path.home() / '.ccache').glob('ccache_debug_*.txt'))
+            print('No ccache hits detected; dumping debug artifacts for root-cause analysis...')
+            for fp in debug_files:
+                print(f'----- {fp} -----')
+                try:
+                    print(fp.read_text())
+                except Exception as exc:
+                    print(f'Failed to read {fp}: {exc}')
             raise SystemExit('No ccache hits detected in cp310 build stats; cache likely not shared across versions.')
         PY2
 
