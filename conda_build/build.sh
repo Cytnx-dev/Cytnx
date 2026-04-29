@@ -9,6 +9,20 @@ start_time=$(date +%s)
 # only one value in the list is changed.
 install_log=$(mktemp)
 
+ensure_pip_available() {
+  if $PYTHON -m pip --version >/dev/null 2>&1; then
+    return 0
+  fi
+
+  echo "pip is missing; attempting bootstrap with ensurepip..."
+  if ! $PYTHON -m ensurepip --default-pip; then
+    echo "Failed to bootstrap pip with ensurepip."
+    return 1
+  fi
+
+  $PYTHON -m pip --version >/dev/null 2>&1
+}
+
 run_pip_install() {
   set -o pipefail
   $PYTHON -m pip install . -vv --no-deps --ignore-installed \
@@ -20,9 +34,16 @@ run_pip_install() {
   return $status
 }
 
-if ! run_pip_install; then
+if ! ensure_pip_available; then
   echo "pip install failed."
-  echo "pip version: $($PYTHON -m pip --version 2>&1 || echo 'unavailable')"
+  echo "pip version: unavailable"
+  exit 1
+fi
+
+if ! run_pip_install; then
+  pip_version=$($PYTHON -m pip --version 2>/dev/null || echo "unavailable")
+  echo "pip install failed."
+  echo "pip version: ${pip_version}"
   echo "Last 200 lines of pip install output:"
   tail -n 200 "$install_log"
   exit 1
