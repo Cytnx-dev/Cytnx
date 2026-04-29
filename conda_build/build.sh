@@ -78,8 +78,7 @@ run_pip_install() {
   "$PYTHON" -m pip install . -vv --no-deps --ignore-installed --no-build-isolation \
     --config-settings "skbuild.build-dir=${SKBUILD_BUILD_DIR}" \
     --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
-    --config-settings "skbuild.cmake.args=-G" \
-    --config-settings "skbuild.cmake.args=Unix Makefiles" \
+    --config-settings "skbuild.cmake.args=-G Unix Makefiles" \
     --config-settings "build.verbose=true"
 }
 
