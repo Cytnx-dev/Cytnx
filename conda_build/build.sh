@@ -8,18 +8,25 @@ start_time=$(date +%s)
 # `skbuild.cmake.args`, so the whole list setting have to be re-assigned even if
 # only one value in the list is changed.
 install_log=$(mktemp)
-set -o pipefail
-if ! $PYTHON -m pip install . -vv --no-deps --ignore-installed \
-  --config-settings skbuild.build-dir=build \
-  --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
-  --config-settings "skbuild.cmake.args=-G Unix Makefiles" 2>&1 | tee "$install_log"; then
+
+run_pip_install() {
+  set -o pipefail
+  $PYTHON -m pip install . -vv --no-deps --ignore-installed \
+    --config-settings skbuild.build-dir=build \
+    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
+    --config-settings "skbuild.cmake.args=-G Unix Makefiles" 2>&1 | tee "$install_log"
+  local status=$?
+  set +o pipefail
+  return $status
+}
+
+if ! run_pip_install; then
   echo "pip install failed."
   echo "pip version: $($PYTHON -m pip --version 2>&1 || echo 'unavailable')"
   echo "Last 200 lines of pip install output:"
   tail -n 200 "$install_log"
   exit 1
 fi
-set +o pipefail
 
 end_time=$(date +%s)
 echo "Execution time: $((end_time - start_time)) seconds"
