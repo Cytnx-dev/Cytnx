@@ -80,7 +80,7 @@ jobs:
       run: |
         echo "Start building---------------------------------"
         export CCACHE_DIR="${HOME}/.ccache"
-        conda build conda_build/ --python 3.10 --build-id-pat "cytnx"
+        conda build conda_build/ --build-id-pat "cytnx"
       env:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
