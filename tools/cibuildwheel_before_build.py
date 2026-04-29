@@ -6,6 +6,16 @@ ccache_config_path = os.getenv('CCACHE_CONFIGPATH')
 if not ccache_config_path:
     raise RuntimeError('The CCACHE_CONFIGPATH environment variable must be set.')
 
+if platform.system() == 'Linux':
+    required = [
+        'CMAKE_C_COMPILER_LAUNCHER',
+        'CMAKE_CXX_COMPILER_LAUNCHER',
+        'CCACHE_COMPILERCHECK',
+    ]
+    missing = [k for k in required if not os.getenv(k)]
+    if missing:
+        raise RuntimeError(f"Missing required Linux ccache env vars: {', '.join(missing)}")
+
 # Expand ~ to actual home directory before writing config.
 ccache_config_abspath = pathlib.Path(os.path.expanduser(ccache_config_path)).resolve()
 ccache_config_abspath.parent.mkdir(parents=True, exist_ok=True)
