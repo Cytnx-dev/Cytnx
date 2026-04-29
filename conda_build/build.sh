@@ -24,7 +24,6 @@ if [[ -z "${CMAKE_PRESET:-}" ]]; then
   echo "CMAKE_PRESET not provided by conda-build; using fallback preset: ${CMAKE_PRESET}"
 fi
 
-
 if ! "$PYTHON" -m pip --version; then
   echo "pip not found in build environment; collecting diagnostics." >&2
   "$PYTHON" - <<'PYDIAG'
@@ -54,10 +53,34 @@ fi
 # `--config-settings` overwrites the whole list setting, like
 # `skbuild.cmake.args`, so the whole list setting have to be re-assigned even if
 # only one value in the list is changed.
-$PYTHON -m pip install . -vv --no-deps --ignore-installed \
-  --config-settings skbuild.build-dir=build \
-  --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
-  --config-settings "skbuild.cmake.args=-G Unix Makefiles"
+echo "scikit-build-core diagnostics--------------------------"
+"$PYTHON" -m pip show scikit-build-core || true
+cmake --version || true
+
+run_pip_install() {
+  "$PYTHON" -m pip install . -vv --no-deps --ignore-installed \
+    --config-settings skbuild.build-dir=build \
+    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
+    --config-settings "skbuild.cmake.args=-G Unix Makefiles"
+}
+
+if ! run_pip_install; then
+  echo "ERROR: pip/scikit-build-core build failed. Collecting extra diagnostics..." >&2
+  "$PYTHON" -m pip debug --verbose || true
+  "$PYTHON" -m pip show scikit-build-core pybind11 cmake || true
+  "$PYTHON" - <<'PYBUILDDBG'
+import os
+print("cwd:", os.getcwd())
+print("CMAKE_PRESET:", os.environ.get("CMAKE_PRESET"))
+print("skbuild build dir exists:", os.path.isdir("build"))
+print("pyproject.toml exists:", os.path.isfile("pyproject.toml"))
+PYBUILDDBG
+  if [ -f CMakePresets.json ]; then
+    echo "CMake presets file found:"
+    sed -n '1,160p' CMakePresets.json || true
+  fi
+  exit 1
+fi
 
 end_time=$(date +%s)
 echo "Execution time: $((end_time - start_time)) seconds"
