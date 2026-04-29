@@ -9,22 +9,6 @@ echo "CC: ${CC:-<unset>}"
 echo "CXX: ${CXX:-<unset>}"
 echo "CMAKE_PRESET (from env): ${CMAKE_PRESET:-<unset>}"
 
-# Align preset with actually available BLAS implementation in the host prefix.
-detected_preset=""
-if [[ -n "${PREFIX:-}" ]]; then
-  if compgen -G "${PREFIX}/lib/libopenblas*" > /dev/null; then
-    detected_preset="openblas-cpu"
-  elif compgen -G "${PREFIX}/lib/libmkl_rt*" > /dev/null; then
-    detected_preset="mkl-cpu"
-  fi
-fi
-if [[ -n "$detected_preset" ]]; then
-  if [[ "${CMAKE_PRESET:-}" != "$detected_preset" ]]; then
-    echo "Overriding CMAKE_PRESET to match installed BLAS: ${detected_preset}"
-    CMAKE_PRESET="$detected_preset"
-  fi
-fi
-
 # Conda-build selector expressions in meta.yaml can vary by platform metadata.
 # Fallback here to avoid empty --preset values causing hard-to-debug failures.
 if [[ -z "${CMAKE_PRESET:-}" ]]; then
@@ -70,14 +54,14 @@ fi
 # `skbuild.cmake.args`, so the whole list setting have to be re-assigned even if
 # only one value in the list is changed.
 echo "scikit-build-core diagnostics--------------------------"
+echo "Using skbuild.cmake.args: --preset=${CMAKE_PRESET};-G;Unix Makefiles"
 "$PYTHON" -m pip show scikit-build-core || true
 cmake --version || true
 
 run_pip_install() {
   "$PYTHON" -m pip install . -vv --no-deps --ignore-installed --no-build-isolation \
     --config-settings skbuild.build-dir=build \
-    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
-    --config-settings "skbuild.cmake.args=-G Unix Makefiles" \
+    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET;-G;Unix Makefiles" \
     --config-settings "build.verbose=true"
 }
 
