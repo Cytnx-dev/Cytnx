@@ -9,6 +9,22 @@ echo "CC: ${CC:-<unset>}"
 echo "CXX: ${CXX:-<unset>}"
 echo "CMAKE_PRESET (from env): ${CMAKE_PRESET:-<unset>}"
 
+# Align preset with actually available BLAS implementation in the host prefix.
+detected_preset=""
+if [[ -n "${PREFIX:-}" ]]; then
+  if compgen -G "${PREFIX}/lib/libopenblas*" > /dev/null; then
+    detected_preset="openblas-cpu"
+  elif compgen -G "${PREFIX}/lib/libmkl_rt*" > /dev/null; then
+    detected_preset="mkl-cpu"
+  fi
+fi
+if [[ -n "$detected_preset" ]]; then
+  if [[ "${CMAKE_PRESET:-}" != "$detected_preset" ]]; then
+    echo "Overriding CMAKE_PRESET to match installed BLAS: ${detected_preset}"
+    CMAKE_PRESET="$detected_preset"
+  fi
+fi
+
 # Conda-build selector expressions in meta.yaml can vary by platform metadata.
 # Fallback here to avoid empty --preset values causing hard-to-debug failures.
 if [[ -z "${CMAKE_PRESET:-}" ]]; then
