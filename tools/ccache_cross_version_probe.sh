@@ -8,12 +8,23 @@ CPP
 
 ccache g++ -c /project/.ccache-probe/probe.cpp -O2 -o /project/.ccache-probe/probe.o
 
-stats_file="/host_ccache/ccache_stats_${CIBW_BUILD}.txt"
-debug_file="/host_ccache/ccache_debug_${CIBW_BUILD}.txt"
+build_tag="${CIBW_BUILD:-}"
+if [[ -z "${build_tag}" ]]; then
+  py_tag=$(python - <<'PYTAG'
+import sys
+print(f"cp{sys.version_info.major}{sys.version_info.minor}-manylinux_x86_64")
+PYTAG
+)
+  build_tag="${py_tag}"
+fi
+
+stats_file="/host_ccache/ccache_stats_${build_tag}.txt"
+debug_file="/host_ccache/ccache_debug_${build_tag}.txt"
 
 ccache --print-stats > "${stats_file}"
 {
-  echo "CIBW_BUILD=${CIBW_BUILD}"
+  echo "CIBW_BUILD=${CIBW_BUILD:-}"
+  echo "build_tag=${build_tag}"
   echo "CCACHE_DIR=${CCACHE_DIR:-}"
   echo "CCACHE_CONFIGPATH=${CCACHE_CONFIGPATH:-}"
   echo "CCACHE_COMPILERCHECK=${CCACHE_COMPILERCHECK:-}"
