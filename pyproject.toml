@@ -43,7 +43,6 @@ cmake.args = [
     # conflicts against the build process of HPTT.
     "-G Unix Makefiles",
 ]
-build-dir = "build"
 
 [tool.scikit-build.metadata.version]
 provider = "scikit_build_core.metadata.regex"
@@ -60,7 +59,6 @@ manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
 
 [tool.cibuildwheel.linux]
-# before-all = "apt-get install -y arpack boost ccache libomp openblas"
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
 environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf" }
 
