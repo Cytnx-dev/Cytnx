@@ -120,8 +120,8 @@ jobs:
             except Exception:
                 return 0.0
 
-        direct_hits = to_num(stats.get('cache_hit_direct', '0'))
-        preprocessed_hits = to_num(stats.get('cache_hit_preprocessed', '0'))
+        direct_hits = to_num(stats.get('direct_cache_hit', stats.get('cache_hit_direct', '0')))
+        preprocessed_hits = to_num(stats.get('preprocessed_cache_hit', stats.get('cache_hit_preprocessed', '0')))
         total_hits = direct_hits + preprocessed_hits
 
         print(f'cache_hit_direct={direct_hits}')
