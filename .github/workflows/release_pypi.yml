@@ -69,6 +69,11 @@ jobs:
           python -m pip install cibuildwheel
         fi
 
+        if ! command -v ccache >/dev/null 2>&1; then
+          sudo apt-get update
+          sudo apt-get install -y ccache
+        fi
+
         ccache --zero-stats
         CIBW_BUILD='cp39-manylinux_x86_64' CIBW_ARCHS_LINUX='x86_64' python -m cibuildwheel --platform linux --output-dir wheelhouse-cp39
 
