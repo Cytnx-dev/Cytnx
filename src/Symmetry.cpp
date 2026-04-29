@@ -318,14 +318,20 @@ namespace cytnx {
   void cytnx::Symmetry::Load_(const char *fname) { this->Load_(string(fname)); }
 
   void cytnx::Symmetry::to_hdf5(H5::Group &location, const std::string &name) const {
-    std::string typestr = this->name();
-    H5::StrType str_type(H5::PredType::C_S1, typestr.length() + 1);
+    std::string symname = this->name();
+    H5::StrType str_type(H5::PredType::C_S1, symname.length() + 1);
     H5::DataSpace dataspace = H5::DataSpace(H5S_SCALAR);
     H5::Attribute attr = location.createAttribute(name, str_type, dataspace);
-    attr.write(str_type, typestr);
+    attr.write(str_type, symname);
   }
   void cytnx::Symmetry::from_hdf5(H5::Group &location, const std::string &name) {
-    cytnx_error_msg(true, "[ERROR] Loading Symmetry from HDF5 is not implemented yet!%s", "\n");
+    H5::Attribute attr = location.openAttribute(name);
+    H5::StrType str_type = attr.getStrType();
+    size_t size = str_type.getSize() - 1;  // remove the null terminator
+    std::string symname;
+    symname.resize(size);
+    attr.read(str_type, &symname[0]);
+    this->Init(symname);
   }
 
   void cytnx::Symmetry::to_binary(std::ostream &f) const {

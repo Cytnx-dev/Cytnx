@@ -330,7 +330,6 @@ namespace cytnx {
         } else {
           idx_erase.push_back(q);
           tmp_degs[loc] += tmp_degs[q];
-          // std::cout << "add from loc" << q << " to " << cnt << std::endl;
         }
         return_order[mapper[q]] = cnt;
       }
@@ -549,7 +548,7 @@ namespace cytnx {
     H5::DataSpace dataspace;
     H5::StrType str_type;
 
-    // // dimension, write as attribute
+    // dimension, write as attribute
     auto dim = this->_impl->_dim;
     datatype = Type.get_hdf5_type(dim);
     attr = location.createAttribute("dimension", datatype, H5::DataSpace(H5S_SCALAR));
@@ -563,59 +562,201 @@ namespace cytnx {
     attr.write(str_type, typestr);
 
     // degs; write vector
-    hsize_t vecdims[1] = {this->_impl->_degs.size()};
-    cytnx_error_msg(vecdims[0] < 1,
-                    "[ERROR] Degeneracy vector has length < 1, something went wrong here!%s", "\n")
+    hsize_t sectordim = this->_impl->_qnums.size();
+    if (sectordim > 0) {  // only with symmetries
+      hsize_t vecdims[1] = {sectordim};
       dataspace = H5::DataSpace(1, vecdims);
-    datatype = Type.get_hdf5_type(this->_impl->_degs[0]);
-    dataset =
-      location.createDataSet("degeneracies", Type.get_hdf5_type(this->_impl->_degs[0]), dataspace);
-    dataset.write(this->_impl->_degs.data(), datatype);
+      datatype = Type.get_hdf5_type(this->_impl->_degs[0]);
+      dataset = location.createDataSet("degeneracies", Type.get_hdf5_type(this->_impl->_degs[0]),
+                                       dataspace);
+      dataset.write(this->_impl->_degs.data(), datatype);
 
-    // qnums; write matrix (dim x qnumdim)
-    size_t sectordim = this->_impl->_qnums.size();
-    size_t qnumdim = this->_impl->_syms.size();
+      // qnums; write matrix (dim x qnumdim)
+      hsize_t qnumdim = this->_impl->_syms.size();
+      std::vector<cytnx_int64> flat(sectordim * qnumdim);  // flatten vector<vector>
+      for (hsize_t i = 0; i < sectordim; ++i) {
+        std::copy(this->_impl->_qnums[i].begin(), this->_impl->_qnums[i].end(),
+                  flat.begin() + i * qnumdim);
+      }
+      hsize_t matdims[2] = {sectordim, qnumdim};
+      dataspace = H5::DataSpace(2, matdims);
+      datatype = Type.get_hdf5_type(flat[0]);
+      dataset = location.createDataSet("quantum_numbers", datatype, dataspace);
+      dataset.write(flat.data(), datatype);
+      // label axes
+      char labels[2][9] = {"sector", "symmetry"};
+      str_type = H5::StrType(H5::PredType::C_S1, 9);
+      hsize_t attr_dims[1] = {2};
+      H5::DataSpace attr_space(1, attr_dims);
+      attr = dataset.createAttribute("axis_labels", str_type, attr_space);
+      attr.write(str_type, labels);
 
-    std::vector<cytnx_int64> flat(sectordim * qnumdim);  // flatten vector<vector>
-    for (size_t i = 0; i < sectordim; ++i) {
-      std::copy(this->_impl->_qnums[i].begin(), this->_impl->_qnums[i].end(),
-                flat.begin() + i * qnumdim);
-    }
-    hsize_t matdims[2] = {sectordim, qnumdim};
-    dataspace = H5::DataSpace(2, matdims);
-    datatype = Type.get_hdf5_type(flat[0]);
-    dataset = location.createDataSet("quantum_numbers", datatype, dataspace);
-    dataset.write(flat.data(), datatype);
-    // label axes
-    char labels[2][9] = {"sector", "symmetry"};
-    str_type = H5::StrType(H5::PredType::C_S1, 9);
-    hsize_t attr_dims[1] = {2};
-    H5::DataSpace attr_space(1, attr_dims);
-    attr = dataset.createAttribute("axis_labels", str_type, attr_space);
-    attr.write(str_type, labels);
+      // Symmetries
+      if (save_symmetries) {
+        // vecdims[1] = { this->_impl->_syms.size() };
+        // dataspace = H5::DataSpace(1, vecdims);
+        // str_type = H5::StrType(H5::PredType::C_S1, H5T_VARIABLE);
+        // dataset = location.createDataSet("symmetries", str_type, dataspace);
 
-    // symmetries
-    if (save_symmetries) {
-      // vecdims[1] = { this->_impl->_syms.size() };
-      // dataspace = H5::DataSpace(1, vecdims);
-      // str_type = H5::StrType(H5::PredType::C_S1, H5T_VARIABLE);
-      // dataset = location.createDataSet("symmetries", str_type, dataspace);
-
-      // std::vector<const char*> c_strings;
-      // std::string symstring;
-      // for (const auto& s : this->_impl->_syms) {
-      //   symstring = s.name();
-      //   c_strings.push_back(symstring.c_str());
-      // }
-      // dataset.write(c_strings.data(), str_type);
-      H5::Group symloc = location.createGroup("Symmetries");
-      for (int sidx = 0; sidx < this->_impl->_syms.size(); sidx++) {
-        this->_impl->_syms[sidx].to_hdf5(symloc, "Symmetry" + std::to_string(sidx));
+        // std::vector<const char*> c_strings;
+        // std::string symstring;
+        // for (const auto& s : this->_impl->_syms) {
+        //   symstring = s.name();
+        //   c_strings.push_back(symstring.c_str());
+        // }
+        // dataset.write(c_strings.data(), str_type);
+        H5::Group symloc = location.createGroup("Symmetries");
+        for (int sidx = 0; sidx < this->_impl->_syms.size(); sidx++) {
+          this->_impl->_syms[sidx].to_hdf5(symloc, "Symmetry" + std::to_string(sidx));
+        }
       }
     }
   }
-  void Bond::from_hdf5(H5::Group &location) {
-    cytnx_error_msg(true, "[ERROR] Loading Bond from HDF5 is not implemented yet!%s", "\n");
+  void Bond::from_hdf5(H5::Group &location, const std::vector<Symmetry> &syms) {
+    H5::DataType datatype;
+    H5::Attribute attr;
+    H5::DataSet dataset;
+    H5::DataSpace dataspace;
+    H5::StrType str_type;
+
+    // type from string
+    attr = location.openAttribute("type");
+    str_type = attr.getStrType();
+    size_t size = str_type.getSize() - 1;  // not including the null terminator
+    std::string typestr;
+    typestr.resize(size);
+    attr.read(str_type, &typestr[0]);
+    this->_impl->_type = string_to_bondtype.at(typestr);
+
+    // degs; read vector
+    bool symmetric = false;
+    hssize_t sectordim;
+    if (location.exists("degeneracies")) {
+      symmetric = true;
+      dataset = location.openDataSet("degeneracies");
+      dataspace = dataset.getSpace();
+      sectordim = dataspace.getSimpleExtentNpoints();
+      this->_impl->_degs.resize(sectordim);
+      datatype = dataset.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(std::size_t),
+        "[ERROR] 'degeneracies' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(std::size_t));
+      dataset.read(this->_impl->_degs.data(), datatype);
+      this->_impl->_dim =
+        std::accumulate(this->_impl->_degs.begin(), this->_impl->_degs.end(), cytnx_uint64(0));
+    } else {
+      this->_impl->_degs = {};
+    }
+
+    // qnums; read matrix (dim x qnumdim)
+    hsize_t qnumdim;
+    if (location.exists("quantum_numbers")) {
+      cytnx_error_msg(!symmetric,
+                      "[ERROR] 'degeneracies' were not found in HDF5 location, but "
+                      "'quantum_numbers' existn. The HDF5 data seems corrupt!%s",
+                      "\n");
+      dataset = location.openDataSet("quantum_numbers");
+      dataspace = dataset.getSpace();
+      cytnx_error_msg(dataspace.getSimpleExtentNdims() != 2,
+                      "[ERROR] 'quantum_numbers' should be a two-dimensional array. The HDF5 data "
+                      "seems corrupt!%s",
+                      "\n");
+      hsize_t dims[2];
+      dataspace.getSimpleExtentDims(dims);
+      cytnx_error_msg(dims[0] != sectordim,
+                      "[ERROR] Length of 'degeneracies' = %d, but first dimension of "
+                      "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
+                      sectordim, dims[0]);
+      qnumdim = dims[1];
+      // Read HDF5 data into a flattened temporary vector
+      std::vector<cytnx_int64> flat(sectordim * qnumdim);
+      datatype = dataset.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(cytnx_int64),
+        "[ERROR] 'quantum_numbers' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(cytnx_int64));
+      dataset.read(flat.data(), datatype);
+      // Reconstruct the vector of vectors
+      this->_impl->_qnums.assign(sectordim, std::vector<cytnx_int64>(qnumdim));
+      for (hsize_t i = 0; i < sectordim; ++i) {
+        std::copy(flat.begin() + i * qnumdim, flat.begin() + (i + 1) * qnumdim,
+                  this->_impl->_qnums[i].begin());
+      }
+    } else {
+      this->_impl->_qnums = {};
+    }
+
+    // Symmetries
+    if (syms.empty()) {
+      if (location.exists("Symmetries")) {
+        H5::Group symloc = location.openGroup("Symmetries");
+        this->_impl->_syms.clear();
+        hsize_t sidx = 0;
+        while (true) {
+          std::string name = "Symmetry" + std::to_string(sidx);
+          if (!symloc.attrExists(name) && !symloc.exists(name)) {
+            break;
+          }
+          Symmetry sym;
+          sym.from_hdf5(symloc, name);
+          this->_impl->_syms.push_back(sym);
+          sidx++;
+        }
+        if (symmetric) {
+          cytnx_error_msg(sidx != qnumdim,
+                          "[ERROR] %d Symmetries were found, but second dimension of "
+                          "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
+                          sidx, qnumdim);
+        } else {
+          cytnx_error_msg(sidx > 0,
+                          "[ERROR] 'degeneracies' and 'quantum_numbers' were not found in HDF5 "
+                          "location, but 'Symmetries' exist. The HDF5 data seems corrupt!%s",
+                          "\n");
+          this->_impl->_syms = {};
+        }
+      } else {
+        cytnx_error_msg(symmetric,
+                        "[ERROR] 'degeneracies' and 'quantum_numbers' exist in HDF5 location, but "
+                        "'Symmetries' are missing. The HDF5 data seems corrupt!%s",
+                        "\n");
+      }
+    } else {
+      cytnx_error_msg(!symmetric,
+                      "[ERROR] 'degeneracies' and 'quantum_numbers' not found in HDF5 location, "
+                      "but Symmetries are passed as arguments.%s",
+                      "\n");
+      cytnx_error_msg(syms.size() != qnumdim,
+                      "[ERROR] %d Symmetries are passed, but second dimension of 'quantum_numbers' "
+                      "is %d. The HDF5 data seems corrupt!\n",
+                      syms.size(), qnumdim);
+      this->_impl->_syms = syms;
+    }
+
+    // dim; from attribute
+    if (location.attrExists("dimension")) {
+      attr = location.openAttribute("dimension");
+      cytnx_uint64 dimension;
+      datatype = attr.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(cytnx_uint64),
+        "[ERROR] 'dimension' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(cytnx_uint64));
+      attr.read(datatype, &dimension);
+      if (symmetric) {
+        cytnx_error_msg(dimension != this->_impl->_dim,
+                        "[ERROR] 'dimension' read from HDF5 file is %d, but the sum of all "
+                        "degeneracies is %d. The HDF5 data seems corrupt!\n",
+                        dimension, this->_impl->_dim);
+      } else {
+        this->_impl->_dim = dimension;
+      }
+    } else {
+      cytnx_error_msg(!symmetric,
+                      "[ERROR] Could not find 'dimension' or 'degeneracies' in HDF5 file. The HDF5 "
+                      "data seems corrupt!%s",
+                      "\n");
+    }
   }
 
   void Bond::to_binary(std::ostream &f) const {

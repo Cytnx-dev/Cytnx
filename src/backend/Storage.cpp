@@ -300,7 +300,12 @@ namespace cytnx {
     int device = Device.cpu;
     if (restore_device && dataset.attrExists("device")) {
       H5::Attribute attr = dataset.openAttribute("device");
-      attr.read(H5::PredType::NATIVE_INT, &device);
+      datatype = dataset.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(int),
+        "[ERROR] 'device' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(int));
+      attr.read(datatype, &device);
     }
 
     this->data_from_hdf5(dataset, Nelem, dtype, datatype, device);

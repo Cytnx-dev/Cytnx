@@ -41,6 +41,8 @@ namespace cytnx {
   };
   static const std::map<bondType, std::string> bondtype_to_string = {
     {BD_REG, "REG"}, {BD_IN, "IN"}, {BD_OUT, "OUT"}};
+  static const std::map<std::string, bondType> string_to_bondtype = {
+    {"REG", BD_REG}, {"IN", BD_IN}, {"OUT", BD_OUT}};
 
   /// @cond
   class Bond_impl : public intrusive_ptr_base<Bond_impl> {
@@ -905,11 +907,13 @@ namespace cytnx {
     /**
      * @brief Load Bond from HDF5 file (inline)
      * @param[in] location the HDF5 group where the Bond will be loaded from.
+     * @param[in] syms vector containing the Symmetries. Leave emtpy to read the Symmetries from
+     * HDF5
      * @warning This function is only available in C++. Use \link Load(const std::string &fname,
      * const bool restore_device) Load() \endlink for loading from file in C++ or Python.
      * @see to_hdf5(H5::Group &location, const std::string &name) const
      */
-    void from_hdf5(H5::Group &location);
+    void from_hdf5(H5::Group &location, const std::vector<Symmetry> &syms = {});
 
     /**
      * @brief Save Bond to binary file

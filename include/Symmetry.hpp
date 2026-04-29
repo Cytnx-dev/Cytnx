@@ -4,6 +4,7 @@
 #include <fstream>
 #include <map>
 #include <ostream>
+#include <regex>
 #include <string>
 #include <vector>
 
@@ -233,9 +234,35 @@ namespace cytnx {
         boost::intrusive_ptr<Symmetry_base> tmp(new FermionNumberSymmetry());
         this->_impl = tmp;
       } else {
-        cytnx_error_msg(1, "%s", "[ERROR] invalid symmetry type.");
+        cytnx_error_msg(true, "[ERROR] Invalid Symmetry type %d.\n", stype);
       }
     }
+    void Init(const std::string name) {
+      if (name == "U1") {
+        boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(1));
+        this->_impl = tmp;
+      } else if (name == "fermion parity") {
+        boost::intrusive_ptr<Symmetry_base> tmp(new FermionParitySymmetry());
+        this->_impl = tmp;
+      } else if (name == "fermion number") {
+        boost::intrusive_ptr<Symmetry_base> tmp(new FermionNumberSymmetry());
+        this->_impl = tmp;
+      } else {  // check if Z(N)
+        std::regex pattern(R"(Z(\d+))");
+        std::smatch matches;
+        if (std::regex_match(name, matches, pattern)) {
+          // matches[0] is the whole string "U(456)"
+          // matches[1] is the first capture group "456"
+          int n = std::stoi(matches[1].str());
+          boost::intrusive_ptr<Symmetry_base> tmp(new ZnSymmetry(n));
+          this->_impl = tmp;
+        } else {
+          cytnx_error_msg(true, "[ERROR] No Symmetry type matches the string '%s'.\n",
+                          name.c_str());
+        }
+      }
+    }
+
     Symmetry &operator=(const Symmetry &rhs) {
       this->_impl = rhs._impl;
       return *this;
@@ -243,7 +270,7 @@ namespace cytnx {
     Symmetry(const Symmetry &rhs) { this->_impl = rhs._impl; }
     ///@endcond
 
-    //[genenrators]
+    //[generators]
     /**
     @brief create a U1 symmetry object
 
