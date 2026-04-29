@@ -26,8 +26,7 @@ fi
 
 
 if ! "$PYTHON" -m pip --version; then
-  echo "ERROR: pip is unavailable in the conda build host environment." >&2
-  echo "Attempting Python diagnostics before exit..." >&2
+  echo "pip not found in build environment; collecting diagnostics." >&2
   "$PYTHON" - <<'PYDIAG'
 import sys
 print("sys.executable:", sys.executable)
@@ -38,7 +37,14 @@ try:
 except Exception as exc:
     print("ensurepip unavailable:", repr(exc))
 PYDIAG
-  exit 1
+
+  echo "Trying to bootstrap pip via ensurepip..." >&2
+  if "$PYTHON" -m ensurepip --default-pip; then
+    "$PYTHON" -m pip --version
+  else
+    echo "ERROR: failed to bootstrap pip with ensurepip." >&2
+    exit 1
+  fi
 fi
 
 # By default, scikit-build-core creates separate working directories for each
