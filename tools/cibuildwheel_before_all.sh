@@ -10,4 +10,9 @@ if [ -d /usr/include/openblas ]; then
     ln -sf /usr/include/openblas/lapacke_mangling.h /usr/include/lapacke_mangling.h
     ln -sf /usr/include/openblas/cblas.h /usr/include/cblas.h
     ln -sf /usr/include/openblas/openblas_config.h /usr/include/openblas_config.h
+    if ls /usr/include/openblas/openblas_config-*.h >/dev/null 2>&1; then
+        for f in /usr/include/openblas/openblas_config-*.h; do
+            ln -sf "${f}" "/usr/include/$(basename "${f}")"
+        done
+    fi
 fi
