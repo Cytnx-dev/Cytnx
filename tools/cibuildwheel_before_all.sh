@@ -1,18 +1,7 @@
 set -xe
 
-# Install required packages based on distro
-if command -v apk &> /dev/null; then
-    # musllinux (Alpine)
-    apk add --no-cache boost-dev openblas-dev arpack-dev ccache
-elif command -v dnf &> /dev/null; then
-    # manylinux_2_28+ (AlmaLinux/RHEL)
-    dnf install -y boost-devel openblas-devel arpack-devel ccache
-elif command -v yum &> /dev/null; then
-    # manylinux2014 (CentOS)
-    yum install -y boost-devel openblas-devel arpack-devel ccache
-else
-    echo "WARNING: No package manager found"
-fi
+# Install required packages for manylinux_2_28+ (AlmaLinux/RHEL)
+dnf install -y boost-devel openblas-devel arpack-devel ccache
 
 # Create symlinks for OpenBLAS headers if available
 if [ -d /usr/include/openblas ]; then

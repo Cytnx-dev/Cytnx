@@ -59,14 +59,6 @@ set\(\w+?VERSION_PATCH\s+(?P<patch>\d+)\)
 result = "{major}.{minor}.{patch}"
 
 [tool.cibuildwheel]
-# The image used to build wheels for x86_64 on Linux is manylinux_2_28, which supports
-# older version of Linux than manylinux_2_34. However, manylinux_2_28 is AlmaLinux 8
-# based and AlmaLinux 8 ships Boost v1.66. The Boost's CMake configuration files are only
-# available since v1.70, so AlmaLinux 9 based manylinux_2_34 is picked here.
-# There is a caveat for manylinux_2_34. manylinux_2_34 assume the machines use x86-64-v2
-# architecture which is an extension of x86_64, so the wheels built with manylinux_2_34
-# may not support older machines. See https://github.com/pypa/manylinux?tab=readme-ov-file#manylinux_2_34-almalinux-9-based---alpha
-# for more information.
 manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
 
@@ -74,7 +66,7 @@ before-build = "python ./tools/cibuildwheel_before_build.py"
 # before-all = "apt-get install -y arpack boost ccache libomp openblas"
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
 # To include LAPACKE header.
-environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf", CMAKE_ARGS = "-DBoost_NO_BOOST_CMAKE=ON" }
+environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf" }
 
 [tool.cibuildwheel.macos]
 before-all = "brew update; brew install arpack boost ccache libomp openblas"
