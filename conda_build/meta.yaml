@@ -31,6 +31,7 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - python {{ python }}
+    - pip
     - scikit-build-core
     - pybind11
     - boost >=1.82.0

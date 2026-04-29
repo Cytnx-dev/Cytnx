@@ -24,6 +24,23 @@ if [[ -z "${CMAKE_PRESET:-}" ]]; then
   echo "CMAKE_PRESET not provided by conda-build; using fallback preset: ${CMAKE_PRESET}"
 fi
 
+
+if ! "$PYTHON" -m pip --version; then
+  echo "ERROR: pip is unavailable in the conda build host environment." >&2
+  echo "Attempting Python diagnostics before exit..." >&2
+  "$PYTHON" - <<'PYDIAG'
+import sys
+print("sys.executable:", sys.executable)
+print("sys.version:", sys.version)
+try:
+    import ensurepip
+    print("ensurepip available:", ensurepip.__file__)
+except Exception as exc:
+    print("ensurepip unavailable:", repr(exc))
+PYDIAG
+  exit 1
+fi
+
 # By default, scikit-build-core creates separate working directories for each
 # Python version. This prevents ccache from sharing cached objects between
 # versions. Setting the working directory to "build" ensures ccache can reuse
