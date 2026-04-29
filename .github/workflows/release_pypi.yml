@@ -127,6 +127,9 @@ jobs:
         if total_hits <= 0:
             raise SystemExit('No ccache hits detected in the second Python-version build; cache likely not shared across versions.')
         PY2
+
+        echo 'Force failing this validation step temporarily by request.'
+        exit 1
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
       env:
