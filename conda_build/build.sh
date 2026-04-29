@@ -46,6 +46,19 @@ PYDIAG
   fi
 fi
 
+PIP_VERSION_RAW=$("$PYTHON" - <<'PYPIPV'
+from importlib.metadata import version
+print(version("pip"))
+PYPIPV
+)
+echo "pip version: ${PIP_VERSION_RAW}"
+"$PYTHON" - <<'PYPIPCHK'
+from importlib.metadata import version
+from packaging.version import Version
+if Version(version("pip")) < Version("23.1"):
+    raise SystemExit("ERROR: pip>=23.1 is required so repeated --config-settings keys append correctly.")
+PYPIPCHK
+
 # By default, scikit-build-core creates separate working directories for each
 # Python version. This prevents ccache from sharing cached objects between
 # versions. Setting the working directory to "build" ensures ccache can reuse
