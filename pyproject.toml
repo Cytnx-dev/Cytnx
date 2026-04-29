@@ -43,10 +43,7 @@ cmake.args = [
     # conflicts against the build process of HPTT.
     "-G Unix Makefiles",
 ]
-# Force the build directory to be "build" instead of a random temp folder. This helps
-# ccache caches the compiler outputs successfully.
-build-dir = "build/{wheel_tag}"
-# cp39-cp39-macosx_14_0_arm64
+build-dir = "build"
 
 [tool.scikit-build.metadata.version]
 provider = "scikit_build_core.metadata.regex"
@@ -65,16 +62,9 @@ before-build = "python ./tools/cibuildwheel_before_build.py"
 [tool.cibuildwheel.linux]
 # before-all = "apt-get install -y arpack boost ccache libomp openblas"
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
-# To include LAPACKE header.
-# find_package(Boost REQUIRED) is module-mode, so Boost_NO_BOOST_CMAKE is unnecessary.
 environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf" }
 
 [tool.cibuildwheel.macos]
 before-all = "brew update; brew install arpack boost ccache libomp openblas"
 environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", CCACHE_CONFIGPATH = "~/ccache.conf" }
 
-# [tool.cibuildwheel]
-# before-build = "bash {project}/tools/cibuildwheel_before_build.sh"
-# # environment = { CMAKE_PREFIX_PATH = "$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH" }
-# # Alternative static configuration for macOS:
-# environment = { CMAKE_PREFIX_PATH = "/opt/homebrew/opt/openblas", PATH = "/opt/homebrew/opt/ccache/libexec:$PATH" }

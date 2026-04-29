@@ -21,5 +21,5 @@ print("wheel_tag:", wheel_tag)
 
 with open(ccache_config_path, 'w') as f:
     f.writelines([
-        f'base_dir = /project/build/{wheel_tag}'
+        'base_dir = /project/build\n'
     ])
