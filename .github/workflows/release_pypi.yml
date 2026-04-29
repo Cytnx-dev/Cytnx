@@ -74,9 +74,6 @@ jobs:
           sudo apt-get install -y ccache
         fi
 
-        sudo apt-get update
-        sudo apt-get install -y build-essential cmake ninja-build
-
         cp CMakeLists.txt CMakeLists.txt.full
         trap 'mv -f CMakeLists.txt.full CMakeLists.txt; rm -f src/ccache_probe.cpp' EXIT
         cat > CMakeLists.txt <<'EOF'
