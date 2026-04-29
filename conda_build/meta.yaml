@@ -31,6 +31,8 @@ requirements:
     - {{ compiler('cxx') }}
   host:
     - python {{ python }}
+    # pip>=23.1 is required because older pip versions do not append repeated
+    # --config-settings keys correctly, which breaks skbuild.cmake.args handling.
     - pip >=23.1
     - scikit-build-core
     - pybind11
