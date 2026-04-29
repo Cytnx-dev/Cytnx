@@ -54,14 +54,21 @@ fi
 # `skbuild.cmake.args`, so the whole list setting have to be re-assigned even if
 # only one value in the list is changed.
 echo "scikit-build-core diagnostics--------------------------"
-echo "Using skbuild.cmake.args: --preset=${CMAKE_PRESET};-G;Unix Makefiles"
+PY_MM=$("$PYTHON" - <<'PYV'
+import sys
+print(f"{sys.version_info.major}.{sys.version_info.minor}")
+PYV
+)
+export SKBUILD_BUILD_DIR="build-py${PY_MM}"
+echo "Using skbuild.build-dir: ${SKBUILD_BUILD_DIR}"
+echo "Using skbuild.cmake.args: --preset=${CMAKE_PRESET}"
 "$PYTHON" -m pip show scikit-build-core || true
 cmake --version || true
 
 run_pip_install() {
   "$PYTHON" -m pip install . -vv --no-deps --ignore-installed --no-build-isolation \
-    --config-settings skbuild.build-dir=build \
-    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET;-G;Unix Makefiles" \
+    --config-settings "skbuild.build-dir=${SKBUILD_BUILD_DIR}" \
+    --config-settings "skbuild.cmake.args=--preset=$CMAKE_PRESET" \
     --config-settings "build.verbose=true"
 }
 
@@ -73,7 +80,8 @@ if ! run_pip_install; then
 import os
 print("cwd:", os.getcwd())
 print("CMAKE_PRESET:", os.environ.get("CMAKE_PRESET"))
-print("skbuild build dir exists:", os.path.isdir("build"))
+print("skbuild build dir:", os.environ.get("SKBUILD_BUILD_DIR"))
+print("skbuild build dir exists:", os.path.isdir(os.environ.get("SKBUILD_BUILD_DIR", "build")))
 print("pyproject.toml exists:", os.path.isfile("pyproject.toml"))
 PYBUILDDBG
   if [ -f CMakePresets.json ]; then
