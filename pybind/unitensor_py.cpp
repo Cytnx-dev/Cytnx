@@ -519,20 +519,24 @@ void unitensor_binding(py::module &m) {
     .def("clone", &UniTensor::clone)
     .def("__copy__", &UniTensor::clone)
     .def("__deepcopy__", &UniTensor::clone)
+
     .def(
-      "Save", [](UniTensor &self, const std::filesystem::path &fname) { self.Save(fname); }, py::arg("fname"))
+      "Save",
+      [](UniTensor &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/UniTensor/", py::arg("mode") = 'w')
     .def_static(
       "Load",
-      [](const std::filesystem::path &fname, const bool restore_device) {
-        return cytnx::UniTensor::Load(fname, restore_device);
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return UniTensor::Load(fname, path, restore_device);
       },
-      py::arg("fname"), py::arg("restore_device") = true)
+      py::arg("fname"), py::arg("path") = "/UniTensor/", py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::UniTensor &self, const std::filesystem::path &fname, const bool restore_device) {
-        return self.Load_(fname, restore_device);
+      [](UniTensor &self, const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return self.Load_(fname, path, restore_device);
       },
-      py::arg("fname"), py::arg("restore_device") = true)
+      py::arg("fname"), py::arg("path") = "/UniTensor/", py::arg("restore_device") = true)
 
     .def(py::pickle(
       [](const UniTensor &self) {  // __getstate__

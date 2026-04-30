@@ -425,7 +425,8 @@ namespace cytnx {
   //===================================================================
   // wrapper
 
-  void cytnx::Tensor::Save(const std::filesystem::path &fname, const std::string &path, const char mode) const {
+  void cytnx::Tensor::Save(const std::filesystem::path &fname, const std::string &path,
+                           const char mode) const {
     fstream f;  // only for binary saving, not used for HDF5
     if (fname.has_extension()) {
       // filename extension is given
@@ -462,9 +463,10 @@ namespace cytnx {
         if (datasetname.empty()) datasetname = "Tensor";
         // create group
         H5::Group location = h5file;
-        if (h5file.exists(grouppath)) {
+        try {
+          H5::Exception::dontPrint();
           location = h5file.openGroup(grouppath);
-        } else {
+        } catch (const H5::Exception &e) {
           H5::LinkCreatPropList lcpl;
           lcpl.setCreateIntermediateGroup(1);
           location = h5file.createGroup(grouppath, lcpl);
@@ -477,16 +479,22 @@ namespace cytnx {
           cytnx_error_msg(std::filesystem::exists(fname),
                           "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
         } else {
-          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
+          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
+                          mode);
         }
         f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
       }
     } else {  // create binary file with standard extension
       std::filesystem::path fnameext = fname;
       fnameext += ".cytn";
-      cytnx_warning_msg(true, "Missing file extension in fname '%s'. I am adding the extension '.cytn'. This is deprecated, please provide the file extension in the future.\n", fname.c_str());
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cytn'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.c_str());
       if (mode == 'x') {
-        cytnx_error_msg(std::filesystem::exists(fnameext), "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fnameext.c_str());
+        cytnx_error_msg(std::filesystem::exists(fnameext),
+                        "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                        fnameext.c_str());
       } else {
         cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
       }
@@ -503,16 +511,19 @@ namespace cytnx {
     this->Save(std::filesystem::path(fname), path, mode);
   }
 
-  cytnx::Tensor cytnx::Tensor::Load(const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+  cytnx::Tensor cytnx::Tensor::Load(const std::filesystem::path &fname, const std::string &path,
+                                    const bool restore_device) {
     Tensor out;
     out.Load_(fname, path, restore_device);
     return out;
   }
-  cytnx::Tensor cytnx::Tensor::Load(const char *fname, const std::string &path, const bool restore_device) {
+  cytnx::Tensor cytnx::Tensor::Load(const char *fname, const std::string &path,
+                                    const bool restore_device) {
     return cytnx::Tensor::Load(std::filesystem::path(fname), path, restore_device);
   }
 
-  void cytnx::Tensor::Load_(const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+  void cytnx::Tensor::Load_(const std::filesystem::path &fname, const std::string &path,
+                            const bool restore_device) {
     std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {
@@ -524,9 +535,15 @@ namespace cytnx {
       std::string datasetname = p.filename().string();
       if (datasetname.empty()) datasetname = "Tensor";
       // open group
-      cytnx_error_msg(!h5file.exists(grouppath),
-                      "[ERROR] Path '%s' does not exist in HDF5 file '%s'", grouppath, fname.c_str());
-      H5::Group location = h5file.openGroup(grouppath);
+      H5::Group location;
+      try {
+        H5::Exception::dontPrint();
+        location = h5file.openGroup(grouppath);
+      } catch (const H5::Exception &e) {
+        std::cerr << e.getDetailMsg() << std::endl;
+        cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
+                        grouppath.c_str(), fname.c_str());
+      }
       this->from_hdf5(location, datasetname, restore_device);
       h5file.close();
     } else {  // load binary

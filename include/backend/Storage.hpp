@@ -528,67 +528,95 @@ namespace cytnx {
 
     /**
      * @brief Save Storage to file
-     * @param[in] fname file name
      * @details Save the Storage to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
      * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @param[in] fname file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/Ten' will
+     * write the Storage to the dataset 'Ten' the group '/foo/bar' in the file.
+     * @param[in] mode the write mode:\n
+     *  `w` Creates a new file. If the given file exists, its contents are destroyed.\n
+     *  `x` Creates a new file. Fails if the given file exists already.\n
+     *  `a` Opens for writing without overwriting any existing content. Creates the file if it
+     *      doesn't exist. Only available for HDF5 files.\n
+     *  `u` Opens for writing. Existing content will be updated(overwritten).
+     *      Creates the file if it doesn't exist. Only available for HDF5 files.
      * @note The common file ending for saving a Storage in binary format is ".cyst".
      * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
      * readability, and future-proofing.
-     * @see Load(const std::filesystem::path &fname, const bool restore_device)
+     * @see Load()
      */
-    void Save(const std::filesystem::path &fname) const;
-    // @see Save(const std::filesystem::path &fname) const
-    void Save(const char *fname) const;
+    void Save(const std::filesystem::path &fname, const std::string &path = "/Storage",
+              const char mode = 'w') const;
+    /**
+     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode)
+     * const;
+     */
+    void Save(const char *fname, const std::string &path = "/Storage", const char mode = 'w') const;
 
     /**
      * @brief Load Storage from file and create new instance
+     * @details This function creates a new Storage and keeps the original Storage unchanged. See
+     * Load_() for loading the Storage to the current Storage.
      * @param fname[in] file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path /foo/bar/Ten will read
+     * the Storage from the dataset 'Ten' the group '/foo/bar' in the file.
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
-     * @pre The file must be a Storage object which is saved by cytnx::Storage::Save.
-     * @note This function creates a new Storage and keeps the original Storage unchanged. See \link
-     * Load_(const std::filesystem::path &fname, const bool restore_device) Load_() \endlink for
-     * loading the Storage to the current Storage.
-     * @details For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf"
-     * is expected. For binary format, the common file ending for a Storage is ".cyst".
+     * @pre The file must be a Storage object which is saved by Save().
+     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is
+     * expected. For binary format, the common file ending for a Storage is ".cyst".
      */
-    static Storage Load(const std::filesystem::path &fname, const bool restore_device = true);
-    // @see Load(const std::filesystem::path &fname, const bool restore_device)
-    static Storage Load(const char *fname, const bool restore_device = true);
+    static cytnx::Storage Load(const std::filesystem::path &fname,
+                               const std::string &path = "/Storage",
+                               const bool restore_device = true);
+    /**
+     * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    static cytnx::Storage Load(const char *fname, const std::string &path = "/Storage",
+                               const bool restore_device = true);
 
     /**
-    @brief Load Storage from file and overwrite current instance
-    @note This function overwrites the existing Storage. See \link Load(const std::filesystem::path
-    &fname, const bool restore_device) Load() \endlink for creating a new Storage.
-    @see Load(const std::filesystem::path &fname, const bool restore_device)
-    */
-    void Load_(const std::filesystem::path &fname, const bool restore_device = true);
-    // @see Load_(const std::filesystem::path &fname, const bool restore_device)
-    void Load_(const char *fname, const bool restore_device = true);
+     * @brief Load Storage from file and overwrite current instance
+     * @details This function overwrites the existing Storage. See Load() for creating a new
+     * Storage.
+     * @see Load()
+     */
+    void Load_(const std::filesystem::path &fname, const std::string &path = "/Storage",
+               const bool restore_device = true);
+    /**
+     * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    void Load_(const char *fname, const std::string &path = "/Storage",
+               const bool restore_device = true);
 
     /**
      * @brief Save Storage to HDF5 file
      * @param[in] location the HDF5 group where the Storage will be saved.
-     * @param[in] name the name of the Storage in the HDF5 file.
-     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
-     * &fname) Save() \endlink for saving to file in C++ or Python.
-     * @see from_hdf5(H5::Group &location, const std::string &name, const bool restore_device)
+     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @param[in] name the name of the dataset in the HDF5 file.d in the
+     * @warning This function is only available in C++. Use Save() for saving to file in C++ or
+     * Python.
+     * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const std::string &name = "Storage") const;
+    void to_hdf5(H5::Group &location, const bool overwrite = false,
+                 const std::string &name = "Storage") const;
     /**
      * @brief Load Storage from HDF5 file (inline)
      * @param[in] location the HDF5 group where the Storage will be loaded from.
-     * @param[in] name the name of the Storage in the HDF5 file.
+     * @param[in] name the name of the dataset in the HDF5 file.
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
-     * @warning This function is only available in C++. Use \link Load(const std::filesystem::path
-     * &fname, const bool restore_device) Load() \endlink for loading from file in C++ or Python.
-     * @see to_hdf5(H5::Group &location, const std::string &name) const
+     * @warning This function is only available in C++. Use Load() for loading from file in C++ or
+     * Python.
+     * @see to_hdf5()
      */
     void from_hdf5(H5::Group &location, const std::string &name = "Storage",
                    const bool restore_device = true);
+
     /**
      * @brief Save only the data of the Storage to HDF5 dataset.
      * @param[in] dataset the HDF5 dataset where the Storage will be saved.
@@ -622,9 +650,8 @@ namespace cytnx {
      * @brief Save Storage to binary file
      * @param[in] f the output stream where the Storage will be saved.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Save(const std::filesystem::path &fname) Save() \endlink for saving to
-     * file in C++ or Python.
-     * @see from_binary(std::istream &f, const bool restore_device)
+     * file format. Use Save() for saving to file in C++ or Python.
+     * @see from_binary()
      */
     void to_binary(std::ostream &f) const;
     /**
@@ -634,11 +661,11 @@ namespace cytnx {
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Load(const std::filesystem::path &fname, const bool restore_device)
-     * Load() \endlink for loading from file in C++ or Python.
-     * @see to_binary(std::ostream &f) const
+     * file format. Use Load() for loading from file in C++ or Python.
+     * @see to_binary()
      */
     void from_binary(std::istream &f, const bool restore_device = true);
+
     /**
      * @brief Save only the data of the Storage to binary filestream.
      * @param[in] f the output stream where the Storage will be saved.
@@ -672,10 +699,14 @@ namespace cytnx {
      */
     [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
       const std::filesystem::path &fname) const;
-    /// @see Tofile(const std::filesystem::path &fname) const
+    /**
+     * @see Tofile(const std::filesystem::path &fname) const
+     */
     [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
       const char *fname) const;
-    /// @see Tofile(const std::filesystem::path &fname) const
+    /**
+     * @see Tofile(const std::filesystem::path &fname) const
+     */
     [[deprecated("Please use to_binary(std::ostream &f) instead.")]] void Tofile(
       std::fstream &f) const;
 
@@ -701,8 +732,10 @@ namespace cytnx {
     [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
       const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
       const int device = Device.cpu);
-    // @see Fromfile(const std::filesystem::path &fname, const unsigned int &dtype, const
-    // cytnx_int64 &count)
+    /**
+     * @see Fromfile(const std::filesystem::path &fname, const unsigned int &dtype, const
+     * cytnx_int64 &count)
+     */
     [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
       const char *fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
       const int device = Device.cpu);

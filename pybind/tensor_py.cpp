@@ -303,9 +303,8 @@ void tensor_binding(py::module &m) {
       py::arg("fname"), py::arg("path") = "/Tensor", py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::Tensor &self, const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
-        return self.Load_(fname, path, restore_device);
-      },
+      [](cytnx::Tensor &self, const std::filesystem::path &fname, const std::string &path,
+         const bool restore_device) { return self.Load_(fname, path, restore_device); },
       py::arg("fname"), py::arg("path") = "/Tensor", py::arg("restore_device") = true)
 
     .def(py::pickle(

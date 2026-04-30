@@ -471,7 +471,8 @@ namespace cytnx {
 
   bool Bond::operator!=(const Bond &rhs) const { return !(*this == rhs); }
 
-  void Bond::Save(const std::filesystem::path &fname, const std::string &path, const char mode) const {
+  void Bond::Save(const std::filesystem::path &fname, const std::string &path,
+                  const char mode) const {
     fstream f;  // only for binary saving, not used for HDF5
     if (fname.has_extension()) {
       // filename extension is given
@@ -503,9 +504,10 @@ namespace cytnx {
         }
         // create group
         H5::Group location = h5file;
-        if (h5file.exists(path)) {
+        try {
+          H5::Exception::dontPrint();
           location = h5file.openGroup(path);
-        } else {
+        } catch (const H5::Exception &e) {
           H5::LinkCreatPropList lcpl;
           lcpl.setCreateIntermediateGroup(1);
           location = h5file.createGroup(path, lcpl);
@@ -518,16 +520,22 @@ namespace cytnx {
           cytnx_error_msg(std::filesystem::exists(fname),
                           "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
         } else {
-          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
+          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
+                          mode);
         }
         f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
       }
     } else {  // create binary file with standard extension
       std::filesystem::path fnameext = fname;
       fnameext += ".cybd";
-      cytnx_warning_msg(true, "Missing file extension in fname '%s'. I am adding the extension '.cybc'. This is deprecated, please provide the file extension in the future.\n", fname.c_str());
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cybd'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.c_str());
       if (mode == 'x') {
-        cytnx_error_msg(std::filesystem::exists(fnameext), "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fnameext.c_str());
+        cytnx_error_msg(std::filesystem::exists(fnameext),
+                        "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                        fnameext.c_str());
       } else {
         cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
       }
@@ -559,9 +567,15 @@ namespace cytnx {
         ext == ".HDF") {
       // load HDF5
       H5::H5File h5file(fname, H5F_ACC_RDONLY);
-      cytnx_error_msg(!h5file.exists(path), "[ERROR] Path '%s' does not exist in HDF5 file '%s'",
-                      path, fname.c_str());
-      H5::Group location = h5file.openGroup(path);
+      H5::Group location;
+      try {
+        H5::Exception::dontPrint();
+        location = h5file.openGroup(path);
+      } catch (const H5::Exception &e) {
+        std::cerr << e.getDetailMsg() << std::endl;
+        cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
+                        path.c_str(), fname.c_str());
+      }
       this->from_hdf5(location);
       h5file.close();
     } else {  // load binary
@@ -574,7 +588,9 @@ namespace cytnx {
       f.close();
     }
   }
-  void Bond::Load_(const char *fname, const std::string &path) { this->Load_(std::filesystem::path(fname), path); }
+  void Bond::Load_(const char *fname, const std::string &path) {
+    this->Load_(std::filesystem::path(fname), path);
+  }
 
   void Bond::to_hdf5(H5::Group &location, const bool overwrite, const bool save_symmetries) const {
     if (overwrite) {  // delete previous data
@@ -749,6 +765,7 @@ namespace cytnx {
           this->_impl->_syms.push_back(sym);
           sidx++;
         }
+        symloc.close();
         if (symmetric) {
           cytnx_error_msg(sidx != qnumdim,
                           "[ERROR] %d Symmetries were found, but second dimension of "

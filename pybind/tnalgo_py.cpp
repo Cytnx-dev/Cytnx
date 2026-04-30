@@ -54,18 +54,23 @@ void tnalgo_binding(py::module &m) {
     .def("c_Into_Lortho", &tn_algo::MPS::Into_Lortho)
     .def("c_S_mvleft", &tn_algo::MPS::S_mvleft)
     .def("c_S_mvright", &tn_algo::MPS::S_mvright)
+
     .def(
-      "Save", [](tn_algo::MPS &self, const std::filesystem::path &fname) { self.Save(fname); },
-      py::arg("fname"))
+      "Save",
+      [](tn_algo::MPS &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/MPS/", py::arg("mode") = 'w')
     .def_static(
-      "Load", [](const std::filesystem::path &fname) { return cytnx::tn_algo::MPS::Load(fname); },
-      py::arg("fname"))
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return tn_algo::MPS::Load(fname, path, restore_device);
+      },
+      py::arg("fname"), py::arg("path") = "/MPS/", py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::tn_algo::MPS &self, const std::filesystem::path &fname) {
-        return self.Load_(fname);
-      },
-      py::arg("fname"))
+      [](tn_algo::MPS &self, const std::filesystem::path &fname, const std::string &path,
+         const bool restore_device) { return self.Load_(fname, path, restore_device); },
+      py::arg("fname"), py::arg("path") = "/MPS/", py::arg("restore_device") = true)
 
     .def(py::pickle(
       [](const tn_algo::MPS &self) {  // __getstate__

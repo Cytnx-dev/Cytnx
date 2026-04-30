@@ -63,7 +63,7 @@ void storage_binding(py::module &m) {
            } else if (tmpIN.dtype() == Type.Bool) {
              chr_dtype = py::format_descriptor<cytnx_bool>::format();
            } else {
-             cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s",
+             cytnx_error_msg(true, "[ERROR] Void Type Storage cannot convert to numpy ndarray%s",
                              "\n");
            }
 
@@ -263,24 +263,26 @@ void storage_binding(py::module &m) {
     .def("c_pylist_bool", &cytnx::Storage::vector<cytnx_bool>)
 
     .def(
-      "Save", [](cytnx::Storage &self, const std::filesystem::path &fname) { self.Save(fname); },
-      py::arg("fname"))
+      "Save",
+      [](cytnx::Storage &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/Storage", py::arg("mode") = 'w')
+    .def_static(
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return cytnx::Storage::Load(fname, path, restore_device);
+      },
+      py::arg("fname"), py::arg("path") = "/Storage", py::arg("restore_device") = true)
+    .def(
+      "Load_",
+      [](cytnx::Storage &self, const std::filesystem::path &fname, const std::string &path,
+         const bool restore_device) { return self.Load_(fname, path, restore_device); },
+      py::arg("fname"), py::arg("path") = "/Storage", py::arg("restore_device") = true)
+
     .def(
       "Tofile",
       [](cytnx::Storage &self, const std::filesystem::path &fname) { self.Tofile(fname); },
       py::arg("fname"))
-    .def_static(
-      "Load",
-      [](const std::filesystem::path &fname, const bool restore_device) {
-        return cytnx::Storage::Load(fname, restore_device);
-      },
-      py::arg("fname"), py::arg("restore_device") = true)
-    .def(
-      "Load_",
-      [](cytnx::Storage &self, const std::filesystem::path &fname, const bool restore_device) {
-        return self.Load_(fname, restore_device);
-      },
-      py::arg("fname"), py::arg("restore_device") = true)
     .def_static(
       "Fromfile",
       [](const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count,

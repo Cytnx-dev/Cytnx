@@ -530,8 +530,11 @@ namespace cytnx {
 
     /**
      * @brief Save Symmetry to file
+     * @details Save the Symmetry to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
+     * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
      * @param[in] fname file name
-     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/Symm' will write the Symmetry to the attribute 'Symm' the group '/foo/bar' in the file.
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/Symm' will
+     * write the Symmetry to the attribute 'Symm' the group '/foo/bar' in the file.
      * @param[in] mode the write mode:\n
      *  `w` Creates a new file. If the given file exists, its contents are destroyed.\n
      *  `x` Creates a new file. Fails if the given file exists already.\n
@@ -539,26 +542,33 @@ namespace cytnx {
      *      doesn't exist. Only available for HDF5 files.\n
      *  `u` Opens for writing. Existing content will be updated(overwritten).
      *      Creates the file if it doesn't exist. Only available for HDF5 files.
-     * @details Save the Symmetry to a file. The file ending should be one of ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
      * @note The common file ending for saving a Symmetry in binary format is ".cysym".
-     * @warning HDF5 file format is strongly recommended for compatibility with other libraries, readability, and future-proofing.
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
      * @see Load()
      */
-    void Save(const std::filesystem::path &fname, const std::string &path = "/Symmetry", const char mode = 'w') const;
+    void Save(const std::filesystem::path &fname, const std::string &path = "/Symmetry",
+              const char mode = 'w') const;
     /**
-     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode) const;
-    */
-    void Save(const char *fname, const std::string &path = "/Symmetry", const char mode = 'w') const;
+     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode)
+     * const;
+     */
+    void Save(const char *fname, const std::string &path = "/Symmetry",
+              const char mode = 'w') const;
 
     /**
      * @brief Load Symmetry from file and create new instance
+     * @details This function creates a new Symmetry and keeps the original Symmetry unchanged. See
+     * Load_() for loading the Symmetry to the current Symmetry.
      * @param fname[in] file name
-     * @param[in] path path inside the file. Only used for HDF5 files. A path /foo/bar/Symm will read the Symmetry from the attribute 'Symm' the group '/foo/bar' in the file.
+     * @param[in] path path inside the file. Only used for HDF5 files. A path /foo/bar/Symm will
+     * read the Symmetry from the attribute 'Symm' the group '/foo/bar' in the file.
      * @pre The file must be a Symmetry object which is saved by Save().
-     * @note This function creates a new Symmetry and keeps the original Symmetry unchanged. See Load_() for loading the Symmetry to the current Symmetry.
-     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is expected. For binary format, the common file ending for a Symmetry is ".cysym".
+     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is
+     * expected. For binary format, the common file ending for a Symmetry is ".cysym".
      */
-    static cytnx::Symmetry Load(const std::filesystem::path &fname, const std::string &path = "/Symmetry");
+    static cytnx::Symmetry Load(const std::filesystem::path &fname,
+                                const std::string &path = "/Symmetry");
     /**
      * @see Load(const std::filesystem::path &fname, const std::string &path)
      */
@@ -566,7 +576,8 @@ namespace cytnx {
 
     /**
      * @brief Load Symmetry from file and overwrite current instance
-     * @note This function overwrites the existing Symmetry. See Load() for creating a new Symmetry.
+     * @details This function overwrites the existing Symmetry. See Load() for creating a new
+     * Symmetry.
      * @see Load()
      */
     void Load_(const std::filesystem::path &fname, const std::string &path = "/Symmetry");
@@ -580,15 +591,18 @@ namespace cytnx {
      * @param[in] location the HDF5 group where the Symmetry will be saved.
      * @param[in] overwrite overwrite previous Bond information in the location.
      * @param[in] name the name of the attribute in the HDF5 file.
-     * @warning This function is only available in C++. Use Save() for saving to file in C++ or Python.
+     * @warning This function is only available in C++. Use Save() for saving to file in C++ or
+     * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const bool overwrite = false, const std::string &name = "Symmetry") const;
+    void to_hdf5(H5::Group &location, const bool overwrite = false,
+                 const std::string &name = "Symmetry") const;
     /**
      * @brief Load Symmetry from HDF5 file (inline)
      * @param[in] location the HDF5 group where the Symmetry will be loaded from.
      * @param[in] name the name of the attribute in the HDF5 file.
-     * @warning This function is only available in C++. Use Load() for loading from file in C++ or Python.
+     * @warning This function is only available in C++. Use Load() for loading from file in C++ or
+     * Python.
      * @see to_hdf5()
      */
     void from_hdf5(H5::Group &location, const std::string &name = "Symmetry");
@@ -596,14 +610,16 @@ namespace cytnx {
     /**
      * @brief Save Symmetry to binary file
      * @param[in] f the output stream where the Symmetry will be saved.
-     * @warning This function is only available in C++. In Python, use pickle for the same binary file format. Use Save() for saving to file in C++ or Python.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Save() for saving to file in C++ or Python.
      * @see from_binary()
      */
     void to_binary(std::ostream &f) const;
     /**
      * @brief Load Symmetry from binary file
      * @param[in] f the input stream from which the Symmetry will be loaded.
-     * @warning This function is only available in C++. In Python, use pickle for the same binary file format. Use Load() for loading from file in C++ or Python.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Load() for loading from file in C++ or Python.
      * @see to_binary()
      */
     void from_binary(std::istream &f);

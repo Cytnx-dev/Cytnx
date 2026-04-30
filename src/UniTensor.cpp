@@ -43,33 +43,75 @@ namespace cytnx {
   UniTensor UniTensor::Mul(const UniTensor &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
   UniTensor UniTensor::Mul(const Scalar &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
 
-  void UniTensor::Save(const std::filesystem::path &fname) const {
-    fstream f;  // only for binary saving, not used for hdf5
+  void UniTensor::Save(const std::filesystem::path &fname, const std::string &path,
+                       const char mode) const {
+    fstream f;  // only for binary saving, not used for HDF5
     if (fname.has_extension()) {
       // filename extension is given
       std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
-        // save as hdf5
+        // save as HDF5
         H5::H5File h5file;
-        try {
+        bool overwrite = false;
+        // open file
+        if (mode == 'w') {  // Write new file
           h5file = H5::H5File(fname, H5F_ACC_TRUNC);
-        } catch (H5::FileIException &error) {
-          error.printErrorStack();
-          cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
+        } else if (mode == 'x') {  // eXclusive create
+          h5file = H5::H5File(fname, H5F_ACC_EXCL);
+        } else if (mode == 'a') {  // Append data
+          if (std::filesystem::exists(fname))
+            h5file = H5::H5File(fname, H5F_ACC_RDWR);
+          else
+            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+        } else if (mode == 'u') {  // Update data
+          if (std::filesystem::exists(fname)) {
+            h5file = H5::H5File(fname, H5F_ACC_RDWR);
+            overwrite = true;
+          } else {
+            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+          }
+        } else {
+          cytnx_error_msg(true, "[ERROR] Unknown mode '%c' for writing to HDF5 file.", mode);
         }
-        this->to_hdf5(h5file);
+        // create group
+        H5::Group location = h5file;
+        try {
+          H5::Exception::dontPrint();
+          location = h5file.openGroup(path);
+        } catch (const H5::Exception &e) {
+          H5::LinkCreatPropList lcpl;
+          lcpl.setCreateIntermediateGroup(1);
+          location = h5file.createGroup(path, lcpl);
+        }
+        this->to_hdf5(location, overwrite);
         h5file.close();
         return;
       } else {  // create binary file
-        f.open(fname, ios::out | ios::trunc | ios::binary);
+        if (mode == 'x') {
+          cytnx_error_msg(std::filesystem::exists(fname),
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+        } else {
+          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
+                          mode);
+        }
+        f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
       }
     } else {  // create binary file with standard extension
+      std::filesystem::path fnameext = fname;
+      fnameext += ".cytnx";
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((std::filesystem::path(fname) += ".cytnx"), ios::out | ios::trunc | ios::binary);
+      if (mode == 'x') {
+        cytnx_error_msg(std::filesystem::exists(fnameext),
+                        "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                        fnameext.c_str());
+      } else {
+        cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
+      }
+      f.open(fnameext, std::ios::out | std::ios::trunc | std::ios::binary);
     }
     // write binary
     if (!f.is_open()) {
@@ -78,34 +120,41 @@ namespace cytnx {
     this->to_binary(f);
     f.close();
   }
-  void UniTensor::Save(const char *fname) const { Save(std::filesystem::path(fname)); }
+  void UniTensor::Save(const char *fname, const std::string &path, const char mode) const {
+    this->Save(std::filesystem::path(fname), path, mode);
+  }
 
-  UniTensor UniTensor::Load(const std::filesystem::path &fname, const bool restore_device) {
+  UniTensor UniTensor::Load(const std::filesystem::path &fname, const std::string &path,
+                            const bool restore_device) {
     UniTensor out;
-    out.Load_(fname, restore_device);
+    out.Load_(fname, path, restore_device);
     return out;
   }
-  UniTensor UniTensor::Load(const char *fname, const bool restore_device) {
-    return UniTensor::Load(std::filesystem::path(fname), restore_device);
+  UniTensor UniTensor::Load(const char *fname, const std::string &path, const bool restore_device) {
+    return UniTensor::Load(std::filesystem::path(fname), path, restore_device);
   }
 
-  void UniTensor::Load_(const std::filesystem::path &fname, const bool restore_device) {
+  void UniTensor::Load_(const std::filesystem::path &fname, const std::string &path,
+                        const bool restore_device) {
     std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {
-      // load hdf5
-      H5::H5File h5file;
+      // load HDF5
+      H5::H5File h5file(fname, H5F_ACC_RDONLY);
+      H5::Group location;
       try {
-        h5file = H5::H5File(fname, H5F_ACC_RDONLY);
-      } catch (H5::FileIException &error) {
-        error.printErrorStack();
-        cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
+        H5::Exception::dontPrint();
+        location = h5file.openGroup(path);
+      } catch (const H5::Exception &e) {
+        std::cerr << e.getDetailMsg() << std::endl;
+        cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
+                        path.c_str(), fname.c_str());
       }
-      this->from_hdf5(h5file, "Tensor", restore_device);
+      this->from_hdf5(location, restore_device);
       h5file.close();
     } else {  // load binary
       fstream f;
-      f.open(fname, ios::in | ios::binary);
+      f.open(fname, std::ios::in | std::ios::binary);
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
       }
@@ -113,15 +162,14 @@ namespace cytnx {
       f.close();
     }
   }
-  void UniTensor::Load_(const char *fname, const bool restore_device) {
-    this->Load_(std::filesystem::path(fname), restore_device);
+  void UniTensor::Load_(const char *fname, const std::string &path, const bool restore_device) {
+    this->Load_(std::filesystem::path(fname), path, restore_device);
   }
 
-  void UniTensor::to_hdf5(H5::Group &location, const std::string &name) const {
+  void UniTensor::to_hdf5(H5::Group &location, const bool overwrite) const {
     cytnx_error_msg(true, "[ERROR] Saving UniTensor to HDF5 is not implemented yet!%s", "\n");
   }
-  void UniTensor::from_hdf5(H5::Group &location, const std::string &name,
-                            const bool restore_device) {
+  void UniTensor::from_hdf5(H5::Group &location, const bool restore_device) {
     cytnx_error_msg(true, "[ERROR] Loading UniTensor from HDF5 is not implemented yet!%s", "\n");
   }
 
@@ -174,6 +222,7 @@ namespace cytnx {
     // second, let dispatch to do remaining saving.
     this->_impl->to_binary_dispatch(f);
   }
+
   void UniTensor::from_binary(std::istream &f, const bool restore_device) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));

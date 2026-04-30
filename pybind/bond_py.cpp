@@ -186,19 +186,19 @@ void bond_binding(py::module &m) {
       [](Bond &self, const std::filesystem::path &fname, const std::string &path, const char mode) {
         self.Save(fname, path, mode);
       },
-      py::arg("fname"), py::arg("path") = "/", py::arg("mode") = 'w')
+      py::arg("fname"), py::arg("path") = "/Bond/", py::arg("mode") = 'w')
     .def_static(
       "Load",
       [](const std::filesystem::path &fname, const std::string &path) {
         return Bond::Load(fname, path);
       },
-      py::arg("fname"), py::arg("path") = "/")
+      py::arg("fname"), py::arg("path") = "/Bond/")
     .def(
       "Load_",
       [](cytnx::Bond &self, const std::filesystem::path &fname, const std::string &path) {
         return self.Load_(fname, path);
       },
-      py::arg("fname"), py::arg("path") = "/")
+      py::arg("fname"), py::arg("path") = "/Bond/")
 
     .def(py::pickle(
       [](const Bond &self) {  // __getstate__
