@@ -64,7 +64,7 @@ environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHE
 
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
-environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
+environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
 
 [tool.cibuildwheel.macos]
 before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"

@@ -20,3 +20,5 @@ dev_test
 *.e
 *.o
 *.so
+
+.ccache/
