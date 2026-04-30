@@ -1,0 +1,85 @@
+name: Release to PyPI
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  BuildWheel:
+    name: BuildWheel-${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # We intentionally pin specific macOS runners; do not blindly move to
+        # newer images because Homebrew dylib minos can force a higher wheel
+        # deployment target and break delocate compatibility for lower targets.
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel]
+        # os: [ubuntu-24.04]
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # When re-running a PR job, GitHub Actions uses the merge commit created at
+    # the time of the original run, not a fresh merge with the latest target branch.
+    # This step ensures we always test against the most recent target branch.
+    - name: Merge with latest target branch (pull_request only)
+      if: github.event_name == 'pull_request'
+      run: |
+        git fetch origin ${{ github.event.pull_request.base.ref }}
+        git merge --no-edit origin/${{ github.event.pull_request.base.ref }}
+
+    - name: Cache Ccache Directory (pull_request)
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.ccache
+        key: ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-${{ github.sha }}
+        restore-keys: |
+          ccache-${{ runner.os }}-${{ github.event.pull_request.head.ref }}-
+          ccache-${{ runner.os }}-${{ github.event.pull_request.base.ref }}-
+
+    - name: Set Ccache Directory
+      run: |
+        echo "Start building---------------------------------"
+        echo "CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
+
+    # NOTE: Setup macOS step is temporarily disabled.
+    # Deployment target is now computed from Homebrew dylib minos metadata in
+    # tools/cibuildwheel_before_all_macos.sh and injected via pyproject.toml.
+    # - name: Setup macOS
+    #   if: matrix.os == 'macos-15-intel' || matrix.os == 'macos-14'
+    #   run: |
+    #     if [[ ${{ matrix.os }} == 'macos-15-intel' ]]; then
+    #       echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> "$GITHUB_ENV"
+    #     elif [[ ${{ matrix.os }} == 'macos-14' ]]; then
+    #       echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
+    #     fi
+
+    - name: Build Wheels
+      uses: pypa/cibuildwheel@v3.3.0
+      env:
+        CMAKE_C_COMPILER_LAUNCHER: ccache
+        CMAKE_CXX_COMPILER_LAUNCHER: ccache
+        CMAKE_CUDA_COMPILER_LAUNCHER: ccache
+        CCACHE_COMPILERCHECK: content
+        CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
+        # Pass environment variables into cibuildwheel build environments
+        # This is only needed on Linux becuase the wheels are built in docker
+        # images only on Linux.
+        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_DIR }}:/host_ccache"
+        CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build
+        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_COMPILERCHECK CCACHE_MAXSIZE
+        CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
+
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+        path: ./wheelhouse/*.whl

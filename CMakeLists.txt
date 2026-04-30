@@ -20,6 +20,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 message(STATUS " Generator: ${CMAKE_GENERATOR}")
 message(STATUS " Build Target: ${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}")
 message(STATUS " Installation Prefix: ${CMAKE_INSTALL_PREFIX}")
+message(STATUS " CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+message(STATUS " PROJECT_BINARY_DIR: ${PROJECT_BINARY_DIR}")
 
 # #####################################################################
 # ## DISABLING IN-SOURCE BUILD
@@ -191,6 +193,14 @@ if(USE_CUDA)
   set(CMAKE_CUDA_USE_RESPONSE_FILE_FOR_OBJECTS 0)
 endif()
 
+
+# Print all environment variables for debugging
+message(STATUS "==================== Environment Variables ====================")
+execute_process(COMMAND ${CMAKE_COMMAND} -E environment
+                OUTPUT_VARIABLE ENV_OUTPUT)
+message(STATUS "${ENV_OUTPUT}")
+message(STATUS "================================================================")
+
 # C++ uses link-time optimization anyway; this enables additionally -flto=auto,
 # for parallel compilation
 # It cannot enable on MacOS since it causes building errors when linking the library libcytnx.a.
@@ -243,7 +253,7 @@ endif()
 # #####################################################################
 
 # ## Boost
-find_package(Boost CONFIG REQUIRED)
+find_package(Boost REQUIRED)
 target_include_directories(cytnx SYSTEM
   PUBLIC
   ${Boost_INCLUDE_DIRS}

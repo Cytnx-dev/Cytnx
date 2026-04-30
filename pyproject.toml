@@ -53,3 +53,20 @@ set\(\w+?VERSION_MINOR\s+(?P<minor>\d+)\)
 set\(\w+?VERSION_PATCH\s+(?P<patch>\d+)\)
 '''
 result = "{major}.{minor}.{patch}"
+
+[tool.cibuildwheel]
+manylinux-x86_64-image = "manylinux_2_28"
+before-build = "python ./tools/cibuildwheel_before_build.py"
+environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHER = "ccache", CMAKE_CUDA_COMPILER_LAUNCHER = "ccache", CCACHE_DIR = "${PWD}/.ccache", CCACHE_BASEDIR = "${PWD}" }
+
+[tool.cibuildwheel.config-settings]
+"build-dir" = "build"
+
+[tool.cibuildwheel.linux]
+before-all = "bash ./tools/cibuildwheel_before_all.sh"
+environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
+
+[tool.cibuildwheel.macos]
+before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
+# `.cibw_macos_deployment_target.txt` is generated in tools/cibuildwheel_before_all_macos.sh.
+environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deployment_target.txt\"); print(p.read_text().strip() if p.exists() else \"10.9\")')" }
