@@ -69,4 +69,4 @@ environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DIR = "/hos
 [tool.cibuildwheel.macos]
 before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
 # `.cibw_macos_deployment_target.txt` is generated in tools/cibuildwheel_before_all_macos.sh.
-environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(cat .cibw_macos_deployment_target.txt 2>/dev/null || echo 10.9)" }
+environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(cat .cibw_macos_deployment_target.txt 2>/dev/null < /dev/null)" }
