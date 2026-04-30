@@ -12,16 +12,16 @@ else
     exit 1
 fi
 
-# Create symlinks for OpenBLAS headers if available
-if [ -d /usr/include/openblas ]; then
-    ln -sf /usr/include/openblas/lapacke.h /usr/include/lapacke.h
-    ln -sf /usr/include/openblas/lapack.h /usr/include/lapack.h
-    ln -sf /usr/include/openblas/lapacke_mangling.h /usr/include/lapacke_mangling.h
-    ln -sf /usr/include/openblas/cblas.h /usr/include/cblas.h
-    ln -sf /usr/include/openblas/openblas_config.h /usr/include/openblas_config.h
-    if ls /usr/include/openblas/openblas_config-*.h >/dev/null 2>&1; then
-        for f in /usr/include/openblas/openblas_config-*.h; do
-            ln -sf "${f}" "/usr/include/$(basename "${f}")"
-        done
-    fi
-fi
+# Kept disabled by request since CMAKE_PREFIX_PATH already points to openblas.
+# if [ -d /usr/include/openblas ]; then
+#     ln -sf /usr/include/openblas/lapacke.h /usr/include/lapacke.h
+#     ln -sf /usr/include/openblas/lapack.h /usr/include/lapack.h
+#     ln -sf /usr/include/openblas/lapacke_mangling.h /usr/include/lapacke_mangling.h
+#     ln -sf /usr/include/openblas/cblas.h /usr/include/cblas.h
+#     ln -sf /usr/include/openblas/openblas_config.h /usr/include/openblas_config.h
+#     if ls /usr/include/openblas/openblas_config-*.h >/dev/null 2>&1; then
+#         for f in /usr/include/openblas/openblas_config-*.h; do
+#             ln -sf "${f}" "/usr/include/$(basename "${f}")"
+#         done
+#     fi
+# fi
