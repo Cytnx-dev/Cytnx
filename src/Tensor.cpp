@@ -425,58 +425,72 @@ namespace cytnx {
   //===================================================================
   // wrapper
 
-  void Tensor::Tofile(const std::filesystem::path &fname) const {
-    if (!this->is_contiguous()) {
-      auto A = this->contiguous();
-      A.storage().Tofile(fname);
-    } else {
-      this->storage().Tofile(fname);
-    }
-  }
-  void Tensor::Tofile(const char *fname) const {
-    if (!this->is_contiguous()) {
-      auto A = this->contiguous();
-      A.storage().Tofile(fname);
-    } else {
-      this->storage().Tofile(fname);
-    }
-  }
-  void Tensor::Tofile(fstream &f) const {
-    if (!this->is_contiguous()) {
-      auto A = this->contiguous();
-      A.storage().Tofile(f);
-    } else {
-      this->storage().Tofile(f);
-    }
-  }
-
-  void Tensor::Save(const std::filesystem::path &fname) const {
-    fstream f;  // only for binary saving, not used for hdf5
+  void cytnx::Tensor::Save(const std::filesystem::path &fname, const std::string &path, const char mode) const {
+    fstream f;  // only for binary saving, not used for HDF5
     if (fname.has_extension()) {
       // filename extension is given
       std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
-        // save as hdf5
+        // save as HDF5
         H5::H5File h5file;
-        try {
+        bool overwrite = false;
+        // open file
+        if (mode == 'w') {  // Write new file
           h5file = H5::H5File(fname, H5F_ACC_TRUNC);
-        } catch (H5::FileIException &error) {
-          error.printErrorStack();
-          cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
+        } else if (mode == 'x') {  // eXclusive create
+          h5file = H5::H5File(fname, H5F_ACC_EXCL);
+        } else if (mode == 'a') {  // Append data
+          if (std::filesystem::exists(fname))
+            h5file = H5::H5File(fname, H5F_ACC_RDWR);
+          else
+            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+        } else if (mode == 'u') {  // Update data
+          if (std::filesystem::exists(fname)) {
+            h5file = H5::H5File(fname, H5F_ACC_RDWR);
+            overwrite = true;
+          } else {
+            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+          }
+        } else {
+          cytnx_error_msg(true, "[ERROR] Unknown mode '%c' for writing to HDF5 file.", mode);
         }
-        this->to_hdf5(h5file);
+        // split path into group and name
+        std::filesystem::path p(path);
+        std::string grouppath = p.parent_path().generic_string();
+        std::string datasetname = p.filename().string();
+        if (datasetname.empty()) datasetname = "Tensor";
+        // create group
+        H5::Group location = h5file;
+        if (h5file.exists(grouppath)) {
+          location = h5file.openGroup(grouppath);
+        } else {
+          H5::LinkCreatPropList lcpl;
+          lcpl.setCreateIntermediateGroup(1);
+          location = h5file.createGroup(grouppath, lcpl);
+        }
+        this->to_hdf5(location, overwrite, datasetname);
         h5file.close();
         return;
       } else {  // create binary file
-        f.open(fname, ios::out | ios::trunc | ios::binary);
+        if (mode == 'x') {
+          cytnx_error_msg(std::filesystem::exists(fname),
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+        } else {
+          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
+        }
+        f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
       }
     } else {  // create binary file with standard extension
-      cytnx_warning_msg(true,
-                        "Missing file extension in fname '%s'. I am adding the extension '.cytn'. "
-                        "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
-      f.open((std::filesystem::path(fname) += ".cytn"), ios::out | ios::trunc | ios::binary);
+      std::filesystem::path fnameext = fname;
+      fnameext += ".cytn";
+      cytnx_warning_msg(true, "Missing file extension in fname '%s'. I am adding the extension '.cytn'. This is deprecated, please provide the file extension in the future.\n", fname.c_str());
+      if (mode == 'x') {
+        cytnx_error_msg(std::filesystem::exists(fnameext), "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fnameext.c_str());
+      } else {
+        cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
+      }
+      f.open(fnameext, std::ios::out | std::ios::trunc | std::ios::binary);
     }
     // write binary
     if (!f.is_open()) {
@@ -485,9 +499,55 @@ namespace cytnx {
     this->to_binary(f);
     f.close();
   }
-  void Tensor::Save(const char *fname) const { this->Save(string(fname)); }
+  void cytnx::Tensor::Save(const char *fname, const std::string &path, const char mode) const {
+    this->Save(std::filesystem::path(fname), path, mode);
+  }
 
-  void Tensor::to_hdf5(H5::Group &location, const std::string &name) const {
+  cytnx::Tensor cytnx::Tensor::Load(const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+    Tensor out;
+    out.Load_(fname, path, restore_device);
+    return out;
+  }
+  cytnx::Tensor cytnx::Tensor::Load(const char *fname, const std::string &path, const bool restore_device) {
+    return cytnx::Tensor::Load(std::filesystem::path(fname), path, restore_device);
+  }
+
+  void cytnx::Tensor::Load_(const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+    std::string ext = fname.extension().string();
+    if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+        ext == ".HDF") {
+      // load HDF5
+      H5::H5File h5file(fname, H5F_ACC_RDONLY);
+      // split path into group and name
+      std::filesystem::path p(path);
+      std::string grouppath = p.parent_path().generic_string();
+      std::string datasetname = p.filename().string();
+      if (datasetname.empty()) datasetname = "Tensor";
+      // open group
+      cytnx_error_msg(!h5file.exists(grouppath),
+                      "[ERROR] Path '%s' does not exist in HDF5 file '%s'", grouppath, fname.c_str());
+      H5::Group location = h5file.openGroup(grouppath);
+      this->from_hdf5(location, datasetname, restore_device);
+      h5file.close();
+    } else {  // load binary
+      fstream f;
+      f.open(fname, ios::in | ios::binary);
+      if (!f.is_open()) {
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+      }
+      this->from_binary(f, restore_device);
+      f.close();
+    }
+  }
+  void cytnx::Tensor::Load_(const char *fname, const std::string &path, const bool restore_device) {
+    this->Load_(std::filesystem::path(fname), path, restore_device);
+  }
+
+  void Tensor::to_hdf5(H5::Group &location, const bool overwrite, const std::string &name) const {
+    if (overwrite) {  // delete previous data
+      if (location.nameExists(name)) location.unlink(name);
+    }
+
     Tensor ten = this->contiguous();
     std::vector<hsize_t> dims(this->shape().begin(), this->shape().end());
 
@@ -502,66 +562,6 @@ namespace cytnx {
       int device = this->device();
       attr.write(H5::PredType::NATIVE_INT, &device);
     }
-  }
-  void Tensor::to_binary(std::ostream &f) const {
-    unsigned int IDDs = 888;
-    f.write((char *)&IDDs, sizeof(unsigned int));
-    cytnx_uint64 shp = this->shape().size();
-    cytnx_uint64 Conti = this->is_contiguous();
-    f.write((char *)&shp, sizeof(cytnx_uint64));
-
-    f.write((char *)&Conti, sizeof(cytnx_uint64));
-    f.write((char *)&this->_impl->_shape[0], sizeof(cytnx_uint64) * shp);
-    f.write((char *)&this->_impl->_mapper[0], sizeof(cytnx_uint64) * shp);
-    f.write((char *)&this->_impl->_invmapper[0], sizeof(cytnx_uint64) * shp);
-
-    // pass to storage for save:
-    this->storage().to_binary(f);
-  }
-
-  Tensor Tensor::Fromfile(const std::filesystem::path &fname, const unsigned int &dtype,
-                          const cytnx_int64 &count, const int device) {
-    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
-  }
-  Tensor Tensor::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count,
-                          const int device) {
-    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
-  }
-  Tensor Tensor::Load(const std::filesystem::path &fname, const bool restore_device) {
-    Tensor out;
-    out.Load_(fname, restore_device);
-    return out;
-  }
-  Tensor Tensor::Load(const char *fname, const bool restore_device) {
-    return Tensor::Load(string(fname), restore_device);
-  }
-
-  void Tensor::Load_(const std::filesystem::path &fname, const bool restore_device) {
-    std::string ext = fname.extension().string();
-    if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
-        ext == ".HDF") {
-      // load hdf5
-      H5::H5File h5file;
-      try {
-        h5file = H5::H5File(fname, H5F_ACC_RDONLY);
-      } catch (H5::FileIException &error) {
-        error.printErrorStack();
-        cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
-      }
-      this->from_hdf5(h5file, "Tensor", restore_device);
-      h5file.close();
-    } else {  // load binary
-      fstream f;
-      f.open(fname, ios::in | ios::binary);
-      if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
-      }
-      this->from_binary(f, restore_device);
-      f.close();
-    }
-  }
-  void Tensor::Load_(const char *fname, const bool restore_device) {
-    this->Load_(string(fname), restore_device);
   }
 
   void Tensor::from_hdf5(H5::Group &location, const std::string &name, const bool restore_device) {
@@ -592,6 +592,23 @@ namespace cytnx {
 
     this->_impl->_storage.data_from_hdf5(dataset, Nelem, dtype, datatype, device);
   }
+
+  void Tensor::to_binary(std::ostream &f) const {
+    unsigned int IDDs = 888;
+    f.write((char *)&IDDs, sizeof(unsigned int));
+    cytnx_uint64 shp = this->shape().size();
+    cytnx_uint64 Conti = this->is_contiguous();
+    f.write((char *)&shp, sizeof(cytnx_uint64));
+
+    f.write((char *)&Conti, sizeof(cytnx_uint64));
+    f.write((char *)&this->_impl->_shape[0], sizeof(cytnx_uint64) * shp);
+    f.write((char *)&this->_impl->_mapper[0], sizeof(cytnx_uint64) * shp);
+    f.write((char *)&this->_impl->_invmapper[0], sizeof(cytnx_uint64) * shp);
+
+    // pass to storage for save:
+    this->storage().to_binary(f);
+  }
+
   void Tensor::from_binary(std::istream &f, const bool restore_device) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
@@ -612,6 +629,40 @@ namespace cytnx {
 
     // pass to storage for save:
     this->_impl->_storage.from_binary(f, restore_device);
+  }
+
+  void Tensor::Tofile(const std::filesystem::path &fname) const {
+    if (!this->is_contiguous()) {
+      auto A = this->contiguous();
+      A.storage().Tofile(fname);
+    } else {
+      this->storage().Tofile(fname);
+    }
+  }
+  void Tensor::Tofile(const char *fname) const {
+    if (!this->is_contiguous()) {
+      auto A = this->contiguous();
+      A.storage().Tofile(fname);
+    } else {
+      this->storage().Tofile(fname);
+    }
+  }
+  void Tensor::Tofile(fstream &f) const {
+    if (!this->is_contiguous()) {
+      auto A = this->contiguous();
+      A.storage().Tofile(f);
+    } else {
+      this->storage().Tofile(f);
+    }
+  }
+
+  Tensor Tensor::Fromfile(const std::filesystem::path &fname, const unsigned int &dtype,
+                          const cytnx_int64 &count, const int device) {
+    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
+  }
+  Tensor Tensor::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count,
+                          const int device) {
+    return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
   }
 
   Tensor Tensor::real() {

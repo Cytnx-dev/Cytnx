@@ -78,7 +78,7 @@ namespace cytnx {
     this->to_binary(f);
     f.close();
   }
-  void UniTensor::Save(const char *fname) const { Save(string(fname)); }
+  void UniTensor::Save(const char *fname) const { Save(std::filesystem::path(fname)); }
 
   UniTensor UniTensor::Load(const std::filesystem::path &fname, const bool restore_device) {
     UniTensor out;
@@ -86,7 +86,7 @@ namespace cytnx {
     return out;
   }
   UniTensor UniTensor::Load(const char *fname, const bool restore_device) {
-    return UniTensor::Load(string(fname), restore_device);
+    return UniTensor::Load(std::filesystem::path(fname), restore_device);
   }
 
   void UniTensor::Load_(const std::filesystem::path &fname, const bool restore_device) {
@@ -114,7 +114,7 @@ namespace cytnx {
     }
   }
   void UniTensor::Load_(const char *fname, const bool restore_device) {
-    this->Load_(string(fname), restore_device);
+    this->Load_(std::filesystem::path(fname), restore_device);
   }
 
   void UniTensor::to_hdf5(H5::Group &location, const std::string &name) const {

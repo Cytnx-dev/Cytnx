@@ -119,7 +119,7 @@ namespace cytnx {
     this->to_binary(f);
     f.close();
   }
-  void Storage::Save(const char *fname) const { this->Save(string(fname)); }
+  void Storage::Save(const char *fname) const { this->Save(std::filesystem::path(fname)); }
 
   void Storage::Tofile(const std::filesystem::path &fname) const {
     fstream f;
@@ -210,7 +210,7 @@ namespace cytnx {
 
   Storage Storage::Fromfile(const char *fname, const unsigned int &dtype, const cytnx_int64 &count,
                             const int device) {
-    return Storage::Fromfile(string(fname), dtype, count, device);
+    return Storage::Fromfile(std::filesystem::path(fname), dtype, count, device);
   }
   Storage Storage::Fromfile(const std::filesystem::path &fname, const unsigned int &dtype,
                             const cytnx_int64 &count, const int device) {
@@ -259,7 +259,7 @@ namespace cytnx {
     return out;
   }
   Storage Storage::Load(const char *fname, const bool restore_device) {
-    return Storage::Load(string(fname), restore_device);
+    return Storage::Load(std::filesystem::path(fname), restore_device);
   }
 
   void Storage::Load_(const std::filesystem::path &fname, const bool restore_device) {
@@ -287,7 +287,7 @@ namespace cytnx {
     }
   }
   void Storage::Load_(const char *fname, const bool restore_device) {
-    this->Load_(string(fname), restore_device);
+    this->Load_(std::filesystem::path(fname), restore_device);
   }
 
   void Storage::from_hdf5(H5::Group &location, const std::string &name, const bool restore_device) {

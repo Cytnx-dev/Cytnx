@@ -98,7 +98,7 @@ namespace cytnx {
       this->to_binary(f);
       f.close();
     }
-    void MPS::Save(const char* fname) const { this->Save(string(fname)); }
+    void MPS::Save(const char* fname) const { this->Save(std::filesystem::path(fname)); }
 
     MPS MPS::Load(const std::filesystem::path& fname, const bool restore_device) {
       MPS out;
@@ -106,7 +106,7 @@ namespace cytnx {
       return out;
     }
     MPS MPS::Load(const char* fname, const bool restore_device) {
-      return MPS::Load(string(fname), restore_device);
+      return MPS::Load(std::filesystem::path(fname), restore_device);
     }
 
     void MPS::Load_(const std::filesystem::path& fname, const bool restore_device) {
@@ -134,7 +134,7 @@ namespace cytnx {
       }
     }
     void MPS::Load_(const char* fname, const bool restore_device) {
-      this->Load_(string(fname), restore_device);
+      this->Load_(std::filesystem::path(fname), restore_device);
     }
 
     void MPS::to_hdf5(H5::Group& location, const std::string& name) const {

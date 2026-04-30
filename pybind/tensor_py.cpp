@@ -291,20 +291,22 @@ void tensor_binding(py::module &m) {
       py::arg("val"))
 
     .def(
-      "Save", [](cytnx::Tensor &self, const std::filesystem::path &fname) { self.Save(fname); },
-      py::arg("fname"))
+      "Save",
+      [](cytnx::Tensor &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/Tensor", py::arg("mode") = 'w')
     .def_static(
       "Load",
-      [](const std::filesystem::path &fname, const bool restore_device) {
-        return cytnx::Tensor::Load(fname, restore_device);
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return cytnx::Tensor::Load(fname, path, restore_device);
       },
-      py::arg("fname"), py::arg("restore_device") = true)
+      py::arg("fname"), py::arg("path") = "/Tensor", py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::Tensor &self, const std::filesystem::path &fname, const bool restore_device) {
-        return self.Load_(fname, restore_device);
+      [](cytnx::Tensor &self, const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return self.Load_(fname, path, restore_device);
       },
-      py::arg("fname"), py::arg("restore_device") = true)
+      py::arg("fname"), py::arg("path") = "/Tensor", py::arg("restore_device") = true)
 
     .def(py::pickle(
       [](const cytnx::Tensor &self) {  // __getstate__
