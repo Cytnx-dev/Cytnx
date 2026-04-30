@@ -6,10 +6,12 @@ set -euo pipefail
 # encode a minimum supported macOS version (minos). We inspect that metadata
 # and persist both a report and an effective deployment target for cibuildwheel.
 
-packages=(arpack boost ccache libomp openblas)
+probe_packages=(arpack boost libomp openblas)
+install_only_packages=(ccache)
+install_packages=("${probe_packages[@]}" "${install_only_packages[@]}")
 
 brew update
-brew install "${packages[@]}"
+brew install "${install_packages[@]}"
 
 report_file="${PWD}/.cibw_macos_brew_minos_report.txt"
 target_file="${PWD}/.cibw_macos_deployment_target.txt"
@@ -19,8 +21,7 @@ target_file="${PWD}/.cibw_macos_deployment_target.txt"
 
 max_minos="0.0"
 
-for pkg in "${packages[@]}"; do
-  [[ "${pkg}" == "ccache" ]] && continue
+for pkg in "${probe_packages[@]}"; do
   echo "### ${pkg} ###" | tee -a "${report_file}"
   prefix="$(brew --prefix "${pkg}")"
   if [[ -d "${prefix}/lib" ]]; then
