@@ -11,6 +11,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # We intentionally pin specific macOS runners; do not blindly move to
+        # newer images because Homebrew dylib minos can force a higher wheel
+        # deployment target and break delocate compatibility for lower targets.
         os: [ubuntu-latest, macos-14, macos-15-intel]
         # os: [ubuntu-latest]
     defaults:
@@ -47,15 +50,9 @@ jobs:
         echo "Start building---------------------------------"
         echo "CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
 
-    - name: Setup macOS
-      if: matrix.os == 'macos-15-intel' || matrix.os == 'macos-14'
-      run: |
-        if [[ ${{ matrix.os }} == 'macos-15-intel' ]]; then
-          echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> "$GITHUB_ENV"
-        elif [[ ${{ matrix.os }} == 'macos-14' ]]; then
-          echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
-        fi
-
+    # NOTE: Setup macOS step is temporarily disabled.
+    # Deployment target is now computed from Homebrew dylib minos metadata in
+    # tools/cibuildwheel_before_all_macos.sh and injected via pyproject.toml.
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
       env:
