@@ -4,6 +4,7 @@
 #ifndef BACKEND_TORCH
 
   #include <cstdlib>
+  #include <filesystem>
   #include <fstream>
   #include <initializer_list>
   #include <iostream>
@@ -533,10 +534,10 @@ namespace cytnx {
      * @note The common file ending for saving a Storage in binary format is ".cyst".
      * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
      * readability, and future-proofing.
-     * @see Load(const std::string &fname, const bool restore_device)
+     * @see Load(const std::filesystem::path &fname, const bool restore_device)
      */
-    void Save(const std::string &fname) const;
-    // @see Save(const std::string &fname) const
+    void Save(const std::filesystem::path &fname) const;
+    // @see Save(const std::filesystem::path &fname) const
     void Save(const char *fname) const;
 
     /**
@@ -547,31 +548,31 @@ namespace cytnx {
      * loading.
      * @pre The file must be a Storage object which is saved by cytnx::Storage::Save.
      * @note This function creates a new Storage and keeps the original Storage unchanged. See \link
-     * Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
-     * Storage to the current Storage.
+     * Load_(const std::filesystem::path &fname, const bool restore_device) Load_() \endlink for
+     * loading the Storage to the current Storage.
      * @details For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf"
      * is expected. For binary format, the common file ending for a Storage is ".cyst".
      */
-    static Storage Load(const std::string &fname, const bool restore_device = true);
-    // @see Load(const std::string &fname, const bool restore_device)
+    static Storage Load(const std::filesystem::path &fname, const bool restore_device = true);
+    // @see Load(const std::filesystem::path &fname, const bool restore_device)
     static Storage Load(const char *fname, const bool restore_device = true);
 
     /**
     @brief Load Storage from file and overwrite current instance
-    @note This function overwrites the existing Storage. See \link Load(const std::string &fname,
-    const bool restore_device) Load() \endlink for creating a new Storage.
-    @see Load(const std::string &fname, const bool restore_device)
+    @note This function overwrites the existing Storage. See \link Load(const std::filesystem::path
+    &fname, const bool restore_device) Load() \endlink for creating a new Storage.
+    @see Load(const std::filesystem::path &fname, const bool restore_device)
     */
-    void Load_(const std::string &fname, const bool restore_device = true);
-    // @see Load_(const std::string &fname, const bool restore_device)
+    void Load_(const std::filesystem::path &fname, const bool restore_device = true);
+    // @see Load_(const std::filesystem::path &fname, const bool restore_device)
     void Load_(const char *fname, const bool restore_device = true);
 
     /**
      * @brief Save Storage to HDF5 file
      * @param[in] location the HDF5 group where the Storage will be saved.
      * @param[in] name the name of the Storage in the HDF5 file.
-     * @warning This function is only available in C++. Use \link Save(const std::string &fname)
-     * Save() \endlink for saving to file in C++ or Python.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
      * @see from_hdf5(H5::Group &location, const std::string &name, const bool restore_device)
      */
     void to_hdf5(H5::Group &location, const std::string &name = "Storage") const;
@@ -582,8 +583,8 @@ namespace cytnx {
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
-     * @warning This function is only available in C++. Use \link Load(const std::string &fname,
-     * const bool restore_device) Load() \endlink for loading from file in C++ or Python.
+     * @warning This function is only available in C++. Use \link Load(const std::filesystem::path
+     * &fname, const bool restore_device) Load() \endlink for loading from file in C++ or Python.
      * @see to_hdf5(H5::Group &location, const std::string &name) const
      */
     void from_hdf5(H5::Group &location, const std::string &name = "Storage",
@@ -593,8 +594,8 @@ namespace cytnx {
      * @param[in] dataset the HDF5 dataset where the Storage will be saved.
      * @param[in] hdf5type the HDF5 data type for the dataset, must match the data type of the
      * Storage.
-     * @warning This function is only available in C++. Use \link Save(const std::string &fname)
-     * Save() \endlink for saving to file in C++ or Python.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
      * @see data_from_hdf5(H5::DataSet &dataset, const cytnx_uint64 &Nelem, const unsigned int
      * &dtype, H5::DataType &hdf5type, const int &device)
      */
@@ -610,8 +611,8 @@ namespace cytnx {
      * Storage.
      * @param[in] device the device on which the Storage will be loaded.
      * @note This function overwrites the current Storage with a new instance.
-     * @warning This function is only available in C++. Use \link Save(const std::string &fname)
-     * Save() \endlink for saving to file in C++ or Python.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
      * @see data_to_hdf5(H5::DataSet &dataset, H5::DataType &hdf5type)
      */
     void data_from_hdf5(H5::DataSet &dataset, const cytnx_uint64 &Nelem, const unsigned int &dtype,
@@ -621,8 +622,8 @@ namespace cytnx {
      * @brief Save Storage to binary file
      * @param[in] f the output stream where the Storage will be saved.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Save(const std::string &fname) Save() \endlink for saving to file in
-     * C++ or Python.
+     * file format. Use \link Save(const std::filesystem::path &fname) Save() \endlink for saving to
+     * file in C++ or Python.
      * @see from_binary(std::istream &f, const bool restore_device)
      */
     void to_binary(std::ostream &f) const;
@@ -633,16 +634,16 @@ namespace cytnx {
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Load(const std::string &fname, const bool restore_device) Load()
-     * \endlink for loading from file in C++ or Python.
+     * file format. Use \link Load(const std::filesystem::path &fname, const bool restore_device)
+     * Load() \endlink for loading from file in C++ or Python.
      * @see to_binary(std::ostream &f) const
      */
     void from_binary(std::istream &f, const bool restore_device = true);
     /**
      * @brief Save only the data of the Storage to binary filestream.
      * @param[in] f the output stream where the Storage will be saved.
-     * @warning This function is only available in C++. Use \link Save(const std::string &fname)
-     * Save() \endlink for saving to file in C++ or Python.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
      * @see data_from_binary(std::istream &f, const cytnx_uint64 &Nelem, const unsigned int &dtype,
      * const int &device)
      */
@@ -655,8 +656,8 @@ namespace cytnx {
      * @param[in] device the device on which the Storage will be loaded.
      * @note This function overwrites the current Storage with a new instance.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Load(const std::string &fname, const bool restore_device) Load()
-     * \endlink for loading from file in C++ or Python.
+     * file format. Use \link Load(const std::filesystem::path &fname, const bool restore_device)
+     * Load() \endlink for loading from file in C++ or Python.
      * @see data_to_binary(std::ostream &f) const
      */
     void data_from_binary(std::istream &f, const cytnx_uint64 &Nelem, const unsigned int &dtype,
@@ -664,16 +665,17 @@ namespace cytnx {
 
     /**
      * @brief Save current Storage to a binary file, which only contains the raw data.
-     * @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count)
-     * @deprecated This function is deprecated. Please use \ref Save(const std::string &fname)
-     * instead for saving raw data together with metadata.
+     * @see Fromfile(const std::filesystem::path &fname, const unsigned int &dtype, const
+     * cytnx_int64 &count)
+     * @deprecated This function is deprecated. Please use \ref Save(const std::filesystem::path
+     * &fname) instead for saving raw data together with metadata.
      */
-    [[deprecated("Please use Save(const std::string &fname) instead.")]] void Tofile(
-      const std::string &fname) const;
-    /// @see Tofile(const std::string &fname) const
-    [[deprecated("Please use Save(const std::string &fname) instead.")]] void Tofile(
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
+      const std::filesystem::path &fname) const;
+    /// @see Tofile(const std::filesystem::path &fname) const
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
       const char *fname) const;
-    /// @see Tofile(const std::string &fname) const
+    /// @see Tofile(const std::filesystem::path &fname) const
     [[deprecated("Please use to_binary(std::ostream &f) instead.")]] void Tofile(
       std::fstream &f) const;
 
@@ -692,14 +694,15 @@ namespace cytnx {
      *  4. The @p count cannot be larger than the number of elements in the binary file.
      *  5. The file name @p fname must be valid.
      *
-     * @see Tofile(const std::string &fname) const
+     * @see Tofile(const std::filesystem::path &fname) const
      * @deprecated This function is deprecated. Please use Save/Load functions instead for storing
      * raw data together with metadata.
      */
     [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
-      const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
+      const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
       const int device = Device.cpu);
-    // @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count)
+    // @see Fromfile(const std::filesystem::path &fname, const unsigned int &dtype, const
+    // cytnx_int64 &count)
     [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
       const char *fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
       const int device = Device.cpu);

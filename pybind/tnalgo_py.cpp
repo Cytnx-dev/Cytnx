@@ -1,18 +1,21 @@
-#include <vector>
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <map>
 #include <random>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
-#include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
 #include "complex.h"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -52,14 +55,16 @@ void tnalgo_binding(py::module &m) {
     .def("c_S_mvleft", &tn_algo::MPS::S_mvleft)
     .def("c_S_mvright", &tn_algo::MPS::S_mvright)
     .def(
-      "Save", [](tn_algo::MPS &self, const std::string &fname) { self.Save(fname); },
+      "Save", [](tn_algo::MPS &self, const std::filesystem::path &fname) { self.Save(fname); },
       py::arg("fname"))
     .def_static(
-      "Load", [](const std::string &fname) { return cytnx::tn_algo::MPS::Load(fname); },
+      "Load", [](const std::filesystem::path &fname) { return cytnx::tn_algo::MPS::Load(fname); },
       py::arg("fname"))
     .def(
       "Load_",
-      [](cytnx::tn_algo::MPS &self, const std::string &fname) { return self.Load_(fname); },
+      [](cytnx::tn_algo::MPS &self, const std::filesystem::path &fname) {
+        return self.Load_(fname);
+      },
       py::arg("fname"))
 
     .def(py::pickle(

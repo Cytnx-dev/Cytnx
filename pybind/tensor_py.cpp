@@ -1,5 +1,6 @@
 #include "cytnx.hpp"
 
+#include <filesystem>
 #include <map>
 #include <random>
 #include <vector>
@@ -11,6 +12,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
 #include "complex.h"
 #include "H5Cpp.h"
@@ -289,17 +291,17 @@ void tensor_binding(py::module &m) {
       py::arg("val"))
 
     .def(
-      "Save", [](cytnx::Tensor &self, const std::string &fname) { self.Save(fname); },
+      "Save", [](cytnx::Tensor &self, const std::filesystem::path &fname) { self.Save(fname); },
       py::arg("fname"))
     .def_static(
       "Load",
-      [](const std::string &fname, const bool restore_device) {
+      [](const std::filesystem::path &fname, const bool restore_device) {
         return cytnx::Tensor::Load(fname, restore_device);
       },
       py::arg("fname"), py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::Tensor &self, const std::string &fname, const bool restore_device) {
+      [](cytnx::Tensor &self, const std::filesystem::path &fname, const bool restore_device) {
         return self.Load_(fname, restore_device);
       },
       py::arg("fname"), py::arg("restore_device") = true)
@@ -319,11 +321,12 @@ void tensor_binding(py::module &m) {
       }))
 
     .def(
-      "Tofile", [](cytnx::Tensor &self, const std::string &fname) { self.Tofile(fname); },
+      "Tofile", [](cytnx::Tensor &self, const std::filesystem::path &fname) { self.Tofile(fname); },
       py::arg("fname"))
     .def_static(
       "Fromfile",
-      [](const std::string &fname, const unsigned int &dtype, const cytnx::cytnx_int64 &count,
+      [](const std::filesystem::path &fname, const unsigned int &dtype,
+         const cytnx::cytnx_int64 &count,
          const int device) { return cytnx::Tensor::Fromfile(fname, dtype, count, device); },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = cytnx::cytnx_int64(-1),
       py::arg("device") = (int)cytnx::Device.cpu)

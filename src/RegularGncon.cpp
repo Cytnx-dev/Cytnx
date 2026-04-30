@@ -1,10 +1,12 @@
-#include <typeinfo>
 #include "Gncon.hpp"
 
-#include "search_tree.hpp"
-#include <stack>
 #include <algorithm>
+#include <filesystem>
 #include <iostream>
+#include <stack>
+#include <typeinfo>
+
+#include "search_tree.hpp"
 
 using namespace std;
 
@@ -402,7 +404,7 @@ namespace cytnx {
     // print_gn(this->table, this->names, this->name2pos);
   }
 
-  void RegularGncon::Fromfile(const std::string &fname) {
+  void RegularGncon::Fromfile(const std::filesystem::path &fname) {
     const cytnx_uint64 MAXLINES = 1024;
 
     // empty all
@@ -482,13 +484,13 @@ namespace cytnx {
     }
   }
 
-  void RegularGncon::Savefile(const std::string &fname) {
+  void RegularGncon::Savefile(const std::filesystem::path &fname) {
     cytnx_error_msg(this->label_arr.size() == 0,
                     "[ERROR][RegularGncon][Savefile] Cannot save empty Gncon to Gncon file!%s",
                     "\n");
 
     fstream fo;
-    fo.open(fname + ".net", ios::out | ios::trunc);
+    fo.open(std::filesystem::path(fname) += ".net", ios::out | ios::trunc);
     if (!fo.is_open()) {
       cytnx_error_msg(true, "[ERROR][RegularGncon][Savefile] Cannot open/create file:%s\n",
                       fname.c_str());

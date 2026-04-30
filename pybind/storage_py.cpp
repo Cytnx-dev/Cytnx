@@ -1,5 +1,6 @@
 #include "cytnx.hpp"
 
+#include <filesystem>
 #include <map>
 #include <random>
 #include <string>
@@ -12,6 +13,7 @@
 #include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
 #include "complex.h"
 #include "H5Cpp.h"
@@ -261,26 +263,27 @@ void storage_binding(py::module &m) {
     .def("c_pylist_bool", &cytnx::Storage::vector<cytnx_bool>)
 
     .def(
-      "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },
+      "Save", [](cytnx::Storage &self, const std::filesystem::path &fname) { self.Save(fname); },
       py::arg("fname"))
     .def(
-      "Tofile", [](cytnx::Storage &self, const std::string &fname) { self.Tofile(fname); },
+      "Tofile",
+      [](cytnx::Storage &self, const std::filesystem::path &fname) { self.Tofile(fname); },
       py::arg("fname"))
     .def_static(
       "Load",
-      [](const std::string &fname, const bool restore_device) {
+      [](const std::filesystem::path &fname, const bool restore_device) {
         return cytnx::Storage::Load(fname, restore_device);
       },
       py::arg("fname"), py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::Storage &self, const std::string &fname, const bool restore_device) {
+      [](cytnx::Storage &self, const std::filesystem::path &fname, const bool restore_device) {
         return self.Load_(fname, restore_device);
       },
       py::arg("fname"), py::arg("restore_device") = true)
     .def_static(
       "Fromfile",
-      [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count,
+      [](const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count,
          const int device) { return cytnx::Storage::Fromfile(fname, dtype, count, device); },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1),
       py::arg("device") = (int)cytnx::Device.cpu)

@@ -62,11 +62,11 @@ namespace cytnx {
       this->_impl->from_binary_dispatch(f, restore_device);
     }
 
-    void MPS::Save(const std::string& fname) const {
+    void MPS::Save(const std::filesystem::path& fname) const {
       fstream f;  // only for binary saving, not used for hdf5
-      if (std::filesystem::path(fname).has_extension()) {
+      if (fname.has_extension()) {
         // filename extension is given
-        auto ext = std::filesystem::path(fname).extension().string();
+        std::string ext = fname.extension().string();
         if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
             ext == ".HDF") {
           // save as hdf5
@@ -89,7 +89,7 @@ namespace cytnx {
           "Missing file extension in fname '%s'. I am adding the extension '.cymps'. This is "
           "deprecated, please provide the file extension in the future.\n",
           fname.c_str());
-        f.open((fname + ".cymps"), ios::out | ios::trunc | ios::binary);
+        f.open((std::filesystem::path(fname) += ".cymps"), ios::out | ios::trunc | ios::binary);
       }
       // write binary
       if (!f.is_open()) {
@@ -100,7 +100,7 @@ namespace cytnx {
     }
     void MPS::Save(const char* fname) const { this->Save(string(fname)); }
 
-    MPS MPS::Load(const std::string& fname, const bool restore_device) {
+    MPS MPS::Load(const std::filesystem::path& fname, const bool restore_device) {
       MPS out;
       out.Load_(fname, restore_device);
       return out;
@@ -109,8 +109,8 @@ namespace cytnx {
       return MPS::Load(string(fname), restore_device);
     }
 
-    void MPS::Load_(const std::string& fname, const bool restore_device) {
-      auto ext = std::filesystem::path(fname).extension().string();
+    void MPS::Load_(const std::filesystem::path& fname, const bool restore_device) {
+      std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
         // load hdf5

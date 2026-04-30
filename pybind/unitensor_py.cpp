@@ -1,19 +1,23 @@
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <format>
-#include <vector>
 #include <map>
 #include <random>
 #include <string>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 #include <pybind11/warnings.h>
 
-#include "cytnx.hpp"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -516,16 +520,16 @@ void unitensor_binding(py::module &m) {
     .def("__copy__", &UniTensor::clone)
     .def("__deepcopy__", &UniTensor::clone)
     .def(
-      "Save", [](UniTensor &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
+      "Save", [](UniTensor &self, const std::filesystem::path &fname) { self.Save(fname); }, py::arg("fname"))
     .def_static(
       "Load",
-      [](const std::string &fname, const bool restore_device) {
+      [](const std::filesystem::path &fname, const bool restore_device) {
         return cytnx::UniTensor::Load(fname, restore_device);
       },
       py::arg("fname"), py::arg("restore_device") = true)
     .def(
       "Load_",
-      [](cytnx::UniTensor &self, const std::string &fname, const bool restore_device) {
+      [](cytnx::UniTensor &self, const std::filesystem::path &fname, const bool restore_device) {
         return self.Load_(fname, restore_device);
       },
       py::arg("fname"), py::arg("restore_device") = true)

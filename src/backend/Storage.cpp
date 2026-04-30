@@ -84,11 +84,11 @@ namespace cytnx {
   }
   bool Storage::operator!=(const Storage &rhs) { return !(*this == rhs); }
 
-  void Storage::Save(const std::string &fname) const {
+  void Storage::Save(const std::filesystem::path &fname) const {
     fstream f;
-    if (std::filesystem::path(fname).has_extension()) {
+    if (fname.has_extension()) {
       // filename extension is given
-      auto ext = std::filesystem::path(fname).extension().string();
+      std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
         // save as hdf5
@@ -110,7 +110,7 @@ namespace cytnx {
                         "Missing file extension in fname '%s'. I am adding the extension '.cyst'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cyst"), ios::out | ios::trunc | ios::binary);
+      f.open((std::filesystem::path(fname) += ".cyst"), ios::out | ios::trunc | ios::binary);
     }
     // write binary
     if (!f.is_open()) {
@@ -121,7 +121,7 @@ namespace cytnx {
   }
   void Storage::Save(const char *fname) const { this->Save(string(fname)); }
 
-  void Storage::Tofile(const std::string &fname) const {
+  void Storage::Tofile(const std::filesystem::path &fname) const {
     fstream f;
     f.open(fname, ios::out | ios::trunc | ios::binary);
     if (!f.is_open()) {
@@ -212,7 +212,7 @@ namespace cytnx {
                             const int device) {
     return Storage::Fromfile(string(fname), dtype, count, device);
   }
-  Storage Storage::Fromfile(const std::string &fname, const unsigned int &dtype,
+  Storage Storage::Fromfile(const std::filesystem::path &fname, const unsigned int &dtype,
                             const cytnx_int64 &count, const int device) {
     cytnx_error_msg(dtype == Type.Void, "[ERROR] Cannot have Void dtype.%s", "\n");
     cytnx_error_msg(count == 0, "[ERROR] count cannot be zero!%s", "\n");
@@ -253,7 +253,7 @@ namespace cytnx {
     return out;
   }
 
-  Storage Storage::Load(const std::string &fname, const bool restore_device) {
+  Storage Storage::Load(const std::filesystem::path &fname, const bool restore_device) {
     Storage out;
     out.Load_(fname, restore_device);
     return out;
@@ -262,8 +262,8 @@ namespace cytnx {
     return Storage::Load(string(fname), restore_device);
   }
 
-  void Storage::Load_(const std::string &fname, const bool restore_device) {
-    auto ext = std::filesystem::path(fname).extension().string();
+  void Storage::Load_(const std::filesystem::path &fname, const bool restore_device) {
+    std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {
       // load hdf5

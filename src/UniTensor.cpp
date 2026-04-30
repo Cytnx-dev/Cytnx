@@ -43,11 +43,11 @@ namespace cytnx {
   UniTensor UniTensor::Mul(const UniTensor &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
   UniTensor UniTensor::Mul(const Scalar &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
 
-  void UniTensor::Save(const std::string &fname) const {
+  void UniTensor::Save(const std::filesystem::path &fname) const {
     fstream f;  // only for binary saving, not used for hdf5
-    if (std::filesystem::path(fname).has_extension()) {
+    if (fname.has_extension()) {
       // filename extension is given
-      auto ext = std::filesystem::path(fname).extension().string();
+      std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
         // save as hdf5
@@ -69,7 +69,7 @@ namespace cytnx {
                         "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cytnx"), ios::out | ios::trunc | ios::binary);
+      f.open((std::filesystem::path(fname) += ".cytnx"), ios::out | ios::trunc | ios::binary);
     }
     // write binary
     if (!f.is_open()) {
@@ -80,7 +80,7 @@ namespace cytnx {
   }
   void UniTensor::Save(const char *fname) const { Save(string(fname)); }
 
-  UniTensor UniTensor::Load(const std::string &fname, const bool restore_device) {
+  UniTensor UniTensor::Load(const std::filesystem::path &fname, const bool restore_device) {
     UniTensor out;
     out.Load_(fname, restore_device);
     return out;
@@ -89,8 +89,8 @@ namespace cytnx {
     return UniTensor::Load(string(fname), restore_device);
   }
 
-  void UniTensor::Load_(const std::string &fname, const bool restore_device) {
-    auto ext = std::filesystem::path(fname).extension().string();
+  void UniTensor::Load_(const std::filesystem::path &fname, const bool restore_device) {
+    std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {
       // load hdf5

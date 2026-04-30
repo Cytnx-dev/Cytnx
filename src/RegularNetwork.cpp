@@ -650,7 +650,7 @@ namespace cytnx {
     this->einsum_path = CtTree_to_eisumpath(CtTree, names);
   }  // end of FromString
 
-  void RegularNetwork::Fromfile(const string &fname) {
+  void RegularNetwork::Fromfile(const std::filesystem::path &fname) {
     const cytnx_uint64 MAXLINES = 1024;
 
     // empty all
@@ -738,13 +738,13 @@ namespace cytnx {
     }
   }
 
-  void RegularNetwork::Savefile(const string &fname) {
+  void RegularNetwork::Savefile(const std::filesystem::path &fname) {
     cytnx_error_msg(
       this->label_arr.size() == 0,
       "[ERROR][RegularNetwork][Savefile] Cannot save empty network to network file!%s", "\n");
 
     fstream fo;
-    fo.open(fname + ".net", ios::out | ios::trunc);
+    fo.open(std::filesystem::path(fname) += ".net", ios::out | ios::trunc);
     if (!fo.is_open()) {
       cytnx_error_msg(true, "[ERROR][RegularNetwork][Savefile] Cannot open/create file:%s\n",
                       fname.c_str());

@@ -245,33 +245,75 @@ namespace cytnx {
 
   //==================================================
 
-  void cytnx::Symmetry::Save(const std::string &fname) const {
+  void cytnx::Symmetry::Save(const std::filesystem::path &fname, const std::string &path,
+                             const char mode) const {
     fstream f;  // only for binary saving, not used for hdf5
-    if (std::filesystem::path(fname).has_extension()) {
+    if (fname.has_extension()) {
       // filename extension is given
-      auto ext = std::filesystem::path(fname).extension().string();
+      std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
         // save as hdf5
         H5::H5File h5file;
-        try {
-          h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+        try {  // overwrite file
+          if (mode == 'w') {
+            h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+          } else if (mode == 'a' || mode == 'u') {
+            if (std::filesystem::exists(fname))
+              h5file = H5::H5File(fname, H5F_ACC_RDWR);
+            else
+              h5file = H5::H5File(fname, H5F_ACC_EXCL);
+          } else if (mode == 'x') {  // create a new file
+            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+          }
         } catch (H5::FileIException &error) {
           error.printErrorStack();
           cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
         }
-        this->to_hdf5(h5file);
+        // split path into group and name
+        std::filesystem::path p(path);
+        std::string grouppath = p.parent_path().generic_string();
+        std::string datasetname = p.filename().string();
+        if (datasetname.empty()) datasetname = "Symmetry";
+        // create group
+        H5::Group location = h5file;
+        if (h5file.exists(grouppath)) {
+          location = h5file.openGroup(grouppath);
+        } else {
+          H5::LinkCreatPropList lcpl;
+          lcpl.setCreateIntermediateGroup(1);
+          location = h5file.createGroup(grouppath, lcpl);
+        }
+        if (mode == 'u')
+          this->to_hdf5(location, true, datasetname);
+        else
+          this->to_hdf5(location, false, datasetname);
         h5file.close();
         return;
       } else {  // create binary file
-        f.open(fname, ios::out | ios::trunc | ios::binary);
+        if (mode == 'x') {
+          cytnx_error_msg(std::filesystem::exists(fname),
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+        } else {
+          cytnx_error_msg((mode != 'x'), "[ERROR] Unknown mode '%c' for writing to binary file.",
+                          mode);
+        }
+        f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
       }
     } else {  // create binary file with standard extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cysym'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cysym"), ios::out | ios::trunc | ios::binary);
+      if (mode == 'x') {
+        cytnx_error_msg(std::filesystem::exists(fname),
+                        "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+      } else {
+        cytnx_error_msg((mode != 'x'), "[ERROR] Unknown mode '%c' for writing to binary file.",
+                        mode);
+      }
+      f.open(std::filesystem::path(fname) += ".cysym",
+             std::ios::out | std::ios::trunc | std::ios::binary);
     }
     // write binary
     if (!f.is_open()) {
@@ -280,19 +322,22 @@ namespace cytnx {
     this->to_binary(f);
     f.close();
   }
-  void cytnx::Symmetry::Save(const char *fname) const { this->Save(string(fname)); }
+  void cytnx::Symmetry::Save(const char *fname, const std::string &path, const char mode) const {
+    this->Save(string(fname), path, mode);
+  }
 
-  cytnx::Symmetry cytnx::Symmetry::Load(const std::string &fname) {
+  cytnx::Symmetry cytnx::Symmetry::Load(const std::filesystem::path &fname,
+                                        const std::string &path) {
     Symmetry out;
-    out.Load_(fname);
+    out.Load_(fname, path);
     return out;
   }
-  cytnx::Symmetry cytnx::Symmetry::Load(const char *fname) {
-    return cytnx::Symmetry::Load(string(fname));
+  cytnx::Symmetry cytnx::Symmetry::Load(const char *fname, const std::string &path) {
+    return cytnx::Symmetry::Load(string(fname), path);
   }
 
-  void cytnx::Symmetry::Load_(const std::string &fname) {
-    auto ext = std::filesystem::path(fname).extension().string();
+  void cytnx::Symmetry::Load_(const std::filesystem::path &fname, const std::string &path) {
+    std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {
       // load hdf5
@@ -303,7 +348,17 @@ namespace cytnx {
         error.printErrorStack();
         cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
       }
-      this->from_hdf5(h5file);
+
+      // split path into group and name
+      std::filesystem::path p(path);
+      std::string grouppath = p.parent_path().generic_string();
+      std::string datasetname = p.filename().string();
+      if (datasetname.empty()) datasetname = "Symmetry";
+      // open group
+      cytnx_error_msg(!h5file.exists(grouppath),
+                      "[ERROR] Path '%s' does not exist in HDF5 file '%s'", grouppath, fname);
+      H5::Group location = h5file.openGroup(grouppath);
+      this->from_hdf5(location);
       h5file.close();
     } else {  // load binary
       fstream f;
@@ -315,9 +370,16 @@ namespace cytnx {
       f.close();
     }
   }
-  void cytnx::Symmetry::Load_(const char *fname) { this->Load_(string(fname)); }
+  void cytnx::Symmetry::Load_(const char *fname, const std::string &path) {
+    this->Load_(string(fname), path);
+  }
 
-  void cytnx::Symmetry::to_hdf5(H5::Group &location, const std::string &name) const {
+  void cytnx::Symmetry::to_hdf5(H5::Group &location, const bool overwrite,
+                                const std::string &name) const {
+    if (overwrite) {  // delete previous data
+      if (location.attrExists(name)) location.removeAttr(name);
+    }
+
     std::string symname = this->name();
     H5::StrType str_type(H5::PredType::C_S1, symname.length() + 1);
     H5::DataSpace dataspace = H5::DataSpace(H5S_SCALAR);

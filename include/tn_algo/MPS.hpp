@@ -1,6 +1,7 @@
 #ifndef CYTNX_TN_ALGO_MPS_H_
 #define CYTNX_TN_ALGO_MPS_H_
 
+#include <filesystem>
 #include <fstream>
 #include <initializer_list>
 #include <iostream>
@@ -296,10 +297,10 @@ namespace cytnx {
        * @note The common file ending for saving a MPS in binary format is ".cymps".
        * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
        * readability, and future-proofing.
-       * @see Load(const std::string &fname, const bool restore_device)
+       * @see Load(const std::filesystem::path &fname, const bool restore_device)
        */
-      void Save(const std::string &fname) const;
-      // @see Save(const std::string &fname) const
+      void Save(const std::filesystem::path &fname) const;
+      // @see Save(const std::filesystem::path &fname) const
       void Save(const char *fname) const;
 
       /**
@@ -310,31 +311,31 @@ namespace cytnx {
        * after loading.
        * @pre The file must be a MPS object which is saved by cytnx::MPS::Save.
        * @note This function creates a new MPS and keeps the original MPS unchanged. See \link
-       * Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
-       * MPS to the current MPS.
+       * Load_(const std::filesystem::path &fname, const bool restore_device) Load_() \endlink for
+       * loading the MPS to the current MPS.
        * @details For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5",
        * ".hdf" is expected. For binary format, the common file ending for a MPS is ".cymps".
        */
-      static MPS Load(const std::string &fname, const bool restore_device = true);
-      // @see Load(const std::string &fname)
+      static MPS Load(const std::filesystem::path &fname, const bool restore_device = true);
+      // @see Load(const std::filesystem::path &fname)
       static MPS Load(const char *fname, const bool restore_device = true);
 
       /**
        * @brief Load MPS from file and overwrite current instance
-       * @note This function overwrites the existing MPS. See \link Load(const std::string &fname,
-       * const bool restore_device) Load() \endlink for creating a new MPS.
-       * @see Load(const std::string &fname, const bool restore_device)
+       * @note This function overwrites the existing MPS. See \link Load(const std::filesystem::path
+       * &fname, const bool restore_device) Load() \endlink for creating a new MPS.
+       * @see Load(const std::filesystem::path &fname, const bool restore_device)
        */
-      void Load_(const std::string &fname, const bool restore_device = true);
-      // @see Load_(const std::string &fname, const bool restore_device)
+      void Load_(const std::filesystem::path &fname, const bool restore_device = true);
+      // @see Load_(const std::filesystem::path &fname, const bool restore_device)
       void Load_(const char *fname, const bool restore_device = true);
 
       /**
        * @brief Save MPS to HDF5 file
        * @param[in] location the HDF5 group where the MPS will be saved.
        * @param[in] name the name of the MPS in the HDF5 file.
-       * @warning This function is only available in C++. Use \link Save(const std::string &fname)
-       * Save() \endlink for saving to file in C++ or Python.
+       * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+       * &fname) Save() \endlink for saving to file in C++ or Python.
        * @see from_hdf5(H5::Group &location, const std::string &name, const bool restore_device)
        */
       void to_hdf5(H5::Group &location, const std::string &name = "MPS") const;
@@ -345,8 +346,8 @@ namespace cytnx {
        * @param[in] restore_device whether to try restoring the device on which the data is stored;
        * if false, the data will be kept on the CPU. Use .to_() to move it to the target device
        * after loading.
-       * @warning This function is only available in C++. Use \link Load(const std::string &fname,
-       * const bool restore_device) Load() \endlink for loading from file in C++ or Python.
+       * @warning This function is only available in C++. Use \link Load(const std::filesystem::path
+       * &fname, const bool restore_device) Load() \endlink for loading from file in C++ or Python.
        * @see to_hdf5(H5::Group &location, const std::string &name) const
        */
       void from_hdf5(H5::Group &location, const std::string &name = "MPS",
@@ -356,8 +357,8 @@ namespace cytnx {
        * @brief Save MPS to binary file
        * @param[in] f the output stream where the MPS will be saved.
        * @warning This function is only available in C++. In Python, use pickle for the same binary
-       * file format. Use \link Save(const std::string &fname) Save() \endlink for saving to file in
-       * C++ or Python.
+       * file format. Use \link Save(const std::filesystem::path &fname) Save() \endlink for saving
+       * to file in C++ or Python.
        * @see from_binary(std::istream &f, const bool restore_device)
        */
       void to_binary(std::ostream &f) const;
@@ -368,8 +369,8 @@ namespace cytnx {
        * if false, the data will be kept on the CPU. Use .to_() to move it to the target device
        * after loading.
        * @warning This function is only available in C++. In Python, use pickle for the same binary
-       * file format. Use \link Load(const std::string &fname, const bool restore_device) Load()
-       * \endlink for loading from file in C++ or Python.
+       * file format. Use \link Load(const std::filesystem::path &fname, const bool restore_device)
+       * Load() \endlink for loading from file in C++ or Python.
        * @see to_binary(std::ostream &f) const
        */
       void from_binary(std::istream &f, const bool restore_device = true);

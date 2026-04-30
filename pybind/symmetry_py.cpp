@@ -1,17 +1,21 @@
-#include <vector>
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <map>
 #include <random>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
-#include "cytnx.hpp"
 #include "complex.h"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -67,12 +71,22 @@ void symmetry_binding(py::module &m) {
     .def("is_fermionic", &Symmetry::is_fermionic)
 
     .def(
-      "Save", [](Symmetry &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
+      "Save",
+      [](Symmetry &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/Symmetry", py::arg("mode") = 'w')
     .def_static(
-      "Load", [](const std::string &fname) { return Symmetry::Load(fname); }, py::arg("fname"))
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path) {
+        return Symmetry::Load(fname, path);
+      },
+      py::arg("fname"), py::arg("path") = "/Symmetry")
     .def(
-      "Load_", [](cytnx::Symmetry &self, const std::string &fname) { return self.Load_(fname); },
-      py::arg("fname"))
+      "Load_",
+      [](cytnx::Symmetry &self, const std::filesystem::path &fname, const std::string &path) {
+        return self.Load_(fname, path);
+      },
+      py::arg("fname"), py::arg("path") = "/Symmetry")
 
     .def(py::pickle(
       [](const Symmetry &self) {  // __getstate__

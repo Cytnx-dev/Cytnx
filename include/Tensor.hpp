@@ -1,6 +1,7 @@
 #ifndef CYTNX_TENSOR_H_
 #define CYTNX_TENSOR_H_
 
+#include <filesystem>
 #include <fstream>
 #include <initializer_list>
 #include <iostream>
@@ -326,10 +327,10 @@ namespace cytnx {
      * @note The common file ending for saving a Tensor in binary format is ".cytn".
      * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
      * readability, and future-proofing.
-     * @see Load(const std::string &fname, const bool restore_device)
+     * @see Load(const std::filesystem::path &fname, const bool restore_device)
      */
-    void Save(const std::string &fname) const;
-    // @see Save(const std::string &fname) const
+    void Save(const std::filesystem::path &fname) const;
+    // @see Save(const std::filesystem::path &fname) const
     void Save(const char *fname) const;
 
     /**
@@ -340,31 +341,32 @@ namespace cytnx {
      * loading.
      * @pre The file must be a Tensor object which is saved by cytnx::Tensor::Save.
      * @note This function creates a new Tensor and keeps the original Tensor unchanged. See \link
-     * Load_(const std::string &fname, const bool restore_device) Load_() \endlink for loading the
-     * Tensor to the current Tensor.
+     * Load_(const std::filesystem::path &fname, const bool restore_device) Load_() \endlink for
+     * loading the Tensor to the current Tensor.
      * @details For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf"
      * is expected. For binary format, the common file ending for a Tensor is ".cytn".
      */
-    static Tensor Load(const std::string &fname, const bool restore_device = true);
-    // @see Load(const std::string &fname, const bool restore_device)
+    static Tensor Load(const std::filesystem::path &fname, const bool restore_device = true);
+    // @see Load(const std::filesystem::path &fname, const bool restore_device)
     static Tensor Load(const char *fname, const bool restore_device = true);
 
     /**
      * @brief Load Tensor from file and overwrite current instance
-     * @note This function overwrites the existing Tensor. See \link Load(const std::string &fname,
-     * const bool restore_device) Load() \endlink for creating a new Tensor.
-     * @see Load(const std::string &fname, const bool restore_device)
+     * @note This function overwrites the existing Tensor. See \link Load(const
+     * std::filesystem::path &fname, const bool restore_device) Load() \endlink for creating a new
+     * Tensor.
+     * @see Load(const std::filesystem::path &fname, const bool restore_device)
      */
-    void Load_(const std::string &fname, const bool restore_device = true);
-    // @see Load_(const std::string &fname, const bool restore_device)
+    void Load_(const std::filesystem::path &fname, const bool restore_device = true);
+    // @see Load_(const std::filesystem::path &fname, const bool restore_device)
     void Load_(const char *fname, const bool restore_device = true);
 
     /**
      * @brief Save Tensor to HDF5 file
      * @param[in] location the HDF5 group where the Tensor will be saved.
      * @param[in] name the name of the Tensor in the HDF5 file.
-     * @warning This function is only available in C++. Use \link Save(const std::string &fname)
-     * Save() \endlink for saving to file in C++ or Python.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
      * @see from_hdf5(H5::Group &location, const std::string &name, const bool restore_device)
      */
     void to_hdf5(H5::Group &location, const std::string &name = "Tensor") const;
@@ -375,8 +377,8 @@ namespace cytnx {
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
-     * @warning This function is only available in C++. Use \link Load(const std::string &fname,
-     * const bool restore_device) Load() \endlink for loading from file in C++ or Python.
+     * @warning This function is only available in C++. Use \link Load(const std::filesystem::path
+     * &fname, const bool restore_device) Load() \endlink for loading from file in C++ or Python.
      * @see to_hdf5(H5::Group &location, const std::string &name) const
      */
     void from_hdf5(H5::Group &location, const std::string &name = "Tensor",
@@ -386,8 +388,8 @@ namespace cytnx {
      * @brief Save Tensor to binary file
      * @param[in] f the output stream where the Tensor will be saved.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Save(const std::string &fname) Save() \endlink for saving to file in
-     * C++ or Python.
+     * file format. Use \link Save(const std::filesystem::path &fname) Save() \endlink for saving to
+     * file in C++ or Python.
      * @see from_binary(std::istream &f, const bool restore_device)
      */
     void to_binary(std::ostream &f) const;
@@ -398,8 +400,8 @@ namespace cytnx {
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Load(const std::string &fname, const bool restore_device) Load()
-     * \endlink for loading from file in C++ or Python.
+     * file format. Use \link Load(const std::filesystem::path &fname, const bool restore_device)
+     * Load() \endlink for loading from file in C++ or Python.
      * @see to_binary(std::ostream &f) const
      */
     void from_binary(std::istream &f, const bool restore_device = true);
@@ -411,15 +413,15 @@ namespace cytnx {
      * @param fname[in] the file name of the binary file.
      * @pre The file name @p fname must be valid.
      * @see cytnx::Tensor::Fromfile
-     * @deprecated This function is deprecated. Please use \ref Save(const std::string &fname)
-     * instead for saving raw data together with metadata.
+     * @deprecated This function is deprecated. Please use \ref Save(const std::filesystem::path
+     * &fname) instead for saving raw data together with metadata.
      */
-    [[deprecated("Please use Save(const std::string &fname) instead.")]] void Tofile(
-      const std::string &fname) const;
-    // @see Tofile(const std::string &fname) const
-    [[deprecated("Please use Save(const std::string &fname) instead.")]] void Tofile(
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
+      const std::filesystem::path &fname) const;
+    // @see Tofile(const std::filesystem::path &fname) const
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
       const char *fname) const;
-    // @see Tofile(const std::string &fname) const
+    // @see Tofile(const std::filesystem::path &fname) const
     [[deprecated("Please use to_binary(std::ostream &f) instead.")]] void Tofile(
       std::fstream &f) const;
 
@@ -448,12 +450,12 @@ namespace cytnx {
      * raw data together with metadata.
      */
     [[deprecated("Please use Save/Load functions instead.")]] static Tensor Fromfile(
-      const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
+      const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
       const int device = Device.cpu);
     [[deprecated("Please use Save/Load functions instead.")]] static Tensor Fromfile(
       const char *fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
       const int device = Device.cpu);
-    // static Tensor Frombinary(const std::string &fname);
+    // static Tensor Frombinary(const std::filesystem::path &fname);
 
     ///@cond
     boost::intrusive_ptr<Tensor_impl> _impl;

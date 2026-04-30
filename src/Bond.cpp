@@ -471,33 +471,70 @@ namespace cytnx {
 
   bool Bond::operator!=(const Bond &rhs) const { return !(*this == rhs); }
 
-  void Bond::Save(const std::string &fname) const {
+  void Bond::Save(const std::filesystem::path &fname, const std::string &path,
+                  const char mode) const {
     fstream f;  // only for binary saving, not used for hdf5
-    if (std::filesystem::path(fname).has_extension()) {
+    if (fname.has_extension()) {
       // filename extension is given
-      auto ext = std::filesystem::path(fname).extension().string();
+      std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
         // save as hdf5
         H5::H5File h5file;
-        try {
-          h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+        try {  // overwrite file
+          if (mode == 'w') {
+            h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+          } else if (mode == 'a' || mode == 'u') {
+            if (std::filesystem::exists(fname))
+              h5file = H5::H5File(fname, H5F_ACC_RDWR);
+            else
+              h5file = H5::H5File(fname, H5F_ACC_EXCL);
+          } else if (mode == 'x') {  // create a new file
+            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+          }
         } catch (H5::FileIException &error) {
           error.printErrorStack();
           cytnx_error_msg(true, "[ERROR] Cannot create HDF5 file '%s'.\n", fname.c_str());
         }
-        this->to_hdf5(h5file);
+        // create group
+        H5::Group location = h5file;
+        if (h5file.exists(path)) {
+          location = h5file.openGroup(path);
+        } else {
+          H5::LinkCreatPropList lcpl;
+          lcpl.setCreateIntermediateGroup(1);
+          location = h5file.createGroup(path, lcpl);
+        }
+        if (mode == 'u')
+          this->to_hdf5(location, true);
+        else
+          this->to_hdf5(location, false);
         h5file.close();
         return;
       } else {  // create binary file
-        f.open(fname, ios::out | ios::trunc | ios::binary);
+        if (mode == 'x') {
+          cytnx_error_msg(std::filesystem::exists(fname),
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+        } else {
+          cytnx_error_msg((mode != 'x'), "[ERROR] Unknown mode '%c' for writing to binary file.",
+                          mode);
+        }
+        f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
       }
     } else {  // create binary file with standard extension
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cybd'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
+      if (mode == 'x') {
+        cytnx_error_msg(std::filesystem::exists(fname),
+                        "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+      } else {
+        cytnx_error_msg((mode != 'x'), "[ERROR] Unknown mode '%c' for writing to binary file.",
+                        mode);
+      }
+      f.open(std::filesystem::path(fname) += ".cybd",
+             std::ios::out | std::ios::trunc | std::ios::binary);
     }
     // write binary
     if (!f.is_open()) {
@@ -506,17 +543,21 @@ namespace cytnx {
     this->to_binary(f);
     f.close();
   }
-  void Bond::Save(const char *fname) const { this->Save(string(fname)); }
+  void Bond::Save(const char *fname, const std::string &path, const char mode) const {
+    this->Save(string(fname), path, mode);
+  }
 
-  Bond Bond::Load(const std::string &fname) {
+  Bond Bond::Load(const std::filesystem::path &fname, const std::string &path) {
     Bond out;
-    out.Load_(fname);
+    out.Load_(fname, path);
     return out;
   }
-  Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
+  Bond Bond::Load(const char *fname, const std::string &path) {
+    return Bond::Load(string(fname), path);
+  }
 
-  void Bond::Load_(const std::string &fname) {
-    auto ext = std::filesystem::path(fname).extension().string();
+  void Bond::Load_(const std::filesystem::path &fname, const std::string &path) {
+    std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {
       // load hdf5
@@ -527,11 +568,14 @@ namespace cytnx {
         error.printErrorStack();
         cytnx_error_msg(true, "[ERROR] Cannot open HDF5 file '%s'.\n", fname.c_str());
       }
-      this->from_hdf5(h5file);
+      cytnx_error_msg(!h5file.exists(path), "[ERROR] Path '%s' does not exist in HDF5 file '%s'",
+                      path, fname);
+      H5::Group location = h5file.openGroup(path);
+      this->from_hdf5(location);
       h5file.close();
     } else {  // load binary
       fstream f;
-      f.open(fname, ios::in | ios::binary);
+      f.open(fname, std::ios::in | std::ios::binary);
       if (!f.is_open()) {
         cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
       }
@@ -539,14 +583,25 @@ namespace cytnx {
       f.close();
     }
   }
-  void Bond::Load_(const char *fname) { this->Load_(string(fname)); }
+  void Bond::Load_(const char *fname, const std::string &path) { this->Load_(string(fname), path); }
 
-  void Bond::to_hdf5(H5::Group &location, const bool save_symmetries) const {
+  void Bond::to_hdf5(H5::Group &location, const bool overwrite, const bool save_symmetries) const {
     H5::DataType datatype;
     H5::Attribute attr;
     H5::DataSet dataset;
     H5::DataSpace dataspace;
     H5::StrType str_type;
+
+    if (overwrite) {  // delete previous data
+      // remove attributes
+      if (location.attrExists("dimension")) location.removeAttr("dimension");
+      if (location.attrExists("type")) location.removeAttr("type");
+      // remove datasets
+      if (location.nameExists("degeneracies")) location.unlink("degeneracies");
+      if (location.nameExists("quantum_numbers")) location.unlink("quantum_numbers");
+      // remove groups and its contents recursively
+      if (location.nameExists("Symmetries")) location.unlink("Symmetries");
+    }
 
     // dimension, write as attribute
     auto dim = this->_impl->_dim;
@@ -607,7 +662,7 @@ namespace cytnx {
         // dataset.write(c_strings.data(), str_type);
         H5::Group symloc = location.createGroup("Symmetries");
         for (int sidx = 0; sidx < this->_impl->_syms.size(); sidx++) {
-          this->_impl->_syms[sidx].to_hdf5(symloc, "Symmetry" + std::to_string(sidx));
+          this->_impl->_syms[sidx].to_hdf5(symloc, overwrite, "Symmetry" + std::to_string(sidx));
         }
       }
     }

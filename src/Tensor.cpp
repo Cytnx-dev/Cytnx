@@ -425,7 +425,7 @@ namespace cytnx {
   //===================================================================
   // wrapper
 
-  void Tensor::Tofile(const std::string &fname) const {
+  void Tensor::Tofile(const std::filesystem::path &fname) const {
     if (!this->is_contiguous()) {
       auto A = this->contiguous();
       A.storage().Tofile(fname);
@@ -450,11 +450,11 @@ namespace cytnx {
     }
   }
 
-  void Tensor::Save(const std::string &fname) const {
+  void Tensor::Save(const std::filesystem::path &fname) const {
     fstream f;  // only for binary saving, not used for hdf5
-    if (std::filesystem::path(fname).has_extension()) {
+    if (fname.has_extension()) {
       // filename extension is given
-      auto ext = std::filesystem::path(fname).extension().string();
+      std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {
         // save as hdf5
@@ -476,7 +476,7 @@ namespace cytnx {
                         "Missing file extension in fname '%s'. I am adding the extension '.cytn'. "
                         "This is deprecated, please provide the file extension in the future.\n",
                         fname.c_str());
-      f.open((fname + ".cytn"), ios::out | ios::trunc | ios::binary);
+      f.open((std::filesystem::path(fname) += ".cytn"), ios::out | ios::trunc | ios::binary);
     }
     // write binary
     if (!f.is_open()) {
@@ -519,7 +519,7 @@ namespace cytnx {
     this->storage().to_binary(f);
   }
 
-  Tensor Tensor::Fromfile(const std::string &fname, const unsigned int &dtype,
+  Tensor Tensor::Fromfile(const std::filesystem::path &fname, const unsigned int &dtype,
                           const cytnx_int64 &count, const int device) {
     return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
   }
@@ -527,7 +527,7 @@ namespace cytnx {
                           const int device) {
     return Tensor::from_storage(Storage::Fromfile(fname, dtype, count, device));
   }
-  Tensor Tensor::Load(const std::string &fname, const bool restore_device) {
+  Tensor Tensor::Load(const std::filesystem::path &fname, const bool restore_device) {
     Tensor out;
     out.Load_(fname, restore_device);
     return out;
@@ -536,8 +536,8 @@ namespace cytnx {
     return Tensor::Load(string(fname), restore_device);
   }
 
-  void Tensor::Load_(const std::string &fname, const bool restore_device) {
-    auto ext = std::filesystem::path(fname).extension().string();
+  void Tensor::Load_(const std::filesystem::path &fname, const bool restore_device) {
+    std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {
       // load hdf5
