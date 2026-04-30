@@ -53,6 +53,15 @@ jobs:
     # NOTE: Setup macOS step is temporarily disabled.
     # Deployment target is now computed from Homebrew dylib minos metadata in
     # tools/cibuildwheel_before_all_macos.sh and injected via pyproject.toml.
+    # - name: Setup macOS
+    #   if: matrix.os == 'macos-15-intel' || matrix.os == 'macos-14'
+    #   run: |
+    #     if [[ ${{ matrix.os }} == 'macos-15-intel' ]]; then
+    #       echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> "$GITHUB_ENV"
+    #     elif [[ ${{ matrix.os }} == 'macos-14' ]]; then
+    #       echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
+    #     fi
+
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
       env:
