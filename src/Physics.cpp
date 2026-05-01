@@ -5,7 +5,6 @@
 
 #include "linalg.hpp"
 #include <cfloat>
-#include <iostream>
 #include <cmath>
 using namespace std;
 

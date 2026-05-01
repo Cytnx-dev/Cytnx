@@ -2,7 +2,7 @@
 #define CYTNX_SYMMETRY_H_
 
 #include <fstream>
-#include <ostream>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -90,7 +90,7 @@ namespace cytnx {
     virtual fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const;
     virtual bool is_fermionic() const { return false; };
 
-    virtual void print_info() const;
+    virtual void print_info(std::ostream &os = std::cout) const;
     virtual std::string stype_str() const;
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
     // std::vector<cytnx_int64> &inR);
@@ -105,7 +105,7 @@ namespace cytnx {
     void Init(const int &n) {
       this->stype_id = SymmetryType::U;
       this->n = n;
-      if (n != 1) cytnx_error_msg(1, "%s", "[ERROR] U1Symmetry should set n = 1");
+      if (n != 1) cytnx_error_msg(true, "%s", "[ERROR] U1Symmetry should set n = 1");
     }
     boost::intrusive_ptr<Symmetry_base> clone() {
       boost::intrusive_ptr<Symmetry_base> out(new U1Symmetry(this->n));
@@ -118,7 +118,7 @@ namespace cytnx {
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    void print_info() const;
+    void print_info(std::ostream &os = std::cout) const;
     std::string stype_str() const override { return "U1"; };
   };
   ///@endcond
@@ -131,7 +131,7 @@ namespace cytnx {
     void Init(const int &n) {
       this->stype_id = SymmetryType::Z;
       this->n = n;
-      if (n <= 1) cytnx_error_msg(1, "%s", "[ERROR] ZnSymmetry can only have n > 1");
+      if (n <= 1) cytnx_error_msg(true, "%s", "[ERROR] ZnSymmetry can only have n > 1");
     }
     boost::intrusive_ptr<Symmetry_base> clone() {
       boost::intrusive_ptr<Symmetry_base> out(new ZnSymmetry(this->n));
@@ -144,7 +144,7 @@ namespace cytnx {
     void combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL, const cytnx_int64 &inR,
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
-    void print_info() const;
+    void print_info(std::ostream &os = std::cout) const;
     std::string stype_str() const override { return "Z" + std::to_string(this->n); };
   };
   ///@endcond
@@ -169,7 +169,7 @@ namespace cytnx {
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
-    void print_info() const;
+    void print_info(std::ostream &os = std::cout) const;
     std::string stype_str() const override { return "fP"; }
   };
   ///@endcond
@@ -194,7 +194,7 @@ namespace cytnx {
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
-    void print_info() const;
+    void print_info(std::ostream &os = std::cout) const;
     std::string stype_str() const override { return "f#"; }
   };
   ///@endcond
@@ -226,7 +226,7 @@ namespace cytnx {
         boost::intrusive_ptr<Symmetry_base> tmp(new FermionNumberSymmetry());
         this->_impl = tmp;
       } else {
-        cytnx_error_msg(1, "%s", "[ERROR] invalid symmetry type.");
+        cytnx_error_msg(true, "%s", "[ERROR] invalid symmetry type.");
       }
     }
     Symmetry &operator=(const Symmetry &rhs) {
@@ -524,7 +524,10 @@ namespace cytnx {
     /**
      * @brief Print the information of current Symmetry object.
      */
-    void print_info() const { this->_impl->print_info(); }
+    void print_info() const { this->_impl->print_info(std::cout); }
+    /// @cond
+    void print_info(std::ostream &os) const { this->_impl->print_info(os); }
+    /// @endcond
 
     /**
      * @brief the equality operator of the Symmetry object.

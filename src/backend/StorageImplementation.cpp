@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
-#include <iostream>
+#include <ostream>
 #include <type_traits>
 #include <vector>
 
@@ -89,7 +89,7 @@ namespace cytnx {
       this->start_ = utils_internal::cuCalloc_gpu(this->capacity_, sizeof(DType));
 
 #else
-      cytnx_error_msg(1, "%s", "[ERROR] Cannot init a Storage on gpu without CUDA support.");
+      cytnx_error_msg(true, "%s", "[ERROR] Cannot init a Storage on gpu without CUDA support.");
 #endif
     }
     this->device_ = device;
@@ -140,7 +140,7 @@ namespace cytnx {
       checkCudaErrors(cudaMemcpy(out->data(), this->start_, sizeof(DType) * this->size_,
                                  cudaMemcpyDeviceToDevice));
 #else
-      cytnx_error_msg(1, "%s", "[ERROR] Cannot clone a Storage on gpu without CUDA support.");
+      cytnx_error_msg(true, "%s", "[ERROR] Cannot clone a Storage on gpu without CUDA support.");
 #endif
     }
     return out;
@@ -158,7 +158,7 @@ namespace cytnx {
       checkCudaErrors(cudaSetDevice(this->device_));
       utils_internal::MoveMemoryGpu<DType>(tmp, old_shape, mapper, invmapper, 1);
 #else
-      cytnx_error_msg(1, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
+      cytnx_error_msg(true, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
 #endif
     }
   }
@@ -175,7 +175,7 @@ namespace cytnx {
       checkCudaErrors(cudaSetDevice(this->device_));
       return utils_internal::MoveMemoryGpu<DType>(tmp, old_shape, mapper, invmapper, 0);
 #else
-      cytnx_error_msg(1, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
+      cytnx_error_msg(true, "%s", "[ERROR][Internal] try to call GPU section without CUDA support");
       return nullptr;
 #endif
     }
@@ -196,7 +196,8 @@ namespace cytnx {
         this->start_ = dtmp;
         this->device_ = device;
 #else
-        cytnx_error_msg(1, "%s", "[ERROR] try to move from cpu(Host) to gpu without CUDA support.");
+        cytnx_error_msg(true, "%s",
+                        "[ERROR] try to move from cpu(Host) to gpu without CUDA support.");
 #endif
       } else {
 #ifdef UNI_GPU
@@ -222,8 +223,8 @@ namespace cytnx {
         }
 #else
         cytnx_error_msg(
-          1, "%s",
-          "[ERROR][Internal] Storage.to_. the Storage is as GPU but without CUDA support.");
+          true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
+          "n");
 #endif
       }
     }
@@ -247,7 +248,8 @@ namespace cytnx {
         out->_Init_byptr(dtmp, this->size_, device, true, this->capacity_);
         return out;
 #else
-        cytnx_error_msg(1, "%s", "[ERROR] try to move from cpu(Host) to gpu without CUDA support.");
+        cytnx_error_msg(true, "%s",
+                        "[ERROR] try to move from cpu(Host) to gpu without CUDA support.");
         return nullptr;
 #endif
       } else {
@@ -274,8 +276,8 @@ namespace cytnx {
         }
 #else
         cytnx_error_msg(
-          1, "%s",
-          "[ERROR][Internal] Storage.to_. the Storage is as GPU but without CUDA support.");
+          true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
+          "n");
         return nullptr;
 #endif
       }
@@ -293,7 +295,7 @@ namespace cytnx {
       Ne *= shape[i];
     }
     if (Ne != this->size_) {
-      cytnx_error_msg(1, "%s",
+      cytnx_error_msg(true, "%s",
                       "PrintElem_byShape, the number of shape not match with the No. of elements.");
     }
 
@@ -373,7 +375,7 @@ namespace cytnx {
 
       } else {
         /// This is for non-contiguous Tensor printing;
-        // cytnx_error_msg(1,"%s","print for a non-contiguous Storage is under developing");
+        // cytnx_error_msg(true,"%s","print for a non-contiguous Storage is under developing");
         // cytnx_uint64 cnt=0;
         std::vector<cytnx_uint64> c_offj(shape.size());
         std::vector<cytnx_uint64> c_shape(shape.size());
@@ -445,13 +447,13 @@ namespace cytnx {
   }
 
   template <typename DType>
-  void StorageImplementation<DType>::print_elems() {
+  void StorageImplementation<DType>::print_elems(std::ostream &os) const {
     DType *elem_ptr_ = reinterpret_cast<DType *>(this->start_);
-    cout << "[ ";
+    os << "[ ";
     for (unsigned long long cnt = 0; cnt < this->size_; cnt++) {
-      PrintValueAndSpace(std::cout, elem_ptr_[cnt]);
+      PrintValueAndSpace(os, elem_ptr_[cnt]);
     }
-    std::cout << "]" << std::endl;
+    os << "]" << std::endl;
   }
 
   template <typename DType>
@@ -508,8 +510,8 @@ namespace cytnx {
       checkCudaErrors(cudaSetDevice(this->device_));
       utils_internal::cuSetZeros(this->start_, sizeof(DType) * this->size_);
 #else
-      cytnx_error_msg(1, "[ERROR][set_zeros] fatal, the storage is on gpu without CUDA support.%s",
-                      "\n");
+      cytnx_error_msg(
+        true, "[ERROR][set_zeros] fatal, the storage is on gpu without CUDA support.%s", "\n");
 #endif
     }
   }
@@ -540,8 +542,8 @@ namespace cytnx {
         this->start_ = dtmp;
 #else
         cytnx_error_msg(
-          1, "%s",
-          "[ERROR][Internal] Storage.resize. the Storage is as GPU but without CUDA support.");
+          true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
+          "n");
 #endif
       }
     }
@@ -630,8 +632,8 @@ namespace cytnx {
         return out;
 #else
         cytnx_error_msg(
-          1, "%s",
-          "[ERROR][Internal] Storage.to_. the Storage is as GPU but without CUDA support.");
+          true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
+          "n");
         return nullptr;
 #endif
       }
@@ -671,8 +673,8 @@ namespace cytnx {
         return out;
 #else
         cytnx_error_msg(
-          1, "%s",
-          "[ERROR][Internal] Storage.to_. the Storage is as GPU but without CUDA support.");
+          true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
+          "n");
         return nullptr;
 #endif
       }
@@ -816,7 +818,6 @@ namespace cytnx {
 
   template <typename DType>
   StorageImplementation<DType>::~StorageImplementation() {
-    // std::cout << "delet" << endl;
     if (this->data() != NULL) {
       if (this->device() == Device.cpu) {
         free(this->data());
@@ -824,7 +825,7 @@ namespace cytnx {
 #ifdef UNI_GPU
         checkCudaErrors(cudaFree(this->data()));
 #else
-        cytnx_error_msg(1, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
+        cytnx_error_msg(true, "%s", "[ERROR] trying to free an GPU memory without CUDA install");
 #endif
       }
     }

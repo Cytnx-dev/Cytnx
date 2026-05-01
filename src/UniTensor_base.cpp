@@ -1,8 +1,11 @@
 #include "UniTensor.hpp"
+
+#include <ostream>
+#include <string>
+
+#include "Network.hpp"
 #include "Tensor.hpp"
 #include "linalg.hpp"
-#include "Network.hpp"
-#include <string>
 
 #ifdef BACKEND_TORCH
 #else
@@ -236,15 +239,16 @@ namespace cytnx {
     return out;
   }
 
-  void UniTensor_base::print_diagram(const bool &bond_info) const {
+  void UniTensor_base::print_diagram(std::ostream &os, const bool &bond_info) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::print_blocks(const bool &full_info) const {
+  void UniTensor_base::print_blocks(std::ostream &os, const bool &full_info) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
-  void UniTensor_base::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+  void UniTensor_base::print_block(std::ostream &os, const cytnx_int64 &idx,
+                                   const bool &full_info) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
@@ -713,7 +717,7 @@ namespace cytnx {
 
   //-----------------------------------------
   std::ostream &operator<<(std::ostream &os, const UniTensor &in) {
-    in.print_blocks();
+    in.print_blocks(os);
     return os;
   }
 

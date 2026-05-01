@@ -1,5 +1,8 @@
-#include <typeinfo>
+
 #include "Gncon.hpp"
+
+#include <ostream>
+#include <typeinfo>
 
 #include "linalg.hpp"
 
@@ -48,7 +51,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR][Gncon][clone] call from uninitialize Gncon. %s", "\n");
     return nullptr;
   }
-  void Gncon_base::PrintNet(std::ostream &os) {
+  void Gncon_base::PrintNet(std::ostream &os) const {
     os << "        [Empty Gncon]" << endl;
     os << "--- Please Load Gncon file ---\n";
     os << endl;

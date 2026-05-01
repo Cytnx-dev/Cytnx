@@ -1,5 +1,6 @@
 #include "Device.hpp"
 
+#include <ostream>
 #include <thread>
 
 #include "cytnx_error.hpp"
@@ -8,7 +9,6 @@ using namespace std;
 namespace cytnx {
 
   Device_class::Device_class() : Ngpus(0), Ncpus(std::thread::hardware_concurrency()) {
-    // cout << "init_device class!" << endl;
 #ifdef UNI_GPU
 
     // get all available gpus
@@ -49,7 +49,6 @@ namespace cytnx {
     if (device_id == this->cpu) {
       return string("cytnx device: CPU");
     } else if (device_id >= 0) {
-      // cout << device_id << Ngpus << endl;
       if (device_id >= Ngpus) {
         cytnx_error_msg(true, "%s", "[ERROR] invalid device_id, gpuid exceed limit");
         return string("");
@@ -61,42 +60,42 @@ namespace cytnx {
       return string("");
     }
   }
-  void Device_class::Print_Property() {
+  void Device_class::Print_Property(std::ostream& os) {
     char* buffer = (char*)malloc(sizeof(char) * 256);
 #ifdef UNI_GPU
-    cout << "=== CUDA support ===" << endl;
-    cout << ": Peer PCIE Access:" << endl;
-    cout << "   ";
+    os << "=== CUDA support ===" << std::endl;
+    os << ": Peer PCIE Access:" << std::endl;
+    os << "   ";
     for (int i = 0; i < this->Ngpus; i++) {
       sprintf(buffer, " %2d", i);
-      cout << string(buffer);
+      os << string(buffer);
     }
-    cout << endl;
+    os << std::endl;
 
-    cout << "   ";
+    os << "   ";
     for (int i = 0; i < this->Ngpus; i++) {
       sprintf(buffer, "%s", "---");
-      cout << string(buffer);
+      os << string(buffer);
     }
-    cout << endl;
+    os << std::endl;
 
     for (int i = 0; i < this->Ngpus; i++) {
       sprintf(buffer, "%2d|", i);
-      cout << string(buffer);
+      os << string(buffer);
       for (int j = 0; j < this->Ngpus; j++) {
         if (j == i) {
           sprintf(buffer, "%s", "  x");
-          cout << string(buffer);
+          os << string(buffer);
         } else {
           sprintf(buffer, "  %d", int(CanAccessPeer[i][j]));
-          cout << string(buffer);
+          os << string(buffer);
         }
       }
-      cout << endl;
+      os << std::endl;
     }
-    cout << "--------------------" << endl;
+    os << "--------------------" << std::endl;
 #else
-    cout << "=== No CUDA support ===" << endl;
+    os << "=== No CUDA support ===" << std::endl;
 #endif
 
     free(buffer);

@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <filesystem>
+#include <ostream>
 
 #include "utils/utils.hpp"
 
@@ -329,7 +330,6 @@ namespace cytnx {
         } else {
           idx_erase.push_back(q);
           tmp_degs[loc] += tmp_degs[q];
-          // std::cout << "add from loc" << q << " to " << cnt << std::endl;
         }
         return_order[mapper[q]] = cnt;
       }
@@ -620,7 +620,7 @@ namespace cytnx {
     } else if (bin.type() == bondType::BD_KET) {
       os << "type: | IN (KET)> " << std::endl;
     } else {
-      cytnx_error_msg(1, "%s", "[ERROR] internal error.");
+      cytnx_error_msg(true, "%s", "[ERROR] internal error.");
     }
     // os << bin.get_syms().size() << endl;
 

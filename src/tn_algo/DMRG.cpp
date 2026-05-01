@@ -1,12 +1,14 @@
-#include "tn_algo/DMRG.hpp"
-#include "Generator.hpp"
-#include "Network.hpp"
-#include "LinOp.hpp"
-#include "linalg.hpp"
-#include <tuple>
 #include <iomanip>
 #include <iostream>
+#include <tuple>
+
+#include "Generator.hpp"
+#include "LinOp.hpp"
+#include "Network.hpp"
+#include "linalg.hpp"
+#include "tn_algo/DMRG.hpp"
 #include "utils/vec_print.hpp"
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -33,8 +35,6 @@ namespace cytnx {
         UniTensor &M2 = functArgs[2];
         UniTensor &R = functArgs[3];
 
-        // std::vector<cytnx_int64> pshape =
-        // {L.shape()[1],M1.shape()[2],M2.shape()[2],R.shape()[1]}; vec_print(std::cout,pshape);
         this->anet.FromString({"psi: -1,-2;-3,-4", "L: ;-5,-1,0", "R: ;-7,-4,3", "M1: ;-5,-6,-2,1",
                                "M2: ;-6,-7,-3,2", "TOUT: 0,1;2,3"});
         this->anet.PutUniTensor("M2", M2);
@@ -82,7 +82,6 @@ namespace cytnx {
 
         std::vector<cytnx_int64> pshape = vec_cast<cytnx_uint64, cytnx_int64>(
           {L.shape()[1], M1.shape()[2], M2.shape()[2], R.shape()[1]});
-        // vec_print(std::cout,pshape);
         this->anet.FromString({"psi: ;-1,-2,-3,-4", "L: ;-5,-1,0", "R: ;-7,-4,3", "M1: ;-5,-6,-2,1",
                                "M2: ;-6,-7,-3,2", "TOUT: ;0,1,2,3"});
         this->anet.PutUniTensor("M2", M2);
@@ -110,8 +109,6 @@ namespace cytnx {
           auto c = linalg::Dot(r, v).item();
           out += this->weight * c * r;
         }
-        // cout << counter << endl; counter++;
-        // cout << out << endl;
         return out;
       }
     };
@@ -270,7 +267,6 @@ namespace cytnx {
           min(min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
               this->mps.virt_dim());
 
-        // cout << "bkpt1\n";
         //  calculate local ortho_mps:
         // omps = []
         std::vector<Tensor> omps;
@@ -292,13 +288,11 @@ namespace cytnx {
           omps.back().flatten_();
         }
 
-        // cout << psi_T << endl;
         auto out = optimize_psi(
           psi_T, {this->LR[p], this->mpo.get_op(p), this->mpo.get_op(p + 1), this->LR[p + 2]},
           maxit, krydim, omps, this->weight);
         psi_T = out[1];
         Entemp = out[0].item();
-        // cout << psi_T << endl;
 
         psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p + 1),
                        dim_r);  // convert psi back to 4-leg form
@@ -317,9 +311,6 @@ namespace cytnx {
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
         this->mps.S_loc() = p;
-
-        // A[p].print_diagram()
-        // A[p+1].print_diagram()
 
         // update LR from right to left:
         // anet = cytnx.Network("R_AMAH.net")
@@ -511,7 +502,6 @@ namespace cytnx {
           min(min(dim_l * this->mps.phys_dim(p), dim_r * this->mps.phys_dim(p + 1)),
               this->mps.virt_dim());
 
-        // cout << "bkpt1\n";
         //  calculate local ortho_mps:
         // omps = []
         std::vector<UniTensor> omps;
@@ -534,18 +524,16 @@ namespace cytnx {
         }
 
         psi.set_rowrank(2);
-        // psi.print_diagram();
-        // cout << psi << endl;
         auto out = optimize_psi_new(
           psi, {this->LR[p], this->mpo.get_op(p), this->mpo.get_op(p + 1), this->LR[p + 2]}, maxit,
           krydim, omps, this->weight);
         psi = out[1];
-        // cout << psi << endl;
         Entemp = out[0].item();
-        // psi.print_diagram();
-        // exit(1);
-        // psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p+1), dim_r); //convert
-        // psi back to 4-leg form psi = UniTensor(psi_T,2); psi.relabel_(lbl);
+
+        // psi_T.reshape_(dim_l, this->mps.phys_dim(p), this->mps.phys_dim(p+1), dim_r);
+        // convert  psi back to 4-leg form
+        // psi = UniTensor(psi_T,2);
+        // psi.relabel_(lbl);
 
         // self.Ekeep.append(Entemp);
 
@@ -560,9 +548,6 @@ namespace cytnx {
 
         this->mps.data()[p] = Contract(this->mps.data()[p], s);  // absorb s into next neighbor
         this->mps.S_loc() = p;
-
-        // A[p].print_diagram()
-        // A[p+1].print_diagram()
 
         // update LR from right to left:
         // anet = cytnx.Network("R_AMAH.net")

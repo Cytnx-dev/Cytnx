@@ -588,12 +588,12 @@ void unitensor_binding(py::module &m) {
     .def("apply_", &UniTensor::apply_,
          "Apply fermionic signflips inplacely. Subsequently, signflip() returns False for all "
          "elements. Non-fermionic tensors are left unchanged. See also: apply()")
-    .def("print_diagram", &UniTensor::print_diagram, py::arg("bond_info") = false,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("print_blocks", &UniTensor::print_blocks, py::arg("full_info") = true,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("print_block", &UniTensor::print_block, py::arg("idx"), py::arg("full_info") = true,
-         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
+    .def("print_diagram", [](UniTensor &self, const bool &bond_info){ self.print_diagram(bond_info); },
+         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>(), py::arg("bond_info") = false)
+    .def("print_block", [](UniTensor &self, const cytnx_int64 &idx, const bool &full_info){ self.print_block(idx, full_info); },
+         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>(), py::arg("idx"), py::arg("full_info") = true)
+    .def("print_blocks", [](UniTensor &self, const bool &full_info){ self.print_blocks(full_info); },
+         py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>(), py::arg("full_info") = true)
 
     .def("group_basis_", &UniTensor::group_basis_)
     .def("group_basis", &UniTensor::group_basis)

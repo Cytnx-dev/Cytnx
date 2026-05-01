@@ -22,10 +22,8 @@ namespace cytnx {
 
   template <class... Ts>
   std::vector<cytnx_int64> dynamic_arg_int64_resolver(const cytnx_int64 &a, const Ts &...args) {
-    // std::cout << a << std::endl;
     std::vector<cytnx_int64> idxs;
     _resolve_int64(idxs, a, args...);
-    // cout << idxs << endl;
     return idxs;
   }
 
@@ -46,10 +44,8 @@ namespace cytnx {
 
   template <class... Ts>
   std::vector<cytnx_uint64> dynamic_arg_uint64_resolver(const cytnx_uint64 &a, const Ts &...args) {
-    // std::cout << a << std::endl;;
     std::vector<cytnx_uint64> idxs;
     _resolve_uint64(idxs, a, args...);
-    // cout << idxs << endl;
     return idxs;
   }
 

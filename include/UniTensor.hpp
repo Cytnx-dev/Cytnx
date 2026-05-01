@@ -1,23 +1,24 @@
 #ifndef CYTNX_UNITENSOR_H_
 #define CYTNX_UNITENSOR_H_
 
+#include <algorithm>
+#include <fstream>
+#include <initializer_list>
+#include <iostream>
+#include <map>
+#include <random>
+#include <utility>
+#include <vector>
+
+#include "Bond.hpp"
+#include "Device.hpp"
+#include "Generator.hpp"
+#include "Symmetry.hpp"
+#include "Tensor.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "Tensor.hpp"
-#include "utils/utils.hpp"
 #include "intrusive_ptr_base.hpp"
-#include <iostream>
-#include <vector>
-#include <map>
-#include <utility>
-#include <initializer_list>
-#include <fstream>
-#include <algorithm>
-#include "Symmetry.hpp"
-#include "Bond.hpp"
-#include "Generator.hpp"
-#include <random>
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -273,9 +274,10 @@ namespace cytnx {
     virtual boost::intrusive_ptr<UniTensor_base> contiguous();
     virtual boost::intrusive_ptr<UniTensor_base> apply_();
     virtual boost::intrusive_ptr<UniTensor_base> apply();
-    virtual void print_diagram(const bool &bond_info = false) const;
-    virtual void print_blocks(const bool &full_info = true) const;
-    virtual void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    virtual void print_diagram(std::ostream &os, const bool &bond_info = false) const;
+    virtual void print_blocks(std::ostream &os, const bool &full_info = true) const;
+    virtual void print_block(std::ostream &os, const cytnx_int64 &idx,
+                             const bool &full_info = true) const;
 
     virtual boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const;
 
@@ -638,9 +640,9 @@ namespace cytnx {
       return out;
     }
 
-    void print_diagram(const bool &bond_info = false) const;
-    void print_blocks(const bool &full_info = true) const;
-    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    void print_diagram(std::ostream &os, const bool &bond_info = false) const;
+    void print_blocks(std::ostream &os, const bool &full_info = true) const;
+    void print_block(std::ostream &os, const cytnx_int64 &idx, const bool &full_info = true) const;
     Tensor get_block() const { return this->_block.clone(); }
     Tensor get_block(const cytnx_uint64 &idx) const {
       cytnx_error_msg(idx != 0,
@@ -1460,9 +1462,9 @@ namespace cytnx {
       return out;
     }
 
-    void print_diagram(const bool &bond_info = false) const;
-    void print_blocks(const bool &full_info = true) const;
-    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    void print_diagram(std::ostream &os, const bool &bond_info = false) const;
+    void print_blocks(std::ostream &os, const bool &full_info = true) const;
+    void print_block(std::ostream &os, const cytnx_int64 &idx, const bool &full_info = true) const;
 
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,
@@ -2234,9 +2236,9 @@ namespace cytnx {
     boost::intrusive_ptr<UniTensor_base> apply_();
     boost::intrusive_ptr<UniTensor_base> apply();
 
-    void print_diagram(const bool &bond_info = false) const;
-    void print_blocks(const bool &full_info = true) const;
-    void print_block(const cytnx_int64 &idx, const bool &full_info = true) const;
+    void print_diagram(std::ostream &os, const bool &bond_info = false) const;
+    void print_blocks(std::ostream &os, const bool &full_info = true) const;
+    void print_block(std::ostream &os, const cytnx_int64 &idx, const bool &full_info = true) const;
 
     boost::intrusive_ptr<UniTensor_base> contract(const boost::intrusive_ptr<UniTensor_base> &rhs,
                                                   const bool &mv_elem_self = false,
@@ -2750,7 +2752,6 @@ namespace cytnx {
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false, const cytnx_int64 &rowrank = -1,
               const std::vector<std::string> &in_labels = {}, const std::string &name = "") {
-      // std::cout << "[entry!]" << std::endl;
       boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
       out->Init_by_Tensor(in_tensor, is_diag, rowrank, name);
       this->_impl = out;
@@ -2843,8 +2844,6 @@ namespace cytnx {
           if (sym_fver == -1)
             sym_fver = bonds[i]._impl->_degs.size();
           else {
-            // std::cout << sym_fver << " " <<
-            // bonds[i]._impl->_degs.size() << std::endl;
             cytnx_error_msg((bool(sym_fver) ^ bool(bonds[i]._impl->_degs.size())),
                             "[ERROR] When initializing a UniTensor with symmetries, all Bonds must "
                             "be in the same format!%s",
@@ -3881,18 +3880,30 @@ namespace cytnx {
     }
 
     /**
-    @brief Plot the diagram of the UniTensor.
+    @brief Print the diagram of the UniTensor.
         @param[in] bond_info whether need to print the information of the bonds of the UniTensor.
     */
     void print_diagram(const bool &bond_info = false) const {
-      this->_impl->print_diagram(bond_info);
+      this->_impl->print_diagram(std::cout, bond_info);
     }
+    /// @cond
+    void print_diagram(std::ostream &os, const bool &bond_info = false) const {
+      this->_impl->print_diagram(os, bond_info);
+    }
+    /// @endcond
 
     /**
     @brief Print all blocks of the UniTensor.
         @param[in] full_info whether need to print the full information of the blocks
     */
-    void print_blocks(const bool &full_info = true) const { this->_impl->print_blocks(full_info); }
+    void print_blocks(const bool &full_info = true) const {
+      this->_impl->print_blocks(std::cout, full_info);
+    }
+    /// @cond
+    void print_blocks(std::ostream &os, const bool &full_info = true) const {
+      this->_impl->print_blocks(os, full_info);
+    }
+    /// @endcond
 
     /**
     @brief Print out the block of the UniTensor with a given block index number.
@@ -3900,8 +3911,13 @@ namespace cytnx {
         @param[in] full_info whether need to print the full information of the block
     */
     void print_block(const cytnx_int64 &idx, const bool &full_info = true) const {
-      this->_impl->print_block(idx, full_info);
+      this->_impl->print_block(std::cout, idx, full_info);
     }
+    /// @cond
+    void print_block(std::ostream &os, const cytnx_int64 &idx, const bool &full_info = true) const {
+      this->_impl->print_block(os, idx, full_info);
+    }
+    /// @endcond
 
     /**
     @brief Group the same quantum number basis together.
@@ -3930,7 +3946,6 @@ namespace cytnx {
     */
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator) {
-      // std::cout << "at " << this->is_blockform()  << std::endl;
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
@@ -3959,7 +3974,6 @@ namespace cytnx {
     */
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
-      // std::cout << "at " << this->is_blockform()  << std::endl;
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;

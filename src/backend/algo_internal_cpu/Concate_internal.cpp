@@ -1,5 +1,4 @@
 #include "Concate_internal.hpp"
-#include <iostream>
 #include <algorithm>
 
 namespace cytnx {
@@ -20,7 +19,6 @@ namespace cytnx {
       for (cytnx_int32 i = 0; i < ins.size(); i++) {
         memcpy(out_ptr + offs, ins[i], ElemSize * lens[i]);
         offs += ElemSize * lens[i];
-        // std::cout << ElemSize*lens[i] << std::endl;
       }
     }
 

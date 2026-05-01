@@ -1,7 +1,6 @@
 #ifndef CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUDAMEMCPYTRUNCATION_H_
 #define CYTNX_BACKEND_LINALG_INTERNAL_GPU_CUDAMEMCPYTRUNCATION_H_
 
-#include <iostream>
 #include <vector>
 
 #include "Tensor.hpp"

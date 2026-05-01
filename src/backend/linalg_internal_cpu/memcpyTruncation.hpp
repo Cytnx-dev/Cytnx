@@ -1,7 +1,6 @@
 #ifndef CYTNX_BACKEND_LINALG_INTERNAL_CPU_MEMCPYTRUNCATION_H_
 #define CYTNX_BACKEND_LINALG_INTERNAL_CPU_MEMCPYTRUNCATION_H_
 
-#include <iostream>
 #include <vector>
 
 #include "Tensor.hpp"

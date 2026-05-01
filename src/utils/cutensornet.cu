@@ -1,9 +1,13 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#include <cassert>
+#include <iostream>
 #include <unordered_map>
 #include <vector>
-#include <cassert>
+
 #include <cytnx.hpp>
+
 #include "cutensornet.hpp"
 
 #ifdef UNI_GPU
@@ -69,7 +73,6 @@ namespace cytnx {
     // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
     // type_mapper[Type.Double] = CUDA_R_64F;
     // type_mapper[Type.Float] = CUDA_R_32F;
-    // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
     // extentsIn = std::vector<int64_t *>();
     // stridesIn = std::vector<int64_t *>();
     // tns = std::vector<UniTensor>();
@@ -92,7 +95,6 @@ namespace cytnx {
   //   // type_mapper[Type.ComplexFloat] = CUDA_C_32F;
   //   // type_mapper[Type.Double] = CUDA_R_64F;
   //   // type_mapper[Type.Float] = CUDA_R_32F;
-  //   // std::cout<<"hdiewhdoiwehdiwehdiuwehdiweu"<<std::endl;
   //   extentsIn.clear();
   //   stridesIn.clear();
   //   rawDataIn_d.clear();
@@ -204,11 +206,9 @@ namespace cytnx {
 
     std::vector<std::pair<int64_t, int64_t>> einsum_path;
 
-    // std::cout << "Number of contractions : " << path.numContractions << std::endl;
     for (int i = 0; i < path.numContractions; i++) {
       einsum_path.push_back(
         std::pair<int64_t, int64_t>((int64_t)path.data[i].first, (int64_t)path.data[i].second));
-      // std::cout << path.data[i].first << ", " << path.data[i].second << std::endl;
     }
     HANDLE_ERROR(cutensornetContractionOptimizerInfoGetAttribute(
       handle, optimizerInfo, CUTENSORNET_CONTRACTION_OPTIMIZER_INFO_NUM_SLICES, &numSlices,

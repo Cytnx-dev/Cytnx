@@ -63,8 +63,9 @@ namespace cytnx {
 
     void _cpy_bool(void *ptr, const std::vector<cytnx_bool> &vin);
 
-    void print();
-    void print_info();
+    void print(std::ostream &os = std::cout) const;
+    void print_info(std::ostream &os = std::cout) const;
+
     /*
         This function is design to check the type mismatch.
         Handy for developer to exclude the assign of double
@@ -121,7 +122,7 @@ namespace cytnx {
         cytnx_error_msg(typeid(T) != typeid(cytnx_bool), "%s",
                         "[ERROR _Init_byptr_safe type not match]");
       } else {
-        cytnx_error_msg(1, "[FATAL] ERROR%s", "\n");
+        cytnx_error_msg(true, "[FATAL] ERROR%s", "\n");
       }
 
       this->_Init_byptr((void *)rawptr, len_in);
@@ -186,7 +187,7 @@ namespace cytnx {
                               const std::vector<cytnx_uint64> &invmapper);
     virtual void PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
                                    const std::vector<cytnx_uint64> &mapper = {});
-    virtual void print_elems();
+    virtual void print_elems(std::ostream &os = std::cout) const;
 
     virtual boost::intrusive_ptr<Storage_base> real();
     virtual boost::intrusive_ptr<Storage_base> imag();
@@ -258,7 +259,11 @@ namespace cytnx {
     boost::intrusive_ptr<Storage_base> to(const int &device);
     void PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &mapper = {});
-    void print_elems();
+
+    void print_elems() const { this->print(std::cout); }
+    /// @cond
+    void print_elems(std::ostream &os = std::cout) const;
+    /// @endcond
 
     ~StorageImplementation();
 
@@ -768,10 +773,11 @@ namespace cytnx {
     @brief print the info of the Storage, including the device, dtype and size.
 
     */
-    void print_info() const { this->_impl->print_info(); }
+    void print_info() const { this->_impl->print(std::cout); }
     /// @cond
+    void print_info(std::ostream &os) const { this->_impl->print(os); }
     // this is a redundant function
-    void print() const { this->_impl->print(); }
+    void print(std::ostream &os = std::cout) const { this->_impl->print(os); }
     /// @endcond
 
     /**
@@ -870,7 +876,7 @@ namespace cytnx {
     void _from_vector(const std::vector<T> &vin, const int device = -1) {
       // auto dispatch:
       // check:
-      cytnx_error_msg(1, "[FATAL] ERROR unsupport type%s", "\n");
+      cytnx_error_msg(true, "[FATAL] ERROR unsupport type%s", "\n");
       // this->_impl->Init(vin.size(),device);
       // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
     }

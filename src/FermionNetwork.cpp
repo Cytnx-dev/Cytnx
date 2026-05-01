@@ -2,7 +2,6 @@
 #include "Network.hpp"
 #include <stack>
 #include <algorithm>
-#include <iostream>
 
 using namespace std;
 

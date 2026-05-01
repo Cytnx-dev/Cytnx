@@ -1,6 +1,7 @@
 #include "Tensor.hpp"
 
 #include <filesystem>
+#include <ostream>
 #include <typeinfo>
 
 #include "linalg.hpp"
@@ -817,7 +818,6 @@ namespace cytnx {
   }
   template <>
   Tensor &Tensor::operator/=<cytnx_int32>(const cytnx_int32 &rc) {
-    // std::cout << "entry /= int32" << std::endl;
     this->_impl->storage() = cytnx::linalg::Div(*this, rc)._impl->storage();
     return *this;
   }

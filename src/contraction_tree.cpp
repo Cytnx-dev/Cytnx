@@ -30,7 +30,6 @@ namespace cytnx {
 
     if (!nodes_container.empty()) {
       auto root = nodes_container.back();
-      // std::cout << "Setting root pointers from " << root->name << std::endl;
       root->set_root_ptrs();
     }
   }
@@ -60,14 +59,10 @@ namespace cytnx {
                                  // change address.
     for (cytnx_uint64 i = 0; i < tokens.size(); i++) {
       tok = str_strip(tokens[i]);  // remove space.
-      // cout << tokens[i] << "|" << tok << "|" << endl;
       if (tok.length() == 0) continue;
-      // cout << tok << "|";
       if (tok == "(") {
         operators.push(tok.c_str()[0]);
-        // cout << "put(" << endl;
       } else if (tok == ")") {
-        // cout << "put)-->";
         if (!operators.empty()) {
           topc = operators.top();
           while ((topc != '(')) {
@@ -85,10 +80,8 @@ namespace cytnx {
               break;
           }
         }
-        // cout << endl;
         operators.pop();  // discard the '('
       } else if (tok == ",") {
-        // cout << "put,-->";
         if (!operators.empty()) {
           topc = operators.top();
           while ((topc != '(') && (topc != ')')) {
@@ -106,7 +99,6 @@ namespace cytnx {
               break;
           }
         }
-        // cout << endl;
         operators.push(',');
       } else {
         cytnx_uint64 idx;
@@ -134,13 +126,6 @@ namespace cytnx {
       this->nodes_container.push_back(new_node);
       stk.push(this->nodes_container.back());
     }
-    /*
-    cout << "============" << endl;
-    for(int i=0;i<this->nodes_container.size();i++){
-        cout << this->nodes_container[i].name << endl;
-    }
-    cout << "============" << endl;
-    */
   }
 
 }  // namespace cytnx

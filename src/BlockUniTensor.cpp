@@ -1,15 +1,20 @@
 #include "UniTensor.hpp"
-#include "Accessor.hpp"
-#include "utils/utils.hpp"
-#include "linalg.hpp"
-#include "Generator.hpp"
-#include <vector>
-#include "utils/vec_clone.hpp"
-#include "utils/vec_print.hpp"
-#include "utils/vec_concatenate.hpp"
+
 #include <map>
-#include <boost/unordered_map.hpp>
+#include <ostream>
 #include <stack>
+#include <vector>
+
+#include <boost/unordered_map.hpp>
+
+#include "Accessor.hpp"
+#include "Generator.hpp"
+#include "linalg.hpp"
+#include "utils/utils.hpp"
+#include "utils/vec_clone.hpp"
+#include "utils/vec_concatenate.hpp"
+#include "utils/vec_print.hpp"
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -142,14 +147,7 @@ namespace cytnx {
       bool fin = false;
       while (1) {
         // get elem
-        // cout << "start!" << endl;
-        // cytnx::vec_print_simple(std::cout , Loc);
         this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(), tot_qns);
-
-        // std::cout << "Loc: ";
-        // cytnx::vec_print_simple(std::cout, Loc);
-        // std::cout << "tot_flx: ";
-        // cytnx::vec_print_simple(std::cout, tot_qns);
 
         // if exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
@@ -180,7 +178,6 @@ namespace cytnx {
             continue;
           } else {
             Loc.back() += 1;
-            // cout << "+1 at loc:" << Loc.size()-1 <<endl;
             while (Loc.size() != this->_bonds.size()) {
               Loc.push_back(0);
             }
@@ -303,13 +300,12 @@ namespace cytnx {
 
     os << (std::string(" ") * (3 + Lmax + 5)) << std::string("-") * (4 + mL + mR + 5) << endl;
   }
-  void BlockUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+  void BlockUniTensor::print_block(std::ostream &os, const cytnx_int64 &idx,
+                                   const bool &full_info) const {
     cytnx_error_msg(
       (idx < 0) || (idx >= this->_blocks.size()),
       "[ERROR] index [%d] out of bound. should be >0 and < number of available blocks %d\n", idx,
       this->_blocks.size());
-
-    std::ostream &os = std::cout;
 
     os << "========================\n";
     if (this->_is_diag) os << " *is_diag: True\n";
@@ -351,9 +347,7 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::print_blocks(const bool &full_info) const {
-    std::ostream &os = std::cout;
-
+  void BlockUniTensor::print_blocks(std::ostream &os, const bool &full_info) const {
     os << "-------- start of print ---------\n";
     char *buffer = (char *)malloc(sizeof(char) * 10240);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
@@ -377,7 +371,7 @@ namespace cytnx {
 
     // print each blocks with its qnum!
     for (int b = 0; b < this->_blocks.size(); b++) {
-      this->print_block(b, full_info);
+      this->print_block(os, b, full_info);
     }
 
     /*
@@ -404,26 +398,26 @@ namespace cytnx {
     free(buffer);
   }
 
-  void BlockUniTensor::print_diagram(const bool &bond_info) const {
+  void BlockUniTensor::print_diagram(std::ostream &os, const bool &bond_info) const {
     char *buffer = (char *)malloc(10240 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "tensor Name : %s\n", this->_name.c_str());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "tensor Rank : %d\n", this->_labels.size());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     // sprintf(buffer, "block_form  : true%s", "\n");
-    // std::cout << std::string(buffer);
+    // os << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "valid blocks: %d\n", this->_blocks.size());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "is diag     : %s\n", this->is_diag() ? "True" : "False");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
 
     cytnx_uint64 Nin = this->_rowrank;
     cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
@@ -459,12 +453,12 @@ namespace cytnx {
 
     std::string tmpss;
     sprintf(buffer, "%s row %s col %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     for (cytnx_uint64 i = 0; i < vl; i++) {
       sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
 
       if (i < Nin) {
         if (this->_bonds[i].type() == bondType::BD_KET)
@@ -508,21 +502,21 @@ namespace cytnx {
         sprintf(rlbl, "%s", tmpss.c_str());
       }
       sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
     }
     sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "%s", "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
 
     if (bond_info) {
       for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
         // sprintf(buffer, "lbl:%d ", this->_labels[i]);
         sprintf(buffer, "lbl:%s ", this->_labels[i].c_str());
-        std::cout << std::string(buffer);
-        std::cout << this->_bonds[i] << std::endl;
+        os << std::string(buffer);
+        os << this->_bonds[i] << std::endl;
       }
     }
 
@@ -767,7 +761,6 @@ namespace cytnx {
       out_rowrank = this->rowrank() + rhs->rowrank();
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
-      // cout << out_bonds;
       tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false);
 
       // tmp->_name = this->_name + "+" + rhs->_name;
@@ -1308,7 +1301,6 @@ namespace cytnx {
       std::map<std::vector<cytnx_uint64>, cytnx_uint64> tmap;
       std::map<std::vector<cytnx_uint64>, cytnx_uint64>::iterator itr;
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
-        // std::cout << "blk: " << i << std::endl;
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
           auto s = this->_inner_to_outer_idx[i];
           s.erase(s.begin() + idb);
@@ -1815,8 +1807,6 @@ namespace cytnx {
 
     // process one by one:
     for (cytnx_int64 bn = 0; bn < dup_bond_idxs.size(); bn++) {
-      // cout << "BOND:" << dup_bond_idxs[bn] << endl;
-      // cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
       tmp_inner_to_outer_idx = this->_inner_to_outer_idx;
 
       for (cytnx_int64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
@@ -1916,8 +1906,6 @@ namespace cytnx {
         }
       }
     }
-    // std::cout << idx_mapper << std::endl;
-    // std::cout << new_shape_aft_perm << std::endl;
 
     this->permute_(idx_mapper);
     this->contiguous_();
@@ -1925,8 +1913,6 @@ namespace cytnx {
     // group bonds:
     std::vector<Bond> new_bonds;
     std::vector<cytnx_uint64> cb_stride(indicators.size());
-    // std::cout << "idor" << idor << std::endl;
-    // std::cout << "rank" << this->rank() << std::endl;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
         Bond tmp = this->_bonds[i];
@@ -1977,9 +1963,6 @@ namespace cytnx {
       this->_blocks[b].reshape_(new_shape);
     }
 
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->get_qindices(2)<<endl;
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->bonds()<<endl;
-
     for (int b = 0; b < this->_blocks.size(); b++) {
       this->_inner_to_outer_idx[b][idor] *= cb_stride[0];
       for (int i = idor + 1; i < idor + indicators.size(); i++) {
@@ -1993,15 +1976,12 @@ namespace cytnx {
       }
       this->_inner_to_outer_idx[b].resize(this->rank());
     }
-    // std::cout << this->_inner_to_outer_idx << std::endl;
 
     // change rowrank:
     this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
 
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->get_qindices(2)<<endl;
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->bonds()<<endl;
     // regroup:
     this->group_basis_();
   }
