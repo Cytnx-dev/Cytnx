@@ -1,10 +1,9 @@
 #include "Generator.hpp"
 
-#include "utils/utils.hpp"
+#include <cfloat>
 
 #include "linalg.hpp"
-#include <cfloat>
-#include <iostream>
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -21,8 +20,6 @@ namespace cytnx {
   }
   Tensor zeros(const std::vector<cytnx_uint64> &Nelem, const unsigned int &dtype,
                const int &device) {
-    // std::cout << "OK" << std::endl;
-    // std::cout << Nelem << std::endl;
     Tensor out(Nelem, dtype, device, true);
     // out._impl->storage().set_zeros();
     return out;

@@ -1,17 +1,19 @@
 #ifndef CYTNX_LINOP_H_
 #define CYTNX_LINOP_H_
 
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include <vector>
+#include <algorithm>
 #include <fstream>
 #include <functional>
+#include <iostream>
 #include <map>
 #include <utility>
-#include <algorithm>
-#include "intrusive_ptr_base.hpp"
+#include <vector>
+
 #include "Tensor.hpp"
+#include "Type.hpp"
 #include "UniTensor.hpp"
+#include "cytnx_error.hpp"
+#include "intrusive_ptr_base.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -156,7 +158,10 @@ namespace cytnx {
     int dtype() const { return this->_dtype; };
     cytnx_uint64 nx() const { return this->_nx; };
 
-    void _print();
+    void _print() { this->_print(std::cout); };
+    /// @cond
+    void _print(std::ostream &os);
+    /// @endcond
 
     /// @cond
     // this expose to interitance:

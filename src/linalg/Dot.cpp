@@ -1,5 +1,4 @@
 #include "linalg.hpp"
-#include <iostream>
 #include <vector>
 #include "Tensor.hpp"
 
@@ -42,7 +41,6 @@ namespace cytnx {
         // check type:
         Tensor _tl = Tl.contiguous();
         Tensor _tr = Tr.contiguous();
-        // std::cout << "MV" << std::endl;
         Tensor out;
         std::vector<cytnx_uint64> newshape = Tl.shape();
         newshape.pop_back();

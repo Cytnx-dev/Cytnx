@@ -1,13 +1,17 @@
 #include "UniTensor.hpp"
+
+#include <map>
+#include <ostream>
+#include <vector>
+
 #include "Accessor.hpp"
+#include "Generator.hpp"
+#include "UniTensor.hpp"
+#include "linalg.hpp"
 #include "utils/utils.hpp"
 #include "utils/utils_internal_interface.hpp"
-#include "linalg.hpp"
-#include "Generator.hpp"
-#include <vector>
-#include "utils/vec_print.hpp"
 #include "utils/vec_concatenate.hpp"
-#include <map>
+#include "utils/vec_print.hpp"
 
 using namespace std;
 namespace cytnx {
@@ -96,12 +100,6 @@ namespace cytnx {
     vector<cytnx_uint64> degenerates;
     vector<vector<cytnx_int64>> uniq_bonds_row = tot_bonds[0].getUniqueQnums();
     vector<vector<cytnx_int64>> uniq_bonds_col = tot_bonds[1].getUniqueQnums();
-    // vec_print(std::cout,uniq_bonds_row);// << endl;
-    // vec_print(std::cout,uniq_bonds_col);// << endl;
-    // exit(1);
-    // vec_print(std::cout,tot_bonds[0].qnums());
-    // vec_print(std::cout,tot_bonds[1].qnums());
-    //[DDK]
 
     // get common qnum set of row-col (bra-ket) space.
     this->_blockqnums = vec2d_intersect(uniq_bonds_row, uniq_bonds_col, false, false);
@@ -109,8 +107,6 @@ namespace cytnx {
     cytnx_error_msg(
       this->_blockqnums.size() == 0,
       "[ERROR][SparseUniTensor] invalid qnums. no common block (qnum) in this setup.%s", "\n");
-
-    // vec_print(std::cout,this->_blockqnums);
 
     // calculate&init the No. of blocks and their sizes.
     this->_blocks.resize(this->_blockqnums.size());
@@ -233,7 +229,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
@@ -300,7 +296,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
@@ -361,7 +357,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[out_raw->_mapper[mapper_u64[i]]] = i;
@@ -427,7 +423,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[this->_mapper[mapper_u64[i]]] = i;
@@ -485,7 +481,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[this->_mapper[mapper_u64[i]]] = i;
@@ -538,7 +534,7 @@ namespace cytnx {
 
     for (cytnx_uint32 i = 0; i < mapper_u64.size(); i++) {
       if (mapper_u64[i] >= mapper_u64.size()) {
-        cytnx_error_msg(1, "%s", "invalid rank index.\n");
+        cytnx_error_msg(true, "%s", "invalid rank index.\n");
       }
       // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[this->_mapper[mapper_u64[i]]] = i;
@@ -652,12 +648,12 @@ namespace cytnx {
 
   std::vector<Symmetry> SparseUniTensor::syms() const { return this->_bonds[0].syms(); }
 
-  void SparseUniTensor::print_block(const cytnx_int64 &idx, const bool &full_info) const {
+  void SparseUniTensor::print_block(std::ostream &os, const cytnx_int64 &idx,
+                                    const bool &full_info) const {
     cytnx_error_msg(true, "[ERROR] SpareUniTensor does not support individual printing.%s", "\n");
   }
 
-  void SparseUniTensor::print_blocks(const bool &full_info) const {
-    std::ostream &os = std::cout;
+  void SparseUniTensor::print_blocks(std::ostream &os, const bool &full_info) const {
     os << "-------- start of print ---------\n";
     char *buffer = (char *)malloc(sizeof(char) * 1024);
     sprintf(buffer, "Tensor name: %s\n", this->_name.c_str());
@@ -700,26 +696,26 @@ namespace cytnx {
     free(buffer);
   }
 
-  void SparseUniTensor::print_diagram(const bool &bond_info) const {
+  void SparseUniTensor::print_diagram(std::ostream &os, const bool &bond_info) const {
     char *buffer = (char *)malloc(1024 * sizeof(char));
     unsigned int BUFFsize = 100;
 
     sprintf(buffer, "-----------------------%s", "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "tensor Name : %s\n", this->_name.c_str());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "tensor Rank : %d\n", this->_labels.size());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "block_form  : true%s", "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "contiguous  : %s\n", this->is_contiguous() ? "True" : "False");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "valid bocks : %d\n", this->_blocks.size());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "is diag   : %s\n", this->is_diag() ? "True" : "False");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "on device   : %s\n", this->device_str().c_str());
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     cytnx_uint64 Nin = this->_rowrank;
     cytnx_uint64 Nout = this->_labels.size() - this->_rowrank;
     cytnx_uint64 vl;
@@ -753,16 +749,16 @@ namespace cytnx {
     string M_dashes = string("-") * (1 + Space_Ldim_max + 5 + Space_Rdim_max + 1);
 
     sprintf(buffer, "braket_form : %s\n", this->_is_braket_form ? "True" : "False");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     std::string tmpss;
     sprintf(buffer, "%s row %s col %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
 
     for (cytnx_uint64 i = 0; i < vl; i++) {
       sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
 
       if (i < Nin) {
         if (this->_bonds[i].type() == bondType::BD_KET)
@@ -806,21 +802,21 @@ namespace cytnx {
         sprintf(rlbl, "%s", tmpss.c_str());
       }
       sprintf(buffer, "   %s| %s     %s |%s\n", l, llbl, rlbl, r);
-      std::cout << std::string(buffer);
+      os << std::string(buffer);
     }
     sprintf(buffer, "%s    |%s|    %s", LallSpace.c_str(), MallSpace.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "%s    -%s-    %s", LallSpace.c_str(), M_dashes.c_str(), "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
     sprintf(buffer, "%s", "\n");
-    std::cout << std::string(buffer);
+    os << std::string(buffer);
 
     if (bond_info) {
       for (cytnx_uint64 i = 0; i < this->_bonds.size(); i++) {
         // sprintf(buffer, "lbl:%d ", this->_labels[i]);
         sprintf(buffer, "lbl:%s ", this->_labels[i].c_str());
-        std::cout << std::string(buffer);
-        std::cout << this->_bonds[i] << std::endl;
+        os << std::string(buffer);
+        os << this->_bonds[i] << std::endl;
       }
     }
 

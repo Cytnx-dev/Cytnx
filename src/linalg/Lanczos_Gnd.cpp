@@ -1,13 +1,13 @@
-#include "linalg.hpp"
-#include "Generator.hpp"
-#include "random.hpp"
-#include "Tensor.hpp"
-#include "LinOp.hpp"
-
 #include <cfloat>
-#include <vector>
-#include "Tensor.hpp"
 #include <iomanip>
+#include <iostream>
+#include <vector>
+
+#include "Generator.hpp"
+#include "LinOp.hpp"
+#include "Tensor.hpp"
+#include "linalg.hpp"
+#include "random.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -43,10 +43,7 @@ namespace cytnx {
       new_psi = Hop->matvec(psi_1);
 
       As(0) = linalg::Vectordot(new_psi, psi_1, true).item();
-      // cout << (new_psi);
       new_psi -= As(0) * psi_1;
-      // cout << (new_psi);
-      // exit(1);
 
       Bs(0) = new_psi.Norm();
 
@@ -62,9 +59,7 @@ namespace cytnx {
 
       // iteration LZ:
       for (unsigned int i = 1; i < Maxiter; i++) {
-        // cout << "iter:" << i << "print Hv" << endl;
         new_psi = Hop->matvec(psi_1);  //- Bs(i-1)*psi_0;
-        // cout << new_psi << endl;
 
         As.append(linalg::Vectordot(new_psi, psi_1, true).item());
 
@@ -106,8 +101,6 @@ namespace cytnx {
         E = tmpEsVs[0].storage().at(0);
 
       }  // iteration
-
-      // cout << As << endl;
 
       if (cvg_fin == false) {
         cytnx_warning_msg(true,
@@ -170,10 +163,7 @@ namespace cytnx {
         //-------------------------------------------------
         new_psi = Hop->matvec(psi_1);
         As(0) = linalg::Vectordot(new_psi,psi_1).item<double>();
-        //cout << (new_psi);
         new_psi -= As(0)*psi_1;
-        //cout << (new_psi);
-        //exit(1);
 
         Bs(0) = new_psi.Norm();
         psi_0 = psi_1;
@@ -282,12 +272,8 @@ namespace cytnx {
         // i=0
         //-------------------------------------------------
         new_psi = Hop->matvec(psi_1).astype(Type.Float);
-        //cout << Scalar(linalg::Vectordot(new_psi,psi_1).item()) << endl;
         As(0) = linalg::Vectordot(new_psi,psi_1).item();
-        //cout << (new_psi);
         new_psi -= As(0)*psi_1;
-        //cout << (new_psi);
-        //exit(1);
 
         Bs(0) = new_psi.Norm();
         psi_0 = psi_1;
@@ -391,7 +377,6 @@ namespace cytnx {
       // check criteria and maxiter:
       cytnx_error_msg(CvgCrit <= 0, "[ERROR][Lanczos] converge criteria must >0%s", "\n");
       cytnx_error_msg(Maxiter < 2, "[ERROR][Lanczos] Maxiter must >1%s", "\n");
-      // cout << Tin << endl;
 
       // check Tin should be rank-1:
       Tensor v0;

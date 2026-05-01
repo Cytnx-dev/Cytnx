@@ -11,7 +11,6 @@ namespace cytnx {
       for (cytnx_uint64 n = 0; n < cytnx_uint64(Ml); n++) {
         out[n] = 0;
         for (cytnx_int64 c = 0; c < Nr; c++) {
-          // std::cout << inl[j*Comm+c] << " " << inr[c*Nr+i] << std::endl;
           out[n] += inl[n * Nr + c] * inr[c];
         }
       }

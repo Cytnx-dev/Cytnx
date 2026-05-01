@@ -427,7 +427,6 @@ namespace cytnx {
 
       // alloc mem for each block:
       T *dblk;
-      // std::cout << NBlocks*sizeof(cytnx_double) << std::endl;
       cudaMalloc((void **)&dblk, NBlocks * sizeof(T));
 
       if (NBlocks == 1) {
@@ -466,7 +465,6 @@ namespace cytnx {
 
       // alloc mem for each block:
       T *dblk;
-      // std::cout << NBlocks*sizeof(cytnx_double) << std::endl;
       cudaMalloc((void **)&dblk, NBlocks * sizeof(T));
 
       if (NBlocks == 1) {

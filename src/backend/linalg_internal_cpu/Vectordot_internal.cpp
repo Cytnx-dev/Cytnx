@@ -232,7 +232,7 @@ namespace cytnx {
                               const boost::intrusive_ptr<Storage_base> &Lin,
                               const boost::intrusive_ptr<Storage_base> &Rin,
                               const unsigned long long &len, const bool &is_conj) {
-      cytnx_error_msg(1,
+      cytnx_error_msg(true,
                       "[ERROR][Vectordot_internal_b][FATAL Invalid internal call.] No internal "
                       "function for vectordot of bool type.%s",
                       "\n");

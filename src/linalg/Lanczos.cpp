@@ -131,7 +131,7 @@ namespace cytnx {
         // return Lanczos(Hop, Tin, "SA", Maxiter, CvgCrit, 1, is_V, 0, verbose);
       } else {
         cytnx_error_msg(
-          1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
+          true, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
         return std::vector<Tensor>();
       }
     }  // Lanczos
@@ -142,7 +142,7 @@ namespace cytnx {
                                    const cytnx_uint32 &max_krydim, const bool &verbose) {
       if (method == "ER") {
         cytnx_error_msg(
-          1, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");
+          true, "[ERROR][Lanczos] Lanczos method 'ER' for UniTensor is under developing!.%s", "\n");
         return std::vector<UniTensor>();
       } else if (method == "Gnd") {
         cytnx_error_msg(k > 1, "[ERROR][Lanczos] Only k = 1 is supported for 'Gnd' method.%s",
@@ -154,7 +154,7 @@ namespace cytnx {
         // return Lanczos(Hop, Tin, "SA", Maxiter, CvgCrit, 1, is_V, 0, verbose);
       } else {
         cytnx_error_msg(
-          1, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
+          true, "[ERROR][Lanczos] Invalid Lanczos method, should be either 'ER' or 'Gnd'.%s", "\n");
         return std::vector<UniTensor>();
       }
     }  // Lanczos

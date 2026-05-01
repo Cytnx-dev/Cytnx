@@ -2,16 +2,19 @@
 #define CYTNX_BACKEND_SCALAR_H_
 
 #ifndef BACKEND_TORCH
+
+  #include <cmath>
+  #include <initializer_list>
+  #include <iostream>
+  #include <limits>
+  #include <string>
+  #include <type_traits>
+  #include <vector>
+
   #include "Type.hpp"
   #include "cytnx_error.hpp"
   #include "intrusive_ptr_base.hpp"
-  #include <vector>
-  #include <initializer_list>
-  #include <string>
-  #include <iostream>
-  #include <cmath>
-  #include <type_traits>
-  #include <limits>
+
 namespace cytnx {
 
   ///@cond
@@ -2845,15 +2848,17 @@ namespace cytnx {
      */
     int dtype() const { return this->_impl->_dtype; }
 
-    // print()
     /**
-     * @brief Print the Scalar to the standard output.
+     * @brief Print the Scalar
      */
-    void print() const {
-      this->_impl->print(std::cout);
-      std::cout << std::string(" Scalar dtype: [") << Type.getname(this->_impl->_dtype)
-                << std::string("]") << std::endl;
+    void print() const { this->print(std::cout); }
+    /// @cond
+    void print(std::ostream &os) const {
+      this->_impl->print(os);
+      os << std::string(" Scalar dtype: [") << Type.getname(this->_impl->_dtype) << std::string("]")
+         << std::endl;
     }
+    /// @endcond
 
     // casting
     /// @brief The explicit casting operator of the Scalar class to cytnx::cytnx_double.

@@ -1,5 +1,4 @@
 #include "linalg.hpp"
-#include <iostream>
 
 #ifdef BACKEND_TORCH
 #else
@@ -64,15 +63,9 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(Tl.device()));
-        // std::cout << _tl << std::endl;
-        // std::cout << _tr << std::endl;
         cytnx::linalg_internal::lii.cuMatmul_dg_ii[_tl.dtype()](
           out._impl->storage()._impl, _tl._impl->storage()._impl, _tr._impl->storage()._impl,
           _tl.shape()[0], _tl.shape().back(), _tr.shape().back(), diag_L);
-
-        // std::cout << "GPU Matmul OUT" << std::endl;
-        // std::cout << out <<std::endl;
-        // std::cout << "xxxxxxxxxxxxxx\n";
         return out;
   #else
         cytnx_error_msg(true, "[Matmul] fatal error,%s",

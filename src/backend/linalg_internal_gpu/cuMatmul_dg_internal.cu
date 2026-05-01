@@ -97,8 +97,6 @@ namespace cytnx {
 
       // query working space :
       cytnx_int32 blsMl = Ml, blsNr = Nr;  //, blsComm=Comm;
-      // std::cout << blsMl << " " << blsNr << " " << blsComm << std::endl;
-      // std::cout << diag_L << std::endl;
 
       if (diag_L)
         checkCudaErrors(

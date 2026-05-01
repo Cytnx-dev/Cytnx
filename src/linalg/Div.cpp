@@ -609,7 +609,6 @@ namespace cytnx {
       // Tensor out(Lt.shape(),Type.Int32 < Lt.dtype()?Type.Int32:Lt.dtype(),Lt.device());
 
       if (Lt.device() == Device.cpu) {
-        // std::cout << "chk" << std::endl;
         cytnx::linalg_internal::lii.Ari_ii[Lt.dtype()][Type.Int32](
           out._impl->storage()._impl, Lt._impl->storage()._impl, Cnst._impl,
           Lt._impl->storage()._impl->size(), {}, {}, {}, 3);

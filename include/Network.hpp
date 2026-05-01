@@ -1,16 +1,18 @@
 #ifndef CYTNX_NETWORK_H_
 #define CYTNX_NETWORK_H_
 
-#include "Type.hpp"
-#include "cytnx_error.hpp"
-#include <initializer_list>
-#include <vector>
-#include <map>
 #include <fstream>
-#include "intrusive_ptr_base.hpp"
-#include "utils/utils.hpp"
+#include <initializer_list>
+#include <iostream>
+#include <map>
+#include <vector>
+
+#include "Type.hpp"
 #include "UniTensor.hpp"
 #include "contraction_tree.hpp"
+#include "cytnx_error.hpp"
+#include "intrusive_ptr_base.hpp"
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -95,7 +97,7 @@ namespace cytnx {
       return true;
     }
 
-    // void print_network() const;
+    // void print_network(std::ostream &os = std::cout) const;
 
     // void PreConstruct(bool force = true);
 
@@ -135,7 +137,7 @@ namespace cytnx {
                            const std::vector<std::vector<std::string>> &labels,
                            const std::vector<std::string> &outlabel, const cytnx_int64 &outrk,
                            const std::string &order, const bool optim);
-    virtual void PrintNet(std::ostream &os);
+    virtual void PrintNet(std::ostream &os = std::cout) const;
     virtual boost::intrusive_ptr<Network_base> clone();
     virtual void Savefile(const std::string &fname);
     virtual ~Network_base(){};
@@ -194,7 +196,7 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os);
+    void PrintNet(std::ostream &os = std::cout) const;
     void Savefile(const std::string &fname);
     ~RegularNetwork(){};
   };
@@ -245,9 +247,9 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os){};
-    void Savefile(const std::string &fname){};
-    ~FermionNetwork(){};
+    void PrintNet(std::ostream &os = std::cout) const;
+    void Savefile(const std::string &fname);
+    ~FermionNetwork();
   };
 
   ///@endcond
@@ -450,7 +452,10 @@ namespace cytnx {
       out._impl = this->_impl->clone();
       return out;
     }
-    void PrintNet() { this->_impl->PrintNet(std::cout); }
+    void PrintNet() const { this->_impl->PrintNet(std::cout); }
+    /// @cond
+    void PrintNet(std::ostream &os) const { this->_impl->PrintNet(os); }
+    /// @endcond
 
     void Savefile(const std::string &fname) { this->_impl->Savefile(fname); }
   };

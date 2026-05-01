@@ -1,7 +1,7 @@
 #include "backend/Storage.hpp"
 
 #include <filesystem>
-#include <iostream>
+#include <ostream>
 
 using namespace std;
 
@@ -10,7 +10,7 @@ namespace cytnx {
   Storage_init_interface __SII;
 
   std::ostream &operator<<(std::ostream &os, const Storage &in) {
-    in.print();
+    in.print(os);
     return os;
   }
 
@@ -199,7 +199,6 @@ namespace cytnx {
 
     // check size:
     ifstream jf;
-    // std::cout << fname << std::endl;
     jf.open(fname, ios::ate | ios::binary);
     if (!jf.is_open()) {
       cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());

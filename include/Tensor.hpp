@@ -232,25 +232,21 @@ namespace cytnx {
     //----------------------------------------
     template <class... Ts>
     Tproxy operator()(const std::string &e1, const Ts &...elems) {
-      // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
     Tproxy operator()(const cytnx_int64 &e1, const Ts &...elems) {
-      // std::cout << e1<< std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
     Tproxy operator()(const cytnx::Accessor &e1, const Ts &...elems) {
-      // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
     template <class... Ts>
     const Tproxy operator()(const std::string &e1, const Ts &...elems) const {
-      // std::cout << e1 << std::endl;
       std::vector<cytnx::Accessor> tmp = Indices_resolver(e1, elems...);
       return (*this)[tmp];
     }
@@ -805,7 +801,6 @@ namespace cytnx {
     template <class... Ts>
     Tensor &reshape_(const cytnx_int64 &e1, const Ts... elems) {
       std::vector<cytnx_int64> shape = dynamic_arg_int64_resolver(e1, elems...);
-      // std::cout << shape << std::endl;
       this->_impl->reshape_(shape);
       return *this;
     }

@@ -1,4 +1,7 @@
 #include "LinOp.hpp"
+
+#include <ostream>
+
 #include "Tensor.hpp"
 #include "utils/vec_print.hpp"
 
@@ -7,16 +10,16 @@
 
 namespace cytnx {
 
-  void LinOp::_print() {
+  void LinOp::_print(std::ostream &os) {
     if (this->_type == "mv_elem") {
-      std::cout << "elements :" << std::endl;
+      os << "elements :" << std::endl;
       for (auto it = this->_elems.begin(); it != this->_elems.end(); it++) {
-        std::cout << "row:" << it->first << std::endl;
+        os << "row:" << it->first << std::endl;
         // Tensor e_i = it->second.second;
-        std::cout << "col idx:" << std::endl;
-        std::cout << it->second.first << std::endl;
-        std::cout << "elem:" << std::endl;
-        std::cout << it->second.second << std::endl;
+        os << "col idx:" << std::endl;
+        os << it->second.first << std::endl;
+        os << "elem:" << std::endl;
+        os << it->second.second << std::endl;
       }
     }
   }

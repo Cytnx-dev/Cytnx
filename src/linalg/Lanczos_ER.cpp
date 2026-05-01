@@ -18,7 +18,6 @@ namespace cytnx {
                              const cytnx_uint32 &max_krydim, const cytnx_uint64 &maxiter,
                              const double &CvgCrit, const bool &verbose) {
       std::vector<Tensor> converged_ev;
-      // std::cout << max_krydim << std::endl;
 
       for (cytnx_int32 ik = 0; ik < k; ik++) {
         cytnx_uint64 krydim = max_krydim;  // initialize
@@ -116,7 +115,6 @@ namespace cytnx {
     const double &CvgCrit, const bool &verbose){
 
             std::vector<Tensor> converged_ev;
-            //std::cout << max_krydim << std::endl;
             for(cytnx_int32 ik=0;ik<k;ik++){
                 cytnx_uint64 krydim = max_krydim; // initialize
                 Tensor kry_mat = cytnx::zeros({krydim,krydim},Type.Double,Hop->device());
@@ -226,7 +224,6 @@ namespace cytnx {
     const double &CvgCrit, const bool &verbose){
 
             std::vector<Tensor> converged_ev;
-            //std::cout << max_krydim << std::endl;
             for(cytnx_int32 ik=0;ik<k;ik++){
                 cytnx_uint64 krydim = max_krydim; // initialize
                 Tensor kry_mat = cytnx::zeros({krydim,krydim},Type.Float,Hop->device());
@@ -324,7 +321,6 @@ namespace cytnx {
     const double &CvgCrit, const bool &verbose){
 
             std::vector<Tensor> converged_ev;
-            //std::cout << max_krydim << std::endl;
             for(cytnx_int32 ik=0;ik<k;ik++){
                 cytnx_uint64 krydim = max_krydim; // initialize
                 Tensor kry_mat = cytnx::zeros({krydim,krydim},Type.ComplexFloat,Hop->device());
@@ -423,11 +419,9 @@ namespace cytnx {
     const double &CvgCrit, const bool &verbose){
 
             std::vector<Tensor> converged_ev;
-            //std::cout << max_krydim << std::endl;
             for(cytnx_int32 ik=0;ik<k;ik++){
                 cytnx_uint64 krydim = max_krydim; // initialize
                 Tensor kry_mat = cytnx::zeros({krydim,krydim},Type.ComplexDouble,Hop->device());
-                //std::cout << "cool" << std::endl;
                 double Elast = DBL_MAX; // this is temporary, so let's put it on CPU.
 
                 bool cvg = false;
@@ -554,8 +548,6 @@ namespace cytnx {
         buffer[0] = Tin.astype(Hop->dtype());
       }
 
-      // std::cout << "[entry] LER" << std::endl;
-
       std::vector<Tensor> out;
       if (is_V)
         out.resize(2);
@@ -564,7 +556,6 @@ namespace cytnx {
 
       out[0] =
         zeros({k}, Type.is_complex(Hop->dtype()) ? Hop->dtype() + 2 : Hop->dtype(), Hop->device());
-      // std::cout << "[entry] LER 2" << std::endl;
 
       double _cvgcrit = CvgCrit;
       if (Hop->dtype() == Type.Float || Hop->dtype() == Type.ComplexFloat) {

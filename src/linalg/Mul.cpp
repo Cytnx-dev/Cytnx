@@ -76,7 +76,6 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
-      // std::cout << "entroy" << std::endl;
       Storage Cnst(1, Type.ComplexDouble, Rt.device());
       Cnst.at<cytnx_complex128>(0) = lc;
       Tensor out;

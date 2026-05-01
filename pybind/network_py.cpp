@@ -114,7 +114,9 @@ void network_binding(py::module &m) {
         return std::string("");
       },
       py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
-    .def("PrintNet", &Network::PrintNet)
+    .def(
+      "PrintNet", [](Network &self) { self.PrintNet(); },
+      py::call_guard<py::scoped_ostream_redirect, py::scoped_estream_redirect>())
     .def_static(
       "Contract",
       [](const std::vector<UniTensor> &utensors, const std::string &Tout,

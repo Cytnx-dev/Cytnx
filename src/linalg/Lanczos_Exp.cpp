@@ -1,15 +1,16 @@
-#include "linalg.hpp"
-#include "Generator.hpp"
-#include "random.hpp"
-#include "Tensor.hpp"
-#include "LinOp.hpp"
-
 #include <cfloat>
-#include <vector>
 #include <cmath>
-#include "UniTensor.hpp"
-#include "utils/vec_print.hpp"
 #include <iomanip>
+#include <iostream>
+#include <vector>
+
+#include "Generator.hpp"
+#include "LinOp.hpp"
+#include "Tensor.hpp"
+#include "UniTensor.hpp"
+#include "linalg.hpp"
+#include "random.hpp"
+#include "utils/vec_print.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -218,11 +219,6 @@ namespace cytnx {
         VkDag_labels.push_back(label_kr);
         VkDag_ut.relabel_(VkDag_labels);
 
-        // Vk_ut.print_diagram();
-        // VkDag_ut.print_diagram();
-        // v0.print_diagram();
-        // B.print_diagram();
-
         out = Contracts({v0, VkDag_ut, B}, "", true);
         out = Contract(out, Vk_ut);
         out.set_rowrank_(v0.rowrank());
@@ -309,7 +305,6 @@ namespace cytnx {
             break;
           }
         }
-        // std::cout << B_mat;
 
         // Let V_k be the n × (k + 1) matrix whose columns are v[0],...,v[k] respectively.
         UniTensor Vk_ut(Vk);

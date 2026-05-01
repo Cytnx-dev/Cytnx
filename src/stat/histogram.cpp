@@ -9,10 +9,7 @@ namespace cytnx {
 
     Histogram::Histogram(const unsigned long long &Nbins, const double &min_val,
                          const double &max_val) {
-      if (min_val >= max_val) {
-        std::cout << "[ERROR] Cannot have min >= max" << std::endl;
-        exit(1);
-      }
+      cytnx_error_msg(min_val >= max_val, "[ERROR] Cannot have min >= max%s", "\n");
       this->min = min_val;
       this->max = max_val;
       this->bins = Nbins;
@@ -38,25 +35,19 @@ namespace cytnx {
       this->vars = tmp.storage();
     }
 
-    void Histogram::print() const {
-      std::cout << "[Histogram 1D] Real" << std::endl;
-      std::cout << "Nbins: " << this->bins << std::endl;
-      std::cout << "bound: [ " << this->min << " , " << this->max << " ]\n";
-      std::cout << "current count: " << this->total_count << std::endl;
+    void Histogram::print(std::ostream &os) const {
+      os << "[Histogram 1D] Real" << std::endl;
+      os << "Nbins: " << this->bins << std::endl;
+      os << "bound: [ " << this->min << " , " << this->max << " ]\n";
+      os << "current count: " << this->total_count << std::endl;
     }
 
     //-----------[2d]
     Histogram2d::Histogram2d(const unsigned long long &Nbinx, const unsigned long long &Nbiny,
                              const double &min_x, const double &max_x, const double &min_y,
                              const double &max_y) {
-      if (min_x >= max_x) {
-        std::cout << "[ERROR] Cannot have min >= max [x axis]" << std::endl;
-        exit(1);
-      }
-      if (min_y >= max_y) {
-        std::cout << "[ERROR] Cannot have min >= max [y axis]" << std::endl;
-        exit(1);
-      }
+      cytnx_error_msg(min_x >= max_x, "[ERROR] Cannot have min >= max [x axis]%s", "\n");
+      cytnx_error_msg(min_y >= max_y, "[ERROR] Cannot have min >= max [y axis]%s", "\n");
       this->minx = min_x;
       this->maxx = max_x;
       this->miny = min_y;
@@ -92,12 +83,12 @@ namespace cytnx {
       this->vars = tmp.storage();
     }
 
-    void Histogram2d::print() const {
-      std::cout << "[Histogram 2D] Real" << std::endl;
-      std::cout << "Nbins: [x= " << this->binx << " , y= " << this->biny << " ]\n";
-      std::cout << "bound,x: [ " << this->minx << " , " << this->maxx << " ]\n";
-      std::cout << "bound,y: [ " << this->miny << " , " << this->maxy << " ]\n";
-      std::cout << "current count: " << this->total_count << std::endl;
+    void Histogram2d::print(std::ostream &os) const {
+      os << "[Histogram 2D] Real" << std::endl;
+      os << "Nbins: [x= " << this->binx << " , y= " << this->biny << " ]\n";
+      os << "bound,x: [ " << this->minx << " , " << this->maxx << " ]\n";
+      os << "bound,y: [ " << this->miny << " , " << this->maxy << " ]\n";
+      os << "current count: " << this->total_count << std::endl;
     }
 
   }  // namespace stat

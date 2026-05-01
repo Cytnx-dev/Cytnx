@@ -1,6 +1,5 @@
 #include "linalg.hpp"
 #include "Tensor.hpp"
-#include <iostream>
 
 #ifdef BACKEND_TORCH
 
