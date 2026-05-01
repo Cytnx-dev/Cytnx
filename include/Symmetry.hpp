@@ -31,7 +31,7 @@ namespace cytnx {
    *  fPar         |  -2, fermionParity symmetry
    *  fNum         |  -3, fermionNumber symmetry
    *
-   *  @see Symmetry::stype(), Symmetry::name(), Symmetry::stype_str()
+   *  @see Symmetry::stype(), Symmetry::getname(), Symmetry::stype_str()
    */
   enum SymmetryType : int { Void = -99, U = -1, Z = 0, fPar = -2, fNum = -3 };
 
@@ -95,7 +95,7 @@ namespace cytnx {
     virtual bool is_fermionic() const { return false; };
 
     virtual void print_info() const;
-    virtual std::string name() const;
+    virtual std::string getname() const;
     virtual std::string stype_str() const;
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
     // std::vector<cytnx_int64> &inR);
@@ -124,7 +124,7 @@ namespace cytnx {
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
-    std::string name() const override { return "U1"; }
+    std::string getname() const override { return "U1"; }
     std::string stype_str() const override { return "U1"; };
   };
   ///@endcond
@@ -151,7 +151,7 @@ namespace cytnx {
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
-    std::string name() const override { return "Z" + std::to_string(this->n); };
+    std::string getname() const override { return "Z" + std::to_string(this->n); };
     std::string stype_str() const override { return "Z" + std::to_string(this->n); };
   };
   ///@endcond
@@ -177,7 +177,7 @@ namespace cytnx {
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
     void print_info() const;
-    std::string name() const override { return "fermion parity"; }
+    std::string getname() const override { return "fermion parity"; }
     std::string stype_str() const override { return "fP"; }
   };
   ///@endcond
@@ -203,7 +203,7 @@ namespace cytnx {
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
     void print_info() const;
-    std::string name() const override { return "fermion number"; }
+    std::string getname() const override { return "fermion number"; }
     std::string stype_str() const override { return "f#"; }
   };
   ///@endcond
@@ -418,7 +418,7 @@ namespace cytnx {
     @brief Type name of the Symmetry in long form
     @return [std::string] the symmetry type long name.
     */
-    std::string name() const { return this->_impl->name(); }
+    std::string getname() const { return this->_impl->getname(); }
     /**
     @brief Type name of the Symmetry in short form
     @return [std::string] the symmetry type short name.

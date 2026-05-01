@@ -2695,6 +2695,7 @@ namespace cytnx {
     ///@cond
     boost::intrusive_ptr<UniTensor_base> _impl;
     UniTensor() : _impl(new UniTensor_base()){};
+    UniTensor(const std::string name);
     UniTensor(const UniTensor &rhs) { this->_impl = rhs._impl; }
     UniTensor &operator=(const UniTensor &rhs) {
       this->_impl = rhs._impl;
@@ -2754,7 +2755,6 @@ namespace cytnx {
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false, const cytnx_int64 &rowrank = -1,
               const std::vector<std::string> &in_labels = {}, const std::string &name = "") {
-      // std::cout << "[entry!]" << std::endl;
       boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
       out->Init_by_Tensor(in_tensor, is_diag, rowrank, name);
       this->_impl = out;

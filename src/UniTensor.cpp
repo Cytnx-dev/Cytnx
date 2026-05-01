@@ -16,6 +16,26 @@ using namespace std;
 
 namespace cytnx {
 
+  UniTensor::UniTensor(const std::string name) {
+    if (name == UTenType.getname(UTenType.Block)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new BlockUniTensor);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.BlockFermionic)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new BlockFermionicUniTensor);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.Dense)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new DenseUniTensor);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.Void)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new UniTensor_base);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.Sparse)) {
+      cytnx_error_msg(true, "[ERROR] SparseUniTensor is deprecated.\s","\n");
+    } else {
+      cytnx_error_msg(true, "[ERROR] No UniTensor type matches the string '%s'.\n", name.c_str());
+    }
+  }
+
   UniTensor UniTensor::Pow(const double &p) const { return cytnx::linalg::Pow(*this, p); }
   UniTensor &UniTensor::Pow_(const double &p) {
     cytnx::linalg::Pow_(*this, p);

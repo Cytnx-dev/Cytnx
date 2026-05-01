@@ -66,7 +66,7 @@ namespace cytnx {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
-  std::string cytnx::Symmetry_base::name() const {
+  std::string cytnx::Symmetry_base::getname() const {
     cytnx_error_msg(1, "%s", "[ERROR][Internal] should not call Symmerty base!");
   }
 
@@ -98,7 +98,7 @@ namespace cytnx {
   void cytnx::U1Symmetry::print_info() const {
     cout << "--------------------\n";
     cout << "[Symmetry]" << endl;
-    cout << "type : Abelian, U1" << endl;
+    cout << "type : Abelian, " << this->getname() << endl;
     cout << "combine rule : Q1 + Q2" << endl;
     cout << "reverse rule : Q*(-1) " << endl;
     cout << "--------------------\n";
@@ -141,7 +141,7 @@ namespace cytnx {
   void cytnx::ZnSymmetry::print_info() const {
     cout << "--------------------\n";
     cout << "[Symmetry]" << endl;
-    cout << "type : Abelian, Z(" << this->n << ")" << endl;
+    cout << "type : Abelian, " << this->getname() << endl;
     cout << "combine rule : (Q1 + Q2)\%" << this->n << endl;
     cout << "reverse rule : Q*(-1) " << endl;
     cout << "--------------------\n";
@@ -195,7 +195,7 @@ namespace cytnx {
   void cytnx::FermionParitySymmetry::print_info() const {
     cout << "--------------------\n";
     cout << "[Symmetry]" << endl;
-    cout << "type : fermionic, FermionParity" << endl;
+    cout << "type : Fermionic, " << this->getname() << endl;
     cout << "combine rule : (Q1 + Q2)\%2" << endl;
     cout << "reverse rule : Q*(-1) " << endl;
     cout << "--------------------\n";
@@ -237,7 +237,7 @@ namespace cytnx {
   void cytnx::FermionNumberSymmetry::print_info() const {
     cout << "--------------------\n";
     cout << "[Symmetry]" << endl;
-    cout << "type : fermionic, FermionNumber" << endl;
+    cout << "type : fermionic, " << this->getname() << endl;
     cout << "combine rule : Q1 + Q2" << endl;
     cout << "reverse rule : Q*(-1) " << endl;
     cout << "--------------------\n";
@@ -384,7 +384,7 @@ namespace cytnx {
       if (location.attrExists(name)) location.removeAttr(name);
     }
 
-    std::string symname = this->name();
+    std::string symname = this->getname();
     H5::StrType str_type(H5::PredType::C_S1, symname.length() + 1);
     H5::DataSpace dataspace = H5::DataSpace(H5S_SCALAR);
     H5::Attribute attr = location.createAttribute(name, str_type, dataspace);

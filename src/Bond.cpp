@@ -665,7 +665,7 @@ namespace cytnx {
         // std::vector<const char*> c_strings;
         // std::string symstring;
         // for (const auto& s : this->_impl->_syms) {
-        //   symstring = s.name();
+        //   symstring = s.getname();
         //   c_strings.push_back(symstring.c_str());
         // }
         // dataset.write(c_strings.data(), str_type);

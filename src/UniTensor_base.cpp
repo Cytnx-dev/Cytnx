@@ -11,20 +11,19 @@ namespace cytnx {
   //====================================================
   std::string UniTensorType_class::getname(const int &ut_type) const {
     if (ut_type == this->Void) {
-      return std::string("Void (un-initialize UniTensor)");
+      return std::string("Void (uninitialized UniTensor)");
     } else if (ut_type == this->Dense) {
-      return std::string("Dense");
+      return std::string("DenseUniTensor");
     } else if (ut_type == this->Sparse) {
-      return std::string("Sparse");
+      return std::string("SparseUniTensor");
     } else if (ut_type == this->Block) {
-      return std::string("Block");
+      return std::string("BlockUniTensor");
     } else if (ut_type == this->BlockFermionic) {
-      return std::string("Block Fermionic");
+      return std::string("BlockFermionicUniTensor");
     } else {
       cytnx_error_msg(true, "%s\n", "[ERROR] invalid ut_type");
       return std::string("");
     }
-    // extend more in here!!
   }
   UniTensorType_class UTenType;
   //===================================================
