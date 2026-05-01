@@ -278,19 +278,20 @@ namespace cytnx {
         }
         // split path into group and name
         std::filesystem::path p(path);
-        std::string grouppath = p.parent_path().generic_string();
+        std::filesystem::path grouppath = p.parent_path();
         std::string datasetname = p.filename().string();
         if (datasetname.empty()) datasetname = "Symmetry";
         // create group
-        H5::Group location = h5file;
-        try {
-          H5::Exception::dontPrint();
-          location = h5file.openGroup(grouppath);
-        } catch (const H5::Exception &e) {
-          H5::LinkCreatPropList lcpl;
-          lcpl.setCreateIntermediateGroup(1);
-          location = h5file.createGroup(grouppath, lcpl);
+        std::filesystem::path subpath;
+        std::string groupfolder = "/";
+        for (const auto &part : grouppath) {
+          if (part.empty()) continue;
+          subpath /= part;
+          groupfolder = subpath.generic_string();
+          if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
         }
+        H5::Group location = h5file.openGroup(groupfolder);
+        // write data
         this->to_hdf5(location, overwrite, datasetname);
         h5file.close();
         return;
@@ -344,8 +345,7 @@ namespace cytnx {
   void cytnx::Symmetry::Load_(const std::filesystem::path &fname, const std::string &path) {
     std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
-        ext == ".HDF") {
-      // load HDF5
+        ext == ".HDF") {  // load HDF5
       H5::H5File h5file(fname, H5F_ACC_RDONLY);
       // split path into group and name
       std::filesystem::path p(path);
@@ -355,13 +355,13 @@ namespace cytnx {
       // open group
       H5::Group location;
       try {
-        H5::Exception::dontPrint();
-        location = h5file.openGroup(grouppath);
+        location = h5file.openGroup(grouppath.empty() ? "/" : grouppath);
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
                         grouppath.c_str(), fname.c_str());
       }
+      // read data
       this->from_hdf5(location, datasetname);
       h5file.close();
     } else {  // load binary

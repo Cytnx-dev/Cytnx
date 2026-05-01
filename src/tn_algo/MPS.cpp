@@ -51,15 +51,17 @@ namespace cytnx {
             cytnx_error_msg(true, "[ERROR] Unknown mode '%c' for writing to HDF5 file.", mode);
           }
           // create group
-          H5::Group location = h5file;
-          try {
-            H5::Exception::dontPrint();
-            location = h5file.openGroup(path);
-          } catch (const H5::Exception &e) {
-            H5::LinkCreatPropList lcpl;
-            lcpl.setCreateIntermediateGroup(1);
-            location = h5file.createGroup(path, lcpl);
+          std::filesystem::path grouppath(path);
+          std::filesystem::path subpath;
+          std::string groupfolder = "/";
+          for (const auto &part : grouppath) {
+            if (part.empty()) continue;
+            subpath /= part;
+            groupfolder = subpath.generic_string();
+            if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
           }
+          H5::Group location = h5file.openGroup(groupfolder);
+          // write data
           this->to_hdf5(location, overwrite);
           h5file.close();
           return;
@@ -116,18 +118,18 @@ namespace cytnx {
                     const bool restore_device) {
       std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
-          ext == ".HDF") {
-        // load HDF5
+          ext == ".HDF") {  // load HDF5
         H5::H5File h5file(fname, H5F_ACC_RDONLY);
+        // open group
         H5::Group location;
         try {
-          H5::Exception::dontPrint();
-          location = h5file.openGroup(path);
+          location = h5file.openGroup(path.empty() ? "/" : path);
         } catch (const H5::Exception &e) {
           std::cerr << e.getDetailMsg() << std::endl;
           cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
                           path.c_str(), fname.c_str());
         }
+        // read data
         this->from_hdf5(location, restore_device);
         h5file.close();
       } else {  // load binary
