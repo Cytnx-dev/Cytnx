@@ -1,14 +1,18 @@
 #ifndef CYTNX_BOND_H_
 #define CYTNX_BOND_H_
 
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
+#include <initializer_list>
+#include <map>
+#include <vector>
+
+#include "H5Cpp.h"
+
+#include "Symmetry.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Symmetry.hpp"
-#include <initializer_list>
-#include <vector>
-#include <fstream>
-#include <map>
-#include <algorithm>
 #include "intrusive_ptr_base.hpp"
 #include "utils/vec_clone.hpp"
 
@@ -36,6 +40,10 @@ namespace cytnx {
     BD_IN = -1, /*!< -1, same as BD_KET */
     BD_OUT = 1 /*!< 1, same as BD_BRA */
   };
+  static const std::map<bondType, std::string> bondtype_to_string = {
+    {BD_REG, "REG"}, {BD_IN, "IN"}, {BD_OUT, "OUT"}};
+  static const std::map<std::string, bondType> string_to_bondtype = {
+    {"REG", BD_REG}, {"IN", BD_IN}, {"OUT", BD_OUT}};
 
   /// @cond
   class Bond_impl : public intrusive_ptr_base<Bond_impl> {
@@ -848,52 +856,113 @@ namespace cytnx {
     }
 
     /**
-    @brief Save the Bond object to the file.
-    @details Save the Bond object to the file. The file extension will be automatically
-      added as ".cybd".
-          @param[in] fname the file name of the Bond object (exclude the file extension).
-    @see Load(const std::string &fname)
-    */
-    void Save(const std::string &fname) const;
+     * @brief Save Bond to file
+     * @details Save the Bond to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
+     * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @param[in] fname file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/' will write
+     * the Bond to the group '/foo/bar' in the file.
+     * @param[in] mode the write mode:\n
+     *  `w` Creates a new file. If the given file exists, its contents are destroyed.\n
+     *  `x` Creates a new file. Fails if the given file exists already.\n
+     *  `a` Opens for writing without overwriting any existing content. Creates the file if it
+     *      doesn't exist. Only available for HDF5 files.\n
+     *  `u` Opens for writing. Existing content will be updated(overwritten).
+     *      Creates the file if it doesn't exist. Only available for HDF5 files.
+     * @note The common file ending for saving a Bond in binary format is ".cybd".
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
+     * @see Load()
+     */
+    void Save(const std::filesystem::path &fname, const std::string &path = "/Bond/",
+              const char mode = 'w') const;
+    /**
+     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode)
+     * const;
+     */
+    void Save(const char *fname, const std::string &path = "/Bond/", const char mode = 'w') const;
 
     /**
-        @see Save(const std::string &fname) const;
-    */
-    void Save(const char *fname) const;
+     * @brief Load Bond from file and create new instance
+     * @details This function creates a new Bond and keeps the original Bond unchanged. See Load_()
+     * for loading the Bond to the current Bond.
+     * @param fname[in] file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/' will read
+     * the Bond from the group '/foo/bar' in the file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @pre The file must be a Bond object which is saved by Save().
+     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is
+     * expected. For binary format, the common file ending for a Bond is ".cybd".
+     */
+    static cytnx::Bond Load(const std::filesystem::path &fname, const std::string &path = "/Bond/");
+    /**
+     * @see Load(const std::filesystem::path &fname, const std::string &path)
+     */
+    static cytnx::Bond Load(const char *fname, const std::string &path = "/Bond/");
 
     /**
-    @brief Load the Bond object from the file.
-          @param[in] fname the file name of the Bond object.
-          @pre The file need to be the file of Bond object, which is saved by the
-      function Bond::Save(const std::string &fname) const.
-    */
-    static cytnx::Bond Load(const std::string &fname);
+     * @brief Load Bond from file and overwrite current instance
+     * @details This function overwrites the existing Bond. See Load() for creating a new Bond.
+     * @see Load()
+     */
+    void Load_(const std::filesystem::path &fname, const std::string &path = "/Bond/");
+    /**
+     * @see Load_(const std::filesystem::path &fname, const std::string &path)
+     */
+    void Load_(const char *fname, const std::string &path = "/Bond/");
 
     /**
-    @see Load(const std::string &fname)
-    */
-    static cytnx::Bond Load(const char *fname);
+     * @brief Save Bond to HDF5 file
+     * @param[in] location the HDF5 group where the Bond will be saved.
+     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @warning This function is only available in C++. Use Save() for saving to file in C++ or
+     * Python.
+     * @see from_hdf5()
+     */
+    void to_hdf5(H5::Group &location, const bool overwrite = false) const;
+    /**
+     * @brief Load Bond from HDF5 file (inline)
+     * @param[in] location the HDF5 group where the Bond will be loaded from.
+     * @warning This function is only available in C++. Use Load() for loading from file in C++ or
+     * Python.
+     * @see to_hdf5() const
+     */
+    void from_hdf5(H5::Group &location);
 
-    /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
-    /// @endcond
+    /**
+     * @brief Save Bond to binary file
+     * @param[in] f the output stream where the Bond will be saved.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Save() for saving to file in C++ or Python.
+     * @see from_binary()
+     */
+    void to_binary(std::ostream &f) const;
+    /**
+     * @brief Load Bond from binary file
+     * @param[in] f the input stream from which the Bond will be loaded.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Load() for loading from file in C++ or Python.
+     * @see to_binary() const
+     */
+    void from_binary(std::istream &f);
 
     /**
     @brief The comparison operator 'equal to'.
-    @details The comparison operators to compare two Bonds. If two Bond object are
-          same, return true. Otherwise, return false. This equal to operator will
-    compare all the "value" of the Bond object. Even the Bond object are different
-    object (different address), but they are same "value", it will return true.
-          @see operator!=(const Bond &rhs) const
+    @details The comparison operators to compare two Bonds. If two Bond object are same, return
+    true. Otherwise, return false. This equal to operator will compare all the "value" of the Bond
+    object. Even the Bond object are different object (different address), but they are same
+    "value", it will return true.
+    @see operator!=(const Bond &rhs) const
     */
     bool operator==(const Bond &rhs) const;
 
     /**
     @brief The comparison operator 'not equal to'.
-    @details The comparison operators to compare two Bonds. More precisely, it is
-    the opposite result of the operator==(const Bond &rhs) const.
-          @see operator==(const Bond &rhs) const
+    @details The comparison operators to compare two Bonds. More precisely, it is the opposite
+    result of the operator==(const Bond &rhs) const.
+    @see operator==(const Bond &rhs) const
     */
     bool operator!=(const Bond &rhs) const;
 

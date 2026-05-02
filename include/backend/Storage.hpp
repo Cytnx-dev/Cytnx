@@ -4,6 +4,7 @@
 #ifndef BACKEND_TORCH
 
   #include <cstdlib>
+  #include <filesystem>
   #include <fstream>
   #include <initializer_list>
   #include <iostream>
@@ -11,13 +12,14 @@
   #include <type_traits>
   #include <vector>
 
+  #include "H5Cpp.h"
   #include "boost/smart_ptr/intrusive_ptr.hpp"
 
+  #include "Device.hpp"
+  #include "Type.hpp"
   #include "backend/Scalar.hpp"
   #include "cytnx_error.hpp"
-  #include "Device.hpp"
   #include "intrusive_ptr_base.hpp"
-  #include "Type.hpp"
 
   #define STORAGE_DEFT_SZ 2
 
@@ -162,10 +164,11 @@ namespace cytnx {
 
     // these is the one that do the work, and customize with Storage_base
     // virtual void Init(const std::vector<unsigned int> &init_shape);
-    virtual void Init(const unsigned long long &len_in, const int &device = -1,
+    virtual void Init(const unsigned long long &len_in, const int &device = Device.cpu,
                       const bool &init_zero = true);
-    virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
-                             const bool &iscap = false, const unsigned long long &cap_in = 0);
+    virtual void _Init_byptr(void *rawptr, const unsigned long long &len_in,
+                             const int &device = Device.cpu, const bool &iscap = false,
+                             const unsigned long long &cap_in = 0);
 
     // this function will return a new storage with the same type as the one
     // that initiate this function.
@@ -242,9 +245,9 @@ namespace cytnx {
    public:
     StorageImplementation()
         : capacity_(0), size_(0), start_(nullptr), dtype_(Type.cy_typeid(DType())), device_(-1){};
-    void Init(const unsigned long long &len_in, const int &device = -1,
+    void Init(const unsigned long long &len_in, const int &device = Device.cpu,
               const bool &init_zero = true);
-    void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = -1,
+    void _Init_byptr(void *rawptr, const unsigned long long &len_in, const int &device = Device.cpu,
                      const bool &iscap = false, const unsigned long long &cap_in = 0);
     boost::intrusive_ptr<Storage_base> _create_new_sametype();
     boost::intrusive_ptr<Storage_base> clone();
@@ -435,7 +438,7 @@ namespace cytnx {
   extern Storage_init_interface __SII;
   ///@endcond;
 
-  ///@brief an memeory storage with multi-type/multi-device support
+  ///@brief a memory storage with multi-type/multi-device support
   class Storage {
    private:
     // Interface:
@@ -465,13 +468,13 @@ namespace cytnx {
     \verbinclude example/Storage/Init.py.out
     */
     void Init(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-              int device = -1, const bool &init_zero = true) {
+              int device = Device.cpu, const bool &init_zero = true) {
       cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
       this->_impl = __SII.USIInit[dtype]();
       this->_impl->Init(size, device, init_zero);
     }
     // void _Init_byptr(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype =
-    // Type.Double, const int &device = -1,
+    // Type.Double, const int &device = Device.cpu,
     //                              const bool &iscap = false, const unsigned long long &cap_in =
     //                              0){
     //   cytnx_error_msg(dtype >= N_Type, "%s", "[ERROR] invalid argument: dtype");
@@ -488,12 +491,12 @@ namespace cytnx {
      * &init_zero)
      */
     Storage(const unsigned long long &size, const unsigned int &dtype = Type.Double,
-            int device = -1, const bool &init_zero = true)
+            int device = Device.cpu, const bool &init_zero = true)
         : _impl(new Storage_base()) {
       Init(size, dtype, device, init_zero);
     }
     // Storage(void *rawptr, const unsigned long long &len_in, const unsigned int &dtype =
-    // Type.Double, const int &device = -1,
+    // Type.Double, const int &device = Device.cpu,
     //       const bool &iscap = false, const unsigned long long &cap_in = 0)
     //       : _impl(new Storage_base()){
     //   _Init_byptr(rawptr,len_in,dtype,device,iscap,cap_in);
@@ -523,78 +526,219 @@ namespace cytnx {
 
     ///@endcond
 
-    /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
-    void _Loadbinary(std::fstream &f, const unsigned int &dtype, const cytnx_uint64 &Nelem);
-    void _Savebinary(std::fstream &f) const;
-
-    /// @endcond
-
     /**
-    @brief Save current Storage to file
-    @param[in] fname file name
-    @details
-        Save the Storage to file with file path specify with input param \p fname with postfix
-    ".cyst"
-    @post The file extension will be ".cyst".
-    */
-    void Save(const std::string &fname) const;
-
-    /**
-     * @brief Save current Storage to file, same as \ref Save(const std::string &fname)
+     * @brief Save Storage to file
+     * @details Save the Storage to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
+     * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @param[in] fname file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/Ten' will
+     * write the Storage to the dataset 'Ten' the group '/foo/bar' in the file.
+     * @param[in] mode the write mode:\n
+     *  `w` Creates a new file. If the given file exists, its contents are destroyed.\n
+     *  `x` Creates a new file. Fails if the given file exists already.\n
+     *  `a` Opens for writing without overwriting any existing content. Creates the file if it
+     *      doesn't exist. Only available for HDF5 files.\n
+     *  `u` Opens for writing. Existing content will be updated(overwritten).
+     *      Creates the file if it doesn't exist. Only available for HDF5 files.
+     * @note The common file ending for saving a Storage in binary format is ".cyst".
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
+     * @see Load()
      */
-    void Save(const char *fname) const;
+    void Save(const std::filesystem::path &fname, const std::string &path = "/Storage",
+              const char mode = 'w') const;
+    /**
+     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode)
+     * const;
+     */
+    void Save(const char *fname, const std::string &path = "/Storage", const char mode = 'w') const;
+
+    /**
+     * @brief Load Storage from file and create new instance
+     * @details This function creates a new Storage and keeps the original Storage unchanged. See
+     * Load_() for loading the Storage to the current Storage.
+     * @param fname[in] file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path /foo/bar/Ten will read
+     * the Storage from the dataset 'Ten' the group '/foo/bar' in the file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @pre The file must be a Storage object which is saved by Save().
+     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is
+     * expected. For binary format, the common file ending for a Storage is ".cyst".
+     */
+    static cytnx::Storage Load(const std::filesystem::path &fname,
+                               const std::string &path = "/Storage",
+                               const bool restore_device = true);
+    /**
+     * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    static cytnx::Storage Load(const char *fname, const std::string &path = "/Storage",
+                               const bool restore_device = true);
+
+    /**
+     * @brief Load Storage from file and overwrite current instance
+     * @details This function overwrites the existing Storage. See Load() for creating a new
+     * Storage.
+     * @see Load()
+     */
+    void Load_(const std::filesystem::path &fname, const std::string &path = "/Storage",
+               const bool restore_device = true);
+    /**
+     * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    void Load_(const char *fname, const std::string &path = "/Storage",
+               const bool restore_device = true);
+
+    /**
+     * @brief Save Storage to HDF5 file
+     * @param[in] location the HDF5 group where the Storage will be saved.
+     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @param[in] name the name of the dataset in the HDF5 file.d in the
+     * @warning This function is only available in C++. Use Save() for saving to file in C++ or
+     * Python.
+     * @see from_hdf5()
+     */
+    void to_hdf5(H5::Group &location, const bool overwrite = false,
+                 const std::string &name = "Storage") const;
+    /**
+     * @brief Load Storage from HDF5 file (inline)
+     * @param[in] location the HDF5 group where the Storage will be loaded from.
+     * @param[in] name the name of the dataset in the HDF5 file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. Use Load() for loading from file in C++ or
+     * Python.
+     * @see to_hdf5()
+     */
+    void from_hdf5(H5::Group &location, const std::string &name = "Storage",
+                   const bool restore_device = true);
+
+    /**
+     * @brief Save only the data of the Storage to HDF5 dataset.
+     * @param[in] dataset the HDF5 dataset where the Storage will be saved.
+     * @param[in] hdf5type the HDF5 data type for the dataset, must match the data type of the
+     * Storage.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
+     * @see data_from_hdf5(H5::DataSet &dataset, const cytnx_uint64 &Nelem, const unsigned int
+     * &dtype, H5::DataType &hdf5type, const int &device)
+     */
+    void data_to_hdf5(H5::DataSet &dataset, H5::DataType &hdf5type) const;
+    /**
+     * @brief Load only the data of the Storage from an HDF5 dataset, for given Storage parameters.
+     * @param[in] dataset the HDF5 dataset from which the Storage will be loaded.
+     * @param[in] Nelem the number of elements to load from the HDF5 dataset. This should match the
+     * size of the Storage.
+     * @param[in] dtype the data type of the Storage. See cytnx.Type. This should match the data
+     * type of the HDF5 dataset.
+     * @param[in] hdf5type the HDF5 data type for the dataset, must match the data type of the
+     * Storage.
+     * @param[in] device the device on which the Storage will be loaded.
+     * @note This function overwrites the current Storage with a new instance.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
+     * @see data_to_hdf5(H5::DataSet &dataset, H5::DataType &hdf5type)
+     */
+    void data_from_hdf5(H5::DataSet &dataset, const cytnx_uint64 &Nelem, const unsigned int &dtype,
+                        H5::DataType &hdf5type, const int &device = Device.cpu);
+
+    /**
+     * @brief Save Storage to binary file
+     * @param[in] f the output stream where the Storage will be saved.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Save() for saving to file in C++ or Python.
+     * @see from_binary()
+     */
+    void to_binary(std::ostream &f) const;
+    /**
+     * @brief Load Storage from binary file
+     * @param[in] f the input stream from which the Storage will be loaded.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Load() for loading from file in C++ or Python.
+     * @see to_binary()
+     */
+    void from_binary(std::istream &f, const bool restore_device = true);
+
+    /**
+     * @brief Save only the data of the Storage to binary filestream.
+     * @param[in] f the output stream where the Storage will be saved.
+     * @warning This function is only available in C++. Use \link Save(const std::filesystem::path
+     * &fname) Save() \endlink for saving to file in C++ or Python.
+     * @see data_from_binary(std::istream &f, const cytnx_uint64 &Nelem, const unsigned int &dtype,
+     * const int &device)
+     */
+    void data_to_binary(std::ostream &f) const;
+    /**
+     * @brief Load Storage from binary file
+     * @param[in] f the input stream from which the Storage will be loaded.
+     * @param[in] Nelem the number of elements to load from the dataset.
+     * @param[in] dtype the data type of the Storage. See cytnx.Type.
+     * @param[in] device the device on which the Storage will be loaded.
+     * @note This function overwrites the current Storage with a new instance.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use \link Load(const std::filesystem::path &fname, const bool restore_device)
+     * Load() \endlink for loading from file in C++ or Python.
+     * @see data_to_binary(std::ostream &f) const
+     */
+    void data_from_binary(std::istream &f, const cytnx_uint64 &Nelem, const unsigned int &dtype,
+                          const int &device = Device.cpu);
+
     /**
      * @brief Save current Storage to a binary file, which only contains the raw data.
-     * @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count)
+     * @see Fromfile(const std::filesystem::path &fname, const unsigned int &dtype, const
+     * cytnx_int64 &count)
+     * @deprecated This function is deprecated. Please use \ref Save(const std::filesystem::path
+     * &fname) instead for saving raw data together with metadata.
      */
-    void Tofile(const std::string &fname) const;
-    /// @see Tofile(const std::string &fname) const
-    void Tofile(const char *fname) const;
-    /// @see Tofile(const std::string &fname) const
-    void Tofile(std::fstream &f) const;
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
+      const std::filesystem::path &fname) const;
+    /**
+     * @see Tofile(const std::filesystem::path &fname) const
+     */
+    [[deprecated("Please use Save(const std::filesystem::path &fname) instead.")]] void Tofile(
+      const char *fname) const;
+    /**
+     * @see Tofile(const std::filesystem::path &fname) const
+     */
+    [[deprecated("Please use to_binary(std::ostream &f) instead.")]] void Tofile(
+      std::fstream &f) const;
 
     /**
-    @brief Load current Storage from file
-    @param[in] fname file name
-    @details
-        load the Storage from file with file path specify with input param 'fname'.
-    @pre The file must be a Storage object, which is saved by the function
-        Save(const std::string &fname) const.
-    */
-    static Storage Load(const std::string &fname);
-
-    /**
-     * @brief Load current Storage from file, same as \ref Load(const std::string &fname)
-     */
-    static Storage Load(const char *fname);
-    /**
-     * @brief Load the binary file, which only contains the raw data, to current Storage.
+     * @brief Load the binary file, which only contains the raw data.
      * @details This function will load the binary file, which only contains the raw data,
      *     to current Storage with specified dtype and number of elements.
      * @param[in] fname file name
-     * @param[in] dtype the data type of the binary file. See cytnx::Type.
-     * @param[in] Nelem the number of elements you want to load from the binary file. If
-     *   \p Nelem is -1, then it will load all the elements in the binary file.
-     * @pre
+     * @param[in] dtype the data type of the binary file. See cytnx.Type.
+     * @param[in] count the number of elements you want to load from the binary file. If
+     *   \p count is -1, then it will load all the elements in the binary file.
+     * @param[in] device the device on which the data will be loaded.
      *  1. The @p dtype cannot be Type.Void.
      *  2. The @p dtype must be the same as the data type of the binary file.
-     *  3. The @p Nelem cannot be 0.
-     *  4. The @p Nelem cannot be larger than the number of elements in the binary file.
+     *  3. The @p count cannot be 0.
+     *  4. The @p count cannot be larger than the number of elements in the binary file.
      *  5. The file name @p fname must be valid.
      *
-     * @see Tofile(const std::string &fname) const
+     * @see Tofile(const std::filesystem::path &fname) const
+     * @deprecated This function is deprecated. Please use Save/Load functions instead for storing
+     * raw data together with metadata.
      */
-    static Storage Fromfile(const std::string &fname, const unsigned int &dtype,
-                            const cytnx_int64 &count = -1);
-
+    [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
+      const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
+      const int device = Device.cpu);
     /**
-     * @see Fromfile(const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count =
-     * -1)
+     * @see Fromfile(const std::filesystem::path &fname, const unsigned int &dtype, const
+     * cytnx_int64 &count)
      */
-    static Storage Fromfile(const char *fname, const unsigned int &dtype,
-                            const cytnx_int64 &count = -1);
+    [[deprecated("Please use Save/Load functions instead.")]] static Storage Fromfile(
+      const char *fname, const unsigned int &dtype, const cytnx_int64 &count = -1,
+      const int device = Device.cpu);
 
     /**
     @brief cast the type of current Storage
@@ -824,7 +968,7 @@ namespace cytnx {
     @note This function is C++ only
     */
     template <class T>
-    static Storage from_vector(const std::vector<T> &vin, const int device = -1) {
+    static Storage from_vector(const std::vector<T> &vin, const int device = Device.cpu) {
       Storage out;
       out._from_vector(vin, device);
       return out;
@@ -867,7 +1011,7 @@ namespace cytnx {
     /// @cond
 
     template <class T>
-    void _from_vector(const std::vector<T> &vin, const int device = -1) {
+    void _from_vector(const std::vector<T> &vin, const int device = Device.cpu) {
       // auto dispatch:
       // check:
       cytnx_error_msg(1, "[FATAL] ERROR unsupport type%s", "\n");
@@ -875,57 +1019,57 @@ namespace cytnx {
       // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
     }
 
-    void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_complex128> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.ComplexDouble]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex128) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_complex64> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.ComplexFloat]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_complex64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_double> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_double> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Double]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_double) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_float> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_float> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Float]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_float) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint64> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Uint64]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int64> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int64> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Int64]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int64) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint32> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Uint32]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint32) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int32> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int32> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Int32]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int32) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_uint16> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Uint16]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_uint16) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_int16> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_int16> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Int16]();
       this->_impl->Init(vin.size(), device);
       memcpy(this->_impl->data(), &vin[0], sizeof(cytnx_int16) * vin.size());
     }
-    void _from_vector(const std::vector<cytnx_bool> &vin, const int device = -1) {
+    void _from_vector(const std::vector<cytnx_bool> &vin, const int device = Device.cpu) {
       this->_impl = __SII.USIInit[Type.Bool]();
       this->_impl->Init(vin.size(), device);
       this->_impl->_cpy_bool(this->_impl->data(), vin);

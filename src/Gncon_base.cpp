@@ -1,6 +1,7 @@
+#include <filesystem>
 #include <typeinfo>
-#include "Gncon.hpp"
 
+#include "Gncon.hpp"
 #include "linalg.hpp"
 
 using namespace std;
@@ -14,13 +15,13 @@ namespace cytnx {
                                  const std::string &contract_order) {
     cytnx_error_msg(true, "[ERROR][Gncon][Contract_plan] call from uninitialize Gncon.%s", "\n");
   }
-  void Gncon_base::Fromfile(const std::string &fname) {
+  void Gncon_base::Fromfile(const std::filesystem::path &fname) {
     cytnx_error_msg(true, "[ERROR][Gncon][Fromfile] call from uninitialize Gncon.%s", "\n");
   }
   void Gncon_base::FromString(const std::vector<std::string> &fname) {
     cytnx_error_msg(true, "[ERROR][Gncon][FromString] call from uninitialize Gncon.%s", "\n");
   }
-  void Gncon_base::Savefile(const std::string &fname) {
+  void Gncon_base::Savefile(const std::filesystem::path &fname) {
     cytnx_error_msg(true, "[ERROR][Gncon][Savefile] call from uninitialize Gncon.%s", "\n");
   }
   void Gncon_base::PutUniTensor(const std::string &name, const UniTensor &utensor) {

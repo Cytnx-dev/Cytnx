@@ -1,19 +1,22 @@
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <map>
 #include <random>
 #include <string>
 #include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
-#include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
 #include "complex.h"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -60,7 +63,7 @@ void storage_binding(py::module &m) {
            } else if (tmpIN.dtype() == Type.Bool) {
              chr_dtype = py::format_descriptor<cytnx_bool>::format();
            } else {
-             cytnx_error_msg(true, "[ERROR] Void Type Tensor cannot convert to numpy ndarray%s",
+             cytnx_error_msg(true, "[ERROR] Void Type Storage cannot convert to numpy ndarray%s",
                              "\n");
            }
 
@@ -76,10 +79,10 @@ void storage_binding(py::module &m) {
     .def(py::init<const cytnx::Storage &>())
     .def(py::init<boost::intrusive_ptr<cytnx::Storage_base>>())
     .def(py::init<const unsigned long long &, const unsigned int &, int, const bool &>(),
-         py::arg("size"), py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
-         py::arg("init_zero") = true)
+         py::arg("size"), py::arg("dtype") = (cytnx_uint64)Type.Double,
+         py::arg("device") = (int)cytnx::Device.cpu, py::arg("init_zero") = true)
     .def("Init", &cytnx::Storage::Init, py::arg("size"),
-         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = -1,
+         py::arg("dtype") = (cytnx_uint64)Type.Double, py::arg("device") = (int)cytnx::Device.cpu,
          py::arg("init_zero") = true)
 
     .def("dtype", &cytnx::Storage::dtype)
@@ -260,20 +263,48 @@ void storage_binding(py::module &m) {
     .def("c_pylist_bool", &cytnx::Storage::vector<cytnx_bool>)
 
     .def(
-      "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },
-      py::arg("fname"))
-    .def(
-      "Tofile", [](cytnx::Storage &self, const std::string &fname) { self.Tofile(fname); },
-      py::arg("fname"))
+      "Save",
+      [](cytnx::Storage &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/Storage", py::arg("mode") = 'w')
     .def_static(
-      "Load", [](const std::string &fname) { return cytnx::Storage::Load(fname); },
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return cytnx::Storage::Load(fname, path, restore_device);
+      },
+      py::arg("fname"), py::arg("path") = "/Storage", py::arg("restore_device") = true)
+    .def(
+      "Load_",
+      [](cytnx::Storage &self, const std::filesystem::path &fname, const std::string &path,
+         const bool restore_device) { return self.Load_(fname, path, restore_device); },
+      py::arg("fname"), py::arg("path") = "/Storage", py::arg("restore_device") = true)
+
+    .def(
+      "Tofile",
+      [](cytnx::Storage &self, const std::filesystem::path &fname) { self.Tofile(fname); },
       py::arg("fname"))
     .def_static(
       "Fromfile",
-      [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count) {
-        return cytnx::Storage::Fromfile(fname, dtype, count);
-      },
-      py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1))
+      [](const std::filesystem::path &fname, const unsigned int &dtype, const cytnx_int64 &count,
+         const int device) { return cytnx::Storage::Fromfile(fname, dtype, count, device); },
+      py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1),
+      py::arg("device") = (int)cytnx::Device.cpu)
+
+    .def(
+      py::pickle(
+        [](const cytnx::Storage &self) {  // __getstate__
+          std::ostringstream oss(std::ios::binary);
+          self.to_binary(oss);
+          return py::bytes(oss.str());
+        },
+        [](py::bytes state) {  // __setstate__
+          std::string data = state;
+          std::istringstream iss(data, std::ios::binary);
+          cytnx::Storage out;
+          out.from_binary(iss);
+          return out;
+        }))
+
     .def("real", &cytnx::Storage::real)
     .def("imag", &cytnx::Storage::imag)
 

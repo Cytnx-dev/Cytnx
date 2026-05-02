@@ -11,20 +11,19 @@ namespace cytnx {
   //====================================================
   std::string UniTensorType_class::getname(const int &ut_type) const {
     if (ut_type == this->Void) {
-      return std::string("Void (un-initialize UniTensor)");
+      return std::string("Void (uninitialized UniTensor)");
     } else if (ut_type == this->Dense) {
-      return std::string("Dense");
+      return std::string("DenseUniTensor");
     } else if (ut_type == this->Sparse) {
-      return std::string("Sparse");
+      return std::string("SparseUniTensor");
     } else if (ut_type == this->Block) {
-      return std::string("Block");
+      return std::string("BlockUniTensor");
     } else if (ut_type == this->BlockFermionic) {
-      return std::string("Block Fermionic");
+      return std::string("BlockFermionicUniTensor");
     } else {
       cytnx_error_msg(true, "%s\n", "[ERROR] invalid ut_type");
       return std::string("");
     }
-    // extend more in here!!
   }
   UniTensorType_class UTenType;
   //===================================================
@@ -692,12 +691,22 @@ namespace cytnx {
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
 
-  void UniTensor_base::_save_dispatch(std::fstream &f) const {
+  void UniTensor_base::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
 
-  void UniTensor_base::_load_dispatch(std::fstream &f) {
+  void UniTensor_base::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+    cytnx_error_msg(true, "[ERROR] Loading BlockUniTensor from HDF5 is not implemented yet!%s",
+                    "\n");
+  }
+
+  void UniTensor_base::to_binary_dispatch(std::ostream &f) const {
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+  }
+
+  void UniTensor_base::from_binary_dispatch(std::istream &f, const bool restore_device) {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }

@@ -1,5 +1,7 @@
-#include <typeinfo>
 #include "Network.hpp"
+
+#include <filesystem>
+#include <typeinfo>
 
 #include "linalg.hpp"
 
@@ -15,13 +17,13 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR][Network][Contract_plan] call from uninitialized network.%s",
                     "\n");
   }
-  void Network_base::Fromfile(const std::string &fname) {
+  void Network_base::Fromfile(const std::filesystem::path &fname) {
     cytnx_error_msg(true, "[ERROR][Network][Fromfile] call from uninitialized network.%s", "\n");
   }
   void Network_base::FromString(const std::vector<std::string> &fname) {
     cytnx_error_msg(true, "[ERROR][Network][FromString] call from uninitialized network.%s", "\n");
   }
-  void Network_base::Savefile(const std::string &fname) {
+  void Network_base::Savefile(const std::filesystem::path &fname) {
     cytnx_error_msg(true, "[ERROR][Network][Savefile] call from uninitialized network.%s", "\n");
   }
   void Network_base::PutUniTensor(const std::string &name, const UniTensor &utensor) {

@@ -1,16 +1,20 @@
 #ifndef CYTNX_SYMMETRY_H_
 #define CYTNX_SYMMETRY_H_
 
+#include <filesystem>
 #include <fstream>
+#include <map>
 #include <ostream>
+#include <regex>
 #include <string>
 #include <vector>
 
+#include "H5Cpp.h"
 #include "boost/smart_ptr/intrusive_ptr.hpp"
 
+#include "Type.hpp"
 #include "cytnx_error.hpp"
 #include "intrusive_ptr_base.hpp"
-#include "Type.hpp"
 #include "utils/dynamic_arg_resolver.hpp"
 
 namespace cytnx {
@@ -27,7 +31,7 @@ namespace cytnx {
    *  fPar         |  -2, fermionParity symmetry
    *  fNum         |  -3, fermionNumber symmetry
    *
-   *  @see Symmetry::stype(), Symmetry::stype_str()
+   *  @see Symmetry::stype(), Symmetry::getname(), Symmetry::stype_str()
    */
   enum SymmetryType : int { Void = -99, U = -1, Z = 0, fPar = -2, fNum = -3 };
 
@@ -63,7 +67,7 @@ namespace cytnx {
   ///@cond
   class Symmetry_base : public intrusive_ptr_base<Symmetry_base> {
    public:
-    int stype_id;
+    SymmetryType stype_id;
     int n;
     Symmetry_base() : stype_id(SymmetryType::Void){};
     Symmetry_base(const int &n) : stype_id(SymmetryType::Void) { this->Init(n); };
@@ -91,6 +95,7 @@ namespace cytnx {
     virtual bool is_fermionic() const { return false; };
 
     virtual void print_info() const;
+    virtual std::string getname() const;
     virtual std::string stype_str() const;
     // virtual std::vector<cytnx_int64>& combine_rule(const std::vector<cytnx_int64> &inL, const
     // std::vector<cytnx_int64> &inR);
@@ -119,6 +124,7 @@ namespace cytnx {
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
+    std::string getname() const override { return "U1"; }
     std::string stype_str() const override { return "U1"; };
   };
   ///@endcond
@@ -145,6 +151,7 @@ namespace cytnx {
                        const bool &is_reverse);
     void reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in);
     void print_info() const;
+    std::string getname() const override { return "Z" + std::to_string(this->n); };
     std::string stype_str() const override { return "Z" + std::to_string(this->n); };
   };
   ///@endcond
@@ -170,6 +177,7 @@ namespace cytnx {
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
     void print_info() const;
+    std::string getname() const override { return "fermion parity"; }
     std::string stype_str() const override { return "fP"; }
   };
   ///@endcond
@@ -195,6 +203,7 @@ namespace cytnx {
     fermionParity get_fermion_parity(const cytnx_int64 &in_qnum) const override;
     bool is_fermionic() const override { return true; };
     void print_info() const;
+    std::string getname() const override { return "fermion number"; }
     std::string stype_str() const override { return "f#"; }
   };
   ///@endcond
@@ -226,9 +235,35 @@ namespace cytnx {
         boost::intrusive_ptr<Symmetry_base> tmp(new FermionNumberSymmetry());
         this->_impl = tmp;
       } else {
-        cytnx_error_msg(1, "%s", "[ERROR] invalid symmetry type.");
+        cytnx_error_msg(true, "[ERROR] Invalid Symmetry type %d.\n", stype);
       }
     }
+    void Init(const std::string name) {
+      if (name == "U1") {
+        boost::intrusive_ptr<Symmetry_base> tmp(new U1Symmetry(1));
+        this->_impl = tmp;
+      } else if (name == "fermion parity") {
+        boost::intrusive_ptr<Symmetry_base> tmp(new FermionParitySymmetry());
+        this->_impl = tmp;
+      } else if (name == "fermion number") {
+        boost::intrusive_ptr<Symmetry_base> tmp(new FermionNumberSymmetry());
+        this->_impl = tmp;
+      } else {  // check if Z(N)
+        std::regex pattern(R"(Z(\d+))");
+        std::smatch matches;
+        if (std::regex_match(name, matches, pattern)) {
+          // matches[0] is the whole string "U(456)"
+          // matches[1] is the first capture group "456"
+          int n = std::stoi(matches[1].str());
+          boost::intrusive_ptr<Symmetry_base> tmp(new ZnSymmetry(n));
+          this->_impl = tmp;
+        } else {
+          cytnx_error_msg(true, "[ERROR] No Symmetry type matches the string '%s'.\n",
+                          name.c_str());
+        }
+      }
+    }
+
     Symmetry &operator=(const Symmetry &rhs) {
       this->_impl = rhs._impl;
       return *this;
@@ -236,7 +271,7 @@ namespace cytnx {
     Symmetry(const Symmetry &rhs) { this->_impl = rhs._impl; }
     ///@endcond
 
-    //[genenrators]
+    //[generators]
     /**
     @brief create a U1 symmetry object
 
@@ -380,11 +415,13 @@ namespace cytnx {
     int &n() const { return this->_impl->n; }
 
     /**
-    @brief return the symmetry type name of current Symmetry object in string form, see
-    cytnx::SymmetryType::
-    @return [std::string]
-        the symmetry type name.
-
+    @brief Type name of the Symmetry in long form
+    @return [std::string] the symmetry type long name.
+    */
+    std::string getname() const { return this->_impl->getname(); }
+    /**
+    @brief Type name of the Symmetry in short form
+    @return [std::string] the symmetry type short name.
     */
     std::string stype_str() const { return this->_impl->stype_str(); }
 
@@ -492,34 +529,100 @@ namespace cytnx {
     bool is_fermionic() const { return this->_impl->is_fermionic(); }
 
     /**
-     * @brief Save the current Symmetry object to a file.
-     * @param[in] fname the file name.
-     * @post the file extension will be automatically added as ".cysym".
+     * @brief Save Symmetry to file
+     * @details Save the Symmetry to a file. The file ending should be one of ".h5", ".hdf5", ".H5",
+     * ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @param[in] fname file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/Symm' will
+     * write the Symmetry to the attribute 'Symm' the group '/foo/bar' in the file.
+     * @param[in] mode the write mode:\n
+     *  `w` Creates a new file. If the given file exists, its contents are destroyed.\n
+     *  `x` Creates a new file. Fails if the given file exists already.\n
+     *  `a` Opens for writing without overwriting any existing content. Creates the file if it
+     *      doesn't exist. Only available for HDF5 files.\n
+     *  `u` Opens for writing. Existing content will be updated(overwritten).
+     *      Creates the file if it doesn't exist. Only available for HDF5 files.
+     * @note The common file ending for saving a Symmetry in binary format is ".cysym".
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
+     * @see Load()
      */
-    void Save(const std::string &fname) const;
+    void Save(const std::filesystem::path &fname, const std::string &path = "/Symmetry",
+              const char mode = 'w') const;
+    /**
+     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode)
+     * const;
+     */
+    void Save(const char *fname, const std::string &path = "/Symmetry",
+              const char mode = 'w') const;
 
     /**
-     * @brief Same as Save(const std::string &fname) const;
+     * @brief Load Symmetry from file and create new instance
+     * @details This function creates a new Symmetry and keeps the original Symmetry unchanged. See
+     * Load_() for loading the Symmetry to the current Symmetry.
+     * @param fname[in] file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path /foo/bar/Symm will
+     * read the Symmetry from the attribute 'Symm' the group '/foo/bar' in the file.
+     * @pre The file must be a Symmetry object which is saved by Save().
+     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is
+     * expected. For binary format, the common file ending for a Symmetry is ".cysym".
      */
-    void Save(const char *fname) const;
+    static cytnx::Symmetry Load(const std::filesystem::path &fname,
+                                const std::string &path = "/Symmetry");
+    /**
+     * @see Load(const std::filesystem::path &fname, const std::string &path)
+     */
+    static cytnx::Symmetry Load(const char *fname, const std::string &path = "/Symmetry");
 
     /**
-     * @brief Load a Symmetry object from a file.
-     * @param[in] fname the file name.
-     * @pre the file extension must be ".cysym".
-     * @return the loaded Symmetry object.
+     * @brief Load Symmetry from file and overwrite current instance
+     * @details This function overwrites the existing Symmetry. See Load() for creating a new
+     * Symmetry.
+     * @see Load()
      */
-    static Symmetry Load(const std::string &fname);
+    void Load_(const std::filesystem::path &fname, const std::string &path = "/Symmetry");
+    /**
+     * @see Load_(const std::filesystem::path &fname, const std::string &path)
+     */
+    void Load_(const char *fname, const std::string &path = "/Symmetry");
 
     /**
-     * @brief Same as static Symmetry Load(const std::string &fname);
+     * @brief Save Symmetry to HDF5 file
+     * @param[in] location the HDF5 group where the Symmetry will be saved.
+     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @param[in] name the name of the attribute in the HDF5 file.
+     * @warning This function is only available in C++. Use Save() for saving to file in C++ or
+     * Python.
+     * @see from_hdf5()
      */
-    static Symmetry Load(const char *fname);
+    void to_hdf5(H5::Group &location, const bool overwrite = false,
+                 const std::string &name = "Symmetry") const;
+    /**
+     * @brief Load Symmetry from HDF5 file (inline)
+     * @param[in] location the HDF5 group where the Symmetry will be loaded from.
+     * @param[in] name the name of the attribute in the HDF5 file.
+     * @warning This function is only available in C++. Use Load() for loading from file in C++ or
+     * Python.
+     * @see to_hdf5()
+     */
+    void from_hdf5(H5::Group &location, const std::string &name = "Symmetry");
 
-    /// @cond
-    void _Save(std::fstream &f) const;
-    void _Load(std::fstream &f);
-    /// @endcond
+    /**
+     * @brief Save Symmetry to binary file
+     * @param[in] f the output stream where the Symmetry will be saved.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Save() for saving to file in C++ or Python.
+     * @see from_binary()
+     */
+    void to_binary(std::ostream &f) const;
+    /**
+     * @brief Load Symmetry from binary file
+     * @param[in] f the input stream from which the Symmetry will be loaded.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Load() for loading from file in C++ or Python.
+     * @see to_binary()
+     */
+    void from_binary(std::istream &f);
 
     /**
      * @brief Print the information of current Symmetry object.

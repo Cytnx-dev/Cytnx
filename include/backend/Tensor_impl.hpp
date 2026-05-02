@@ -51,7 +51,7 @@ namespace cytnx {
     Tensor_impl() : _contiguous(true){};
 
     void Init(const std::vector<cytnx_uint64> &shape, const unsigned int &dtype = Type.Double,
-              int device = -1, const bool &init_zero = true);
+              int device = Device.cpu, const bool &init_zero = true);
     void Init(const Storage &in);
     // void Init(const Storage &in, const std::vector<cytnx_uint64> &shape,
     // const unsigned int &dtype, int device);
@@ -77,6 +77,16 @@ namespace cytnx {
     std::string device_str() const { return Device.getname(this->_storage.device()); }
 
     const std::vector<cytnx_uint64> &shape() const { return _shape; }
+
+    const std::vector<cytnx_uint64> strides() const {
+      std::vector<cytnx_uint64> strides(this->_shape.size());
+      cytnx_uint64 accu = 1;
+      for (cytnx_int64 i = this->_shape.size() - 1; i >= 0; i--) {
+        strides[this->_mapper[i]] = accu;  // calculate strides here
+        accu *= this->_shape[this->_invmapper[i]];
+      }
+      return strides;
+    }
 
     const bool &is_contiguous() const { return this->_contiguous; }
 

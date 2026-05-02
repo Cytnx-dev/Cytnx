@@ -1,18 +1,21 @@
-#include <vector>
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <map>
 #include <random>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
-#include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
 #include "complex.h"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -51,12 +54,38 @@ void tnalgo_binding(py::module &m) {
     .def("c_Into_Lortho", &tn_algo::MPS::Into_Lortho)
     .def("c_S_mvleft", &tn_algo::MPS::S_mvleft)
     .def("c_S_mvright", &tn_algo::MPS::S_mvright)
+
     .def(
-      "Save", [](cytnx::Storage &self, const std::string &fname) { self.Save(fname); },
-      py::arg("fname"))
+      "Save",
+      [](tn_algo::MPS &self, const std::filesystem::path &fname, const std::string &path,
+         const char mode) { self.Save(fname, path, mode); },
+      py::arg("fname"), py::arg("path") = "/MPS/", py::arg("mode") = 'w')
     .def_static(
-      "Load", [](const std::string &fname) { return cytnx::tn_algo::MPS::Load(fname); },
-      py::arg("fname"))
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path, const bool restore_device) {
+        return tn_algo::MPS::Load(fname, path, restore_device);
+      },
+      py::arg("fname"), py::arg("path") = "/MPS/", py::arg("restore_device") = true)
+    .def(
+      "Load_",
+      [](tn_algo::MPS &self, const std::filesystem::path &fname, const std::string &path,
+         const bool restore_device) { return self.Load_(fname, path, restore_device); },
+      py::arg("fname"), py::arg("path") = "/MPS/", py::arg("restore_device") = true)
+
+    .def(py::pickle(
+      [](const tn_algo::MPS &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+        std::string data = state;
+        std::istringstream iss(data, std::ios::binary);
+        tn_algo::MPS out;
+        out.from_binary(iss);
+        return out;
+      }))
+
     .def(
       "__repr__",
       [](cytnx::tn_algo::MPS &self) -> std::string {

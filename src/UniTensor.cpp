@@ -3,9 +3,11 @@
 #include <filesystem>
 #include <typeinfo>
 
-#include "utils/utils.hpp"
+#include "H5Cpp.h"
+
 #include "linalg.hpp"
 #include "random.hpp"
+#include "utils/utils.hpp"
 
 using namespace std;
 
@@ -13,6 +15,26 @@ using namespace std;
 #else
 
 namespace cytnx {
+
+  void UniTensor::Init(const std::string name) {
+    if (name == UTenType.getname(UTenType.Block)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new BlockUniTensor);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.BlockFermionic)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new BlockFermionicUniTensor);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.Dense)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new DenseUniTensor);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.Void)) {
+      boost::intrusive_ptr<UniTensor_base> tmp(new UniTensor_base);
+      this->_impl = tmp;
+    } else if (name == UTenType.getname(UTenType.Sparse)) {
+      cytnx_error_msg(true, "[ERROR] SparseUniTensor is deprecated.\s", "\n");
+    } else {
+      cytnx_error_msg(true, "[ERROR] No UniTensor type matches the string '%s'.\n", name.c_str());
+    }
+  }
 
   UniTensor UniTensor::Pow(const double &p) const { return cytnx::linalg::Pow(*this, p); }
   UniTensor &UniTensor::Pow_(const double &p) {
@@ -41,8 +63,320 @@ namespace cytnx {
   UniTensor UniTensor::Mul(const UniTensor &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
   UniTensor UniTensor::Mul(const Scalar &rhs) const { return cytnx::linalg::Mul(*this, rhs); }
 
-  void UniTensor::_Save(std::fstream &f) const {
-    cytnx_error_msg(!f.is_open(), "[ERROR][UniTensor] invalid fstream!.%s", "\n");
+  void UniTensor::Save(const std::filesystem::path &fname, const std::string &path,
+                       const char mode) const {
+    fstream f;  // only for binary saving, not used for HDF5
+    if (fname.has_extension()) {
+      // filename extension is given
+      std::string ext = fname.extension().string();
+      if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+          ext == ".HDF") {
+        // save as HDF5
+        H5::H5File h5file;
+        // Enable reuse of space after data is deleted;
+        // Set the strategy: FSM_AGGR is standard for free-space management
+        // Parameters: strategy, persist (true), threshold (default 1: track all free-space
+        // sections)
+        H5::FileCreatPropList fcpl;
+        fcpl.setFileSpaceStrategy(H5F_FSPACE_STRATEGY_FSM_AGGR, true, 1);
+        // Persistent free space requires HDF5 1.10.x format or later
+        H5::FileAccPropList fapl;
+        fapl.setLibverBounds(H5F_LIBVER_V110, H5F_LIBVER_LATEST);
+        // open file
+        bool overwrite = false;
+        if (mode == 'w') {  // Write new file
+          h5file = H5::H5File(fname, H5F_ACC_TRUNC, fcpl, fapl);
+        } else if (mode == 'x') {  // eXclusive create
+          h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
+        } else if (mode == 'a') {  // Append data
+          if (std::filesystem::exists(fname))
+            h5file = H5::H5File(fname, H5F_ACC_RDWR, H5::FileCreatPropList::DEFAULT, fapl);
+          else
+            h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
+        } else if (mode == 'u') {  // Update data
+          if (std::filesystem::exists(fname)) {
+            h5file = H5::H5File(fname, H5F_ACC_RDWR, H5::FileCreatPropList::DEFAULT, fapl);
+            overwrite = true;
+          } else {
+            h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
+          }
+        } else {
+          cytnx_error_msg(true, "[ERROR] Unknown mode '%c' for writing to HDF5 file.", mode);
+        }
+        // create group
+        std::filesystem::path grouppath(path);
+        std::filesystem::path subpath;
+        std::string groupfolder = "/";
+        for (const auto &part : grouppath) {
+          if (part.empty()) continue;
+          subpath /= part;
+          groupfolder = subpath.generic_string();
+          if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
+        }
+        H5::Group location = h5file.openGroup(groupfolder);
+        // write data
+        this->to_hdf5(location, overwrite);
+        h5file.close();
+        return;
+      } else {  // create binary file
+        if (mode == 'x') {
+          cytnx_error_msg(std::filesystem::exists(fname),
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                          fname.string().c_str());
+        } else {
+          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
+                          mode);
+        }
+        f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
+      }
+    } else {  // create binary file with standard extension
+      std::filesystem::path fnameext = fname;
+      fnameext += ".cytnx";
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.string().c_str());
+      if (mode == 'x') {
+        cytnx_error_msg(std::filesystem::exists(fnameext),
+                        "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                        fnameext.string().c_str());
+      } else {
+        cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
+      }
+      f.open(fnameext, std::ios::out | std::ios::trunc | std::ios::binary);
+    }
+    // write binary
+    if (!f.is_open()) {
+      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
+    }
+    this->to_binary(f);
+    f.close();
+  }
+  void UniTensor::Save(const char *fname, const std::string &path, const char mode) const {
+    this->Save(std::filesystem::path(fname), path, mode);
+  }
+
+  UniTensor UniTensor::Load(const std::filesystem::path &fname, const std::string &path,
+                            const bool restore_device) {
+    UniTensor out;
+    out.Load_(fname, path, restore_device);
+    return out;
+  }
+  UniTensor UniTensor::Load(const char *fname, const std::string &path, const bool restore_device) {
+    return UniTensor::Load(std::filesystem::path(fname), path, restore_device);
+  }
+
+  void UniTensor::Load_(const std::filesystem::path &fname, const std::string &path,
+                        const bool restore_device) {
+    std::string ext = fname.extension().string();
+    if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+        ext == ".HDF") {  // load HDF5
+      H5::H5File h5file(fname, H5F_ACC_RDONLY);
+      // open group
+      H5::Group location;
+      try {
+        location = h5file.openGroup(path.empty() ? "/" : path);
+      } catch (const H5::Exception &e) {
+        std::cerr << e.getDetailMsg() << std::endl;
+        cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
+                        path.c_str(), fname.string().c_str());
+      }
+      // read data
+      this->from_hdf5(location, restore_device);
+      h5file.close();
+    } else {  // load binary
+      fstream f;
+      f.open(fname, std::ios::in | std::ios::binary);
+      if (!f.is_open()) {
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
+      }
+      this->from_binary(f, restore_device);
+      f.close();
+    }
+  }
+  void UniTensor::Load_(const char *fname, const std::string &path, const bool restore_device) {
+    this->Load_(std::filesystem::path(fname), path, restore_device);
+  }
+
+  void UniTensor::to_hdf5(H5::Group &location, const bool overwrite) const {
+    if (overwrite) {  // delete previous data
+      // delete all entries that could be written by one of the implementations;
+      // remove attributes
+      if (location.attrExists("type")) location.removeAttr("type");
+      if (location.attrExists("diagonal")) location.removeAttr("diagonal");
+      if (location.attrExists("rowrank")) location.removeAttr("rowrank");
+      if (location.attrExists("name")) location.removeAttr("name");
+      if (location.attrExists("directed")) location.removeAttr("directed");
+      // remove datasets
+      if (location.nameExists("labels")) location.unlink("labels");
+      if (location.nameExists("Tensor")) location.unlink("Tensor");
+      if (location.nameExists("block_to_sectors")) location.unlink("block_to_sectors");
+      // remove groups and its contents recursively
+      if (location.nameExists("bonds")) location.unlink("bonds");
+      if (location.nameExists("blocks")) location.unlink("blocks");
+    }
+
+    H5::DataType datatype;
+    H5::Attribute attr;
+    H5::DataSet dataset;
+    H5::DataSpace dataspace;
+    H5::StrType str_type;
+
+    // type, write as string attribute
+    std::string type = UTenType.getname(this->_impl->uten_type_id);
+    str_type = H5::StrType(H5::PredType::C_S1, type.length() + 1);
+    dataspace = H5::DataSpace(H5S_SCALAR);
+    attr = location.createAttribute("type", str_type, dataspace);
+    attr.write(str_type, type);
+
+    // is_diag, write as attribute only for diagonal tensors
+    if (this->_impl->_is_diag) {
+      datatype = Type.get_hdf5_type(this->_impl->_is_diag);
+      attr = location.createAttribute("diagonal", datatype, H5::DataSpace(H5S_SCALAR));
+      attr.write(datatype, &this->_impl->_is_diag);
+    }
+
+    // rowrank, write as attribute
+    datatype = Type.get_hdf5_type(this->_impl->_rowrank);
+    attr = location.createAttribute("rowrank", datatype, H5::DataSpace(H5S_SCALAR));
+    attr.write(datatype, &this->_impl->_rowrank);
+
+    // name, write as string attribute
+    str_type = H5::StrType(H5::PredType::C_S1, this->_impl->_name.length() + 1);
+    dataspace = H5::DataSpace(H5S_SCALAR);
+    attr = location.createAttribute("name", str_type, dataspace);
+    attr.write(str_type, this->_impl->_name);
+
+    // labels; write as string vector
+    if (!this->_impl->_labels.empty()) {
+      hsize_t vecdims[1] = {this->_impl->_labels.size()};
+      dataspace = H5::DataSpace(1, vecdims);
+      str_type = H5::StrType(H5::PredType::C_S1, H5T_VARIABLE);
+      dataset = location.createDataSet("labels", str_type, dataspace);
+      std::vector<const char *> c_strings;  // H5 needs cstrings
+      std::string symstring;
+      for (const auto &label : this->_impl->_labels) {
+        c_strings.push_back(label.c_str());
+      }
+      dataset.write(c_strings.data(), str_type);
+    }
+
+    // bonds; write in group
+    if (!this->_impl->_bonds.empty()) {
+      H5::Group dir = location.createGroup("bonds");
+      for (int i = 0; i < this->_impl->_bonds.size(); i++) {
+        H5::Group bondgroup = dir.createGroup("Bond" + std::to_string(i));
+        this->_impl->_bonds[i].to_hdf5(bondgroup, overwrite);
+      }
+    }
+
+    this->_impl->to_hdf5_dispatch(location, overwrite);
+  }
+
+  void UniTensor::from_hdf5(H5::Group &location, const bool restore_device) {
+    H5::DataType datatype;
+    H5::Attribute attr;
+    H5::StrType str_type;
+    size_t size;
+
+    // type, read from attribute
+    attr = location.openAttribute("type");
+    str_type = attr.getStrType();
+    size = str_type.getSize() - 1;  // remove the null terminator
+    std::string utenname;
+    utenname.resize(size);
+    attr.read(str_type, &utenname[0]);
+    this->Init(utenname);
+
+    // is_diag, read from attribute
+    if (location.attrExists("diagonal")) {
+      H5::Attribute attr = location.openAttribute("diagonal");
+      datatype = attr.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != Type.get_hdf5_type(this->_impl->_is_diag).getSize(),
+        "[ERROR] 'device' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), Type.get_hdf5_type(this->_impl->_is_diag).getSize());
+      attr.read(datatype, &this->_impl->_is_diag);
+    } else {
+      this->_impl->_is_diag = false;
+    }
+
+    // rowrank, read from attribute
+    attr = location.openAttribute("rowrank");
+    datatype = attr.getDataType();
+    cytnx_error_msg(
+      datatype.getSize() != Type.get_hdf5_type(this->_impl->_rowrank).getSize(),
+      "[ERROR] 'rowrank' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+      datatype.getSize(), Type.get_hdf5_type(this->_impl->_rowrank).getSize());
+    attr.read(datatype, &this->_impl->_rowrank);
+
+    // name, read from string attribute
+    if (location.attrExists("name")) {
+      attr = location.openAttribute("name");
+      str_type = attr.getStrType();
+      size = str_type.getSize() - 1;  // remove the null terminator
+      if (size > 0) {
+        this->_impl->_name.resize(size);
+        attr.read(str_type, &this->_impl->_name[0]);
+      } else {
+        this->_impl->_name.clear();
+      }
+    } else {
+      this->_impl->_name.clear();
+    }
+
+    // labels; read from string vector
+    this->_impl->_labels.clear();
+    if (location.exists("labels")) {
+      H5::DataSet dataset = location.openDataSet("labels");
+      H5::DataSpace dataspace = dataset.getSpace();
+      hsize_t dims[1];
+      dataspace.getSimpleExtentDims(dims);
+      // H5T_VARIABLE requires reading into an array of char pointers (char**)
+      H5::StrType str_type(H5::PredType::C_S1, H5T_VARIABLE);
+      std::vector<char *> c_strings(dims[0]);
+      dataset.read(c_strings.data(), str_type);
+      this->_impl->_labels.reserve(dims[0]);
+      for (size_t i = 0; i < dims[0]; ++i) {
+        this->_impl->_labels.push_back(std::string(c_strings[i]));
+      }
+      // free the space of each char* that was allocated in dataset.read()
+      dataset.vlenReclaim(c_strings.data(), str_type, dataspace);
+    }
+
+    // bonds; read from group
+    this->_impl->_bonds.clear();
+    if (location.exists("bonds")) {
+      H5::Group dir = location.openGroup("bonds");
+      hsize_t idx = 0;
+      while (true) {
+        std::string name = "Bond" + std::to_string(idx);
+        if (!dir.exists(name)) {
+          break;
+        }
+        H5::Group bondgroup = dir.openGroup(name);
+        Bond bond;
+        bond.from_hdf5(bondgroup);
+        this->_impl->_bonds.push_back(bond);
+        idx++;
+      }
+      cytnx_error_msg(
+        idx != this->_impl->_labels.size(),
+        "[ERROR] %d bonds were found, but %d labels exist. The HDF5 data seems corrupt!\n", idx,
+        this->_impl->_labels.size());
+    } else {
+      cytnx_error_msg(
+        !this->_impl->_labels.empty(),
+        "[ERROR] %d labels exist, but no bonds were found. The HDF5 data seems corrupt!\n",
+        this->_impl->_labels.size());
+      this->_impl->_bonds.clear();
+    }
+
+    this->_impl->from_hdf5_dispatch(location, restore_device);
+    this->_impl->_is_braket_form = this->_impl->_update_braket();
+  }
+
+  void UniTensor::to_binary(std::ostream &f) const {
     cytnx_error_msg(this->_impl->uten_type_id == UTenType.Void,
                     "[ERROR][UniTensor] Cannot save an uninitialized UniTensor.%s", "\n");
 
@@ -85,15 +419,14 @@ namespace cytnx {
     }
     // f.write((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      this->_impl->_bonds[i]._Save(f);
+      this->_impl->_bonds[i].to_binary(f);
     }
 
     // second, let dispatch to do remaining saving.
-    this->_impl->_save_dispatch(f);
+    this->_impl->to_binary_dispatch(f);
   }
-  void UniTensor::_Load(std::fstream &f) {
-    cytnx_error_msg(!f.is_open(), "[ERROR][UniTensor] invalid fstream%s", "\n");
 
+  void UniTensor::from_binary(std::istream &f, const bool restore_device) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 555, "[ERROR] the object is not a cytnx UniTensor!%s", "\n");
@@ -149,46 +482,12 @@ namespace cytnx {
     }
     // f.read((char *)&(this->_impl->_labels[0]), sizeof(cytnx_int64) * rank);
     for (cytnx_uint64 i = 0; i < rank; i++) {
-      this->_impl->_bonds[i]._Load(f);
+      this->_impl->_bonds[i].from_binary(f);
     }
 
     // second, let dispatch to do remaining loading.
-    this->_impl->_load_dispatch(f);
+    this->_impl->from_binary_dispatch(f, restore_device);
   }
-
-  void UniTensor::Save(const std::string &fname) const {
-    fstream f;
-    if (std::filesystem::path(fname).has_extension()) {
-      // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
-    } else {
-      // add filename extension
-      cytnx_warning_msg(true,
-                        "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
-                        "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
-      f.open((fname + ".cytnx"), ios::out | ios::trunc | ios::binary);
-    }
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
-  void UniTensor::Save(const char *fname) const { Save(string(fname)); }
-
-  UniTensor UniTensor::Load(const std::string &fname) {
-    UniTensor out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load. >> %s\n", fname.c_str());
-    }
-    out._Load(f);
-    f.close();
-    return out;
-  }
-  UniTensor UniTensor::Load(const char *fname) { return UniTensor::Load(string(fname)); }
 
   // Random Generators:
   UniTensor UniTensor::normal(const cytnx_uint64 &Nelem, const double &mean, const double &std,

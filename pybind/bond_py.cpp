@@ -1,18 +1,21 @@
-#include <vector>
+#include "cytnx.hpp"
+
+#include <filesystem>
 #include <map>
 #include <random>
+#include <vector>
 
-#include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
-#include <pybind11/operators.h>
-#include <pybind11/iostream.h>
-#include <pybind11/numpy.h>
 #include <pybind11/buffer_info.h>
 #include <pybind11/functional.h>
+#include <pybind11/iostream.h>
+#include <pybind11/numpy.h>
+#include <pybind11/operators.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+#include <pybind11/stl/filesystem.h>
 
-#include "cytnx.hpp"
-// #include "../include/cytnx_error.hpp"
 #include "complex.h"
+#include "H5Cpp.h"
 
 namespace py = pybind11;
 using namespace pybind11::literals;
@@ -179,9 +182,37 @@ void bond_binding(py::module &m) {
     .def("calc_reverse_qnums", &Bond::calc_reverse_qnums)
 
     .def(
-      "Save", [](Bond &self, const std::string &fname) { self.Save(fname); }, py::arg("fname"))
+      "Save",
+      [](Bond &self, const std::filesystem::path &fname, const std::string &path, const char mode) {
+        self.Save(fname, path, mode);
+      },
+      py::arg("fname"), py::arg("path") = "/Bond/", py::arg("mode") = 'w')
     .def_static(
-      "Load", [](const std::string &fname) { return Bond::Load(fname); }, py::arg("fname"))
+      "Load",
+      [](const std::filesystem::path &fname, const std::string &path) {
+        return Bond::Load(fname, path);
+      },
+      py::arg("fname"), py::arg("path") = "/Bond/")
+    .def(
+      "Load_",
+      [](cytnx::Bond &self, const std::filesystem::path &fname, const std::string &path) {
+        return self.Load_(fname, path);
+      },
+      py::arg("fname"), py::arg("path") = "/Bond/")
+
+    .def(py::pickle(
+      [](const Bond &self) {  // __getstate__
+        std::ostringstream oss(std::ios::binary);
+        self.to_binary(oss);
+        return py::bytes(oss.str());
+      },
+      [](py::bytes state) {  // __setstate__
+        std::string data = state;
+        std::istringstream iss(data, std::ios::binary);
+        Bond out;
+        out.from_binary(iss);
+        return out;
+      }))
 
     ;  // end of object line
 }

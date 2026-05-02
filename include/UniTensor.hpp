@@ -1,23 +1,27 @@
 #ifndef CYTNX_UNITENSOR_H_
 #define CYTNX_UNITENSOR_H_
 
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
+#include <initializer_list>
+#include <iostream>
+#include <map>
+#include <random>
+#include <utility>
+#include <vector>
+
+#include "H5Cpp.h"
+
+#include "Bond.hpp"
+#include "Device.hpp"
+#include "Generator.hpp"
+#include "Symmetry.hpp"
+#include "Tensor.hpp"
 #include "Type.hpp"
 #include "cytnx_error.hpp"
-#include "Device.hpp"
-#include "Tensor.hpp"
-#include "utils/utils.hpp"
 #include "intrusive_ptr_base.hpp"
-#include <iostream>
-#include <vector>
-#include <map>
-#include <utility>
-#include <initializer_list>
-#include <fstream>
-#include <algorithm>
-#include "Symmetry.hpp"
-#include "Bond.hpp"
-#include "Generator.hpp"
-#include <random>
+#include "utils/utils.hpp"
 
 #ifdef BACKEND_TORCH
 #else
@@ -443,8 +447,11 @@ namespace cytnx {
     virtual const vec2d<cytnx_uint64> &get_itoi() const;
     virtual vec2d<cytnx_uint64> &get_itoi();
 
-    virtual void _save_dispatch(std::fstream &f) const;
-    virtual void _load_dispatch(std::fstream &f);
+    virtual void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    virtual void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+
+    virtual void to_binary_dispatch(std::ostream &f) const;
+    virtual void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     virtual ~UniTensor_base(){};
   };
@@ -1078,8 +1085,11 @@ namespace cytnx {
                         "\n");
     }
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const {
       cytnx_error_msg(true, "[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s",
@@ -1282,7 +1292,7 @@ namespace cytnx {
 
       std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
 
-      // find if the indices specify exists!
+      // find if the specified indices exists!
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {
@@ -1751,8 +1761,11 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -2544,8 +2557,11 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void _save_dispatch(std::fstream &f) const;
-    void _load_dispatch(std::fstream &f);
+    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+
+    void to_binary_dispatch(std::ostream &f) const;
+    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -2750,13 +2766,16 @@ namespace cytnx {
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false, const cytnx_int64 &rowrank = -1,
               const std::vector<std::string> &in_labels = {}, const std::string &name = "") {
-      // std::cout << "[entry!]" << std::endl;
       boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
       out->Init_by_Tensor(in_tensor, is_diag, rowrank, name);
       this->_impl = out;
       if (in_labels.size() != 0) this->set_labels(in_labels);
     }
     //@}
+
+    /// @cond
+    void Init(const std::string name);
+    /// @endcond
 
     //@{
     /**
@@ -5455,40 +5474,112 @@ namespace cytnx {
     }
 
     /**
-    @brief save a UniTensor to file
-    @details Save a UniTensor to file. The file extension will be extended as '.cytnx'
-    @param[in] fname the file name (exclude the file extension).
-    @see Load(const std::string &fname)
-    */
-    void Save(const std::string &fname) const;
+     * @brief Save UniTensor to file
+     * @details Save the UniTensor to a file. The file ending should be one of ".h5", ".hdf5",
+     * ".H5", ".HDF5", ".hdf" to save in HDF5 file format. Otherwise, a binary file format is used.
+     * @param[in] fname file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/' will write
+     * the UniTensor to the group '/foo/bar' in the file.
+     * @param[in] mode the write mode:\n
+     *  `w` Creates a new file. If the given file exists, its contents are destroyed.\n
+     *  `x` Creates a new file. Fails if the given file exists already.\n
+     *  `a` Opens for writing without overwriting any existing content. Creates the file if it
+     *      doesn't exist. Only available for HDF5 files.\n
+     *  `u` Opens for writing. Existing content will be updated(overwritten).
+     *      Creates the file if it doesn't exist. Only available for HDF5 files.
+     * @note The common file ending for saving a UniTensor in binary format is ".cytnx".
+     * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
+     * readability, and future-proofing.
+     * @see Load()
+     */
+    void Save(const std::filesystem::path &fname, const std::string &path = "/UniTensor/",
+              const char mode = 'w') const;
+    /**
+     * @see Save(const std::filesystem::path &fname, const std::string &path, const char mode)
+     * const;
+     */
+    void Save(const char *fname, const std::string &path = "/UniTensor/",
+              const char mode = 'w') const;
 
     /**
-    @brief save a UniTensor to file
-    @details Save a UniTensor to file. The file extension will be extended as '.cytnx'
-    @param[in] fname the file name (exclude the file extension).
-    @see Load(const char *fname)
-    */
-    void Save(const char *fname) const;
+     * @brief Load UniTensor from file and create new instance
+     * @details This function creates a new UniTensor and keeps the original UniTensor unchanged.
+     * See Load_() for loading the UniTensor to the current UniTensor.
+     * @param fname[in] file name
+     * @param[in] path path inside the file. Only used for HDF5 files. A path '/foo/bar/' will read
+     * the UniTensor from the group '/foo/bar' in the file.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @pre The file must be a UniTensor object which is saved by Save().
+     * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf" is
+     * expected. For binary format, the common file ending for a UniTensor is ".cytnx".
+     */
+    static UniTensor Load(const std::filesystem::path &fname,
+                          const std::string &path = "/UniTensor/",
+                          const bool restore_device = true);
+    /**
+     * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    static UniTensor Load(const char *fname, const std::string &path = "/UniTensor/",
+                          const bool restore_device = true);
 
     /**
-    @brief load a UniTensor from file
-    @param[in] fname the file name
-    @return the loaded UniTensor
-    @pre The file must be a UniTensor object. That is, the file must be created by
-    UniTensor::Save().
-    @see Save(const std::string &fname) const
-    */
-    static UniTensor Load(const std::string &fname);
+     * @brief Load UniTensor from file and overwrite current instance
+     * @details This function overwrites the existing UniTensor. See Load() for creating a new
+     * UniTensor.
+     * @see Load()
+     */
+    void Load_(const std::filesystem::path &fname, const std::string &path = "/UniTensor/",
+               const bool restore_device = true);
+    /**
+     * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
+     * restore_device)
+     */
+    void Load_(const char *fname, const std::string &path = "/UniTensor/",
+               const bool restore_device = true);
 
     /**
-    @brief load a UniTensor from file
-    @param[in] fname: the file name
-    @return the loaded UniTensor
-    @pre The file must be a UniTensor object. That is, the file must be created by
-    UniTensor::Save().
-    @see Save(const char* fname) const
-    */
-    static UniTensor Load(const char *fname);
+     * @brief Save UniTensor to HDF5 file
+     * @param[in] location the HDF5 group where the UniTensor will be saved.
+     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @warning This function is only available in C++. Use Save() for saving to file in C++ or
+     * Python.
+     * @see from_hdf5()
+     */
+    void to_hdf5(H5::Group &location, const bool overwrite = false) const;
+    /**
+     * @brief Load UniTensor from HDF5 file (inline)
+     * @param[in] location the HDF5 group where the UniTensor will be loaded from.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. Use Load() for loading from file in C++ or
+     * Python.
+     * @see to_hdf5()
+     */
+    void from_hdf5(H5::Group &location, const bool restore_device = true);
+
+    /**
+     * @brief Save UniTensor to binary file
+     * @param[in] f the output stream where the UniTensor will be saved.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Save() for saving to file in C++ or Python.
+     * @see from_binary()
+     */
+    void to_binary(std::ostream &f) const;
+    /**
+     * @brief Load UniTensor from binary file
+     * @param[in] f the input stream from which the UniTensor will be loaded.
+     * @param[in] restore_device whether to try restoring the device on which the data is stored; if
+     * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
+     * loading.
+     * @warning This function is only available in C++. In Python, use pickle for the same binary
+     * file format. Use Load() for loading from file in C++ or Python.
+     * @see to_binary()
+     */
+    void from_binary(std::istream &f, const bool restore_device = true);
 
     /**
      * @brief truncate bond dimension of the UniTensor by the given bond label and dimension.
@@ -5575,11 +5666,6 @@ namespace cytnx {
     */
     const vec2d<cytnx_uint64> &get_itoi() const { return this->_impl->get_itoi(); }
     vec2d<cytnx_uint64> &get_itoi() { return this->_impl->get_itoi(); }
-
-    /// @cond
-    void _Load(std::fstream &f);
-    void _Save(std::fstream &f) const;
-    /// @endcond
 
     UniTensor &convert_from(const UniTensor &rhs, const bool &force = false,
                             const cytnx_double &tol = 1e-14) {
@@ -5681,7 +5767,7 @@ namespace cytnx {
     @note 2-bond if not diagonal. 1-bond if diagonal.
     @see identity(Nelem, in_labels, is_diag, dtype, device, name)
     Note:
-      This function is a alias of cytnx::UniTensor::identity().
+      This function is a alias of identity().
     */
     static UniTensor eye(const cytnx_uint64 &dim, const std::vector<std::string> &in_labels = {},
                          const cytnx_bool &is_diag = false, const unsigned int &dtype = Type.Double,
@@ -5940,8 +6026,7 @@ namespace cytnx {
   @param[in] cacheR if the inR should be contiguous align after calling
   @return
       [UniTensor]
-
-  @see cytnx::UniTensor::contract
+  @see cytnx::Contract()
 
   */
   UniTensor Contract(const UniTensor &inL, const UniTensor &inR, const bool &cacheL = false,
@@ -5955,9 +6040,7 @@ namespace cytnx {
   @param[in] optimal wheather to find the optimal contraction order automatically.
   @return
       [UniTensor]
-
-  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
-
+  @see cytnx::Contract()
   */
   UniTensor Contract(const std::vector<UniTensor> &TNs, const std::string &order,
                      const bool &optimal);
@@ -5990,9 +6073,7 @@ namespace cytnx {
   @param args the Tensors.
   @return
       [UniTensor]
-
-  See also \link cytnx::UniTensor::contract UniTensor.contract \endlink
-
+  @see cytnx::Contract()
   */
   template <class... T>
   UniTensor Contract(const UniTensor &in, const T &...args, const std::string &order,

@@ -2332,18 +2332,26 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
   }
 
-  void SparseUniTensor::_save_dispatch(std::fstream &f) const {
+  void SparseUniTensor::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
+    cytnx_error_msg(true, "[ERROR] Saving SparseUniTensor to HDF5 is not implemented!%s", "\n");
+  }
+
+  void SparseUniTensor::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+    cytnx_error_msg(true, "[ERROR] Loading SparseUniTensor from HDF5 is not implemented!%s", "\n");
+  }
+
+  void SparseUniTensor::to_binary_dispatch(std::ostream &f) const {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));
 
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i]._Save(f);
+      this->_blocks[i].to_binary(f);
     }
   }
 
-  void SparseUniTensor::_load_dispatch(std::fstream &f) {
+  void SparseUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks;
@@ -2354,7 +2362,7 @@ namespace cytnx {
                     "\n");
 
     for (unsigned int i = 0; i < this->_blocks.size(); i++) {
-      this->_blocks[i]._Load(f);
+      this->_blocks[i].from_binary(f, restore_device);
     }
   }
 

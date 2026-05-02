@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <filesystem>
 
+#include "H5Cpp.h"
 #include "utils/utils.hpp"
 
 using namespace std;
@@ -329,7 +330,6 @@ namespace cytnx {
         } else {
           idx_erase.push_back(q);
           tmp_degs[loc] += tmp_degs[q];
-          // std::cout << "add from loc" << q << " to " << cnt << std::endl;
         }
         return_order[mapper[q]] = cnt;
       }
@@ -471,38 +471,349 @@ namespace cytnx {
 
   bool Bond::operator!=(const Bond &rhs) const { return !(*this == rhs); }
 
-  void Bond::Save(const std::string &fname) const {
-    fstream f;
-    if (std::filesystem::path(fname).has_extension()) {
+  void Bond::Save(const std::filesystem::path &fname, const std::string &path,
+                  const char mode) const {
+    fstream f;  // only for binary saving, not used for HDF5
+    if (fname.has_extension()) {
       // filename extension is given
-      f.open(fname, ios::out | ios::trunc | ios::binary);
-    } else {
-      // add filename extension
-      f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
+      std::string ext = fname.extension().string();
+      if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+          ext == ".HDF") {
+        // save as HDF5
+        H5::H5File h5file;
+        // Enable reuse of space after data is deleted;
+        // Set the strategy: FSM_AGGR is standard for free-space management
+        // Parameters: strategy, persist (true), threshold (default 1: track all free-space
+        // sections)
+        H5::FileCreatPropList fcpl;
+        fcpl.setFileSpaceStrategy(H5F_FSPACE_STRATEGY_FSM_AGGR, true, 1);
+        // Persistent free space requires HDF5 1.10.x format or later
+        H5::FileAccPropList fapl;
+        fapl.setLibverBounds(H5F_LIBVER_V110, H5F_LIBVER_LATEST);
+        // open file
+        bool overwrite = false;
+        if (mode == 'w') {  // Write new file
+          h5file = H5::H5File(fname, H5F_ACC_TRUNC, fcpl, fapl);
+        } else if (mode == 'x') {  // eXclusive create
+          h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
+        } else if (mode == 'a') {  // Append data
+          if (std::filesystem::exists(fname))
+            h5file = H5::H5File(fname, H5F_ACC_RDWR, H5::FileCreatPropList::DEFAULT, fapl);
+          else
+            h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
+        } else if (mode == 'u') {  // Update data
+          if (std::filesystem::exists(fname)) {
+            h5file = H5::H5File(fname, H5F_ACC_RDWR, H5::FileCreatPropList::DEFAULT, fapl);
+            overwrite = true;
+          } else {
+            h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
+          }
+        } else {
+          cytnx_error_msg(true, "[ERROR] Unknown mode '%c' for writing to HDF5 file.", mode);
+        }
+        // create group
+        std::filesystem::path grouppath(path);
+        std::filesystem::path subpath;
+        std::string groupfolder = "/";
+        for (const auto &part : grouppath) {
+          if (part.empty()) continue;
+          subpath /= part;
+          groupfolder = subpath.generic_string();
+          if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
+        }
+        H5::Group location = h5file.openGroup(groupfolder);
+        // write data
+        this->to_hdf5(location, overwrite);
+        h5file.close();
+        return;
+      } else {  // create binary file
+        if (mode == 'x') {
+          cytnx_error_msg(std::filesystem::exists(fname),
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                          fname.string().c_str());
+        } else {
+          cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
+                          mode);
+        }
+        f.open(fname, std::ios::out | std::ios::trunc | std::ios::binary);
+      }
+    } else {  // create binary file with standard extension
+      std::filesystem::path fnameext = fname;
+      fnameext += ".cybd";
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cybd'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.string().c_str());
+      if (mode == 'x') {
+        cytnx_error_msg(std::filesystem::exists(fnameext),
+                        "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                        fnameext.string().c_str());
+      } else {
+        cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
+      }
+      f.open(fnameext, std::ios::out | std::ios::trunc | std::ios::binary);
     }
+    // write binary
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
-    this->_Save(f);
+    this->to_binary(f);
     f.close();
   }
-  void Bond::Save(const char *fname) const { this->Save(string(fname)); }
+  void Bond::Save(const char *fname, const std::string &path, const char mode) const {
+    this->Save(std::filesystem::path(fname), path, mode);
+  }
 
-  Bond Bond::Load(const std::string &fname) {
+  Bond Bond::Load(const std::filesystem::path &fname, const std::string &path) {
     Bond out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
-    }
-    out._Load(f);
-    f.close();
+    out.Load_(fname, path);
     return out;
   }
-  Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
+  Bond Bond::Load(const char *fname, const std::string &path) {
+    return Bond::Load(std::filesystem::path(fname), path);
+  }
 
-  void Bond::_Save(fstream &f) const {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
+  void Bond::Load_(const std::filesystem::path &fname, const std::string &path) {
+    std::string ext = fname.extension().string();
+    if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
+        ext == ".HDF") {  // load HDF5
+      H5::H5File h5file(fname, H5F_ACC_RDONLY);
+      // open group
+      H5::Group location;
+      try {
+        location = h5file.openGroup(path.empty() ? "/" : path);
+      } catch (const H5::Exception &e) {
+        std::cerr << e.getDetailMsg() << std::endl;
+        cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
+                        path.c_str(), fname.string().c_str());
+      }
+      // read data
+      this->from_hdf5(location);
+      h5file.close();
+    } else {  // load binary
+      fstream f;
+      f.open(fname, std::ios::in | std::ios::binary);
+      if (!f.is_open()) {
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
+      }
+      this->from_binary(f);
+      f.close();
+    }
+  }
+  void Bond::Load_(const char *fname, const std::string &path) {
+    this->Load_(std::filesystem::path(fname), path);
+  }
+
+  void Bond::to_hdf5(H5::Group &location, const bool overwrite) const {
+    if (overwrite) {  // delete previous data
+      // remove attributes
+      if (location.attrExists("dimension")) location.removeAttr("dimension");
+      if (location.attrExists("type")) location.removeAttr("type");
+      // remove datasets
+      if (location.nameExists("degeneracies")) location.unlink("degeneracies");
+      if (location.nameExists("quantum_numbers")) location.unlink("quantum_numbers");
+      // remove groups and its contents recursively
+      if (location.nameExists("symmetries")) location.unlink("symmetries");
+    }
+
+    H5::DataType datatype;
+    H5::Attribute attr;
+    H5::DataSet dataset;
+    H5::DataSpace dataspace;
+    H5::StrType str_type;
+
+    // dimension, write as attribute
+    auto dim = this->_impl->_dim;
+    datatype = Type.get_hdf5_type(dim);
+    attr = location.createAttribute("dimension", datatype, H5::DataSpace(H5S_SCALAR));
+    attr.write(datatype, &dim);
+
+    // type, write as string
+    std::string typestr = bondtype_to_string.at(this->_impl->_type);
+    str_type = H5::StrType(H5::PredType::C_S1, typestr.length() + 1);
+    dataspace = H5::DataSpace(H5S_SCALAR);
+    attr = location.createAttribute("type", str_type, dataspace);
+    attr.write(str_type, typestr);
+
+    // degs; write vector
+    hsize_t sectordim = this->_impl->_qnums.size();
+    if (sectordim > 0) {  // only with symmetries
+      hsize_t vecdims[1] = {sectordim};
+      dataspace = H5::DataSpace(1, vecdims);
+      datatype = Type.get_hdf5_type(this->_impl->_degs[0]);
+      dataset = location.createDataSet("degeneracies", Type.get_hdf5_type(this->_impl->_degs[0]),
+                                       dataspace);
+      dataset.write(this->_impl->_degs.data(), datatype);
+      // label axis
+      dataspace = H5::DataSpace(H5S_SCALAR);
+      str_type = H5::StrType(H5::PredType::C_S1, 7);
+      attr = dataset.createAttribute("axis_label", str_type, dataspace);
+      attr.write(str_type, "sector");
+
+      // qnums; write matrix (dim x qnumdim)
+      hsize_t qnumdim = this->_impl->_syms.size();
+      std::vector<cytnx_int64> flat(sectordim * qnumdim);  // flatten vector<vector>
+      for (hsize_t i = 0; i < sectordim; ++i) {
+        std::copy(this->_impl->_qnums[i].begin(), this->_impl->_qnums[i].end(),
+                  flat.begin() + i * qnumdim);
+      }
+      hsize_t matdims[2] = {sectordim, qnumdim};
+      dataspace = H5::DataSpace(2, matdims);
+      datatype = Type.get_hdf5_type(flat[0]);
+      dataset = location.createDataSet("quantum_numbers", datatype, dataspace);
+      dataset.write(flat.data(), datatype);
+      // label axes
+      char labels[2][9] = {"sector", "symmetry"};
+      str_type = H5::StrType(H5::PredType::C_S1, 9);
+      hsize_t attr_dims[1] = {2};
+      H5::DataSpace attr_space(1, attr_dims);
+      attr = dataset.createAttribute("axis_labels", str_type, attr_space);
+      attr.write(str_type, labels);
+
+      // symmetries
+      H5::Group symloc = location.createGroup("symmetries");
+      for (int i = 0; i < this->_impl->_syms.size(); i++) {
+        this->_impl->_syms[i].to_hdf5(symloc, overwrite, "Symmetry" + std::to_string(i));
+      }
+    }
+  }
+  void Bond::from_hdf5(H5::Group &location) {
+    H5::DataType datatype;
+    H5::Attribute attr;
+    H5::DataSet dataset;
+    H5::DataSpace dataspace;
+    H5::StrType str_type;
+
+    // type from string
+    attr = location.openAttribute("type");
+    str_type = attr.getStrType();
+    size_t size = str_type.getSize() - 1;  // not including the null terminator
+    std::string typestr;
+    typestr.resize(size);
+    attr.read(str_type, &typestr[0]);
+    this->_impl->_type = string_to_bondtype.at(typestr);
+
+    // degs; read vector
+    bool symmetric = false;
+    hssize_t sectordim;
+    if (location.exists("degeneracies")) {
+      symmetric = true;
+      dataset = location.openDataSet("degeneracies");
+      dataspace = dataset.getSpace();
+      sectordim = dataspace.getSimpleExtentNpoints();
+      this->_impl->_degs.resize(sectordim);
+      datatype = dataset.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(std::size_t),
+        "[ERROR] 'degeneracies' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(std::size_t));
+      dataset.read(this->_impl->_degs.data(), datatype);
+      this->_impl->_dim =
+        std::accumulate(this->_impl->_degs.begin(), this->_impl->_degs.end(), cytnx_uint64(0));
+    } else {
+      this->_impl->_degs = {};
+    }
+
+    // qnums; read matrix (dim x qnumdim)
+    hsize_t qnumdim = 0;
+    if (location.exists("quantum_numbers")) {
+      cytnx_error_msg(!symmetric,
+                      "[ERROR] 'degeneracies' were not found in HDF5 location, but "
+                      "'quantum_numbers' exist. The HDF5 data seems corrupt!%s",
+                      "\n");
+      dataset = location.openDataSet("quantum_numbers");
+      dataspace = dataset.getSpace();
+      cytnx_error_msg(dataspace.getSimpleExtentNdims() != 2,
+                      "[ERROR] 'quantum_numbers' should be a two-dimensional array. The HDF5 data "
+                      "seems corrupt!%s",
+                      "\n");
+      hsize_t dims[2];
+      dataspace.getSimpleExtentDims(dims);
+      cytnx_error_msg(dims[0] != sectordim,
+                      "[ERROR] Length of 'degeneracies' = %d, but first dimension of "
+                      "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
+                      sectordim, dims[0]);
+      qnumdim = dims[1];
+      // Read HDF5 data into a flattened temporary vector
+      std::vector<cytnx_int64> flat(sectordim * qnumdim);
+      datatype = dataset.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(cytnx_int64),
+        "[ERROR] 'quantum_numbers' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(cytnx_int64));
+      dataset.read(flat.data(), datatype);
+      // Reconstruct the vector of vectors
+      this->_impl->_qnums.assign(sectordim, std::vector<cytnx_int64>(qnumdim));
+      for (hsize_t i = 0; i < sectordim; ++i) {
+        std::copy(flat.begin() + i * qnumdim, flat.begin() + (i + 1) * qnumdim,
+                  this->_impl->_qnums[i].begin());
+      }
+    } else {
+      this->_impl->_qnums.clear();
+    }
+
+    // symmetries
+    if (location.exists("symmetries")) {
+      H5::Group symloc = location.openGroup("symmetries");
+      this->_impl->_syms.clear();
+      hsize_t idx = 0;
+      while (true) {
+        std::string name = "Symmetry" + std::to_string(idx);
+        if (!symloc.attrExists(name) && !symloc.exists(name)) {
+          break;
+        }
+        Symmetry sym;
+        sym.from_hdf5(symloc, name);
+        this->_impl->_syms.push_back(sym);
+        idx++;
+      }
+      if (symmetric) {
+        cytnx_error_msg(idx != qnumdim,
+                        "[ERROR] %d symmetries were found, but second dimension of "
+                        "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
+                        idx, qnumdim);
+      } else {
+        cytnx_error_msg(idx > 0,
+                        "[ERROR] 'degeneracies' and 'quantum_numbers' were not found in HDF5 "
+                        "location, but 'symmetries' exist. The HDF5 data seems corrupt!%s",
+                        "\n");
+        this->_impl->_syms.clear();
+      }
+    } else {
+      cytnx_error_msg(symmetric,
+                      "[ERROR] 'degeneracies' and 'quantum_numbers' exist in HDF5 location, but "
+                      "'symmetries' are missing. The HDF5 data seems corrupt!%s",
+                      "\n");
+      this->_impl->_syms.clear();
+    }
+
+    // dim; from attribute
+    if (location.attrExists("dimension")) {
+      attr = location.openAttribute("dimension");
+      cytnx_uint64 dimension;
+      datatype = attr.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(cytnx_uint64),
+        "[ERROR] 'dimension' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(cytnx_uint64));
+      attr.read(datatype, &dimension);
+      if (symmetric) {
+        cytnx_error_msg(dimension != this->_impl->_dim,
+                        "[ERROR] 'dimension' read from HDF5 file is %d, but the sum of all "
+                        "degeneracies is %d. The HDF5 data seems corrupt!\n",
+                        dimension, this->_impl->_dim);
+      } else {
+        this->_impl->_dim = dimension;
+      }
+    } else {
+      cytnx_error_msg(!symmetric,
+                      "[ERROR] Could not find 'dimension' or 'degeneracies' in HDF5 file. The HDF5 "
+                      "data seems corrupt!%s",
+                      "\n");
+    }
+  }
+
+  void Bond::to_binary(std::ostream &f) const {
     unsigned int IDDs = 666;
     f.write((char *)&IDDs, sizeof(unsigned int));
 
@@ -546,13 +857,12 @@ namespace cytnx {
 
     if (Nsym != 0) {
       for (int j = 0; j < Nsym; j++) {
-        this->_impl->_syms[j]._Save(f);
+        this->_impl->_syms[j].to_binary(f);
       }
     }
   }
 
-  void Bond::_Load(fstream &f) {
-    cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");
+  void Bond::from_binary(std::istream &f) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 666, "[ERROR] the object is not a cytnx Bond!%s", "\n");
@@ -605,7 +915,7 @@ namespace cytnx {
     if (Nsym_in != 0) {
       this->_impl->_syms.resize(Nsym_in);
       for (int j = 0; j < Nsym_in; j++) {
-        this->_impl->_syms[j]._Load(f);
+        this->_impl->_syms[j].from_binary(f);
       }
     }
   }
