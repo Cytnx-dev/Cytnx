@@ -691,6 +691,16 @@ namespace cytnx {
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
   }
 
+  void UniTensor_base::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
+    cytnx_error_msg(
+      true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");
+  }
+
+  void UniTensor_base::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+    cytnx_error_msg(true, "[ERROR] Loading BlockUniTensor from HDF5 is not implemented yet!%s",
+                    "\n");
+  }
+
   void UniTensor_base::to_binary_dispatch(std::ostream &f) const {
     cytnx_error_msg(
       true, "[ERROR] fatal internal, cannot call on an un-initialized UniTensor_base%s", "\n");

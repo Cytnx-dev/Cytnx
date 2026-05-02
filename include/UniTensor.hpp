@@ -447,6 +447,9 @@ namespace cytnx {
     virtual const vec2d<cytnx_uint64> &get_itoi() const;
     virtual vec2d<cytnx_uint64> &get_itoi();
 
+    virtual void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    virtual void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+
     virtual void to_binary_dispatch(std::ostream &f) const;
     virtual void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
@@ -1081,6 +1084,9 @@ namespace cytnx {
       cytnx_warning_msg(true, "[WARNING] group basis will not have any effect on DensUniTensor.%s",
                         "\n");
     }
+
+    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
     void from_binary_dispatch(std::istream &f, const bool restore_device = true);
@@ -1754,6 +1760,9 @@ namespace cytnx {
     cytnx_int32 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int32 &aux);
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
+
+    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
     void from_binary_dispatch(std::istream &f, const bool restore_device = true);
@@ -2548,6 +2557,9 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
+    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+
     void to_binary_dispatch(std::ostream &f) const;
     void from_binary_dispatch(std::istream &f, const bool restore_device = true);
 
@@ -2695,7 +2707,6 @@ namespace cytnx {
     ///@cond
     boost::intrusive_ptr<UniTensor_base> _impl;
     UniTensor() : _impl(new UniTensor_base()){};
-    UniTensor(const std::string name);
     UniTensor(const UniTensor &rhs) { this->_impl = rhs._impl; }
     UniTensor &operator=(const UniTensor &rhs) {
       this->_impl = rhs._impl;
@@ -2761,6 +2772,10 @@ namespace cytnx {
       if (in_labels.size() != 0) this->set_labels(in_labels);
     }
     //@}
+
+    /// @cond
+    void Init(const std::string name);
+    /// @endcond
 
     //@{
     /**

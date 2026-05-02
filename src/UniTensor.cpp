@@ -16,7 +16,7 @@ using namespace std;
 
 namespace cytnx {
 
-  UniTensor::UniTensor(const std::string name) {
+  void UniTensor::Init(const std::string name) {
     if (name == UTenType.getname(UTenType.Block)) {
       boost::intrusive_ptr<UniTensor_base> tmp(new BlockUniTensor);
       this->_impl = tmp;
@@ -198,10 +198,175 @@ namespace cytnx {
   }
 
   void UniTensor::to_hdf5(H5::Group &location, const bool overwrite) const {
-    cytnx_error_msg(true, "[ERROR] Saving UniTensor to HDF5 is not implemented yet!%s", "\n");
+    if (overwrite) {  // delete previous data
+      // delete all entries that could be written by one of the implementations;
+      // remove attributes
+      if (location.attrExists("type")) location.removeAttr("type");
+      if (location.attrExists("diagonal")) location.removeAttr("diagonal");
+      if (location.attrExists("rowrank")) location.removeAttr("rowrank");
+      if (location.attrExists("name")) location.removeAttr("name");
+      if (location.attrExists("directed")) location.removeAttr("directed");
+      // remove datasets
+      if (location.nameExists("labels")) location.unlink("labels");
+      if (location.nameExists("Tensor")) location.unlink("Tensor");
+      // remove groups and its contents recursively
+      if (location.nameExists("bonds")) location.unlink("bonds");
+    }
+
+    H5::DataType datatype;
+    H5::Attribute attr;
+    H5::DataSet dataset;
+    H5::DataSpace dataspace;
+    H5::StrType str_type;
+
+    // type, write as string attribute
+    std::string type = UTenType.getname(this->_impl->uten_type_id);
+    str_type = H5::StrType(H5::PredType::C_S1, type.length() + 1);
+    dataspace = H5::DataSpace(H5S_SCALAR);
+    attr = location.createAttribute("type", str_type, dataspace);
+    attr.write(str_type, type);
+
+    // is_diag, write as attribute only for diagonal tensors
+    if (this->_impl->_is_diag) {
+      datatype = Type.get_hdf5_type(this->_impl->_is_diag);
+      attr = location.createAttribute("diagonal", datatype, H5::DataSpace(H5S_SCALAR));
+      attr.write(H5::PredType::NATIVE_INT, &this->_impl->_is_diag);
+    }
+
+    // rowrank, write as attribute
+    datatype = Type.get_hdf5_type(this->_impl->_rowrank);
+    attr = location.createAttribute("rowrank", datatype, H5::DataSpace(H5S_SCALAR));
+    attr.write(H5::PredType::NATIVE_INT, &this->_impl->_rowrank);
+
+    // name, write as string attribute
+    str_type = H5::StrType(H5::PredType::C_S1, this->_impl->_name.length() + 1);
+    dataspace = H5::DataSpace(H5S_SCALAR);
+    attr = location.createAttribute("name", str_type, dataspace);
+    attr.write(str_type, this->_impl->_name);
+
+    // labels; write as string vector
+    if (!this->_impl->_labels.empty()) {
+      hsize_t vecdims[1] = {this->_impl->_labels.size()};
+      dataspace = H5::DataSpace(1, vecdims);
+      str_type = H5::StrType(H5::PredType::C_S1, H5T_VARIABLE);
+      dataset = location.createDataSet("labels", str_type, dataspace);
+      std::vector<const char *> c_strings;  // H5 needs cstrings
+      std::string symstring;
+      for (const auto &label : this->_impl->_labels) {
+        c_strings.push_back(label.c_str());
+      }
+      dataset.write(c_strings.data(), str_type);
+    }
+
+    // bonds; write in group
+    if (!this->_impl->_bonds.empty()) {
+      H5::Group bonddir = location.createGroup("bonds");
+      for (int i = 0; i < this->_impl->_bonds.size(); i++) {
+        H5::Group bondgroup = bonddir.createGroup("Bond" + std::to_string(i));
+        this->_impl->_bonds[i].to_hdf5(bondgroup, overwrite);
+      }
+    }
+
+    this->_impl->to_hdf5_dispatch(location, overwrite);
   }
+
   void UniTensor::from_hdf5(H5::Group &location, const bool restore_device) {
-    cytnx_error_msg(true, "[ERROR] Loading UniTensor from HDF5 is not implemented yet!%s", "\n");
+    H5::DataType datatype;
+    H5::Attribute attr;
+    H5::StrType str_type;
+    size_t size;
+
+    // type, read from attribute
+    attr = location.openAttribute("type");
+    str_type = attr.getStrType();
+    size = str_type.getSize() - 1;  // remove the null terminator
+    std::string utenname;
+    utenname.resize(size);
+    attr.read(str_type, &utenname[0]);
+    this->Init(utenname);
+
+    // is_diag, read from attribute
+    if (location.attrExists("diagonal")) {
+      H5::Attribute attr = location.openAttribute("diagonal");
+      datatype = attr.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != Type.get_hdf5_type(this->_impl->_is_diag).getSize(),
+        "[ERROR] 'device' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), Type.get_hdf5_type(this->_impl->_is_diag).getSize());
+      attr.read(datatype, &this->_impl->_is_diag);
+    } else {
+      this->_impl->_is_diag = false;
+    }
+
+    // rowrank, read from attribute
+    attr = location.openAttribute("rowrank");
+    datatype = attr.getDataType();
+    cytnx_error_msg(
+      datatype.getSize() != Type.get_hdf5_type(this->_impl->_rowrank).getSize(),
+      "[ERROR] 'rowrank' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+      datatype.getSize(), Type.get_hdf5_type(this->_impl->_rowrank).getSize());
+    attr.read(datatype, &this->_impl->_rowrank);
+
+    // name, read from string attribute
+    if (location.attrExists("name")) {
+      attr = location.openAttribute("name");
+      str_type = attr.getStrType();
+      size = str_type.getSize() - 1;  // remove the null terminator
+      this->_impl->_name.resize(size);
+      attr.read(str_type, &this->_impl->_name[0]);
+    } else {
+      this->_impl->_name.clear();
+    }
+
+    // labels; read from string vector
+    this->_impl->_labels.clear();
+    if (location.exists("labels")) {
+      H5::DataSet dataset = location.openDataSet("labels");
+      H5::DataSpace dataspace = dataset.getSpace();
+      hsize_t dims[1];
+      dataspace.getSimpleExtentDims(dims);
+      // H5T_VARIABLE requires reading into an array of char pointers (char**)
+      H5::StrType str_type(H5::PredType::C_S1, H5T_VARIABLE);
+      std::vector<char *> c_strings(dims[0]);
+      dataset.read(c_strings.data(), str_type);
+      this->_impl->_labels.reserve(dims[0]);
+      for (size_t i = 0; i < dims[0]; ++i) {
+        this->_impl->_labels.push_back(std::string(c_strings[i]));
+      }
+      // free the space of each char* that was allocated in dataset.read()
+      dataset.vlenReclaim(c_strings.data(), str_type, dataspace);
+    }
+
+    // bonds; read from group
+    this->_impl->_bonds.clear();
+    if (location.exists("bonds")) {
+      H5::Group bonddir = location.openGroup("bonds");
+      hsize_t idx = 0;
+      while (true) {
+        std::string name = "Bond" + std::to_string(idx);
+        if (!bonddir.exists(name)) {
+          break;
+        }
+        H5::Group bondgroup = bonddir.openGroup(name);
+        Bond bond;
+        bond.from_hdf5(bondgroup);
+        this->_impl->_bonds.push_back(bond);
+        idx++;
+      }
+      cytnx_error_msg(
+        idx != this->_impl->_labels.size(),
+        "[ERROR] %d bonds were found, but %d labels exist. The HDF5 data seems corrupt!\n", idx,
+        this->_impl->_labels.size());
+    } else {
+      cytnx_error_msg(
+        !this->_impl->_labels.empty(),
+        "[ERROR] %d labels exist, but no bonds were found. The HDF5 data seems corrupt!\n",
+        this->_impl->_labels.size());
+      this->_impl->_bonds.clear();
+    }
+
+    this->_impl->from_hdf5_dispatch(location, restore_device);
+    this->_impl->_is_braket_form = this->_impl->_update_braket();
   }
 
   void UniTensor::to_binary(std::ostream &f) const {

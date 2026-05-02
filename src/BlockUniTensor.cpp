@@ -1582,6 +1582,15 @@ namespace cytnx {
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
+  void BlockUniTensor::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
+    cytnx_error_msg(true, "[ERROR] Saving BlockUniTensor to HDF5 is not implemented yet!%s", "\n");
+  }
+
+  void BlockUniTensor::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+    cytnx_error_msg(true, "[ERROR] Loading BlockUniTensor from HDF5 is not implemented yet!%s",
+                    "\n");
+  }
+
   void BlockUniTensor::to_binary_dispatch(std::ostream &f) const {
     cytnx_uint64 Nblocks = this->_blocks.size();
     f.write((char *)&Nblocks, sizeof(cytnx_uint64));

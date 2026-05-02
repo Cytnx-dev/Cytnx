@@ -2372,6 +2372,16 @@ namespace cytnx {
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
+  void BlockFermionicUniTensor::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
+    cytnx_error_msg(
+      true, "[ERROR] Saving BlockFermionicUniTensor to HDF5 is not implemented yet!%s", "\n");
+  }
+
+  void BlockFermionicUniTensor::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+    cytnx_error_msg(
+      true, "[ERROR] Loading BlockFermionicUniTensor from HDF5 is not implemented yet!%s", "\n");
+  }
+
   void BlockFermionicUniTensor::to_binary_dispatch(std::ostream &f) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; saves signs as well
     cytnx_uint64 Nblocks = this->_blocks.size();
