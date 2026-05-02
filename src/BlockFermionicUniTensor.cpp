@@ -145,7 +145,7 @@ namespace cytnx {
       }
 
     } else {
-      // checking how many blocks are there, and the size:
+      // find the number of blocks and their sizes:
       std::vector<cytnx_uint64> Loc(this->_bonds.size(), 0);
       std::vector<cytnx_int64> tot_qns(
         this->_bonds[0].Nsym());  // use first bond to determine symmetry size
@@ -162,29 +162,22 @@ namespace cytnx {
         // std::cout << "tot_flx: ";
         // cytnx::vec_print_simple(std::cout, tot_qns);
 
-        // if exists:
+        // if total flux is zero -> block exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
           // get size & init block!
-          if (!no_alloc) {
-            // cytnx_uint64 blockNelem = 1;
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-              // blockNelem *= size[i];
-            }
-            this->_blocks.push_back(zeros(size, dtype, device));
-            // blocklens.push_back(blockNelem);
-            // blocksizes.push_back(size);
-            // totblocksize += blockNelem;
-          } else {
-            for (cytnx_int32 i = 0; i < Loc.size(); i++) {
-              size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
-            }
+          for (cytnx_int32 i = 0; i < Loc.size(); i++) {
+            size[i] = this->_bonds[i]._impl->_degs[Loc[i]];
+          }
+          if (no_alloc) {
             this->_blocks.push_back(Tensor(size, dtype, device, false));
+          } else {
+            this->_blocks.push_back(zeros(size, dtype, device));
           }
           // push its loc
           this->_inner_to_outer_idx.push_back(Loc);
         }
 
+        // increment Loc by one or emtpy Loc if last element is reached
         while (Loc.size() != 0) {
           if (Loc.back() == this->_bonds[Loc.size() - 1]._impl->_qnums.size() - 1) {
             Loc.pop_back();
@@ -2112,11 +2105,14 @@ namespace cytnx {
   }
 
   // helper function:
+  // @param[in] locator: indices to check
+  // @param[out] bidx: block index corresponding to the locator
+  // @param[out] loc_in_T: indices in block[bidx] that locator corresponds to
   void BlockFermionicUniTensor::_fx_locate_elem(cytnx_int64 &bidx,
                                                 std::vector<cytnx_uint64> &loc_in_T,
                                                 const std::vector<cytnx_uint64> &locator) const {
     //[21 Aug 2024] This is a copy from BlockUniTensor; error message differs
-    // 1. check if out of range:
+    // 1. check if out of range
     cytnx_error_msg(locator.size() != this->_bonds.size(),
                     "[ERROR] len(locator) does not match the rank of tensor.%s", "\n");
 
@@ -2126,7 +2122,8 @@ namespace cytnx {
         "[ERROR][BlockFermionicUniTensor][elem_exists] locator @index: %d out of range.\n", i);
     }
 
-    // 2. calculate the location is in which qindices:
+    // 2. calculate qindices corresponding to the locator
+    // subtracts the degeneracies from the locator until loc_in_T < degeneracy on that index
     if (this->is_diag()) {
       if (locator[0] != locator[1])
         bidx = -1;
@@ -2373,13 +2370,98 @@ namespace cytnx {
   }
 
   void BlockFermionicUniTensor::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
-    cytnx_error_msg(
-      true, "[ERROR] Saving BlockFermionicUniTensor to HDF5 is not implemented yet!%s", "\n");
+    // blocks; write to group
+    if (!this->_blocks.empty()) {
+      H5::Group dir = location.createGroup("blocks");
+      for (int i = 0; i < this->_blocks.size(); i++) {
+        if (this->_signflip[i]) {
+          Tensor block = -this->_blocks[i];
+          block.to_hdf5(dir, overwrite, "Tensor" + std::to_string(i));
+        } else {
+          this->_blocks[i].to_hdf5(dir, overwrite, "Tensor" + std::to_string(i));
+        }
+      }
+    }
+    // inner_to_outer_idx; write matrix (blocknum x rank)
+    if (!this->_inner_to_outer_idx.empty()) {
+      hsize_t blocknum = this->_inner_to_outer_idx.size();
+      hsize_t rank = this->_bonds.size();
+      std::vector<cytnx_uint64> flat(blocknum * rank);  // flatten vector<vector>
+      for (hsize_t i = 0; i < blocknum; ++i) {
+        std::copy(this->_inner_to_outer_idx[i].begin(), this->_inner_to_outer_idx[i].end(),
+                  flat.begin() + i * blocknum);
+      }
+      hsize_t matdims[2] = {blocknum, rank};
+      H5::DataSpace dataspace(2, matdims);
+      H5::DataType datatype = Type.get_hdf5_type(flat[0]);
+      H5::DataSet dataset = location.createDataSet("block_to_sectors", datatype, dataspace);
+      dataset.write(flat.data(), datatype);
+      // label axes
+      char labels[2][6] = {"block", "bond"};
+      H5::StrType str_type(H5::PredType::C_S1, 6);
+      hsize_t attr_dims[1] = {2};
+      H5::DataSpace attr_space(1, attr_dims);
+      H5::Attribute attr = dataset.createAttribute("axis_labels", str_type, attr_space);
+      attr.write(str_type, labels);
+    }
   }
 
   void BlockFermionicUniTensor::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
-    cytnx_error_msg(
-      true, "[ERROR] Loading BlockFermionicUniTensor from HDF5 is not implemented yet!%s", "\n");
+    this->_is_tag = true;
+    // blocks; read from group
+    this->_blocks.clear();
+    if (location.exists("blocks")) {
+      H5::Group dir = location.openGroup("blocks");
+      hsize_t idx = 0;
+      while (true) {
+        std::string name = "Tensor" + std::to_string(idx);
+        if (!dir.exists(name)) {
+          break;
+        }
+        Tensor block;
+        block.from_hdf5(dir, name, restore_device);
+        this->_blocks.push_back(block);
+        idx++;
+      }
+    }
+    // inner_to_outer_idx; read matrix (blocknum x rank)
+    if (location.exists("block_to_sectors")) {
+      H5::DataSet dataset = location.openDataSet("block_to_sectors");
+      H5::DataSpace dataspace = dataset.getSpace();
+      cytnx_error_msg(dataspace.getSimpleExtentNdims() != 2,
+                      "[ERROR] 'block_to_sectors' should be a two-dimensional array. The HDF5 data "
+                      "seems corrupt!%s",
+                      "\n");
+      hsize_t dims[2];
+      dataspace.getSimpleExtentDims(dims);
+      hsize_t blocknum = dims[0];
+      hsize_t rank = dims[1];
+      cytnx_error_msg(blocknum != this->_blocks.size(),
+                      "[ERROR] %d blocks found, but first dimension of 'block_to_sectors' is %d. "
+                      "The HDF5 data seems corrupt!\n",
+                      this->_blocks.size(), blocknum);
+      cytnx_error_msg(rank != this->_bonds.size(),
+                      "[ERROR] %d bonds found, but second dimension of 'block_to_sectors' is %d. "
+                      "The HDF5 data seems corrupt!\n",
+                      this->_bonds.size(), rank);
+      // Read HDF5 data into a flattened temporary vector
+      std::vector<cytnx_uint64> flat(blocknum * rank);
+      H5::DataType datatype = dataset.getDataType();
+      cytnx_error_msg(
+        datatype.getSize() != sizeof(cytnx_uint64),
+        "[ERROR] 'block_to_sectors' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
+        datatype.getSize(), sizeof(cytnx_uint64));
+      dataset.read(flat.data(), datatype);
+      // Reconstruct the vector of vectors
+      this->_inner_to_outer_idx.assign(blocknum, std::vector<cytnx_uint64>(rank));
+      for (hsize_t i = 0; i < blocknum; ++i) {
+        std::copy(flat.begin() + i * rank, flat.begin() + (i + 1) * rank,
+                  this->_inner_to_outer_idx[i].begin());
+      }
+    } else {
+      this->_inner_to_outer_idx.empty();
+    }
+    this->_signflip = std::vector<bool>(this->_blocks.size(), false);
   }
 
   void BlockFermionicUniTensor::to_binary_dispatch(std::ostream &f) const {

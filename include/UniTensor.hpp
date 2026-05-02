@@ -1292,7 +1292,7 @@ namespace cytnx {
 
       std::vector<cytnx_uint64> inds(indices.begin(), indices.end());
 
-      // find if the indices specify exists!
+      // find if the specified indices exists!
       cytnx_int64 b = -1;
       for (cytnx_uint64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
         if (inds == this->_inner_to_outer_idx[i]) {

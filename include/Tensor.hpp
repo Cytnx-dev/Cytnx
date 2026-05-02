@@ -1356,7 +1356,7 @@ namespace cytnx {
      * @param[in] rhs the added Tensor or scalar.
      */
     template <class T>
-    Tensor Add(const T &rhs) {
+    Tensor Add(const T &rhs) const {
       return *this + rhs;
     }
 
@@ -1376,7 +1376,7 @@ namespace cytnx {
      * @param[in] rhs the subtracted Tensor or scalar.
      */
     template <class T>
-    Tensor Sub(const T &rhs) {
+    Tensor Sub(const T &rhs) const {
       return *this - rhs;
     }
 
@@ -1396,7 +1396,7 @@ namespace cytnx {
      * @param[in] rhs the multiplied Tensor or scalar.
      */
     template <class T>
-    Tensor Mul(const T &rhs) {
+    Tensor Mul(const T &rhs) const {
       return *this * rhs;
     }
 
@@ -1417,7 +1417,7 @@ namespace cytnx {
      * @attension \p rhs cannot be zero.
      */
     template <class T>
-    Tensor Div(const T &rhs) {
+    Tensor Div(const T &rhs) const {
       return *this / rhs;
     }
 
@@ -1439,7 +1439,7 @@ namespace cytnx {
      * @param[in] rhs the compared object.
      */
     template <class T>
-    Tensor Cpr(const T &rhs) {
+    Tensor Cpr(const T &rhs) const {
       return *this == rhs;
     }
 
@@ -1482,7 +1482,7 @@ namespace cytnx {
     // }
 
     template <class T>
-    Tensor Mod(const T &rhs) {
+    Tensor Mod(const T &rhs) const {
       return *this % rhs;
     }
 
@@ -1492,7 +1492,7 @@ namespace cytnx {
      * tensor is \f$A\f$, then the output tensor is \f$-A\f$.
      * @return The negation of the current tensor.
      */
-    Tensor operator-() { return this->Mul(-1.); }
+    Tensor operator-() const { return this->Mul(-1.); }
 
     /**
      * @brief The flatten function.

@@ -209,8 +209,10 @@ namespace cytnx {
       // remove datasets
       if (location.nameExists("labels")) location.unlink("labels");
       if (location.nameExists("Tensor")) location.unlink("Tensor");
+      if (location.nameExists("block_to_sectors")) location.unlink("block_to_sectors");
       // remove groups and its contents recursively
       if (location.nameExists("bonds")) location.unlink("bonds");
+      if (location.nameExists("blocks")) location.unlink("blocks");
     }
 
     H5::DataType datatype;
@@ -260,9 +262,9 @@ namespace cytnx {
 
     // bonds; write in group
     if (!this->_impl->_bonds.empty()) {
-      H5::Group bonddir = location.createGroup("bonds");
+      H5::Group dir = location.createGroup("bonds");
       for (int i = 0; i < this->_impl->_bonds.size(); i++) {
-        H5::Group bondgroup = bonddir.createGroup("Bond" + std::to_string(i));
+        H5::Group bondgroup = dir.createGroup("Bond" + std::to_string(i));
         this->_impl->_bonds[i].to_hdf5(bondgroup, overwrite);
       }
     }
@@ -340,14 +342,14 @@ namespace cytnx {
     // bonds; read from group
     this->_impl->_bonds.clear();
     if (location.exists("bonds")) {
-      H5::Group bonddir = location.openGroup("bonds");
+      H5::Group dir = location.openGroup("bonds");
       hsize_t idx = 0;
       while (true) {
         std::string name = "Bond" + std::to_string(idx);
-        if (!bonddir.exists(name)) {
+        if (!dir.exists(name)) {
           break;
         }
-        H5::Group bondgroup = bonddir.openGroup(name);
+        H5::Group bondgroup = dir.openGroup(name);
         Bond bond;
         bond.from_hdf5(bondgroup);
         this->_impl->_bonds.push_back(bond);
