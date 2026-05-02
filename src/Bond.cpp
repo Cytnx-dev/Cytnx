@@ -603,7 +603,7 @@ namespace cytnx {
     this->Load_(std::filesystem::path(fname), path);
   }
 
-  void Bond::to_hdf5(H5::Group &location, const bool overwrite, const bool save_symmetries) const {
+  void Bond::to_hdf5(H5::Group &location, const bool overwrite) const {
     if (overwrite) {  // delete previous data
       // remove attributes
       if (location.attrExists("dimension")) location.removeAttr("dimension");
@@ -670,27 +670,13 @@ namespace cytnx {
       attr.write(str_type, labels);
 
       // symmetries
-      if (save_symmetries) {
-        // vecdims[1] = { this->_impl->_syms.size() };
-        // dataspace = H5::DataSpace(1, vecdims);
-        // str_type = H5::StrType(H5::PredType::C_S1, H5T_VARIABLE);
-        // dataset = location.createDataSet("symmetries", str_type, dataspace);
-        // // create cstrings
-        // std::vector<const char*> c_strings;
-        // std::string symstring;
-        // for (const auto& s : this->_impl->_syms) {
-        //   symstring = s.getname();
-        //   c_strings.push_back(symstring.c_str());
-        // }
-        // dataset.write(c_strings.data(), str_type);
-        H5::Group symloc = location.createGroup("symmetries");
-        for (int i = 0; i < this->_impl->_syms.size(); i++) {
-          this->_impl->_syms[i].to_hdf5(symloc, overwrite, "Symmetry" + std::to_string(i));
-        }
+      H5::Group symloc = location.createGroup("symmetries");
+      for (int i = 0; i < this->_impl->_syms.size(); i++) {
+        this->_impl->_syms[i].to_hdf5(symloc, overwrite, "Symmetry" + std::to_string(i));
       }
     }
   }
-  void Bond::from_hdf5(H5::Group &location, const std::vector<Symmetry> &syms) {
+  void Bond::from_hdf5(H5::Group &location) {
     H5::DataType datatype;
     H5::Attribute attr;
     H5::DataSet dataset;
@@ -766,49 +752,37 @@ namespace cytnx {
     }
 
     // symmetries
-    if (syms.empty()) {
-      if (location.exists("symmetries")) {
-        H5::Group symloc = location.openGroup("symmetries");
-        this->_impl->_syms.clear();
-        hsize_t idx = 0;
-        while (true) {
-          std::string name = "Symmetry" + std::to_string(idx);
-          if (!symloc.attrExists(name) && !symloc.exists(name)) {
-            break;
-          }
-          Symmetry sym;
-          sym.from_hdf5(symloc, name);
-          this->_impl->_syms.push_back(sym);
-          idx++;
+    if (location.exists("symmetries")) {
+      H5::Group symloc = location.openGroup("symmetries");
+      this->_impl->_syms.clear();
+      hsize_t idx = 0;
+      while (true) {
+        std::string name = "Symmetry" + std::to_string(idx);
+        if (!symloc.attrExists(name) && !symloc.exists(name)) {
+          break;
         }
-        if (symmetric) {
-          cytnx_error_msg(idx != qnumdim,
-                          "[ERROR] %d symmetries were found, but second dimension of "
-                          "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
-                          idx, qnumdim);
-        } else {
-          cytnx_error_msg(idx > 0,
-                          "[ERROR] 'degeneracies' and 'quantum_numbers' were not found in HDF5 "
-                          "location, but 'symmetries' exist. The HDF5 data seems corrupt!%s",
-                          "\n");
-          this->_impl->_syms = {};
-        }
+        Symmetry sym;
+        sym.from_hdf5(symloc, name);
+        this->_impl->_syms.push_back(sym);
+        idx++;
+      }
+      if (symmetric) {
+        cytnx_error_msg(idx != qnumdim,
+                        "[ERROR] %d symmetries were found, but second dimension of "
+                        "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
+                        idx, qnumdim);
       } else {
-        cytnx_error_msg(symmetric,
-                        "[ERROR] 'degeneracies' and 'quantum_numbers' exist in HDF5 location, but "
-                        "'symmetries' are missing. The HDF5 data seems corrupt!%s",
+        cytnx_error_msg(idx > 0,
+                        "[ERROR] 'degeneracies' and 'quantum_numbers' were not found in HDF5 "
+                        "location, but 'symmetries' exist. The HDF5 data seems corrupt!%s",
                         "\n");
+        this->_impl->_syms = {};
       }
     } else {
-      cytnx_error_msg(!symmetric,
-                      "[ERROR] 'degeneracies' and 'quantum_numbers' not found in HDF5 location, "
-                      "but symmetries are passed as arguments.%s",
+      cytnx_error_msg(symmetric,
+                      "[ERROR] 'degeneracies' and 'quantum_numbers' exist in HDF5 location, but "
+                      "'symmetries' are missing. The HDF5 data seems corrupt!%s",
                       "\n");
-      cytnx_error_msg(syms.size() != qnumdim,
-                      "[ERROR] %d symmetries are passed, but second dimension of 'quantum_numbers' "
-                      "is %d. The HDF5 data seems corrupt!\n",
-                      syms.size(), qnumdim);
-      this->_impl->_syms = syms;
     }
 
     // dim; from attribute

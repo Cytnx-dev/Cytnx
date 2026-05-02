@@ -917,23 +917,19 @@ namespace cytnx {
      * @brief Save Bond to HDF5 file
      * @param[in] location the HDF5 group where the Bond will be saved.
      * @param[in] overwrite overwrite previous Bond information in the location.
-     * @param[in] save_symmetries whether to save the symmetry information in the HDF5 file.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const bool overwrite = false,
-                 const bool save_symmetries = true) const;
+    void to_hdf5(H5::Group &location, const bool overwrite = false) const;
     /**
      * @brief Load Bond from HDF5 file (inline)
      * @param[in] location the HDF5 group where the Bond will be loaded from.
-     * @param[in] syms vector containing the Symmetries. Leave emtpy to read the Symmetries from
-     * HDF5
      * @warning This function is only available in C++. Use Load() for loading from file in C++ or
      * Python.
      * @see to_hdf5() const
      */
-    void from_hdf5(H5::Group &location, const std::vector<Symmetry> &syms = {});
+    void from_hdf5(H5::Group &location);
 
     /**
      * @brief Save Bond to binary file
