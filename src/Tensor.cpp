@@ -435,23 +435,32 @@ namespace cytnx {
           ext == ".HDF") {
         // save as HDF5
         H5::H5File h5file;
-        bool overwrite = false;
+        // Enable reuse of space after data is deleted;
+        // Set the strategy: FSM_AGGR is standard for free-space management
+        // Parameters: strategy, persist (true), threshold (default 1: track all free-space
+        // sections)
+        H5::FileCreatPropList fcpl;
+        fcpl.setFileSpaceStrategy(H5F_FSPACE_STRATEGY_FSM_AGGR, true, 1);
+        // Persistent free space requires HDF5 1.10.x format or later
+        H5::FileAccPropList fapl;
+        fapl.setLibverBounds(H5F_LIBVER_V200, H5F_LIBVER_LATEST);
         // open file
+        bool overwrite = false;
         if (mode == 'w') {  // Write new file
-          h5file = H5::H5File(fname, H5F_ACC_TRUNC);
+          h5file = H5::H5File(fname, H5F_ACC_TRUNC, fcpl, fapl);
         } else if (mode == 'x') {  // eXclusive create
-          h5file = H5::H5File(fname, H5F_ACC_EXCL);
+          h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
         } else if (mode == 'a') {  // Append data
           if (std::filesystem::exists(fname))
-            h5file = H5::H5File(fname, H5F_ACC_RDWR);
+            h5file = H5::H5File(fname, H5F_ACC_RDWR, H5::FileCreatPropList::DEFAULT, fapl);
           else
-            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+            h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
         } else if (mode == 'u') {  // Update data
           if (std::filesystem::exists(fname)) {
-            h5file = H5::H5File(fname, H5F_ACC_RDWR);
+            h5file = H5::H5File(fname, H5F_ACC_RDWR, H5::FileCreatPropList::DEFAULT, fapl);
             overwrite = true;
           } else {
-            h5file = H5::H5File(fname, H5F_ACC_EXCL);
+            h5file = H5::H5File(fname, H5F_ACC_EXCL, fcpl, fapl);
           }
         } else {
           cytnx_error_msg(true, "[ERROR] Unknown mode '%c' for writing to HDF5 file.", mode);
