@@ -424,11 +424,33 @@ namespace cytnx {
         case Type::Bool:
           return H5::PredType::NATIVE_HBOOL;
 
+#if H5_VERSION_GE(2, 0, 0)
         case Type::ComplexDouble:
           return H5::DataType(H5Tcopy(H5T_NATIVE_DOUBLE_COMPLEX));
 
         case Type::ComplexFloat:
           return H5::DataType(H5Tcopy(H5T_NATIVE_FLOAT_COMPLEX));
+#else
+        case Type::ComplexDouble: {
+          static const H5::CompType ct = [] {
+            H5::CompType tmp(sizeof(cytnx_complex128));
+            tmp.insertMember("r", 0, H5::PredType::NATIVE_DOUBLE);
+            tmp.insertMember("i", sizeof(double), H5::PredType::NATIVE_DOUBLE);
+            return tmp;
+          }();
+          return ct;
+        }
+
+        case Type::ComplexFloat: {
+          static const H5::CompType ct = [] {
+            H5::CompType tmp(sizeof(cytnx_complex64));
+            tmp.insertMember("r", 0, H5::PredType::NATIVE_FLOAT);
+            tmp.insertMember("i", sizeof(float), H5::PredType::NATIVE_FLOAT);
+            return tmp;
+          }();
+          return ct;
+        }
+#endif
 
         case Type::Void:
           cytnx_error_msg(true, "[ERROR] Void dtype cannot be mapped to HDF5%s", "\n");
@@ -452,9 +474,22 @@ namespace cytnx {
       if (h5_type == H5::PredType::NATIVE_INT16) return Type::Int16;
       if (h5_type == H5::PredType::NATIVE_UINT16) return Type::Uint16;
       if (h5_type == H5::PredType::NATIVE_HBOOL) return Type::Bool;
+#if H5_VERSION_GE(2, 0, 0)
       if (h5_type.getClass() == H5T_COMPLEX) {
         if (h5_type.getSize() == sizeof(cytnx_complex128)) return Type::ComplexDouble;
         if (h5_type.getSize() == sizeof(cytnx_complex64)) return Type::ComplexFloat;
+      }
+#endif
+      if (h5_type.getClass() == H5T_COMPOUND) {  // supporting older versions of HDF5
+        H5::CompType ct(h5_type.getId());
+        if (ct.getNmembers() == 2) {
+          H5::DataType m0 = ct.getMemberDataType(0);
+          H5::DataType m1 = ct.getMemberDataType(1);
+          if (m0 == m1 && m0.getClass() == H5T_FLOAT) {
+            if (ct.getSize() == sizeof(cytnx_complex128)) return Type::ComplexDouble;
+            if (ct.getSize() == sizeof(cytnx_complex64)) return Type::ComplexFloat;
+          }
+        }
       }
       cytnx_error_msg(true, "[ERROR] HDF5 DataType cannot be mapped to Cytnx dtype.%s", "\n");
     }

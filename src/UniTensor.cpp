@@ -81,7 +81,7 @@ namespace cytnx {
         fcpl.setFileSpaceStrategy(H5F_FSPACE_STRATEGY_FSM_AGGR, true, 1);
         // Persistent free space requires HDF5 1.10.x format or later
         H5::FileAccPropList fapl;
-        fapl.setLibverBounds(H5F_LIBVER_V200, H5F_LIBVER_LATEST);
+        fapl.setLibverBounds(H5F_LIBVER_V110, H5F_LIBVER_LATEST);
         // open file
         bool overwrite = false;
         if (mode == 'w') {  // Write new file
