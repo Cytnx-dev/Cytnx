@@ -1286,7 +1286,7 @@ namespace cytnx {
     // is_tag, write as attribute
     H5::DataType datatype = Type.get_hdf5_type(this->_is_tag);
     H5::Attribute attr = location.createAttribute("directed", datatype, H5::DataSpace(H5S_SCALAR));
-    attr.write(H5::PredType::NATIVE_INT, &this->_is_tag);
+    attr.write(datatype, &this->_is_tag);
 
     this->_block.to_hdf5(location, overwrite, "Tensor");
   }

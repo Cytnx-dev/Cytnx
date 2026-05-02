@@ -529,7 +529,8 @@ namespace cytnx {
       } else {  // create binary file
         if (mode == 'x') {
           cytnx_error_msg(std::filesystem::exists(fname),
-                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                          fname.string().c_str());
         } else {
           cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
                           mode);
@@ -542,11 +543,11 @@ namespace cytnx {
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cybd'. "
                         "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
+                        fname.string().c_str());
       if (mode == 'x') {
         cytnx_error_msg(std::filesystem::exists(fnameext),
                         "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
-                        fnameext.c_str());
+                        fnameext.string().c_str());
       } else {
         cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
       }
@@ -584,7 +585,7 @@ namespace cytnx {
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
-                        path.c_str(), fname.c_str());
+                        path.c_str(), fname.string().c_str());
       }
       // read data
       this->from_hdf5(location);
@@ -593,7 +594,7 @@ namespace cytnx {
       fstream f;
       f.open(fname, std::ios::in | std::ios::binary);
       if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
       }
       this->from_binary(f);
       f.close();
@@ -625,7 +626,7 @@ namespace cytnx {
     auto dim = this->_impl->_dim;
     datatype = Type.get_hdf5_type(dim);
     attr = location.createAttribute("dimension", datatype, H5::DataSpace(H5S_SCALAR));
-    attr.write(H5::PredType::NATIVE_INT, &dim);
+    attr.write(datatype, &dim);
 
     // type, write as string
     std::string typestr = bondtype_to_string.at(this->_impl->_type);
@@ -714,7 +715,7 @@ namespace cytnx {
     }
 
     // qnums; read matrix (dim x qnumdim)
-    hsize_t qnumdim;
+    hsize_t qnumdim = 0;
     if (location.exists("quantum_numbers")) {
       cytnx_error_msg(!symmetric,
                       "[ERROR] 'degeneracies' were not found in HDF5 location, but "
@@ -748,7 +749,7 @@ namespace cytnx {
                   this->_impl->_qnums[i].begin());
       }
     } else {
-      this->_impl->_qnums.empty();
+      this->_impl->_qnums.clear();
     }
 
     // symmetries
@@ -776,13 +777,14 @@ namespace cytnx {
                         "[ERROR] 'degeneracies' and 'quantum_numbers' were not found in HDF5 "
                         "location, but 'symmetries' exist. The HDF5 data seems corrupt!%s",
                         "\n");
-        this->_impl->_syms = {};
+        this->_impl->_syms.clear();
       }
     } else {
       cytnx_error_msg(symmetric,
                       "[ERROR] 'degeneracies' and 'quantum_numbers' exist in HDF5 location, but "
                       "'symmetries' are missing. The HDF5 data seems corrupt!%s",
                       "\n");
+      this->_impl->_syms.clear();
     }
 
     // dim; from attribute

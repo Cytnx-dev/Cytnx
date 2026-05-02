@@ -487,7 +487,8 @@ namespace cytnx {
       } else {  // create binary file
         if (mode == 'x') {
           cytnx_error_msg(std::filesystem::exists(fname),
-                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                          fname.string().c_str());
         } else {
           cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
                           mode);
@@ -500,11 +501,11 @@ namespace cytnx {
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cytn'. "
                         "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
+                        fname.string().c_str());
       if (mode == 'x') {
         cytnx_error_msg(std::filesystem::exists(fnameext),
                         "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
-                        fnameext.c_str());
+                        fnameext.string().c_str());
       } else {
         cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
       }
@@ -550,7 +551,7 @@ namespace cytnx {
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
-                        grouppath.c_str(), fname.c_str());
+                        grouppath.c_str(), fname.string().c_str());
       }
       // read data
       this->from_hdf5(location, datasetname, restore_device);
@@ -559,7 +560,7 @@ namespace cytnx {
       fstream f;
       f.open(fname, ios::in | ios::binary);
       if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
       }
       this->from_binary(f, restore_device);
       f.close();
@@ -582,10 +583,10 @@ namespace cytnx {
     H5::DataSet dataset = location.createDataSet(name, datatype, dataspace);
     ten.storage().data_to_hdf5(dataset, datatype);
 
-    if (this->device() != Device.cpu) {
+    int device = this->device();
+    if (device != Device.cpu) {
       H5::Attribute attr =
         dataset.createAttribute("device", H5::PredType::NATIVE_INT, H5::DataSpace(H5S_SCALAR));
-      int device = this->device();
       attr.write(H5::PredType::NATIVE_INT, &device);
     }
   }
@@ -614,6 +615,16 @@ namespace cytnx {
         "[ERROR] 'device' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
         datatype.getSize(), sizeof(int));
       attr.read(datatype, &device);
+  #ifndef UNI_GPU
+      if (device != Device.cpu) {
+        cytnx_warning_msg(true,
+                          "Cytnx was compiled without CPU support, but Tensor in HDF5 file "
+                          "requests to load to GPU with id %d. Loading Tensor to CPU memory "
+                          "instead. Use restore_device=false to disable this message.",
+                          device);
+        device = Device.cpu;
+      }
+  #endif
     }
 
     this->_impl->_storage.data_from_hdf5(dataset, Nelem, dtype, datatype, device);

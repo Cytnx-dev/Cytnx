@@ -146,7 +146,8 @@ namespace cytnx {
       } else {  // create binary file
         if (mode == 'x') {
           cytnx_error_msg(std::filesystem::exists(fname),
-                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                          fname.string().c_str());
         } else {
           cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
                           mode);
@@ -159,11 +160,11 @@ namespace cytnx {
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cyst'. "
                         "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
+                        fname.string().c_str());
       if (mode == 'x') {
         cytnx_error_msg(std::filesystem::exists(fnameext),
                         "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
-                        fnameext.c_str());
+                        fnameext.string().c_str());
       } else {
         cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
       }
@@ -208,7 +209,7 @@ namespace cytnx {
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
-                        grouppath.c_str(), fname.c_str());
+                        grouppath.c_str(), fname.string().c_str());
       }
       // read data
       this->from_hdf5(location, datasetname, restore_device);
@@ -217,7 +218,7 @@ namespace cytnx {
       fstream f;
       f.open(fname, ios::in | ios::binary);
       if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
       }
       this->from_binary(f, restore_device);
       f.close();
@@ -261,6 +262,16 @@ namespace cytnx {
         "[ERROR] 'device' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
         datatype.getSize(), sizeof(int));
       attr.read(datatype, &device);
+#ifndef UNI_GPU
+      if (device != Device.cpu) {
+        cytnx_warning_msg(true,
+                          "Cytnx was compiled without CPU support, but Storage in HDF5 file "
+                          "requests to load to GPU with id %d. Loading Storage to CPU memory "
+                          "instead. Use restore_device=false to disable this message.",
+                          device);
+        device = Device.cpu;
+      }
+#endif
     }
 
     this->data_from_hdf5(dataset, Nelem, dtype, datatype, device);
@@ -301,7 +312,10 @@ namespace cytnx {
                                  cudaMemcpyHostToDevice));
       free(htmp);
 #else
-      cytnx_error_msg(true, "ERROR internal fatal error in Load Storage%s", "\n");
+      cytnx_error_msg(true,
+                      "[ERROR] Trying to load Storage from HDF5 file to the GPU with id %d, but "
+                      "cytnx was compiled without GPU support!\n",
+                      device);
 #endif
     }
   }
@@ -432,7 +446,7 @@ namespace cytnx {
     ifstream jf;
     jf.open(fname, ios::ate | ios::binary);
     if (!jf.is_open()) {
-      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
     }
     Nbytes = jf.tellg();
     jf.close();
@@ -453,7 +467,7 @@ namespace cytnx {
 
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
     }
     out.data_from_binary(f, Nelem, dtype, device);
     f.close();

@@ -307,7 +307,8 @@ namespace cytnx {
       } else {  // create binary file
         if (mode == 'x') {
           cytnx_error_msg(std::filesystem::exists(fname),
-                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                          fname.string().c_str());
         } else {
           cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
                           mode);
@@ -320,11 +321,11 @@ namespace cytnx {
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cysym'. "
                         "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
+                        fname.string().c_str());
       if (mode == 'x') {
         cytnx_error_msg(std::filesystem::exists(fnameext),
                         "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
-                        fnameext.c_str());
+                        fnameext.string().c_str());
       } else {
         cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
       }
@@ -368,7 +369,7 @@ namespace cytnx {
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
-                        grouppath.c_str(), fname.c_str());
+                        grouppath.c_str(), fname.string().c_str());
       }
       // read data
       this->from_hdf5(location, datasetname);
@@ -377,7 +378,7 @@ namespace cytnx {
       fstream f;
       f.open(fname, ios::in | ios::binary);
       if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
       }
       this->from_binary(f);
       f.close();

@@ -2389,7 +2389,7 @@ namespace cytnx {
       std::vector<cytnx_uint64> flat(blocknum * rank);  // flatten vector<vector>
       for (hsize_t i = 0; i < blocknum; ++i) {
         std::copy(this->_inner_to_outer_idx[i].begin(), this->_inner_to_outer_idx[i].end(),
-                  flat.begin() + i * blocknum);
+                  flat.begin() + i * rank);
       }
       hsize_t matdims[2] = {blocknum, rank};
       H5::DataSpace dataspace(2, matdims);
@@ -2459,7 +2459,11 @@ namespace cytnx {
                   this->_inner_to_outer_idx[i].begin());
       }
     } else {
-      this->_inner_to_outer_idx.empty();
+      cytnx_error_msg(
+        !(this->_blocks.empty()),
+        "[ERROR] 'block_to_sectors' not found, but %d blocks exist. The HDF5 data seems corrupt!\n",
+        this->_blocks.size());
+      this->_inner_to_outer_idx.clear();
     }
     this->_signflip = std::vector<bool>(this->_blocks.size(), false);
   }

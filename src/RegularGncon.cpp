@@ -412,9 +412,9 @@ namespace cytnx {
 
     // open file
     std::ifstream infile;
-    infile.open(fname.c_str());
+    infile.open(fname.string().c_str());
     if (!(infile.is_open())) {
-      cytnx_error_msg(true, "[Gncon] Error in opening file \'", fname.c_str(), "\'.\n");
+      cytnx_error_msg(true, "[Gncon] Error in opening file \'", fname.string().c_str(), "\'.\n");
     }
     filename = fname;
 
@@ -493,7 +493,7 @@ namespace cytnx {
     fo.open(std::filesystem::path(fname) += ".net", ios::out | ios::trunc);
     if (!fo.is_open()) {
       cytnx_error_msg(true, "[ERROR][RegularGncon][Savefile] Cannot open/create file:%s\n",
-                      fname.c_str());
+                      fname.string().c_str());
     }
 
     for (int i = 0; i < this->label_arr.size(); i++) {

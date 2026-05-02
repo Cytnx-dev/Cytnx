@@ -121,7 +121,8 @@ namespace cytnx {
       } else {  // create binary file
         if (mode == 'x') {
           cytnx_error_msg(std::filesystem::exists(fname),
-                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.", fname);
+                          "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
+                          fname.string().c_str());
         } else {
           cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.",
                           mode);
@@ -134,11 +135,11 @@ namespace cytnx {
       cytnx_warning_msg(true,
                         "Missing file extension in fname '%s'. I am adding the extension '.cytnx'. "
                         "This is deprecated, please provide the file extension in the future.\n",
-                        fname.c_str());
+                        fname.string().c_str());
       if (mode == 'x') {
         cytnx_error_msg(std::filesystem::exists(fnameext),
                         "[ERROR] File %s already exists. Use mode 'w' to overwrite.",
-                        fnameext.c_str());
+                        fnameext.string().c_str());
       } else {
         cytnx_error_msg(mode != 'w', "[ERROR] Unknown mode '%c' for writing to binary file.", mode);
       }
@@ -178,7 +179,7 @@ namespace cytnx {
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
-                        path.c_str(), fname.c_str());
+                        path.c_str(), fname.string().c_str());
       }
       // read data
       this->from_hdf5(location, restore_device);
@@ -187,7 +188,7 @@ namespace cytnx {
       fstream f;
       f.open(fname, std::ios::in | std::ios::binary);
       if (!f.is_open()) {
-        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
+        cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.string().c_str());
       }
       this->from_binary(f, restore_device);
       f.close();
@@ -232,13 +233,13 @@ namespace cytnx {
     if (this->_impl->_is_diag) {
       datatype = Type.get_hdf5_type(this->_impl->_is_diag);
       attr = location.createAttribute("diagonal", datatype, H5::DataSpace(H5S_SCALAR));
-      attr.write(H5::PredType::NATIVE_INT, &this->_impl->_is_diag);
+      attr.write(datatype, &this->_impl->_is_diag);
     }
 
     // rowrank, write as attribute
     datatype = Type.get_hdf5_type(this->_impl->_rowrank);
     attr = location.createAttribute("rowrank", datatype, H5::DataSpace(H5S_SCALAR));
-    attr.write(H5::PredType::NATIVE_INT, &this->_impl->_rowrank);
+    attr.write(datatype, &this->_impl->_rowrank);
 
     // name, write as string attribute
     str_type = H5::StrType(H5::PredType::C_S1, this->_impl->_name.length() + 1);
@@ -314,8 +315,12 @@ namespace cytnx {
       attr = location.openAttribute("name");
       str_type = attr.getStrType();
       size = str_type.getSize() - 1;  // remove the null terminator
-      this->_impl->_name.resize(size);
-      attr.read(str_type, &this->_impl->_name[0]);
+      if (size > 0) {
+        this->_impl->_name.resize(size);
+        attr.read(str_type, &this->_impl->_name[0]);
+      } else {
+        this->_impl->_name.clear();
+      }
     } else {
       this->_impl->_name.clear();
     }
@@ -458,7 +463,7 @@ namespace cytnx {
     if (len_name != 0) {
       char *cname = (char *)malloc(sizeof(char) * len_name);
       f.read(cname, sizeof(char) * len_name);
-      this->_impl->_name = std::string(cname, len_name);
+      this->_impl->_name = std::string(cname);
       free(cname);
     }
 
