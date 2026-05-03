@@ -23,9 +23,17 @@ max_minos="0.0"
 
 # Expand the probe set with the full transitive runtime dependency closure,
 # since dylibs we link against may in turn load deeper brewed dylibs whose
-# minos is higher than the direct dependencies'.
-mapfile -t transitive_deps < <(brew deps --union "${probe_packages[@]}")
-mapfile -t all_probe_packages < <(printf '%s\n' "${probe_packages[@]}" "${transitive_deps[@]}" | awk 'NF && !seen[$0]++')
+# minos is higher than the direct dependencies'. macOS ships bash 3.2 which
+# lacks `mapfile`, so read into arrays with a while-loop instead.
+transitive_deps=()
+while IFS= read -r dep; do
+  transitive_deps+=("${dep}")
+done < <(brew deps --union "${probe_packages[@]}")
+
+all_probe_packages=()
+while IFS= read -r pkg; do
+  all_probe_packages+=("${pkg}")
+done < <(printf '%s\n' "${probe_packages[@]}" "${transitive_deps[@]}" | awk 'NF && !seen[$0]++')
 
 for pkg in "${all_probe_packages[@]}"; do
   echo "### ${pkg} ###" | tee -a "${report_file}"
