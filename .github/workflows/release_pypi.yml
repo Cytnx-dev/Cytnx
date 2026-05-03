@@ -97,6 +97,10 @@ jobs:
         CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || env.HOST_CCACHE_DIR }}
         CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
         CYTNX_CIBW_ENV_SENTINEL: workflow-env
+        # Force CI host values to take precedence over duplicate TOML keys.
+        # We intentionally override only CI-critical ccache-related variables.
+        CIBW_ENVIRONMENT_LINUX: "CMAKE_C_COMPILER_LAUNCHER=ccache CMAKE_CXX_COMPILER_LAUNCHER=ccache CMAKE_CUDA_COMPILER_LAUNCHER=ccache CCACHE_COMPILERCHECK=content CCACHE_MAXSIZE=1G CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build CYTNX_CIBW_ENV_SENTINEL=workflow-env"
+        CIBW_ENVIRONMENT_MACOS: "CMAKE_C_COMPILER_LAUNCHER=ccache CMAKE_CXX_COMPILER_LAUNCHER=ccache CMAKE_CUDA_COMPILER_LAUNCHER=ccache CCACHE_COMPILERCHECK=content CCACHE_MAXSIZE=1G CCACHE_DIR=${HOME}/.ccache CCACHE_BASEDIR=${PWD} CYTNX_CIBW_ENV_SENTINEL=workflow-env"
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
 
