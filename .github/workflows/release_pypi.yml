@@ -70,12 +70,12 @@ jobs:
         CMAKE_CUDA_COMPILER_LAUNCHER: ccache
         CCACHE_COMPILERCHECK: content
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
-        # Pass environment variables into cibuildwheel build environments
-        # This is only needed on Linux becuase the wheels are built in docker
-        # images only on Linux.
+        # On Linux the wheels build inside a docker image, so the host's
+        # ccache is bind-mounted at /host_ccache. The list of host env vars
+        # forwarded into the container is defined as `environment-pass`
+        # under [tool.cibuildwheel.linux] in pyproject.toml.
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_DIR }}:/host_ccache"
         CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build
-        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_COMPILERCHECK CCACHE_MAXSIZE
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
 
 
