@@ -49,7 +49,11 @@ for pkg in "${all_probe_packages[@]}"; do
           max_minos="${minos}"
         fi
       fi
-    done < <(find "${prefix}/lib" -maxdepth 2 -name "*.dylib" -type f)
+    # -L follows brew's version symlinks (e.g. gcc's lib/gcc/current -> 15)
+    # so dylibs nested under lib/<formula>/<version>/ such as libgfortran,
+    # libquadmath and libgcc_s are picked up. Keep -maxdepth bounded to
+    # guard against symlink-induced recursion.
+    done < <(find -L "${prefix}/lib" -maxdepth 4 -name "*.dylib" -type f)
   fi
   echo | tee -a "${report_file}"
 done
