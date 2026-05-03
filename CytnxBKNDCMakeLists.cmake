@@ -43,18 +43,6 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
     find_package( LAPACK REQUIRED)
     find_package( LAPACKE REQUIRED)
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
-    # When LAPACKE is bundled inside the LAPACK library (e.g. OpenBLAS),
-    # FindLAPACKE copies LAPACK_INCLUDE_DIRS into LAPACKE_INCLUDE_DIRS, but
-    # CMake's stock FindLAPACK never populates LAPACK_INCLUDE_DIRS, so the
-    # header path is empty. Resolve lapacke.h explicitly via find_path so
-    # CMAKE_PREFIX_PATH / CMAKE_INCLUDE_PATH hints are honored.
-    if(NOT LAPACKE_INCLUDE_DIRS)
-      find_path(LAPACKE_INCLUDE_DIR NAMES lapacke.h)
-      if(NOT LAPACKE_INCLUDE_DIR)
-        message(FATAL_ERROR "Could not locate lapacke.h; set CMAKE_PREFIX_PATH or CMAKE_INCLUDE_PATH to the directory containing it.")
-      endif()
-      set(LAPACKE_INCLUDE_DIRS "${LAPACKE_INCLUDE_DIR}")
-    endif()
     target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
     message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )

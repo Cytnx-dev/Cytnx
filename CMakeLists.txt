@@ -12,6 +12,10 @@ cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_AR
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
+# Inria's morse_cmake provides an up-to-date FindLAPACKE (and helpers) that
+# correctly handles LAPACKE bundled inside LAPACK (e.g. OpenBLAS).
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/morse_cmake/modules")
+include(MorseInit)
 message(STATUS ${CMAKE_MODULE_PATH})
 
 set(CMAKE_CXX_STANDARD 20)

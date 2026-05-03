@@ -24,6 +24,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
+        submodules: recursive
 
     # When re-running a PR job, GitHub Actions uses the merge commit created at
     # the time of the original run, not a fresh merge with the latest target branch.
