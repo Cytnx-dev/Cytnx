@@ -58,7 +58,7 @@ result = "{major}.{minor}.{patch}"
 manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
 # Local defaults; CI can override via workflow workflow env / environment-pass variables.
-environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHER = "ccache", CMAKE_CUDA_COMPILER_LAUNCHER = "ccache", CCACHE_DIR = "${CCACHE_DIR:-${PWD}/.ccache}", CCACHE_BASEDIR = "${CCACHE_BASEDIR:-${PWD}}" }
+environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHER = "ccache", CMAKE_CUDA_COMPILER_LAUNCHER = "ccache", CCACHE_DIR = "${PWD}/.ccache", CCACHE_BASEDIR = "${PWD}" }
 
 [tool.cibuildwheel.config-settings]
 "build-dir" = "build"
@@ -66,7 +66,7 @@ environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHE
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
 # Local defaults; CI can override via workflow workflow env / environment-pass variables.
-environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DIR = "${CCACHE_DIR:-/host${PWD}/.ccache}", CCACHE_BASEDIR = "${CCACHE_BASEDIR:-/host${PWD}}" }
+environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
 # Forward host env vars set by the GitHub Actions workflow into the build
 # container so we do not need CIBW_ENVIRONMENT_PASS_LINUX on the workflow side.
 environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR"]
