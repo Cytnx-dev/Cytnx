@@ -81,8 +81,11 @@ jobs:
         # [tool.cibuildwheel.linux] in pyproject.toml. On macOS the build
         # runs directly on the runner, so the same vars point at the host
         # ccache directory and the workflow workspace respectively.
-        CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || format('{0}/.ccache', env.HOME) }}
-        CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || env.GITHUB_WORKSPACE }}
+        # `env.HOME` is not exposed in the expression context; reuse the
+        # HOST_CCACHE_DIR we exported to GITHUB_ENV in the previous step.
+        # `github.workspace` is the runner-side analogue of $PWD.
+        CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || env.HOST_CCACHE_DIR }}
+        CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
 
