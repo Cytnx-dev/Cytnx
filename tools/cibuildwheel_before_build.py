@@ -18,6 +18,10 @@ print('CC:', os.getenv('CC', ''))
 print('CXX:', os.getenv('CXX', ''))
 print('CCACHE_DEBUG:', os.getenv('CCACHE_DEBUG', ''))
 print('CCACHE_LOGFILE:', os.getenv('CCACHE_LOGFILE', ''))
+print('environment_variables_begin')
+for k in sorted(os.environ):
+    print(f'{k}={os.environ[k]}')
+print('environment_variables_end')
 
 for cmd in (
     ['ccache', '--show-config'],
