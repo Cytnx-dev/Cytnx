@@ -49,10 +49,11 @@ jobs:
     - name: Set Ccache Directory
       run: |
         echo "Start building---------------------------------"
-        # HOST_CCACHE_DIR is consumed only by the docker bind-mount source
-        # below; the in-container CCACHE_DIR is set in the Build Wheels
-        # step's env: block (and forwarded via environment-pass).
+        # HOST_CCACHE_DIR is consumed by the docker bind-mount source below.
         echo "HOST_CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
+        # Use shell default-value expansion so callers can predefine these.
+        echo "CCACHE_DIR=${CCACHE_DIR:-${HOME}/.ccache}" >> "$GITHUB_ENV"
+        echo "CCACHE_BASEDIR=${CCACHE_BASEDIR:-${PWD}}" >> "$GITHUB_ENV"
 
     # NOTE: Setup macOS step is temporarily disabled.
     # Deployment target is now computed from Homebrew dylib minos metadata in
@@ -73,7 +74,6 @@ jobs:
         echo "  HOST_CCACHE_DIR=${HOST_CCACHE_DIR}"
         echo "  CCACHE_DIR=${{ runner.os == 'Linux' && '/host_ccache' || env.HOST_CCACHE_DIR }}"
         echo "  CCACHE_BASEDIR=${{ runner.os == 'Linux' && '/project/build' || github.workspace }}"
-        echo "  CYTNX_CIBW_ENV_SENTINEL=workflow-env"
 
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
@@ -94,13 +94,8 @@ jobs:
         # `env.HOME` is not exposed in the expression context; reuse the
         # HOST_CCACHE_DIR we exported to GITHUB_ENV in the previous step.
         # `github.workspace` is the runner-side analogue of $PWD.
-        CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || env.HOST_CCACHE_DIR }}
-        CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
-        CYTNX_CIBW_ENV_SENTINEL: workflow-env
-        # Force CI host values to take precedence over duplicate TOML keys.
-        # We intentionally override only CI-critical ccache-related variables.
-        CIBW_ENVIRONMENT_LINUX: "CMAKE_C_COMPILER_LAUNCHER=ccache CMAKE_CXX_COMPILER_LAUNCHER=ccache CMAKE_CUDA_COMPILER_LAUNCHER=ccache CCACHE_COMPILERCHECK=content CCACHE_MAXSIZE=1G CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build CYTNX_CIBW_ENV_SENTINEL=workflow-env"
-        CIBW_ENVIRONMENT_MACOS: "CMAKE_C_COMPILER_LAUNCHER=ccache CMAKE_CXX_COMPILER_LAUNCHER=ccache CMAKE_CUDA_COMPILER_LAUNCHER=ccache CCACHE_COMPILERCHECK=content CCACHE_MAXSIZE=1G CCACHE_DIR=${HOME}/.ccache CCACHE_BASEDIR=${PWD} CYTNX_CIBW_ENV_SENTINEL=workflow-env"
+        CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || env.CCACHE_DIR }}
+        CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || env.CCACHE_BASEDIR }}
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
 

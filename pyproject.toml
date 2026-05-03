@@ -57,7 +57,7 @@ result = "{major}.{minor}.{patch}"
 [tool.cibuildwheel]
 manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
-# Local defaults; CI can override via workflow CIBW_ENVIRONMENT_* variables.
+# Local defaults; CI can override via workflow workflow env / environment-pass variables.
 environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHER = "ccache", CMAKE_CUDA_COMPILER_LAUNCHER = "ccache", CCACHE_DIR = "${PWD}/.ccache", CCACHE_BASEDIR = "${PWD}" }
 
 [tool.cibuildwheel.config-settings]
@@ -65,14 +65,14 @@ environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHE
 
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
-# Local defaults; CI can override via workflow CIBW_ENVIRONMENT_* variables.
+# Local defaults; CI can override via workflow workflow env / environment-pass variables.
 environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
 # Forward host env vars set by the GitHub Actions workflow into the build
 # container so we do not need CIBW_ENVIRONMENT_PASS_LINUX on the workflow side.
-environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR", "CYTNX_CIBW_ENV_SENTINEL"]
+environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR"]
 
 [tool.cibuildwheel.macos]
 before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
 # `.cibw_macos_deployment_target.txt` is generated in tools/cibuildwheel_before_all_macos.sh.
-# Local defaults; CI can override via workflow CIBW_ENVIRONMENT_* variables.
+# Local defaults; CI can override via workflow workflow env / environment-pass variables.
 environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(python -c 'from pathlib import Path; p=Path(\".cibw_macos_deployment_target.txt\"); print(p.read_text().strip() if p.exists() else \"10.9\")')" }
