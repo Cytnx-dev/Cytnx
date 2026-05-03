@@ -66,6 +66,15 @@ jobs:
     #       echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
     #     fi
 
+    - name: Print CI ccache env source-of-truth
+      run: |
+        echo "CI workflow values (source of truth):"
+        echo "  runner.os=${{ runner.os }}"
+        echo "  HOST_CCACHE_DIR=${HOST_CCACHE_DIR}"
+        echo "  CCACHE_DIR=${{ runner.os == 'Linux' && '/host_ccache' || env.HOST_CCACHE_DIR }}"
+        echo "  CCACHE_BASEDIR=${{ runner.os == 'Linux' && '/project/build' || github.workspace }}"
+        echo "  CYTNX_CIBW_ENV_SENTINEL=workflow-env"
+
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
       env:
@@ -74,6 +83,7 @@ jobs:
         CMAKE_CUDA_COMPILER_LAUNCHER: ccache
         CCACHE_COMPILERCHECK: content
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
+        # CI source of truth for ccache and container paths.
         # On Linux the wheels build inside a docker image; the host's ccache
         # at $HOME/.ccache is bind-mounted as /host_ccache. CCACHE_DIR /
         # CCACHE_BASEDIR below are set to the in-container paths and then
@@ -86,6 +96,7 @@ jobs:
         # `github.workspace` is the runner-side analogue of $PWD.
         CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || env.HOST_CCACHE_DIR }}
         CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || github.workspace }}
+        CYTNX_CIBW_ENV_SENTINEL: workflow-env
         CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
 
