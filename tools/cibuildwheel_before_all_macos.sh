@@ -21,7 +21,13 @@ target_file="${PWD}/.cibw_macos_deployment_target.txt"
 
 max_minos="0.0"
 
-for pkg in "${probe_packages[@]}"; do
+# Expand the probe set with the full transitive runtime dependency closure,
+# since dylibs we link against may in turn load deeper brewed dylibs whose
+# minos is higher than the direct dependencies'.
+mapfile -t transitive_deps < <(brew deps --union "${probe_packages[@]}")
+mapfile -t all_probe_packages < <(printf '%s\n' "${probe_packages[@]}" "${transitive_deps[@]}" | awk 'NF && !seen[$0]++')
+
+for pkg in "${all_probe_packages[@]}"; do
   echo "### ${pkg} ###" | tee -a "${report_file}"
   prefix="$(brew --prefix "${pkg}")"
   if [[ -d "${prefix}/lib" ]]; then
