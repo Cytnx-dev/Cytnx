@@ -16,7 +16,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Mo
 # correctly handles LAPACKE bundled inside LAPACK (e.g. OpenBLAS).
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/morse_cmake/modules")
 include(MorseInit)
-message(STATUS ${CMAKE_MODULE_PATH})
+message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
