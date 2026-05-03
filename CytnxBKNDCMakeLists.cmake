@@ -43,7 +43,8 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
     find_package( LAPACK REQUIRED)
     find_package( LAPACKE REQUIRED)
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
-    set(LAPACKE_INCLUDE_DIRS ${LAPACKE_DIR_FOUND}/include)
+    # Use include dirs resolved by FindLAPACKE instead of overriding with
+    # an internal/non-standard variable.
     target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
     message( STATUS "LAPACK found: ${LAPACK_LIBRARIES}" )
     message( STATUS "LAPACKE Header found: ${LAPACKE_INCLUDE_DIRS}" )

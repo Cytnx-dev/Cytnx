@@ -57,15 +57,17 @@ result = "{major}.{minor}.{patch}"
 [tool.cibuildwheel]
 manylinux-x86_64-image = "manylinux_2_28"
 before-build = "python ./tools/cibuildwheel_before_build.py"
+environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHER = "ccache", CMAKE_CUDA_COMPILER_LAUNCHER = "ccache", CCACHE_DIR = "${PWD}/.ccache", CCACHE_BASEDIR = "${PWD}" }
 
 [tool.cibuildwheel.config-settings]
 "build-dir" = "build"
 
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
-environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CPATH = "/usr/include/openblas", CCACHE_CONFIGPATH = "~/ccache.conf", CCACHE_BASEDIR = "/project/build" }
+environment = { CMAKE_PREFIX_PATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
 
 [tool.cibuildwheel.macos]
-before-all = "brew update; brew install arpack boost ccache libomp openblas"
-environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", CCACHE_CONFIGPATH = "~/ccache.conf" }
+before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
+# `.cibw_macos_deployment_target.txt` is generated in tools/cibuildwheel_before_all_macos.sh.
+environment = { CMAKE_PREFIX_PATH = "$(brew --prefix arpack):$(brew --prefix boost):$(brew --prefix libomp):$(brew --prefix openblas)", PATH = "$(brew --prefix ccache)/libexec:$PATH", MACOSX_DEPLOYMENT_TARGET = "$(cat .cibw_macos_deployment_target.txt 2>/dev/null || echo 14.0)" }
 

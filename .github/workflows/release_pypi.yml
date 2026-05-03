@@ -11,8 +11,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-14, macos-15-intel]
-        # os: [ubuntu-latest]
+        # We intentionally pin specific macOS runners; do not blindly move to
+        # newer images because Homebrew dylib minos can force a higher wheel
+        # deployment target and break delocate compatibility for lower targets.
+        os: [ubuntu-24.04, ubuntu-24.04-arm, macos-14, macos-15-intel]
+        # os: [ubuntu-24.04]
     defaults:
       run:
         shell: bash -l {0}
@@ -45,16 +48,19 @@ jobs:
     - name: Set Ccache Directory
       run: |
         echo "Start building---------------------------------"
-        export CCACHE_DIR="${HOME}/.ccache"
+        echo "CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
 
-    - name: Setup macOS
-      if: matrix.os == 'macos-15-intel' || matrix.os == 'macos-14'
-      run: |
-        if [[ ${{ matrix.os }} == 'macos-15-intel' ]]; then
-          echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> "$GITHUB_ENV"
-        elif [[ ${{ matrix.os }} == 'macos-14' ]]; then
-          echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
-        fi
+    # NOTE: Setup macOS step is temporarily disabled.
+    # Deployment target is now computed from Homebrew dylib minos metadata in
+    # tools/cibuildwheel_before_all_macos.sh and injected via pyproject.toml.
+    # - name: Setup macOS
+    #   if: matrix.os == 'macos-15-intel' || matrix.os == 'macos-14'
+    #   run: |
+    #     if [[ ${{ matrix.os }} == 'macos-15-intel' ]]; then
+    #       echo "MACOSX_DEPLOYMENT_TARGET=15.0" >> "$GITHUB_ENV"
+    #     elif [[ ${{ matrix.os }} == 'macos-14' ]]; then
+    #       echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
+    #     fi
 
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
@@ -62,15 +68,16 @@ jobs:
         CMAKE_C_COMPILER_LAUNCHER: ccache
         CMAKE_CXX_COMPILER_LAUNCHER: ccache
         CMAKE_CUDA_COMPILER_LAUNCHER: ccache
-        # DO NOT enable this line because the script for conda build is not
-        # executed in a interactive shell, and "~" will not be expanded to the
-        # home directory. Export CCACHE_DIR in the run command instead.
-        # CCACHE_DIR: ~/.ccache
+        CCACHE_COMPILERCHECK: content
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
         # Pass environment variables into cibuildwheel build environments
         # This is only needed on Linux becuase the wheels are built in docker
         # images only on Linux.
-        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_MAXSIZE
+        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_DIR }}:/host_ccache"
+        CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build
+        CIBW_ENVIRONMENT_PASS_LINUX: CMAKE_C_COMPILER_LAUNCHER CMAKE_CXX_COMPILER_LAUNCHER CMAKE_CUDA_COMPILER_LAUNCHER CCACHE_COMPILERCHECK CCACHE_MAXSIZE
+        CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
+
 
     - uses: actions/upload-artifact@v4
       with:
