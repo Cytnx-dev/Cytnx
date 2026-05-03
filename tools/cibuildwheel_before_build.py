@@ -14,6 +14,8 @@ print('CMAKE_CXX_COMPILER_LAUNCHER:', os.getenv('CMAKE_CXX_COMPILER_LAUNCHER', '
 print('CCACHE_COMPILERCHECK:', os.getenv('CCACHE_COMPILERCHECK', ''))
 print('CCACHE_BASEDIR:', os.getenv('CCACHE_BASEDIR', ''))
 print('CCACHE_DIR:', os.getenv('CCACHE_DIR', ''))
+print('CC:', os.getenv('CC', ''))
+print('CXX:', os.getenv('CXX', ''))
 print('CCACHE_DEBUG:', os.getenv('CCACHE_DEBUG', ''))
 print('CCACHE_LOGFILE:', os.getenv('CCACHE_LOGFILE', ''))
 
