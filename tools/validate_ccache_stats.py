@@ -33,12 +33,11 @@ if logfile:
     print(f'ccache_logfile={path}')
     if path.exists():
         lines = path.read_text(errors='replace').splitlines()
-        tail = lines[-200:]
-        print(f'ccache_logfile_tail_lines={len(tail)}')
-        print('--- ccache logfile tail (last 200 lines) ---')
-        for line in tail:
+        print(f'ccache_logfile_total_lines={len(lines)}')
+        print('--- begin ccache logfile ---')
+        for line in lines:
             print(line)
-        print('--- end ccache logfile tail ---')
+        print('--- end ccache logfile ---')
     else:
         print(f'ccache logfile not found: {path}')
 else:
