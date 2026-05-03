@@ -71,11 +71,6 @@ jobs:
         CMAKE_CUDA_COMPILER_LAUNCHER: ccache
         CCACHE_COMPILERCHECK: content
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
-        # Probes for the environment-pass experiment — verifies whether
-        # arbitrary host env vars listed in `environment-pass` (pyproject)
-        # actually reach the container.
-        CMAKE_INCLUDE_PATH: /usr/include/openblas
-        CYTNX_ENV_PROBE: hello-from-host
         # On Linux the wheels build inside a docker image, so the host's
         # ccache is bind-mounted at /host_ccache. The list of host env vars
         # forwarded into the container is defined as `environment-pass`
