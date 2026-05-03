@@ -66,6 +66,18 @@ jobs:
     #       echo "MACOSX_DEPLOYMENT_TARGET=14.0" >> "$GITHUB_ENV"
     #     fi
 
+    - name: Debug cibuildwheel env resolution
+      shell: bash
+      run: |
+        set -euxo pipefail
+        echo "runner.os=${{ runner.os }}"
+        echo "github.workspace=${{ github.workspace }}"
+        echo "PWD=${PWD}"
+        echo "HOME=${HOME}"
+        echo "HOST_CCACHE_DIR=${HOST_CCACHE_DIR:-<unset>}"
+        echo "-- CIBW env on runner --"
+        env | sort | grep -E '^(CIBW|CCACHE|CMAKE|CYTNX)_' || true
+
     - name: Build Wheels
       uses: pypa/cibuildwheel@v3.3.0
       env:
@@ -74,6 +86,7 @@ jobs:
         CMAKE_CUDA_COMPILER_LAUNCHER: ccache
         CCACHE_COMPILERCHECK: content
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
+        CYTNX_CIBW_ENV_SENTINEL: workflow-env
         # On Linux the wheels build inside a docker image; the host's ccache
         # at $HOME/.ccache is bind-mounted as /host_ccache. CCACHE_DIR /
         # CCACHE_BASEDIR below are set to the in-container paths and then

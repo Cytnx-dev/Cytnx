@@ -10,3 +10,4 @@ print('CMAKE_CXX_COMPILER_LAUNCHER:', os.getenv('CMAKE_CXX_COMPILER_LAUNCHER', '
 print('CCACHE_COMPILERCHECK:', os.getenv('CCACHE_COMPILERCHECK', ''))
 print('CCACHE_BASEDIR:', os.getenv('CCACHE_BASEDIR', ''))
 print('CCACHE_DIR:', os.getenv('CCACHE_DIR', ''))
+print('CYTNX_CIBW_ENV_SENTINEL:', os.getenv('CYTNX_CIBW_ENV_SENTINEL', ''))
