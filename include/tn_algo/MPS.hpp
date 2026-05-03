@@ -307,6 +307,7 @@ namespace cytnx {
        * @warning HDF5 file format is strongly recommended for compatibility with other libraries,
        * readability, and future-proofing.
        * @see Load()
+       * @warning HDF5 file format is still under development for MPS.
        */
       void Save(const std::filesystem::path &fname, const std::string &path = "/MPS/",
                 const char mode = 'w') const;
@@ -329,6 +330,7 @@ namespace cytnx {
        * @pre The file must be a MPS object which is saved by Save().
        * @note For HDF5 file format, one of the file endings ".h5", ".hdf5", ".H5", ".HDF5", ".hdf"
        * is expected. For binary format, the common file ending for a MPS is ".cymps".
+       * @warning HDF5 file format is still under development for MPS.
        */
       static MPS Load(const std::filesystem::path &fname, const std::string &path = "/MPS/",
                       const bool restore_device = true);

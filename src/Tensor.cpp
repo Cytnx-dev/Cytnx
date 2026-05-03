@@ -597,11 +597,11 @@ namespace cytnx {
     unsigned int dtype = Type.from_hdf5_type(datatype);
     H5::DataSpace dataspace = dataset.getSpace();
     int rank = dataspace.getSimpleExtentNdims();
-    hsize_t dims[rank];
-    dataspace.getSimpleExtentDims(dims);
+    std::vector<hsize_t> dims(rank);
+    dataspace.getSimpleExtentDims(dims.data());
     auto Nelem = dataspace.getSimpleExtentNpoints();
 
-    this->_impl->_shape = std::vector<cytnx_uint64>(dims, dims + rank);
+    this->_impl->_shape = std::vector<cytnx_uint64>(dims.begin(), dims.end());
     this->_impl->_mapper = vec_range(this->_impl->_shape.size());
     this->_impl->_invmapper = this->_impl->_mapper;
     this->_impl->_contiguous = true;  // HDF5 data is always stored in contiguous layout
