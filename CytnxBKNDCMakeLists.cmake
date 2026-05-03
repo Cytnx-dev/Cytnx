@@ -41,25 +41,6 @@ if( NOT (DEFINED BLAS_LIBRARIES AND DEFINED LAPACK_LIBRARIES AND DEFINED LAPACKE
     message(STATUS "BLA_VENDOR: ${BLA_VENDOR}")
     find_package( BLAS REQUIRED)
     find_package( LAPACK REQUIRED)
-    # Morse's FindLAPACKE only probes include, include/lapacke, include/mkl
-    # under its hint roots, so on distros that bury lapacke.h in an
-    # openblas/ subdir (e.g. AlmaLinux openblas-devel ->
-    # /usr/include/openblas/lapacke.h) we need to point LAPACKE_INCDIR at
-    # the right directory before calling find_package(LAPACKE).
-    if(NOT DEFINED LAPACKE_INCDIR AND LAPACK_LIBRARIES)
-      list(GET LAPACK_LIBRARIES 0 _cytnx_first_lapack)
-      get_filename_component(_cytnx_lapack_libdir "${_cytnx_first_lapack}" DIRECTORY)
-      foreach(_cytnx_inc_candidate
-              "${_cytnx_lapack_libdir}/../include/openblas"
-              "${_cytnx_lapack_libdir}/../include/openblas64"
-              "${_cytnx_lapack_libdir}/../include/lapacke"
-              "${_cytnx_lapack_libdir}/../include")
-        if(EXISTS "${_cytnx_inc_candidate}/lapacke.h")
-          get_filename_component(LAPACKE_INCDIR "${_cytnx_inc_candidate}" ABSOLUTE)
-          break()
-        endif()
-      endforeach()
-    endif()
     find_package( LAPACKE REQUIRED)
     target_link_libraries(cytnx PUBLIC ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
     target_include_directories(cytnx PUBLIC ${LAPACKE_INCLUDE_DIRS})
