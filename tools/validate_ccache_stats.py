@@ -1,4 +1,6 @@
 import subprocess
+import os
+from pathlib import Path
 
 raw = subprocess.check_output(['ccache', '--print-stats'], text=True)
 stats = {}
@@ -24,6 +26,23 @@ total = direct + preprocessed
 print(f'cache_hit_direct={direct}')
 print(f'cache_hit_preprocessed={preprocessed}')
 print(f'cache_hit_total={total}')
+
+logfile = os.getenv('CCACHE_LOGFILE', '').strip()
+if logfile:
+    path = Path(logfile)
+    print(f'ccache_logfile={path}')
+    if path.exists():
+        lines = path.read_text(errors='replace').splitlines()
+        tail = lines[-200:]
+        print(f'ccache_logfile_tail_lines={len(tail)}')
+        print('--- ccache logfile tail (last 200 lines) ---')
+        for line in tail:
+            print(line)
+        print('--- end ccache logfile tail ---')
+    else:
+        print(f'ccache logfile not found: {path}')
+else:
+    print('CCACHE_LOGFILE is not set.')
 
 # Reset counters so the next Python-version build observes fresh, per-build stats.
 subprocess.check_call(['ccache', '--zero-stats'])
