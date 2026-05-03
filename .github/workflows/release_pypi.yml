@@ -49,7 +49,10 @@ jobs:
     - name: Set Ccache Directory
       run: |
         echo "Start building---------------------------------"
-        echo "CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
+        # HOST_CCACHE_DIR is consumed only by the docker bind-mount source
+        # below; the in-container CCACHE_DIR is set in the Build Wheels
+        # step's env: block (and forwarded via environment-pass).
+        echo "HOST_CCACHE_DIR=${HOME}/.ccache" >> "$GITHUB_ENV"
 
     # NOTE: Setup macOS step is temporarily disabled.
     # Deployment target is now computed from Homebrew dylib minos metadata in
@@ -71,12 +74,16 @@ jobs:
         CMAKE_CUDA_COMPILER_LAUNCHER: ccache
         CCACHE_COMPILERCHECK: content
         CCACHE_MAXSIZE: 1G  # The limit of actions/cache is 10GB
-        # On Linux the wheels build inside a docker image, so the host's
-        # ccache is bind-mounted at /host_ccache. The list of host env vars
-        # forwarded into the container is defined as `environment-pass`
-        # under [tool.cibuildwheel.linux] in pyproject.toml.
-        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.CCACHE_DIR }}:/host_ccache"
-        CIBW_ENVIRONMENT_LINUX: CCACHE_DIR=/host_ccache CCACHE_BASEDIR=/project/build
+        # On Linux the wheels build inside a docker image; the host's ccache
+        # at $HOME/.ccache is bind-mounted as /host_ccache. CCACHE_DIR /
+        # CCACHE_BASEDIR below are set to the in-container paths and then
+        # forwarded into the container via the environment-pass list under
+        # [tool.cibuildwheel.linux] in pyproject.toml. On macOS the build
+        # runs directly on the runner, so the same vars point at the host
+        # ccache directory and the workflow workspace respectively.
+        CCACHE_DIR: ${{ runner.os == 'Linux' && '/host_ccache' || format('{0}/.ccache', env.HOME) }}
+        CCACHE_BASEDIR: ${{ runner.os == 'Linux' && '/project/build' || env.GITHUB_WORKSPACE }}
+        CIBW_CONTAINER_ENGINE: "docker; create_args: --volume ${{ env.HOST_CCACHE_DIR }}:/host_ccache"
         CIBW_TEST_COMMAND: "python {project}/tools/validate_ccache_stats.py"
 
 

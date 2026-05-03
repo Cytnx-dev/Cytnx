@@ -64,10 +64,10 @@ environment = { CMAKE_C_COMPILER_LAUNCHER = "ccache", CMAKE_CXX_COMPILER_LAUNCHE
 
 [tool.cibuildwheel.linux]
 before-all = "bash ./tools/cibuildwheel_before_all.sh"
-environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}", CYTNX_ENV_PROBE = "hello-from-pyproject" }
+environment = { CMAKE_INCLUDE_PATH = "/usr/include/openblas", CCACHE_DIR = "/host${PWD}/.ccache", CCACHE_BASEDIR = "/host${PWD}" }
 # Forward host env vars set by the GitHub Actions workflow into the build
 # container so we do not need CIBW_ENVIRONMENT_PASS_LINUX on the workflow side.
-environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE"]
+environment-pass = ["CMAKE_C_COMPILER_LAUNCHER", "CMAKE_CXX_COMPILER_LAUNCHER", "CMAKE_CUDA_COMPILER_LAUNCHER", "CCACHE_COMPILERCHECK", "CCACHE_MAXSIZE", "CCACHE_DIR", "CCACHE_BASEDIR"]
 
 [tool.cibuildwheel.macos]
 before-all = "bash ./tools/cibuildwheel_before_all_macos.sh"
