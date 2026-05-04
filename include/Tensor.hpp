@@ -388,7 +388,7 @@ namespace cytnx {
      * @brief Save Tensor to HDF5 file
      * @param[in] location the HDF5 group where the Tensor will be saved.
      * @param[in] overwrite overwrite previous Bond information in the location.
-     * @param[in] name the name of the dataset in the HDF5 file.d in the
+     * @param[in] name the name of the dataset in the HDF5 file.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()

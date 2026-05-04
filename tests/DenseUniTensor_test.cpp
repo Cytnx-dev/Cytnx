@@ -343,13 +343,15 @@ TEST_F(DenseUniTensorTest, dtype_str_uninit) { EXPECT_ANY_THROW(ut_uninit.dtype_
 /*=====test info=====
 describe:test uten_type_str for dense tensor.
 ====================*/
-TEST_F(DenseUniTensorTest, uten_type_str) { EXPECT_EQ(utzero345.uten_type_str(), "Dense"); }
+TEST_F(DenseUniTensorTest, uten_type_str) {
+  EXPECT_EQ(utzero345.uten_type_str(), "DenseUniTensor");
+}
 
 /*=====test info=====
 describe:test uten_type for uninitialized tensor.
 ====================*/
 TEST_F(DenseUniTensorTest, uten_type_str_uninit) {
-  EXPECT_EQ(ut_uninit.uten_type_str(), "Void (un-initialize UniTensor)");
+  EXPECT_EQ(ut_uninit.uten_type_str(), "Void (uninitialized UniTensor)");
 }
 
 TEST_F(DenseUniTensorTest, device_str) { EXPECT_EQ(Spf.device_str(), "cytnx device: CPU"); }
