@@ -610,6 +610,8 @@ namespace cytnx {
       for (int j = 0; j < Nsym_in; j++) {
         this->_impl->_syms[j].from_binary(f);
       }
+    } else {
+      this->_impl->_syms.clear();
     }
   }
 
