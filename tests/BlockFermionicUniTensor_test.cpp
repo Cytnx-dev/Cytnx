@@ -76,6 +76,77 @@ TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {
   EXPECT_EQ(AreNearlyEqUniTensor(res.apply_(), BFUT3.Pow(2.).apply(), tol), true);
 }
 
+/*=====test info=====
+describe:test fermion_twists behavior on tagged fermionic tensors
+====================*/
+TEST_F(BlockFermionicUniTensorTest, FermionTwists) {
+  UniTensor twisted = BFUT5.fermion_twists();
+  UniTensor manual = BFUT5.clone();
+  for (cytnx_int64 idx = manual.rowrank(); idx < manual.rank(); idx++) {
+    if (manual.bonds()[idx].type() != BD_BRA) manual.twist_(idx);
+  }
+  EXPECT_EQ(twisted.signflip(), manual.signflip());
+  EXPECT_TRUE(AreEqUniTensor(twisted.apply_(), manual.apply_()));
+
+  // applying fermion_twists_ twice toggles the same set of signs twice
+  UniTensor twice = BFUT5.clone();
+  twice.fermion_twists_().fermion_twists_();
+  EXPECT_EQ(twice.signflip(), BFUT5.signflip());
+  EXPECT_TRUE(AreEqUniTensor(twice.apply_(), BFUT5.apply()));
+}
+
+/*=====test info=====
+describe:test SVD unitarity and reconstruction for fermionic tensors with mixed in/out legs
+====================*/
+TEST_F(BlockFermionicUniTensorTest, SvdUnitaryAndReconstruction) {
+  const double tol = 1e-10;
+
+  std::vector<UniTensor> svd_out = linalg::Svd_truncate(BFUT5, 10, 0., true, 0);
+  ASSERT_EQ(svd_out.size(), 3);
+  UniTensor S = svd_out[0].set_name("S");
+  UniTensor U = svd_out[1].set_name("U");
+  UniTensor vT = svd_out[2].set_name("vT");
+  UniTensor Udag = U.Dagger().set_name("Udag");
+  Udag.relabel_("_aux_L", "_aux_L_dag");
+  UniTensor vTdag = vT.Dagger().set_name("vTdag");
+  vTdag.relabel_("_aux_R", "_aux_R_dag");
+
+  // Check U^dagger U = I on the auxiliary left space.
+  UniTensor UdagU = Contract(Udag.fermion_twists(), U);
+  UniTensor Iu = 0. * UdagU.clone();  // will be identity matrix
+  auto shape_u = Iu.shape();
+  for (cytnx_uint64 k = 0; k < shape_u[0]; k++) {
+    auto proxy = Iu.at({k, k});
+    proxy = 1.0;
+  }
+  EXPECT_TRUE(AreNearlyEqUniTensor(UdagU.apply(), Iu, tol));
+
+  // Check vT vT^dagger = I on the auxiliary right space.
+  UniTensor vTvTdag = Contract(vT.fermion_twists(), vTdag);
+  UniTensor Iv = 0. * vTvTdag.clone();  // will be identity matrix
+  auto shape_v = Iv.shape();
+  for (cytnx_uint64 k = 0; k < shape_v[0]; k++) {
+    auto proxy = Iv.at({k, k});
+    proxy = 1.0;
+  }
+  EXPECT_TRUE(AreNearlyEqUniTensor(vTvTdag.apply(), Iv, tol));
+
+  // Check U^dagger * BFUT5 * V^dagger = S (where V^dagger is returned as vT).
+  UniTensor Scontr = Contract(Contract(Udag.fermion_twists(), BFUT5.fermion_twists()), vTdag);
+  Scontr.relabel_("_aux_L_dag", "_aux_L");
+  Scontr.relabel_("_aux_R_dag", "_aux_R");
+  Scontr.permute_(S.labels());
+  UniTensor Sref = 0. * Scontr.clone();  // Creating Sref, a dense version of S
+  S.apply_();
+  auto shape_s = Sref.shape();
+  for (cytnx_uint64 k = 0; k < shape_s[0]; k++) {
+    auto pref = Sref.at({k, k});
+    auto ps = S.at({k, k});
+    if (pref.exists() && ps.exists()) pref = Scalar(ps);
+  }
+  EXPECT_TRUE(AreNearlyEqUniTensor(Scontr.apply(), Sref.apply(), tol));
+}
+
 TEST_F(BlockFermionicUniTensorTest, group_basis) {
   auto out = BFUT4.group_basis();
 

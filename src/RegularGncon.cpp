@@ -484,13 +484,13 @@ namespace cytnx {
 
   void RegularGncon::Savefile(const std::string &fname) {
     cytnx_error_msg(this->label_arr.size() == 0,
-                    "[ERROR][RegularGncon][Savefile] cannot save empty Gncon to Gncon file!%s",
+                    "[ERROR][RegularGncon][Savefile] Cannot save empty Gncon to Gncon file!%s",
                     "\n");
 
     fstream fo;
     fo.open(fname + ".net", ios::out | ios::trunc);
     if (!fo.is_open()) {
-      cytnx_error_msg(true, "[ERROR][RegularGncon][Savefile] cannot open/create file:%s\n",
+      cytnx_error_msg(true, "[ERROR][RegularGncon][Savefile] Cannot open/create file:%s\n",
                       fname.c_str());
     }
 
@@ -549,7 +549,7 @@ namespace cytnx {
       idx = this->name2pos.at(name);
     } catch (std::out_of_range) {
       cytnx_error_msg(true,
-                      "[ERROR][RegularGncon][PutUniTensor] cannot find the tensor name: [%s] in "
+                      "[ERROR][RegularGncon][PutUniTensor] Cannot find the tensor name: [%s] in "
                       "current Gncon.\n",
                       name.c_str());
     }
@@ -622,14 +622,14 @@ namespace cytnx {
   UniTensor RegularGncon::Launch(const bool &optimal, const string &contract_order /*default ""*/) {
     // 1. check tensors are all set, and put all unitensor on node for contraction:
     cytnx_error_msg(this->tensors.size() == 0,
-                    "[ERROR][Launch][RegularGncon] cannot launch an un-initialize Gncon.%s", "\n");
+                    "[ERROR][Launch][RegularGncon] Cannot launch an un-initialize Gncon.%s", "\n");
     cytnx_error_msg(this->tensors.size() < 2,
                     "[ERROR][Launch][RegularGncon] Gncon should contain >=2 tensors.%s", "\n");
 
     // check not both optimal=true and contract_order not nullptr
     cytnx_error_msg(
       optimal and contract_order != "",
-      "[ERROR][Launch][RegularGncon] cannot launch with optimal=True and given contract_order.%s",
+      "[ERROR][Launch][RegularGncon] Cannot launch with optimal=True and given contract_order.%s",
       "\n");
     int outleg_lbl = -1;
 

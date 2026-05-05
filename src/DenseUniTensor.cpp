@@ -31,12 +31,12 @@ namespace cytnx {
                       "[ERROR][DenseUniTensor] All bonds must have non symmetries.");
       if (this->_is_tag) {
         cytnx_error_msg(bonds[i].type() == bondType::BD_REG, "%s",
-                        "[ERROR][DenseUniTensor] cannot mix tagged bond with un-tagged bond!%s",
+                        "[ERROR][DenseUniTensor] Cannot mix tagged bond with un-tagged bond!%s",
                         "\n");
         N_ket += cytnx_uint32(bonds[i].type() == bondType::BD_KET);
       } else {
         cytnx_error_msg(bonds[i].type() != bondType::BD_REG, "%s",
-                        "[ERROR][DenseUniTensor] cannot mix tagged bond with un-tagged bond!%s",
+                        "[ERROR][DenseUniTensor] Cannot mix tagged bond with un-tagged bond!%s",
                         "\n");
       }
       cytnx_error_msg(bonds[i].dim() == 0, "%s", "[ERROR] All bonds must have dimension >=1");
@@ -143,7 +143,7 @@ namespace cytnx {
     this->_name = name;
     cytnx_error_msg(
       in_tensor.dtype() == Type.Void,
-      "[ERROR][Init_by_Tensor] cannot init a UniTensor from an un-initialize Tensor.%s", "\n");
+      "[ERROR][Init_by_Tensor] Cannot init a UniTensor from an un-initialize Tensor.%s", "\n");
 
     cytnx_int64 i_rowrank = rowrank;
 
@@ -321,8 +321,10 @@ namespace cytnx {
     std::vector<std::string>::iterator it;
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
-      cytnx_error_msg(it == out_raw->_labels.end(),
-                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
+      cytnx_error_msg(
+        it == out_raw->_labels.end(),
+        "[ERROR][DenseUniTensor][permute] Label '%s' does not exist in UniTensor '%s'.\n",
+        mapper[i].c_str(), this->_name.c_str());
       mapper_u64.push_back(std::distance(out_raw->_labels.begin(), it));
     }
 
@@ -390,8 +392,10 @@ namespace cytnx {
     std::vector<std::string>::iterator it;
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
-      cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
+      cytnx_error_msg(
+        it == this->_labels.end(),
+        "[ERROR][DenseUniTensor][permute_] Label '%s' does not exist in UniTensor '%s'.\n",
+        mapper[i].c_str(), this->_name.c_str());
       mapper_u64.push_back(std::distance(this->_labels.begin(), it));
     }
 
@@ -640,10 +644,77 @@ namespace cytnx {
     free(rlbl);
     free(buffer);
   }
+
+  boost::intrusive_ptr<UniTensor_base> DenseUniTensor::get(const std::vector<Accessor> &accessors) {
+    if (accessors.empty()) return this->clone_meta();
+    DenseUniTensor *out_raw = this->clone_meta();
+    std::vector<cytnx_int64> removed;  // bonds to be removed
+    if (this->_is_diag) {
+      if (accessors.size() == 1) {
+        out_raw->_block = this->_block.get(accessors, removed);
+        if (removed.empty()) {  // change dimension of bonds
+          for (cytnx_int64 idx = out_raw->_bonds.size() - 1; idx >= 0; idx--) {
+            out_raw->_bonds[idx]._impl->_dim = out_raw->_block.shape()[0];
+          }
+        } else {  // erase all bonds
+          out_raw->_is_braket_form = false;
+          out_raw->_is_diag = false;
+          out_raw->_rowrank = 0;
+          out_raw->_labels = std::vector<std::string>();
+          out_raw->_bonds = std::vector<Bond>();
+        }
+      } else {  // convert to non-diagonal UniTensor
+        cytnx_error_msg(accessors.size() > 2,
+                        "[ERROR][DenseUniTensor][get] For diagonal UniTensors, only one or two "
+                        "accessor elements are allowed.%s",
+                        "\n");
+        out_raw->_block = this->_block;
+        out_raw->to_dense_();
+        boost::intrusive_ptr<UniTensor_base> out(out_raw);
+        return out->get(accessors);
+      }
+    } else {  // non-diagonal
+      out_raw->_block = this->_block.get(accessors, removed);
+      for (cytnx_int64 idx = removed.size() - 1; idx >= 0; idx--) {
+        out_raw->_labels.erase(out_raw->_labels.begin() + removed[idx]);
+        out_raw->_bonds.erase(out_raw->_bonds.begin() + removed[idx]);
+        if (removed[idx] < this->_rowrank) out_raw->_rowrank--;
+      }
+      // adapt dimensions on bonds
+      auto dims = out_raw->_block.shape();
+      for (cytnx_int64 idx = 0; idx < out_raw->_bonds.size(); idx++) {
+        out_raw->_bonds[idx]._impl->_dim = dims[idx];
+      }
+      // update_braket
+      if (out_raw->is_tag() && !out_raw->_is_braket_form) {
+        out_raw->_is_braket_form = out_raw->_update_braket();
+      }
+    }
+    return boost::intrusive_ptr<UniTensor_base>(out_raw);
+  }
+
+  void DenseUniTensor::set(const std::vector<Accessor> &accessors, const Tensor &rhs) {
+    if (accessors.empty()) return;
+    if (this->_is_diag) {
+      if (accessors.size() == 1) {
+        this->_block.set(accessors, rhs);
+      } else {  // convert to non-diagonal UniTensor
+        cytnx_error_msg(accessors.size() > 2,
+                        "[ERROR][DenseUniTensor][set] For diagonal UniTensors, only one or two "
+                        "accessor elements are allowed.%s",
+                        "\n");
+        this->to_dense_();
+        this->_block.set(accessors, rhs);
+      }
+    } else {  // non-diagonal
+      this->_block.set(accessors, rhs);
+    }
+  }
+
   void DenseUniTensor::reshape_(const std::vector<cytnx_int64> &new_shape,
                                 const cytnx_uint64 &rowrank) {
     cytnx_error_msg(this->is_tag(),
-                    "[ERROR] cannot reshape a tagged UniTensor. suggestion: use untag() first.%s",
+                    "[ERROR] Cannot reshape a tagged UniTensor. suggestion: use untag() first.%s",
                     "\n");
     cytnx_error_msg(rowrank > new_shape.size(),
                     "[ERROR] rowrank cannot larger than the rank of reshaped UniTensor.%s", "\n");
@@ -667,7 +738,7 @@ namespace cytnx {
   boost::intrusive_ptr<UniTensor_base> DenseUniTensor::reshape(
     const std::vector<cytnx_int64> &new_shape, const cytnx_uint64 &rowrank) {
     cytnx_error_msg(this->is_tag(),
-                    "[ERROR] cannot reshape a tagged UniTensor. suggestion: use untag() first.%s",
+                    "[ERROR] Cannot reshape a tagged UniTensor. suggestion: use untag() first.%s",
                     "\n");
     cytnx_error_msg(rowrank > new_shape.size(),
                     "[ERROR] rowrank cannot larger than the rank of reshaped UniTensor.%s", "\n");
@@ -696,8 +767,10 @@ namespace cytnx {
     // find the index of label:
     for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
-      cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label '%s' not found in current UniTensor\n", indicators[i].c_str());
+      cytnx_error_msg(
+        it == this->_labels.end(),
+        "[ERROR][DenseUniTensor][combineBond] Label '%s' not found in this UniTensor '%s'.\n",
+        indicators[i].c_str(), this->_name.c_str());
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
     this->combineBonds(idx_mapper, force);
@@ -715,7 +788,7 @@ namespace cytnx {
     idx_mapper.reserve(this->rank());
 
     cytnx_error_msg(this->_is_diag,
-                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
+                    "[ERROR] Cannot combineBond on a is_diag=True UniTensor. suggestion: try "
                     "UniTensor.to_dense()/to_dense_() first.%s",
                     "\n");
 
@@ -802,7 +875,7 @@ namespace cytnx {
     std::vector<cytnx_uint64> old_shape = this->shape();
 
     cytnx_error_msg(this->_is_diag,
-                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
+                    "[ERROR] Cannot combineBond on a is_diag=True UniTensor. suggestion: try "
                     "UniTensor.to_dense()/to_dense_() first.%s",
                     "\n");
 
@@ -950,13 +1023,16 @@ namespace cytnx {
     const bool &mv_elem_rhs) {
     // checking :
     cytnx_error_msg(rhs->is_blockform(),
-                    "[ERROR] cannot contract non-symmetry UniTensor with symmetry UniTensor%s",
+                    "[ERROR][DenseUniTensor][contract] Cannot contract non-symmetry UniTensor with "
+                    "symmetry UniTensor%s",
                     "\n");
     cytnx_error_msg(this->is_tag() != rhs->is_tag(),
-                    "[ERROR] cannot contract tagged UniTensor with untagged UniTensor.%s", "\n");
-    // cytnx_error_msg(this->is_diag() != rhs->is_diag(),"[ERROR] cannot contract a diagonal
-    // tensor with non-diagonal tensor. [suggestion:] call UniTensor.to_dense/to_dense_
-    // first%s","\n"); get common labels:
+                    "[ERROR][DenseUniTensor][contract] Cannot contract tagged UniTensor with "
+                    "untagged UniTensor.%s",
+                    "\n");
+    // cytnx_error_msg(this->is_diag() != rhs->is_diag(),"[ERROR][DenseUniTensor][contract] Cannot
+    // contract a diagonal tensor with non-diagonal tensor. [suggestion:] call
+    // UniTensor.to_dense/to_dense_ first%s","\n"); get common labels:
     std::vector<std::string> comm_labels;
     std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_<std::string>(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
@@ -1024,9 +1100,9 @@ namespace cytnx {
       if (this->is_tag()) {
         for (int i = 0; i < comm_idx1.size(); i++)
           cytnx_error_msg(this->_bonds[comm_idx1[i]].type() == rhs->_bonds[comm_idx2[i]].type(),
-                          "[ERROR][DenseUniTensor][contract] cannot contract common label: <%s> @ "
-                          "self bond#%d & rhs bond#%d, BRA-KET mismatch!%s",
-                          this->labels()[comm_idx1[i]].c_str(), comm_idx1[i], comm_idx2[i], "\n");
+                          "[ERROR][DenseUniTensor][contract] A bond with type BRA can only be "
+                          "contracted with type KET. Invalid contraction for label '%s'\n",
+                          this->labels()[comm_idx1[i]].c_str());
       }
 
       // process meta
@@ -1214,10 +1290,11 @@ namespace cytnx {
     cytnx_error_msg(dim < 1, "[ERROR][DenseUniTensor][truncate] dim should be >0.%s", "\n");
     cytnx_uint64 idx;
     auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_label);
-    cytnx_error_msg(it == this->_labels.end(),
-                    "[ERROR][DenseUniTensor][truncate] Error, bond label does not exist in the "
-                    "current label list.%s",
-                    "\n");
+    cytnx_error_msg(
+      it == this->_labels.end(),
+      "[ERROR][DenseUniTensor][truncate] Error, bond label '%s' does not exist in the "
+      "current label list.\n",
+      bond_label.c_str());
     idx = std::distance(this->_labels.begin(), it);
     cytnx_error_msg(
       idx >= this->_labels.size(),
@@ -1284,10 +1361,10 @@ namespace cytnx {
     if (this->is_tag()) {
       cytnx_error_msg(
         rhs->uten_type() != UTenType.Dense,
-        "[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s",
+        "[ERROR][DenseUniTensor] Cannot perform arithmetic with different type of UniTensor!%s",
         "\n");
       cytnx_error_msg(!rhs->is_tag(),
-                      "[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag "
+                      "[ERROR][DenseUniTensor] Cannot perform arithmetic between tag and un-tag "
                       "DenseUniTensor!%s",
                       "\n");
       cytnx_error_msg(rhs->rank() != this->rank(),
@@ -1329,7 +1406,7 @@ namespace cytnx {
   }
   void DenseUniTensor::Add_(const Scalar &rhs) {
     // cout << rhs << endl;
-    //  cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
+    //  cytnx_error_msg(this->is_tag(),"[ERROR] Cannot perform arithmetic on tagged unitensor
     //  L.%s","\n");
     this->_block += rhs;
   }
@@ -1339,10 +1416,10 @@ namespace cytnx {
     if (this->is_tag()) {
       cytnx_error_msg(
         rhs->uten_type() != UTenType.Dense,
-        "[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s",
+        "[ERROR][DenseUniTensor] Cannot perform arithmetic with different type of UniTensor!%s",
         "\n");
       cytnx_error_msg(!rhs->is_tag(),
-                      "[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag "
+                      "[ERROR][DenseUniTensor] Cannot perform arithmetic between tag and un-tag "
                       "DenseUniTensor!%s",
                       "\n");
       cytnx_error_msg(rhs->rank() != this->rank(),
@@ -1383,12 +1460,12 @@ namespace cytnx {
     }
   }
   void DenseUniTensor::Sub_(const Scalar &rhs) {
-    // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
+    // cytnx_error_msg(this->is_tag(),"[ERROR] Cannot perform arithmetic on tagged unitensor
     // L.%s","\n");
     this->_block -= rhs;
   }
   void DenseUniTensor::lSub_(const Scalar &lhs) {
-    // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
+    // cytnx_error_msg(this->is_tag(),"[ERROR] Cannot perform arithmetic on tagged unitensor
     // R.%s","\n");
     this->_block = lhs - this->_block;
   }
@@ -1398,10 +1475,10 @@ namespace cytnx {
     if (this->is_tag()) {
       cytnx_error_msg(
         rhs->uten_type() != UTenType.Dense,
-        "[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s",
+        "[ERROR][DenseUniTensor] Cannot perform arithmetic with different type of UniTensor!%s",
         "\n");
       cytnx_error_msg(!rhs->is_tag(),
-                      "[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag "
+                      "[ERROR][DenseUniTensor] Cannot perform arithmetic between tag and un-tag "
                       "DenseUniTensor!%s",
                       "\n");
       cytnx_error_msg(rhs->rank() != this->rank(),
@@ -1442,7 +1519,7 @@ namespace cytnx {
     }
   }
   void DenseUniTensor::Mul_(const Scalar &rhs) {
-    // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
+    // cytnx_error_msg(this->is_tag(),"[ERROR] Cannot perform arithmetic on tagged unitensor
     // L.%s","\n");
     this->_block *= rhs;
   }
@@ -1452,10 +1529,10 @@ namespace cytnx {
     if (this->is_tag()) {
       cytnx_error_msg(
         rhs->uten_type() != UTenType.Dense,
-        "[ERROR][DenseUniTensor] cannot perform arithmetic with different type of UniTensor!%s",
+        "[ERROR][DenseUniTensor] Cannot perform arithmetic with different type of UniTensor!%s",
         "\n");
       cytnx_error_msg(!rhs->is_tag(),
-                      "[ERROR][DenseUniTensor] cannot perform arithmetic between tag and un-tag "
+                      "[ERROR][DenseUniTensor] Cannot perform arithmetic between tag and un-tag "
                       "DenseUniTensor!%s",
                       "\n");
       cytnx_error_msg(rhs->rank() != this->rank(),
@@ -1484,12 +1561,12 @@ namespace cytnx {
     }
   }
   void DenseUniTensor::Div_(const Scalar &rhs) {
-    // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
+    // cytnx_error_msg(this->is_tag(),"[ERROR] Cannot perform arithmetic on tagged unitensor
     // L.%s","\n");
     this->_block /= rhs;
   }
   void DenseUniTensor::lDiv_(const Scalar &lhs) {
-    // cytnx_error_msg(this->is_tag(),"[ERROR] cannot perform arithmetic on tagged unitensor
+    // cytnx_error_msg(this->is_tag(),"[ERROR] Cannot perform arithmetic on tagged unitensor
     // R.%s","\n");
     this->_block = lhs / this->_block;
   }

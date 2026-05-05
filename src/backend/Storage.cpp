@@ -16,7 +16,7 @@ namespace cytnx {
 
   bool Storage::operator==(const Storage &rhs) {
     cytnx_error_msg(this->dtype() != rhs.dtype(),
-                    "[ERROR] cannot compare two Storage with different type.%s", "\n");
+                    "[ERROR] Cannot compare two Storage with different type.%s", "\n");
     if (this->size() != rhs.size()) return false;
 
     switch (this->dtype()) {
@@ -190,7 +190,7 @@ namespace cytnx {
   }
   Storage Storage::Fromfile(const std::string &fname, const unsigned int &dtype,
                             const cytnx_int64 &count) {
-    cytnx_error_msg(dtype == Type.Void, "[ERROR] cannot have Void dtype.%s", "\n");
+    cytnx_error_msg(dtype == Type.Void, "[ERROR] Cannot have Void dtype.%s", "\n");
     cytnx_error_msg(count == 0, "[ERROR] count cannot be zero!%s", "\n");
 
     Storage out;
