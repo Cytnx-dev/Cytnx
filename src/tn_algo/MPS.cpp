@@ -20,7 +20,7 @@ namespace cytnx {
     void MPS::_Save(std::fstream& f) const {
       cytnx_error_msg(!f.is_open(), "[ERROR][MPS] invalid fstream!.%s", "\n");
       cytnx_error_msg(this->_impl->mps_type_id == MPSType.Void,
-                      "[ERROR][MPS] cannot save an uninitialize MPS.%s", "\n");
+                      "[ERROR][MPS] Cannot save an uninitialize MPS.%s", "\n");
 
       unsigned int IDDs = 109;
       f.write((char*)&IDDs, sizeof(unsigned int));

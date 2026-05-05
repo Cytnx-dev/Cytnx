@@ -76,7 +76,7 @@ class linalg_Test : public ::testing::Test {
     H.put_block(A, 0);
     H.put_block(B, 1);
     H.put_block(C, 2);
-    H.set_labels({"a", "b"});
+    H.relabel_({"a", "b"});
 
     invertable3x3cd.at({0, 0}) = 2;  // just to make it invertable.
     invertable3x3cd_ut.at({0, 0}) = 2;  // just to make it invertable.

@@ -130,13 +130,13 @@ namespace cytnx {
         Qlbl.push_back(newlbl);
         outT[0].reshape_(Qshape);
         outCyT[0] = UniTensor(outT[0], false, Qshape.size() - 1);
-        outCyT[0].set_labels(Qlbl);
+        outCyT[0].relabel_(Qlbl);
 
         // D
         outCyT[1] = UniTensor(outT[1], true, 1);
-        // outCyT[1].set_labels({newlbl, newlbl - 1});
+        // outCyT[1].relabel_({newlbl, newlbl - 1});
         // newlbl -= 1;
-        outCyT[1].set_labels({newlbl, string("_aux_R")});
+        outCyT[1].relabel_({newlbl, string("_aux_R")});
         newlbl = outCyT[1].labels().back();
 
         // R
@@ -150,7 +150,7 @@ namespace cytnx {
         }
         outT[2].reshape_(Qshape);
         outCyT[2] = UniTensor(outT[2], false, 1);
-        outCyT[2].set_labels(Qlbl);
+        outCyT[2].relabel_(Qlbl);
 
         // tau
         if (is_tau) {

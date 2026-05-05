@@ -372,7 +372,7 @@ namespace SvdTest {
     const UniTensor& U = Tout[1];
     const UniTensor& V = Tout[2];
     auto UD = U.Dagger();
-    UD.set_labels({"0", "1", "9"});
+    UD.relabel_({"0", "1", "9"});
     UD.permute_({2, 0, 1}, 1);
     auto UUD = Contract(U, UD);
   }

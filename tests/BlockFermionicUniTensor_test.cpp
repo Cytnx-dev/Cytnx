@@ -76,6 +76,77 @@ TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {
   EXPECT_EQ(AreNearlyEqUniTensor(res.apply_(), BFUT3.Pow(2.).apply(), tol), true);
 }
 
+/*=====test info=====
+describe:test fermion_twists behavior on tagged fermionic tensors
+====================*/
+TEST_F(BlockFermionicUniTensorTest, FermionTwists) {
+  UniTensor twisted = BFUT5.fermion_twists();
+  UniTensor manual = BFUT5.clone();
+  for (cytnx_int64 idx = manual.rowrank(); idx < manual.rank(); idx++) {
+    if (manual.bonds()[idx].type() != BD_BRA) manual.twist_(idx);
+  }
+  EXPECT_EQ(twisted.signflip(), manual.signflip());
+  EXPECT_TRUE(AreEqUniTensor(twisted.apply_(), manual.apply_()));
+
+  // applying fermion_twists_ twice toggles the same set of signs twice
+  UniTensor twice = BFUT5.clone();
+  twice.fermion_twists_().fermion_twists_();
+  EXPECT_EQ(twice.signflip(), BFUT5.signflip());
+  EXPECT_TRUE(AreEqUniTensor(twice.apply_(), BFUT5.apply()));
+}
+
+/*=====test info=====
+describe:test SVD unitarity and reconstruction for fermionic tensors with mixed in/out legs
+====================*/
+TEST_F(BlockFermionicUniTensorTest, SvdUnitaryAndReconstruction) {
+  const double tol = 1e-10;
+
+  std::vector<UniTensor> svd_out = linalg::Svd_truncate(BFUT5, 10, 0., true, 0);
+  ASSERT_EQ(svd_out.size(), 3);
+  UniTensor S = svd_out[0].set_name("S");
+  UniTensor U = svd_out[1].set_name("U");
+  UniTensor vT = svd_out[2].set_name("vT");
+  UniTensor Udag = U.Dagger().set_name("Udag");
+  Udag.relabel_("_aux_L", "_aux_L_dag");
+  UniTensor vTdag = vT.Dagger().set_name("vTdag");
+  vTdag.relabel_("_aux_R", "_aux_R_dag");
+
+  // Check U^dagger U = I on the auxiliary left space.
+  UniTensor UdagU = Contract(Udag.fermion_twists(), U);
+  UniTensor Iu = 0. * UdagU.clone();  // will be identity matrix
+  auto shape_u = Iu.shape();
+  for (cytnx_uint64 k = 0; k < shape_u[0]; k++) {
+    auto proxy = Iu.at({k, k});
+    proxy = 1.0;
+  }
+  EXPECT_TRUE(AreNearlyEqUniTensor(UdagU.apply(), Iu, tol));
+
+  // Check vT vT^dagger = I on the auxiliary right space.
+  UniTensor vTvTdag = Contract(vT.fermion_twists(), vTdag);
+  UniTensor Iv = 0. * vTvTdag.clone();  // will be identity matrix
+  auto shape_v = Iv.shape();
+  for (cytnx_uint64 k = 0; k < shape_v[0]; k++) {
+    auto proxy = Iv.at({k, k});
+    proxy = 1.0;
+  }
+  EXPECT_TRUE(AreNearlyEqUniTensor(vTvTdag.apply(), Iv, tol));
+
+  // Check U^dagger * BFUT5 * V^dagger = S (where V^dagger is returned as vT).
+  UniTensor Scontr = Contract(Contract(Udag.fermion_twists(), BFUT5.fermion_twists()), vTdag);
+  Scontr.relabel_("_aux_L_dag", "_aux_L");
+  Scontr.relabel_("_aux_R_dag", "_aux_R");
+  Scontr.permute_(S.labels());
+  UniTensor Sref = 0. * Scontr.clone();  // Creating Sref, a dense version of S
+  S.apply_();
+  auto shape_s = Sref.shape();
+  for (cytnx_uint64 k = 0; k < shape_s[0]; k++) {
+    auto pref = Sref.at({k, k});
+    auto ps = S.at({k, k});
+    if (pref.exists() && ps.exists()) pref = Scalar(ps);
+  }
+  EXPECT_TRUE(AreNearlyEqUniTensor(Scontr.apply(), Sref.apply(), tol));
+}
+
 TEST_F(BlockFermionicUniTensorTest, group_basis) {
   auto out = BFUT4.group_basis();
 
@@ -197,4 +268,52 @@ TEST_F(BlockFermionicUniTensorTest, SaveLoad) {
   EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_save));
   UniTensor BFUT1_loaded_char_load = BFUT1_loaded_char_load.Load(fname);
   EXPECT_TRUE(AreEqUniTensor(BFUT1, BFUT1_loaded_char_load));
+}
+
+/*=====test info=====
+describe:test Transpose and Transpose_ for BlockFermionicUniTensor:
+  rowrank is updated, index order is reversed, bonds are redirected,
+  and element values are preserved without sign flips.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, Transpose) {
+  // BFUT1: rank=3, rowrank=2, bonds=[BD_IN(a), BD_IN(b), BD_OUT(c)], shape=(2,2,4)
+  EXPECT_EQ(BFUT1.rowrank(), 2);
+
+  auto tmp = BFUT1.Transpose();
+
+  // rowrank must be rank - old_rowrank = 3 - 2 = 1
+  EXPECT_EQ(tmp.rowrank(), 1);
+  EXPECT_EQ(tmp.rank(), 3);
+
+  // index order is reversed: new [0,1,2] = old [c,b,a]
+  EXPECT_EQ(tmp.labels()[0], "c");
+  EXPECT_EQ(tmp.labels()[1], "b");
+  EXPECT_EQ(tmp.labels()[2], "a");
+
+  // bonds are redirected: old BD_OUT(c)->BD_IN, old BD_IN(b)->BD_OUT, old BD_IN(a)->BD_OUT
+  EXPECT_EQ(tmp.bonds()[0].type(), BD_IN);
+  EXPECT_EQ(tmp.bonds()[1].type(), BD_OUT);
+  EXPECT_EQ(tmp.bonds()[2].type(), BD_OUT);
+
+  // element at old {a,b,c} appears at new {c,b,a}; no sign flips
+  EXPECT_DOUBLE_EQ(double(tmp.at({0, 0, 0}).real()), 1.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({1, 0, 0}).real()), 2.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({2, 1, 0}).real()), 3.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({3, 1, 0}).real()), 4.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({2, 0, 1}).real()), 5.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({3, 0, 1}).real()), 6.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({0, 1, 1}).real()), 7.);
+  EXPECT_DOUBLE_EQ(double(tmp.at({1, 1, 1}).real()), 8.);
+
+  // Transpose is an involution: T.Transpose().Transpose() == T
+  EXPECT_TRUE(AreEqUniTensor(tmp.Transpose(), BFUT1));
+
+  // in-place version must match
+  auto tmp2 = BFUT1.clone();
+  tmp2.Transpose_();
+  EXPECT_EQ(tmp2.rowrank(), 1);
+  EXPECT_EQ(tmp2.bonds()[0].type(), BD_IN);
+  EXPECT_EQ(tmp2.bonds()[1].type(), BD_OUT);
+  EXPECT_EQ(tmp2.bonds()[2].type(), BD_OUT);
+  EXPECT_TRUE(AreEqUniTensor(tmp2, tmp));
 }

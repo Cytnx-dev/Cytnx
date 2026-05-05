@@ -31,7 +31,7 @@ namespace Lanczos_Exp_Ut_Test {
      *         | |         +          | |       "vol"--A--"vor"  | |         +          | |
      *         |_|--"vol" "po" "vor"--|_|                        |_|---------A----------|_|
      *
-     * Then relabels ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
+     * Then relabel ["vil", "pi", "vir"] -> ["vol", "po", "vor"]
      *
      * "vil":virtual in bond left
      * "po":physical out bond
@@ -39,7 +39,7 @@ namespace Lanczos_Exp_Ut_Test {
     UniTensor matvec(const UniTensor& A) override {
       auto tmp = Contract(EffH, A);
       tmp.permute_({"vil", "pi", "vir"}, 1);
-      tmp.relabels_(A.labels());
+      tmp.relabel_(A.labels());
       return tmp;
     }
   };
@@ -116,7 +116,7 @@ namespace Lanczos_Exp_Ut_Test {
     double low = -1.0, high = 1.0;
     UniTensor A = UniTensor({Bond(D), Bond(d), Bond(D)}, {}, -1, dtype, device)
                     .set_name("A")
-                    .relabels_({"vol", "po", "vor"})
+                    .relabel_({"vol", "po", "vor"})
                     .set_rowrank_(1);
     if (Type.is_float(A.dtype())) {
       random::uniform_(A, low, high, 0);
@@ -139,7 +139,7 @@ namespace Lanczos_Exp_Ut_Test {
     std::vector<std::string> heff_labels = {"vil", "pi", "vir", "vol", "po", "vor"};
     UniTensor HEff = UniTensor(bonds, {}, -1, dtype, device)
                        .set_name("HEff")
-                       .relabels_(heff_labels)
+                       .relabel_(heff_labels)
                        .set_rowrank(bonds.size() / 2);
     auto HEff_shape = HEff.shape();
     auto in_dim = 1;
@@ -157,11 +157,11 @@ namespace Lanczos_Exp_Ut_Test {
     // Let H can be converge in ExpM
     auto eigs = HEff_mat.Eigh();
     auto e = UniTensor(eigs[0], true) * 0.01;
-    e.set_labels({"a", "b"});
+    e.relabel_({"a", "b"});
     auto v = UniTensor(eigs[1]);
-    v.set_labels({"i", "a"});
+    v.relabel_({"i", "a"});
     auto vt = UniTensor(linalg::InvM(v.get_block()));
-    vt.set_labels({"b", "j"});
+    vt.relabel_({"b", "j"});
     HEff_mat = Contract(Contract(e, v), vt).get_block();
 
     // HEff_mat = linalg::Matmul(HEff_mat, HEff_mat.permute({1, 0}).Conj());  // positive definete
@@ -183,7 +183,7 @@ namespace Lanczos_Exp_Ut_Test {
       linalg::ExpM((tau * expH.get_block()).reshape(in_dim, out_dim)).reshape(HEff_shape));
     auto ans = Contract(expH, Tin);
     ans.permute_({"vil", "pi", "vir"}, 1);
-    ans.relabels_(Tin.labels());
+    ans.relabel_(Tin.labels());
     ans = Contract(expH, Tin);
     return ans;
   }

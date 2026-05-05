@@ -905,7 +905,7 @@ namespace cytnx {
       if (Lt.dtype() > Rt.dtype()) {
         out = out.astype(Rt.dtype());
       }
-      out.set_labels(vec_range<std::string>(Lt.rank()));
+      out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       out.Sub_(Rt);
@@ -915,7 +915,7 @@ namespace cytnx {
 
     template <class T>
     cytnx::UniTensor Sub(const T &lc, const cytnx::UniTensor &Rt) {
-      // cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
+      // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
       UniTensor out;
@@ -948,7 +948,7 @@ namespace cytnx {
 
     template <class T>
     cytnx::UniTensor Sub(const cytnx::UniTensor &Lt, const T &rc) {
-      // cytnx_error_msg(Lt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
+      // cytnx_error_msg(Lt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
       UniTensor out;
@@ -959,7 +959,7 @@ namespace cytnx {
         out = Lt.clone();
         out.Sub_(rc);
       }
-      // out.set_labels(vec_range<cytnx_int64>(Lt.rank()));
+      // out.relabel_(vec_range<cytnx_int64>(Lt.rank()));
       out.set_name("");
 
       return out;

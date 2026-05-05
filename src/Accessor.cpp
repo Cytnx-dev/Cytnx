@@ -86,7 +86,7 @@ namespace cytnx {
 
   // range constr.
   Accessor::Accessor(const cytnx_int64 &min, const cytnx_int64 &max, const cytnx_int64 &step) {
-    cytnx_error_msg(step == 0, "[ERROR] cannot have step=0 for range%s", "\n");
+    cytnx_error_msg(step == 0, "[ERROR] Cannot have step=0 for range%s", "\n");
     this->_type = Accessor::Range;
     this->_min = min;
     this->_max = max;
@@ -112,6 +112,14 @@ namespace cytnx {
     this->_step = rhs._step;
     this->idx_list = rhs.idx_list;
     return *this;
+  }
+
+  // check equality
+  bool Accessor::operator==(const Accessor &rhs) const {
+    bool out = (this->_type == rhs._type) && (this->_min == rhs._min) && (this->_max == rhs._max) &&
+               (this->loc == rhs.loc) && (this->_step == rhs._step) &&
+               (this->idx_list == rhs.idx_list);
+    return out;
   }
 
   // get the real len from dim

@@ -440,41 +440,41 @@ namespace cytnx {
     }
 
     cytnx_float to_cytnx_float() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_double to_cytnx_double() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_complex64 to_cytnx_complex64() const { return cytnx_complex64(this->_elem); };
     cytnx_complex128 to_cytnx_complex128() const { return this->_elem; };
     cytnx_int64 to_cytnx_int64() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_uint64 to_cytnx_uint64() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_int32 to_cytnx_int32() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_uint32 to_cytnx_uint32() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_int16 to_cytnx_int16() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_uint16 to_cytnx_uint16() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
     cytnx_bool to_cytnx_bool() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex128 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex128 to real%s", "\n");
       return 0;
     };
 
@@ -693,41 +693,41 @@ namespace cytnx {
     }
 
     cytnx_float to_cytnx_float() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_double to_cytnx_double() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_complex64 to_cytnx_complex64() const { return this->_elem; };
     cytnx_complex128 to_cytnx_complex128() const { return cytnx_complex128(this->_elem); };
     cytnx_int64 to_cytnx_int64() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_uint64 to_cytnx_uint64() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_int32 to_cytnx_int32() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_uint32 to_cytnx_uint32() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_int16 to_cytnx_int16() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_uint16 to_cytnx_uint16() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
     cytnx_bool to_cytnx_bool() const {
-      cytnx_error_msg(true, "[ERROR] cannot cast complex64 to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot cast complex64 to real%s", "\n");
       return 0;
     };
 
@@ -957,10 +957,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -974,10 +974,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_double(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -991,10 +991,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_double(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -1008,10 +1008,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_double(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -1025,10 +1025,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_double(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -1132,10 +1132,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -1149,10 +1149,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_float(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -1166,10 +1166,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_float(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -1183,10 +1183,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_float(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -1200,10 +1200,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_float(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -1308,10 +1308,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -1325,10 +1325,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_int64(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -1342,10 +1342,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_int64(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -1359,10 +1359,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_int64(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -1376,10 +1376,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_int64(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -1482,10 +1482,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -1499,10 +1499,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_uint64(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -1516,10 +1516,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint64(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -1533,10 +1533,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_uint64(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -1550,10 +1550,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_uint64(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -1656,10 +1656,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -1673,10 +1673,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_int32(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -1690,10 +1690,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_int32(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -1707,10 +1707,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_int32(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -1724,10 +1724,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_int32(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -1831,10 +1831,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -1848,10 +1848,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_uint32(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -1865,10 +1865,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint32(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -1882,10 +1882,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_uint32(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -1899,10 +1899,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_uint32(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -2005,10 +2005,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -2022,10 +2022,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_int16(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -2039,10 +2039,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_int16(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -2056,10 +2056,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_int16(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -2073,10 +2073,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_int16(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -2179,10 +2179,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -2196,10 +2196,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_uint16(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -2213,10 +2213,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_uint16(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -2230,10 +2230,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_uint16(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -2247,10 +2247,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_uint16(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }
@@ -2353,10 +2353,10 @@ namespace cytnx {
     cytnx_bool to_cytnx_bool() const { return this->_elem; };
 
     void assign_selftype(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot convert complex to real%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot convert complex to real%s", "\n");
     }
     void assign_selftype(const cytnx_double &c) { this->_elem = c; }
     void assign_selftype(const cytnx_float &c) { this->_elem = c; }
@@ -2370,10 +2370,10 @@ namespace cytnx {
 
     void iadd(const Scalar_base *c) { this->_elem += c->to_cytnx_bool(); }
     void iadd(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void iadd(const cytnx_double &c) { this->_elem += c; }
     void iadd(const cytnx_float &c) { this->_elem += c; }
@@ -2387,10 +2387,10 @@ namespace cytnx {
 
     void isub(const Scalar_base *c) { this->_elem -= c->to_cytnx_bool(); }
     void isub(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void isub(const cytnx_double &c) { this->_elem -= c; }
     void isub(const cytnx_float &c) { this->_elem -= c; }
@@ -2404,10 +2404,10 @@ namespace cytnx {
 
     void imul(const Scalar_base *c) { this->_elem *= c->to_cytnx_bool(); }
     void imul(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void imul(const cytnx_double &c) { this->_elem *= c; }
     void imul(const cytnx_float &c) { this->_elem *= c; }
@@ -2421,10 +2421,10 @@ namespace cytnx {
 
     void idiv(const Scalar_base *c) { this->_elem /= c->to_cytnx_bool(); }
     void idiv(const cytnx_complex128 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_complex64 &c) {
-      cytnx_error_msg(true, "[ERROR] cannot operate real and complex values%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot operate real and complex values%s", "\n");
     }
     void idiv(const cytnx_double &c) { this->_elem /= c; }
     void idiv(const cytnx_float &c) { this->_elem /= c; }

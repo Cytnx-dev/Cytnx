@@ -148,7 +148,7 @@ namespace cytnx {
         Cy_U.Init(outT[t], false, Tin.rowrank());
         vector<string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
         labelU.push_back(Cy_S.labels()[0]);
-        Cy_U.set_labels(labelU);
+        Cy_U.relabel_(labelU);
         t++;  // U
       }
       if (compute_uv) {
@@ -165,7 +165,7 @@ namespace cytnx {
         // memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() -
         // 1));
         std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
-        Cy_vT.set_labels(labelvT);
+        Cy_vT.relabel_(labelvT);
         t++;  // vT
       }
       // if tag, then update  the tagging informations
