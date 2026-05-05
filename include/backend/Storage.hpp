@@ -260,7 +260,7 @@ namespace cytnx {
     void PrintElem_byShape(std::ostream &os, const std::vector<cytnx_uint64> &shape,
                            const std::vector<cytnx_uint64> &mapper = {});
 
-    void print_elems() const { this->print(std::cout); }
+    void print_elems() const { this->print_elems(std::cout); }
     /// @cond
     void print_elems(std::ostream &os) const;
     /// @endcond
