@@ -10,6 +10,9 @@ source:
 
 build:
   number: 0
+  channels:
+    - conda-forge
+    - defaults
   script_env:
     # Refer to : https://github.com/ccache/ccache/discussions/821#discussioncomment-521209
     - CCACHE_NOHASHDIR=1
@@ -39,6 +42,7 @@ requirements:
     - boost >=1.82.0
     - blas=*=mkl            # [x86]
     - blas=*=openblas       # [not x86]
+    - hdf5 >=1.10.0
     - gtest
     - arpack
   run:
@@ -49,6 +53,7 @@ requirements:
     - graphviz
     - blas=*=mkl            # [x86]
     - blas=*=openblas       # [not x86]
+    - hdf5 >=1.10.0
     - beartype
     - arpack
 
