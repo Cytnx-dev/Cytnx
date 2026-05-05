@@ -7,7 +7,7 @@ import numpy as np
 
 # uT = cytnx.UniTensor.arange(2*3*4, name="tensor uT")
 # uT.reshape_(2,3,4);
-# uT.relabels_(["a","b","c"])
+# uT.relabel_(["a","b","c"])
 
 # T = cytnx.random.uniform([4,4], low=-1., high=1.)
 # print(T)
