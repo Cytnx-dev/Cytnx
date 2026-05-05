@@ -262,7 +262,7 @@ namespace cytnx {
 
     void print_elems() const { this->print(std::cout); }
     /// @cond
-    void print_elems(std::ostream &os = std::cout) const;
+    void print_elems(std::ostream &os) const;
     /// @endcond
 
     ~StorageImplementation();
@@ -773,7 +773,7 @@ namespace cytnx {
     @brief print the info of the Storage, including the device, dtype and size.
 
     */
-    void print_info() const { this->_impl->print(std::cout); }
+    void print_info() const { this->_impl->print_info(std::cout); }
     /// @cond
     void print_info(std::ostream &os) const { this->_impl->print(os); }
     // this is a redundant function

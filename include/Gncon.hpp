@@ -184,9 +184,9 @@ namespace cytnx {
       boost::intrusive_ptr<Gncon_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os) const;
-    void Savefile(const std::string &fname);
-    ~FermionGncon();
+    void PrintNet(std::ostream &os) const {};
+    void Savefile(const std::string &fname){};
+    ~FermionGncon(){};
   };
 
   ///@endcond

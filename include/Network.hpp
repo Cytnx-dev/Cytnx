@@ -247,9 +247,9 @@ namespace cytnx {
       boost::intrusive_ptr<Network_base> out(tmp);
       return out;
     }
-    void PrintNet(std::ostream &os = std::cout) const;
-    void Savefile(const std::string &fname);
-    ~FermionNetwork();
+    void PrintNet(std::ostream &os = std::cout) const {};
+    void Savefile(const std::string &fname){};
+    ~FermionNetwork(){};
   };
 
   ///@endcond

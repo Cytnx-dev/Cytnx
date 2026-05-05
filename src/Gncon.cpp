@@ -20,7 +20,7 @@ namespace cytnx {
 
   GnconType_class NtType;
 
-  std::ostream& operator<<(std::ostream& os, const Gncon& in) const {
+  std::ostream& operator<<(std::ostream& os, const Gncon& in) {
     in._impl->PrintNet(os);
     return os;
   }

@@ -172,6 +172,7 @@ namespace cytnx {
       if (this->_step < 0) {
         for (cytnx_int64 i = r_min; i >= r_max; i += this->_step) {
           pos.push_back(i);
+          len++;
         }
       } else {
         for (cytnx_int64 i = r_min; i <= r_max; i += this->_step) {
