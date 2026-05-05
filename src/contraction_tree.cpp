@@ -44,7 +44,7 @@ namespace cytnx {
                     "\n");
     cytnx_error_msg(
       tokens.size() == 0,
-      "[ERROR][ContractionTree][build_contraction_order_by_tokens] cannot have empty tokens.%s",
+      "[ERROR][ContractionTree][build_contraction_order_by_tokens] Cannot have empty tokens.%s",
       "\n");
 
     stack<std::shared_ptr<Node>> stk;
