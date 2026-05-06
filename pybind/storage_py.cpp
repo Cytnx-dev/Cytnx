@@ -282,7 +282,7 @@ void storage_binding(py::module &m) {
       [](const std::string &fname, const unsigned int &dtype, const cytnx_int64 &count,
          const int device) { return cytnx::Storage::Fromfile(fname, dtype, count, device); },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = (cytnx_int64)(-1),
-      py::arg("device") = cytnx::Device.cpu)
+      py::arg("device") = (int)cytnx::Device.cpu)
 
     .def(
       py::pickle(

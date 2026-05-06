@@ -322,9 +322,9 @@ void tensor_binding(py::module &m) {
     .def_static(
       "Fromfile",
       [](const std::string &fname, const unsigned int &dtype, const cytnx::cytnx_int64 &count,
-         const bool restore_device) { return cytnx::Tensor::Load(fname, restore_device); },
+         const int device) { return cytnx::Tensor::Fromfile(fname, dtype, count, device); },
       py::arg("fname"), py::arg("dtype"), py::arg("count") = cytnx::cytnx_int64(-1),
-      py::arg("restore_device") = true)
+      py::arg("device") = (int)cytnx::Device.cpu)
 
     .def_static(
       "from_storage",
