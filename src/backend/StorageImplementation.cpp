@@ -816,7 +816,6 @@ namespace cytnx {
 
   template <typename DType>
   StorageImplementation<DType>::~StorageImplementation() {
-    // std::cout << "delet" << endl;
     if (this->data() != NULL) {
       if (this->device() == Device.cpu) {
         free(this->data());

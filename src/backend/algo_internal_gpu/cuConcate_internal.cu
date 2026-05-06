@@ -19,7 +19,6 @@ namespace cytnx {
         checkCudaErrors(
           cudaMemcpy(out_ptr + offs, ins[i], ElemSize * lens[i], cudaMemcpyDeviceToDevice));
         offs += ElemSize * lens[i];
-        // std::cout << ElemSize*lens[i] << std::endl;
       }
     }
 
