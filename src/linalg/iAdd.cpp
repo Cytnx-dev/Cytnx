@@ -18,8 +18,6 @@ namespace cytnx {
                         "Rt rank: [%d] %s",
                         Lt.shape().size(), Rt.shape().size(), "\n");
       }
-
-      // std::cout << "iadd entry" << std::endl;
       Storage nulls;
 
       Tensor R;

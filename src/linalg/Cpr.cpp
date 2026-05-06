@@ -15,7 +15,6 @@ namespace cytnx {
                       "[Cpr] error, the two tensor does not have the same shape.%s", "\n");
       cytnx_error_msg(Lt.device() != Rt.device(),
                       "[Cpr] error, two tensor cannot on different devices.%s", "\n");
-      // std::cout << "g1 Cpr" << std::endl;
       Tensor out(Lt.shape(), Type.Bool, Lt.device());
 
       // if contiguous, then no need to calculate the mappers

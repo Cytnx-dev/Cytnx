@@ -70,9 +70,7 @@ namespace cytnx {
 
   //==========================
   void Storage_base::Init(const unsigned long long &len_in, const int &device,
-                          const bool &init_zero) {
-    // cout << "Base.init" << endl;
-  }
+                          const bool &init_zero) {}
 
   Storage_base::Storage_base(const unsigned long long &len_in, const int &device,
                              const bool &init_zero) {
@@ -105,7 +103,6 @@ namespace cytnx {
       if (utils_internal::uii.cuElemCast[this->dtype()][dtype] == NULL) {
         cytnx_error_msg(1, "[ERROR] not support type with dtype=%d", dtype);
       } else {
-        // std::cout << this->device() << std::endl;
         utils_internal::uii.cuElemCast[this->dtype()][dtype](this, out, this->size(),
                                                              this->device());
       }
@@ -217,9 +214,6 @@ namespace cytnx {
       else
         new_accu *= shape[i];
     }
-    // std::cout << c_offj << std::endl;
-    // std::cout << new_offj << std::endl;
-    // std::cout << TotalElem << std::endl;
     if (this->device() == Device.cpu) {
       utils_internal::uii.GetElems_conti_ii[this->dtype()](out->data(), this->data(), c_offj,
                                                            new_offj, locators, TotalElem, Nunit);
@@ -252,8 +246,6 @@ namespace cytnx {
     }
     cytnx_error_msg(this->device() != out->device(),
                     "[ERROR] Cannot GetElem_byShape between different device.%s", "\n");
-
-    // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < len.size(); i++) TotalElem *= len[i];
@@ -309,7 +301,6 @@ namespace cytnx {
 
     cytnx_error_msg(this->device() != in->device(),
                     "[ERROR] Cannot SetElem_byShape between different device.%s", "\n");
-    // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < len.size(); i++) TotalElem *= len[i];
@@ -367,12 +358,8 @@ namespace cytnx {
                                         const std::vector<std::vector<cytnx_uint64>> &locators,
                                         const cytnx_uint64 &Nunit, const bool &is_scalar) {
     // plan: we assume in is contiguous for now!
-    //
-
     cytnx_error_msg(this->device() != in->device(),
                     "[ERROR] Cannot SetElem_byShape_v2 between different device.%s", "\n");
-
-    // std::cout <<"=====" << len.size() << " " << locators.size() << std::endl;
     // create new instance:
     cytnx_uint64 TotalElem = 1;
     for (cytnx_uint32 i = 0; i < locators.size(); i++) {
