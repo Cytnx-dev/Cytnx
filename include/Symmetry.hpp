@@ -105,7 +105,7 @@ namespace cytnx {
     void Init(const int &n) {
       this->stype_id = SymmetryType::U;
       this->n = n;
-      if (n != 1) cytnx_error_msg(1, "%s", "[ERROR] U1Symmetry should set n = 1");
+      if (n != 1) cytnx_error_msg(true, "%s", "[ERROR] U1Symmetry should set n = 1");
     }
     boost::intrusive_ptr<Symmetry_base> clone() {
       boost::intrusive_ptr<Symmetry_base> out(new U1Symmetry(this->n));
@@ -131,7 +131,7 @@ namespace cytnx {
     void Init(const int &n) {
       this->stype_id = SymmetryType::Z;
       this->n = n;
-      if (n <= 1) cytnx_error_msg(1, "%s", "[ERROR] ZnSymmetry can only have n > 1");
+      if (n <= 1) cytnx_error_msg(true, "%s", "[ERROR] ZnSymmetry can only have n > 1");
     }
     boost::intrusive_ptr<Symmetry_base> clone() {
       boost::intrusive_ptr<Symmetry_base> out(new ZnSymmetry(this->n));
@@ -226,7 +226,7 @@ namespace cytnx {
         boost::intrusive_ptr<Symmetry_base> tmp(new FermionNumberSymmetry());
         this->_impl = tmp;
       } else {
-        cytnx_error_msg(1, "%s", "[ERROR] invalid symmetry type.");
+        cytnx_error_msg(true, "%s", "[ERROR] invalid symmetry type.");
       }
     }
     Symmetry &operator=(const Symmetry &rhs) {

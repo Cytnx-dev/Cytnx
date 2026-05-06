@@ -392,7 +392,7 @@ namespace cytnx {
         for (int i = 0; i < TN_names.size(); i++) {
           cout << "        " << TN_names[i] << endl;
         }
-        cytnx_error_msg(true, "%s", "\n");
+        cytnx_error_msg(true, "[ERROR] TNs appeared in ORDER line, but are not defined.%s", "\n");
       }
 
     }  // check all RN.
@@ -430,7 +430,10 @@ namespace cytnx {
       cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
       for (int i = 0; i < TOUT_labels.size(); i++) cout << TOUT_labels[i] << " ";
       cout << endl;
-      cytnx_error_msg(true, "%s", "\n");
+      cytnx_error_msg(true,
+                      "[ERROR][Network][Contract--planning] The TOUT contains labels that does not "
+                      "match with the delcartion from TNs%s",
+                      "\n");
     }
 
     // put tensor:
@@ -555,7 +558,7 @@ namespace cytnx {
         for (int i = 0; i < TN_names.size(); i++) {
           cout << "        " << TN_names[i] << endl;
         }
-        cytnx_error_msg(true, "%s", "\n");
+        cytnx_error_msg(true, "[ERROR] TNs appeared in ORDER line, but are not defined.%s", "\n");
       }
     }  // check all RN.
 
@@ -591,7 +594,10 @@ namespace cytnx {
       cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
       for (int i = 0; i < TOUT_labels.size(); i++) cout << TOUT_labels[i] << " ";
       cout << endl;
-      cytnx_error_msg(true, "%s", "\n");
+      cytnx_error_msg(true,
+                      "[ERROR][Network][Fromfile] The TOUT contains labels that does not match  "
+                      "with the delcartion from TNs.%s",
+                      "\n");
     }
 
     // maintain TOUT leg position
@@ -1174,7 +1180,7 @@ namespace cytnx {
         for (int i = 0; i < TN_names.size(); i++) {
           cout << "        " << TN_names[i] << endl;
         }
-        cytnx_error_msg(true, "%s", "\n");
+        cytnx_error_msg(true, "[ERROR] TNs appeared in ORDER line, but are not defined.%s", "\n");
       }
     }  // check all RN.
 
@@ -1228,7 +1234,10 @@ namespace cytnx {
         cout << "  > The TOUT [rank" << TOUT_labels.size() << "] specified is:";
         for (int i = 0; i < TOUT_labels.size(); i++) cout << TOUT_labels[i] << " ";
         cout << endl;
-        cytnx_error_msg(true, "%s", "\n");
+        cytnx_error_msg(true,
+                        "[ERROR][Network][Fromfile] The TOUT contains labels that does not match "
+                        "with the delcartion from TNs.%s",
+                        "\n");
       }
     }
 

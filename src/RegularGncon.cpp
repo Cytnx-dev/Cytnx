@@ -389,7 +389,7 @@ namespace cytnx {
         for (int i = 0; i < TN_names.size(); i++) {
           cout << "        " << TN_names[i] << endl;
         }
-        cytnx_error_msg(true, "%s", "\n");
+        cytnx_error_msg(true, "[ERROR] TNs appeared in ORDER line, but are not defined.%s", "\n");
       }
     }  // check all RN.
     // print_gn(this->table, this->names, this->name2pos);

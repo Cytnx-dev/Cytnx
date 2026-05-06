@@ -121,7 +121,7 @@ namespace cytnx {
         cytnx_error_msg(typeid(T) != typeid(cytnx_bool), "%s",
                         "[ERROR _Init_byptr_safe type not match]");
       } else {
-        cytnx_error_msg(1, "[FATAL] ERROR%s", "\n");
+        cytnx_error_msg(true, "[FATAL] ERROR%s", "\n");
       }
 
       this->_Init_byptr((void *)rawptr, len_in);
@@ -870,7 +870,7 @@ namespace cytnx {
     void _from_vector(const std::vector<T> &vin, const int device = -1) {
       // auto dispatch:
       // check:
-      cytnx_error_msg(1, "[FATAL] ERROR unsupport type%s", "\n");
+      cytnx_error_msg(true, "[FATAL] ERROR unsupport type%s", "\n");
       // this->_impl->Init(vin.size(),device);
       // memcpy(this->_impl->data(),&vin[0],sizeof(T)*vin.size());
     }
