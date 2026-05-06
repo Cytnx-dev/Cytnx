@@ -224,7 +224,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
 #endif
       }
     }
@@ -277,7 +277,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
         return nullptr;
 #endif
       }
@@ -543,7 +543,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
 #endif
       }
     }
@@ -633,7 +633,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
         return nullptr;
 #endif
       }
@@ -674,7 +674,7 @@ namespace cytnx {
 #else
         cytnx_error_msg(
           true, "[ERROR][Internal][Storage.to_] The Storage is on GPU but without CUDA support.%s",
-          "n");
+          "\n");
         return nullptr;
 #endif
       }
