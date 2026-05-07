@@ -1,25 +1,19 @@
 import os
 import pathlib
+import subprocess
 import sys
 
-import packaging.tags
-tag = f'cp{sys.version_info.major}{sys.version_info.minor}'
+for key in sorted(os.environ):
+    print(f'{key}={os.environ[key]}')
 
-ccache_config_path = os.getenv('CCACHE_CONFIGPATH')
+logfile = os.getenv('CCACHE_LOGFILE', '')
+if logfile:
+    pathlib.Path(logfile).parent.mkdir(parents=True, exist_ok=True)
 
-# Expand ~ to actual home directory
-ccache_config_path = os.path.expanduser(ccache_config_path)
-if not ccache_config_path:
-    raise RuntimeError('The CCACHE_CONFIGPATH environment variable must be set.')
-
-print("ccache_config_path:", ccache_config_path)
-print("ccache_config_path:", pathlib.Path(ccache_config_path).absolute())
-
-
-wheel_tag = str(next(packaging.tags.sys_tags()))
-print("wheel_tag:", wheel_tag)
-
-with open(ccache_config_path, 'w') as f:
-    f.writelines([
-        f'base_dir = /project/build/{wheel_tag}'
-    ])
+proc = subprocess.run(['ccache', '--show-config'], capture_output=True, text=True)
+if proc.stdout:
+    print(proc.stdout, end='')
+if proc.returncode != 0:
+    if proc.stderr:
+        print(proc.stderr, file=sys.stderr, end='')
+    raise SystemExit(proc.returncode)
