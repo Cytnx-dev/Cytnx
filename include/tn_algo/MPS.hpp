@@ -78,7 +78,7 @@ namespace cytnx {
       virtual void S_mvright();
 
       virtual void to_binary_dispatch(std::ostream &f);
-      virtual void from_binary_dispatch(std::istream &f, const bool restore_device = true);
+      virtual void from_binary_dispatch(std::istream &f, bool restore_device = true);
     };
 
     // finite size:
@@ -120,7 +120,7 @@ namespace cytnx {
       }
 
       void to_binary_dispatch(std::ostream &f);
-      void from_binary_dispatch(std::istream &f, const bool restore_device = true);
+      void from_binary_dispatch(std::istream &f, bool restore_device = true);
     };
 
     // infinite size:
@@ -164,7 +164,7 @@ namespace cytnx {
       }
       Scalar norm() const;
       void to_binary_dispatch(std::ostream &f);
-      void from_binary_dispatch(std::istream &f, const bool restore_device = true);
+      void from_binary_dispatch(std::istream &f, bool restore_device = true);
     };
     ///@endcond
 
@@ -333,13 +333,13 @@ namespace cytnx {
        * @warning HDF5 file format is still under development for MPS.
        */
       static MPS Load(const std::filesystem::path &fname, const std::string &path = "/MPS/",
-                      const bool restore_device = true);
+                      bool restore_device = true);
       /**
        * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
        * restore_device)
        */
       static MPS Load(const char *fname, const std::string &path = "/MPS/",
-                      const bool restore_device = true);
+                      bool restore_device = true);
 
       /**
        * @brief Load MPS from file and overwrite current instance
@@ -347,26 +347,28 @@ namespace cytnx {
        * @see Load()
        */
       void Load_(const std::filesystem::path &fname, const std::string &path = "/MPS/",
-                 const bool restore_device = true);
+                 bool restore_device = true);
       /**
        * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
        * restore_device)
        */
-      void Load_(const char *fname, const std::string &path = "/MPS/",
-                 const bool restore_device = true);
+      void Load_(const char *fname, const std::string &path = "/MPS/", bool restore_device = true);
 
       /**
        * @brief Save MPS to HDF5 file
-       * @param[in] location the HDF5 group where the MPS will be saved.
-       * @param[in] overwrite overwrite previous Bond information in the location.
+       * @param[in] location the HDF5 parent group.
+       * @param[in] name the subgroup in which the MPS will be saved.
+       * @param[in] overwrite overwrite previous MPS information in the location.
        * @warning This function is only available in C++. Use Save() for saving to file in C++ or
        * Python.
        * @see from_hdf5()
        */
-      void to_hdf5(H5::Group &location, const bool overwrite = false) const;
+      void to_hdf5(H5::Group &location, const std::string &name = "MPS",
+                   const bool overwrite = false) const;
       /**
        * @brief Load MPS from HDF5 file (inline)
-       * @param[in] location the HDF5 group where the MPS will be loaded from.
+       * @param[in] location the HDF5 parent group.
+       * @param[in] name the subgroup from which the MPS will be loaded.
        * @param[in] restore_device whether to try restoring the device on which the data is stored;
        * if false, the data will be kept on the CPU. Use .to_() to move it to the target device
        * after loading.
@@ -374,7 +376,8 @@ namespace cytnx {
        * Python.
        * @see to_hdf5()
        */
-      void from_hdf5(H5::Group &location, const bool restore_device = true);
+      void from_hdf5(H5::Group &location, const std::string &name = "MPS",
+                     bool restore_device = true);
 
       /**
        * @brief Save MPS to binary file
@@ -394,7 +397,7 @@ namespace cytnx {
        * file format. Use Load() for loading from file in C++ or Python.
        * @see to_binary()
        */
-      void from_binary(std::istream &f, const bool restore_device = true);
+      void from_binary(std::istream &f, bool restore_device = true);
     };
 
     std::ostream &operator<<(std::ostream &os, const MPS &in);

@@ -568,14 +568,13 @@ namespace cytnx {
      * expected. For binary format, the common file ending for a Storage is ".cyst".
      */
     static cytnx::Storage Load(const std::filesystem::path &fname,
-                               const std::string &path = "/Storage",
-                               const bool restore_device = true);
+                               const std::string &path = "/Storage", bool restore_device = true);
     /**
      * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
      * restore_device)
      */
     static cytnx::Storage Load(const char *fname, const std::string &path = "/Storage",
-                               const bool restore_device = true);
+                               bool restore_device = true);
 
     /**
      * @brief Load Storage from file and overwrite current instance
@@ -584,25 +583,24 @@ namespace cytnx {
      * @see Load()
      */
     void Load_(const std::filesystem::path &fname, const std::string &path = "/Storage",
-               const bool restore_device = true);
+               bool restore_device = true);
     /**
      * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
      * restore_device)
      */
-    void Load_(const char *fname, const std::string &path = "/Storage",
-               const bool restore_device = true);
+    void Load_(const char *fname, const std::string &path = "/Storage", bool restore_device = true);
 
     /**
      * @brief Save Storage to HDF5 file
      * @param[in] location the HDF5 group where the Storage will be saved.
+     * @param[in] name the name of the dataset in the HDF5 file.
      * @param[in] overwrite overwrite previous Bond information in the location.
-     * @param[in] name the name of the dataset in the HDF5 file.d in the
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const bool overwrite = false,
-                 const std::string &name = "Storage") const;
+    void to_hdf5(H5::Group &location, const std::string &name = "Storage",
+                 const bool overwrite = false) const;
     /**
      * @brief Load Storage from HDF5 file (inline)
      * @param[in] location the HDF5 group where the Storage will be loaded from.
@@ -615,7 +613,7 @@ namespace cytnx {
      * @see to_hdf5()
      */
     void from_hdf5(H5::Group &location, const std::string &name = "Storage",
-                   const bool restore_device = true);
+                   bool restore_device = true);
 
     /**
      * @brief Save only the data of the Storage to HDF5 dataset.
@@ -664,7 +662,7 @@ namespace cytnx {
      * file format. Use Load() for loading from file in C++ or Python.
      * @see to_binary()
      */
-    void from_binary(std::istream &f, const bool restore_device = true);
+    void from_binary(std::istream &f, bool restore_device = true);
 
     /**
      * @brief Save only the data of the Storage to binary filestream.
@@ -683,7 +681,7 @@ namespace cytnx {
      * @param[in] device the device on which the Storage will be loaded.
      * @note This function overwrites the current Storage with a new instance.
      * @warning This function is only available in C++. In Python, use pickle for the same binary
-     * file format. Use \link Load(const std::filesystem::path &fname, const bool restore_device)
+     * file format. Use \link Load(const std::filesystem::path &fname, bool restore_device)
      * Load() \endlink for loading from file in C++ or Python.
      * @see data_to_binary(std::ostream &f) const
      */

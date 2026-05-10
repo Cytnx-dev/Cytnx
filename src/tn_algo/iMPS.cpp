@@ -69,7 +69,7 @@ namespace cytnx {
         this->_TNs[i].to_binary(f);
       }
     }
-    void iMPS::from_binary_dispatch(std::istream &f, const bool restore_device) {
+    void iMPS::from_binary_dispatch(std::istream &f, bool restore_device) {
       cytnx_uint64 N;
 
       f.read((char *)&N, sizeof(cytnx_uint64));

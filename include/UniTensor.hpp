@@ -448,10 +448,10 @@ namespace cytnx {
     virtual vec2d<cytnx_uint64> &get_itoi();
 
     virtual void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    virtual void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+    virtual void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
 
     virtual void to_binary_dispatch(std::ostream &f) const;
-    virtual void from_binary_dispatch(std::istream &f, const bool restore_device = true);
+    virtual void from_binary_dispatch(std::istream &f, bool restore_device = true);
 
     virtual ~UniTensor_base(){};
   };
@@ -1086,10 +1086,10 @@ namespace cytnx {
     }
 
     void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+    void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
-    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
+    void from_binary_dispatch(std::istream &f, bool restore_device = true);
 
     const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const {
       cytnx_error_msg(true, "[ERROR] get_qindices can only be unsed on UniTensor with Symmetry.%s",
@@ -1762,10 +1762,10 @@ namespace cytnx {
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
     void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+    void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
-    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
+    void from_binary_dispatch(std::istream &f, bool restore_device = true);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -2558,10 +2558,10 @@ namespace cytnx {
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
     void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    void from_hdf5_dispatch(H5::Group &location, const bool restore_device = true);
+    void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
-    void from_binary_dispatch(std::istream &f, const bool restore_device = true);
+    void from_binary_dispatch(std::istream &f, bool restore_device = true);
 
     // this will remove the [q_index]-th qnum at [bond_idx]-th Bond!
     void truncate_(const std::string &label, const cytnx_uint64 &q_index);
@@ -5516,14 +5516,13 @@ namespace cytnx {
      * expected. For binary format, the common file ending for a UniTensor is ".cytnx".
      */
     static UniTensor Load(const std::filesystem::path &fname,
-                          const std::string &path = "/UniTensor/",
-                          const bool restore_device = true);
+                          const std::string &path = "/UniTensor/", bool restore_device = true);
     /**
      * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
      * restore_device)
      */
     static UniTensor Load(const char *fname, const std::string &path = "/UniTensor/",
-                          const bool restore_device = true);
+                          bool restore_device = true);
 
     /**
      * @brief Load UniTensor from file and overwrite current instance
@@ -5532,26 +5531,29 @@ namespace cytnx {
      * @see Load()
      */
     void Load_(const std::filesystem::path &fname, const std::string &path = "/UniTensor/",
-               const bool restore_device = true);
+               bool restore_device = true);
     /**
      * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
      * restore_device)
      */
     void Load_(const char *fname, const std::string &path = "/UniTensor/",
-               const bool restore_device = true);
+               bool restore_device = true);
 
     /**
      * @brief Save UniTensor to HDF5 file
-     * @param[in] location the HDF5 group where the UniTensor will be saved.
-     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @param[in] location the HDF5 parent group.
+     * @param[in] name the subgroup in which the UniTensor will be saved.
+     * @param[in] overwrite overwrite previous UniTensor information in the location.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const bool overwrite = false) const;
+    void to_hdf5(H5::Group &location, const std::string &name = "UniTensor",
+                 const bool overwrite = false) const;
     /**
      * @brief Load UniTensor from HDF5 file (inline)
-     * @param[in] location the HDF5 group where the UniTensor will be loaded from.
+     * @param[in] location the HDF5 parent group.
+     * @param[in] name the subgroup from which the UniTensor will be loaded.
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
      * loading.
@@ -5559,7 +5561,8 @@ namespace cytnx {
      * Python.
      * @see to_hdf5()
      */
-    void from_hdf5(H5::Group &location, const bool restore_device = true);
+    void from_hdf5(H5::Group &location, const std::string &name = "UniTensor",
+                   bool restore_device = true);
 
     /**
      * @brief Save UniTensor to binary file
@@ -5579,7 +5582,7 @@ namespace cytnx {
      * file format. Use Load() for loading from file in C++ or Python.
      * @see to_binary()
      */
-    void from_binary(std::istream &f, const bool restore_device = true);
+    void from_binary(std::istream &f, bool restore_device = true);
 
     /**
      * @brief truncate bond dimension of the UniTensor by the given bond label and dimension.

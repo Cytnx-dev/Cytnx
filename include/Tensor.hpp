@@ -361,14 +361,13 @@ namespace cytnx {
      * expected. For binary format, the common file ending for a Tensor is ".cytn".
      */
     static cytnx::Tensor Load(const std::filesystem::path &fname,
-                              const std::string &path = "/Tensor",
-                              const bool restore_device = true);
+                              const std::string &path = "/Tensor", bool restore_device = true);
     /**
      * @see Load(const std::filesystem::path &fname, const std::string &path, const bool
      * restore_device)
      */
     static cytnx::Tensor Load(const char *fname, const std::string &path = "/Tensor",
-                              const bool restore_device = true);
+                              bool restore_device = true);
 
     /**
      * @brief Load Tensor from file and overwrite current instance
@@ -376,25 +375,24 @@ namespace cytnx {
      * @see Load()
      */
     void Load_(const std::filesystem::path &fname, const std::string &path = "/Tensor",
-               const bool restore_device = true);
+               bool restore_device = true);
     /**
      * @see Load_(const std::filesystem::path &fname, const std::string &path, const bool
      * restore_device)
      */
-    void Load_(const char *fname, const std::string &path = "/Tensor",
-               const bool restore_device = true);
+    void Load_(const char *fname, const std::string &path = "/Tensor", bool restore_device = true);
 
     /**
      * @brief Save Tensor to HDF5 file
-     * @param[in] location the HDF5 group where the Tensor will be saved.
-     * @param[in] overwrite overwrite previous Bond information in the location.
-     * @param[in] name the name of the dataset in the HDF5 file.
+     * @param[in] location the HDF5 parent group.
+     * @param[in] name the subgroup in which the Tensor will be saved.
+     * @param[in] overwrite overwrite previous Tensor information in the location.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const bool overwrite = false,
-                 const std::string &name = "Tensor") const;
+    void to_hdf5(H5::Group &location, const std::string &name = "Tensor",
+                 const bool overwrite = false) const;
     /**
      * @brief Load Tensor from HDF5 file (inline)
      * @param[in] location the HDF5 group where the Tensor will be loaded from.
@@ -407,7 +405,7 @@ namespace cytnx {
      * @see to_hdf5()
      */
     void from_hdf5(H5::Group &location, const std::string &name = "Tensor",
-                   const bool restore_device = true);
+                   bool restore_device = true);
 
     /**
      * @brief Save Tensor to binary file
@@ -427,7 +425,7 @@ namespace cytnx {
      * file format. Use Load() for loading from file in C++ or Python.
      * @see to_binary()
      */
-    void from_binary(std::istream &f, const bool restore_device = true);
+    void from_binary(std::istream &f, bool restore_device = true);
 
     /**
      * @brief Save current Tensor to the binary file

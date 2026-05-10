@@ -915,21 +915,24 @@ namespace cytnx {
 
     /**
      * @brief Save Bond to HDF5 file
-     * @param[in] location the HDF5 group where the Bond will be saved.
+     * @param[in] location the HDF5 parent group.
+     * @param[in] name the subgroup in which the Bond will be saved.
      * @param[in] overwrite overwrite previous Bond information in the location.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const bool overwrite = false) const;
+    void to_hdf5(H5::Group &location, const std::string &name = "Bond",
+                 const bool overwrite = false) const;
     /**
      * @brief Load Bond from HDF5 file (inline)
-     * @param[in] location the HDF5 group where the Bond will be loaded from.
+     * @param[in] location the HDF5 parent group.
+     * @param[in] name the subgroup from which the Bond will be loaded.
      * @warning This function is only available in C++. Use Load() for loading from file in C++ or
      * Python.
      * @see to_hdf5() const
      */
-    void from_hdf5(H5::Group &location);
+    void from_hdf5(H5::Group &location, const std::string &name = "Bond");
 
     /**
      * @brief Save Bond to binary file

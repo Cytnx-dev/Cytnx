@@ -1288,10 +1288,10 @@ namespace cytnx {
     H5::Attribute attr = location.createAttribute("directed", datatype, H5::DataSpace(H5S_SCALAR));
     attr.write(datatype, &this->_is_tag);
 
-    this->_block.to_hdf5(location, overwrite, "Tensor");
+    this->_block.to_hdf5(location, "Tensor", overwrite);
   }
 
-  void DenseUniTensor::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+  void DenseUniTensor::from_hdf5_dispatch(H5::Group &location, bool restore_device) {
     this->_block.from_hdf5(location, "Tensor", restore_device);
     // check data consistency
     auto shape = this->_block.shape();
@@ -1333,7 +1333,7 @@ namespace cytnx {
   }
 
   void DenseUniTensor::to_binary_dispatch(std::ostream &f) const { this->_block.to_binary(f); }
-  void DenseUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
+  void DenseUniTensor::from_binary_dispatch(std::istream &f, bool restore_device) {
     this->_block.from_binary(f, restore_device);
   }
 

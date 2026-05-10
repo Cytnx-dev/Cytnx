@@ -2336,7 +2336,7 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] Saving SparseUniTensor to HDF5 is not implemented!%s", "\n");
   }
 
-  void SparseUniTensor::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+  void SparseUniTensor::from_hdf5_dispatch(H5::Group &location, bool restore_device) {
     cytnx_error_msg(true, "[ERROR] Loading SparseUniTensor from HDF5 is not implemented!%s", "\n");
   }
 
@@ -2351,7 +2351,7 @@ namespace cytnx {
     }
   }
 
-  void SparseUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
+  void SparseUniTensor::from_binary_dispatch(std::istream &f, bool restore_device) {
     // cytnx_error_msg(true,"[ERROR] Save for SparseUniTensor is under developing!!%s","\n");
 
     cytnx_uint64 Nblocks;

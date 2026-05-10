@@ -136,11 +136,11 @@ namespace cytnx {
           if (part.empty()) continue;
           subpath /= part;
           groupfolder = subpath.generic_string();
-          if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
+          if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
         }
         H5::Group location = h5file.openGroup(groupfolder);
         // write data
-        this->to_hdf5(location, overwrite, datasetname);
+        this->to_hdf5(location, datasetname, overwrite);
         h5file.close();
         return;
       } else {  // create binary file
@@ -182,17 +182,17 @@ namespace cytnx {
   }
 
   Storage Storage::Load(const std::filesystem::path &fname, const std::string &path,
-                        const bool restore_device) {
+                        bool restore_device) {
     Storage out;
     out.Load_(fname, path, restore_device);
     return out;
   }
-  Storage Storage::Load(const char *fname, const std::string &path, const bool restore_device) {
+  Storage Storage::Load(const char *fname, const std::string &path, bool restore_device) {
     return Storage::Load(std::filesystem::path(fname), path, restore_device);
   }
 
   void Storage::Load_(const std::filesystem::path &fname, const std::string &path,
-                      const bool restore_device) {
+                      bool restore_device) {
     std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {  // load HDF5
@@ -224,11 +224,11 @@ namespace cytnx {
       f.close();
     }
   }
-  void Storage::Load_(const char *fname, const std::string &path, const bool restore_device) {
+  void Storage::Load_(const char *fname, const std::string &path, bool restore_device) {
     this->Load_(std::filesystem::path(fname), path, restore_device);
   }
 
-  void Storage::to_hdf5(H5::Group &location, const bool overwrite, const std::string &name) const {
+  void Storage::to_hdf5(H5::Group &location, const std::string &name, const bool overwrite) const {
     if (overwrite) {  // delete previous data
       if (location.nameExists(name)) location.unlink(name);
     }
@@ -246,7 +246,7 @@ namespace cytnx {
     }
   }
 
-  void Storage::from_hdf5(H5::Group &location, const std::string &name, const bool restore_device) {
+  void Storage::from_hdf5(H5::Group &location, const std::string &name, bool restore_device) {
     H5::DataSet dataset = location.openDataSet(name);
     H5::DataType datatype = dataset.getDataType();
     unsigned int dtype = Type.from_hdf5_type(datatype);
@@ -333,7 +333,7 @@ namespace cytnx {
     this->data_to_binary(f);
   }
 
-  void Storage::from_binary(std::istream &f, const bool restore_device) {
+  void Storage::from_binary(std::istream &f, bool restore_device) {
     unsigned long long Nelem;
     unsigned int dtype;
     int device;

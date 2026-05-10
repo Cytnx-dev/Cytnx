@@ -111,11 +111,11 @@ namespace cytnx {
           if (part.empty()) continue;
           subpath /= part;
           groupfolder = subpath.generic_string();
-          if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
+          if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
         }
         H5::Group location = h5file.openGroup(groupfolder);
         // write data
-        this->to_hdf5(location, overwrite);
+        this->to_hdf5(location, "", overwrite);
         h5file.close();
         return;
       } else {  // create binary file
@@ -157,17 +157,17 @@ namespace cytnx {
   }
 
   UniTensor UniTensor::Load(const std::filesystem::path &fname, const std::string &path,
-                            const bool restore_device) {
+                            bool restore_device) {
     UniTensor out;
     out.Load_(fname, path, restore_device);
     return out;
   }
-  UniTensor UniTensor::Load(const char *fname, const std::string &path, const bool restore_device) {
+  UniTensor UniTensor::Load(const char *fname, const std::string &path, bool restore_device) {
     return UniTensor::Load(std::filesystem::path(fname), path, restore_device);
   }
 
   void UniTensor::Load_(const std::filesystem::path &fname, const std::string &path,
-                        const bool restore_device) {
+                        bool restore_device) {
     std::string ext = fname.extension().string();
     if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
         ext == ".HDF") {  // load HDF5
@@ -182,7 +182,7 @@ namespace cytnx {
                         path.c_str(), fname.string().c_str());
       }
       // read data
-      this->from_hdf5(location, restore_device);
+      this->from_hdf5(location, "", restore_device);
       h5file.close();
     } else {  // load binary
       fstream f;
@@ -194,26 +194,38 @@ namespace cytnx {
       f.close();
     }
   }
-  void UniTensor::Load_(const char *fname, const std::string &path, const bool restore_device) {
+  void UniTensor::Load_(const char *fname, const std::string &path, bool restore_device) {
     this->Load_(std::filesystem::path(fname), path, restore_device);
   }
 
-  void UniTensor::to_hdf5(H5::Group &location, const bool overwrite) const {
+  void UniTensor::to_hdf5(H5::Group &location, const std::string &name,
+                          const bool overwrite) const {
+    H5::Group rootgroup;
+    if (name.empty())
+      rootgroup = location;
+    else {
+      if (location.nameExists(name)) {
+        rootgroup = location.openGroup(name);
+      } else {
+        rootgroup = location.createGroup(name);
+      }
+    }
+
     if (overwrite) {  // delete previous data
       // delete all entries that could be written by one of the implementations;
       // remove attributes
-      if (location.attrExists("type")) location.removeAttr("type");
-      if (location.attrExists("diagonal")) location.removeAttr("diagonal");
-      if (location.attrExists("rowrank")) location.removeAttr("rowrank");
-      if (location.attrExists("name")) location.removeAttr("name");
-      if (location.attrExists("directed")) location.removeAttr("directed");
+      if (rootgroup.attrExists("type")) rootgroup.removeAttr("type");
+      if (rootgroup.attrExists("diagonal")) rootgroup.removeAttr("diagonal");
+      if (rootgroup.attrExists("rowrank")) rootgroup.removeAttr("rowrank");
+      if (rootgroup.attrExists("name")) rootgroup.removeAttr("name");
+      if (rootgroup.attrExists("directed")) rootgroup.removeAttr("directed");
       // remove datasets
-      if (location.nameExists("labels")) location.unlink("labels");
-      if (location.nameExists("Tensor")) location.unlink("Tensor");
-      if (location.nameExists("block_to_sectors")) location.unlink("block_to_sectors");
+      if (rootgroup.nameExists("labels")) rootgroup.unlink("labels");
+      if (rootgroup.nameExists("Tensor")) rootgroup.unlink("Tensor");
+      if (rootgroup.nameExists("block_to_sectors")) rootgroup.unlink("block_to_sectors");
       // remove groups and its contents recursively
-      if (location.nameExists("bonds")) location.unlink("bonds");
-      if (location.nameExists("blocks")) location.unlink("blocks");
+      if (rootgroup.nameExists("bonds")) rootgroup.unlink("bonds");
+      if (rootgroup.nameExists("blocks")) rootgroup.unlink("blocks");
     }
 
     H5::DataType datatype;
@@ -226,25 +238,25 @@ namespace cytnx {
     std::string type = UTenType.getname(this->_impl->uten_type_id);
     str_type = H5::StrType(H5::PredType::C_S1, type.length() + 1);
     dataspace = H5::DataSpace(H5S_SCALAR);
-    attr = location.createAttribute("type", str_type, dataspace);
+    attr = rootgroup.createAttribute("type", str_type, dataspace);
     attr.write(str_type, type);
 
     // is_diag, write as attribute only for diagonal tensors
     if (this->_impl->_is_diag) {
       datatype = Type.get_hdf5_type(this->_impl->_is_diag);
-      attr = location.createAttribute("diagonal", datatype, H5::DataSpace(H5S_SCALAR));
+      attr = rootgroup.createAttribute("diagonal", datatype, H5::DataSpace(H5S_SCALAR));
       attr.write(datatype, &this->_impl->_is_diag);
     }
 
     // rowrank, write as attribute
     datatype = Type.get_hdf5_type(this->_impl->_rowrank);
-    attr = location.createAttribute("rowrank", datatype, H5::DataSpace(H5S_SCALAR));
+    attr = rootgroup.createAttribute("rowrank", datatype, H5::DataSpace(H5S_SCALAR));
     attr.write(datatype, &this->_impl->_rowrank);
 
     // name, write as string attribute
     str_type = H5::StrType(H5::PredType::C_S1, this->_impl->_name.length() + 1);
     dataspace = H5::DataSpace(H5S_SCALAR);
-    attr = location.createAttribute("name", str_type, dataspace);
+    attr = rootgroup.createAttribute("name", str_type, dataspace);
     attr.write(str_type, this->_impl->_name);
 
     // labels; write as string vector
@@ -252,7 +264,7 @@ namespace cytnx {
       hsize_t vecdims[1] = {this->_impl->_labels.size()};
       dataspace = H5::DataSpace(1, vecdims);
       str_type = H5::StrType(H5::PredType::C_S1, H5T_VARIABLE);
-      dataset = location.createDataSet("labels", str_type, dataspace);
+      dataset = rootgroup.createDataSet("labels", str_type, dataspace);
       std::vector<const char *> c_strings;  // H5 needs cstrings
       std::string symstring;
       for (const auto &label : this->_impl->_labels) {
@@ -263,24 +275,24 @@ namespace cytnx {
 
     // bonds; write in group
     if (!this->_impl->_bonds.empty()) {
-      H5::Group dir = location.createGroup("bonds");
+      H5::Group dir = rootgroup.createGroup("bonds");
       for (int i = 0; i < this->_impl->_bonds.size(); i++) {
-        H5::Group bondgroup = dir.createGroup("Bond" + std::to_string(i));
-        this->_impl->_bonds[i].to_hdf5(bondgroup, overwrite);
+        this->_impl->_bonds[i].to_hdf5(dir, "Bond" + std::to_string(i), overwrite);
       }
     }
 
-    this->_impl->to_hdf5_dispatch(location, overwrite);
+    this->_impl->to_hdf5_dispatch(rootgroup, overwrite);
   }
 
-  void UniTensor::from_hdf5(H5::Group &location, const bool restore_device) {
+  void UniTensor::from_hdf5(H5::Group &location, const std::string &name, bool restore_device) {
+    H5::Group rootgroup = (name.empty() ? location : location.openGroup(name));
     H5::DataType datatype;
     H5::Attribute attr;
     H5::StrType str_type;
     size_t size;
 
     // type, read from attribute
-    attr = location.openAttribute("type");
+    attr = rootgroup.openAttribute("type");
     str_type = attr.getStrType();
     size = str_type.getSize() - 1;  // remove the null terminator
     std::string utenname;
@@ -289,8 +301,8 @@ namespace cytnx {
     this->Init(utenname);
 
     // is_diag, read from attribute
-    if (location.attrExists("diagonal")) {
-      H5::Attribute attr = location.openAttribute("diagonal");
+    if (rootgroup.attrExists("diagonal")) {
+      H5::Attribute attr = rootgroup.openAttribute("diagonal");
       datatype = attr.getDataType();
       cytnx_error_msg(
         datatype.getSize() != Type.get_hdf5_type(this->_impl->_is_diag).getSize(),
@@ -302,7 +314,7 @@ namespace cytnx {
     }
 
     // rowrank, read from attribute
-    attr = location.openAttribute("rowrank");
+    attr = rootgroup.openAttribute("rowrank");
     datatype = attr.getDataType();
     cytnx_error_msg(
       datatype.getSize() != Type.get_hdf5_type(this->_impl->_rowrank).getSize(),
@@ -311,8 +323,8 @@ namespace cytnx {
     attr.read(datatype, &this->_impl->_rowrank);
 
     // name, read from string attribute
-    if (location.attrExists("name")) {
-      attr = location.openAttribute("name");
+    if (rootgroup.attrExists("name")) {
+      attr = rootgroup.openAttribute("name");
       str_type = attr.getStrType();
       size = str_type.getSize() - 1;  // remove the null terminator
       if (size > 0) {
@@ -327,8 +339,8 @@ namespace cytnx {
 
     // labels; read from string vector
     this->_impl->_labels.clear();
-    if (location.exists("labels")) {
-      H5::DataSet dataset = location.openDataSet("labels");
+    if (rootgroup.nameExists("labels")) {
+      H5::DataSet dataset = rootgroup.openDataSet("labels");
       H5::DataSpace dataspace = dataset.getSpace();
       hsize_t dims[1];
       dataspace.getSimpleExtentDims(dims);
@@ -346,17 +358,16 @@ namespace cytnx {
 
     // bonds; read from group
     this->_impl->_bonds.clear();
-    if (location.exists("bonds")) {
-      H5::Group dir = location.openGroup("bonds");
+    if (rootgroup.nameExists("bonds")) {
+      H5::Group dir = rootgroup.openGroup("bonds");
       hsize_t idx = 0;
       while (true) {
-        std::string name = "Bond" + std::to_string(idx);
-        if (!dir.exists(name)) {
+        std::string bondname = "Bond" + std::to_string(idx);
+        if (!dir.nameExists(bondname)) {
           break;
         }
-        H5::Group bondgroup = dir.openGroup(name);
         Bond bond;
-        bond.from_hdf5(bondgroup);
+        bond.from_hdf5(dir, bondname);
         this->_impl->_bonds.push_back(bond);
         idx++;
       }
@@ -372,7 +383,7 @@ namespace cytnx {
       this->_impl->_bonds.clear();
     }
 
-    this->_impl->from_hdf5_dispatch(location, restore_device);
+    this->_impl->from_hdf5_dispatch(rootgroup, restore_device);
     this->_impl->_is_braket_form = this->_impl->_update_braket();
   }
 
@@ -426,7 +437,7 @@ namespace cytnx {
     this->_impl->to_binary_dispatch(f);
   }
 
-  void UniTensor::from_binary(std::istream &f, const bool restore_device) {
+  void UniTensor::from_binary(std::istream &f, bool restore_device) {
     unsigned int tmpIDDs;
     f.read((char *)&tmpIDDs, sizeof(unsigned int));
     cytnx_error_msg(tmpIDDs != 555, "[ERROR] the object is not a cytnx UniTensor!%s", "\n");

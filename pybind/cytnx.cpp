@@ -30,6 +30,7 @@ void symmetry_binding(py::module &m);
 #else
 
 void generator_binding(py::module &m);
+void io_binding(py::module &m);
 void storage_binding(py::module &m);
 void tensor_binding(py::module &m);
 
@@ -118,6 +119,7 @@ PYBIND11_MODULE(cytnx, m) {
   //   py::arg("out_labels") = std::vector<std::string>());
 
   generator_binding(m);
+  io_binding(m);
   scalar_binding(m);
   storage_binding(m);
   tensor_binding(m);

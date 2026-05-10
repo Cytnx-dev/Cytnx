@@ -67,11 +67,11 @@ namespace cytnx {
             if (part.empty()) continue;
             subpath /= part;
             groupfolder = subpath.generic_string();
-            if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
+            if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
           }
           H5::Group location = h5file.openGroup(groupfolder);
           // write data
-          this->to_hdf5(location, overwrite);
+          this->to_hdf5(location, "MPS", overwrite);
           h5file.close();
           return;
         } else {  // create binary file
@@ -115,17 +115,17 @@ namespace cytnx {
     }
 
     MPS MPS::Load(const std::filesystem::path &fname, const std::string &path,
-                  const bool restore_device) {
+                  bool restore_device) {
       MPS out;
       out.Load_(fname, path, restore_device);
       return out;
     }
-    MPS MPS::Load(const char *fname, const std::string &path, const bool restore_device) {
+    MPS MPS::Load(const char *fname, const std::string &path, bool restore_device) {
       return MPS::Load(std::filesystem::path(fname), path, restore_device);
     }
 
     void MPS::Load_(const std::filesystem::path &fname, const std::string &path,
-                    const bool restore_device) {
+                    bool restore_device) {
       std::string ext = fname.extension().string();
       if (ext == ".h5" || ext == ".hdf5" || ext == ".H5" || ext == ".HDF5" || ext == ".hdf" ||
           ext == ".HDF") {  // load HDF5
@@ -140,7 +140,7 @@ namespace cytnx {
                           path.c_str(), fname.string().c_str());
         }
         // read data
-        this->from_hdf5(location, restore_device);
+        this->from_hdf5(location, "", restore_device);
         h5file.close();
       } else {  // load binary
         fstream f;
@@ -152,14 +152,14 @@ namespace cytnx {
         f.close();
       }
     }
-    void MPS::Load_(const char *fname, const std::string &path, const bool restore_device) {
+    void MPS::Load_(const char *fname, const std::string &path, bool restore_device) {
       this->Load_(std::filesystem::path(fname), path, restore_device);
     }
 
-    void MPS::to_hdf5(H5::Group &location, const bool overwrite) const {
+    void MPS::to_hdf5(H5::Group &location, const std::string &name, const bool overwrite) const {
       cytnx_error_msg(true, "[ERROR] Saving MPS to HDF5 is not implemented yet!%s", "\n");
     }
-    void MPS::from_hdf5(H5::Group &location, const bool restore_device) {
+    void MPS::from_hdf5(H5::Group &location, const std::string &name, bool restore_device) {
       cytnx_error_msg(true, "[ERROR] Loading MPS from HDF5 is not implemented yet!%s", "\n");
     }
 
@@ -181,7 +181,7 @@ namespace cytnx {
       this->_impl->to_binary_dispatch(f);
     }
 
-    void MPS::from_binary(std::istream &f, const bool restore_device) {
+    void MPS::from_binary(std::istream &f, bool restore_device) {
       unsigned int tmpIDDs;
       f.read((char *)&tmpIDDs, sizeof(unsigned int));
       cytnx_error_msg(tmpIDDs != 109, "[ERROR] the object is not a cytnx MPS!%s", "\n");

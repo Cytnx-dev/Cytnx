@@ -1584,7 +1584,7 @@ namespace cytnx {
     if (!this->_blocks.empty()) {
       H5::Group dir = location.createGroup("blocks");
       for (int i = 0; i < this->_blocks.size(); i++) {
-        this->_blocks[i].to_hdf5(dir, overwrite, "Tensor" + std::to_string(i));
+        this->_blocks[i].to_hdf5(dir, "Tensor" + std::to_string(i), overwrite);
       }
     }
     // inner_to_outer_idx; write matrix (blocknum x rank)
@@ -1611,16 +1611,16 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::from_hdf5_dispatch(H5::Group &location, const bool restore_device) {
+  void BlockUniTensor::from_hdf5_dispatch(H5::Group &location, bool restore_device) {
     this->_is_tag = true;
     // blocks; read from group
     this->_blocks.clear();
-    if (location.exists("blocks")) {
+    if (location.nameExists("blocks")) {
       H5::Group dir = location.openGroup("blocks");
       hsize_t idx = 0;
       while (true) {
         std::string name = "Tensor" + std::to_string(idx);
-        if (!dir.exists(name)) {
+        if (!dir.nameExists(name)) {
           break;
         }
         Tensor block;
@@ -1630,7 +1630,7 @@ namespace cytnx {
       }
     }
     // inner_to_outer_idx; read matrix (blocknum x rank)
-    if (location.exists("block_to_sectors")) {
+    if (location.nameExists("block_to_sectors")) {
       H5::DataSet dataset = location.openDataSet("block_to_sectors");
       H5::DataSpace dataspace = dataset.getSpace();
       cytnx_error_msg(dataspace.getSimpleExtentNdims() != 2,
@@ -1685,7 +1685,7 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::from_binary_dispatch(std::istream &f, const bool restore_device) {
+  void BlockUniTensor::from_binary_dispatch(std::istream &f, bool restore_device) {
     cytnx_uint64 Nblocks;
     f.read((char *)&Nblocks, sizeof(cytnx_uint64));
 

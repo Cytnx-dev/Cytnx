@@ -297,11 +297,11 @@ namespace cytnx {
           if (part.empty()) continue;
           subpath /= part;
           groupfolder = subpath.generic_string();
-          if (!h5file.exists(groupfolder)) h5file.createGroup(groupfolder);
+          if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
         }
         H5::Group location = h5file.openGroup(groupfolder);
         // write data
-        this->to_hdf5(location, overwrite, datasetname);
+        this->to_hdf5(location, datasetname, overwrite);
         h5file.close();
         return;
       } else {  // create binary file
@@ -388,8 +388,8 @@ namespace cytnx {
     this->Load_(std::filesystem::path(fname), path);
   }
 
-  void cytnx::Symmetry::to_hdf5(H5::Group &location, const bool overwrite,
-                                const std::string &name) const {
+  void cytnx::Symmetry::to_hdf5(H5::Group &location, const std::string &name,
+                                const bool overwrite) const {
     if (overwrite) {  // delete previous data
       if (location.attrExists(name)) location.removeAttr(name);
     }

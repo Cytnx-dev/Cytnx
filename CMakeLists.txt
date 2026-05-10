@@ -345,6 +345,7 @@ IF(BUILD_PYTHON)
   endif()
 
   pybind11_add_module(pycytnx MODULE pybind/cytnx.cpp
+    pybind/io_py.cpp
     pybind/generator_py.cpp
     pybind/storage_py.cpp
     pybind/tensor_py.cpp
