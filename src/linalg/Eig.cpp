@@ -50,18 +50,13 @@ namespace cytnx {
 
         std::vector<Tensor> out;
         out.push_back(S);
-        // std::cout << "[Eig][V]" << std::endl;
-        // std::cout << V << std::endl;
         if (is_V) {
           out.push_back(V);
           if (!row_v) {
             if (out.back().dtype() == Type.ComplexFloat ||
                 out.back().dtype() == Type.ComplexDouble) {
               out.back().permute_({1, 0}).contiguous_();
-              // std::cout << out.back();
               out.back().Conj_();
-              // std::cout << out.back();
-              // std::cout << "ok" << std::endl;
             } else
               out.back().permute_({1, 0}).contiguous_();
           }
@@ -102,8 +97,6 @@ namespace cytnx {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
-      // std::cout << "entry Dense UT" << std::endl;
-
       Tensor tmp;
       if (Tin.is_contiguous())
         tmp = Tin.get_block_();
@@ -179,6 +172,7 @@ namespace cytnx {
       for (int i = Tin.rank() - 2; i >= Tin.rowrank(); i--) {
         strides[i] *= strides[i + 1];
       }
+      //  ->b. calc new inner_to_outer_idx!
       vec2d<cytnx_uint64> new_itoi(Tin.Nblocks(), std::vector<cytnx_uint64>(2));
 
       int cnt;
@@ -210,10 +204,8 @@ namespace cytnx {
 
       for (auto const &x : mgrp) {
         vec2d<cytnx_uint64> itoi_indicators(x.second.size());
-        // std::cout << x.second.size() << "-------" << std::endl;
         for (int i = 0; i < x.second.size(); i++) {
           itoi_indicators[i] = new_itoi[x.second[i]];
-          // std::cout << new_itoi[x.second[i]] << std::endl;
         }
         auto order = vec_sort(itoi_indicators, true);
         std::vector<Tensor> Tlist(itoi_indicators.size());

@@ -64,11 +64,6 @@ namespace cytnx {
         std::vector<Tensor> out;
         out.push_back(S);
         if (is_UvT) {
-          // std::cout << "Original:\n" << in << std::endl;
-          // std::cout << "S:\n" << S << std::endl;
-          // std::cout << "Recompose1!:\n" << Matmul(Matmul(U, Diag(S)), vT) << std::endl;
-          // std::cout << "Recompose2!:\n"
-          //      << Tensordot(Tensordot(U, Diag(S), {1}, {0}), vT, {1}, {0}) << std::endl;
           out.push_back(U);
           out.push_back(vT);
         }
@@ -88,7 +83,6 @@ namespace cytnx {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
-
       Tensor tmp;
       if (Tin.is_contiguous())
         tmp = Tin.get_block_();

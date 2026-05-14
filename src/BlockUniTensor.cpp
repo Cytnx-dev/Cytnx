@@ -142,14 +142,7 @@ namespace cytnx {
       bool fin = false;
       while (1) {
         // get elem
-        // cout << "start!" << endl;
-        // cytnx::vec_print_simple(std::cout , Loc);
         this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(), tot_qns);
-
-        // std::cout << "Loc: ";
-        // cytnx::vec_print_simple(std::cout, Loc);
-        // std::cout << "tot_flx: ";
-        // cytnx::vec_print_simple(std::cout, tot_qns);
 
         // if exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
@@ -180,7 +173,6 @@ namespace cytnx {
             continue;
           } else {
             Loc.back() += 1;
-            // cout << "+1 at loc:" << Loc.size()-1 <<endl;
             while (Loc.size() != this->_bonds.size()) {
               Loc.push_back(0);
             }
@@ -767,7 +759,6 @@ namespace cytnx {
       out_rowrank = this->rowrank() + rhs->rowrank();
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
-      // cout << out_bonds;
       tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false);
 
       // tmp->_name = this->_name + "+" + rhs->_name;
@@ -1308,7 +1299,6 @@ namespace cytnx {
       std::map<std::vector<cytnx_uint64>, cytnx_uint64> tmap;
       std::map<std::vector<cytnx_uint64>, cytnx_uint64>::iterator itr;
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
-        // std::cout << "blk: " << i << std::endl;
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
           auto s = this->_inner_to_outer_idx[i];
           s.erase(s.begin() + idb);
@@ -1815,8 +1805,6 @@ namespace cytnx {
 
     // process one by one:
     for (cytnx_int64 bn = 0; bn < dup_bond_idxs.size(); bn++) {
-      // cout << "BOND:" << dup_bond_idxs[bn] << endl;
-      // cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
       tmp_inner_to_outer_idx = this->_inner_to_outer_idx;
 
       for (cytnx_int64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
@@ -1916,8 +1904,6 @@ namespace cytnx {
         }
       }
     }
-    // std::cout << idx_mapper << std::endl;
-    // std::cout << new_shape_aft_perm << std::endl;
 
     this->permute_(idx_mapper);
     this->contiguous_();
@@ -1925,8 +1911,6 @@ namespace cytnx {
     // group bonds:
     std::vector<Bond> new_bonds;
     std::vector<cytnx_uint64> cb_stride(indicators.size());
-    // std::cout << "idor" << idor << std::endl;
-    // std::cout << "rank" << this->rank() << std::endl;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
         Bond tmp = this->_bonds[i];
@@ -1990,12 +1974,13 @@ namespace cytnx {
       }
       this->_inner_to_outer_idx[b].resize(this->rank());
     }
-    // std::cout << this->_inner_to_outer_idx << std::endl;
 
     // change rowrank:
     this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
+
+    // regroup:
     this->group_basis_();
   }
 

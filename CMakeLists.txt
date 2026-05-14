@@ -12,7 +12,15 @@ cmake_minimum_required(VERSION 3.24) # require for the "native" value of CUDA_AR
 include(cmake/target_sources_local.cmake)
 include(ExternalProject)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules")
-message(STATUS ${CMAKE_MODULE_PATH})
+# Inria's morse_cmake provides an up-to-date FindLAPACKE (and helpers) that
+# correctly handles LAPACKE bundled inside LAPACK (e.g. OpenBLAS).
+set(_morse_modules_dir "${CMAKE_CURRENT_SOURCE_DIR}/cmake_modules/morse_cmake/modules")
+if(NOT EXISTS "${_morse_modules_dir}/MorseInit.cmake")
+  message(FATAL_ERROR "morse_cmake submodule missing. Run: git submodule update --init --recursive")
+endif()
+list(APPEND CMAKE_MODULE_PATH "${_morse_modules_dir}")
+include(MorseInit)
+message(STATUS "CMAKE_MODULE_PATH: ${CMAKE_MODULE_PATH}")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -230,15 +238,6 @@ if(USE_DEBUG)
 endif()
 
 include(GNUInstallDirs)
-
-if(USE_ICPC)
-  target_compile_definitions(cytnx PUBLIC UNI_ICPC)
-  # This option is to disable the warning of icpc
-  target_compile_options(cytnx PUBLIC -diag-disable=10441)
-  # This option is to maintain consistency of the floating point operation, also
-  # try to improve the performance
-  target_compile_options(cytnx PUBLIC -fp-model consistent -fimf-use-svml)
-endif()
 
 # #####################################################################
 

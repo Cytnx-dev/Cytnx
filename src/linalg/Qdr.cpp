@@ -25,8 +25,6 @@ namespace cytnx {
       Tensor in = Tin.contiguous();
       if (Tin.dtype() > Type.Float) in = in.astype(Type.Double);
 
-      // std::cout << n_singlu << std::endl;
-
       Tensor tau, Q, R, D;  // D is not used here.
       tau.Init({n_tau}, in.dtype(), in.device());
       tau.storage().set_zeros();

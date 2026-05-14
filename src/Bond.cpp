@@ -329,7 +329,6 @@ namespace cytnx {
         } else {
           idx_erase.push_back(q);
           tmp_degs[loc] += tmp_degs[q];
-          // std::cout << "add from loc" << q << " to " << cnt << std::endl;
         }
         return_order[mapper[q]] = cnt;
       }
