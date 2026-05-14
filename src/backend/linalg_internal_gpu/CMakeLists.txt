@@ -1,4 +1,4 @@
-target_sources_local(cytnx
+target_sources(cytnx
   PRIVATE
     # cuNorm_internal.hpp
     # cuAbs_internal.hpp
