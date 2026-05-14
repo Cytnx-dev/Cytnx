@@ -60,34 +60,47 @@ endif()
 
 
 if (USE_HPTT)
-    option(HPTT_ENABLE_ARM "HPTT option ARM" OFF)
-    option(HPTT_ENABLE_IBM "HPTT option IBM" OFF)
-    option(HPTT_ENABLE_AVX "HPTT option AVX" OFF)
-    option(HPTT_ENABLE_FINE_TUNE "HPTT option FINE_TUNE" OFF)
-
-    # Use absolute paths so Ninja can track the artifacts produced by the ExternalProject.
-    cmake_path(APPEND CMAKE_CURRENT_BINARY_DIR "hptt" OUTPUT_VARIABLE HPTT_PREFIX)
-    set(HPTT_STATIC_LIB_NAME "${CMAKE_STATIC_LIBRARY_PREFIX}hptt${CMAKE_STATIC_LIBRARY_SUFFIX}")
-    set(HPTT_SHARED_LIB_NAME "${CMAKE_SHARED_LIBRARY_PREFIX}hptt${CMAKE_SHARED_LIBRARY_SUFFIX}")
-    set(HPTT_BYPRODUCTS "${HPTT_PREFIX}/lib/${HPTT_STATIC_LIB_NAME}")
-    if(NOT WIN32 AND NOT CMAKE_SHARED_LIBRARY_SUFFIX STREQUAL "")
-        list(APPEND HPTT_BYPRODUCTS "${HPTT_PREFIX}/lib/${HPTT_SHARED_LIB_NAME}")
+    set(HPTT_SUBMODULE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/hptt")
+    if(NOT EXISTS "${HPTT_SUBMODULE_DIR}/CMakeLists.txt")
+        message(FATAL_ERROR
+            "thirdparty/hptt submodule missing. "
+            "Run: git submodule update --init --recursive")
     endif()
 
+    # Forward cytnx's HPTT_ENABLE_* options to the names hptt's CMakeLists
+    # expects (ENABLE_ARM / ENABLE_AVX / ENABLE_IBM / FINE_TUNE).
+    set(ENABLE_ARM "${HPTT_ENABLE_ARM}")
+    set(ENABLE_AVX "${HPTT_ENABLE_AVX}")
+    set(ENABLE_IBM "${HPTT_ENABLE_IBM}")
+    set(FINE_TUNE "${HPTT_ENABLE_FINE_TUNE}")
+
+    # Build hptt in-tree. add_subdirectory works with any CMake generator
+    # (no BUILD_BYPRODUCTS gymnastics like ExternalProject_Add needs under
+    # Ninja), is faster (no separate sub-build), and exposes hptt_static
+    # as a real CMake target — so we can drop the manual include_directories,
+    # add_dependencies, and absolute-path library link below.
+    add_subdirectory("${HPTT_SUBMODULE_DIR}" "${CMAKE_BINARY_DIR}/hptt")
+
+    # hptt's CMakeLists sets `target_include_directories(hptt_static PUBLIC
+    # ${PROJECT_SOURCE_DIR}/include)`, i.e. an absolute path inside the
+    # source tree. CMake refuses to export INTERFACE_INCLUDE_DIRECTORIES
+    # entries that are prefixed in the source dir, which trips
+    # `install(EXPORT cytnx_targets)` once we add hptt_static to that
+    # export set below. Wrap the entry in $<BUILD_INTERFACE:...> so the
+    # path is only visible while building cytnx (not in the exported
+    # CytnxTargets.cmake); a parallel $<INSTALL_INTERFACE:include> entry
+    # gives consumers a sensible include dir if they ever consume
+    # hptt_static directly via cytnx's export.
+    set_property(TARGET hptt_static PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+        "$<BUILD_INTERFACE:${HPTT_SUBMODULE_DIR}/include>"
+        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
+
     set(CYTNX_VARIANT_INFO "${CYTNX_VARIANT_INFO} UNI_HPTT")
-    # TODO: Build HPTT from the submodule in the thirdparty folder.
-    ExternalProject_Add(hptt
-    PREFIX "${HPTT_PREFIX}"
-    GIT_REPOSITORY https://github.com/Cytnx-dev/hptt.git
-    GIT_TAG 50bc0b65d2bb4751fc88414681363e1995e41b23
-    CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR> -DCMAKE_POSITION_INDEPENDENT_CODE=ON -DENABLE_ARM=${HPTT_ENABLE_ARM} -DENABLE_AVX=${HPTT_ENABLE_AVX} -DENABLE_IBM=${HPTT_ENABLE_IBM} -DFINE_TUNE=${HPTT_ENABLE_FINE_TUNE}
-    BUILD_BYPRODUCTS ${HPTT_BYPRODUCTS}
-    )
-    message( STATUS " Build HPTT Support: YES")
-    message( STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")
-    message( STATUS " --HPTT option ARM: ${HPTT_ENABLE_ARM}")
-    message( STATUS " --HPTT option AVX: ${HPTT_ENABLE_AVX}")
-    message( STATUS " --HPTT option IBM: ${HPTT_ENABLE_IBM}")
+    message(STATUS " Build HPTT Support: YES")
+    message(STATUS " --HPTT option FINE_TUNE: ${HPTT_ENABLE_FINE_TUNE}")
+    message(STATUS " --HPTT option ARM: ${HPTT_ENABLE_ARM}")
+    message(STATUS " --HPTT option AVX: ${HPTT_ENABLE_AVX}")
+    message(STATUS " --HPTT option IBM: ${HPTT_ENABLE_IBM}")
     FILE(APPEND "${CMAKE_BINARY_DIR}/cxxflags.tmp" "-DUNI_HPTT\n" "")
 endif() #use_HPTT
 
@@ -228,34 +241,48 @@ endif()
 ### Dependency of HPTT
 #####################################################################
 if(USE_HPTT)
-    ExternalProject_Get_Property(hptt install_dir)
-    cmake_path(APPEND install_dir "include" OUTPUT_VARIABLE hptt_include_dir)
-    cmake_path(APPEND install_dir "lib" OUTPUT_VARIABLE hptt_lib_dir)
-    include_directories("${hptt_include_dir}")
-    message(STATUS "hptt install dir: ${install_dir}")
-    unset(install_dir)
-    add_dependencies(cytnx hptt)
     target_compile_definitions(cytnx PRIVATE UNI_HPTT)
-    target_link_libraries(cytnx PUBLIC "${hptt_lib_dir}/libhptt.a")
 
-    # OpenMP must be PUBLIC even though no cytnx source uses `#pragma omp`
-    # or `<omp.h>`. libcytnx is a STATIC archive
-    # (`add_library(cytnx STATIC)` in the top-level CMakeLists.txt) and
-    # libhptt.a uses OpenMP internally; static linking leaves libhptt's
-    # OpenMP symbol references (`__kmpc_*`, `omp_*`) unresolved until the
-    # consumer's final executable link, so the consumer's link line needs
-    # OpenMP too. PRIVATE here would re-introduce the bug fixed by commit
-    # 5733a441 ("Propagate `-fopenmp` linking flag when using HPTT").
+    # Use `$<LINK_ONLY:hptt_static>` rather than a plain PRIVATE link.
+    #
+    # `target_link_libraries(cytnx PRIVATE hptt_static)` would still cause
+    # cytnx's own compilation to pick up hptt_static's
+    # INTERFACE_COMPILE_OPTIONS (PRIVATE controls outward propagation, not
+    # the inward pull from the dependency's interface) — and hptt sets
+    # `target_compile_options(hptt_static PUBLIC ${HPTT_CXX_FLAGS})` which
+    # includes `-march=native -mtune=native` when HPTT_ENABLE_FINE_TUNE=ON.
+    # Those aggressive flags enable FMA contraction / different SIMD
+    # codegen on cytnx's .cpp files, which produces different bit-level
+    # floating-point results and breaks tests like
+    # `DenseUniTensorTest.Mul_UT_UT` and `.arange`.
+    #
+    # `$<LINK_ONLY:hptt_static>` tells CMake "link this archive but ignore
+    # its interface properties for the consumer's own compilation" —
+    # cytnx links libhptt.a without inheriting hptt's compile flags. We
+    # then add hptt's include directory explicitly below so cytnx's
+    # `Movemem_cpu.cpp` can still `#include "hptt.h"`. PRIVATE keeps
+    # everything out of cytnx's outward interface (no leaking to consumers,
+    # no absolute source path baked into CytnxTargets.cmake).
+    target_link_libraries(cytnx PRIVATE $<LINK_ONLY:hptt_static>)
+    target_include_directories(cytnx PRIVATE "${HPTT_SUBMODULE_DIR}/include")
+
+    # OpenMP must still be PUBLIC even though hptt_static is PRIVATE: libcytnx
+    # is a STATIC archive (`add_library(cytnx STATIC)` in CMakeLists.txt) and
+    # libhptt.a uses OpenMP internally, so libhptt's OpenMP symbol references
+    # (`__kmpc_*`, `omp_*`) stay unresolved until the consumer's final
+    # executable link — the consumer's link line therefore needs OpenMP to
+    # satisfy them. See commit 5733a441 ("Propagate `-fopenmp` linking flag
+    # when using HPTT").
     find_package(OpenMP REQUIRED)
     target_link_libraries(cytnx PUBLIC OpenMP::OpenMP_CXX)
 
-    # Install HPTT to input CMAKE_INSTALL_PREFIX.
-    cmake_path(APPEND CMAKE_INSTALL_INCLUDEDIR "hptt" OUTPUT_VARIABLE hptt_install_include_dir)
-    # Suffix the source folder with / to copy the files and folders in the source folder to the
-    # destination folder instead of copying the source folder itself.
-    # XXX: Do we have to ship the header files of HPTT? Is shipping the static library only enough?
-    install(DIRECTORY "${hptt_include_dir}/" DESTINATION "${hptt_install_include_dir}")
-    # CMake doesn't combine external static libraries into our static library, so we have to
-    # distribute the external static libraries manually.
-    install(DIRECTORY "${hptt_lib_dir}/" TYPE LIB)
+    # CMake requires every target referenced by an exported target to itself
+    # be in some export set, even via the `$<LINK_ONLY:...>` wrapper that
+    # `target_link_libraries(cytnx PRIVATE hptt_static)` adds to
+    # INTERFACE_LINK_LIBRARIES on a STATIC cytnx. Add hptt_static to the
+    # cytnx_targets export so the consumer's `find_package(Cytnx)` can pick
+    # up the import; otherwise `install(EXPORT cytnx_targets)` fails with
+    # "target hptt_static is not in any export set".
+    install(TARGETS hptt_static EXPORT cytnx_targets
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
