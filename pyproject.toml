@@ -67,10 +67,6 @@ wheel.packages = ["cytnx"]
 cmake.args = [
     # Use the default preset defined in CMakePresets.json
     "--preset=openblas-cpu",
-    # TODO: Remove setting of generator to support builuding on Windows.
-    # scikit-build uses Ninja as the default cmake generator. However, Ninja
-    # conflicts against the build process of HPTT.
-    "-G Unix Makefiles",
 ]
 
 [tool.scikit-build.metadata.version]
