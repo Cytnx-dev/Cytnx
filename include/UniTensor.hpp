@@ -1492,6 +1492,9 @@ namespace cytnx {
       return nullptr;
     }
 
+    boost::intrusive_ptr<UniTensor_base> to_dense();
+    void to_dense_();
+
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       BlockUniTensor *tmp = this->clone_meta(true, true);
       tmp->_blocks.resize(this->_blocks.size());
@@ -2264,6 +2267,9 @@ namespace cytnx {
       cytnx_error_msg(true, "[ERROR] Cannot reshape a UniTensor with symmetry.%s", "\n");
       return nullptr;
     }
+
+    boost::intrusive_ptr<UniTensor_base> to_dense();
+    void to_dense_();
 
     boost::intrusive_ptr<UniTensor_base> astype(const unsigned int &dtype) const {
       //[21 Aug 2024] This is a copy from BlockUniTensor; the tensor type was adapted

@@ -1255,6 +1255,25 @@ namespace cytnx {
     return out;
   }
 
+  boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::to_dense() {
+    if (!(this->_is_diag)) {
+      return this->clone();
+    }
+    BlockFermionicUniTensor *tmp = this->clone_meta(true, true);
+    tmp->_blocks.resize(this->_blocks.size());
+    for (std::size_t i = 0; i < tmp->_blocks.size(); i++)
+      tmp->_blocks[i] = cytnx::linalg::Diag(this->_blocks[i]);
+    tmp->_is_diag = false;
+    boost::intrusive_ptr<UniTensor_base> out(tmp);
+    return out;
+  }
+  void BlockFermionicUniTensor::to_dense_() {
+    if (this->_is_diag) {
+      for (auto &blk : this->_blocks) blk = cytnx::linalg::Diag(blk);
+      this->_is_diag = false;
+    }
+  }
+
   boost::intrusive_ptr<UniTensor_base> BlockFermionicUniTensor::contract(
     const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
     const bool &mv_elem_rhs) {
