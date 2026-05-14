@@ -1,7 +1,32 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(Boost REQUIRED)
+
+find_dependency(Boost CONFIG REQUIRED)
+
+# Conditional re-find of build-time PUBLIC imported-target deps.
+# Plain absolute-path link entries (e.g. ${LAPACK_LIBRARIES}, ${ARPACK_LIB})
+# do not need this — they were baked into INTERFACE_LINK_LIBRARIES as paths.
+# Imported targets (CUDA::*, OpenMP::*, Torch targets) only exist after the
+# corresponding find_package runs in the consumer's project, so we recreate
+# them here when cytnx was built with the matching flag. The @VAR@ tokens
+# are expanded to the build-time value of each option by
+# configure_package_config_file when CytnxConfig.cmake is emitted.
+if(@USE_CUDA@)
+  find_dependency(CUDAToolkit REQUIRED)
+endif()
+
+if(@USE_HPTT@)
+  # libcytnx is a STATIC archive; libhptt.a (which uses OpenMP internally)
+  # gets pulled in by reference, so the consumer's final executable link
+  # needs OpenMP to resolve libhptt's `__kmpc_*` / `omp_*` symbols. See
+  # commit 5733a441 ("Propagate `-fopenmp` linking flag when using HPTT").
+  find_dependency(OpenMP REQUIRED)
+endif()
+
+if(@BACKEND_TORCH@)
+  find_dependency(Torch REQUIRED)
+endif()
 
 if(NOT TARGET Cytnx::Cytnx)
     include("${CMAKE_CURRENT_LIST_DIR}/CytnxTargets.cmake")
@@ -10,3 +35,5 @@ endif()
 # Legacy alias for consumers still using `target_link_libraries(... ${Cytnx_Libraries})`.
 # Prefer the imported target `Cytnx::Cytnx` in new code.
 set(Cytnx_Libraries Cytnx::Cytnx)
+
+check_required_components(Cytnx)
