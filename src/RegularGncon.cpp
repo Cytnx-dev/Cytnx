@@ -49,8 +49,6 @@ namespace cytnx {
         // rep_labels.push_back(vector<pair<string, string>>());
         name2pos[tmpvs_[0]] = names.size() - 1;  // register
       }
-      // std::cout<<"table size : "<<table.size()<<std::endl;
-      // std::cout<<"index : "<<name2pos[tmpvs_[0]]<<std::endl;
       pair<string, string> ptmp(tmpvs_[1], "/" + to_string(i));
       // table[i] =  i-th tensor's leg names to be contracted, and its target labels.
       table[name2pos[tmpvs_[0]]].push_back(ptmp);
@@ -90,8 +88,6 @@ namespace cytnx {
       vector<string> tmp_ = str_split(tmp[i], false, "/");
       string name = str_strip(tmp_[0]);
       string content = str_strip(tmp_[1]);
-      // std::cout<<"name = "<<name<<std::endl;
-      // std::cout<<"content = "<<content<<std::endl;
       vector<string> reps = str_split(content, false, ",");
       int tidx = name2pos[name];
       for (int j = 0; j < reps.size(); j++) {
@@ -100,7 +96,6 @@ namespace cytnx {
         ls[0] = str_strip(ls[0]);  // remove spaces
         ls[1] = str_strip(ls[1]);  // remove spaces
         pair<string, string> tmp(ls[0], ls[1]);
-        // std::cout<<"ls[0] = "<<ls[0]<<"ls[1] = "<<ls[1]<<std::endl;
         table[tidx].push_back(tmp);
       }
     }
@@ -220,7 +215,6 @@ namespace cytnx {
     //   }
 
     //   this->name2pos[name] = names.size() - 1;  // register
-    //   // cout << name << "|" << names.size() - 1 << endl;
     //   this->label_arr.push_back(vector<cytnx_int64>());
     //   cytnx_uint64 tmp_iBN;
     //   // this is an internal function that is defined in this cpp file.
@@ -332,7 +326,6 @@ namespace cytnx {
 
       // remove any comment at eol :
       line = str_split(line, true, "#")[0];  // remove comment on end.
-      // std::cout<<line<<std::endl;
       if (line.find_first_of("-") == string::npos) {
         // Not a contraction line, should be either ORDER or TOUT
 
@@ -539,12 +532,6 @@ namespace cytnx {
 
   void RegularGncon::PutUniTensor(const std::string &name, const UniTensor &utensor) {
     cytnx_uint64 idx;
-    /*
-    std::cout << "|" << name <<"|" << std::endl;
-    for(auto it=this->name2pos.begin();it!=this->name2pos.end();it++){
-        std::cout << "|"<<it->first<<"|"<<it->second<<"|" << std::endl;
-    }
-    */
     try {
       idx = this->name2pos.at(name);
     } catch (std::out_of_range) {
@@ -640,21 +627,12 @@ namespace cytnx {
       // transion save old labels:
       //  old_labels.push_back(this->tensors[idx].labels());
 
-      // std::cout<<"idx: "<<idx<<" label: ";
-      // for (cytnx_uint64 j = 0; j < this->label_arr[idx].size(); j++){
-      //   std::cout<<this->label_arr[idx][j]<<",";
-      // }
-      // std::cout<<std::endl;
-
       // modify the label of unitensor (shared):
       //  this->tensors[idx].relabel_(this->label_arr[idx]);//this conflict
       this->CtTree.base_nodes[idx]->utensor =
         this->tensors[idx].relabel(this->label_arr[idx]);  // this conflict
       // this->CtTree.base_nodes[idx].name = this->tensors[idx].name();
       this->CtTree.base_nodes[idx]->is_assigned = true;
-
-      // cout << this->tensors[idx].name() << " " << idx << "from dict:" <<
-      // this->name2pos[this->tensors[idx].name()] << endl;
     }
 
     // 1.5 contraction order:
@@ -678,7 +656,6 @@ namespace cytnx {
     }
 
     // 2. contract using postorder traversal:
-    // cout << this->CtTree.nodes_container.size() << endl;
     stack<std::shared_ptr<Node>> stk;
     std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
     int ly = 0;
@@ -707,34 +684,19 @@ namespace cytnx {
       if (ict) {
         // process!
 
-        // cout << "OK" << endl;
         if ((root->right != nullptr) && (root->left != nullptr)) {
-          // cout << "L,R::\n";
-          // root->left->utensor.print_diagram(1);
-          // root->right->utensor.print_diagram(1);
           root->utensor = Contract(root->left->utensor, root->right->utensor);
-          // cout << "Contract:" << root->left->utensor.name() << " " << root->right->utensor.name()
-          // << endl; root->left->utensor.print_diagram(); root->right->utensor.print_diagram();
-          // root->utensor.print_diagram(); root->utensor.set_name(root->left->utensor.name() +
-          // root->right->utensor.name());
           root->left->clear_utensor();  // remove intermediate unitensor to save heap space
           root->right->clear_utensor();  // remove intermediate unitensor to save heap space
           root->is_assigned = true;
-          // cout << "contract!" << endl;
         }
 
         root = nullptr;
       }
-
-      // cout.flush();
-      // break;
-
     } while (!stk.empty());
 
     // 3. get result:
     UniTensor out = this->CtTree.nodes_container.back()->utensor;
-    // std::cout << out << std::endl;
-    // out.print_diagram();
 
     // 4. reset nodes:
     this->CtTree.reset_nodes();

@@ -167,8 +167,6 @@ namespace cytnx {
 
     //   // tri(tmp.c_str());
 
-    //   // cout << tmp.size() << endl;
-    //   // cout << tmp.find_first_not_of("0123456789-") << endl;
     //   cytnx_error_msg((tmp.find_first_not_of("0123456789-") != string::npos),
     //                   "[ERROR][Network][Fromfile] line:%d %s\n", line_num,
     //                   "Invalid TN line. label contain non integer.");
@@ -269,9 +267,6 @@ namespace cytnx {
         root = nullptr;
       }
     } while (!stk.empty());
-    // for (int i = 0; i < path.size(); i++) {
-    //   std::cout << path[i].first << ", " << path[i].second << std::endl;
-    // }
     return path;
   }
 
@@ -362,7 +357,6 @@ namespace cytnx {
       }
 
       this->name2pos[name] = names.size() - 1;  // register
-      // cout << name << "|" << names.size() - 1 << endl;
       this->label_arr.push_back(vector<string>());
       cytnx_uint64 tmp_iBN;
       // this is an internal function that is defined in this cpp file.
@@ -516,7 +510,6 @@ namespace cytnx {
                         i);
 
         this->name2pos[name] = names.size() - 1;  // register
-        // cout << name << "|" << names.size() - 1 << endl;
         this->label_arr.push_back(vector<string>());
         cytnx_uint64 tmp_iBN;
         // this is an internal function that is defined in this cpp file.
@@ -976,7 +969,6 @@ namespace cytnx {
       }
 
       // 2. contract using postorder traversal:
-      // cout << this->CtTree.nodes_container.size() << endl;
       stack<std::shared_ptr<Node>> stk;
       std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
       root->set_root_ptrs();  // Add this line
@@ -1017,8 +1009,6 @@ namespace cytnx {
 
       // 3. get result:
       UniTensor out = this->CtTree.nodes_container.back()->utensor;
-      // cout << out << endl;
-      // out.print_diagram();
 
       // 4. reset nodes:
       this->CtTree.reset_nodes();
@@ -1094,7 +1084,6 @@ namespace cytnx {
         CtTree.build_default_contraction_tree();
       }
       // 2. contract using postorder traversal:
-      // cout << this->CtTree.nodes_container.size() << endl;
       stack<std::shared_ptr<Node>> stk;
       std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
       root->set_root_ptrs();  // Add this line
@@ -1219,7 +1208,6 @@ namespace cytnx {
     for (map<string, cytnx_int64>::iterator it = labelcnt.begin(); it != labelcnt.end(); ++it) {
       if (it->second == 1) expected_TOUT.push_back(it->first);
     }
-    // cout<<this->TOUT_labels.size();
     if (this->TOUT_labels.size() == 0) {
       this->TOUT_labels = expected_TOUT;
     } else {

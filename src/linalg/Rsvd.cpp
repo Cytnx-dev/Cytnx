@@ -209,9 +209,7 @@ namespace cytnx {
         int t = 0;
         outCyT.resize(outT.size());
 
-        // cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Rsvd] keepdim should <=
-        // dimension of singular tensor%s","\n");
-
+        // s
         cytnx::UniTensor &Cy_S = outCyT[t];
         cytnx::Bond newBond(outT[0].shape()[0]);
         Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1,
