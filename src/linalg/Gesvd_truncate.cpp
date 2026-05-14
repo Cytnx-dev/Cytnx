@@ -344,10 +344,15 @@ namespace cytnx {
 
       // handle return_err!
       if (return_err == 1) {
-        outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-        outCyT.back().get_block_().storage().at(0) = Smin;
+        Tensor out = zeros({1}, Smin.dtype());
+        if (smidx > 0) out(0) = Sall(smidx - 1);
+        outCyT.push_back(UniTensor(out));
       } else if (return_err) {
-        outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+        if (smidx > 0) {
+          outCyT.push_back(UniTensor(Sall.get({Accessor::range(0, smidx, 1)})));
+        } else {
+          outCyT.push_back(UniTensor::zeros({1}, {}, Tin.dtype()));
+        }
       }
     }  // _gesvd_truncate_Block_UT
 
@@ -504,10 +509,15 @@ namespace cytnx {
 
       // handle return_err!
       if (return_err == 1) {
-        outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-        outCyT.back().get_block_().storage().at(0) = Smin;
+        Tensor out = zeros({1}, Smin.dtype());
+        if (smidx > 0) out(0) = Sall(smidx - 1);
+        outCyT.push_back(UniTensor(out));
       } else if (return_err) {
-        outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+        if (smidx > 0) {
+          outCyT.push_back(UniTensor(Sall.get({Accessor::range(0, smidx, 1)})));
+        } else {
+          outCyT.push_back(UniTensor::zeros({1}, {}, Tin.dtype()));
+        }
       }
     }  // _gesvd_truncate_BlockFermionic_UT
 
@@ -606,7 +616,7 @@ namespace cytnx {
       if (!anySall) {
         // no truncation; return_err is tensor with one element, set to 0
         if (return_err >= 1) {
-          outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+          outCyT.push_back(UniTensor::zeros({1}, {}, Tin.dtype()));
         }
       } else {
         Scalar Smin;
@@ -638,14 +648,19 @@ namespace cytnx {
           }
           // handle return_err!
           if (return_err == 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Smin.dtype())));
-            outCyT.back().get_block_().storage().at(0) = Smin;
+            Tensor out = zeros({1}, Smin.dtype());
+            if (smidx > 0) out(0) = Sall(smidx - 1);
+            outCyT.push_back(UniTensor(out));
           } else if (return_err) {
-            outCyT.push_back(UniTensor(Sall.get({Accessor::tilend(smidx)})));
+            if (smidx > 0) {
+              outCyT.push_back(UniTensor(Sall.get({Accessor::range(0, smidx, 1)})));
+            } else {
+              outCyT.push_back(UniTensor::zeros({1}, {}, Tin.dtype()));
+            }
           }
         } else {
           if (return_err >= 1) {
-            outCyT.push_back(UniTensor(Tensor({1}, Tin.dtype())));
+            outCyT.push_back(UniTensor::zeros({1}, {}, Tin.dtype()));
           }
         }
 
