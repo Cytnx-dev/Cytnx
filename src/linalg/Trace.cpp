@@ -35,7 +35,7 @@ namespace cytnx {
       cytnx_error_msg(axisA >= Tn.shape().size(), "[ERROR] axisA out of bound.%s", "\n");
       cytnx_error_msg(axisB >= Tn.shape().size(), "[ERROR] axisB out of bound.%s", "\n");
       cytnx_error_msg(axisA == axisB, "[ERROR] axisB cannot be the same as axisA.%s", "\n");
-      cytnx_error_msg(Tn.dtype() == Type.Void, "[ERROR] cannot have output type to be Type.Void.%s",
+      cytnx_error_msg(Tn.dtype() == Type.Void, "[ERROR] Cannot have output type to be Type.Void.%s",
                       "\n");
       cytnx_error_msg(
         Tn.dtype() == Type.Bool,
@@ -83,7 +83,6 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < Tn.shape().size(); i++) {
           if (i != ax1 && i != ax2) remain_rank_id.push_back(i);
         }
-        // std::cout << "entry Trace" << std::endl;
         if (Tn.device() == Device.cpu)
           linalg_internal::lii.Trace_ii[Tn.dtype()](false, out, Tn, Ndiag, Nelem, Device.Ncpus,
                                                     accu, remain_rank_id, shape, ax1, ax2);

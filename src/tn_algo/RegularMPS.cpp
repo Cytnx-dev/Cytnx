@@ -48,13 +48,13 @@ namespace cytnx {
       UniTensor L;
       for (auto Ai : this->_TNs) {
         if (L.uten_type() == UTenType.Void) {
-          auto tA = Ai.relabels({"0", "1", "2"});
+          auto tA = Ai.relabel({"0", "1", "2"});
           L = Contract(tA, tA.Dagger().relabel("0", "-2"));
         } else {
-          L.set_labels({"2", "-2"});
-          auto tA = Ai.relabels({"2", "3", "4"});
+          L.relabel_({"2", "-2"});
+          auto tA = Ai.relabel({"2", "3", "4"});
           L = Contract(tA, L);
-          L = Contract(L, tA.Dagger().relabels({"-4", "-2", "3"}));
+          L = Contract(L, tA.Dagger().relabel({"-4", "-2", "3"}));
         }
       }
       return L.Trace().item();
@@ -94,9 +94,7 @@ namespace cytnx {
         k_ov = 0;
       }
 
-      // vec_print(std::cout,vphys_dim);
       for (cytnx_int64 k = 1; k < N; k++) {
-        // cout << k << endl;
         dim1 = this->_TNs[k - 1].shape()[2];
         dim2 = vphys_dim[k];
 
@@ -107,8 +105,7 @@ namespace cytnx {
           dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)), DR);
         }
         this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3}, 0., 1., -1), false, 2);
-        this->_TNs[k].set_labels({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
-        // vec_print(std::cout,this->_TNs[k].shape());// << endl;
+        this->_TNs[k].relabel_({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
       }
       this->S_loc = -1;
       this->Into_Lortho();
@@ -143,7 +140,6 @@ namespace cytnx {
       cytnx_uint64 DR = 1;
       cytnx_int64 k_ov = -1;
       for (cytnx_int64 k = N - 1; k >= 0; k--) {
-        // cout << k << endl;
         if (std::numeric_limits<cytnx_uint64>::max() / vphys_dim[k] <= DR) {
           k_ov = k;
           break;
@@ -166,12 +162,11 @@ namespace cytnx {
           DR /= vphys_dim[k];
           dim3 = std::min(std::min(chi, cytnx_uint64(dim1 * dim2)), DR);
         }
-        // cout << dim1 << dim2 << dim3 << endl;
         this->_TNs[k] = UniTensor(zeros({dim1, dim2, dim3}), false, 2);
         this->_TNs[k].get_block_()(":", select[k]) = random::normal({dim1, dim3}, 0., 1.);
 
         // this->_TNs[k] = UniTensor(random::normal({dim1, dim2, dim3},0.,1.,-1,99),2);
-        this->_TNs[k].set_labels({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
+        this->_TNs[k].relabel_({to_string(2 * k), to_string(2 * k + 1), to_string(2 * k + 2)});
       }
       this->S_loc = -1;
       this->Into_Lortho();

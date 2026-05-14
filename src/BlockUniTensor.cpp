@@ -142,14 +142,7 @@ namespace cytnx {
       bool fin = false;
       while (1) {
         // get elem
-        // cout << "start!" << endl;
-        // cytnx::vec_print_simple(std::cout , Loc);
         this->_fx_get_total_fluxs(Loc, this->_bonds[0].syms(), tot_qns);
-
-        // std::cout << "Loc: ";
-        // cytnx::vec_print_simple(std::cout, Loc);
-        // std::cout << "tot_flx: ";
-        // cytnx::vec_print_simple(std::cout, tot_qns);
 
         // if exists:
         if (std::all_of(tot_qns.begin(), tot_qns.end(), [](const int &i) { return i == 0; })) {
@@ -180,7 +173,6 @@ namespace cytnx {
             continue;
           } else {
             Loc.back() += 1;
-            // cout << "+1 at loc:" << Loc.size()-1 <<endl;
             while (Loc.size() != this->_bonds.size()) {
               Loc.push_back(0);
             }
@@ -610,8 +602,10 @@ namespace cytnx {
     std::vector<string>::iterator it;
     for (cytnx_int64 i = 0; i < mapper.size(); i++) {
       it = std::find(out_raw->_labels.begin(), out_raw->_labels.end(), mapper[i]);
-      cytnx_error_msg(it == out_raw->_labels.end(),
-                      "[ERROR] label %s does not exist in current UniTensor.\n", mapper[i].c_str());
+      cytnx_error_msg(
+        it == out_raw->_labels.end(),
+        "[ERROR][BlockUniTensor][permute] Label '%s' does not exist in UniTensor '%s'.\n",
+        mapper[i].c_str(), this->_name.c_str());
       mapper_i64.push_back(std::distance(out_raw->_labels.begin(), it));
     }
 
@@ -662,8 +656,10 @@ namespace cytnx {
     std::vector<std::string>::iterator it;
     for (cytnx_uint64 i = 0; i < mapper.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), mapper[i]);
-      cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label %d does not exist in current UniTensor.\n", mapper[i].c_str());
+      cytnx_error_msg(
+        it == this->_labels.end(),
+        "[ERROR][BlockUniTensor][permute_] Label '%s' does not exist in UniTensor '%s'.\n",
+        mapper[i].c_str(), this->_name.c_str());
       mapper_i64.push_back(std::distance(this->_labels.begin(), it));
     }
 
@@ -728,13 +724,17 @@ namespace cytnx {
     const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &mv_elem_self,
     const bool &mv_elem_rhs) {
     // checking type
-    cytnx_error_msg(
-      rhs->uten_type() != UTenType.Block,
-      "[ERROR] cannot contract symmetry-block UniTensor with other type of UniTensor%s", "\n");
+    cytnx_error_msg(rhs->uten_type() != UTenType.Block,
+                    "[ERROR][BlockUniTensor][contract] Cannot contract BlockUniTensor with other "
+                    "type of UniTensor.%s",
+                    "\n");
 
     // checking symmetry:
-    cytnx_error_msg(this->syms() != rhs->syms(),
-                    "[ERROR] two UniTensor have different symmetry type cannot contract.%s", "\n");
+    cytnx_error_msg(
+      this->syms() != rhs->syms(),
+      "[ERROR][BlockUniTensor][contract] Two UniTensor have different symmetry types, "
+      "cannot contract.%s",
+      "\n");
 
     // get common labels:
     std::vector<string> comm_labels;
@@ -759,7 +759,6 @@ namespace cytnx {
       out_rowrank = this->rowrank() + rhs->rowrank();
       vec_concatenate_(out_labels, this->_labels, rhs->_labels);
 
-      // cout << out_bonds;
       tmp->Init(out_bonds, out_labels, out_rowrank, this->dtype(), this->device(), false);
 
       // tmp->_name = this->_name + "+" + rhs->_name;
@@ -776,26 +775,17 @@ namespace cytnx {
         auto IDL = vec_argwhere(this->_inner_to_outer_idx, Lidx);
         auto IDR = vec_argwhere(Rtn->_inner_to_outer_idx, Ridx);
 
-        /*
-        cout << b << endl;
-        //vec_print_simple(std::cout,tmp->_inner_to_outer_idx[b]);
-        //vec_print_simple(std::cout,Lidx);
-        //vec_print_simple(std::cout,Ridx);
-        vec_print_simple(std::cout,IDL);
-        vec_print_simple(std::cout,IDR);
-        */
         if (User_debug) {
-          if (IDL.size() == IDR.size()) {
-            cytnx_error_msg(IDL.size() > 1,
-                            "[ERROR][BlockUniTensor] IDL has more than two ambiguous location!%s",
-                            "\n");
-            cytnx_error_msg(IDR.size() > 1,
-                            "[ERROR][BlockUniTensor] IDL has more than two ambiguous location!%s",
-                            "\n");
-
-          } else {
-            cytnx_error_msg(true, "[ERROR] duplication, something wrong!%s", "\n");
-          }
+          cytnx_error_msg(
+            IDL.size() > 1,
+            "[ERROR][BlockUniTensor][contract] IDL has more than two ambiguous locations!%s", "\n");
+          cytnx_error_msg(
+            IDR.size() > 1,
+            "[ERROR][BlockUniTensor][contract] IDR has more than two ambiguous locations!%s", "\n");
+          cytnx_error_msg(IDL.size() == 0, "[ERROR][BlockUniTensor][contract] IDL not found!%s",
+                          "\n");
+          cytnx_error_msg(IDR.size() == 0, "[ERROR][BlockUniTensor][contract] IDR not found!%s",
+                          "\n");
         }
         if (IDL.size()) {
           auto tmpR = Rtn->is_diag() ? linalg::Diag(Rtn->_blocks[IDR[0]]) : Rtn->_blocks[IDR[0]];
@@ -806,8 +796,8 @@ namespace cytnx {
           tmpL = tmpL.reshape(shape_L);
           auto Ott = linalg::Kron(tmpL, tmpR, false, true);
           // checking:
-          cytnx_error_msg(Ott.shape() != tmp->_blocks[b].shape(), "[ERROR] mismatching shape!%s",
-                          "\n");
+          cytnx_error_msg(Ott.shape() != tmp->_blocks[b].shape(),
+                          "[ERROR][BlockUniTensor][contract] Mismatching shape!%s", "\n");
           tmp->_blocks[b] = Ott;
         }
       }
@@ -821,15 +811,18 @@ namespace cytnx {
       for (int i = 0; i < comm_labels.size(); i++) {
         if (User_debug) {
           cytnx_error_msg(this->_bonds[comm_idx1[i]].qnums() != rhs->_bonds[comm_idx2[i]].qnums(),
-                          "[ERROR] contract bond @ label %s have qnum mismatch.\n",
+                          "[ERROR][BlockUniTensor][contract] Contracted bond with label '%s' has a "
+                          "qnum mismatch.\n",
                           comm_labels[i].c_str());
           cytnx_error_msg(this->_bonds[comm_idx1[i]].getDegeneracies() !=
                             rhs->_bonds[comm_idx2[i]].getDegeneracies(),
-                          "[ERROR] contract bond @ label %s have degeneracies mismatch.\n",
+                          "[ERROR][BlockUniTensor][contract] Contracted bond with label '%s' has a "
+                          "degeneracies mismatch.\n",
                           comm_labels[i].c_str());
         }
         cytnx_error_msg(this->_bonds[comm_idx1[i]].type() + rhs->_bonds[comm_idx2[i]].type(),
-                        "[ERROR] BRA can only contract with KET. invalid @ label: %s\n",
+                        "[ERROR][BlockUniTensor][contract] A bond with type BRA can only be "
+                        "contracted with type KET. Invalid contraction for label '%s'.\n",
                         comm_labels[i].c_str());
       }
 
@@ -864,8 +857,6 @@ namespace cytnx {
               else
                 tmp->_block += linalg::Vectordot(Lperm_raw->_blocks[b].flatten(),
                                                  Rperm_raw->_blocks[a].flatten());
-
-              // std::cout << b << " " << a << endl;
             }
           }
         }
@@ -1023,12 +1014,14 @@ namespace cytnx {
               if (this->_blocks[a].device() != this->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(
-              all_sub_tensor_same_dtype,
-              "[ERROR] cannot perform contraction on sub-Tensors with different dtype.%s", "\n");
-            cytnx_error_msg(
-              all_sub_tensor_same_device,
-              "[ERROR] cannot perform contraction on sub-Tensors with different device.%s", "\n");
+            cytnx_error_msg(all_sub_tensor_same_dtype,
+                            "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
+                            "sub-Tensors with different dtype.%s",
+                            "\n");
+            cytnx_error_msg(all_sub_tensor_same_device,
+                            "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
+                            "sub-Tensors on different device.%s",
+                            "\n");
             all_sub_tensor_same_dtype = true;
             all_sub_tensor_same_device = true;
             for (cytnx_int64 a = 0; a < Rtn->_blocks.size(); a++) {
@@ -1037,12 +1030,14 @@ namespace cytnx {
               if (Rtn->_blocks[a].device() != Rtn->_blocks[0].device())
                 all_sub_tensor_same_device = false;
             }
-            cytnx_error_msg(
-              all_sub_tensor_same_dtype,
-              "[ERROR] cannot perform contraction on sub-Tensors with different dtype.%s", "\n");
-            cytnx_error_msg(
-              all_sub_tensor_same_device,
-              "[ERROR] cannot perform contraction on sub-Tensors with different device.%s", "\n");
+            cytnx_error_msg(all_sub_tensor_same_dtype,
+                            "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
+                            "sub-Tensors with different dtype.%s",
+                            "\n");
+            cytnx_error_msg(all_sub_tensor_same_device,
+                            "[ERROR][BlockUniTensor][contract] Cannot perform contraction on "
+                            "sub-Tensors on different device.%s",
+                            "\n");
           }
   #ifdef UNI_MKL
           // If the dtype of this and Rtn are different, we need to cast to the common dtype
@@ -1208,17 +1203,20 @@ namespace cytnx {
 
       }  // does it contract all the bond?
 
-      cytnx_error_msg(true, "something wrong!%s", "\n");
+      cytnx_error_msg(true, "[ERROR][BlockUniTensor][contract] Something is fatally wrong!%s",
+                      "\n");
 
     }  // does it contract all the bond?
   };
 
   void BlockUniTensor::Transpose_() {
-    // modify tag
-    for (int i = 0; i < this->bonds().size(); i++) {
+    std::vector<cytnx_int64> idxorder(this->_bonds.size());
+    cytnx_int64 idxnum = this->bonds().size() - 1;
+    for (cytnx_int64 i = 0; i <= idxnum; i++) {
       this->bonds()[i].redirect_();
-      // this->bonds()[i].qnums() = this->bonds()[i].calc_reverse_qnums();
+      idxorder[i] = idxnum - i;
     }
+    this->permute_(idxorder, idxnum + 1 - this->_rowrank);
   };
 
   void BlockUniTensor::normalize_() {
@@ -1301,7 +1299,6 @@ namespace cytnx {
       std::map<std::vector<cytnx_uint64>, cytnx_uint64> tmap;
       std::map<std::vector<cytnx_uint64>, cytnx_uint64>::iterator itr;
       for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
-        // std::cout << "blk: " << i << std::endl;
         if (this->_inner_to_outer_idx[i][ida] == this->_inner_to_outer_idx[i][idb]) {
           auto s = this->_inner_to_outer_idx[i];
           s.erase(s.begin() + idb);
@@ -1612,7 +1609,7 @@ namespace cytnx {
   void BlockUniTensor::truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &q_index) {
     cytnx_error_msg(
       this->is_diag(),
-      "[ERROR][BlockUniTensor][truncate_] cannot use truncate_ when is_diag() = true.%s", "\n");
+      "[ERROR][BlockUniTensor][truncate_] Cannot use truncate_ when is_diag() = true.%s", "\n");
     cytnx_int64 bidx = bond_idx;
 
     cytnx_error_msg((bidx >= this->_labels.size()) || (bidx < 0),
@@ -1623,7 +1620,7 @@ namespace cytnx {
 
     cytnx_error_msg(
       this->_bonds[bidx].qnums().size() == 1,
-      "[ERROR][BlockUniTensor][truncate_] cannot remove the only qnums on a given Bond!%s", "\n");
+      "[ERROR][BlockUniTensor][truncate_] Cannot remove the only qnums on a given Bond!%s", "\n");
 
     this->_bonds[bidx]._impl->_rm_qnum(q_index);
 
@@ -1639,15 +1636,17 @@ namespace cytnx {
   }
   void BlockUniTensor::truncate_(const std::string &bond_idx, const cytnx_uint64 &q_index) {
     auto it = std::find(this->_labels.begin(), this->_labels.end(), bond_idx);
-    cytnx_error_msg(it == this->_labels.end(),
-                    "[ERROR] label [%s] does not exist in current UniTensor.\n", bond_idx.c_str());
+    cytnx_error_msg(
+      it == this->_labels.end(),
+      "[ERROR][BlockUniTensor][truncate_] Label '%s' does not exist in UniTensor '%s'.\n",
+      bond_idx.c_str(), this->_name.c_str());
 
     cytnx_int64 idx = it - this->_labels.begin();
     this->truncate_(idx, q_index);
   }
 
   void BlockUniTensor::Mul_(const Scalar &rhs) {
-    // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
+    // cytnx_error_msg(true,"[ERROR] Cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i] *= rhs;
@@ -1655,7 +1654,7 @@ namespace cytnx {
   }
 
   void BlockUniTensor::Div_(const Scalar &rhs) {
-    // cytnx_error_msg(true,"[ERROR] cannot perform arithmetic on all tagged tensor, @spase
+    // cytnx_error_msg(true,"[ERROR] Cannot perform arithmetic on all tagged tensor, @spase
     // unitensor%s","\n");
     for (cytnx_int64 i = 0; i < this->_blocks.size(); i++) {
       this->_blocks[i] /= rhs;
@@ -1665,13 +1664,13 @@ namespace cytnx {
   void BlockUniTensor::Add_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     // checking Type:
     cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
+                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
 
     BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] cannot add two BlockUniTensor with different rank!%s", "\n");
+                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
     for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(
         this->_bonds[i] != Rtn->_bonds[i],
@@ -1680,7 +1679,7 @@ namespace cytnx {
     }
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
-                    "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
+                    "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
                     "\n");
 
     // 2) finding the blocks (they might be not in the same order!)
@@ -1698,13 +1697,13 @@ namespace cytnx {
   void BlockUniTensor::Mul_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     // checking Type:
     cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
+                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
 
     BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] cannot add two BlockUniTensor with different rank!%s", "\n");
+                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
     for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(
         this->_bonds[i] != Rtn->_bonds[i],
@@ -1713,7 +1712,7 @@ namespace cytnx {
     }
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
-                    "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
+                    "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
                     "\n");
 
     // 2) finding the blocks (they might be not in the same order!)
@@ -1732,13 +1731,13 @@ namespace cytnx {
     //[26 Sep 2025] This is a copy from Mul_ with *= replaced by /=
     // checking Type:
     cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
+                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
 
     BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] cannot add two BlockUniTensor with different rank!%s", "\n");
+                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
     for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(
         this->_bonds[i] != Rtn->_bonds[i],
@@ -1747,7 +1746,7 @@ namespace cytnx {
     }
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
-                    "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
+                    "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
                     "\n");
 
     // 2) finding the blocks (they might be not in the same order!)
@@ -1765,13 +1764,13 @@ namespace cytnx {
   void BlockUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     // checking Type:
     cytnx_error_msg(rhs->uten_type() != UTenType.Block,
-                    "[ERROR] cannot add two UniTensor with different type/format.%s", "\n");
+                    "[ERROR] Cannot add two UniTensor with different type/format.%s", "\n");
 
     BlockUniTensor *Rtn = (BlockUniTensor *)rhs.get();
 
     // 1) check each bond.
     cytnx_error_msg(this->_bonds.size() != Rtn->_bonds.size(),
-                    "[ERROR] cannot add two BlockUniTensor with different rank!%s", "\n");
+                    "[ERROR] Cannot add two BlockUniTensor with different rank!%s", "\n");
     for (cytnx_int64 i = 0; i < this->_bonds.size(); i++) {
       cytnx_error_msg(
         this->_bonds[i] != Rtn->_bonds[i],
@@ -1780,7 +1779,7 @@ namespace cytnx {
     }
 
     cytnx_error_msg(this->is_diag() != Rtn->is_diag(),
-                    "[ERROR] cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
+                    "[ERROR] Cannot add BlockUniTensor with is_diag=true and is_diag=false.%s",
                     "\n");
 
     // 2) finding the blocks (they might be not in the same order!)
@@ -1806,8 +1805,6 @@ namespace cytnx {
 
     // process one by one:
     for (cytnx_int64 bn = 0; bn < dup_bond_idxs.size(); bn++) {
-      // cout << "BOND:" << dup_bond_idxs[bn] << endl;
-      // cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n";
       tmp_inner_to_outer_idx = this->_inner_to_outer_idx;
 
       for (cytnx_int64 i = 0; i < this->_inner_to_outer_idx.size(); i++) {
@@ -1833,23 +1830,9 @@ namespace cytnx {
           if (mask[a] == 1) continue;
           if (tmp_inner_to_outer_idx[a] == tmp_inner_to_outer_idx[b]) {
             // need to combine two!
-            // checking which bonds does not need to combine!
+            // checking which bonds do not need to be combined!
             mask[a] = 1;
-            /*
-            std::cout << "CALL DS:\n";
-            std::cout << no_combine << std::endl;
-            std::cout << "targ: old/new itoi:\n";
-            std::cout << this->_inner_to_outer_idx[b] << std::endl;
-            std::cout << tmp_inner_to_outer_idx[b] << std::endl;
-            std::cout << "----------\n" << std::endl;
-            std::cout << "src: old/new itoi:\n";
-            std::cout << this->_inner_to_outer_idx[a] << std::endl;
-            std::cout << tmp_inner_to_outer_idx[a] << std::endl;
-            std::cout << "----------\n" << std::endl;
-            std::cout << new_blocks.back().shape() << std::endl;
-            std::cout << this->_blocks[a].shape() << std::endl;
-            std::cout << "=============\n" << std::endl;
-            */
+
             new_blocks.back() = linalg::Directsum(new_blocks.back(), this->_blocks[a], no_combine);
           }
         }
@@ -1877,7 +1860,7 @@ namespace cytnx {
   // Deprecated, internal use only
   void BlockUniTensor::combineBonds(const std::vector<cytnx_int64> &indicators, const bool &force) {
     cytnx_error_msg(this->is_diag(),
-                    "[ERROR][BlockUniTensor] cannot combineBonds when is_diag = true!%s", "\n");
+                    "[ERROR][BlockUniTensor] Cannot combineBonds when is_diag = true!%s", "\n");
 
     cytnx_error_msg(indicators.size() < 2, "[ERROR] the number of bonds to combine must be > 1%s",
                     "\n");
@@ -1890,7 +1873,7 @@ namespace cytnx {
     // idx_mapper = std::vector<cytnx_uint64>(indicators.begin(), indicators.end());
 
     cytnx_error_msg(this->_is_diag,
-                    "[ERROR] cannot combineBond on a is_diag=True UniTensor. suggestion: try "
+                    "[ERROR] Cannot combineBond on a is_diag=True UniTensor. suggestion: try "
                     "UniTensor.to_dense()/to_dense_() first.%s [NOTE] this is BlockUniTensor, so "
                     "currently under developing!\n",
                     "\n");
@@ -1921,8 +1904,6 @@ namespace cytnx {
         }
       }
     }
-    // std::cout << idx_mapper << std::endl;
-    // std::cout << new_shape_aft_perm << std::endl;
 
     this->permute_(idx_mapper);
     this->contiguous_();
@@ -1930,8 +1911,6 @@ namespace cytnx {
     // group bonds:
     std::vector<Bond> new_bonds;
     std::vector<cytnx_uint64> cb_stride(indicators.size());
-    // std::cout << "idor" << idor << std::endl;
-    // std::cout << "rank" << this->rank() << std::endl;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
         Bond tmp = this->_bonds[i];
@@ -1982,9 +1961,6 @@ namespace cytnx {
       this->_blocks[b].reshape_(new_shape);
     }
 
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->get_qindices(2)<<endl;
-    // cout<<"AAAAAAAAAAAAAAAAAAAAAAA"<<this->bonds()<<endl;
-
     for (int b = 0; b < this->_blocks.size(); b++) {
       this->_inner_to_outer_idx[b][idor] *= cb_stride[0];
       for (int i = idor + 1; i < idor + indicators.size(); i++) {
@@ -1998,15 +1974,12 @@ namespace cytnx {
       }
       this->_inner_to_outer_idx[b].resize(this->rank());
     }
-    // std::cout << this->_inner_to_outer_idx << std::endl;
 
     // change rowrank:
     this->_rowrank = newrowrank;
 
     this->_is_braket_form = this->_update_braket();
 
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->get_qindices(2)<<endl;
-    // cout<<"BBBBBBBBBBBBBBBBBBBBBBB"<<this->bonds()<<endl;
     // regroup:
     this->group_basis_();
   }
@@ -2019,8 +1992,10 @@ namespace cytnx {
     // find the index of label:
     for (cytnx_uint64 i = 0; i < indicators.size(); i++) {
       it = std::find(this->_labels.begin(), this->_labels.end(), indicators[i]);
-      cytnx_error_msg(it == this->_labels.end(),
-                      "[ERROR] label '%s' not found in current UniTensor\n", indicators[i].c_str());
+      cytnx_error_msg(
+        it == this->_labels.end(),
+        "[ERROR][BlockUniTensor][combineBond] Label '%s' not found in UniTensor '%s'.\n",
+        indicators[i].c_str(), this->_name.c_str());
       idx_mapper.push_back(std::distance(this->_labels.begin(), it));
     }
     this->combineBonds(idx_mapper, force);

@@ -82,7 +82,6 @@ namespace cytnx {
       }
     }
     str_order = string(needed_parentheses, '(').append(str_order);
-    // std::cout << str_order << std::endl;
     UniTensor out;
     Network N;
     N.construct(alias, labels, out_labels, 1, str_order, optimize);
@@ -95,7 +94,7 @@ namespace cytnx {
       N.setOrder(true, "");
       out = N.Launch();
     }
-    if (!out_labels.empty()) out.set_labels(out_labels);
+    if (!out_labels.empty()) out.relabel_(out_labels);
     return out;
   }
 }  // namespace cytnx

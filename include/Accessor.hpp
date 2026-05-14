@@ -63,7 +63,6 @@ namespace cytnx {
       std::vector<T> tmp = list;
       this->_type = this->list;
       this->idx_list = std::vector<cytnx_int64>(tmp.begin(), tmp.end());
-      // std::cout << "VV" << this->idx_list.size() << std::endl;
     };  // construct from vector/list, should be 1d with dtype integer.
 
     template <class T>
@@ -84,6 +83,9 @@ namespace cytnx {
     Accessor(const Accessor &rhs);
     // copy assignment:
     Accessor &operator=(const Accessor &rhs);
+
+    // check equality
+    bool operator==(const Accessor &rhs) const;
     ///@endcond
 
     int type() const { return this->_type; }
@@ -127,7 +129,7 @@ namespace cytnx {
     };
 
     static Accessor tilend(const cytnx_int64 &min, const cytnx_int64 &step = 1) {
-      cytnx_error_msg(step == 0, "[ERROR] cannot have _step=0 for tilend%s", "\n");
+      cytnx_error_msg(step == 0, "[ERROR] Cannot have _step=0 for tilend%s", "\n");
       Accessor out;
       out._type = Accessor::Tilend;
       out._min = min;
@@ -136,7 +138,7 @@ namespace cytnx {
     };
 
     static Accessor step(const cytnx_int64 &step) {
-      cytnx_error_msg(step == 0, "[ERROR] cannot have _step=0 for _step%s", "\n");
+      cytnx_error_msg(step == 0, "[ERROR] Cannot have _step=0 for _step%s", "\n");
       Accessor out;
       out._type = Accessor::Step;
       // out._min = 0;
@@ -145,7 +147,7 @@ namespace cytnx {
     };
 
     static Accessor qns(const std::vector<std::vector<cytnx_int64>> &qns) {
-      cytnx_error_msg(qns.size() == 0, "[ERROR] cannot have empty qnums.%s", "\n");
+      cytnx_error_msg(qns.size() == 0, "[ERROR] Cannot have empty qnums.%s", "\n");
       Accessor out;
 
       out._type = Accessor::Qns;
@@ -181,10 +183,8 @@ namespace cytnx {
 
   template <class T, class... Ts>
   std::vector<cytnx::Accessor> Indices_resolver(const T &a, const Ts &...args) {
-    // std::cout << a << std::endl;;
     std::vector<cytnx::Accessor> idxs;
     _resolve_elems(idxs, a, args...);
-    // cout << idxs << endl;
     return idxs;
   }
   ///@endcond

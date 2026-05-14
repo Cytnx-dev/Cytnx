@@ -102,8 +102,6 @@ namespace cytnx {
       //[Note] outCyT must be empty!
 
       // DenseUniTensor:
-      // cout << "entry Dense UT" << endl;
-
       Tensor tmp;
       if (Tin.is_contiguous())
         tmp = Tin.get_block_();
@@ -136,7 +134,6 @@ namespace cytnx {
       Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
                 Tin.device(), true);  // it is just reference so no hurt to alias ^^
 
-      // cout << "[AFTER INIT]" << endl;
       Cy_S.put_block_(outT[t]);
       t++;
 
@@ -152,7 +149,7 @@ namespace cytnx {
         Cy_U.Init(outT[t], false, Tin.rowrank());
         std::vector<std::string> labelU(oldlabel.begin(), oldlabel.begin() + Tin.rowrank());
         labelU.push_back(Cy_S.labels()[0]);
-        Cy_U.set_labels(labelU);
+        Cy_U.relabel_(labelU);
         t++;  // U
       }
       if (is_vT) {
@@ -163,13 +160,12 @@ namespace cytnx {
 
         outT[t].reshape_(shapevT);
         Cy_vT.Init(outT[t], false, 1);
-        // cout << shapevT.size() << endl;
         std::vector<std::string> labelvT(shapevT.size());
         labelvT[0] = Cy_S.labels()[1];
         // memcpy(&labelvT[1], &oldlabel[Tin.rowrank()], sizeof(cytnx_int64) * (labelvT.size() -
         // 1));
         std::copy(oldlabel.begin() + Tin.rowrank(), oldlabel.end(), labelvT.begin() + 1);
-        Cy_vT.set_labels(labelvT);
+        Cy_vT.relabel_(labelvT);
         t++;  // vT
       }
       // if tag, then update  the tagging informations

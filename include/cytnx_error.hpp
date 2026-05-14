@@ -9,7 +9,16 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <execinfo.h>
+#if defined(__has_include)
+  #if __has_include(<execinfo.h>)
+    #include <execinfo.h>
+    #define CYTNX_HAS_EXECINFO 1
+  #endif
+#endif
+
+#ifndef CYTNX_HAS_EXECINFO
+  #define CYTNX_HAS_EXECINFO 0
+#endif
 
 #ifdef _MSC_VER
   #define __PRETTY_FUNCTION__ __FUNCTION__
@@ -34,6 +43,7 @@ static inline void error_msg(char const *const func, const char *const file, int
     va_end(args);
     // std::cerr << output_str << std::endl;
     std::cerr << output_str << std::endl;
+#if CYTNX_HAS_EXECINFO
     std::cerr << "Stack trace:" << std::endl;
     void *array[10];
     size_t size;
@@ -43,6 +53,9 @@ static inline void error_msg(char const *const func, const char *const file, int
       std::cerr << strings[i] << std::endl;
     }
     free(strings);
+#else
+    std::cerr << "Stack trace is unavailable on this platform/compiler." << std::endl;
+#endif
     throw std::logic_error(output_str);
   }
   // } catch (const char *output_msg) {

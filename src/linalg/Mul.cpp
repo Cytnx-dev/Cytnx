@@ -96,7 +96,6 @@ namespace cytnx {
     //-----------------------------------------------------------------------------------
     template <>
     Tensor Mul<cytnx_complex128>(const cytnx_complex128 &lc, const Tensor &Rt) {
-      // std::cout << "entroy" << std::endl;
       Storage Cnst(1, Type.ComplexDouble, Rt.device());
       Cnst.at<cytnx_complex128>(0) = lc;
       Tensor out;
@@ -745,7 +744,7 @@ namespace cytnx {
         out = Lt.clone();
         out.Mul_(Rt);
       }
-      out.set_labels(vec_range<std::string>(Lt.rank()));
+      out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       return out;
@@ -755,7 +754,7 @@ namespace cytnx {
 
     template <class T>
     UniTensor Mul(const T &lc, const UniTensor &Rt) {
-      // cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
+      // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
       UniTensor out;

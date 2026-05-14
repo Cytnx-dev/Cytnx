@@ -33,14 +33,14 @@ class MyOp2 : public LinOp {
     H.put_block(A, 0);
     H.put_block(B, 1);
     H.put_block(C, 2);
-    H.set_labels({"a", "b"});
+    H.relabel_({"a", "b"});
     H.to_(cytnx::Device.cuda);
     // H.print_diagram();
     // H.print_blocks();
   }
   UniTensor matvec(const UniTensor& psi) override {
     auto out = H.contract(psi);
-    out.set_labels({"b", "c"});
+    out.relabel_({"b", "c"});
     return out;
   }
 };
@@ -74,7 +74,7 @@ TEST(Lanczos_Gnd, gpu_Bk_Lanczos_Gnd_test) {
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 0);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 1);
   lan_guess.put_block(random::normal(9, 1, 1).reshape({9, 1}), 2);
-  lan_guess.set_labels({"b", "c"});
+  lan_guess.relabel_({"b", "c"});
   lan_guess.to_(cytnx::Device.cuda);
   // lan_guess.print_diagram();
   // lan_guess.print_blocks();
