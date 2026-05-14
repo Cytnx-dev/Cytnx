@@ -2044,7 +2044,7 @@ TEST_F(DenseUniTensorTest, to_dense_non_diag) {
   auto ut_diag = UniTensor({Bond(4), Bond(4)});
   int seed = 0;
   random::uniform_(ut_diag, -100.0, 100.0, seed);
-  EXPECT_THROW(ut_diag.to_dense(), std::logic_error);
+  EXPECT_TRUE(AreEqUniTensor(ut_diag, ut_diag.to_dense()));
 }
 
 /*=====test info=====
@@ -2052,7 +2052,9 @@ describe:test to_dense_, but the UniTensor is non diagonal
 ====================*/
 TEST_F(DenseUniTensorTest, to_dense__non_diag) {
   auto ut_diag = UniTensor({Bond(4), Bond(4)});
-  EXPECT_THROW(ut_diag.to_dense_(), std::logic_error);
+  auto ut_to_diag = ut_diag.clone();
+  ut_to_diag.to_dense_();
+  EXPECT_TRUE(AreEqUniTensor(ut_diag, ut_to_diag));
 }
 
 /*=====test info=====
