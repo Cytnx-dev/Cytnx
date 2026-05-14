@@ -239,15 +239,6 @@ endif()
 
 include(GNUInstallDirs)
 
-if(USE_ICPC)
-  target_compile_definitions(cytnx PUBLIC UNI_ICPC)
-  # This option is to disable the warning of icpc
-  target_compile_options(cytnx PUBLIC -diag-disable=10441)
-  # This option is to maintain consistency of the floating point operation, also
-  # try to improve the performance
-  target_compile_options(cytnx PUBLIC -fp-model consistent -fimf-use-svml)
-endif()
-
 # #####################################################################
 
 # ## Boost

@@ -33,13 +33,8 @@ INCFLAGS +=-I$(CONDA_PREFIX)/include/
 HPTT_PATH=$(CytnxPATH)/thirdparty/hptt
 
 
-ifeq ($(ICPC_Enable),1)
-  CC:= $(ICPC)
-  CCFLAGS:= -DUNI_ICPC
-else
-  CC:= $(GCC)
-  CCFLAGS:=
-endif
+CC:= $(GCC)
+CCFLAGS:=
 
 ifeq ($(MKL_Enable),1)
   CCFLAGS += -std=c++20 ${OPTIM} -Wformat=0 -m64 -fPIC -DUNI_MKL -w -DMKL_LP64 #-DUNI_DEBUG -Wno-c++11-narrowing
