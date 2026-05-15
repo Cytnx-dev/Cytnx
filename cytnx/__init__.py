@@ -1,5 +1,7 @@
 import os,sys,warnings
+from . import cytnx
 from .cytnx import *
+from .cytnx import __version__
 
 if cytnx.__cytnx_backend__ == "torch":
     import numpy, torch
@@ -165,13 +167,6 @@ def _find_hptt__():
 
 
 
-def _get_version__():
-    f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"version.tmp"))
-    line = f.readline()
-    f.close()
-    line = line.strip()
-    return line
-
 def _resolve_cpp_compileflags__():
     f = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),"cxxflags.tmp"))
     lines = f.readlines()
@@ -219,5 +214,4 @@ def _get_variant_info__():
 
 __cpp_linkflags__ = _resolve_cpp_linkflags__()
 __cpp_flags__ = _resolve_cpp_compileflags__()
-__version__ = _get_version__()
 __variant_info__ = _get_variant_info__()

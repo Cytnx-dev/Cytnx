@@ -286,6 +286,17 @@ In the case that Cytnx is installed locally from binary build, not from anaconda
     CYTNX_ROOT is the path where Cytnx is installed from binary build.
 
 
+Check Cytnx version
+*************************************
+The current version of the library can be printed by:
+
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+    print("Cytnx version = ", cytnx.__version__)
+
 Generate API documentation
 *************************************
 An API documentation can be generated from the source code of Cytnx by using doxygen. The documentation is accessible online at <https://kaihsinwu.gitlab.io/cytnx_api/>. To create it locally, make sure that doxygen is installed:
