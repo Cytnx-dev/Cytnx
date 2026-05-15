@@ -2781,8 +2781,9 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void _bkf_from_dn(BlockFermionicUniTensor *ths, DenseUniTensor *rhs, const bool &force) {
-    //[21 Aug 2024] This is a copy from BlockUniTensor; The name is changed (BKF instead of BK);
+  void _bkf_from_dn(BlockFermionicUniTensor *ths, DenseUniTensor *rhs, bool force,
+                    cytnx_double tol) {
+    //[14 May 2026] This is a copy from BlockUniTensor; The name is changed (BKF instead of BK);
     // signflips are initialized to be all EVEN
     if (!force) {
       // more checking:
@@ -2811,43 +2812,39 @@ namespace cytnx {
       if (elem.exists()) {
         elem = rhs->_block.at(cart);
       } else {
-        if (!force)
-          if (abs(Scalar(rhs->_block.at(cart))) > 1e-14) {
-            cytnx_error_msg(true,
-                            "[ERROR] force = false, trying to convert DenseUT to BlockUT that "
-                            "violate the symmetry structure.%s",
-                            "\n");
-          }
+        if (!force && abs(Scalar(rhs->_block.at(cart))) > tol) {
+          cytnx_error_msg(true,
+                          "[ERROR] force = false, trying to convert DenseUT to BlockUT that "
+                          "violate the symmetry structure.%s",
+                          "\n");
+        }
       }
     }
   }
 
-  void _bkf_from_bk(BlockFermionicUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
-    cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockUT not implemented.%s", "\n");
-  }
-
-  void _bkf_from_bkf(BlockFermionicUniTensor *ths, BlockFermionicUniTensor *rhs,
-                     const bool &force) {
-    cytnx_error_msg(true, "[ERROR] BlockFermionicUT-> BlockFermionicUT not implemented.%s", "\n");
-  }
-
-  void BlockFermionicUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs,
-                                      const bool &force) {
-    //[21 Aug 2024] This is a copy from BlockUniTensor; calls the right functions (with BKS instead
+  void BlockFermionicUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force,
+                                      cytnx_double tol) {
+    //[14 May 2026] This is a copy from BlockUniTensor; calls the right functions (with BKS instead
     // of BK)
 
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
-      _bkf_from_dn(this, (DenseUniTensor *)(rhs.get()), force);
+      _bkf_from_dn(this, (DenseUniTensor *)(rhs.get()), force, tol);
     } else if (rhs->uten_type() == UTenType.Block) {
-      _bkf_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
+      cytnx_error_msg(true,
+                      "[ERROR] BlockFermionicUniTensor -> BlockUniTensor not implemented. Convert "
+                      "to DenseUniTensor first if this conversion is really intended.%s",
+                      "\n");
     } else if (rhs->uten_type() == UTenType.BlockFermionic) {
-      _bkf_from_bkf(this, (BlockFermionicUniTensor *)(rhs.get()), force);
+      cytnx_error_msg(true,
+                      "[ERROR] BlockFermionicUniTensor -> BlockFermionicUniTensor not implemented. "
+                      "Convert to DenseUniTensor first if this conversion is really intended.%s",
+                      "\n");
     } else {
       cytnx_error_msg(
-        true, "[ERROR] unsupport conversion of UniTensor from %s => BlockFermionicUniTensor\n",
+        true, "[ERROR] Unsupported conversion of UniTensor from %s -> BlockFermionicUniTensor.\n",
         UTenType.getname(rhs->uten_type()).c_str());
     }
   }

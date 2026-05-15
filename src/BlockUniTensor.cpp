@@ -2027,8 +2027,7 @@ namespace cytnx {
     this->combineBonds(idx_mapper, force);
   }
 
-  void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, const bool &force,
-                   const cytnx_double &tol) {
+  void _bk_from_dn(BlockUniTensor *ths, DenseUniTensor *rhs, bool force, cytnx_double tol) {
     if (!force) {
       // more checking:
       if (int(rhs->bond_(0).type()) != bondType::BD_NONE) {
@@ -2055,32 +2054,36 @@ namespace cytnx {
       if (elem.exists()) {
         elem = rhs->_block.at(cart);
       } else {
-        if (!force)
-          if (abs(Scalar(rhs->_block.at(cart))) > tol) {
-            cytnx_error_msg(true,
-                            "[ERROR] force = false, trying to convert DenseUT to BlockUT that "
-                            "violate the symmetry structure.%s",
-                            "\n");
-          }
+        if (!force && abs(Scalar(rhs->_block.at(cart))) > tol) {
+          cytnx_error_msg(true,
+                          "[ERROR] force = false, trying to convert DenseUT to BlockUT that "
+                          "violate the symmetry structure.%s",
+                          "\n");
+        }
       }
     }
   }
 
-  void _bk_from_bk(BlockUniTensor *ths, BlockUniTensor *rhs, const bool &force) {
-    cytnx_error_msg(true, "[ERROR] BlockUT-> BlockUT not implemented.%s", "\n");
-  }
-
-  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
-                             const cytnx_double &tol) {
+  void BlockUniTensor::from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force,
+                             cytnx_double tol) {
     // checking shape:
     cytnx_error_msg(this->shape() != rhs->shape(), "[ERROR][from_] shape does not match.%s", "\n");
 
     if (rhs->uten_type() == UTenType.Dense) {
       _bk_from_dn(this, (DenseUniTensor *)(rhs.get()), force, tol);
     } else if (rhs->uten_type() == UTenType.Block) {
-      _bk_from_bk(this, (BlockUniTensor *)(rhs.get()), force);
+      cytnx_error_msg(true,
+                      "[ERROR] BlockUniTensor-> BlockUniTensor not implemented. Convert to "
+                      "DenseUniTensor first if this conversion is really intended.%s",
+                      "\n");
+    } else if (rhs->uten_type() == UTenType.BlockFermionic) {
+      cytnx_error_msg(true,
+                      "[ERROR] BlockFermionicUniTensor-> BlockUniTensor not implemented. Convert "
+                      "to DenseUniTensor first if this conversion is really intended.%s",
+                      "\n");
     } else {
-      cytnx_error_msg(true, "[ERROR] unsupport conversion of UniTensor from %s => BlockUniTensor\n",
+      cytnx_error_msg(true,
+                      "[ERROR] Unsupported conversion of UniTensor from %s -> BlockUniTensor.\n",
                       UTenType.getname(rhs->uten_type()).c_str());
     }
   }

@@ -1579,13 +1579,10 @@ void unitensor_binding(py::module &m) {
                 },
 				py::arg("low"), py::arg("high"), py::arg("seed")= -1)
 
-	 .def("cfrom", [](UniTensor &self, const UniTensor &in, const bool &force, const cytnx_double &tol){
-                         if(self.uten_type() == UTenType.Block or self.uten_type() == UTenType.Sparse)
-                              self.convert_from(in,force,tol);
-                         else
-                              self.convert_from(in,force);
-                         },
-                    py::arg("Tin"), py::arg("force") = false, py::arg("tol") = 1e-14)
+	.def("cfrom", [](UniTensor &self, const UniTensor &in, bool force, cytnx_double tol)
+                    { return self.convert_from(in,force,tol); },
+                    py::arg("Tin"), py::arg("force") = false, py::arg("tol") = 0.)
+
      .def("get_qindices",  [](UniTensor &self, const cytnx_uint64 &bidx){return self.get_qindices(bidx);});
   ;  // end of object line
 

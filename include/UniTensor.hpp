@@ -433,9 +433,8 @@ namespace cytnx {
     virtual const cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator,
                                              const cytnx_int16 &aux) const;
 
-    virtual void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
-                       const cytnx_double &tol);
-    virtual void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
+    virtual void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force,
+                       cytnx_double tol = 0.);
 
     virtual void group_basis_();
     virtual const std::vector<cytnx_uint64> &get_qindices(const cytnx_uint64 &bidx) const;
@@ -1071,7 +1070,7 @@ namespace cytnx {
     void truncate_(const cytnx_int64 &bond_idx, const cytnx_uint64 &dim);
     void truncate_(const std::string &label, const cytnx_uint64 &dim);
 
-    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force, cytnx_double tol = 0.);
 
     void group_basis_() {
       cytnx_warning_msg(true, "[WARNING] group basis will not have any effect on DensUniTensor.%s",
@@ -1799,8 +1798,7 @@ namespace cytnx {
         "This operation would cause division by zero on non-block elements. [Suggest] Avoid or use "
         "get/put_block(s) to do operation on blocks.");
     }
-    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force,
-               const cytnx_double &tol);
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force, cytnx_double tol = 0.);
 
     void group_basis_();
 
@@ -2592,7 +2590,7 @@ namespace cytnx {
                       "This operation would cause division by zero on non-block elements. "
                       "[Suggest] Avoid or use get/put_block(s) to do operation on blocks.");
     }
-    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, const bool &force);
+    void from_(const boost::intrusive_ptr<UniTensor_base> &rhs, bool force, cytnx_double tol = 0.);
 
     void group_basis_();
 
@@ -5576,8 +5574,21 @@ namespace cytnx {
     void _Save(std::fstream &f) const;
     /// @endcond
 
-    UniTensor &convert_from(const UniTensor &rhs, const bool &force = false,
-                            const cytnx_double &tol = 1e-14) {
+    /**
+    @brief Copy data from a UniTensor of different type
+    @details For example, if uTB is a BlockUniTensor and uTD is a DenseUniTensor of the same shape,
+    then uTD.convert_from(uTB) makes uTD a sparse copy of uTB.
+    @param[in] rhs the UniTensor to copy from
+    @param[in] force if true is true, the compatibility of the input and output tensor structure is
+    not checked strictly; elements that do not exist in the output tensor are ignored in the input
+    tensor, even if they are not zero or small.
+    @param[in] tol applies if a denser UniTensor is converted to a sparser tensor structure; if an
+    element in the output tensor does not exist, the absolute value of the element in the input
+    tensor has to be <= \p tol. Otherwise an errror is thrown. This is overwritten by force = true.
+    @return
+        [UniTensor] a reference to this UniTensor
+    */
+    UniTensor &convert_from(const UniTensor &rhs, bool force = false, cytnx_double tol = 0.) {
       this->_impl->from_(rhs._impl, force, tol);
       return *this;
     }
