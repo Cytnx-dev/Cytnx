@@ -107,10 +107,11 @@ namespace cytnx {
     static Accessor all() { return Accessor(std::string(":")); };
 
     /**
-    @brief access the range at assigned rank, this is similar to min:max:step in python
-    @param min
-    @param max
-    @param step
+    @brief access the range at assigned rank; this is similar to min:max:step in python
+    @param min the first element to access
+    @param max exclusive bound
+    @param step the step size, so the second element will be \p min + \p step
+    @warning The range is in [min, max), so the element \p max itself is not included
 
 
     ## Example:
