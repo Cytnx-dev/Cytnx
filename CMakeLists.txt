@@ -448,18 +448,18 @@ install(FILES
 
 # #############################################
 # # Exporting from the build tree
-# Keep build-tree package export enabled even with USE_HPTT=ON by exporting
-# the concrete hptt_static target together with cytnx. cytnx links to the
-# namespaced alias hptt::hptt_static (defined by thirdparty/hptt), whose
-# backing target is hptt_static.
+# Build-tree export must include all direct cytnx link targets. In HPTT mode,
+# cytnx links to hptt::hptt_static (backed by hptt_static), so append that
+# concrete target to the build-tree export list.
+set(_cytnx_export_targets cytnx)
 if(USE_HPTT)
-  export(TARGETS hptt_static cytnx
-    FILE ${CMAKE_CURRENT_BINARY_DIR}/CytnxTargets.cmake
-    NAMESPACE Cytnx::
-  )
-else()
-  export(EXPORT cytnx_targets FILE ${CMAKE_CURRENT_BINARY_DIR}/CytnxTargets.cmake NAMESPACE Cytnx::)
+  list(APPEND _cytnx_export_targets hptt_static)
 endif()
+
+export(TARGETS ${_cytnx_export_targets}
+  FILE ${CMAKE_CURRENT_BINARY_DIR}/CytnxTargets.cmake
+  NAMESPACE Cytnx::
+)
 
 export(PACKAGE Cytnx)
 
