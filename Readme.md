@@ -260,7 +260,7 @@ Manuel Schneider |NYCU, Taiwan |developer
 Contributors    | Affiliation
 ----------------|-----------------
 PoChung Chen    | NTHU, Taiwan
-Chia-Min Chung  | NSYSU, Taiwan
+Chia-Min Chung  | NYCU, Taiwan
 Ian McCulloch   | NTHU, Taiwan
 Yen-Hsin Wu     | NTU, Taiwan
 Po-Kwan Wu      | OSU, USA
