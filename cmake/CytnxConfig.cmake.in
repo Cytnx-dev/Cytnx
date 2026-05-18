@@ -28,12 +28,8 @@ if(@BACKEND_TORCH@)
   find_dependency(Torch REQUIRED)
 endif()
 
-if(NOT TARGET Cytnx::Cytnx)
+if(NOT TARGET Cytnx::cytnx)
     include("${CMAKE_CURRENT_LIST_DIR}/CytnxTargets.cmake")
 endif()
-
-# Legacy alias for consumers still using `target_link_libraries(... ${Cytnx_Libraries})`.
-# Prefer the imported target `Cytnx::Cytnx` in new code.
-set(Cytnx_Libraries Cytnx::Cytnx)
 
 check_required_components(Cytnx)
