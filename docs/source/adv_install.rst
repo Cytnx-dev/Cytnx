@@ -178,6 +178,16 @@ Starting from v0.7.6a, Cytnx provides a shell script **Install.sh**, which conta
 
 **Option B. Using cmake install**
 
+.. note::
+
+    Use Option B when you need a bare CMake install of the **C++** library
+    (e.g. to link other CMake projects against ``libcytnx`` from a system
+    prefix). If you only want the **Python** API, install via pip instead
+    -- see *Option C* below. ``cmake --install`` no longer copies the
+    ``cytnx/`` Python sources into the install prefix; that path is
+    handled by pip + scikit-build-core to avoid producing two competing
+    copies of the package.
+
 Please see the following steps for the standard cmake compiling process and all the compiling options:
 
 
@@ -239,21 +249,51 @@ Additional options for HPTT if -DUSE_HPTT=on:
     $make install
 
 
+**Option C. Install the Python API via pip (recommended for Python users)**
+
+If you only need to use Cytnx from Python, the simplest path is to let
+``pip`` drive the build through scikit-build-core. From the repository
+root:
+
+.. code-block:: shell
+
+    $ pip install .
+
+or, for development (rebuilds incrementally and lets ``import cytnx``
+resolve back to the source tree):
+
+.. code-block:: shell
+
+    $ pip install --editable .
+
+This installs ``cytnx`` into your active Python environment as a normal
+package, so ``import cytnx`` works without any ``sys.path`` manipulation.
+The same dependencies described above (compilers, BLAS/LAPACK, etc.)
+still need to be present; ``pip`` handles only the Python side.
+
+
 
 Using Python API after self-build install
 -------------------------------------------
-To use the Python API after self-build, you need to add the path where you installed Cytnx before importing it.
-The simplest (and most flexible) way to do that is to add it into sys.path right at the beginning of your code.
 
-In the following, we will use **CYTNX_ROOT** (capital letters) to represent the path where you installed Cytnx. You should replace it with the path where Cytnx is installed.
+If you used **Option C** (``pip install .`` or ``pip install --editable .``),
+Cytnx is already importable -- ``import cytnx`` just works inside the
+Python environment where you ran ``pip``. Skip to the example below.
+
+If you used **Option A** (``Install.sh``) or **Option B** (bare CMake
+install), the install prefix contains only the compiled extension and
+its support files, not the ``cytnx/`` Python sources, so you cannot
+``import cytnx`` from there directly. Re-run ``pip install --editable
+.`` from the repository root to make the Python API importable; the
+already-compiled artifacts will be reused.
+
+Once ``cytnx`` is importable in your Python environment:
 
 * In Python:
 
 .. code-block:: python
     :linenos:
 
-    import sys
-    sys.path.insert(0,CYTNX_ROOT)
     import cytnx
 
     A = cytnx.ones(4)
