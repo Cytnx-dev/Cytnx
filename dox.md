@@ -293,21 +293,21 @@ Creator and Project manager | Affiliation     | Email
 Kai-Hsin Wu                 |Boston Univ., USA|kaihsinwu@gmail.com
 \n
 
-Developers      | Affiliation     | Roles
-----------------|-----------------|---------
-Chang-Teng Lin  |NTU, Taiwan      |major maintainer and developer
-Ke Hsu          |NTU, Taiwan      |major maintainer and developer
-Ivana Gyro      |NTU, Taiwan      |major maintainer and developer
-Hao-Ti Hung     |NTU, Taiwan      |documentation and linalg
-Ying-Jer Kao    |NTU, Taiwan      |setuptool, cmake
+Developers       | Affiliation | Roles
+-----------------|-------------|---------
+Chang-Teng Lin   |NTU, Taiwan  |major maintainer and developer
+Ke Hsu           |NTU, Taiwan  |major maintainer and developer
+Ivana Gyro       |NTU, Taiwan  |major maintainer and developer
+Hao-Ti Hung     |NTU, Taiwan  |documentation and linalg
+Ying-Jer Kao    |NTU, Taiwan  |setuptool, cmake
+Manuel Schneider |NYCU, Taiwan |developer
 
 ## Contributors
 Contributors    | Affiliation
 ----------------|-----------------
 PoChung Chen    | NTHU, Taiwan
-Chia-Min Chung  | NSYSU, Taiwan
+Chia-Min Chung  | NYCU, Taiwan
 Ian McCulloch   | NTHU, Taiwan
-Manuel Schneider| NYCU, Taiwan
 Yen-Hsin Wu     | NTU, Taiwan
 Po-Kwan Wu      | OSU, USA
 Wen-Han Kao     | UMN, USA
