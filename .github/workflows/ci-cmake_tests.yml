@@ -149,7 +149,7 @@ jobs:
             --exclude '.*example/.*'
 
       - name: Upload C++ coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ env.BUILD_DIR }}/coverage-cpp.xml
@@ -160,7 +160,7 @@ jobs:
           verbose: true
 
       - name: Upload Python coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ github.workspace }}/coverage-python.xml
@@ -172,7 +172,11 @@ jobs:
 
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@v1
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ env.BUILD_DIR }}/junit.xml,${{ github.workspace }}/junit/test-results.xml
+          report_type: test_results
+          disable_search: true
+          fail_ci_if_error: true
+          verbose: true
