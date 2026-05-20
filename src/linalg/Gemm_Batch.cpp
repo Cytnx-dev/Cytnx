@@ -6,8 +6,31 @@
 #ifdef BACKEND_TORCH
 #else
   #include "backend/linalg_internal_interface.hpp"
+  #include "backend/linalg_internal_cpu/Gemm_Batch_internal.hpp"
 using namespace std;
 namespace cytnx {
+  namespace {
+    void CpuGemmBatch(unsigned int dtype, const char *transa, const char *transb, const blas_int *m,
+                      const blas_int *n, const blas_int *k, const vector<Scalar> &alpha,
+                      const void **a, const blas_int *lda, const void **b, const blas_int *ldb,
+                      const vector<Scalar> &beta, void **c, const blas_int *ldc,
+                      blas_int group_count, const blas_int *group_size) {
+      if (dtype == Type.ComplexDouble)
+        linalg_internal::Gemm_Batch<cytnx_complex128>(transa, transb, m, n, k, alpha, a, lda, b,
+                                                      ldb, beta, c, ldc, group_count, group_size);
+      else if (dtype == Type.ComplexFloat)
+        linalg_internal::Gemm_Batch<cytnx_complex64>(transa, transb, m, n, k, alpha, a, lda, b, ldb,
+                                                     beta, c, ldc, group_count, group_size);
+      else if (dtype == Type.Double)
+        linalg_internal::Gemm_Batch<cytnx_double>(transa, transb, m, n, k, alpha, a, lda, b, ldb,
+                                                  beta, c, ldc, group_count, group_size);
+      else if (dtype == Type.Float)
+        linalg_internal::Gemm_Batch<cytnx_float>(transa, transb, m, n, k, alpha, a, lda, b, ldb,
+                                                 beta, c, ldc, group_count, group_size);
+      else
+        cytnx_error_msg(true, "[Gemm_Batch] unsupported dtype for cpu Gemm_Batch_internal%s", "\n");
+    }
+  }  // namespace
   namespace linalg {
     // Internal use only, not exposed to user.
     // transa, transb are not supported yet in GPU.
@@ -56,11 +79,10 @@ namespace cytnx {
           if (beta_array[i].dtype() != dtype) tmp_beta_array[i] = beta_array[i].astype(dtype);
         }
         if (device == Device.cpu) {
-          linalg_internal::lii.Gemm_Batch_ii[dtype](
-            transb_array.data(), transa_array.data(), n_array.data(), m_array.data(),
-            k_array.data(), tmp_alpha_array, (const void **)b_array, n_array.data(),
-            (const void **)a_array, k_array.data(), tmp_beta_array, c_array, n_array.data(),
-            group_count, group_size.data());
+          CpuGemmBatch(dtype, transb_array.data(), transa_array.data(), n_array.data(),
+                       m_array.data(), k_array.data(), tmp_alpha_array, (const void **)b_array,
+                       n_array.data(), (const void **)a_array, k_array.data(), tmp_beta_array,
+                       c_array, n_array.data(), group_count, group_size.data());
         } else {
   #ifdef UNI_GPU
           checkCudaErrors(cudaSetDevice(device));
@@ -75,24 +97,6 @@ namespace cytnx {
   #endif
         }
       }
-      //       if(device==Device.cpu){
-      //         linalg_internal::lii.Gemm_Batch_ii[dtype](transb_array.data(), transa_array.data(),
-      //         n_array.data(), m_array.data(), k_array.data(),
-      //                 alpha_array, b_array, n_array.data(), a_array, k_array.data(),
-      //                 beta_array, c_array, n_array.data(), group_count, group_size.data());
-      //       }else{
-      // #ifdef UNI_GPU
-      //         checkCudaErrors(cudaSetDevice(device));
-      //         linalg_internal::lii.cuGemm_Batch_ii[dtype](transb_array.data(),
-      //         transa_array.data(), n_array.data(), m_array.data(), k_array.data(),
-      //                 alpha_array, (const void**)b_array, n_array.data(), (const void**)a_array,
-      //                 k_array.data(), beta_array, (void**)c_array, n_array.data(), group_count,
-      //                 group_size.data());
-      // #else
-      //         cytnx_error_msg(true,"[Gemm_Batch] fatal error,%s","try to use GPU but not compiled
-      //         with GPU support.\n");
-      // #endif
-      //       }
     }
     void Gemm_Batch(const vector<cytnx_int64> &m_array, const vector<cytnx_int64> &n_array,
                     const vector<cytnx_int64> &k_array, const vector<Scalar> &alpha_array,
@@ -246,11 +250,10 @@ namespace cytnx {
         ns(vec_cast<cytnx_int64, blas_int>(n_array)), ks(vec_cast<cytnx_int64, blas_int>(k_array));
 
       if (a_tensors[0].device() == Device.cpu) {
-        linalg_internal::lii.Gemm_Batch_ii[fin_dtype](
-          transs.data(), transs.data(), ns.data(), ms.data(), ks.data(), tmp_alpha_array,
-          (const void **)b_array, ns.data(), (const void **)a_array, ks.data(), tmp_beta_array,
-          (void **)c_array, ns.data(), (blas_int)group_count,
-          vec_cast<cytnx_int64, blas_int>(group_size).data());
+        CpuGemmBatch(fin_dtype, transs.data(), transs.data(), ns.data(), ms.data(), ks.data(),
+                     tmp_alpha_array, (const void **)b_array, ns.data(), (const void **)a_array,
+                     ks.data(), tmp_beta_array, (void **)c_array, ns.data(), (blas_int)group_count,
+                     vec_cast<cytnx_int64, blas_int>(group_size).data());
       } else {
   #ifdef UNI_GPU
         checkCudaErrors(cudaSetDevice(a_tensors[0].device()));
