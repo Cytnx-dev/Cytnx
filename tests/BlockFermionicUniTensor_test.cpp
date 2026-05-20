@@ -20,6 +20,18 @@ TEST_F(BlockFermionicUniTensorTest, SimpleTensorContract) {
 }
 
 /*=====test info=====
+describe:contraction with mixed dtypes (double lhs, float rhs); exercises
+         the #ifdef UNI_MKL dtype-cast path added with Gemm_Batch, including
+         fermionic sign flips encoded in alpha
+====================*/
+TEST_F(BlockFermionicUniTensorTest, ContractMixedDtype) {
+  UniTensor L = BFUT1.astype(Type.Double);
+  UniTensor R = BFUT2.astype(Type.Float);
+  // 1+2*2-3*3-4*4-5*5-6*6+7*7+8*8 = 32 (same as VectorContract; verifies sign flip preserved)
+  EXPECT_TRUE(abs(L.contract(R).item() - 32.0) < 1e-5);
+}
+
+/*=====test info=====
 describe:some elementwise linear algebra functions
 ====================*/
 TEST_F(BlockFermionicUniTensorTest, LinAlgElementwise) {

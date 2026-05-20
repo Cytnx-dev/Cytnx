@@ -126,7 +126,9 @@ namespace cytnx {
         }
       }
 
-      // Find highest dtype across all operands
+      // Promoted dtype: the highest-precision type among all tensors and scalars.
+      // Scalars with higher precision than the tensors promote the tensors upward so that BLAS
+      // operates uniformly at the promoted precision without losing scalar bits.
       int promoted_dtype = a_tensors[0].dtype();
       for (cytnx_uint64 i = 0; i < total_matrices; i++) {
         if (a_tensors[i].dtype() < promoted_dtype) promoted_dtype = a_tensors[i].dtype();
@@ -211,16 +213,6 @@ namespace cytnx {
                         "try to use GPU but not compiled with GPU support.\n");
   #endif
       }
-    }
-
-    // Deprecated stub — only reachable from if(false and ...) dead-code blocks in
-    // BlockUniTensor and BlockFermionicUniTensor, which will be replaced by
-    // linalg::Gemm_Batch call sites in the next commit.
-    void __Gemm_Batch(const vector<char>&, const vector<char>&, const vector<blas_int>&,
-                      const vector<blas_int>&, const vector<blas_int>&, const vector<Scalar>&,
-                      const void**, const void**, const vector<Scalar>&, void**, const blas_int,
-                      const vector<blas_int>&, const unsigned int, const int) {
-      cytnx_error_msg(true, "[__Gemm_Batch] deprecated; use linalg::Gemm_Batch instead%s", "\n");
     }
 
   }  // namespace linalg

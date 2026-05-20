@@ -424,8 +424,10 @@ namespace cytnx {
 
   /*=====test info=====
   describe: A * I = A for various tensor/scalar dtype combinations.
-    Verifies that Gemm_Batch promotes operands to the highest dtype present and
-    that the result dtype matches expected_dtype.
+    Verifies Gemm_Batch dtype promotion: tensor dtypes (a, b, c) always drive
+    promotion; complex scalars additionally promote real tensors to complex;
+    real scalars are cast to match the promoted tensor dtype and do not drive it.
+    Result dtype matches expected_dtype.
   ====================*/
   TEST_P(GemmBatchTypePromotionTest, ATimesIdentityPromotion) {
     const auto& p = GetParam();
@@ -476,19 +478,19 @@ namespace cytnx {
   INSTANTIATE_TEST_SUITE_P(
     MixedTypes, GemmBatchTypePromotionTest,
     ::testing::Values(
-      // float tensors + double scalars → double
+      // float tensors + double scalar → double (scalar precision is preserved)
       TypePromotionCase{Type.Float, Type.Float, Type.Double, Type.Double, 1e-10,
                         "FloatTensorsDoubleScalar"},
-      // double tensors + complex128 scalar → complex128
+      // double tensors + complex128 scalar → complex128 (complex scalars promote to complex)
       TypePromotionCase{Type.Double, Type.Double, Type.ComplexDouble, Type.ComplexDouble, 1e-10,
                         "DoubleTensorsComplex128Scalar"},
-      // float tensors + complex128 scalar → complex128
+      // float tensors + complex128 scalar → complex128 (complex scalars promote to complex)
       TypePromotionCase{Type.Float, Type.Float, Type.ComplexDouble, Type.ComplexDouble, 1e-4,
                         "FloatTensorsComplex128Scalar"},
-      // float tensors + complex64 scalar → complex64
+      // float tensors + complex64 scalar → complex64 (complex scalars promote to complex)
       TypePromotionCase{Type.Float, Type.Float, Type.ComplexFloat, Type.ComplexFloat, 1e-4,
                         "FloatTensorsComplex64Scalar"},
-      // mixed tensor dtypes: float A + double B → double
+      // mixed tensor dtypes: float A + double B → double (tensor dtype drives promotion)
       TypePromotionCase{Type.Float, Type.Double, Type.Double, Type.Double, 1e-10,
                         "FloatATensorDoubleB"}),
     [](const ::testing::TestParamInfo<TypePromotionCase>& info) { return info.param.name; });

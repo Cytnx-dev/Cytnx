@@ -1279,3 +1279,25 @@ TEST_F(BlockUniTensorTest, to_dense_non_diag) {
   Bp.to_dense_();
   EXPECT_TRUE(AreEqUniTensor(BUT4, Bp));
 }
+
+/*=====test info=====
+describe:contraction with mixed dtypes (double lhs, float rhs); exercises
+         the #ifdef UNI_MKL dtype-cast path added with Gemm_Batch
+====================*/
+TEST_F(BlockUniTensorTest, ContractMixedDtype) {
+  UniTensor L_d = UT_contract_L1.astype(Type.Double);
+  UniTensor R_f = UT_contract_R1.astype(Type.Float);
+  UniTensor L_ref = UT_contract_L1.astype(Type.Double);
+  UniTensor R_ref = UT_contract_R1.astype(Type.Double);
+  L_d.set_labels({"a", "b"});
+  R_f.set_labels({"b", "c"});
+  L_ref.set_labels({"a", "b"});
+  R_ref.set_labels({"b", "c"});
+  UniTensor out_mixed = L_d.contract(R_f);
+  UniTensor out_ref = L_ref.contract(R_ref);
+  auto outbks = out_mixed.get_blocks();
+  auto refbks = out_ref.get_blocks();
+  for (int i = 0; i < static_cast<int>(refbks.size()); i++) {
+    EXPECT_EQ(AreNearlyEqTensor(outbks[i], refbks[i], 1e-5), true);
+  }
+}

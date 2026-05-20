@@ -1582,15 +1582,6 @@ namespace cytnx {
             }
           }
         } else {
-          std::vector<char> transs(Rtn->_blocks.size(), 'N');
-          std::vector<blas_int> ms(Rtn->_blocks.size(), 0), ns(Rtn->_blocks.size(), 0),
-            ks(Rtn->_blocks.size(), 0);
-          std::vector<void *> LMems(Rtn->_blocks.size(), 0), RMems(Rtn->_blocks.size(), 0),
-            CMems(Rtn->_blocks.size(), 0);
-          std::vector<blas_int> group_size(Rtn->_blocks.size(), 1);
-          std::vector<Scalar> alphas(Rtn->_blocks.size(), 1.0);
-          std::vector<Scalar> betas(Rtn->_blocks.size(), 0.0);
-
           BlockFermionicUniTensor *tmp_Rtn = Rtn;
           bool tmp_rtn_is_casted = false;
 
@@ -1652,6 +1643,12 @@ namespace cytnx {
             this->_blocks[a].permute_(mapperL);
             oldshapeL = this->_blocks[a].shape();
             this->_blocks[a].reshape_({-1, comm_dim});
+            // Collect block pairs for this left block then call Gemm_Batch once.
+            // Fermionic sign flips are encoded in alpha (+1 or -1 per group).
+            vector<Tensor> batch_a, batch_b, batch_c;
+            vector<Scalar> batch_alpha, batch_beta;
+            vector<cytnx_int64> batch_targ_b;
+
             // loop over all right blocks that can contract with this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
               // get the index of the right block
@@ -1672,53 +1669,27 @@ namespace cytnx {
               }
               // target block index
               cytnx_int64 targ_b = mpC[Lgbuffer];
-              betas[binx] = 1.0;
-              // if the target block is not initialized, call to gemm with beta=0
+              double beta = 1.0;
               if (!reshaped[targ_b]) {
                 tmp->_blocks[targ_b].reshape_({(cytnx_int64)this->_blocks[a].shape()[0],
                                                (cytnx_int64)tmp_Rtn->_blocks[b].shape()[1]});
                 reshaped[targ_b] = true;
-                betas[binx] = 0.0;
+                beta = 0.0;
               }
-              // // prepare to call gemm_batch
-              // if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4)
-              // and
-              //     (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
-              //      tmp_Rtn->dtype() != Type.Void)) {
-              //   ms[binx] = this->_blocks[a].shape()[0];
-              //   ns[binx] = tmp_Rtn->_blocks[b].shape()[1];
-              //   ks[binx] = comm_dim;
-              //   LMems[binx] = this->_blocks[a].storage()._impl->data();
-              //   RMems[binx] = tmp_Rtn->_blocks[b].storage()._impl->data();
-              //   CMems[binx] = tmp->_blocks[targ_b].storage()._impl->data();
-              // } else {
-              // fermionic signs included here
-              if (signfliplhs[a] != signfliprhs[b]) {
-                tmp->_blocks[targ_b] -= linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                          .reshape(tmp->_blocks[targ_b].shape());
-              } else {
-                tmp->_blocks[targ_b] += linalg::Matmul(this->_blocks[a], tmp_Rtn->_blocks[b])
-                                          .reshape(tmp->_blocks[targ_b].shape());
-              }
-              // }
+              // fermionic sign goes into alpha (+1 or -1 per group)
+              double alpha = (signfliplhs[a] != signfliprhs[b]) ? -1.0 : 1.0;
+              batch_a.push_back(this->_blocks[a]);
+              batch_b.push_back(tmp_Rtn->_blocks[b]);
+              batch_c.push_back(tmp->_blocks[targ_b]);
+              batch_alpha.push_back(Scalar(alpha).astype(this->_blocks[a].dtype()));
+              batch_beta.push_back(Scalar(beta).astype(this->_blocks[a].dtype()));
+              batch_targ_b.push_back(targ_b);
             }
-            // mkl_set_interface_layer(MKL_INTERFACE_ILP64);
-
-            blas_int group_count = itoiR_idx.size();
-            if (false and (tmp->dtype() <= 4 and this->dtype() <= 4 and tmp_Rtn->dtype() <= 4) and
-                (tmp->dtype() != Type.Void and this->dtype() != Type.Void and
-                 tmp_Rtn->dtype() != Type.Void)) {
-              group_size.resize(group_count, 1);
-              // TODOfermions: alphas need to include sign factors!
-              cytnx_error_msg(true,
-                              "[ERROR][BlockFermionicUniTensor][contract] Fermionic sign flips not "
-                              "implemented yet in Gemm_Batch contracition. One needs to change the "
-                              "signs of the alphas.%s",
-                              "\n")
-                linalg::__Gemm_Batch(transs, transs, ms, ns, ks, alphas,
-                                     (const void **)LMems.data(), (const void **)RMems.data(),
-                                     betas, (void **)CMems.data(), group_count, group_size,
-                                     this->dtype(), tmp->device());
+            if (!batch_a.empty()) {
+              vector<cytnx_int64> group_sizes(batch_a.size(), 1);
+              linalg::Gemm_Batch(batch_alpha, batch_a, batch_b, batch_beta, batch_c, group_sizes);
+              for (size_t i = 0; i < batch_c.size(); i++)
+                tmp->_blocks[batch_targ_b[i]] = batch_c[i];
             }
             // restore the shape&permutation of this->_blocks[a]
             for (cytnx_uint64 binx = 0; binx < itoiR_idx.size(); binx++) {
