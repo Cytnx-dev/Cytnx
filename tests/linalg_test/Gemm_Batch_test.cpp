@@ -602,6 +602,32 @@ namespace cytnx {
     EXPECT_THROW(linalg::Gemm_Batch(alphas, as, bs, betas, cs, {2}), std::logic_error);
   }
 
+  /*=====test info=====
+  describe: Non-positive entries in group_size (zero or negative) are rejected.
+    A zero entry would leave the per-group shape lookup reading a_tensors[idx]
+    when idx == total_matrices (out of bounds for a trailing empty group), and
+    MKL itself rejects leading-dimension = 0 even when the empty group has no
+    work to do. A negative entry would wrap to a huge cytnx_uint64 when
+    accumulating total_matrices and surface as a misleading size-mismatch
+    error instead of pointing at the real bug.
+  ====================*/
+  TEST(GemmBatchError, ThrowsOnNonPositiveGroupSize) {
+    Tensor A = zeros({2, 2}, Type.Double, Device.cpu);
+    Tensor B = zeros({2, 2}, Type.Double, Device.cpu);
+    Tensor C = zeros({2, 2}, Type.Double, Device.cpu);
+    {
+      std::vector<Tensor> as = {A}, bs = {B}, cs = {C};
+      std::vector<Scalar> alphas = {Scalar(1.0)}, betas = {Scalar(0.0)};
+      EXPECT_THROW(linalg::Gemm_Batch(alphas, as, bs, betas, cs, {-1}), std::logic_error);
+    }
+    {
+      std::vector<Tensor> as = {A}, bs = {B}, cs = {C};
+      std::vector<Scalar> alphas = {Scalar(1.0), Scalar(2.0)};
+      std::vector<Scalar> betas = {Scalar(0.0), Scalar(0.0)};
+      EXPECT_THROW(linalg::Gemm_Batch(alphas, as, bs, betas, cs, {1, 0}), std::logic_error);
+    }
+  }
+
   // ── Invalid scalar type tests ─────────────────────────────────────────────────
 
   /*=====test info=====

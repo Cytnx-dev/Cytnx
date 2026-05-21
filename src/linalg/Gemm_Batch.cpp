@@ -20,9 +20,17 @@ namespace cytnx {
                     vector<Tensor>& c_tensors, const vector<cytnx_int64>& group_size) {
       const cytnx_int64 group_count = static_cast<cytnx_int64>(group_size.size());
 
+      // Each group must contain at least one matrix: MKL's gemm_batch rejects
+      // leading-dimension = 0 even for a group with no work, and a zero entry would also
+      // leave idx == total_matrices for a trailing empty group, making the per-group
+      // shape lookup below read past the end of a_tensors. Negative values are also
+      // rejected here so the cast to cytnx_uint64 does not wrap.
       cytnx_uint64 total_matrices = 0;
-      for (cytnx_int64 group_len : group_size)
+      for (cytnx_int64 group_len : group_size) {
+        cytnx_error_msg(group_len <= 0,
+                        "[Gemm_Batch] error, group_size entries must be positive (>= 1)%s", "\n");
         total_matrices += static_cast<cytnx_uint64>(group_len);
+      }
 
       // Array-size checks (unconditional; O(n_groups) and negligible vs. BLAS)
       cytnx_error_msg(a_tensors.size() != total_matrices,
