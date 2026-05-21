@@ -143,12 +143,17 @@ There are two methods how you can set-up all the dependencies before starting th
 
     $conda install -c nvidia cuda
 
-If cutensor shall be used as well (compile with -DUSE_CUDA=on), then further install the following:
+If cutensor shall be used as well (compile option -DUSE_CUTENSOR=ON), then further install the following:
 
 .. code-block:: shell
 
     $conda install -c nvidia cutensor
-    $conda install cutensornet
+
+Similarly, cuqauantum (compile option -DUSE_CUTENSOR=ON), requires:
+
+.. code-block:: shell
+
+    $conda install -c nvidia cuquantum
 
 **Option B. Install dependencies via system package manager**
 
