@@ -19,6 +19,25 @@ using namespace cytnx;
 #ifdef BACKEND_TORCH
 #else
 
+// Helper for the three polymorphic wrapper structures
+template <typename T>
+void InPlaceLoad(T &object, H5::Group &container, const std::string &name,
+                 const std::string &path) {
+  cytnx::io::savable_class temp_savable = T();
+  cytnx::io::Load(temp_savable, container, name, path);
+  T &loaded_tensor = std::get<T>(temp_savable);
+  object = std::move(loaded_tensor);
+}
+
+template <typename T>
+void InPlaceLoadDevice(T &object, H5::Group &container, const std::string &name,
+                       const std::string &path, bool restore_device) {
+  cytnx::io::loadable_to_device temp_savable = T();
+  cytnx::io::Load(temp_savable, container, name, path, restore_device);
+  T &loaded_tensor = std::get<T>(temp_savable);
+  object = std::move(loaded_tensor);
+}
+
 void io_binding(py::module &m) {
   // [Submodule io]
   pybind11::module m_io = m.def_submodule("io", "Input/Output related.");
@@ -151,13 +170,32 @@ void io_binding(py::module &m) {
   m_io.def("Save", &cytnx::io::Save, py::arg("object"), py::arg("container"), py::arg("name"),
            py::arg("path") = "", py::arg("overwrite") = false);
 
+  // ---- Load function ----
+  // Wrapper types that break references without an in-place move
+  m_io.def("Load", &InPlaceLoad<cytnx::UniTensor>, py::arg("object"), py::arg("container"),
+           py::arg("name"), py::arg("path") = "");
+  m_io.def("Load", &InPlaceLoad<cytnx::Storage>, py::arg("object"), py::arg("container"),
+           py::arg("name"), py::arg("path") = "");
+  m_io.def("Load", &InPlaceLoad<cytnx::tn_algo::MPS>, py::arg("object"), py::arg("container"),
+           py::arg("name"), py::arg("path") = "");
+  // All other types (must come after the previous more specific ones)
   m_io.def(
-    "c_Load",
+    "Load",
     [](cytnx::io::savable_class &object, H5::Group &container, const std::string &name,
        const std::string &path) { cytnx::io::Load(object, container, name, path); },
     py::arg("object"), py::arg("container"), py::arg("name"), py::arg("path") = "");
+
+  // ---- Load function for objects that can be restored on a given device ----
+  // Wrapper types that break references without an in-place move
+  m_io.def("Load", &InPlaceLoadDevice<cytnx::UniTensor>, py::arg("object"), py::arg("container"),
+           py::arg("name"), py::arg("path") = "", py::arg("restore_device"));
+  m_io.def("Load", &InPlaceLoadDevice<cytnx::Storage>, py::arg("object"), py::arg("container"),
+           py::arg("name"), py::arg("path") = "", py::arg("restore_device"));
+  m_io.def("Load", &InPlaceLoadDevice<cytnx::tn_algo::MPS>, py::arg("object"), py::arg("container"),
+           py::arg("name"), py::arg("path") = "", py::arg("restore_device"));
+  // All other types (must come after the previous more specific ones)
   m_io.def(
-    "c_Load",
+    "Load",
     [](cytnx::io::loadable_to_device &object, H5::Group &container, const std::string &name,
        const std::string &path,
        bool restore_device) { cytnx::io::Load(object, container, name, path, restore_device); },
