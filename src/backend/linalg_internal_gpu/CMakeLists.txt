@@ -36,6 +36,9 @@ target_sources_local(cytnx
 
     cuAbs_internal.cu
     cuAdd_internal.cu
+    cuSub_dispatch.cu
+    cuMul_dispatch.cu
+    cuDiv_dispatch.cu
     cuGer_internal.cu
     cuArithmetic_internal.cu
     cuConj_inplace_internal.cu

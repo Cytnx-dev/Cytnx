@@ -63,7 +63,6 @@ namespace cytnx {
       std::vector<T> tmp = list;
       this->_type = this->list;
       this->idx_list = std::vector<cytnx_int64>(tmp.begin(), tmp.end());
-      // std::cout << "VV" << this->idx_list.size() << std::endl;
     };  // construct from vector/list, should be 1d with dtype integer.
 
     template <class T>
@@ -108,10 +107,11 @@ namespace cytnx {
     static Accessor all() { return Accessor(std::string(":")); };
 
     /**
-    @brief access the range at assigned rank, this is similar to min:max:step in python
-    @param min
-    @param max
-    @param step
+    @brief access the range at assigned rank; this is similar to min:max:step in python
+    @param min the first element to access
+    @param max exclusive bound
+    @param step the step size, so the second element will be \p min + \p step
+    @warning The range is in [min, max), so the element \p max itself is not included
 
 
     ## Example:
@@ -184,10 +184,8 @@ namespace cytnx {
 
   template <class T, class... Ts>
   std::vector<cytnx::Accessor> Indices_resolver(const T &a, const Ts &...args) {
-    // std::cout << a << std::endl;;
     std::vector<cytnx::Accessor> idxs;
     _resolve_elems(idxs, a, args...);
-    // cout << idxs << endl;
     return idxs;
   }
   ///@endcond

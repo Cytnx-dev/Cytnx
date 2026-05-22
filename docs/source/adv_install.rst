@@ -15,7 +15,7 @@ Cytnx requires the following minimum dependencies:
 * make
 * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
 * openblas (or mkl, see below)
-* gcc v13+ (or icpc, see below) (recommand latest or equivalent clang on Mac/Linux with C++20 support) (required -std=c++20)
+* gcc v13+ (recommand latest or equivalent clang on Mac/Linux with C++20 support) (required -std=c++20)
 
 In addition, you might want to install the following optional dependencies if you want Cytnx to compile with features like openmp, mkl and/or CUDA support.
 
@@ -219,8 +219,6 @@ The following are the available compiling option flags that you can specify in *
 +------------------------+-------------------+------------------------------------+
 | -DBUILD_PYTHON         |   ON              | Compile and install Python API     |
 +------------------------+-------------------+------------------------------------+
-| -DUSE_ICPC             |   OFF             | Compile using intel icpc compiler  |
-+------------------------+-------------------+------------------------------------+
 | -DUSE_MKL              |   OFF             | Compile Cytnx with intel MKL lib.  |
 |                        |                   | If =off, default link to openblas  |
 +------------------------+-------------------+------------------------------------+
@@ -303,6 +301,17 @@ In the case that Cytnx is installed locally from binary build, not from anaconda
 
     CYTNX_ROOT is the path where Cytnx is installed from binary build.
 
+
+Check Cytnx version
+*************************************
+The current version of the library can be printed by:
+
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+    print("Cytnx version = ", cytnx.__version__)
 
 Generate API documentation
 *************************************

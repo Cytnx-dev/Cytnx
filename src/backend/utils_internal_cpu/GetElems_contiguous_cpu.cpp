@@ -70,7 +70,6 @@ namespace cytnx {
             Loc += cytnx_uint64(tmpn / new_offj[r]) * offj[r];
           tmpn %= new_offj[r];
         }
-        // std::cout << n << " " << Loc << std::endl;
         memcpy(new_elem_ptr_ + n * Nelem_grp, elem_ptr_ + Loc * Nelem_grp,
                sizeof(cytnx_double) * Nelem_grp);
         // new_elem_ptr_[n] = elem_ptr_[Loc];
