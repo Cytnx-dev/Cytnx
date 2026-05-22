@@ -240,74 +240,34 @@ namespace cytnx {
 
   void UniTensor::from_hdf5(H5::Group &container, const std::string &name, bool restore_device) {
     H5::Group rootgroup = (name.empty() ? container : container.openGroup(name));
-    H5::DataType datatype;
-    H5::Attribute attr;
-    H5::StrType str_type;
-    size_t size;
 
     // type, read from attribute
-    attr = rootgroup.openAttribute("type");
-    str_type = attr.getStrType();
-    size = str_type.getSize() - 1;  // remove the null terminator
     std::string utenname;
-    utenname.resize(size);
-    attr.read(str_type, &utenname[0]);
+    io::load_attribute(utenname, rootgroup, "type");
     this->Init(utenname);
 
     // is_diag, read from attribute
     if (rootgroup.attrExists("diagonal")) {
-      H5::Attribute attr = rootgroup.openAttribute("diagonal");
-      datatype = attr.getDataType();
-      cytnx_error_msg(
-        datatype.getSize() != Type.get_hdf5_type(this->_impl->_is_diag).getSize(),
-        "[ERROR] 'device' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
-        datatype.getSize(), Type.get_hdf5_type(this->_impl->_is_diag).getSize());
-      attr.read(datatype, &this->_impl->_is_diag);
+      io::load_attribute(this->_impl->_is_diag, rootgroup, "diagonal");
     } else {
       this->_impl->_is_diag = false;
     }
 
     // rowrank, read from attribute
-    attr = rootgroup.openAttribute("rowrank");
-    datatype = attr.getDataType();
-    cytnx_error_msg(
-      datatype.getSize() != Type.get_hdf5_type(this->_impl->_rowrank).getSize(),
-      "[ERROR] 'rowrank' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
-      datatype.getSize(), Type.get_hdf5_type(this->_impl->_rowrank).getSize());
-    attr.read(datatype, &this->_impl->_rowrank);
+    io::load_attribute(this->_impl->_rowrank, rootgroup, "rowrank");
 
     // name, read from string attribute
     if (rootgroup.attrExists("name")) {
-      attr = rootgroup.openAttribute("name");
-      str_type = attr.getStrType();
-      size = str_type.getSize() - 1;  // remove the null terminator
-      if (size > 0) {
-        this->_impl->_name.resize(size);
-        attr.read(str_type, &this->_impl->_name[0]);
-      } else {
-        this->_impl->_name.clear();
-      }
+      io::load_attribute(this->_impl->_name, rootgroup, "name");
     } else {
       this->_impl->_name.clear();
     }
 
     // labels; read from string vector
-    this->_impl->_labels.clear();
     if (rootgroup.nameExists("labels")) {
-      H5::DataSet dataset = rootgroup.openDataSet("labels");
-      H5::DataSpace dataspace = dataset.getSpace();
-      hsize_t dims[1];
-      dataspace.getSimpleExtentDims(dims);
-      // H5T_VARIABLE requires reading into an array of char pointers (char**)
-      H5::StrType str_type(H5::PredType::C_S1, H5T_VARIABLE);
-      std::vector<char *> c_strings(dims[0]);
-      dataset.read(c_strings.data(), str_type);
-      this->_impl->_labels.reserve(dims[0]);
-      for (size_t i = 0; i < dims[0]; ++i) {
-        this->_impl->_labels.push_back(std::string(c_strings[i]));
-      }
-      // free the space of each char* that was allocated in dataset.read()
-      dataset.vlenReclaim(c_strings.data(), str_type, dataspace);
+      io::load_dataset(this->_impl->_labels, rootgroup, "labels");
+    } else {
+      this->_impl->_labels.clear();
     }
 
     // bonds; read from group
@@ -337,6 +297,7 @@ namespace cytnx {
       this->_impl->_bonds.clear();
     }
 
+    // dispatch
     this->_impl->from_hdf5_dispatch(rootgroup, restore_device);
     this->_impl->_is_braket_form = this->_impl->_update_braket();
   }

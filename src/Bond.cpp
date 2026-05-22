@@ -645,38 +645,20 @@ namespace cytnx {
     // delete further symmetries if they exist
     while (io::remove_attribute(symloc, "Symmetry" + std::to_string(symnum), overwrite)) symnum++;
   }
+
   void Bond::from_hdf5(H5::Group &container, const std::string &name) {
     H5::Group rootgroup = (name.empty() ? container : container.openGroup(name));
-    H5::DataType datatype;
-    H5::Attribute attr;
-    H5::DataSet dataset;
-    H5::DataSpace dataspace;
-    H5::StrType str_type;
 
     // type from string
-    attr = rootgroup.openAttribute("type");
-    str_type = attr.getStrType();
-    size_t size = str_type.getSize() - 1;  // not including the null terminator
     std::string typestr;
-    typestr.resize(size);
-    attr.read(str_type, &typestr[0]);
+    io::load_attribute(typestr, rootgroup, "type");
     this->_impl->_type = string_to_bondtype.at(typestr);
 
     // degs; read vector
     bool symmetric = false;
-    hssize_t sectordim;
     if (rootgroup.nameExists("degeneracies")) {
+      io::load_dataset(this->_impl->_degs, rootgroup, "degeneracies");
       symmetric = true;
-      dataset = rootgroup.openDataSet("degeneracies");
-      dataspace = dataset.getSpace();
-      sectordim = dataspace.getSimpleExtentNpoints();
-      this->_impl->_degs.resize(sectordim);
-      datatype = dataset.getDataType();
-      cytnx_error_msg(
-        datatype.getSize() != sizeof(std::size_t),
-        "[ERROR] 'degeneracies' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
-        datatype.getSize(), sizeof(std::size_t));
-      dataset.read(this->_impl->_degs.data(), datatype);
       this->_impl->_dim =
         std::accumulate(this->_impl->_degs.begin(), this->_impl->_degs.end(), cytnx_uint64(0));
     } else {
@@ -690,33 +672,12 @@ namespace cytnx {
                       "[ERROR] 'degeneracies' were not found, but "
                       "'quantum_numbers' exist. The HDF5 data seems corrupt!%s",
                       "\n");
-      dataset = rootgroup.openDataSet("quantum_numbers");
-      dataspace = dataset.getSpace();
-      cytnx_error_msg(dataspace.getSimpleExtentNdims() != 2,
-                      "[ERROR] 'quantum_numbers' should be a two-dimensional array. The HDF5 data "
-                      "seems corrupt!%s",
-                      "\n");
-      hsize_t dims[2];
-      dataspace.getSimpleExtentDims(dims);
-      cytnx_error_msg(dims[0] != sectordim,
-                      "[ERROR] Length of 'degeneracies' = %d, but first dimension of "
-                      "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
-                      sectordim, dims[0]);
-      qnumdim = dims[1];
-      // Read HDF5 data into a flattened temporary vector
-      std::vector<cytnx_int64> flat(sectordim * qnumdim);
-      datatype = dataset.getDataType();
-      cytnx_error_msg(
-        datatype.getSize() != sizeof(cytnx_int64),
-        "[ERROR] 'quantum_numbers' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
-        datatype.getSize(), sizeof(cytnx_int64));
-      dataset.read(flat.data(), datatype);
-      // Reconstruct the vector of vectors
-      this->_impl->_qnums.assign(sectordim, std::vector<cytnx_int64>(qnumdim));
-      for (hsize_t i = 0; i < sectordim; ++i) {
-        std::copy(flat.begin() + i * qnumdim, flat.begin() + (i + 1) * qnumdim,
-                  this->_impl->_qnums[i].begin());
-      }
+      io::load_dataset(this->_impl->_qnums, rootgroup, "quantum_numbers");
+      cytnx_error_msg(this->_impl->_qnums.size() != this->_impl->_degs.size(),
+                      "[ERROR] Length of 'degeneracies' = %zu, but first dimension of "
+                      "'quantum_numbers' is %zu. The HDF5 data seems corrupt!\n",
+                      this->_impl->_degs.size(), this->_impl->_qnums.size());
+      if (!(this->_impl->_qnums.empty())) qnumdim = this->_impl->_qnums[0].size();
     } else {
       this->_impl->_qnums.clear();
     }
@@ -738,8 +699,8 @@ namespace cytnx {
       }
       if (symmetric) {
         cytnx_error_msg(idx != qnumdim,
-                        "[ERROR] %d symmetries were found, but second dimension of "
-                        "'quantum_numbers' is %d. The HDF5 data seems corrupt!\n",
+                        "[ERROR] %zu symmetries were found, but second dimension of "
+                        "'quantum_numbers' is %zu. The HDF5 data seems corrupt!\n",
                         idx, qnumdim);
       } else {
         cytnx_error_msg(idx > 0,
@@ -758,18 +719,12 @@ namespace cytnx {
 
     // dim; from attribute
     if (rootgroup.attrExists("dimension")) {
-      attr = rootgroup.openAttribute("dimension");
       cytnx_uint64 dimension;
-      datatype = attr.getDataType();
-      cytnx_error_msg(
-        datatype.getSize() != sizeof(cytnx_uint64),
-        "[ERROR] 'dimension' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
-        datatype.getSize(), sizeof(cytnx_uint64));
-      attr.read(datatype, &dimension);
+      io::load_attribute(dimension, rootgroup, "dimension");
       if (symmetric) {
         cytnx_error_msg(dimension != this->_impl->_dim,
-                        "[ERROR] 'dimension' read from HDF5 file is %d, but the sum of all "
-                        "degeneracies is %d. The HDF5 data seems corrupt!\n",
+                        "[ERROR] 'dimension' read from HDF5 file is %llu, but the sum of all "
+                        "degeneracies is %llu. The HDF5 data seems corrupt!\n",
                         dimension, this->_impl->_dim);
       } else {
         this->_impl->_dim = dimension;

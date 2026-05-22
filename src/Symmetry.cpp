@@ -395,12 +395,8 @@ namespace cytnx {
     io::save_attribute(this->getname(), container, name, overwrite);
   }
   void cytnx::Symmetry::from_hdf5(H5::Group &container, const std::string &name) {
-    H5::Attribute attr = container.openAttribute(name);
-    H5::StrType str_type = attr.getStrType();
-    size_t size = str_type.getSize() - 1;  // remove the null terminator
     std::string symname;
-    symname.resize(size);
-    attr.read(str_type, &symname[0]);
+    io::load_attribute(symname, container, name);
     this->Init(symname);
   }
 

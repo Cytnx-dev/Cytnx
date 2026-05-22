@@ -60,7 +60,7 @@ namespace cytnx {
     bool unlink(H5::Group &container, const std::string &name, bool overwrite = true);
 
     /**
-     * @brief Save data to an attribute
+     * @brief Save scalar to an attribute
      * @param[in] object a scalar of any type that is supported by cytnx
      * @param[in] container file, group or dataset; should be opened for writing
      * @param[in] name the name of the attribute
@@ -80,6 +80,28 @@ namespace cytnx {
      */
     void save_attribute(const std::vector<std::string> &object, H5::H5Object &container,
                         const std::string &name, bool overwrite = false);
+
+    /**
+     * @brief Load scalar from an attribute
+     * @param[out] object a scalar of any type that is supported by cytnx; needs to be compatible
+     * with the data format in the file.
+     * @param[in] container file, group or dataset
+     * @param[in] name the name of the attribute
+     */
+    template <typename T>
+    void load_attribute(T &object, H5::H5Object &container, const std::string &name) {
+      H5::Attribute attr = container.openAttribute(name);
+      H5::DataType datatype = attr.getDataType();
+      H5::DataType scalartype = Type.get_hdf5_type(object);
+      cytnx_error_msg(datatype.getClass() != scalartype.getClass(),
+                      "[ERROR] Attribute '%s' data type class mismatch.\n", name.c_str());
+      attr.read(scalartype, &object);
+    }
+    /**
+     * @brief Load string from an attribute
+     * @see load_attribute(T &object, H5::H5Object &container, const std::string &name)
+     */
+    void load_attribute(std::string &object, H5::H5Object &container, const std::string &name);
 
     /**
      * @brief Remove an attribute if it exists
@@ -120,6 +142,69 @@ namespace cytnx {
      */
     H5::DataSet save_dataset(const Matrix_list &object, H5::Group &container,
                              const std::string &name, bool overwrite = false);
+
+    /**
+     * @brief Load data from a dataset
+     * @param[out] object vector of supported types
+     * @param[in] container file, group or dataset
+     * @param[in] name the name of the attribute
+     */
+    template <typename T>
+    void load_dataset(std::vector<T> &object, H5::H5Object &container, const std::string &name) {
+      H5::DataSet dataset = container.openDataSet(name);
+      H5::DataSpace dataspace = dataset.getSpace();
+      object.resize(dataspace.getSimpleExtentNpoints());
+      H5::DataType datatype = dataset.getDataType();
+      T scalar;
+      H5::DataType scalartype = Type.get_hdf5_type(scalar);
+      cytnx_error_msg(datatype.getClass() != scalartype.getClass(),
+                      "[ERROR] Dataset '%s' type class mismatch.\n", name.c_str());
+      dataset.read(object.data(), scalartype);
+    }
+
+    /**
+     * @brief Load vector of strings from a dataset
+     * @param[out] object vector of strings
+     * @see void load_dataset(std::vector<T> &object, H5::H5Object &container, const std::string
+     * &name)
+     */
+    void load_dataset(std::vector<std::string> &object, H5::H5Object &container,
+                      const std::string &name);
+    /**
+     * @brief Load a matrix of a supported type
+     * @param[out] object a vector of a vector based on a supported type
+     * @see save_dataset(const Matrix_list &object, H5::Group &container, const std::string &name,
+     * bool overwrite)
+     * @see void load_dataset(std::vector<T> &object, H5::H5Object &container, const std::string
+     * &name)
+     */
+    template <typename T>
+    void load_dataset(std::vector<std::vector<T>> &object, H5::H5Object &container,
+                      const std::string &name) {
+      H5::DataSet dataset = container.openDataSet(name);
+      H5::DataSpace dataspace = dataset.getSpace();
+      cytnx_error_msg(
+        dataspace.getSimpleExtentNdims() != 2,
+        "[ERROR] Dataset '%s' should be a two-dimensional array. The HDF5 data seems corrupt!\n",
+        name.c_str());
+      hsize_t dims[2];
+      dataspace.getSimpleExtentDims(dims);
+      hsize_t rownum = dims[0];
+      hsize_t colnum = dims[1];
+      H5::DataType datatype = dataset.getDataType();
+      T scalar;
+      H5::DataType scalartype = Type.get_hdf5_type(scalar);
+      cytnx_error_msg(datatype.getClass() != scalartype.getClass(),
+                      "[ERROR] Dataset '%s' type class mismatch.\n", name.c_str());
+      // Read HDF5 data into a flattened temporary vector
+      std::vector<T> flat(rownum * colnum);
+      dataset.read(flat.data(), scalartype);
+      // Reconstruct the vector of vectors
+      object.assign(rownum, std::vector<T>(colnum));
+      for (hsize_t i = 0; i < rownum; ++i) {
+        std::copy(flat.begin() + i * colnum, flat.begin() + (i + 1) * colnum, object[i].begin());
+      }
+    }
 
     /**
      * @brief Input/output file access mode for HDF5 files.
@@ -201,7 +286,7 @@ namespace cytnx {
     /**
      * @brief Load object from HDF5 file
      * @details Can be used with most cytnx classes as objects.
-     * @param[in] object an object of the correct type that will be modified (inline)
+     * @param[out] object an object of the correct type that will be modified (inline)
      * @param[in] container HDF5 object that should be opened for writing; can be a file or a group
      * @param[in] name the name of the attribute, dataset, or group
      * @param[in] path path inside the file; a path /foo/bar/Obj will read the object from the

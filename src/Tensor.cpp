@@ -600,13 +600,7 @@ namespace cytnx {
 
     int device = Device.cpu;
     if (restore_device && dataset.attrExists("device")) {
-      H5::Attribute attr = dataset.openAttribute("device");
-      datatype = dataset.getDataType();
-      cytnx_error_msg(
-        datatype.getSize() != sizeof(int),
-        "[ERROR] 'device' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
-        datatype.getSize(), sizeof(int));
-      attr.read(datatype, &device);
+      io::load_attribute(device, dataset, "device");
   #ifndef UNI_GPU
       if (device != Device.cpu) {
         cytnx_warning_msg(true,

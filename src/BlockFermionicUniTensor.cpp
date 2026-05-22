@@ -2425,38 +2425,16 @@ namespace cytnx {
     }
     // inner_to_outer_idx; read matrix (blocknum x rank)
     if (container.nameExists("block_to_sectors")) {
-      H5::DataSet dataset = container.openDataSet("block_to_sectors");
-      H5::DataSpace dataspace = dataset.getSpace();
-      cytnx_error_msg(dataspace.getSimpleExtentNdims() != 2,
-                      "[ERROR] 'block_to_sectors' should be a two-dimensional array. The HDF5 data "
-                      "seems corrupt!%s",
-                      "\n");
-      hsize_t dims[2];
-      dataspace.getSimpleExtentDims(dims);
-      hsize_t blocknum = dims[0];
-      hsize_t rank = dims[1];
-      cytnx_error_msg(blocknum != this->_blocks.size(),
+      io::load_dataset(this->_inner_to_outer_idx, container, "block_to_sectors");
+      cytnx_error_msg(this->_inner_to_outer_idx.size() != this->_blocks.size(),
                       "[ERROR] %d blocks found, but first dimension of 'block_to_sectors' is %d. "
                       "The HDF5 data seems corrupt!\n",
-                      this->_blocks.size(), blocknum);
-      cytnx_error_msg(rank != this->_bonds.size(),
+                      this->_blocks.size(), this->_inner_to_outer_idx.size());
+      cytnx_error_msg(!(this->_inner_to_outer_idx.empty()) &&
+                        this->_inner_to_outer_idx[0].size() != this->_bonds.size(),
                       "[ERROR] %d bonds found, but second dimension of 'block_to_sectors' is %d. "
                       "The HDF5 data seems corrupt!\n",
-                      this->_bonds.size(), rank);
-      // Read HDF5 data into a flattened temporary vector
-      std::vector<cytnx_uint64> flat(blocknum * rank);
-      H5::DataType datatype = dataset.getDataType();
-      cytnx_error_msg(
-        datatype.getSize() != sizeof(cytnx_uint64),
-        "[ERROR] 'block_to_sectors' bit-length mismatch. File: %zu bytes, expected: %zu bytes.\n",
-        datatype.getSize(), sizeof(cytnx_uint64));
-      dataset.read(flat.data(), datatype);
-      // Reconstruct the vector of vectors
-      this->_inner_to_outer_idx.assign(blocknum, std::vector<cytnx_uint64>(rank));
-      for (hsize_t i = 0; i < blocknum; ++i) {
-        std::copy(flat.begin() + i * rank, flat.begin() + (i + 1) * rank,
-                  this->_inner_to_outer_idx[i].begin());
-      }
+                      this->_bonds.size(), this->_inner_to_outer_idx[0].size());
     } else {
       cytnx_error_msg(
         !(this->_blocks.empty()),

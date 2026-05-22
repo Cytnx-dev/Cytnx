@@ -74,6 +74,17 @@ namespace cytnx {
       }
     }
 
+    bool unlink(H5::Group &container, const std::string &name, bool overwrite) {
+      if (container.nameExists(name)) {
+        cytnx_error_msg(
+          !overwrite, "Dataset or group '%s' exists. Use argument overwrite = true to remove it.\n",
+          name);
+        container.unlink(name);
+        return true;
+      }
+      return false;
+    }
+
     void save_attribute(const Scalar_list &object, H5::H5Object &container, const std::string &name,
                         bool overwrite) {
       std::visit(
@@ -138,6 +149,29 @@ namespace cytnx {
       attr.write(str_type, c_strings.data());
     }
 
+    void load_attribute(std::string &object, H5::H5Object &container, const std::string &name) {
+      H5::Attribute attr = container.openAttribute(name);
+      H5::StrType str_type = attr.getStrType();
+      size_t size = str_type.getSize();
+      object.resize(size);
+      attr.read(str_type, object.data());
+
+      // remove the null terminator
+      if (!object.empty() && object.back() == '\0') {
+        object.pop_back();
+      }
+    }
+
+    bool remove_attribute(H5::H5Object &container, const std::string &name, bool overwrite) {
+      if (container.attrExists(name)) {
+        cytnx_error_msg(
+          !overwrite, "Attribute '%s' exists. Use argument overwrite = true to remove it.\n", name);
+        container.removeAttr(name);
+        return true;
+      }
+      return false;
+    }
+
     H5::DataSet save_dataset(const Vector_list &object, H5::Group &container,
                              const std::string &name, bool overwrite) {
       H5::DataSet dataset;
@@ -184,16 +218,6 @@ namespace cytnx {
       return dataset;
     }
 
-    bool remove_attribute(H5::H5Object &container, const std::string &name, bool overwrite) {
-      if (container.attrExists(name)) {
-        cytnx_error_msg(
-          !overwrite, "Attribute '%s' exists. Use argument overwrite = true to remove it.\n", name);
-        container.removeAttr(name);
-        return true;
-      }
-      return false;
-    }
-
     H5::DataSet save_dataset(const Matrix_list &object, H5::Group &container,
                              const std::string &name, bool overwrite) {
       H5::DataSet dataset;
@@ -234,15 +258,22 @@ namespace cytnx {
       return dataset;
     }
 
-    bool unlink(H5::Group &container, const std::string &name, bool overwrite) {
-      if (container.nameExists(name)) {
-        cytnx_error_msg(
-          !overwrite, "Dataset or group '%s' exists. Use argument overwrite = true to remove it.\n",
-          name);
-        container.unlink(name);
-        return true;
+    void load_dataset(std::vector<std::string> &object, H5::H5Object &container,
+                      const std::string &name) {
+      H5::DataSet dataset = container.openDataSet(name);
+      H5::DataSpace dataspace = dataset.getSpace();
+      hsize_t dims[1];
+      dataspace.getSimpleExtentDims(dims);
+      // H5T_VARIABLE requires reading into an array of char pointers (char**)
+      H5::StrType str_type(H5::PredType::C_S1, H5T_VARIABLE);
+      std::vector<char *> c_strings(dims[0]);
+      dataset.read(c_strings.data(), str_type);
+      object.reserve(dims[0]);
+      for (size_t i = 0; i < dims[0]; ++i) {
+        object.push_back(std::string(c_strings[i]));
       }
-      return false;
+      // free the space of each char* that was allocated in dataset.read()
+      dataset.vlenReclaim(c_strings.data(), str_type, dataspace);
     }
 
     H5::H5File open(const std::filesystem::path &fname, IoMode mode) {
