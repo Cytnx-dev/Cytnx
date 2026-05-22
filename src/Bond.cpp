@@ -610,84 +610,40 @@ namespace cytnx {
     if (name.empty())
       rootgroup = container;
     else {
-      if (container.nameExists(name)) {
-        rootgroup = container.openGroup(name);
-      } else {
-        rootgroup = container.createGroup(name);
-      }
+      rootgroup = io::create_group(container, name, false);
     }
 
-    if (overwrite) {  // delete previous data
-      // remove attributes
-      if (rootgroup.attrExists("dimension")) rootgroup.removeAttr("dimension");
-      if (rootgroup.attrExists("type")) rootgroup.removeAttr("type");
-      // remove datasets
-      if (rootgroup.nameExists("degeneracies")) rootgroup.unlink("degeneracies");
-      if (rootgroup.nameExists("quantum_numbers")) rootgroup.unlink("quantum_numbers");
-      // remove groups and its contents recursively
-      if (rootgroup.nameExists("symmetries")) rootgroup.unlink("symmetries");
-    }
+    // write attributes
+    io::save_attribute(this->_impl->_dim, rootgroup, "dimension", overwrite);
+    io::save_attribute(bondtype_to_string.at(this->_impl->_type), rootgroup, "type", overwrite);
 
-    H5::DataType datatype;
-    H5::Attribute attr;
-    H5::DataSet dataset;
-    H5::DataSpace dataspace;
-    H5::StrType str_type;
-
-    // dimension, write as attribute
-    auto dim = this->_impl->_dim;
-    datatype = Type.get_hdf5_type(dim);
-    attr = rootgroup.createAttribute("dimension", datatype, H5::DataSpace(H5S_SCALAR));
-    attr.write(datatype, &dim);
-
-    // type, write as string
-    std::string typestr = bondtype_to_string.at(this->_impl->_type);
-    str_type = H5::StrType(H5::PredType::C_S1, typestr.length() + 1);
-    dataspace = H5::DataSpace(H5S_SCALAR);
-    attr = rootgroup.createAttribute("type", str_type, dataspace);
-    attr.write(str_type, typestr);
-
-    // degs; write vector
     hsize_t sectordim = this->_impl->_qnums.size();
-    if (sectordim > 0) {  // only with symmetries
-      hsize_t vecdims[1] = {sectordim};
-      dataspace = H5::DataSpace(1, vecdims);
-      datatype = Type.get_hdf5_type(this->_impl->_degs[0]);
-      dataset = rootgroup.createDataSet("degeneracies", Type.get_hdf5_type(this->_impl->_degs[0]),
-                                        dataspace);
-      dataset.write(this->_impl->_degs.data(), datatype);
-      // label axis
-      dataspace = H5::DataSpace(H5S_SCALAR);
-      str_type = H5::StrType(H5::PredType::C_S1, 7);
-      attr = dataset.createAttribute("axis_label", str_type, dataspace);
-      attr.write(str_type, "sector");
-
-      // qnums; write matrix (dim x qnumdim)
-      hsize_t qnumdim = this->_impl->_syms.size();
-      std::vector<cytnx_int64> flat(sectordim * qnumdim);  // flatten vector<vector>
-      for (hsize_t i = 0; i < sectordim; ++i) {
-        std::copy(this->_impl->_qnums[i].begin(), this->_impl->_qnums[i].end(),
-                  flat.begin() + i * qnumdim);
-      }
-      hsize_t matdims[2] = {sectordim, qnumdim};
-      dataspace = H5::DataSpace(2, matdims);
-      datatype = Type.get_hdf5_type(flat[0]);
-      dataset = rootgroup.createDataSet("quantum_numbers", datatype, dataspace);
-      dataset.write(flat.data(), datatype);
-      // label axes
-      char labels[2][9] = {"sector", "symmetry"};
-      str_type = H5::StrType(H5::PredType::C_S1, 9);
-      hsize_t attr_dims[1] = {2};
-      H5::DataSpace attr_space(1, attr_dims);
-      attr = dataset.createAttribute("axis_labels", str_type, attr_space);
-      attr.write(str_type, labels);
-
-      // symmetries
-      H5::Group symloc = rootgroup.createGroup("symmetries");
-      for (int i = 0; i < this->_impl->_syms.size(); i++) {
-        this->_impl->_syms[i].to_hdf5(symloc, "Symmetry" + std::to_string(i), overwrite);
-      }
+    if (sectordim < 1) {  // no symmetries
+      io::unlink(rootgroup, "degeneracies", overwrite);
+      io::unlink(rootgroup, "quantum_numbers", overwrite);
+      io::unlink(rootgroup, "symmetries", overwrite);
+      return;
     }
+    // degs; write vector
+    H5::DataSet dataset =
+      io::save_dataset(this->_impl->_degs, rootgroup, "degeneracies", overwrite);
+    // label axis
+    io::save_attribute("sector", dataset, "axis_label", overwrite);
+
+    // qnums; write matrix (dim x qnumdim)
+    dataset = io::save_dataset(this->_impl->_qnums, rootgroup, "quantum_numbers", overwrite);
+    // label axes
+    io::save_attribute(std::vector<std::string>{"sector", "symmetry"}, dataset, "axis_labels",
+                       overwrite);
+
+    // symmetries
+    H5::Group symloc = io::create_group(rootgroup, "symmetries", false);
+    hsize_t symnum = 0;
+    for (; symnum < this->_impl->_syms.size(); symnum++) {
+      this->_impl->_syms[symnum].to_hdf5(symloc, "Symmetry" + std::to_string(symnum), overwrite);
+    }
+    // delete further symmetries if they exist
+    while (io::remove_attribute(symloc, "Symmetry" + std::to_string(symnum), overwrite)) symnum++;
   }
   void Bond::from_hdf5(H5::Group &container, const std::string &name) {
     H5::Group rootgroup = (name.empty() ? container : container.openGroup(name));

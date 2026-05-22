@@ -8,6 +8,8 @@
 
 #include "H5Cpp.h"
 
+#include "io.hpp"
+
 using namespace std;
 
 namespace cytnx {
@@ -390,15 +392,7 @@ namespace cytnx {
 
   void cytnx::Symmetry::to_hdf5(H5::Group &container, const std::string &name,
                                 const bool overwrite) const {
-    if (overwrite) {  // delete previous data
-      if (container.attrExists(name)) container.removeAttr(name);
-    }
-
-    std::string symname = this->getname();
-    H5::StrType str_type(H5::PredType::C_S1, symname.length() + 1);
-    H5::DataSpace dataspace = H5::DataSpace(H5S_SCALAR);
-    H5::Attribute attr = container.createAttribute(name, str_type, dataspace);
-    attr.write(str_type, symname);
+    io::save_attribute(this->getname(), container, name, overwrite);
   }
   void cytnx::Symmetry::from_hdf5(H5::Group &container, const std::string &name) {
     H5::Attribute attr = container.openAttribute(name);

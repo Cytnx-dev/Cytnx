@@ -30,7 +30,25 @@ void io_binding(py::module &m) {
     .value("ACC_INOUT", cytnx::io::IoMode::ACC_INOUT)
     .export_values();
 
-  py::class_<H5::Group>(m_io, "Group")
+  // H5Object is an abstract class for all H5 objects that can contain attributes
+  py::class_<H5::H5Object, std::unique_ptr<H5::H5Object, py::nodelete>>(m_io, "H5Object")
+    // Attribute management
+    .def(
+      "attrExists",
+      [](const H5::H5Object &self, const std::string &name) { return self.attrExists(name); },
+      py::arg("name"))
+    .def(
+      "removeAttr",
+      [](const H5::H5Object &self, const std::string &name) { self.removeAttr(name); },
+      py::arg("name"))
+    .def(
+      "renameAttr",
+      [](const H5::H5Object &self, const std::string &old_n, const std::string &new_n) {
+        self.renameAttr(old_n, new_n);
+      },
+      py::arg("old_name"), py::arg("new_name"));  // end of object line
+
+  py::class_<H5::Group, H5::H5Object>(m_io, "Group")
     // construction
     .def(py::init<>())
     .def(py::init<const H5::Group &>(), py::arg("original"))
@@ -52,21 +70,6 @@ void io_binding(py::module &m) {
       "openGroup",
       [](const H5::Group &self, const std::string &name) { return self.openGroup(name); },
       py::arg("name"))
-
-    // Attribute management
-    .def(
-      "attrExists",
-      [](const H5::Group &self, const std::string &name) { return self.attrExists(name); },
-      py::arg("name"))
-    .def(
-      "removeAttr", [](const H5::Group &self, const std::string &name) { self.removeAttr(name); },
-      py::arg("name"))
-    .def(
-      "renameAttr",
-      [](const H5::Group &self, const std::string &old_n, const std::string &new_n) {
-        self.renameAttr(old_n, new_n);
-      },
-      py::arg("old_name"), py::arg("new_name"))
 
     // link/object management
     .def(
@@ -129,12 +132,13 @@ void io_binding(py::module &m) {
       py::arg("name"))
     .def("getObjCount", [](H5::H5File &self) { return self.getObjCount(); });  // end of object line
 
+  // implementations from cytnx::io
   m_io.def(
     "create_group",
-    [](H5::Group &container, const std::string &path) {
-      return cytnx::io::create_group(container, path);
+    [](H5::Group &container, const std::string &path, bool recursive) {
+      return cytnx::io::create_group(container, path, recursive);
     },
-    py::arg("container"), py::arg("path"));
+    py::arg("container"), py::arg("path"), py::arg("recursive") = true);
 
   m_io.def(
     "open",
@@ -148,12 +152,12 @@ void io_binding(py::module &m) {
            py::arg("path") = "", py::arg("overwrite") = false);
 
   m_io.def(
-    "Load",
+    "c_Load",
     [](cytnx::io::savable_class &object, H5::Group &container, const std::string &name,
        const std::string &path) { cytnx::io::Load(object, container, name, path); },
     py::arg("object"), py::arg("container"), py::arg("name"), py::arg("path") = "");
   m_io.def(
-    "Load",
+    "c_Load",
     [](cytnx::io::loadable_to_device &object, H5::Group &container, const std::string &name,
        const std::string &path,
        bool restore_device) { cytnx::io::Load(object, container, name, path, restore_device); },

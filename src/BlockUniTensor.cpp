@@ -10,6 +10,8 @@
 #include <map>
 #include <boost/unordered_map.hpp>
 #include <stack>
+#include "io.hpp"
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -1580,34 +1582,31 @@ namespace cytnx {
   }
 
   void BlockUniTensor::to_hdf5_dispatch(H5::Group &container, const bool overwrite) const {
+    // delete all entries that could be written by one of the UniTensor implementations;
+    io::remove_attribute(container, "directed", overwrite);
+    io::unlink(container, "Tensor", overwrite);
+
     // blocks; write to group
-    if (!this->_blocks.empty()) {
-      H5::Group dir = container.createGroup("blocks");
-      for (int i = 0; i < this->_blocks.size(); i++) {
-        this->_blocks[i].to_hdf5(dir, "Tensor" + std::to_string(i), overwrite);
+    if (this->_blocks.empty()) {
+      io::unlink(container, "blocks", overwrite);
+    } else {
+      H5::Group dir = io::create_group(container, "blocks", false);
+      hsize_t blknum = 0;
+      for (; blknum < this->_blocks.size(); blknum++) {
+        this->_blocks[blknum].to_hdf5(dir, "Tensor" + std::to_string(blknum), overwrite);
       }
+      // delete further blocks if they exist
+      while (io::remove_attribute(dir, "Tensor" + std::to_string(blknum), overwrite)) blknum++;
     }
     // inner_to_outer_idx; write matrix (blocknum x rank)
-    if (!this->_inner_to_outer_idx.empty()) {
-      hsize_t blocknum = this->_inner_to_outer_idx.size();
-      hsize_t rank = this->_bonds.size();
-      std::vector<cytnx_uint64> flat(blocknum * rank);  // flatten vector<vector>
-      for (hsize_t i = 0; i < blocknum; ++i) {
-        std::copy(this->_inner_to_outer_idx[i].begin(), this->_inner_to_outer_idx[i].end(),
-                  flat.begin() + i * rank);
-      }
-      hsize_t matdims[2] = {blocknum, rank};
-      H5::DataSpace dataspace(2, matdims);
-      H5::DataType datatype = Type.get_hdf5_type(flat[0]);
-      H5::DataSet dataset = container.createDataSet("block_to_sectors", datatype, dataspace);
-      dataset.write(flat.data(), datatype);
+    if (this->_inner_to_outer_idx.empty()) {
+      io::unlink(container, "block_to_sectors", overwrite);
+    } else {
+      H5::DataSet dataset =
+        io::save_dataset(this->_inner_to_outer_idx, container, "block_to_sectors", overwrite);
       // label axes
-      char labels[2][6] = {"block", "bond"};
-      H5::StrType str_type(H5::PredType::C_S1, 6);
-      hsize_t attr_dims[1] = {2};
-      H5::DataSpace attr_space(1, attr_dims);
-      H5::Attribute attr = dataset.createAttribute("axis_labels", str_type, attr_space);
-      attr.write(str_type, labels);
+      io::save_attribute(std::vector<std::string>{"block", "bond"}, dataset, "axis_labels",
+                         overwrite);
     }
   }
 

@@ -22,48 +22,104 @@ namespace cytnx {
   */
   namespace io {
 
+    namespace internal {
+      ///@cond
+      /**
+       * @brief Check if a dataset of correct type and size exists, otherwise create a new one
+       * @param[in] datatype datatype to be written
+       * @param[in] dimensions size of the tensor to be written
+       * @param[in] container group to create dataset in
+       * @param[in] name the name of the dataset
+       * @param[in] overwrite if true, previous data will be overwritten or deleted.
+       * @returns an opened dataset, compatible for writing
+       */
+      H5::DataSet create_dataset(H5::DataType &datatype, const std::vector<hsize_t> &dimensions,
+                                 H5::Group &container, const std::string &name, bool overwrite);
+      ///@endcond
+    }  // namespace internal
+
     /**
      * @brief Create a group, given a path that can contain subpathes
      * @details Opens the group or creates it newly
      * @param[in] container root group
      * @param[in] path a path that can contain subpathes
+     * @param[in] recursive if the path can contain subpathes, such that groups in group are opened
+     * or created
      * @returns the opened group or a newly created group
      */
-    H5::Group create_group(H5::Group &container, const std::string &path);
+    H5::Group create_group(H5::Group &container, const std::string &path, bool recursive = true);
+
+    /**
+     * @brief Remove a group if dataset if it exists
+     * @param[in] container group or file from which the attribute will be removed
+     * @param[in] name the name of the dataset or group
+     * @param[in] overwrite if true, the data will be removed. If false, an error is thrown if the
+     * data exists
+     * @returns true if the name existed, false otherwise
+     */
+    bool unlink(H5::Group &container, const std::string &name, bool overwrite = true);
 
     /**
      * @brief Save data to an attribute
      * @param[in] object a scalar of any type that is supported by cytnx
-     * @param[in] container group; should be opened for writing
+     * @param[in] container file, group or dataset; should be opened for writing
      * @param[in] name the name of the attribute
      * @param[in] overwrite if true, overwrite previous data in the container
      */
-    void save_attribute(const Scalar_list &object, H5::Group &container, const std::string &name,
+    void save_attribute(const Scalar_list &object, H5::H5Object &container, const std::string &name,
                         bool overwrite = false);
     /**
      * @brief Save string to an attribute
      * @see save_attribute(const Scalar_list &object, H5::Group &container, const std::string &name)
      */
-    void save_attribute(const std::string &object, H5::Group &container, const std::string &name,
+    void save_attribute(const std::string &object, H5::H5Object &container, const std::string &name,
                         bool overwrite = false);
+    /**
+     * @brief Save vector of strings to an attribute
+     * @see save_attribute(const Scalar_list &object, H5::Group &container, const std::string &name)
+     */
+    void save_attribute(const std::vector<std::string> &object, H5::H5Object &container,
+                        const std::string &name, bool overwrite = false);
+
+    /**
+     * @brief Remove an attribute if it exists
+     * @param[in] container file, group or dataset from which the attribute will be removed
+     * @param[in] name the name of the attribute
+     * @param[in] overwrite if true, the attribute will be removed. If false, an error is thrown if
+     * the attribute exists
+     * @returns true if the attribute existed, false otherwise
+     */
+    bool remove_attribute(H5::H5Object &container, const std::string &name, bool overwrite = true);
 
     /**
      * @brief Save data to a dataset
      * @param[in] object a vector of supported types
-     * @param[in] container group; should be opened for writing
+     * @param[in] container file, group or dataset; should be opened for writing
      * @param[in] name the name of the dataset
+     * @param[in] overwrite if true, overwrite previous data in the container
+     * @returns the dataset that was written to
      */
-    void save_dataset(const std::vector<std::string> &object, H5::Group &container,
-                      const std::string &name);
-
+    H5::DataSet save_dataset(const Vector_list &object, H5::Group &container,
+                             const std::string &name, bool overwrite = false);
     /**
-     * @brief Remove an attribute if it exists
-     * @param[in] container group or file from which the attribute will be removed
-     * @param[in] name the name of the attribute
-     * @param[in] overwrite if true, the attribute will be removed. If false, an error is thrown if
-     * the attribute exists
+     * @brief Save string to a dataset
+     * @see save_dataset(const Vector_list &object, H5::Group &container, const std::string &name,
+     * bool overwrite)
      */
-    void remove_attribute(H5::Group &container, const std::string &name, bool overwrite = true);
+    H5::DataSet save_dataset(const std::vector<std::string> &object, H5::Group &container,
+                             const std::string &name, bool overwrite = false);
+    /**
+     * @brief Save a matrix of a supported type
+     * @param[in] object a vector of a vector based on a supported type; if the outer vector has \em
+     * rownum elements, and all inner vectors have \em colnum elements, then the result will be
+     * written as a \em rownum \em x \em colnum matrix.
+     * @see save_dataset(const Vector_list &object, H5::Group &container, const std::string &name,
+     * bool overwrite)
+     * @note All inner vectors need to have the same length, such that the data structure
+     * corresponds to a rectangular matrix.
+     */
+    H5::DataSet save_dataset(const Matrix_list &object, H5::Group &container,
+                             const std::string &name, bool overwrite = false);
 
     /**
      * @brief Input/output file access mode for HDF5 files.

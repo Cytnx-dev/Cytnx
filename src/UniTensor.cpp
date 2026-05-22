@@ -205,24 +205,7 @@ namespace cytnx {
     if (name.empty())
       rootgroup = container;
     else {
-      if (container.nameExists(name)) {
-        rootgroup = container.openGroup(name);
-      } else {
-        rootgroup = container.createGroup(name);
-      }
-    }
-
-    if (overwrite) {  // delete previous data
-      // delete all entries that could be written by one of the implementations;
-      // remove attributes
-      if (rootgroup.attrExists("directed")) rootgroup.removeAttr("directed");
-      // remove datasets
-      if (rootgroup.nameExists("labels")) rootgroup.unlink("labels");
-      if (rootgroup.nameExists("Tensor")) rootgroup.unlink("Tensor");
-      if (rootgroup.nameExists("block_to_sectors")) rootgroup.unlink("block_to_sectors");
-      // remove groups and its contents recursively
-      if (rootgroup.nameExists("bonds")) rootgroup.unlink("bonds");
-      if (rootgroup.nameExists("blocks")) rootgroup.unlink("blocks");
+      rootgroup = io::create_group(container, name, false);
     }
 
     // write attributes
@@ -235,16 +218,20 @@ namespace cytnx {
     io::save_attribute(this->_impl->_rowrank, rootgroup, "rowrank", overwrite);
     io::save_attribute(this->_impl->_name, rootgroup, "name", overwrite);
 
-    // write datasets
-    if (!this->_impl->_labels.empty()) {
-      io::save_dataset(this->_impl->_labels, rootgroup, "labels");
+    // write labels
+    if (this->_impl->_labels.empty()) {
+      io::unlink(rootgroup, "labels", overwrite);
+    } else {
+      io::save_dataset(this->_impl->_labels, rootgroup, "labels", overwrite);
     }
 
-    // write groups
-    if (!this->_impl->_bonds.empty()) {
-      H5::Group dir = rootgroup.createGroup("bonds");
+    // write bonds
+    if (this->_impl->_bonds.empty()) {
+      io::unlink(rootgroup, "bonds", overwrite);
+    } else {
+      H5::Group bondloc = io::create_group(rootgroup, "bonds", false);
       for (int i = 0; i < this->_impl->_bonds.size(); i++) {
-        this->_impl->_bonds[i].to_hdf5(dir, "Bond" + std::to_string(i), overwrite);
+        this->_impl->_bonds[i].to_hdf5(bondloc, "Bond" + std::to_string(i), overwrite);
       }
     }
 

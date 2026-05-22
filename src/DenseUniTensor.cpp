@@ -2,10 +2,12 @@
 #include "utils/utils.hpp"
 
 #include "Generator.hpp"
+#include "io.hpp"
 #include "linalg.hpp"
 #include <algorithm>
 #include <utility>
 #include <vector>
+
 typedef cytnx::Accessor ac;
 
 using namespace std;
@@ -1283,10 +1285,12 @@ namespace cytnx {
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
 
   void DenseUniTensor::to_hdf5_dispatch(H5::Group &container, const bool overwrite) const {
+    // delete all entries that could be written by one of the UniTensor implementations;
+    io::unlink(container, "block_to_sectors", overwrite);
+    io::unlink(container, "blocks", overwrite);
+
     // is_tag, write as attribute
-    H5::DataType datatype = Type.get_hdf5_type(this->_is_tag);
-    H5::Attribute attr = container.createAttribute("directed", datatype, H5::DataSpace(H5S_SCALAR));
-    attr.write(datatype, &this->_is_tag);
+    io::save_attribute(this->_is_tag, container, "directed", overwrite);
 
     this->_block.to_hdf5(container, "Tensor", overwrite);
   }

@@ -178,6 +178,38 @@ namespace cytnx {
   using Scalar_list_gpu = internal::truncate_variant::exclude_first<Type_list_gpu>::type;
 #endif
 
+  namespace internal {
+    /// @cond
+    // This is create a variant containing vectors of all supported types
+    template <typename Variant>
+    struct vector_variant;
+
+    template <typename... Types>
+    struct vector_variant<std::variant<Types...>> {
+      using type = std::variant<std::vector<Types>...>;
+    };
+    /// @endcond
+  }  // namespace internal
+
+  // the list of vectors of all supported Scalar types.
+  using Vector_list = typename internal::vector_variant<Scalar_list>::type;
+
+  namespace internal {
+    /// @cond
+    // This is create a variant containing vectors of vectors of all supported types
+    template <typename Variant>
+    struct matrix_variant;
+
+    template <typename... Types>
+    struct matrix_variant<std::variant<Types...>> {
+      using type = std::variant<std::vector<std::vector<Types>>...>;
+    };
+    /// @endcond
+  }  // namespace internal
+
+  // the list of vectors of vectors of all supported Scalar types.
+  using Matrix_list = typename internal::matrix_variant<Scalar_list>::type;
+
   // The number of supported types
   constexpr int N_Type = std::variant_size_v<Type_list>;
   constexpr int N_fType = 5;

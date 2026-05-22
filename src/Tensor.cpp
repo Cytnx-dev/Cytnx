@@ -4,6 +4,7 @@
 #include <typeinfo>
 
 #include "H5Cpp.h"
+#include "io.hpp"
 #include "Type.hpp"
 #include "linalg.hpp"
 #include "utils/is.hpp"
@@ -568,23 +569,17 @@ namespace cytnx {
   }
 
   void Tensor::to_hdf5(H5::Group &container, const std::string &name, const bool overwrite) const {
-    if (overwrite) {  // delete previous data
-      if (container.nameExists(name)) container.unlink(name);
-    }
-
     Tensor ten = this->contiguous();
-    std::vector<hsize_t> dims(this->shape().begin(), this->shape().end());
 
-    H5::DataSpace dataspace(dims.size(), dims.data());
     H5::DataType datatype = Type.dtype_to_hdf5_type(this->dtype());
-    H5::DataSet dataset = container.createDataSet(name, datatype, dataspace);
+    H5::DataSet dataset =
+      io::internal::create_dataset(datatype, this->shape(), container, name, overwrite);
     ten.storage().data_to_hdf5(dataset, datatype);
 
-    int device = this->device();
-    if (device != Device.cpu) {
-      H5::Attribute attr =
-        dataset.createAttribute("device", H5::PredType::NATIVE_INT, H5::DataSpace(H5S_SCALAR));
-      attr.write(H5::PredType::NATIVE_INT, &device);
+    if (this->device() != Device.cpu) {
+      io::save_attribute(this->device(), dataset, "device", overwrite);
+    } else {
+      io::remove_attribute(dataset, "device", overwrite);
     }
   }
 

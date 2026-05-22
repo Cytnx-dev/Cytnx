@@ -5,6 +5,8 @@
 
 #include "H5Cpp.h"
 
+#include "io.hpp"
+
 using namespace std;
 
 namespace cytnx {
@@ -229,20 +231,15 @@ namespace cytnx {
   }
 
   void Storage::to_hdf5(H5::Group &container, const std::string &name, const bool overwrite) const {
-    if (overwrite) {  // delete previous data
-      if (container.nameExists(name)) container.unlink(name);
-    }
-
-    hsize_t Nelem = this->size();
-    H5::DataSpace dataspace(1, &Nelem);
     H5::DataType datatype = Type.dtype_to_hdf5_type(this->dtype());
-    H5::DataSet dataset = container.createDataSet(name, datatype, dataspace);
+    H5::DataSet dataset =
+      io::internal::create_dataset(datatype, {this->size()}, container, name, overwrite);
     this->data_to_hdf5(dataset, datatype);
+
     if (this->device() != Device.cpu) {
-      H5::Attribute attr =
-        dataset.createAttribute("device", H5::PredType::NATIVE_INT, H5::DataSpace(H5S_SCALAR));
-      int device = this->device();
-      attr.write(H5::PredType::NATIVE_INT, &device);
+      io::save_attribute(this->device(), dataset, "device", overwrite);
+    } else {
+      io::remove_attribute(dataset, "device", overwrite);
     }
   }
 
