@@ -447,8 +447,8 @@ namespace cytnx {
     virtual const vec2d<cytnx_uint64> &get_itoi() const;
     virtual vec2d<cytnx_uint64> &get_itoi();
 
-    virtual void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    virtual void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
+    virtual void to_hdf5_dispatch(H5::Group &container, const bool overwrite) const;
+    virtual void from_hdf5_dispatch(H5::Group &container, bool restore_device = true);
 
     virtual void to_binary_dispatch(std::ostream &f) const;
     virtual void from_binary_dispatch(std::istream &f, bool restore_device = true);
@@ -1085,8 +1085,8 @@ namespace cytnx {
                         "\n");
     }
 
-    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
+    void to_hdf5_dispatch(H5::Group &container, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &container, bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
     void from_binary_dispatch(std::istream &f, bool restore_device = true);
@@ -1761,8 +1761,8 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
+    void to_hdf5_dispatch(H5::Group &container, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &container, bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
     void from_binary_dispatch(std::istream &f, bool restore_device = true);
@@ -2557,8 +2557,8 @@ namespace cytnx {
     cytnx_uint16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_uint16 &aux);
     cytnx_int16 &at_for_sparse(const std::vector<cytnx_uint64> &locator, const cytnx_int16 &aux);
 
-    void to_hdf5_dispatch(H5::Group &location, const bool overwrite) const;
-    void from_hdf5_dispatch(H5::Group &location, bool restore_device = true);
+    void to_hdf5_dispatch(H5::Group &container, const bool overwrite) const;
+    void from_hdf5_dispatch(H5::Group &container, bool restore_device = true);
 
     void to_binary_dispatch(std::ostream &f) const;
     void from_binary_dispatch(std::istream &f, bool restore_device = true);
@@ -5541,18 +5541,18 @@ namespace cytnx {
 
     /**
      * @brief Save UniTensor to HDF5 file
-     * @param[in] location the HDF5 parent group.
+     * @param[in] container the HDF5 parent group.
      * @param[in] name the subgroup in which the UniTensor will be saved.
-     * @param[in] overwrite overwrite previous UniTensor information in the location.
+     * @param[in] overwrite overwrite previous UniTensor information in the container.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const std::string &name = "UniTensor",
+    void to_hdf5(H5::Group &container, const std::string &name = "UniTensor",
                  const bool overwrite = false) const;
     /**
      * @brief Load UniTensor from HDF5 file (inline)
-     * @param[in] location the HDF5 parent group.
+     * @param[in] container the HDF5 parent group.
      * @param[in] name the subgroup from which the UniTensor will be loaded.
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
@@ -5561,7 +5561,7 @@ namespace cytnx {
      * Python.
      * @see to_hdf5()
      */
-    void from_hdf5(H5::Group &location, const std::string &name = "UniTensor",
+    void from_hdf5(H5::Group &container, const std::string &name = "UniTensor",
                    bool restore_device = true);
 
     /**

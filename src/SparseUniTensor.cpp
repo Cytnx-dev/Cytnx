@@ -2332,11 +2332,11 @@ namespace cytnx {
     cytnx_error_msg(true, "[ERROR] truncate for SparseUniTensor is under developing!!%s", "\n");
   }
 
-  void SparseUniTensor::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
+  void SparseUniTensor::to_hdf5_dispatch(H5::Group &container, const bool overwrite) const {
     cytnx_error_msg(true, "[ERROR] Saving SparseUniTensor to HDF5 is not implemented!%s", "\n");
   }
 
-  void SparseUniTensor::from_hdf5_dispatch(H5::Group &location, bool restore_device) {
+  void SparseUniTensor::from_hdf5_dispatch(H5::Group &container, bool restore_device) {
     cytnx_error_msg(true, "[ERROR] Loading SparseUniTensor from HDF5 is not implemented!%s", "\n");
   }
 

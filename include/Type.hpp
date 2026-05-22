@@ -75,7 +75,6 @@ namespace cytnx {
         return index_in_tuple_helper<I + 1, T, Tuple>();
       }
     }
-
   }  // namespace internal
 
   // helper metafunction to transform a variant into another variant via a
@@ -154,6 +153,29 @@ namespace cytnx {
   using Type_list_gpu =
     std::variant<void, cuDoubleComplex, cuComplex, cytnx_double, cytnx_float, cytnx_int64,
                  cytnx_uint64, cytnx_int32, cytnx_uint32, cytnx_int16, cytnx_uint16, cytnx_bool>;
+#endif
+
+  namespace internal {
+    /// @cond
+    // This mechanism is to remove the 'void' type from Type_list. Taking advantage of it
+    // appearing first ...
+    struct truncate_variant {
+      template <typename Variant>
+      struct exclude_first;
+
+      template <typename First, typename... Rest>
+      struct exclude_first<std::variant<First, Rest...>> {
+        using type = std::variant<Rest...>;
+      };
+    };  // truncate_variant
+    /// @endcond
+  }  // namespace internal
+
+  // the list of supported Scalar types. Removes void because it cannot be used in visit
+  using Scalar_list = internal::truncate_variant::exclude_first<Type_list>::type;
+
+#ifdef UNI_GPU
+  using Scalar_list_gpu = internal::truncate_variant::exclude_first<Type_list_gpu>::type;
 #endif
 
   // The number of supported types

@@ -588,24 +588,24 @@ namespace cytnx {
 
     /**
      * @brief Save Symmetry to HDF5 file
-     * @param[in] location the HDF5 group where the Symmetry will be saved.
+     * @param[in] container the HDF5 group where the Symmetry will be saved.
      * @param[in] name the name of the attribute in the HDF5 file.
-     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @param[in] overwrite overwrite previous Bond information in the container.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const std::string &name = "Symmetry",
+    void to_hdf5(H5::Group &container, const std::string &name = "Symmetry",
                  const bool overwrite = false) const;
     /**
      * @brief Load Symmetry from HDF5 file (inline)
-     * @param[in] location the HDF5 group where the Symmetry will be loaded from.
+     * @param[in] container the HDF5 group where the Symmetry will be loaded from.
      * @param[in] name the name of the attribute in the HDF5 file.
      * @warning This function is only available in C++. Use Load() for loading from file in C++ or
      * Python.
      * @see to_hdf5()
      */
-    void from_hdf5(H5::Group &location, const std::string &name = "Symmetry");
+    void from_hdf5(H5::Group &container, const std::string &name = "Symmetry");
 
     /**
      * @brief Save Symmetry to binary file

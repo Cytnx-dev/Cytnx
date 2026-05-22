@@ -592,18 +592,18 @@ namespace cytnx {
 
     /**
      * @brief Save Storage to HDF5 file
-     * @param[in] location the HDF5 group where the Storage will be saved.
+     * @param[in] container the HDF5 group where the Storage will be saved.
      * @param[in] name the name of the dataset in the HDF5 file.
-     * @param[in] overwrite overwrite previous Bond information in the location.
+     * @param[in] overwrite overwrite previous Bond information in the container.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const std::string &name = "Storage",
+    void to_hdf5(H5::Group &container, const std::string &name = "Storage",
                  const bool overwrite = false) const;
     /**
      * @brief Load Storage from HDF5 file (inline)
-     * @param[in] location the HDF5 group where the Storage will be loaded from.
+     * @param[in] container the HDF5 group where the Storage will be loaded from.
      * @param[in] name the name of the dataset in the HDF5 file.
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
@@ -612,7 +612,7 @@ namespace cytnx {
      * Python.
      * @see to_hdf5()
      */
-    void from_hdf5(H5::Group &location, const std::string &name = "Storage",
+    void from_hdf5(H5::Group &container, const std::string &name = "Storage",
                    bool restore_device = true);
 
     /**

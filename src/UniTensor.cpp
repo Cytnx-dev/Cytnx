@@ -5,6 +5,7 @@
 
 #include "H5Cpp.h"
 
+#include "io.hpp"
 #include "linalg.hpp"
 #include "random.hpp"
 #include "utils/utils.hpp"
@@ -113,9 +114,9 @@ namespace cytnx {
           groupfolder = subpath.generic_string();
           if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
         }
-        H5::Group location = h5file.openGroup(groupfolder);
+        H5::Group group = h5file.openGroup(groupfolder);
         // write data
-        this->to_hdf5(location, "", overwrite);
+        this->to_hdf5(group, "", overwrite);
         h5file.close();
         return;
       } else {  // create binary file
@@ -173,16 +174,16 @@ namespace cytnx {
         ext == ".HDF") {  // load HDF5
       H5::H5File h5file(fname, H5F_ACC_RDONLY);
       // open group
-      H5::Group location;
+      H5::Group group;
       try {
-        location = h5file.openGroup(path.empty() ? "/" : path);
+        group = h5file.openGroup(path.empty() ? "/" : path);
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
                         path.c_str(), fname.string().c_str());
       }
       // read data
-      this->from_hdf5(location, "", restore_device);
+      this->from_hdf5(group, "", restore_device);
       h5file.close();
     } else {  // load binary
       fstream f;
@@ -198,26 +199,22 @@ namespace cytnx {
     this->Load_(std::filesystem::path(fname), path, restore_device);
   }
 
-  void UniTensor::to_hdf5(H5::Group &location, const std::string &name,
+  void UniTensor::to_hdf5(H5::Group &container, const std::string &name,
                           const bool overwrite) const {
     H5::Group rootgroup;
     if (name.empty())
-      rootgroup = location;
+      rootgroup = container;
     else {
-      if (location.nameExists(name)) {
-        rootgroup = location.openGroup(name);
+      if (container.nameExists(name)) {
+        rootgroup = container.openGroup(name);
       } else {
-        rootgroup = location.createGroup(name);
+        rootgroup = container.createGroup(name);
       }
     }
 
     if (overwrite) {  // delete previous data
       // delete all entries that could be written by one of the implementations;
       // remove attributes
-      if (rootgroup.attrExists("type")) rootgroup.removeAttr("type");
-      if (rootgroup.attrExists("diagonal")) rootgroup.removeAttr("diagonal");
-      if (rootgroup.attrExists("rowrank")) rootgroup.removeAttr("rowrank");
-      if (rootgroup.attrExists("name")) rootgroup.removeAttr("name");
       if (rootgroup.attrExists("directed")) rootgroup.removeAttr("directed");
       // remove datasets
       if (rootgroup.nameExists("labels")) rootgroup.unlink("labels");
@@ -228,52 +225,22 @@ namespace cytnx {
       if (rootgroup.nameExists("blocks")) rootgroup.unlink("blocks");
     }
 
-    H5::DataType datatype;
-    H5::Attribute attr;
-    H5::DataSet dataset;
-    H5::DataSpace dataspace;
-    H5::StrType str_type;
-
-    // type, write as string attribute
-    std::string type = UTenType.getname(this->_impl->uten_type_id);
-    str_type = H5::StrType(H5::PredType::C_S1, type.length() + 1);
-    dataspace = H5::DataSpace(H5S_SCALAR);
-    attr = rootgroup.createAttribute("type", str_type, dataspace);
-    attr.write(str_type, type);
-
-    // is_diag, write as attribute only for diagonal tensors
+    // write attributes
+    io::save_attribute(UTenType.getname(this->_impl->uten_type_id), rootgroup, "type", overwrite);
     if (this->_impl->_is_diag) {
-      datatype = Type.get_hdf5_type(this->_impl->_is_diag);
-      attr = rootgroup.createAttribute("diagonal", datatype, H5::DataSpace(H5S_SCALAR));
-      attr.write(datatype, &this->_impl->_is_diag);
+      io::save_attribute(this->_impl->_is_diag, rootgroup, "diagonal", overwrite);
+    } else {
+      io::remove_attribute(rootgroup, "diagonal", overwrite);
     }
+    io::save_attribute(this->_impl->_rowrank, rootgroup, "rowrank", overwrite);
+    io::save_attribute(this->_impl->_name, rootgroup, "name", overwrite);
 
-    // rowrank, write as attribute
-    datatype = Type.get_hdf5_type(this->_impl->_rowrank);
-    attr = rootgroup.createAttribute("rowrank", datatype, H5::DataSpace(H5S_SCALAR));
-    attr.write(datatype, &this->_impl->_rowrank);
-
-    // name, write as string attribute
-    str_type = H5::StrType(H5::PredType::C_S1, this->_impl->_name.length() + 1);
-    dataspace = H5::DataSpace(H5S_SCALAR);
-    attr = rootgroup.createAttribute("name", str_type, dataspace);
-    attr.write(str_type, this->_impl->_name);
-
-    // labels; write as string vector
+    // write datasets
     if (!this->_impl->_labels.empty()) {
-      hsize_t vecdims[1] = {this->_impl->_labels.size()};
-      dataspace = H5::DataSpace(1, vecdims);
-      str_type = H5::StrType(H5::PredType::C_S1, H5T_VARIABLE);
-      dataset = rootgroup.createDataSet("labels", str_type, dataspace);
-      std::vector<const char *> c_strings;  // H5 needs cstrings
-      std::string symstring;
-      for (const auto &label : this->_impl->_labels) {
-        c_strings.push_back(label.c_str());
-      }
-      dataset.write(c_strings.data(), str_type);
+      io::save_dataset(this->_impl->_labels, rootgroup, "labels");
     }
 
-    // bonds; write in group
+    // write groups
     if (!this->_impl->_bonds.empty()) {
       H5::Group dir = rootgroup.createGroup("bonds");
       for (int i = 0; i < this->_impl->_bonds.size(); i++) {
@@ -284,8 +251,8 @@ namespace cytnx {
     this->_impl->to_hdf5_dispatch(rootgroup, overwrite);
   }
 
-  void UniTensor::from_hdf5(H5::Group &location, const std::string &name, bool restore_device) {
-    H5::Group rootgroup = (name.empty() ? location : location.openGroup(name));
+  void UniTensor::from_hdf5(H5::Group &container, const std::string &name, bool restore_device) {
+    H5::Group rootgroup = (name.empty() ? container : container.openGroup(name));
     H5::DataType datatype;
     H5::Attribute attr;
     H5::StrType str_type;

@@ -1579,10 +1579,10 @@ namespace cytnx {
     return this->_blocks[bidx].at<cytnx_int16>(loc_in_T);
   }
 
-  void BlockUniTensor::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
+  void BlockUniTensor::to_hdf5_dispatch(H5::Group &container, const bool overwrite) const {
     // blocks; write to group
     if (!this->_blocks.empty()) {
-      H5::Group dir = location.createGroup("blocks");
+      H5::Group dir = container.createGroup("blocks");
       for (int i = 0; i < this->_blocks.size(); i++) {
         this->_blocks[i].to_hdf5(dir, "Tensor" + std::to_string(i), overwrite);
       }
@@ -1599,7 +1599,7 @@ namespace cytnx {
       hsize_t matdims[2] = {blocknum, rank};
       H5::DataSpace dataspace(2, matdims);
       H5::DataType datatype = Type.get_hdf5_type(flat[0]);
-      H5::DataSet dataset = location.createDataSet("block_to_sectors", datatype, dataspace);
+      H5::DataSet dataset = container.createDataSet("block_to_sectors", datatype, dataspace);
       dataset.write(flat.data(), datatype);
       // label axes
       char labels[2][6] = {"block", "bond"};
@@ -1611,12 +1611,12 @@ namespace cytnx {
     }
   }
 
-  void BlockUniTensor::from_hdf5_dispatch(H5::Group &location, bool restore_device) {
+  void BlockUniTensor::from_hdf5_dispatch(H5::Group &container, bool restore_device) {
     this->_is_tag = true;
     // blocks; read from group
     this->_blocks.clear();
-    if (location.nameExists("blocks")) {
-      H5::Group dir = location.openGroup("blocks");
+    if (container.nameExists("blocks")) {
+      H5::Group dir = container.openGroup("blocks");
       hsize_t idx = 0;
       while (true) {
         std::string name = "Tensor" + std::to_string(idx);
@@ -1630,8 +1630,8 @@ namespace cytnx {
       }
     }
     // inner_to_outer_idx; read matrix (blocknum x rank)
-    if (location.nameExists("block_to_sectors")) {
-      H5::DataSet dataset = location.openDataSet("block_to_sectors");
+    if (container.nameExists("block_to_sectors")) {
+      H5::DataSet dataset = container.openDataSet("block_to_sectors");
       H5::DataSpace dataspace = dataset.getSpace();
       cytnx_error_msg(dataspace.getSimpleExtentNdims() != 2,
                       "[ERROR] 'block_to_sectors' should be a two-dimensional array. The HDF5 data "

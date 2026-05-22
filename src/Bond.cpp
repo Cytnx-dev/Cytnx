@@ -522,9 +522,9 @@ namespace cytnx {
           groupfolder = subpath.generic_string();
           if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
         }
-        H5::Group location = h5file.openGroup(groupfolder);
+        H5::Group group = h5file.openGroup(groupfolder);
         // write data
-        this->to_hdf5(location, "", overwrite);
+        this->to_hdf5(group, "", overwrite);
         h5file.close();
         return;
       } else {  // create binary file
@@ -580,16 +580,16 @@ namespace cytnx {
         ext == ".HDF") {  // load HDF5
       H5::H5File h5file(fname, H5F_ACC_RDONLY);
       // open group
-      H5::Group location;
+      H5::Group group;
       try {
-        location = h5file.openGroup(path.empty() ? "/" : path);
+        group = h5file.openGroup(path.empty() ? "/" : path);
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
                         path.c_str(), fname.string().c_str());
       }
       // read data
-      this->from_hdf5(location, "");
+      this->from_hdf5(group, "");
       h5file.close();
     } else {  // load binary
       fstream f;
@@ -605,15 +605,15 @@ namespace cytnx {
     this->Load_(std::filesystem::path(fname), path);
   }
 
-  void Bond::to_hdf5(H5::Group &location, const std::string &name, const bool overwrite) const {
+  void Bond::to_hdf5(H5::Group &container, const std::string &name, const bool overwrite) const {
     H5::Group rootgroup;
     if (name.empty())
-      rootgroup = location;
+      rootgroup = container;
     else {
-      if (location.nameExists(name)) {
-        rootgroup = location.openGroup(name);
+      if (container.nameExists(name)) {
+        rootgroup = container.openGroup(name);
       } else {
-        rootgroup = location.createGroup(name);
+        rootgroup = container.createGroup(name);
       }
     }
 
@@ -689,8 +689,8 @@ namespace cytnx {
       }
     }
   }
-  void Bond::from_hdf5(H5::Group &location, const std::string &name) {
-    H5::Group rootgroup = (name.empty() ? location : location.openGroup(name));
+  void Bond::from_hdf5(H5::Group &container, const std::string &name) {
+    H5::Group rootgroup = (name.empty() ? container : container.openGroup(name));
     H5::DataType datatype;
     H5::Attribute attr;
     H5::DataSet dataset;

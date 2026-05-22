@@ -69,9 +69,9 @@ namespace cytnx {
             groupfolder = subpath.generic_string();
             if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
           }
-          H5::Group location = h5file.openGroup(groupfolder);
+          H5::Group group = h5file.openGroup(groupfolder);
           // write data
-          this->to_hdf5(location, "MPS", overwrite);
+          this->to_hdf5(group, "MPS", overwrite);
           h5file.close();
           return;
         } else {  // create binary file
@@ -131,16 +131,16 @@ namespace cytnx {
           ext == ".HDF") {  // load HDF5
         H5::H5File h5file(fname, H5F_ACC_RDONLY);
         // open group
-        H5::Group location;
+        H5::Group group;
         try {
-          location = h5file.openGroup(path.empty() ? "/" : path);
+          group = h5file.openGroup(path.empty() ? "/" : path);
         } catch (const H5::Exception &e) {
           std::cerr << e.getDetailMsg() << std::endl;
           cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
                           path.c_str(), fname.string().c_str());
         }
         // read data
-        this->from_hdf5(location, "", restore_device);
+        this->from_hdf5(group, "", restore_device);
         h5file.close();
       } else {  // load binary
         fstream f;
@@ -156,10 +156,10 @@ namespace cytnx {
       this->Load_(std::filesystem::path(fname), path, restore_device);
     }
 
-    void MPS::to_hdf5(H5::Group &location, const std::string &name, const bool overwrite) const {
+    void MPS::to_hdf5(H5::Group &container, const std::string &name, const bool overwrite) const {
       cytnx_error_msg(true, "[ERROR] Saving MPS to HDF5 is not implemented yet!%s", "\n");
     }
-    void MPS::from_hdf5(H5::Group &location, const std::string &name, bool restore_device) {
+    void MPS::from_hdf5(H5::Group &container, const std::string &name, bool restore_device) {
       cytnx_error_msg(true, "[ERROR] Loading MPS from HDF5 is not implemented yet!%s", "\n");
     }
 

@@ -299,9 +299,9 @@ namespace cytnx {
           groupfolder = subpath.generic_string();
           if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
         }
-        H5::Group location = h5file.openGroup(groupfolder);
+        H5::Group group = h5file.openGroup(groupfolder);
         // write data
-        this->to_hdf5(location, datasetname, overwrite);
+        this->to_hdf5(group, datasetname, overwrite);
         h5file.close();
         return;
       } else {  // create binary file
@@ -363,16 +363,16 @@ namespace cytnx {
       std::string datasetname = p.filename().string();
       if (datasetname.empty()) datasetname = "Symmetry";
       // open group
-      H5::Group location;
+      H5::Group group;
       try {
-        location = h5file.openGroup(grouppath.empty() ? "/" : grouppath);
+        group = h5file.openGroup(grouppath.empty() ? "/" : grouppath);
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
                         grouppath.c_str(), fname.string().c_str());
       }
       // read data
-      this->from_hdf5(location, datasetname);
+      this->from_hdf5(group, datasetname);
       h5file.close();
     } else {  // load binary
       fstream f;
@@ -388,20 +388,20 @@ namespace cytnx {
     this->Load_(std::filesystem::path(fname), path);
   }
 
-  void cytnx::Symmetry::to_hdf5(H5::Group &location, const std::string &name,
+  void cytnx::Symmetry::to_hdf5(H5::Group &container, const std::string &name,
                                 const bool overwrite) const {
     if (overwrite) {  // delete previous data
-      if (location.attrExists(name)) location.removeAttr(name);
+      if (container.attrExists(name)) container.removeAttr(name);
     }
 
     std::string symname = this->getname();
     H5::StrType str_type(H5::PredType::C_S1, symname.length() + 1);
     H5::DataSpace dataspace = H5::DataSpace(H5S_SCALAR);
-    H5::Attribute attr = location.createAttribute(name, str_type, dataspace);
+    H5::Attribute attr = container.createAttribute(name, str_type, dataspace);
     attr.write(str_type, symname);
   }
-  void cytnx::Symmetry::from_hdf5(H5::Group &location, const std::string &name) {
-    H5::Attribute attr = location.openAttribute(name);
+  void cytnx::Symmetry::from_hdf5(H5::Group &container, const std::string &name) {
+    H5::Attribute attr = container.openAttribute(name);
     H5::StrType str_type = attr.getStrType();
     size_t size = str_type.getSize() - 1;  // remove the null terminator
     std::string symname;

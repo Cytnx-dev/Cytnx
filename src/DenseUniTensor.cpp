@@ -1282,17 +1282,17 @@ namespace cytnx {
 
   void DenseUniTensor::normalize_() { this->_block /= linalg::Norm(this->_block); }
 
-  void DenseUniTensor::to_hdf5_dispatch(H5::Group &location, const bool overwrite) const {
+  void DenseUniTensor::to_hdf5_dispatch(H5::Group &container, const bool overwrite) const {
     // is_tag, write as attribute
     H5::DataType datatype = Type.get_hdf5_type(this->_is_tag);
-    H5::Attribute attr = location.createAttribute("directed", datatype, H5::DataSpace(H5S_SCALAR));
+    H5::Attribute attr = container.createAttribute("directed", datatype, H5::DataSpace(H5S_SCALAR));
     attr.write(datatype, &this->_is_tag);
 
-    this->_block.to_hdf5(location, "Tensor", overwrite);
+    this->_block.to_hdf5(container, "Tensor", overwrite);
   }
 
-  void DenseUniTensor::from_hdf5_dispatch(H5::Group &location, bool restore_device) {
-    this->_block.from_hdf5(location, "Tensor", restore_device);
+  void DenseUniTensor::from_hdf5_dispatch(H5::Group &container, bool restore_device) {
+    this->_block.from_hdf5(container, "Tensor", restore_device);
     // check data consistency
     auto shape = this->_block.shape();
     if (this->_bonds.empty()) {
@@ -1315,8 +1315,8 @@ namespace cytnx {
     }
 
     // is_tag, read from attribute or reproduce
-    if (location.attrExists("directed")) {
-      H5::Attribute attr = location.openAttribute("directed");
+    if (container.attrExists("directed")) {
+      H5::Attribute attr = container.openAttribute("directed");
       H5::DataType datatype = attr.getDataType();
       cytnx_error_msg(
         datatype.getSize() != Type.get_hdf5_type(this->_is_tag).getSize(),

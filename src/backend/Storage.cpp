@@ -138,9 +138,9 @@ namespace cytnx {
           groupfolder = subpath.generic_string();
           if (!h5file.nameExists(groupfolder)) h5file.createGroup(groupfolder);
         }
-        H5::Group location = h5file.openGroup(groupfolder);
+        H5::Group group = h5file.openGroup(groupfolder);
         // write data
-        this->to_hdf5(location, datasetname, overwrite);
+        this->to_hdf5(group, datasetname, overwrite);
         h5file.close();
         return;
       } else {  // create binary file
@@ -203,16 +203,16 @@ namespace cytnx {
       std::string datasetname = p.filename().string();
       if (datasetname.empty()) datasetname = "Storage";
       // open group
-      H5::Group location;
+      H5::Group group;
       try {
-        location = h5file.openGroup(grouppath.empty() ? "/" : grouppath);
+        group = h5file.openGroup(grouppath.empty() ? "/" : grouppath);
       } catch (const H5::Exception &e) {
         std::cerr << e.getDetailMsg() << std::endl;
         cytnx_error_msg(true, "[ERROR] HDF5 path '%s' not found or is not a group in file '%s'.",
                         grouppath.c_str(), fname.string().c_str());
       }
       // read data
-      this->from_hdf5(location, datasetname, restore_device);
+      this->from_hdf5(group, datasetname, restore_device);
       h5file.close();
     } else {  // load binary
       fstream f;
@@ -228,15 +228,15 @@ namespace cytnx {
     this->Load_(std::filesystem::path(fname), path, restore_device);
   }
 
-  void Storage::to_hdf5(H5::Group &location, const std::string &name, const bool overwrite) const {
+  void Storage::to_hdf5(H5::Group &container, const std::string &name, const bool overwrite) const {
     if (overwrite) {  // delete previous data
-      if (location.nameExists(name)) location.unlink(name);
+      if (container.nameExists(name)) container.unlink(name);
     }
 
     hsize_t Nelem = this->size();
     H5::DataSpace dataspace(1, &Nelem);
     H5::DataType datatype = Type.dtype_to_hdf5_type(this->dtype());
-    H5::DataSet dataset = location.createDataSet(name, datatype, dataspace);
+    H5::DataSet dataset = container.createDataSet(name, datatype, dataspace);
     this->data_to_hdf5(dataset, datatype);
     if (this->device() != Device.cpu) {
       H5::Attribute attr =
@@ -246,8 +246,8 @@ namespace cytnx {
     }
   }
 
-  void Storage::from_hdf5(H5::Group &location, const std::string &name, bool restore_device) {
-    H5::DataSet dataset = location.openDataSet(name);
+  void Storage::from_hdf5(H5::Group &container, const std::string &name, bool restore_device) {
+    H5::DataSet dataset = container.openDataSet(name);
     H5::DataType datatype = dataset.getDataType();
     unsigned int dtype = Type.from_hdf5_type(datatype);
     H5::DataSpace dataspace = dataset.getSpace();

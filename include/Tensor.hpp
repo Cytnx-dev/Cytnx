@@ -384,18 +384,18 @@ namespace cytnx {
 
     /**
      * @brief Save Tensor to HDF5 file
-     * @param[in] location the HDF5 parent group.
+     * @param[in] container the HDF5 parent group.
      * @param[in] name the subgroup in which the Tensor will be saved.
-     * @param[in] overwrite overwrite previous Tensor information in the location.
+     * @param[in] overwrite overwrite previous Tensor information in the container.
      * @warning This function is only available in C++. Use Save() for saving to file in C++ or
      * Python.
      * @see from_hdf5()
      */
-    void to_hdf5(H5::Group &location, const std::string &name = "Tensor",
+    void to_hdf5(H5::Group &container, const std::string &name = "Tensor",
                  const bool overwrite = false) const;
     /**
      * @brief Load Tensor from HDF5 file (inline)
-     * @param[in] location the HDF5 group where the Tensor will be loaded from.
+     * @param[in] container the HDF5 group where the Tensor will be loaded from.
      * @param[in] name the name of the dataset in the HDF5 file.
      * @param[in] restore_device whether to try restoring the device on which the data is stored; if
      * false, the data will be kept on the CPU. Use .to_() to move it to the target device after
@@ -404,7 +404,7 @@ namespace cytnx {
      * Python.
      * @see to_hdf5()
      */
-    void from_hdf5(H5::Group &location, const std::string &name = "Tensor",
+    void from_hdf5(H5::Group &container, const std::string &name = "Tensor",
                    bool restore_device = true);
 
     /**
@@ -580,25 +580,8 @@ namespace cytnx {
     // }
     //@}
 
-    // This mechanism is to remove the 'void' type from Type_list. Taking advantage of it
-    // appearing first ...
-
-    /// @cond
-    struct internal {
-      template <typename Variant>
-      struct exclude_first;
-
-      template <typename First, typename... Rest>
-      struct exclude_first<std::variant<First, Rest...>> {
-        using type = std::variant<Rest...>;
-      };
-    };  // internal
-        /// @endcond
-
     // std::variant of pointers to Type_list, without void ....
-    using pointer_types =
-      make_variant_from_transform_t<typename internal::exclude_first<Type_list>::type,
-                                    std::add_pointer>;
+    using pointer_types = make_variant_from_transform_t<Scalar_list, std::add_pointer>;
 
     // convert this->_impl->_storage._impl->Mem to a typed variant of pointers, excluding void*
     pointer_types ptr() const;
@@ -618,9 +601,7 @@ namespace cytnx {
 
   #ifdef UNI_GPU
     // std::variant of pointers to Type_list_gpu, without void ....
-    using gpu_pointer_types =
-      make_variant_from_transform_t<typename internal::exclude_first<Type_list_gpu>::type,
-                                    std::add_pointer>;
+    using gpu_pointer_types = make_variant_from_transform_t<Scalar_list_gpu, std::add_pointer>;
 
     // convert this->_impl->_storage->Mem to a typed variant of pointers, excluding void*
     gpu_pointer_types gpu_ptr() const;
