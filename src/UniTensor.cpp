@@ -287,12 +287,12 @@ namespace cytnx {
       }
       cytnx_error_msg(
         idx != this->_impl->_labels.size(),
-        "[ERROR] %d bonds were found, but %d labels exist. The HDF5 data seems corrupt!\n", idx,
+        "[ERROR] %zu bonds were found, but %zu labels exist. The HDF5 data seems corrupt!\n", idx,
         this->_impl->_labels.size());
     } else {
       cytnx_error_msg(
         !this->_impl->_labels.empty(),
-        "[ERROR] %d labels exist, but no bonds were found. The HDF5 data seems corrupt!\n",
+        "[ERROR] %zu labels exist, but no bonds were found. The HDF5 data seems corrupt!\n",
         this->_impl->_labels.size());
       this->_impl->_bonds.clear();
     }

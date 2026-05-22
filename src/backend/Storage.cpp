@@ -281,7 +281,10 @@ namespace cytnx {
       dataset.write(htmp, hdf5type);
       free(htmp);
 #else
-      cytnx_error_msg(true, "ERROR internal fatal error in Save Storage%s", "\n");
+      cytnx_error_msg(true,
+                      "[ERROR][Storage] Trying to access data from GPU without GPU support. "
+                      "Internal fatal error!%s",
+                      "\n");
 #endif
     }
   }

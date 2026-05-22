@@ -2427,19 +2427,19 @@ namespace cytnx {
     if (container.nameExists("block_to_sectors")) {
       io::load_dataset(this->_inner_to_outer_idx, container, "block_to_sectors");
       cytnx_error_msg(this->_inner_to_outer_idx.size() != this->_blocks.size(),
-                      "[ERROR] %d blocks found, but first dimension of 'block_to_sectors' is %d. "
+                      "[ERROR] %zu blocks found, but first dimension of 'block_to_sectors' is %zu. "
                       "The HDF5 data seems corrupt!\n",
                       this->_blocks.size(), this->_inner_to_outer_idx.size());
       cytnx_error_msg(!(this->_inner_to_outer_idx.empty()) &&
                         this->_inner_to_outer_idx[0].size() != this->_bonds.size(),
-                      "[ERROR] %d bonds found, but second dimension of 'block_to_sectors' is %d. "
+                      "[ERROR] %zu bonds found, but second dimension of 'block_to_sectors' is %zu. "
                       "The HDF5 data seems corrupt!\n",
                       this->_bonds.size(), this->_inner_to_outer_idx[0].size());
     } else {
-      cytnx_error_msg(
-        !(this->_blocks.empty()),
-        "[ERROR] 'block_to_sectors' not found, but %d blocks exist. The HDF5 data seems corrupt!\n",
-        this->_blocks.size());
+      cytnx_error_msg(!(this->_blocks.empty()),
+                      "[ERROR] 'block_to_sectors' not found, but %zu blocks exist. The HDF5 data "
+                      "seems corrupt!\n",
+                      this->_blocks.size());
       this->_inner_to_outer_idx.clear();
     }
     this->_signflip = std::vector<bool>(this->_blocks.size(), false);

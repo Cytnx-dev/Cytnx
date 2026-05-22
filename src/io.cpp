@@ -16,10 +16,10 @@ namespace cytnx {
         // check if old dataset can be overwritten
         bool create_new = true;
         if (container.nameExists(name)) {  // we can overwrite the data if type and size match
-          cytnx_error_msg(
-            !overwrite,
-            "Dataset (or group) '%s' already exists. Use argument overwrite = true to overwrite.\n",
-            name);
+          cytnx_error_msg(!overwrite,
+                          "[ERROR] Dataset (or group) '%s' already exists. Use argument overwrite "
+                          "= true to overwrite.\n",
+                          name.c_str());
           if (container.childObjType(name) == H5O_TYPE_DATASET) {
             dataset = container.openDataSet(name);
             H5::DataSpace olddataspace = dataset.getSpace();
@@ -77,8 +77,9 @@ namespace cytnx {
     bool unlink(H5::Group &container, const std::string &name, bool overwrite) {
       if (container.nameExists(name)) {
         cytnx_error_msg(
-          !overwrite, "Dataset or group '%s' exists. Use argument overwrite = true to remove it.\n",
-          name);
+          !overwrite,
+          "[ERROR] Dataset or group '%s' exists. Use argument overwrite = true to remove it.\n",
+          name.c_str());
         container.unlink(name);
         return true;
       }
@@ -91,9 +92,10 @@ namespace cytnx {
         [&](const auto &scalar) {
           H5::DataType datatype = Type.get_hdf5_type(scalar);
           if (container.attrExists(name)) {
-            cytnx_error_msg(
-              !overwrite,
-              "Attribute '%s' already exists. Use argument overwrite = true to overwrite.\n", name);
+            cytnx_error_msg(!overwrite,
+                            "[ERROR] Attribute '%s' already exists. Use argument overwrite = true "
+                            "to overwrite.\n",
+                            name.c_str());
             H5::Attribute oldattr = container.openAttribute(name);
             if (oldattr.getSpace().getSimpleExtentType() == H5S_SCALAR &&
                 oldattr.getDataType() == datatype) {
@@ -115,7 +117,8 @@ namespace cytnx {
       if (container.attrExists(name)) {
         cytnx_error_msg(
           !overwrite,
-          "Attribute '%s' already exists. Use argument overwrite = true to overwrite.\n", name);
+          "[ERROR] Attribute '%s' already exists. Use argument overwrite = true to overwrite.\n",
+          name.c_str());
         H5::Attribute oldattr = container.openAttribute(name);
         if (oldattr.getSpace().getSimpleExtentType() == H5S_SCALAR &&
             oldattr.getStrType() == str_type) {
@@ -136,7 +139,8 @@ namespace cytnx {
       if (container.attrExists(name)) {  // simply delete old dataset
         cytnx_error_msg(
           !overwrite,
-          "Attribute '%s' already exists. Use argument overwrite = true to overwrite.\n", name);
+          "[ERROR] Attribute '%s' already exists. Use argument overwrite = true to overwrite.\n",
+          name.c_str());
         container.removeAttr(name);
       }
       // create a new dataset
@@ -165,7 +169,9 @@ namespace cytnx {
     bool remove_attribute(H5::H5Object &container, const std::string &name, bool overwrite) {
       if (container.attrExists(name)) {
         cytnx_error_msg(
-          !overwrite, "Attribute '%s' exists. Use argument overwrite = true to remove it.\n", name);
+          !overwrite,
+          "[ERROR] Attribute '%s' exists. Use argument overwrite = true to remove it.\n",
+          name.c_str());
         container.removeAttr(name);
         return true;
       }
@@ -177,7 +183,8 @@ namespace cytnx {
       H5::DataSet dataset;
       std::visit(
         [&](const auto &vec) {
-          cytnx_error_msg(vec.empty(), "Cannot write an empty vector to a dataset!\s", "\n");
+          cytnx_error_msg(vec.empty(), "[ERROR] Cannot write an empty vector to dataset '%s'!\n",
+                          name.c_str());
 
           H5::DataType datatype = Type.get_hdf5_type(vec[0]);
           dataset = internal::create_dataset(datatype, {vec.size()}, container, name, overwrite);
@@ -204,7 +211,7 @@ namespace cytnx {
         cytnx_error_msg(
           !overwrite,
           "Dataset (or group) '%s' already exists. Use argument overwrite = true to overwrite.\n",
-          name);
+          name.c_str());
         container.unlink(name);
       }
       // create a new dataset
@@ -224,12 +231,12 @@ namespace cytnx {
       std::visit(
         [&](const auto &vec) {
           cytnx_error_msg(vec.empty() || vec[0].empty(),
-                          "Cannot write an empty vector to a dataset!\s", "\n");
+                          "[ERROR] Cannot write an empty vector to dataset '%s'!\n", name.c_str());
           hsize_t rownum = vec.size();
           hsize_t colnum = vec[0].size();
           for (hsize_t i = 1; i < vec.size(); ++i) {
             cytnx_error_msg(vec[i].size() != colnum,
-                            "[ERROR] object[%d] has different size than object[0]. A rectanglular "
+                            "[ERROR] object[%zu] has different size than object[0]. A rectanglular "
                             "matrix is expected as input!\n",
                             i);
           }
