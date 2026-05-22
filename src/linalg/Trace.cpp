@@ -35,7 +35,7 @@ namespace cytnx {
       cytnx_error_msg(axisA >= Tn.shape().size(), "[ERROR] axisA out of bound.%s", "\n");
       cytnx_error_msg(axisB >= Tn.shape().size(), "[ERROR] axisB out of bound.%s", "\n");
       cytnx_error_msg(axisA == axisB, "[ERROR] axisB cannot be the same as axisA.%s", "\n");
-      cytnx_error_msg(Tn.dtype() == Type.Void, "[ERROR] cannot have output type to be Type.Void.%s",
+      cytnx_error_msg(Tn.dtype() == Type.Void, "[ERROR] Cannot have output type to be Type.Void.%s",
                       "\n");
       cytnx_error_msg(
         Tn.dtype() == Type.Bool,

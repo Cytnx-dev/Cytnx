@@ -10,7 +10,7 @@ namespace cytnx {
   namespace linalg {
     Tensor Mul(const Tensor &Lt, const Tensor &Rt) {
       cytnx_error_msg(Lt.device() != Rt.device(),
-                      "[Mul] error, two tensor cannot on different devices.%s", "\n");
+                      "[Mul] The two tensors cannot be on different devices.%s", "\n");
 
       Tensor out;
       bool icnst = false;
@@ -30,7 +30,7 @@ namespace cytnx {
 
       } else {
         cytnx_error_msg(Lt.shape() != Rt.shape(),
-                        "[Mul] error, the two tensor does not have the same shape.%s", "\n");
+                        "[Mul] The two tensors do not have the same shape.%s", "\n");
         out.Init(Lt.shape(), Lt.dtype() < Rt.dtype() ? Lt.dtype() : Rt.dtype(), Lt.device());
       }
 
@@ -665,7 +665,7 @@ namespace cytnx {
         out = Lt.clone();
         out.Mul_(Rt);
       }
-      out.set_labels(vec_range<std::string>(Lt.rank()));
+      out.relabel_(vec_range<std::string>(Lt.rank()));
       out.set_name("");
 
       return out;
@@ -675,7 +675,7 @@ namespace cytnx {
 
     template <class T>
     UniTensor Mul(const T &lc, const UniTensor &Rt) {
-      // cytnx_error_msg(Rt.is_tag(),"[ERROR] cannot perform arithmetic on tagged
+      // cytnx_error_msg(Rt.is_tag(),"[ERROR] Cannot perform arithmetic on tagged
       // unitensor.%s","\n");
 
       UniTensor out;
@@ -686,7 +686,6 @@ namespace cytnx {
         out = Rt.clone();
         out.Mul_(lc);
       }
-      // out.set_labels(vec_range<cytnx_int64>(Rt.rank()));
       out.set_name("");
 
       return out;

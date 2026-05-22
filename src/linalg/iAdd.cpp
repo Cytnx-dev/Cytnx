@@ -1,7 +1,6 @@
 #include "linalg.hpp"
 
 #include "Tensor.hpp"
-#include "UniTensor.hpp"
 
 #ifdef BACKEND_TORCH
 #else

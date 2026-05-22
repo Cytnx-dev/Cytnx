@@ -24,9 +24,9 @@ class ContractTest : public ::testing::Test {
     // utdnB = utdnB.set_name("B");
     // utdnC = utdnC.set_name("C");
 
-    utdnA = utdnA.set_labels({"a", "b", "c"});
-    utdnB = utdnB.set_labels({"c", "d"});
-    utdnC = utdnC.set_labels({"d", "e"});
+    utdnA = utdnA.relabel_({"a", "b", "c"});
+    utdnB = utdnB.relabel_({"c", "d"});
+    utdnC = utdnC.relabel_({"d", "e"});
 
     utdnAns.at({0, 0, 0}) = 1;
     utdnAns.at({0, 0, 1}) = 1;

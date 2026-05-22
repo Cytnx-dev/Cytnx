@@ -1,8 +1,12 @@
-#include <typeinfo>
 #include "Tensor.hpp"
+
+#include <filesystem>
+#include <typeinfo>
+
 #include "linalg.hpp"
 #include "utils/is.hpp"
 #include "Type.hpp"
+
 using namespace std;
 
 #ifdef BACKEND_TORCH
@@ -446,23 +450,24 @@ namespace cytnx {
   }
   void Tensor::Save(const std::string &fname) const {
     fstream f;
-    f.open((fname + ".cytn"), ios::out | ios::trunc | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::out | ios::trunc | ios::binary);
+    } else {
+      // add filename extension
+      cytnx_warning_msg(true,
+                        "Missing file extension in fname '%s'. I am adding the extension '.cytn'. "
+                        "This is deprecated, please provide the file extension in the future.\n",
+                        fname.c_str());
+      f.open((fname + ".cytn"), ios::out | ios::trunc | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Save(f);
     f.close();
   }
-  void Tensor::Save(const char *fname) const {
-    fstream f;
-    string ffname = string(fname) + ".cytn";
-    f.open(ffname, ios::out | ios::trunc | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
+  void Tensor::Save(const char *fname) const { this->Save(string(fname)); }
   void Tensor::_Save(fstream &f) const {
     // header
     // check:
@@ -495,23 +500,13 @@ namespace cytnx {
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     out._Load(f);
     f.close();
     return out;
   }
-  Tensor Tensor::Load(const char *fname) {
-    Tensor out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
-    }
-    out._Load(f);
-    f.close();
-    return out;
-  }
+  Tensor Tensor::Load(const char *fname) { return Tensor::Load(string(fname)); }
   void Tensor::_Load(fstream &f) {
     // header
     // check:

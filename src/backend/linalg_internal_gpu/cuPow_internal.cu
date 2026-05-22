@@ -26,15 +26,14 @@ namespace cytnx {
     __global__ void cuPow_internal_kernel_cd(cuDoubleComplex *out, const cuDoubleComplex *ten,
                                              const cytnx_uint64 Nelem, const double p) {
       cuDoubleComplex tmp;
-      double a;
+      cytnx_double mag;
+      cytnx_double theta;
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         tmp = ten[blockIdx.x * blockDim.x + threadIdx.x];
-        a = pow(cuCabs(tmp), p);
-        tmp.x = a;
-        tmp.y = a;
-        a = atan2(tmp.y, tmp.x);
-        tmp.x *= cos(p * a);
-        tmp.y *= sin(p * a);
+        mag = pow(cuCabs(tmp), p);
+        theta = p * atan2(tmp.y, tmp.x);
+        tmp.x = mag * cos(theta);
+        tmp.y = mag * sin(theta);
         out[blockIdx.x * blockDim.x + threadIdx.x] = tmp;
       }
       __syncthreads();
@@ -43,15 +42,14 @@ namespace cytnx {
     __global__ void cuPow_internal_kernel_cf(cuFloatComplex *out, const cuFloatComplex *ten,
                                              const cytnx_uint64 Nelem, const double p) {
       cuFloatComplex tmp;
-      float a;
+      cytnx_float mag;
+      cytnx_float theta;
       if (blockIdx.x * blockDim.x + threadIdx.x < Nelem) {
         tmp = ten[blockIdx.x * blockDim.x + threadIdx.x];
-        a = powf(cuCabsf(tmp), p);
-        tmp.x = a;
-        tmp.y = a;
-        a = atan2f(tmp.y, tmp.x);
-        tmp.x *= cosf(p * a);
-        tmp.y *= sinf(p * a);
+        mag = pow(cuCabsf(tmp), p);
+        theta = p * atan2(tmp.y, tmp.x);
+        tmp.x = mag * cos(theta);
+        tmp.y = mag * sin(theta);
         out[blockIdx.x * blockDim.x + threadIdx.x] = tmp;
       }
       __syncthreads();

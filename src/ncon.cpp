@@ -95,7 +95,7 @@ namespace cytnx {
       N.setOrder(true, "");
       out = N.Launch();
     }
-    if (!out_labels.empty()) out.set_labels(out_labels);
+    if (!out_labels.empty()) out.relabel_(out_labels);
     return out;
   }
 }  // namespace cytnx

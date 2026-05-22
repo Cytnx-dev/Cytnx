@@ -137,20 +137,20 @@ namespace cytnx {
       void Init_Msector(const cytnx_uint64 &N, const std::vector<cytnx_uint64> &phys_dim,
                         const cytnx_uint64 &virt_dim, const std::vector<cytnx_int64> &select,
                         const cytnx_int64 &dtype) {
-        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] cannot call Init_Msector%s", "\n");
+        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] Cannot call Init_Msector%s", "\n");
       }
       // void Init_prodstate(const std::vector<cytnx_uint64> &phys_dim, const
       // std::vector<cytnx_uint64> cstate, const cytnx_int64 &dtype);
-      //     cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] cannot call prodstate%s","\n");
+      //     cytnx_error_msg(true,"[ERROR][MPS][type=iMPS] Cannot call prodstate%s","\n");
       // }
       void Into_Lortho() {
-        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] cannot call Into_Lortho%s", "\n");
+        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] Cannot call Into_Lortho%s", "\n");
       }
       void S_mvleft() {
-        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] cannot call S_mvleft%s", "\n");
+        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] Cannot call S_mvleft%s", "\n");
       }
       void S_mvright() {
-        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] cannot call S_mvright%s", "\n");
+        cytnx_error_msg(true, "[ERROR][MPS][type=iMPS] Cannot call S_mvright%s", "\n");
       }
       boost::intrusive_ptr<MPS_impl> clone() const {
         boost::intrusive_ptr<MPS_impl> out(new RegularMPS());

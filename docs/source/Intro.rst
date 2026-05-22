@@ -28,4 +28,7 @@ Further references
     https://github.com/Cytnx-dev/Cytnx
 
     A technical documentation of the namespaces and classes is available here:
+    https://cytnx-dev.github.io/Cytnx_doc/api_build/html/index.html
+
+    This user guide is available online:
     https://cytnx-dev.github.io/Cytnx_doc/html/index.html

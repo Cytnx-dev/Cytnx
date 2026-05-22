@@ -153,8 +153,8 @@ Tensor A({3,4,5},Type.Double);
 UniTensor tA = UniTensor(A); // convert directly.
 UniTensor tB = UniTensor({Bond(3),Bond(4),Bond(5)},{}); // init from scratch.
 // Relabel the tensor and then contract.
-tA.relabels_({"common_1", "common_2", "out_a"});
-tB.relabels_({"common_1", "common_2", "out_b"});
+tA.relabel_({"common_1", "common_2", "out_a"});
+tB.relabel_({"common_1", "common_2", "out_b"});
 UniTensor out = cytnx::Contract(tA,tB);
 tA.print_diagram();
 tB.print_diagram();
@@ -243,17 +243,18 @@ You can contact us by:
 * Email, see below
 
 ## Developers & Maintainers
-Creator and Project manager | Affiliation     | Email
-----------------------------|-----------------|---------
-Kai-Hsin Wu                 |Boston Univ., USA|kaihsinwu@gmail.com
+Creator     | Affiliation        | Email
+------------|--------------------|--------------------
+Kai-Hsin Wu | QuEra, Boston, USA | kaihsinwu@gmail.com
 
 Developers      | Affiliation     | Roles
 ----------------|-----------------|---------
-Chang-Teng Lin  |NTU, Taiwan      |major maintainer and developer
-Ke Hsu          |NTU, Taiwan      |major maintainer and developer
-Ivana Gyro      |NTU, Taiwan      |major maintainer and developer
-Hao-Ti Hung     |NTU, Taiwan      |documentation and linalg
-Ying-Jer Kao    |NTU, Taiwan      |setuptool, cmake
+Chang-Teng Lin  | NTU, Taiwan     | major maintainer and developer
+Ke Hsu          | NTU, Taiwan     | major maintainer and developer
+Ivana Gyro      | NTU, Taiwan     | major maintainer and developer
+Hao-Ti Hung     | NTU, Taiwan     | documentation and linalg
+Manuel Schneider| NYCU, Taiwan    | developer, fermions, documentation
+Ying-Jer Kao    | NTU, Taiwan     | project manager, setuptool, cmake
 
 ## Contributors
 Contributors    | Affiliation
@@ -261,7 +262,6 @@ Contributors    | Affiliation
 PoChung Chen    | NTHU, Taiwan
 Chia-Min Chung  | NSYSU, Taiwan
 Ian McCulloch   | NTHU, Taiwan
-Manuel Schneider| NYCU, Taiwan
 Yen-Hsin Wu     | NTU, Taiwan
 Po-Kwan Wu      | OSU, USA
 Wen-Han Kao     | UMN, USA

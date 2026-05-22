@@ -1,7 +1,11 @@
 
 #include "Bond.hpp"
+
 #include <algorithm>
+#include <filesystem>
+
 #include "utils/utils.hpp"
+
 using namespace std;
 
 namespace cytnx {
@@ -73,17 +77,17 @@ namespace cytnx {
                                      const bool &is_grp) {
     // check:
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with different symmetry.");
+                    "[ERROR] Cannot combine two Bonds with different symmetry.");
 
     this->_dim *= bd_in->dim();  // update to new total dimension
 
     if (this->Nsym() != 0) {
       cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
-                      "[ERROR] cannot combine two Bonds with different symmetry.");
+                      "[ERROR] Cannot combine two Bonds with different symmetry.");
 
       // checking the qnum format:
       cytnx_error_msg((this->_degs.size() != 0) ^ (bd_in->_degs.size() != 0), "%s\n",
-                      "[ERROR] cannot combine two symmetry bond with different format!");
+                      "[ERROR] Cannot combine two symmetry bond with different format!");
 
       std::vector<std::vector<cytnx_int64>> new_qnums;
       if (this->_degs.size()) {
@@ -184,19 +188,19 @@ namespace cytnx {
   void Bond_impl::combineBond_(const boost::intrusive_ptr<Bond_impl> &bd_in, const bool &is_grp) {
     // check:
     cytnx_error_msg(this->type() != bd_in->type(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with different types.");
+                    "[ERROR] Cannot combine two Bonds with different types.");
     cytnx_error_msg(this->Nsym() != bd_in->Nsym(), "%s\n",
-                    "[ERROR] cannot combine two Bonds with different symmetry.");
+                    "[ERROR] Cannot combine two Bonds with different symmetry.");
 
     this->_dim *= bd_in->dim();  // update to new total dimension
 
     if (this->Nsym() != 0) {
       cytnx_error_msg(this->syms() != bd_in->syms(), "%s\n",
-                      "[ERROR] cannot combine two Bonds with different symmetry.");
+                      "[ERROR] Cannot combine two Bonds with different symmetry.");
 
       // checking the qnum format:
       cytnx_error_msg((this->_degs.size() != 0) ^ (bd_in->_degs.size() != 0), "%s\n",
-                      "[ERROR] cannot combine two symmetry bond with different format!");
+                      "[ERROR] Cannot combine two symmetry bond with different format!");
 
       std::vector<std::vector<cytnx_int64>> new_qnums;
       if (this->_degs.size()) {
@@ -280,7 +284,7 @@ namespace cytnx {
   std::vector<std::vector<cytnx_int64>> Bond_impl::getUniqueQnums(std::vector<cytnx_uint64> &counts,
                                                                   const bool &return_counts) {
     cytnx_error_msg(this->_qnums.size() == 0,
-                    "[ERROR][getUniqueQnums] cannot call this on a non-symmetry bond!%s", "\n");
+                    "[ERROR][getUniqueQnums] Cannot call this on a non-symmetry bond!%s", "\n");
 
     vector<vector<cytnx_int64>> tmp_qnums = this->_qnums;
     if (this->_degs.size()) {
@@ -469,47 +473,33 @@ namespace cytnx {
 
   void Bond::Save(const std::string &fname) const {
     fstream f;
-    f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
+    if (std::filesystem::path(fname).has_extension()) {
+      // filename extension is given
+      f.open(fname, ios::out | ios::trunc | ios::binary);
+    } else {
+      // add filename extension
+      f.open((fname + ".cybd"), ios::out | ios::trunc | ios::binary);
+    }
     if (!f.is_open()) {
       cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
     }
     this->_Save(f);
     f.close();
   }
-  void Bond::Save(const char *fname) const {
-    fstream f;
-    string ffname = string(fname) + ".cybd";
-    f.open((ffname), ios::out | ios::trunc | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for save.%s", "\n");
-    }
-    this->_Save(f);
-    f.close();
-  }
+  void Bond::Save(const char *fname) const { this->Save(string(fname)); }
 
   Bond Bond::Load(const std::string &fname) {
     Bond out;
     fstream f;
     f.open(fname, ios::in | ios::binary);
     if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
+      cytnx_error_msg(true, "[ERROR] Cannot open file '%s'.\n", fname.c_str());
     }
     out._Load(f);
     f.close();
     return out;
   }
-
-  Bond Bond::Load(const char *fname) {
-    Bond out;
-    fstream f;
-    f.open(fname, ios::in | ios::binary);
-    if (!f.is_open()) {
-      cytnx_error_msg(true, "[ERROR] invalid file path for load.%s", "\n");
-    }
-    out._Load(f);
-    f.close();
-    return out;
-  }
+  Bond Bond::Load(const char *fname) { return Bond::Load(string(fname)); }
 
   void Bond::_Save(fstream &f) const {
     cytnx_error_msg(!f.is_open(), "[ERROR][Bond] invalid fstream%s", "\n");

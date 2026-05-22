@@ -89,7 +89,7 @@ namespace cytnx {
             cytnx_error_msg(dtype<1 || dtype >= N_Type,"[ERROR] invalid dtype.%s","\n");
             this->_dtype = dtype;
         }else{
-            cytnx_error_msg(true,"[ERROR] cannot specify func with type=mv_elem%s. use set_elem
+            cytnx_error_msg(true,"[ERROR] Cannot specify func with type=mv_elem%s. use set_elem
     instead.","\n");
         }
     };

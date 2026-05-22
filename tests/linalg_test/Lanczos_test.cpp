@@ -18,7 +18,7 @@ namespace {
   MatOp::MatOp(const cytnx_uint64& in_nx, const int& in_dtype) : LinOp("mv", in_nx, in_dtype) {
     opMat = zeros({in_nx, in_nx}, this->dtype(), this->device());
     if (Type.is_float(this->dtype())) {
-      random::Make_normal(opMat, 0.0, 1.0, 0);
+      random::normal_(opMat, 0.0, 1.0, 0);
     }
     opMat += opMat.permute({1, 0}).Conj();
     InitVec();
@@ -26,7 +26,7 @@ namespace {
   void MatOp::InitVec() {
     T_init = zeros(nx(), this->dtype());
     if (Type.is_float(this->dtype())) {
-      random::Make_normal(T_init, 0.0, 1.0, 0);
+      random::normal_(T_init, 0.0, 1.0, 0);
     }
   }
 

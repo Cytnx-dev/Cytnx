@@ -90,12 +90,6 @@ namespace cytnx {
       }
     }
 
-  }  // namespace linalg
-}  // namespace cytnx
-
-namespace cytnx {
-  namespace linalg {
-
     // actual impls:
     void _Eig_Dense_UT(std::vector<cytnx::UniTensor> &outCyT, const UniTensor &Tin,
                        const bool &is_V, const bool &row_v) {
