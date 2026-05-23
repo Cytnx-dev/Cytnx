@@ -27,8 +27,3 @@ allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/cytnx_doc"]
-
-[tool.uv]
-dev-dependencies = [
-    "rust-just>=1.36.0",
-]

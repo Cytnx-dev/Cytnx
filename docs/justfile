@@ -1,8 +1,0 @@
-doc:
-    sphinx-build -M html source/ build
-
-doc-vers:
-    sphinx-multiversion source/ build
-
-latex_doc:
-	sphinx-build -M latexpdf source/ build
