@@ -8,10 +8,8 @@ authors = [
 dependencies = [
     "sphinx>=9.1.0",
     "sphinxcontrib-bibtex>=2.7.0",
-    "breathe>=4.36.0",
     "sphinxcontrib-jquery>=4.1",
     "sphinxbootstrap4theme>=0.6.0",
-    "setuptools>=82.0.1",
     "sphinx-multiversion>=0.2.4",
     "furo>=2025.12.19",
 ]
