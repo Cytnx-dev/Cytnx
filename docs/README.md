@@ -19,7 +19,7 @@ uv run sphinx-build -M html source build
 ```bash
 uv run sphinx-build -M latexpdf source build  # PDF via LaTeX
 uv run sphinx-build -M help     source build  # full list of -M targets
-uv run sphinx-multiversion source build       # one build per tracked git tag
+uv run sphinx-multiversion source build       # one build per git ref, output in build/<ref>/
 ```
 
 
