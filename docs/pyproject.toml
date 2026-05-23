@@ -6,17 +6,17 @@ authors = [
     { name = "Kai", email = "kaihsinwu@gmail.com" }
 ]
 dependencies = [
-    "sphinx>=8.0.2",
-    "sphinxcontrib-bibtex>=2.6.2",
-    "breathe>=4.35.0",
+    "sphinx>=9.1.0",
+    "sphinxcontrib-bibtex>=2.7.0",
+    "breathe>=4.36.0",
     "sphinxcontrib-jquery>=4.1",
     "sphinxbootstrap4theme>=0.6.0",
-    "setuptools>=72.1.0",
+    "setuptools>=82.0.1",
     "sphinx-multiversion>=0.2.4",
-    "furo>=2024.8.6",
+    "furo>=2025.12.19",
 ]
 readme = "README.md"
-requires-python = ">= 3.10"
+requires-python = ">=3.14"
 
 [build-system]
 requires = ["hatchling"]
