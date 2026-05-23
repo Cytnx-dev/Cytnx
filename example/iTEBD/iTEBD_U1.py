@@ -84,7 +84,7 @@ def itebd_heisenberg(chi = 32, J  = 1.0, dt = 0.1, CvgCrit = 1.0e-12):
         X = cytnx.Contract(tmpA,tmpB);# << "this line cause problem!\n";
         #X = cytnx.Contract(cytnx.Contract(A,la),cytnx.Contract(B,lb))
         #exit(1)
-        lb.set_label("e",new_label='a')
+        lb.relabel_("e",new_label='a')
         X = cytnx.Contract(lb,X)
 
 

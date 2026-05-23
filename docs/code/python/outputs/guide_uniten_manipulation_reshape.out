@@ -1,5 +1,5 @@
 -----------------------
-tensor Name :
+tensor Name : T
 tensor Rank : 3
 block_form  : False
 is_diag     : False

@@ -3,3 +3,6 @@ doc:
 
 doc-vers:
     sphinx-multiversion source/ build
+
+latex_doc:
+	sphinx-build -M latexpdf source/ build

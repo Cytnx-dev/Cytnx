@@ -1,6 +1,6 @@
-uT = cytnx.UniTensor(cytnx.ones([2,3,4]),
-                     name="untagged tensor",
-                     labels=["a","b","c"])
+uT = cytnx.UniTensor.ones([2,3,4]) \
+                    .relabel(["a","b","c"]) \
+                    .set_name("untagged tensor")
 
 bond_d = cytnx.Bond(
     cytnx.BD_IN, [cytnx.Qs(1)>>1, cytnx.Qs(-1)>>1],
@@ -19,10 +19,10 @@ bond_f = cytnx.Bond(
 bond_g = cytnx.Bond(2,cytnx.BD_OUT)
 bond_h = cytnx.Bond(2,cytnx.BD_IN)
 
-Tsymm = cytnx.UniTensor(
-    [bond_d, bond_e, bond_f],
-    name="symm. tensor", labels=["d","e","f"])
+Tsymm = cytnx.UniTensor([bond_d, bond_e, bond_f]) \
+                       .relabel(["d","e","f"]) \
+                       .set_name("symm. tensor")
 
-Tdiag = cytnx.UniTensor(
-    [bond_g, bond_h], is_diag=True,
-    name="diag tensor", labels=["g","h"])
+Tdiag = cytnx.UniTensor([bond_g, bond_h], is_diag=True) \
+                       .relabel(["g","h"]) \
+                       .set_name("diag tensor")
