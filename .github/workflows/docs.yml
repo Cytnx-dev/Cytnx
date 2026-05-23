@@ -32,7 +32,7 @@ jobs:
       - name: Sphinx build
         working-directory: docs
         run: |
-          uv run just doc
+          uv run sphinx-build -M html source build
       - name: Create index.html
         working-directory: docs
         run: |
