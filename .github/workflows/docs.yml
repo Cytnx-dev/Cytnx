@@ -11,15 +11,15 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
         with:
           fetch-depth: 0
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
           version: "0.8.17"
           enable-cache: true
-          cache-dependency-glob: "uv.lock"
+          cache-dependency-glob: "docs/uv.lock"
       - name: Install dependencies
         working-directory: docs
         run: |
@@ -38,7 +38,7 @@ jobs:
         run: |
           uv run python redirect.py ${{ github.ref_name }} > build/index.html
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
           publish_branch: gh-pages
           personal_token: ${{ secrets.PAGES_PAT }}
