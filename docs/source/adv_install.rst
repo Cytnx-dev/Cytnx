@@ -15,7 +15,7 @@ Cytnx requires the following minimum dependencies:
 * make
 * Boost v1.53+ [check_deleted, atomicadd, intrusive_ptr]
 * openblas (or mkl, see below)
-* gcc v6+ (or icpc, see below) (recommand latest or equivalent clang on Mac/Linux with C++11 support) (required -std=c++11)
+* gcc v13+ (recommand latest or equivalent clang on Mac/Linux with C++20 support) (required -std=c++20)
 
 In addition, you might want to install the following optional dependencies if you want Cytnx to compile with features like openmp, mkl and/or CUDA support.
 
@@ -34,15 +34,11 @@ In addition, you might want to install the following optional dependencies if yo
 * Nvidia cuTensor library
 * Nvidia cuQuantum library
 
-[MAGMA]
-
-* MAGMA 2.7 currently required strict cuda version v11.8
-
 
 [Python API]
 
-* python >= 3.6
-* pybind11
+* python >= 3.9
+* pybind11 >= 3.0.0
 * python-graphviz
 * graphviz
 * numpy
@@ -73,7 +69,7 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.8 _openmp_mutex=*=*_llvm
+    $conda create --name cytnx python=3.9 _openmp_mutex=*=*_llvm
     $conda activate cytnx
     $conda upgrade --all
 
@@ -83,13 +79,13 @@ There are two methods how you can set-up all the dependencies before starting th
 .. code-block:: shell
 
     $conda config --add channels conda-forge
-    $conda create --name cytnx python=3.8 llvm-openmp
+    $conda create --name cytnx python=3.9 llvm-openmp
     $conda activate cytnx
     $conda upgrade --all
 
 .. Note::
 
-    1. The python=3.8 indicates the Python version you want to use. Generally, Cytnx is tested with 3.7/3.8/3.9. You can replace this with the version you want to use.
+    1. The python=3.9 indicates the Python version you want to use. Generally, Cytnx is tested with 3.9+. You can replace this with the version you want to use.
     2. The last line is updating all the libraries such that they are all dependent on the conda-forge channel.
 
 
@@ -97,7 +93,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
 .. code-block:: shell
 
-    $conda install cmake make boost libboost git compilers hdf5 numpy openblas arpack pybind11 beartype
+    $conda install cmake make boost boost-cpp git compilers hdf5 numpy openblas arpack pybind11 beartype arpack
 
 
 .. Note::
@@ -107,7 +103,7 @@ There are two methods how you can set-up all the dependencies before starting th
 
         .. code-block:: shell
 
-            $conda install cmake make boost libboost git compilers hdf5 numpy mkl mkl-include mkl-service arpack pybind11 libblas=*=*mkl beartype
+            $conda install cmake make boost boost-cpp git compilers hdf5 numpy mkl mkl-include mkl-service arpack pybind11 libblas=*=*mkl beartype arpack
 
     3. After the installation, an automated test based on gtest and benchmark can be run. This option needs to be activated in the install script. In this case, gtest needs to be installed as well:
 
@@ -137,7 +133,7 @@ There are two methods how you can set-up all the dependencies before starting th
         3. Make sure libblas=mkl (you can check using *$conda list | grep libblas*)
 
 
-1. In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:
+3. In addition, if you want to have GPU support (compile with -DUSE_CUDA=on), then additional packages need to be installed:
 
 .. .. code-block:: shell
 
@@ -147,6 +143,17 @@ There are two methods how you can set-up all the dependencies before starting th
 
     $conda install -c nvidia cuda
 
+If cutensor shall be used as well (compile option -DUSE_CUTENSOR=ON), then further install the following:
+
+.. code-block:: shell
+
+    $conda install -c nvidia cutensor
+
+Similarly, cuqauantum (compile option -DUSE_CUTENSOR=ON), requires:
+
+.. code-block:: shell
+
+    $conda install -c nvidia cuquantum
 
 **Option B. Install dependencies via system package manager**
 
@@ -167,13 +174,22 @@ Compiling process
 -------------------
 Once you installed all the dependencies, it is time to start building the Cytnx source code.
 
-**Option A. Compiling with script**
+**Option A. Using cmake preset**
 
-Starting from v0.7.6a, Cytnx provides a shell script **Install.sh**, which contains all the cmake arguments as a check list. To install, edit the script, un-comment and modify custom parameters in the corresponding lines. Then, simply execute this script:
+We support the ``cmake-presets`` tool for building the library starting from version
+v1.1.0. You can find the configuration file in ``CMakePresets.json``. For example,
+if you choose the ``openblas-cpu`` preset, use the following command to build:
+
 
 .. code-block:: shell
 
-    $sh Install.sh
+    $cmake --preset openblas-cpu
+    $cmake --build --preset openblas-cpu
+.. note::
+
+   If you are using Visual Studio Code, you can also take advantage of the
+   *CMake Tools* extension, which provides built-in support for selecting and
+   running CMake presets directly from the editor.
 
 
 **Option B. Using cmake install**
@@ -185,7 +201,7 @@ Please see the following steps for the standard cmake compiling process and all 
 
 .. code-block:: shell
 
-    $make build
+    $mkdir build
     $cd build
 
 2. Use cmake to automatically generate compiling files:
@@ -199,11 +215,9 @@ The following are the available compiling option flags that you can specify in *
 +------------------------+-------------------+------------------------------------+
 |       options          | default           |          description               |
 +------------------------+-------------------+------------------------------------+
-| -DCMAME_INSTALL_PREFIX | /usr/local/cytnx  | Install destination of the library |
+| -DCMAKE_INSTALL_PREFIX | /usr/local/cytnx  | Install destination of the library |
 +------------------------+-------------------+------------------------------------+
 | -DBUILD_PYTHON         |   ON              | Compile and install Python API     |
-+------------------------+-------------------+------------------------------------+
-| -DUSE_ICPC             |   OFF             | Compile using intel icpc compiler  |
 +------------------------+-------------------+------------------------------------+
 | -DUSE_MKL              |   OFF             | Compile Cytnx with intel MKL lib.  |
 |                        |                   | If =off, default link to openblas  |
@@ -288,9 +302,20 @@ In the case that Cytnx is installed locally from binary build, not from anaconda
     CYTNX_ROOT is the path where Cytnx is installed from binary build.
 
 
+Check Cytnx version
+*************************************
+The current version of the library can be printed by:
+
+* In Python:
+
+.. code-block:: python
+    :linenos:
+
+    print("Cytnx version = ", cytnx.__version__)
+
 Generate API documentation
 *************************************
-An API documentation can be generated from the source code of Cytnx by using doxygen. The documentation is accessible online at <https://kaihsinwu.gitlab.io/cytnx_api/>. To create it locally, make sure that doxygen is installed:
+An API documentation can be generated from the source code of Cytnx by using doxygen. The documentation is accessible online at `here <../api_build/html/index.html>`__. To create it locally, make sure that doxygen is installed:
 
 .. code-block:: shell
 

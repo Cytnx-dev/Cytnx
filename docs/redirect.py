@@ -8,7 +8,7 @@ head = """
     <meta charset="utf-8" />
 """
 
-line1 = r'    <meta http-equiv="refresh" content="0; url=./' + f"{tag}" + r'/index.html" />' + "\n"
+line1 = r'    <meta http-equiv="refresh" content="0; url=./html/index.html" />' + "\n"
 line2 = r'    <link rel="canonical" href="https://cytnx-dev.github.io/Cytnx_doc/' + f"{tag}" + r'/index.html" />' + "\n"
 
 end = """

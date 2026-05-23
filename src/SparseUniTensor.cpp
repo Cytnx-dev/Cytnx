@@ -96,12 +96,6 @@ namespace cytnx {
     vector<cytnx_uint64> degenerates;
     vector<vector<cytnx_int64>> uniq_bonds_row = tot_bonds[0].getUniqueQnums();
     vector<vector<cytnx_int64>> uniq_bonds_col = tot_bonds[1].getUniqueQnums();
-    // vec_print(std::cout,uniq_bonds_row);// << endl;
-    // vec_print(std::cout,uniq_bonds_col);// << endl;
-    // exit(1);
-    // vec_print(std::cout,tot_bonds[0].qnums());
-    // vec_print(std::cout,tot_bonds[1].qnums());
-    //[DDK]
 
     // get common qnum set of row-col (bra-ket) space.
     this->_blockqnums = vec2d_intersect(uniq_bonds_row, uniq_bonds_col, false, false);
@@ -109,8 +103,6 @@ namespace cytnx {
     cytnx_error_msg(
       this->_blockqnums.size() == 0,
       "[ERROR][SparseUniTensor] invalid qnums. no common block (qnum) in this setup.%s", "\n");
-
-    // vec_print(std::cout,this->_blockqnums);
 
     // calculate&init the No. of blocks and their sizes.
     this->_blocks.resize(this->_blockqnums.size());

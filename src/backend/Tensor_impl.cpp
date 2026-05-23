@@ -61,7 +61,6 @@ namespace cytnx {
       if (rnks[i] >= rnks.size()) {
         cytnx_error_msg(1, "%s", "reshape a tensor with invalid rank index.");
       }
-      // std::cout << this->_mapper[rnks[i]] << " " << i << std::endl;
       new_idxmap[this->_mapper[rnks[i]]] = i;
       new_fwdmap[i] = this->_mapper[rnks[i]];
       new_shape[i] = this->_shape[rnks[i]];
@@ -112,9 +111,6 @@ namespace cytnx {
     std::vector<cytnx_uint64> new_fwdmap(this->_shape.size());
     std::vector<cytnx_uint64> new_shape(this->_shape.size());
     std::vector<cytnx_uint64> new_idxmap(this->_shape.size());
-
-    // for(int i=0;i<this->_shape.size();i++)
-    //     std::cout << this->_mapper[i] << " " << this->_invmapper[i] << std::endl;
 
     for (cytnx_uint32 i = 0; i < rnks.size(); i++) {
       if (rnks[i] >= rnks.size()) {
@@ -182,7 +178,6 @@ namespace cytnx {
     }
 
     // acc-> locators
-
     std::vector<cytnx_uint64> get_shape(acc.size());
     std::vector<std::vector<cytnx_uint64>> locators(acc.size());
     for (cytnx_uint32 i = 0; i < acc.size(); i++) {
@@ -316,7 +311,6 @@ namespace cytnx {
     if (rhs->storage().size() == 1) {
       this->storage()._impl->SetElem_byShape_v2(rhs->storage()._impl, curr_shape, locators, Nunit,
                                                 true);
-
     } else {
       for (cytnx_uint64 i = 0; i < tmpidx; i++) {
         get_shape.push_back(curr_shape[acc.size() + i]);

@@ -1,5 +1,6 @@
 Bond
-=======
+-------------------------
+
 A **Bond** is an object that represents the legs or indices of a tensor. It carries information such as the direction, dimension and quantum numbers (if symmetries given).
 
 There are in general two types of Bonds: **directional** and **undirectional**, depending on whether the bond has a direction (pointing inward or outward with respect to the tensor) or not. The inward Bond is also defined as **Ket**/**In** type, while the outward Bond is defined as **Bra**/**Out** type as in the *Braket* notation in the quantum mechanics:
@@ -59,6 +60,7 @@ In Cytnx, the symmetry type is defined by a Symmetry object. It contains the nam
     :linenos:
 
 * In C++:
+
 .. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_bond_symobj.cpp
     :language: c++
     :linenos:
@@ -104,6 +106,7 @@ For example:
     :linenos:
 
 * In C++:
+
 .. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_bond_sym_bond.cpp
     :language: c++
     :linenos:
@@ -117,6 +120,7 @@ Output >>
     :linenos:
 
 * In C++:
+
 .. literalinclude:: ../../../code/cplusplus/doc_codes/guide_uniten_bond_multi_sym_bond.cpp
     :language: c++
     :linenos:
