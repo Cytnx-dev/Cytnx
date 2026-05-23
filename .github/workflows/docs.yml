@@ -17,7 +17,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@08807647e7069bb48b6ef5acd8ec9567f424441b  # v8.1.0
         with:
-          version: "0.5.1"
+          version: "0.8.17"
           enable-cache: true
           cache-dependency-glob: "docs/uv.lock"
       - name: Install dependencies
@@ -32,16 +32,16 @@ jobs:
       - name: Sphinx build
         working-directory: docs
         run: |
-          uv run just doc
-      - name: Create index.html
+          uv run sphinx-build -M html source build
+      - name: Move api_build into html output
         working-directory: docs
         run: |
-          uv run python redirect.py ${{ github.ref_name }} > build/index.html
+          mv build/api_build build/html/api_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
           publish_branch: gh-pages
           personal_token: ${{ secrets.PAGES_PAT }}
           external_repository: Cytnx-dev/Cytnx_doc
-          publish_dir: docs/build/
+          publish_dir: docs/build/html/
           force_orphan: true
