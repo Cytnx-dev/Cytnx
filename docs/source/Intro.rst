@@ -31,4 +31,4 @@ Further references
     https://cytnx-dev.github.io/Cytnx_doc/api_build/html/index.html
 
     This user guide is available online:
-    https://cytnx-dev.github.io/Cytnx_doc/html/index.html
+    https://cytnx-dev.github.io/Cytnx_doc/index.html
