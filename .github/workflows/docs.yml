@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         working-directory: docs
         run: |
-          uv sync --python 3.14
+          uv sync
           sudo apt-get update && sudo apt-get install -y doxygen graphviz
       - name: Build api documentation
         working-directory: docs
