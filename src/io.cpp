@@ -340,8 +340,12 @@ namespace cytnx {
               const std::string &path) {
       std::visit(
         [&](auto &concreteObj) {
-          H5::Group group = (path.empty() ? container : container.openGroup(path));
-          concreteObj.from_hdf5(group, name);
+          if (path.empty()) {
+            concreteObj.from_hdf5(container, name);
+          } else {
+            H5::Group group = container.openGroup(path);
+            concreteObj.from_hdf5(group, name);
+          }
         },
         object);
     }
@@ -350,8 +354,12 @@ namespace cytnx {
               const std::string &path, bool restore_device) {
       std::visit(
         [&](auto &concreteObj) {
-          H5::Group group = (path.empty() ? container : container.openGroup(path));
-          concreteObj.from_hdf5(group, name, restore_device);
+          if (path.empty()) {
+            concreteObj.from_hdf5(container, name, restore_device);
+          } else {
+            H5::Group group = container.openGroup(path);
+            concreteObj.from_hdf5(group, name, restore_device);
+          }
         },
         object);
     }
