@@ -8,22 +8,13 @@ authors = [
 dependencies = [
     "sphinx>=8.0.2",
     "sphinxcontrib-bibtex>=2.6.2",
-    "breathe>=4.35.0",
     "sphinxcontrib-jquery>=4.1",
     "sphinxbootstrap4theme>=0.6.0",
-    "setuptools>=72.1.0",
     "sphinx-multiversion>=0.2.4",
     "furo>=2024.8.6",
 ]
 readme = "README.md"
-requires-python = ">= 3.10"
+requires-python = ">=3.10"
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/cytnx_doc"]
+[tool.uv]
+package = false
