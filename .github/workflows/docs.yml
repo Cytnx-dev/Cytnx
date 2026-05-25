@@ -19,20 +19,17 @@ jobs:
         with:
           version: "0.8.17"
           enable-cache: true
-          cache-dependency-glob: "docs/uv.lock"
       - name: Install dependencies
-        working-directory: docs
         run: |
-          uv sync --python 3.10
+          uv sync --python 3.10 --extra docs --no-install-project
           sudo apt-get update && sudo apt-get install -y doxygen graphviz
       - name: Build api documentation
         working-directory: docs
         run: |
-          uv run bash api_doc_script.sh
+          uv run --no-sync bash api_doc_script.sh
       - name: Sphinx build
-        working-directory: docs
         run: |
-          uv run sphinx-build -M html source build
+          uv run --no-sync sphinx-build -M html docs/source docs/build
       - name: Move api_build into html output
         working-directory: docs
         run: |
