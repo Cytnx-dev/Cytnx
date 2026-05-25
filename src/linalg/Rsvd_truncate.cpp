@@ -38,29 +38,20 @@ namespace cytnx {
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
       Tensor Q;
       if (Tin.device() == Device.cpu) {
-        std::vector<Tensor> tmps;
+        std::vector<Tensor> outT;
         if (samplenum < n_singlu) {
           Tensor in = Tin.contiguous();
           Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-          tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
+          outT = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
         } else {
-          tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
+          outT = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
-        Tensor terr({1}, Tin.dtype(), Tin.device());
+        // truncates outT in place and appends the error tensor when return_err != 0.
+        cytnx::linalg_internal::memcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
+                                                 mindim);
 
-        cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err, mindim);
-
-        std::vector<Tensor> outT;
-        outT.push_back(tmps[0]);
-        if (is_U) {
-          if (samplenum < n_singlu)
-            outT.push_back(Matmul(Q, tmps[1]));
-          else
-            outT.push_back(tmps[1]);
-        }
-        if (is_vT) outT.push_back(tmps[2]);
-        if (return_err) outT.push_back(terr);
+        // when projected, bring U back to the original row space
+        if (is_U && samplenum < n_singlu) outT[1] = Matmul(Q, outT[1]);
 
         return outT;
 

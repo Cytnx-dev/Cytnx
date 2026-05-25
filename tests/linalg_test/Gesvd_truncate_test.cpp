@@ -295,4 +295,58 @@ namespace GesvdTruncateTest {
 
     return true;
   }
+
+  /*=====test info=====
+  describe:Tensor-level Gesvd_truncate must work for all (is_U, is_vT) combinations.
+  ====================*/
+  // Singular values are gauge-invariant; compare them with a relative tolerance (LAPACK gesvd
+  // can differ slightly across jobu/jobvt modes). U/vT are sign/gauge dependent across modes,
+  // so we only assert their truncated shapes.
+  static bool SingularValsClose(const Tensor& a, const Tensor& b, double rtol = 1e-14) {
+    Tensor ad = a.astype(Type.Double).contiguous();
+    Tensor bd = b.astype(Type.Double).contiguous();
+    if (ad.shape() != bd.shape()) return false;
+    for (cytnx_uint64 i = 0; i < ad.storage().size(); ++i) {
+      double x = ad.storage().at<double>(i), y = bd.storage().at<double>(i);
+      if (std::abs(x - y) > rtol * (1.0 + std::abs(y))) return false;
+    }
+    return true;
+  }
+
+  TEST(Gesvd_truncate, flag_combinations_dense) {
+    for (auto dtype : {Type.Double, Type.ComplexDouble}) {
+      Tensor T = Tensor({6, 5}, dtype);
+      InitTensorUniform(T, /*seed=*/2);
+      const cytnx_uint64 keep = 3;
+
+      // reference singular values (both matrices requested)
+      std::vector<Tensor> ref = linalg::Gesvd_truncate(T, keep, 0., true, true, 0, 1);
+      ASSERT_EQ(ref.size(), 3u);
+      const cytnx_uint64 k = ref[0].shape()[0];
+      EXPECT_EQ(k, keep);
+      EXPECT_EQ(ref[1].shape(), std::vector<cytnx_uint64>({6, k}));
+      EXPECT_EQ(ref[2].shape(), std::vector<cytnx_uint64>({k, 5}));
+
+      for (bool is_U : {false, true}) {
+        for (bool is_vT : {false, true}) {
+          std::vector<Tensor> out = linalg::Gesvd_truncate(T, keep, 0., is_U, is_vT, 0, 1);
+          const cytnx_uint64 expected = 1u + (is_U ? 1u : 0u) + (is_vT ? 1u : 0u);
+          ASSERT_EQ(out.size(), expected) << "is_U=" << is_U << " is_vT=" << is_vT;
+
+          EXPECT_TRUE(SingularValsClose(out[0], ref[0]))
+            << "S mismatch, is_U=" << is_U << " is_vT=" << is_vT;
+
+          cytnx_uint64 idx = 1;
+          if (is_U) {
+            EXPECT_EQ(out[idx].shape(), std::vector<cytnx_uint64>({6, k}));
+            ++idx;
+          }
+          if (is_vT) {
+            // the truncated vT must have k rows
+            EXPECT_EQ(out[idx].shape(), std::vector<cytnx_uint64>({k, 5}));
+          }
+        }
+      }
+    }
+  }
 }  // namespace GesvdTruncateTest

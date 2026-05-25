@@ -232,4 +232,50 @@ namespace RsvdTruncateTest {
 
     return true;
   }
+
+  /*=====test info=====
+  describe:Tensor-level Rsvd_truncate must work for all (is_U, is_vT) combinations.
+  With a fixed seed the random isometry is identical across flag choices, so the kept
+  singular values (and any requested matrices) must match the all-true reference.
+  ====================*/
+  TEST(Rsvd_truncate, flag_combinations_dense) {
+    const unsigned int seed = 42;
+    const cytnx_uint64 keep = 3;
+    const cytnx_uint64 summand = 0;
+    const double factor = 0.;
+    const cytnx_uint64 power_it = 2;
+
+    for (auto dtype : {Type.Double, Type.ComplexDouble}) {
+      Tensor T = Tensor({8, 6}, dtype);
+      InitTensorUniform(T, /*seed=*/3);
+
+      std::vector<Tensor> ref =
+        linalg::Rsvd_truncate(T, keep, 0., true, true, 0, 1, summand, factor, power_it, seed);
+      ASSERT_EQ(ref.size(), 3u);
+      const cytnx_uint64 k = ref[0].shape()[0];
+
+      for (bool is_U : {false, true}) {
+        for (bool is_vT : {false, true}) {
+          std::vector<Tensor> out =
+            linalg::Rsvd_truncate(T, keep, 0., is_U, is_vT, 0, 1, summand, factor, power_it, seed);
+          const cytnx_uint64 expected = 1u + (is_U ? 1u : 0u) + (is_vT ? 1u : 0u);
+          ASSERT_EQ(out.size(), expected) << "is_U=" << is_U << " is_vT=" << is_vT;
+
+          EXPECT_TRUE(AreNearlyEqTensor(out[0], ref[0], 1e-10))
+            << "S mismatch, is_U=" << is_U << " is_vT=" << is_vT;
+
+          cytnx_uint64 idx = 1;
+          if (is_U) {
+            EXPECT_EQ(out[idx].shape()[1], k);  // U truncated to k columns
+            EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[1], 1e-10));
+            ++idx;
+          }
+          if (is_vT) {
+            EXPECT_EQ(out[idx].shape()[0], k);  // vT truncated to k rows
+            EXPECT_TRUE(AreNearlyEqTensor(out[idx], ref[2], 1e-10));
+          }
+        }
+      }
+    }
+  }
 }  // namespace RsvdTruncateTest

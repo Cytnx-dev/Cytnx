@@ -31,17 +31,11 @@ namespace cytnx {
                       "[Gesvd_truncate] can only operate on rank-2 Tensor.%s", "\n");
 
       if (Tin.device() == Device.cpu) {
-        std::vector<Tensor> tmps = Gesvd(Tin, is_U, is_vT);
-        Tensor terr({1}, Tin.dtype(), Tin.device());
+        std::vector<Tensor> outT = Gesvd(Tin, is_U, is_vT);
 
-        cytnx::linalg_internal::lii.memcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err, mindim);
-
-        std::vector<Tensor> outT;
-        outT.push_back(tmps[0]);
-        if (is_U) outT.push_back(tmps[1]);
-        if (is_vT) outT.push_back(tmps[2]);
-        if (return_err) outT.push_back(terr);
+        // truncates outT in place and appends the error != 0.
+        cytnx::linalg_internal::memcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
+                                                 mindim);
 
         return outT;
 
