@@ -73,15 +73,27 @@ namespace cytnx {
         }
         cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, keepdim, err, return_err, U,
                                                                   S, vT, terr);
+        // restart if less than mindim singular values are kept.
+        // TODO: issue #650 - mindim should be part of cuQuantumGeSvd after the refactoring to avoid
+        // redundant calls
+        if (S.shape()[0] < mindim) {
+          // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
+          // output tensor descriptors from the passed buffer shapes, so the buffers must be
+          // re-initialized to the full size before restarting.
+          S.Init({n_singlu}, in.dtype() <= 2 ? in.dtype() + 2 : in.dtype(), in.device());
+          U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
+          vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
+          terr.Init({1}, in.dtype(), in.device());
+          cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, mindim, 0., return_err, U,
+                                                                    S, vT, terr);
+        }
 
-        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[in.dtype()](
-          U, vT, S, terr, keepdim, err, is_U, is_vT, return_err, mindim);
-
+        // cuQuantum's SVD already truncates (keepdim/err) and fills terr; assemble directly.
         std::vector<Tensor> outT;
         outT.push_back(S);
         if (is_U) {
           if (samplenum < n_singlu)
-            outT.push_back(Matmul(Q, U));
+            outT.push_back(Matmul(Q, U));  // bring U back to the original row space
           else
             outT.push_back(U);
         }
@@ -91,29 +103,17 @@ namespace cytnx {
         return outT;
 
     #else
-        std::vector<Tensor> tmps;
+        std::vector<Tensor> outT;
         if (samplenum < n_singlu) {
           Tensor in = Tin.contiguous();
           Q = linalg::Rand_isometry(in, samplenum, power_iteration, seed);
-          tmps = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
+          outT = Gesvd(Matmul(Q.Conj().permute_({1, 0}), in), is_U, is_vT);  // run full SVD
         } else {
-          tmps = Gesvd(Tin, is_U, is_vT);  // run full SVD
+          outT = Gesvd(Tin, is_U, is_vT);  // run full SVD
         }
-        Tensor terr({1}, Tin.dtype(), Tin.device());
-
-        cytnx::linalg_internal::lii.cudaMemcpyTruncation_ii[Tin.dtype()](
-          tmps[1], tmps[2], tmps[0], terr, keepdim, err, is_U, is_vT, return_err, mindim);
-
-        std::vector<Tensor> outT;
-        outT.push_back(tmps[0]);
-        if (is_U) {
-          if (samplenum < n_singlu)
-            outT.push_back(Matmul(Q, tmps[1]));
-          else
-            outT.push_back(tmps[1]);
-        }
-        if (is_vT) outT.push_back(tmps[2]);
-        if (return_err) outT.push_back(terr);
+        cytnx::linalg_internal::cudaMemcpyTruncation(outT, keepdim, err, is_U, is_vT, return_err,
+                                                     mindim);
+        if (is_U && samplenum < n_singlu) outT[1] = Matmul(Q, outT[1]);
 
         return outT;
     #endif

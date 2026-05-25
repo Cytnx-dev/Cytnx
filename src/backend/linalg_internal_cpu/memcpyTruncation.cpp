@@ -37,7 +37,7 @@ namespace cytnx {
               // nothing to truncate; there are no discarded values, so the truncation error is
               // zero.
               if (return_err) terr = zeros(1, tens[0].dtype(), tens[0].device());
-              return;
+              return;  // escapes lambda
             }
             // truncated singular values
             Tensor newS({trunc_dim}, S.dtype(), S.device());
@@ -98,9 +98,7 @@ namespace cytnx {
         }
       }
 
-      if (return_err) {
-        tens.push_back(terr);
-      }
+      if (return_err) tens.push_back(terr);
     }
 
   }  // namespace linalg_internal

@@ -12,23 +12,11 @@ namespace cytnx {
   namespace linalg_internal {
 
 #ifdef UNI_GPU
-    /// cuSvd
-    void cudaMemcpyTruncation_cd(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                 const bool &is_vT, const unsigned int &return_err,
-                                 const unsigned int &mindim);
-    void cudaMemcpyTruncation_cf(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                 const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                 const bool &is_vT, const unsigned int &return_err,
-                                 const unsigned int &mindim);
-    void cudaMemcpyTruncation_d(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                const bool &is_vT, const unsigned int &return_err,
-                                const unsigned int &mindim);
-    void cudaMemcpyTruncation_f(Tensor &U, Tensor &vT, Tensor &S, Tensor &terr,
-                                const cytnx_uint64 &keepdim, const double &err, const bool &is_U,
-                                const bool &is_vT, const unsigned int &return_err,
-                                const unsigned int &mindim);
+    // GPU counterpart of linalg_internal::memcpyTruncation; truncates the packed Svd/Gesvd output
+    // tens = [S, U?, vT?] in place and appends the error tensor when return_err != 0. See the CPU
+    // declaration in linalg_internal_cpu/memcpyTruncation.hpp for the full contract.
+    void cudaMemcpyTruncation(std::vector<Tensor> &tens, cytnx_uint64 keepdim, double err,
+                              bool is_U, bool is_vT, unsigned int return_err, cytnx_uint64 mindim);
 #endif
 
   }  // namespace linalg_internal

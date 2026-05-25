@@ -27,7 +27,7 @@ namespace cytnx {
      *   If no truncation occurs there are no discarded values, so a 1-element zero tensor is
      *   appended (the truncation error is zero).
      * @param[in] mindim minimum number of singular values to keep.
-     * @pre S is a real floating-point vector (float or double);
+     * @pre S is a non-empty real floating-point vector (float or double);
      */
     void memcpyTruncation(std::vector<Tensor> &tens, cytnx_uint64 keepdim, double err, bool is_U,
                           bool is_vT, unsigned int return_err, cytnx_uint64 mindim);
