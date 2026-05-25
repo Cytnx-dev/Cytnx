@@ -70,9 +70,6 @@ message(STATUS " Version: ${CYTNX_VERSION}")
 FILE(WRITE "${CMAKE_BINARY_DIR}/linkflags.tmp" "" "")
 FILE(WRITE "${CMAKE_BINARY_DIR}/cxxflags.tmp" "" "")
 
-FILE(WRITE "${CMAKE_BINARY_DIR}/version.tmp" "" "")
-FILE(APPEND "${CMAKE_BINARY_DIR}/version.tmp" "${CYTNX_VERSION}" "")
-
 FILE(WRITE "${CMAKE_BINARY_DIR}/vinfo.tmp" "" "")
 FILE(APPEND "${CMAKE_BINARY_DIR}/vinfo.tmp" "${CYTNX_VARIANT_INFO}" "")
 
@@ -356,6 +353,7 @@ IF(BUILD_PYTHON)
     pybind/ncon_py.cpp
   )
   target_link_libraries(pycytnx PUBLIC cytnx)
+  target_compile_definitions(pycytnx PRIVATE CYTNX_VERSION="${CYTNX_VERSION}")
 
   # On macOS, Python extensions should NOT link to libpython
   # Use -undefined dynamic_lookup to resolve symbols from the running interpreter
@@ -523,7 +521,6 @@ message(STATUS "")
 
 install(FILES ${CMAKE_BINARY_DIR}/linkflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 install(FILES ${CMAKE_BINARY_DIR}/cxxflags.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
-install(FILES ${CMAKE_BINARY_DIR}/version.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 install(FILES ${CMAKE_BINARY_DIR}/vinfo.tmp DESTINATION ${CMAKE_INSTALL_PREFIX}/cytnx)
 
 if(BUILD_PACKAGES)

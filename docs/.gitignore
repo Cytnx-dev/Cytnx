@@ -6,5 +6,4 @@
 source/__pycache__/*
 tests/__pycache__/*
 tests/build/*
-build/
 *.swp
