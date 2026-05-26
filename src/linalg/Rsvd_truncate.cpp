@@ -76,7 +76,7 @@ namespace cytnx {
         // restart if less than mindim singular values are kept.
         // TODO: issue #650 - mindim should be part of cuQuantumGeSvd after the refactoring to avoid
         // redundant calls
-        if (S.shape()[0] < mindim) {
+        if (S.shape()[0] < std::min(mindim, keepdim)) {
           // the first call shrinks U/S/vT to the truncated size, and cuQuantumGeSvd sizes its
           // output tensor descriptors from the passed buffer shapes, so the buffers must be
           // re-initialized to the full size before restarting.
@@ -84,8 +84,8 @@ namespace cytnx {
           U.Init({in.shape()[0], n_singlu}, in.dtype(), in.device());
           vT.Init({n_singlu, in.shape()[1]}, in.dtype(), in.device());
           terr.Init({1}, in.dtype(), in.device());
-          cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, mindim, 0., return_err, U,
-                                                                    S, vT, terr);
+          cytnx::linalg_internal::lii.cuQuantumGeSvd_ii[in.dtype()](in, std::min(mindim, keepdim),
+                                                                    0., return_err, U, S, vT, terr);
         }
 
         // cuQuantum's SVD already truncates (keepdim/err) and fills terr; assemble directly.

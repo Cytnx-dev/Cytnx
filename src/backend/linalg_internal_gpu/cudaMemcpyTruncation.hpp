@@ -14,7 +14,7 @@ namespace cytnx {
 #ifdef UNI_GPU
     // GPU counterpart of linalg_internal::memcpyTruncation; truncates the packed Svd/Gesvd output
     // tens = [S, U?, vT?] in place and appends the error tensor when return_err != 0. See the CPU
-    // declaration in linalg_internal_cpu/memcpyTruncation.hpp for the full contract.
+    // declaration in linalg_internal_cpu/memcpyTruncation.hpp for the full description.
     void cudaMemcpyTruncation(std::vector<Tensor> &tens, cytnx_uint64 keepdim, double err,
                               bool is_U, bool is_vT, unsigned int return_err, cytnx_uint64 mindim);
 #endif
