@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   publish_sphinx_docs:
@@ -35,6 +37,7 @@ jobs:
         run: |
           mv build/api_build build/html/api_build
       - name: Deploy
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
           publish_branch: gh-pages
