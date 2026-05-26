@@ -86,3 +86,63 @@ TEST_F(NetworkTest, Network_dense_TOUT_no_colon) {
   EXPECT_TRUE(AreNearlyEqTensor(res.get_block(), utdnAns.get_block(), 1e-12));
   EXPECT_EQ(res.rowrank(), 1);
 }
+
+// Helper: Contract three tensors directly with Contract, and permute the open legs into the
+// requested TOUT order.
+static UniTensor BlockNetworkReference(const UniTensor& A, const UniTensor& B, const UniTensor& C) {
+  UniTensor a = A.relabel({"a", "e"});
+  UniTensor b = B.relabel({"a", "c_", "d_", "h"});
+  UniTensor c = C.relabel({"e", "f_", "g_", "h"});
+  UniTensor expected = Contract(Contract(b, c), a);
+  expected.permute_({"c_", "d_", "f_", "g_"}, 2);
+  expected.contiguous_();
+  return expected;
+}
+
+// Block (symmetric) UniTensor network contraction. Validate traversal/relabel/permute against a
+// direct Contract of the same tensors.
+TEST_F(NetworkTest, Network_block_no_order) {
+  random::uniform_(bkut1, -1., 1., 1);
+  random::uniform_(bkut2, -1., 1., 2);
+  random::uniform_(bkut3, -1., 1., 3);
+
+  auto net = Network();
+  net.FromString({"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "TOUT: c_,d_;f_,g_"});
+  net.PutUniTensors({"A", "B", "C"}, {bkut1, bkut2, bkut3});
+  UniTensor res = net.Launch();
+  res.contiguous_();
+
+  EXPECT_EQ(res.uten_type(), UTenType.Block);
+  EXPECT_TRUE(AreNearlyEqUniTensor(res, BlockNetworkReference(bkut1, bkut2, bkut3), 1e-8));
+}
+
+TEST_F(NetworkTest, Network_block_specified_order) {
+  random::uniform_(bkut1, -1., 1., 1);
+  random::uniform_(bkut2, -1., 1., 2);
+  random::uniform_(bkut3, -1., 1., 3);
+
+  auto net = Network();
+  net.FromString(
+    {"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "ORDER:(A,(B,C))", "TOUT: c_,d_;f_,g_"});
+  net.PutUniTensors({"A", "B", "C"}, {bkut1, bkut2, bkut3});
+  UniTensor res = net.Launch();
+  res.contiguous_();
+
+  EXPECT_TRUE(AreNearlyEqUniTensor(res, BlockNetworkReference(bkut1, bkut2, bkut3), 1e-8));
+}
+
+// setOrder(true, "") computes the optimal order
+TEST_F(NetworkTest, Network_block_find_optimal) {
+  random::uniform_(bkut1, -1., 1., 1);
+  random::uniform_(bkut2, -1., 1., 2);
+  random::uniform_(bkut3, -1., 1., 3);
+
+  auto net = Network();
+  net.FromString({"A: a,e", "B: a,c_,d_,h", "C: e,f_,g_,h", "TOUT: c_,d_;f_,g_"});
+  net.PutUniTensors({"A", "B", "C"}, {bkut1, bkut2, bkut3});
+  net.setOrder(true, "");
+  UniTensor res = net.Launch();
+  res.contiguous_();
+
+  EXPECT_TRUE(AreNearlyEqUniTensor(res, BlockNetworkReference(bkut1, bkut2, bkut3), 1e-8));
+}

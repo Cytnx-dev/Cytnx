@@ -234,7 +234,6 @@ namespace cytnx {
       vector<pair<cytnx_int64, cytnx_int64>> path;
       stack<std::shared_ptr<Node>> stk;
       std::shared_ptr<Node> root = CtTree.nodes_container.back();
-      int ly = 0;
       bool ict;
       do {
         while ((root != nullptr)) {
@@ -1016,7 +1015,6 @@ namespace cytnx {
     stack<std::shared_ptr<Node>> stk;
     std::shared_ptr<Node> root = this->CtTree.nodes_container.back();
     root->set_root_ptrs();  // Add this line
-    int ly = 0;
     bool ict;
 
     do {
