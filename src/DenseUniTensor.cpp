@@ -41,14 +41,10 @@ namespace cytnx {
       }
       cytnx_error_msg(bonds[i].dim() == 0, "%s", "[ERROR] All bonds must have dimension >=1");
     }
-    // cout << N_ket << endl;
-    // cout << is_diag << endl;
-    // cout << this->_is_tag << endl;
 
     // check rowrank
     if (this->_is_tag) {
       if (is_diag) {
-        // cout << "NKET = " << N_ket << endl;
         cytnx_error_msg(N_ket != 1,
                         "[ERROR][DenseUniTensor] is_diag = true with tagged UniTensor must have "
                         "one IN (KET) bond  and one OUT (BRA) bond.%s",
@@ -148,7 +144,6 @@ namespace cytnx {
     cytnx_int64 i_rowrank = rowrank;
 
     if (is_diag) {
-      // std::cout << in_tensor.shape() << std::endl;
       cytnx_error_msg(in_tensor.shape().size() != 1,
                       "[ERROR][Init_by_tensor] setting is_diag=True should have input Tensor to be "
                       "rank-1 with diagonal elements.%s",
@@ -193,7 +188,6 @@ namespace cytnx {
         for (cytnx_uint64 i = 0; i < in_tensor.shape().size(); i++) {
           bds.push_back(Bond(in_tensor.shape()[i]));
         }
-        // std::cout << bds.size() << std::endl;
         this->_bonds = bds;
         this->_block = in_tensor;
         std::vector<cytnx_int64> tmp = vec_range<cytnx_int64>(in_tensor.shape().size());
@@ -721,9 +715,7 @@ namespace cytnx {
     if (this->is_diag()) {
       // if(new_shape.size()!=2){
       this->_block = cytnx::linalg::Diag(this->_block);
-      // std::cout << this->_block << std::endl;
       this->_block.reshape_(new_shape);
-      // std::cout << this->_block << std::endl;
       this->Init_by_Tensor(this->_block, false, rowrank, this->_name);
       //}else{
       //    cytnx_error_msg(new_shape[0]!=new_shape[1],"[ERROR] invalid shape. The total elements
@@ -819,8 +811,6 @@ namespace cytnx {
 
     // group bonds:
     std::vector<Bond> new_bonds;
-    // std::cout << "idor" << idor << std::endl;
-    // std::cout << "rank" << this->rank() << std::endl;
     for (int i = 0; i < this->rank(); i++) {
       if (i == idor) {
         Bond tmp = this->_bonds[i];
@@ -1036,8 +1026,6 @@ namespace cytnx {
     std::vector<std::string> comm_labels;
     std::vector<cytnx_uint64> comm_idx1, comm_idx2;
     vec_intersect_<std::string>(comm_labels, this->labels(), rhs->labels(), comm_idx1, comm_idx2);
-    // std::cout << comm_idx1 << std::endl;
-    // std::cout << comm_idx2 << std::endl;
 
     // output instance:
     DenseUniTensor *tmp = new DenseUniTensor();
@@ -1106,7 +1094,6 @@ namespace cytnx {
       }
 
       // process meta
-      // std::cout << this->rank() << " " << rhs->rank() << std::endl;
       std::vector<cytnx_uint64> non_comm_idx1 = vec_erase(vec_range(this->rank()), comm_idx1);
       std::vector<cytnx_uint64> non_comm_idx2 = vec_erase(vec_range(rhs->rank()), comm_idx2);
 
@@ -1150,9 +1137,6 @@ namespace cytnx {
           // Tensor tmpL,tmpR;
           // tmpL = this->_block;
           // tmpR =  rhs->get_block_(); // share view!!
-          // std::cout << "dkd" << std::endl;
-          // std::cout << this->_block.shape() << std::endl;
-          // std::cout << rhs->get_block_().shape() << std::endl;
           tmp->_block = linalg::Tensordot(this->_block, rhs->get_block_(), comm_idx1, comm_idx2,
                                           mv_elem_self, mv_elem_rhs);
         }
@@ -1404,12 +1388,7 @@ namespace cytnx {
       }
     }
   }
-  void DenseUniTensor::Add_(const Scalar &rhs) {
-    // cout << rhs << endl;
-    //  cytnx_error_msg(this->is_tag(),"[ERROR] Cannot perform arithmetic on tagged unitensor
-    //  L.%s","\n");
-    this->_block += rhs;
-  }
+  void DenseUniTensor::Add_(const Scalar &rhs) { this->_block += rhs; }
 
   void DenseUniTensor::Sub_(const boost::intrusive_ptr<UniTensor_base> &rhs) {
     // checking if Bond have same direction:

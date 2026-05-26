@@ -51,7 +51,7 @@ void ncon_binding(py::module &m);
 #endif
 
 PYBIND11_MODULE(cytnx, m) {
-  m.attr("__version__") = "0.7";
+  m.attr("__version__") = CYTNX_VERSION;
   m.attr("__blasINTsize__") = cytnx::__blasINTsize__;
   m.attr("User_debug") = cytnx::User_debug;
 

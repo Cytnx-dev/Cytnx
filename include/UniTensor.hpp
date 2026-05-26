@@ -2750,7 +2750,6 @@ namespace cytnx {
     */
     void Init(const Tensor &in_tensor, const bool &is_diag = false, const cytnx_int64 &rowrank = -1,
               const std::vector<std::string> &in_labels = {}, const std::string &name = "") {
-      // std::cout << "[entry!]" << std::endl;
       boost::intrusive_ptr<UniTensor_base> out(new DenseUniTensor());
       out->Init_by_Tensor(in_tensor, is_diag, rowrank, name);
       this->_impl = out;
@@ -2843,8 +2842,6 @@ namespace cytnx {
           if (sym_fver == -1)
             sym_fver = bonds[i]._impl->_degs.size();
           else {
-            // std::cout << sym_fver << " " <<
-            // bonds[i]._impl->_degs.size() << std::endl;
             cytnx_error_msg((bool(sym_fver) ^ bool(bonds[i]._impl->_degs.size())),
                             "[ERROR] When initializing a UniTensor with symmetries, all Bonds must "
                             "be in the same format!%s",
@@ -3930,7 +3927,6 @@ namespace cytnx {
     */
     template <class T>
     T &at(const std::vector<cytnx_uint64> &locator) {
-      // std::cout << "at " << this->is_blockform()  << std::endl;
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
@@ -3959,7 +3955,6 @@ namespace cytnx {
     */
     template <class T>
     const T &at(const std::vector<cytnx_uint64> &locator) const {
-      // std::cout << "at " << this->is_blockform()  << std::endl;
       if (this->uten_type() == UTenType.Block || this->uten_type() == UTenType.BlockFermionic) {
         // [NEW] this will not check if it exists, if it is not then error will throw!
         T aux;
@@ -5645,16 +5640,17 @@ namespace cytnx {
     }
 
     /**
-    @brief Generate an identity UniTensor.
+    @brief Generate an identity UniTensor with two bonds.
     @param[in] dim the dimension of the diagnal.
-    @param[in] in_labels the labels of the UniTensor.
+    @param[in] in_labels the two labels of the UniTensor.
     @param[in] is_diag determine if the UniTensor is diagonal or not. Default is false.
     @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
     @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
-    @note 2-bond if not diagonal. 1-bond if diagonal.
+    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if
+    is_diag is true (false).
     */
     static UniTensor identity(const cytnx_uint64 &dim,
                               const std::vector<std::string> &in_labels = {},
@@ -5671,17 +5667,17 @@ namespace cytnx {
     /**
     @brief Generate a 2-bond identity UniTensor
     @param[in] dim the dimension of the diagnal.
-    @param[in] in_labels the labels of the UniTensor.
+    @param[in] in_labels the two labels of the UniTensor.
     @param[in] is_diag determine if the UniTensor is diagonal or not. Default is false.
     @param[in] dtype the data type of the UniTensor, see cytnx::Type for more information.
     @param[in] device the device type of the UniTensor, see cytnx::Device for more information.
     @param[in] name the name of the UniTensor.
     @return
         [UniTensor]
-    @note 2-bond if not diagonal. 1-bond if diagonal.
-    @see identity(Nelem, in_labels, is_diag, dtype, device, name)
-    Note:
-      This function is a alias of cytnx::UniTensor::identity().
+    @note The resulting UniTensor has two bonds. The data is one-dimensional (two-dimensional) if
+    is_diag is true (false).
+    @see cytnx::UniTensor::identity
+    @note This function is a alias of cytnx::UniTensor::identity().
     */
     static UniTensor eye(const cytnx_uint64 &dim, const std::vector<std::string> &in_labels = {},
                          const cytnx_bool &is_diag = false, const unsigned int &dtype = Type.Double,

@@ -8,7 +8,7 @@ In linear algebra, a linear operator can be represented as a matrix :math:`\bold
 
 .. math::
 
-    y = \hat{H} x
+    y = \hat{H} x .
 
 
 If we consider :math:`\boldsymbol{\hat{H}}` to be a matrix, this matrix-vector multiplication can simply be achieved by using **linalg.Dot**.
@@ -111,7 +111,7 @@ Output >>
 
 Example: sparse data structure with mapping function
 *****************************************************
-With the flexibility provided by overloading the **matvec** member function, users can actually define their own sparse data structures of an operator.
+With the flexibility provided by overloading the **matvec** member function, users can define their own sparse data structures of an operator.
 
 As an example, we want to define a sparse matrix :math:`\boldsymbol{A}` with shape=(1000,1000) with ONLY two non-zero elements A[1,100]=4 and A[100,1]=7. All other elements are zero. We do not have to construct a dense tensor with size :math:`10^6`. Instead, we can simply use the **LinOp** class:
 
