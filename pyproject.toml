@@ -47,6 +47,7 @@ dev = [
     "pytest",
     "pytest-cov",
     "gcovr",
+]
 docs = [
     "sphinx>=7.4.7",
     "sphinxcontrib-bibtex>=2.6.2",
