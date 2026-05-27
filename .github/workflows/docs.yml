@@ -55,7 +55,7 @@ jobs:
         run: |
           mkdir -p docs/build/site_root
           cp docs/site_root/index.html docs/build/site_root/index.html
-          cp docs/source/_static/switcher.json docs/build/site_root/switcher.json
+          cp docs/source/_static/versions.json docs/build/site_root/versions.json
       - name: Deploy current version
         if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0

@@ -8,7 +8,7 @@
 (function () {
   // The deployed site lays each version out under <site_root>/<slug>/...,
   // where <slug> is "dev", "stable", or a release like "0.10.0". The same
-  // switcher.json lives at <site_root>/switcher.json and lists every slug.
+  // versions.json lives at <site_root>/versions.json and lists every slug.
   // Use Sphinx's `pagename` (the page's path under `docs/source/`, no
   // extension) to peel the version slug off the URL: the URL always ends
   // with `<slug>/<pagename>.html`, regardless of any repo-name prefix or
@@ -22,7 +22,7 @@
   var currentSlug = buildRootParts[buildRootParts.length - 1];
   var relAfterSlug = pathParts.slice(buildRootParts.length).join('/');
 
-  fetch(siteRoot + 'switcher.json', { cache: 'no-store' })
+  fetch(siteRoot + 'versions.json', { cache: 'no-store' })
     .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function (entries) {
       var container = document.getElementById('cytnx-version-switcher');
@@ -44,6 +44,6 @@
       });
       container.hidden = false;
     })
-    .catch(function () { /* Local builds without switcher.json: stay hidden. */ });
+    .catch(function () { /* Local builds without versions.json: stay hidden. */ });
 })();
 </script>
