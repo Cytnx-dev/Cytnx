@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+    tags:
+      - 'v*'
   pull_request:
   workflow_dispatch:
 
@@ -25,37 +27,58 @@ jobs:
         run: |
           uv sync --python 3.10 --extra docs --no-install-project
           sudo apt-get update && sudo apt-get install -y doxygen graphviz
-      # TODO: re-enable once api_doc_script.sh is refactored to fit the
-      # uv-based CI and Sphinx build layout, alongside the publish refactor
-      # described on the Deploy step below.
-      - name: Build api documentation
-        if: false
-        working-directory: docs
-        run: |
-          uv run --no-sync bash api_doc_script.sh
+      - name: Build API documentation
+        run: uv run --no-sync python docs/build_api_docs.py
       - name: Sphinx build
+        run: uv run --no-sync sphinx-build -M html docs/source docs/build
+      - name: Compute deploy target
+        id: target
+        if: github.event_name == 'push'
         run: |
-          uv run --no-sync sphinx-build -M html docs/source docs/build
-      # TODO: re-enable together with the "Build api documentation" step above.
-      - name: Move api_build into html output
-        if: false
-        working-directory: docs
+          ref="${GITHUB_REF}"
+          if [[ "${ref}" == refs/tags/v* ]]; then
+            version="${ref#refs/tags/v}"
+            echo "version=${version}" >>"$GITHUB_OUTPUT"
+            echo "kind=tag" >>"$GITHUB_OUTPUT"
+            if [[ "${version}" =~ (rc|a|b|alpha|beta|dev) ]]; then
+              echo "prerelease=true" >>"$GITHUB_OUTPUT"
+            else
+              echo "prerelease=false" >>"$GITHUB_OUTPUT"
+            fi
+          else
+            echo "version=dev" >>"$GITHUB_OUTPUT"
+            echo "kind=branch" >>"$GITHUB_OUTPUT"
+            echo "prerelease=false" >>"$GITHUB_OUTPUT"
+          fi
+      - name: Stage site-root assets
+        if: github.event_name == 'push'
         run: |
-          mv build/api_build build/html/api_build
-      # TODO: re-enable as part of a versioned-docs publish refactor:
-      # publish each tagged release into 'destination_dir: <version>/' with a
-      # matching 'stable/' alias, send pushes to master into 'dev/', drop
-      # 'force_orphan: true' so the gh-pages branch can accumulate versions,
-      # and serve a 'switcher.json' from the docs site root so the theme's
-      # version dropdown lists every published release. Publishing is paused
-      # until that refactor lands to avoid wiping the current Cytnx_doc
-      # contents with a docs build that is missing the API reference.
-      - name: Deploy
-        if: false
+          mkdir -p docs/build/site_root
+          cp docs/site_root/index.html docs/build/site_root/index.html
+          cp docs/source/_static/switcher.json docs/build/site_root/switcher.json
+      - name: Deploy current version
+        if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          personal_token: ${{ secrets.PAGES_PAT }}
-          external_repository: Cytnx-dev/Cytnx_doc
-          publish_dir: docs/build/html/
-          force_orphan: true
+          publish_dir: docs/build/html
+          destination_dir: ${{ steps.target.outputs.version }}
+          keep_files: true
+      - name: Deploy stable alias
+        if: github.event_name == 'push' && steps.target.outputs.kind == 'tag' && steps.target.outputs.prerelease == 'false'
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: docs/build/html
+          destination_dir: stable
+          keep_files: true
+      - name: Deploy site-root assets
+        if: github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: docs/build/site_root
+          keep_files: true
