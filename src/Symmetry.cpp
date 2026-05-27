@@ -10,6 +10,14 @@ using namespace std;
 
 namespace cytnx {
 
+  namespace {
+    cytnx_int64 NormalizeZnQnum(cytnx_int64 qnum, const cytnx_int64 n) {
+      qnum %= n;
+      if (qnum < 0) qnum += n;
+      return qnum;
+    }
+  }  // namespace
+
   bool cytnx::Symmetry::operator==(const cytnx::Symmetry &rhs) const {
     return (this->stype() == rhs.stype()) && (this->n() == rhs.n());
   }
@@ -117,19 +125,19 @@ namespace cytnx {
                                         const std::vector<cytnx_int64> &inR) {
     out.resize(inL.size() * inR.size());
     for (cytnx_uint64 i = 0; i < out.size(); i++) {
-      out[i] = (inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()]) % (this->n);
+      out[i] = NormalizeZnQnum(inL[cytnx_uint64(i / inR.size())] + inR[i % inR.size()], this->n);
     }
   }
   void cytnx::ZnSymmetry::combine_rule_(cytnx_int64 &out, const cytnx_int64 &inL,
                                         const cytnx_int64 &inR, const bool &is_reverse) {
+    const cytnx_int64 combined = NormalizeZnQnum(inL + inR, this->n);
     if (is_reverse)
-      this->reverse_rule_(out, (inL + inR) % (this->n));
+      this->reverse_rule_(out, combined);
     else
-      out = (inL + inR) % (this->n);
+      out = combined;
   }
   void cytnx::ZnSymmetry::reverse_rule_(cytnx_int64 &out, const cytnx_int64 &in) {
-    // out = -in<0?-in+this->n:-in;
-    out = -in + this->n;
+    out = NormalizeZnQnum(-in, this->n);
   }
 
   void cytnx::ZnSymmetry::print_info() const {

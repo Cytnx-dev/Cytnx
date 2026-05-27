@@ -1,5 +1,5 @@
 # Create an untagged unitensor and save
-T1 = cytnx.UniTensor(cytnx.zeros([4,4]),
+T1 = cytnx.UniTensor.zeros([4,4],
                      rowrank=1,
                      labels=["a","b"],
                      name="Untagged_Unitensor")

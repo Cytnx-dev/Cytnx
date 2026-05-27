@@ -165,6 +165,19 @@ TEST(Bond, CombindBondSymm_v2) {
   EXPECT_THROW(bd_sym_a.combineBond(bd_sym_g), std::logic_error);
 }
 
+TEST(Bond, ZnSymmetryNormalizesPublicRules) {
+  Symmetry z2 = Symmetry::Zn(2);
+
+  EXPECT_EQ(z2.combine_rule(-1, 0), 1);
+  EXPECT_EQ(z2.combine_rule(0, -1), 1);
+  EXPECT_EQ(z2.combine_rule(-1, 0, true), 1);
+  EXPECT_EQ(z2.reverse_rule(0), 0);
+  EXPECT_EQ(z2.reverse_rule(1), 1);
+  EXPECT_TRUE(z2.check_qnum(z2.combine_rule(-1, 0)));
+  EXPECT_TRUE(z2.check_qnum(z2.combine_rule(0, -1)));
+  EXPECT_TRUE(z2.check_qnum(z2.reverse_rule(0)));
+}
+
 TEST(Bond, Clear_type) {
   Bond bd_sym = Bond(BD_KET, {{0, 2}, {3, 5}, {1, 6}, {4, 1}}, {4, 7, 2, 3});
 

@@ -37,3 +37,4 @@ In the following, let's look into these objects:
     uniten/elements.rst
     uniten/manipulation.rst
     uniten/io.rst
+    uniten/fermions.rst
