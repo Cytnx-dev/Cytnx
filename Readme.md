@@ -25,11 +25,11 @@ Cytnx is a tensor network library designed for quantum physics simulations using
 
 ## User Guide [under construction]:
 
-[Cytnx User Guide](https://cytnx-dev.github.io/Cytnx_doc)
+[Cytnx User Guide](https://cytnx-dev.github.io/Cytnx/stable/)
 
 ## API Documentation:
 
-[API Documentation](https://cytnx-dev.github.io/Cytnx_doc/api_build/html)
+[API Documentation](https://cytnx-dev.github.io/Cytnx/stable/api/)
 
 
 ## Objects:
@@ -204,7 +204,7 @@ on device   : cytnx device: CPU
 
 ```
 
-* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://kaihsinwu.gitlab.io/Cytnx_doc/) for more details.
+* `UniTensor` supports `Block` form, which is useful if the physical system has a symmetry. See [user guide](https://cytnx-dev.github.io/Cytnx/stable/) for more details.
 
 ## Linear Algebra
 Cytnx provides a set of linear algebra functions.
