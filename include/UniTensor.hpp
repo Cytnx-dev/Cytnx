@@ -1122,7 +1122,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
@@ -1854,7 +1854,7 @@ namespace cytnx {
 
       for (cytnx_int32 i = 0; i < syms.size(); i++) {
         if (this->_bonds[0].type() == BD_BRA)
-          total_qns[i] = syms[0].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
+          total_qns[i] = syms[i].reverse_rule(this->_bonds[0]._impl->_qnums[loc[0]][i]);
         else
           total_qns[i] = this->_bonds[0]._impl->_qnums[loc[0]][i];
 
