@@ -53,7 +53,6 @@ docs = [
     "sphinxcontrib-bibtex>=2.6.2",
     "sphinxcontrib-jquery>=4.1",
     "sphinxbootstrap4theme>=0.6.0",
-    "sphinx-multiversion>=0.2.4",
     "furo>=2024.8.6",
 ]
 
