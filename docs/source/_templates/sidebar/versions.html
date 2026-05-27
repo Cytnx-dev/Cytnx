@@ -9,11 +9,18 @@
   // The deployed site lays each version out under <site_root>/<slug>/...,
   // where <slug> is "dev", "stable", or a release like "0.10.0". The same
   // switcher.json lives at <site_root>/switcher.json and lists every slug.
-  var match = window.location.pathname.match(/^(.*?\/)([^\/]+)\//);
-  if (!match) { return; }
-  var siteRoot = match[1];
-  var currentSlug = match[2];
-  var relAfterSlug = window.location.pathname.substring(match[0].length);
+  // Use Sphinx's `pagename` (the page's path under `docs/source/`, no
+  // extension) to peel the version slug off the URL: the URL always ends
+  // with `<slug>/<pagename>.html`, regardless of any repo-name prefix or
+  // custom domain in front of the slug.
+  var pagename = "{{ pagename }}";
+  var pathParts = window.location.pathname.split('/');
+  var depth = pagename.split('/').length - 1;
+  var buildRootParts = pathParts.slice(0, -1 - depth);
+  if (buildRootParts.length < 2) { return; }
+  var siteRoot = buildRootParts.slice(0, -1).join('/') + '/';
+  var currentSlug = buildRootParts[buildRootParts.length - 1];
+  var relAfterSlug = pathParts.slice(buildRootParts.length).join('/');
 
   fetch(siteRoot + 'switcher.json', { cache: 'no-store' })
     .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
