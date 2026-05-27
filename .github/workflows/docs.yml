@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+  pull_request:
+  workflow_dispatch:
 
 jobs:
   publish_sphinx_docs:
@@ -19,25 +21,37 @@ jobs:
         with:
           version: "0.8.17"
           enable-cache: true
-          cache-dependency-glob: "docs/uv.lock"
       - name: Install dependencies
-        working-directory: docs
         run: |
-          uv sync --python 3.10
+          uv sync --python 3.10 --extra docs --no-install-project
           sudo apt-get update && sudo apt-get install -y doxygen graphviz
+      # TODO: re-enable once api_doc_script.sh is refactored to fit the
+      # uv-based CI and Sphinx build layout, alongside the publish refactor
+      # described on the Deploy step below.
       - name: Build api documentation
+        if: false
         working-directory: docs
         run: |
-          uv run bash api_doc_script.sh
+          uv run --no-sync bash api_doc_script.sh
       - name: Sphinx build
-        working-directory: docs
         run: |
-          uv run sphinx-build -M html source build
+          uv run --no-sync sphinx-build -M html docs/source docs/build
+      # TODO: re-enable together with the "Build api documentation" step above.
       - name: Move api_build into html output
+        if: false
         working-directory: docs
         run: |
           mv build/api_build build/html/api_build
+      # TODO: re-enable as part of a versioned-docs publish refactor:
+      # publish each tagged release into 'destination_dir: <version>/' with a
+      # matching 'stable/' alias, send pushes to master into 'dev/', drop
+      # 'force_orphan: true' so the gh-pages branch can accumulate versions,
+      # and serve a 'switcher.json' from the docs site root so the theme's
+      # version dropdown lists every published release. Publishing is paused
+      # until that refactor lands to avoid wiping the current Cytnx_doc
+      # contents with a docs build that is missing the API reference.
       - name: Deploy
+        if: false
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0
         with:
           publish_branch: gh-pages
