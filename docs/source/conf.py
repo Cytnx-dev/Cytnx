@@ -38,8 +38,7 @@ author = 'Kai-Hsin Wu'
 # https://sublime-and-sphinx-guide.readthedocs.io/en/latest/references.html
 extensions = ['sphinxcontrib.bibtex',\
               'sphinxcontrib.jquery',\
-              'sphinx.ext.autosectionlabel',\
-              'sphinx_multiversion']
+              'sphinx.ext.autosectionlabel']
 bibtex_bibfiles = ["example/ref.dmrg.bib",\
                    "example/ref.hotrg.bib",\
                    "example/ref.itebd.bib",\
@@ -65,10 +64,6 @@ html_sidebars = {
         "sidebar/scroll-end.html",
     ],
 }
-smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'
-smv_branch_whitelist = r'main'
-smv_remote_whitelist = None
-
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.

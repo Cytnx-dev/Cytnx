@@ -1,16 +1,42 @@
-{% if versions %}
-<div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">{{ _('Branches') }}</span></p>
-  <ul>
-    {%- for item in versions.branches %}
-    <li class="toctree-l1"><a class="reference" href="{{ item.url }}">{{ item.name }}</a></li>
-    {%- endfor %}
-  </ul>
-  <p class="caption" role="heading"><span class="caption-text">{{ _('Tags') }}</span></p>
-  <ul>
-    {%- for item in versions.tags %}
-    <li class="toctree-l1"><a class="reference" href="{{ item.url }}">{{ item.name }}</a></li>
-    {%- endfor %}
-  </ul>
+<div class="sidebar-tree" id="cytnx-version-switcher" hidden>
+  <p class="caption" role="heading">
+    <span class="caption-text">{{ _('Versions') }}</span>
+  </p>
+  <ul></ul>
 </div>
-{% endif %}
+<script>
+(function () {
+  // The deployed site lays each version out under <site_root>/<slug>/...,
+  // where <slug> is "dev", "stable", or a release like "0.10.0". The same
+  // switcher.json lives at <site_root>/switcher.json and lists every slug.
+  var match = window.location.pathname.match(/^(.*?\/)([^\/]+)\//);
+  if (!match) { return; }
+  var siteRoot = match[1];
+  var currentSlug = match[2];
+  var relAfterSlug = window.location.pathname.substring(match[0].length);
+
+  fetch(siteRoot + 'switcher.json', { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function (entries) {
+      var container = document.getElementById('cytnx-version-switcher');
+      if (!container) { return; }
+      var list = container.querySelector('ul');
+      entries.forEach(function (entry) {
+        var li = document.createElement('li');
+        li.className = 'toctree-l1';
+        var a = document.createElement('a');
+        a.className = 'reference';
+        a.href = siteRoot + entry.version + '/' + relAfterSlug;
+        a.textContent = entry.name;
+        if (entry.version === currentSlug) {
+          li.classList.add('current');
+          a.setAttribute('aria-current', 'page');
+        }
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+      container.hidden = false;
+    })
+    .catch(function () { /* Local builds without switcher.json: stay hidden. */ });
+})();
+</script>
