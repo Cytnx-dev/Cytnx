@@ -17,7 +17,7 @@ namespace cytnx {
       cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
       // similar to _trace_nd_gpu
       UniTensor UTn = UniTensor(Tn, false, 2);
-      I_UT.set_labels({UTn._impl->_labels[0], UTn._impl->_labels[1]});
+      I_UT.relabel_({UTn._impl->_labels[0], UTn._impl->_labels[1]});
       out = Contract(I_UT, UTn).get_block_();
     }
 
@@ -31,7 +31,7 @@ namespace cytnx {
       cytnx::UniTensor I_UT = cytnx::UniTensor::eye(Ndiag, {}, true, Tn.dtype(), Tn.device());
 
       UniTensor UTn = UniTensor(Tn, false, 2);
-      I_UT.set_labels({UTn._impl->_labels[ax1], UTn._impl->_labels[ax2]});
+      I_UT.relabel_({UTn._impl->_labels[ax1], UTn._impl->_labels[ax2]});
 
       out = Contract(I_UT, UTn).get_block_();
     }
