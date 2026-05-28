@@ -65,6 +65,7 @@ target_sources(cytnx
     cuMod_internal.cu
     cuDet_internal.cu
     cuSum_internal.cu
+    cuTrace_internal.cu
     cuMaxMin_internal.cu
     cuTensordot_internal.cu
     cuQuantumGeSvd_internal.cu
