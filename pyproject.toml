@@ -28,6 +28,26 @@ classifiers = [
 dependencies = ["numpy >=1.18", "graphviz", "beartype"]
 
 [project.optional-dependencies]
+# Runtime test runner used by `pytests/`.
+test = [
+    "pytest",
+    "pytest-cov",
+]
+# Tooling for collecting C++ coverage from the build directory. Pure
+# Python and works against any GCC/Clang-produced .gcno/.gcda pair.
+coverage = [
+    "gcovr",
+]
+# Convenience aggregate for contributors and CI:
+#     pip install --editable .[dev]
+# pulls everything needed to build, run the test suite, and collect
+# both Python and C++ coverage. Build-time deps (scikit-build-core,
+# pybind11) come from `[build-system].requires` automatically.
+dev = [
+    "pytest",
+    "pytest-cov",
+    "gcovr",
+]
 docs = [
     "sphinx>=7.4.7",
     "sphinxcontrib-bibtex>=2.6.2",

@@ -1,16 +1,105 @@
+codecov:
+  require_ci_to_pass: true
+  notify:
+    # Each CI run uploads two coverage reports for the same commit:
+    # `cpp` (gcovr) and `python` (pytest-cov). Without this setting,
+    # Codecov posts a status / PR comment the moment the first upload
+    # arrives, then revises it when the second one lands -- a confusing
+    # double-update for reviewers. `after_n_builds: 2` coalesces them
+    # into a single notification once both flags are in. This is about
+    # upload ordering within a single CI run, not historical data;
+    # bump it if more upload jobs are added (e.g. a CUDA flag).
+    after_n_builds: 2
+    wait_for_ci: true
+
 coverage:
+  precision: 2
+  round: down
+  range: "60...90"
   status:
     project:
       default:
+        # The per-flag statuses (cpp, python) below are the authoritative
+        # checks. The umbrella default sees a merged view across both flags
+        # and can fail spuriously when coverage is split across uploads;
+        # mark it informational so it reports without blocking.
+        informational: true
+      cpp:
         target: auto
-        threshold: 100%
+        threshold: 1%
+        flags:
+          - cpp
+      python:
+        target: auto
+        threshold: 1%
+        flags:
+          - python
     patch:
       default:
         target: auto
-        threshold: 100%
+        threshold: 1%
+
+flags:
+  # Two upload flags, one per coverage XML produced by CI:
+  #   cpp    <- gcovr report over src/, include/, pybind/
+  #   python <- pytest-cov report over cytnx/
+  # pybind/ lives under `cpp` because pybind/*.cpp are C++ sources that
+  # compile into the cytnx .so; only gcovr can measure them.
+  cpp:
+    paths:
+      - src/
+      - include/
+      - pybind/
+    carryforward: true
+  python:
+    paths:
+      - cytnx/
+    carryforward: true
+
+component_management:
+  # Components are a UI breakdown in the PR comment; they don't drive their
+  # own status checks here (the cpp/python flag statuses already do).
+  # Splitting the C++ side into "backend" vs "bindings" keeps the binding
+  # layer visible without inflating the headline backend number.
+  individual_components:
+    - component_id: cpp_backend
+      name: C++ backend
+      paths:
+        - src/
+        - include/
+      flag_regexes:
+        - cpp
+    - component_id: python_bindings
+      name: Python bindings
+      paths:
+        - pybind/
+      flag_regexes:
+        - cpp
+    - component_id: python_package
+      name: Python package
+      paths:
+        - cytnx/
+      flag_regexes:
+        - python
+
+comment:
+  layout: "header, diff, flags, components, files, footer"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+
 ignore:
-  - "tests"
-  - "bm_tests"
-  - "pybind"
-  - "cytnx"
-  - "example"
+  - "tests/**"
+  - "benchmarks/**"
+  - "bm_tests/**"
+  - "example/**"
+  - "docs/**"
+  - "doxygen_conf/**"
+  - "thirdparty/**"
+  - "cmake_modules/**"
+  - "conda_build/**"
+  - "developer_tools/**"
+  - "build/**"
+  - "**/_deps/**"
+  - "**/*.cu.o"
