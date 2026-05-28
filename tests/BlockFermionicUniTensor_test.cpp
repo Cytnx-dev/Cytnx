@@ -1,6 +1,7 @@
 #include "BlockFermionicUniTensor_test.h"
 
 #include <algorithm>
+#include <cmath>
 
 // Helper: verify that X is an isometry / unitary over its auxiliary index `aux`: contracting the
 // physical legs against X^dagger yields the identity on the aux index. Handles both conventions:
@@ -574,4 +575,75 @@ TEST_F(BlockFermionicUniTensorTest, GesvdTruncateUnitaryAndReconstruction) {
   auto gesvd_sf = linalg::Gesvd_truncate(Msf, 1000, 0., true, true, 0);
   expect_svd_reconstructs(gesvd_sf, Msf, tol);
   expect_same_diagonal(gesvd_sf[0], linalg::Svd_truncate(Msf, 1000, 0., true, 0)[0], tol);
+}
+
+// Helper: given the (diagonal) eigenvalue tensors of exp(a*M) and of M, assert their sorted real
+// diagonals satisfy exp_evals[i] == exp(a * evals[i]). exp is monotonic for real a, so the
+// ascending orders match.
+static void expect_exp_spectrum(const UniTensor &exp_evals, const UniTensor &evals, double a,
+                                double tol) {
+  auto se = sorted_diagonal(exp_evals);
+  auto sm = sorted_diagonal(evals);
+  ASSERT_EQ(se.size(), sm.size());
+  for (size_t i = 0; i < se.size(); i++) EXPECT_NEAR(se[i], std::exp(a * sm[i]), tol);
+}
+
+// Helper: assert two eigenvector tensors (physical legs + aux as the LAST leg) describe the same
+// eigenvectors up to a per-vector phase. For orthonormal eigenbases Ua^dagger Ub is then a diagonal
+// unitary: each diagonal entry is a unit-modulus phase and the off-diagonals vanish. Assumes a
+// non-degenerate spectrum with matching sorted ordering in both inputs (true for Eigh of M and of a
+// monotonic function of M). Per the fermionic contraction rule the dagger operand is followed by
+// fermion_twists().
+static void expect_same_eigenvectors(const UniTensor &Ua, const UniTensor &Ub,
+                                     const std::string &aux, double tol) {
+  UniTensor Uad = Ua.Dagger();
+  Uad.relabel_(aux, aux + "_a");
+  UniTensor G = Contract(Uad.fermion_twists(), Ub).apply();  // -> [aux_a, aux]
+  for (cytnx_uint64 k = 0; k < G.shape()[0]; k++) {
+    auto p = G.at({k, k});
+    if (p.exists()) {
+      EXPECT_NEAR(double(Scalar(p).abs()), 1.0, tol);  // diagonal is a unit-modulus phase
+      p = 0.0;  // remove it; only the (vanishing) off-diagonals should remain
+    }
+  }
+  EXPECT_TRUE(G.Norm().item() < tol);
+}
+
+/*=====test info=====
+describe:ExpH for fermionic tensors: exp of a (sign-flip-active) Hermitian operator has spectrum
+  exp(a * eigenvalues), verifying the per-sector signflip negation in ExpH_BlockUT_internal.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, ExpH) {
+  const double tol = 1e-10;
+  const double a = 0.5;
+  // sign-flip-active Hermitian operator (consistent permute keeps it Hermitian).
+  UniTensor Mp = permute_with_signflips(make_rank4_hermitian());
+  UniTensor eM = linalg::ExpH(Mp, a);
+  EXPECT_EQ(eM.uten_type(), UTenType.BlockFermionic);
+  auto de = linalg::Eigh(eM);  // [eigenvalues, eigenvectors] of exp(a H)
+  auto dm = linalg::Eigh(Mp);  // [eigenvalues, eigenvectors] of H
+  // eigenvalues of exp(a H) are exp(a * eig(H)).
+  expect_exp_spectrum(de[0], dm[0], a, tol);
+  // exp(a H) shares H's eigenvectors: the two eigenbases agree up to a per-vector phase.
+  expect_same_eigenvectors(de[1], dm[1], "_aux_L", tol);
+}
+
+/*=====test info=====
+describe:ExpM for fermionic tensors: exp of a (sign-flip-active) operator has spectrum
+  exp(a * eigenvalues), verifying the per-sector signflip negation in ExpM_BlockUT_internal.
+====================*/
+TEST_F(BlockFermionicUniTensorTest, ExpM) {
+  const double tol = 1e-10;
+  const double a = 0.3;
+  // ExpM accepts a general operator; a Hermitian one gives a real spectrum so the sorted compare
+  // is well defined, while the consistent permute still exercises the signflip negation path.
+  UniTensor Mp = permute_with_signflips(make_rank4_hermitian());
+  UniTensor eM = linalg::ExpM(Mp, a);
+  EXPECT_EQ(eM.uten_type(), UTenType.BlockFermionic);
+  // both operands are Hermitian, so use Eigh (sorted, orthonormal) for a well-defined comparison
+  // even though ExpM itself uses the general Eig internally.
+  auto de = linalg::Eigh(eM);  // [eigenvalues, eigenvectors] of exp(a M)
+  auto dm = linalg::Eigh(Mp);  // [eigenvalues, eigenvectors] of M
+  expect_exp_spectrum(de[0], dm[0], a, tol);
+  expect_same_eigenvectors(de[1], dm[1], "_aux_L", tol);
 }
