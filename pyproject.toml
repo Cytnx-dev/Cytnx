@@ -57,7 +57,7 @@ docs = [
 ]
 
 [project.urls]
-Documentation = "https://cytnx-dev.github.io/Cytnx/stable/"
+Documentation = "https://cytnx-dev.github.io/Cytnx/"
 Repository = "https://github.com/Cytnx-dev/Cytnx.git"
 Issues = "https://github.com/Cytnx-dev/Cytnx/issues"
 
