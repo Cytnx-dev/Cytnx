@@ -39,20 +39,31 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: Doxyfile not found at {doxyfile}", file=sys.stderr)
         return 1
 
-    # Doxyfile declares OUTPUT_DIRECTORY = "./docs/" and HTML_OUTPUT = html,
-    # both relative to the working directory of the doxygen invocation.
-    cwd = doxyfile.parent
-    doxygen_html_dir = cwd / "docs" / "html"
-    if doxygen_html_dir.exists():
-        shutil.rmtree(doxygen_html_dir)
-
-    subprocess.run(["doxygen", str(doxyfile)], cwd=cwd, check=True)
-
     output_dir = args.output_dir.resolve()
     if output_dir.exists():
         shutil.rmtree(output_dir)
     output_dir.parent.mkdir(parents=True, exist_ok=True)
-    shutil.move(str(doxygen_html_dir), str(output_dir))
+
+    # Feed the Doxyfile on stdin and append OUTPUT_DIRECTORY / HTML_OUTPUT so
+    # Doxygen writes its HTML straight into `output_dir`, regardless of the
+    # paths configured in the Doxyfile. Doxygen applies the last assignment of
+    # a scalar tag, so these trailing lines override the file's own values and
+    # the script never has to guess where the build landed. Relative INPUT /
+    # EXAMPLE_PATH entries still resolve against the working directory, so the
+    # invocation runs from the Doxyfile's directory (the repository root).
+    config = doxyfile.read_text()
+    config += (
+        f"\nGENERATE_HTML = YES\n"
+        f"OUTPUT_DIRECTORY = {output_dir.parent}\n"
+        f"HTML_OUTPUT = {output_dir.name}\n"
+    )
+    subprocess.run(
+        ["doxygen", "-"],
+        input=config,
+        text=True,
+        cwd=doxyfile.parent,
+        check=True,
+    )
 
     print(f"API documentation generated at {output_dir}")
     return 0
