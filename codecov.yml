@@ -19,9 +19,11 @@ coverage:
   status:
     project:
       default:
-        target: auto
-        threshold: 1%
-        informational: false
+        # The per-flag statuses (cpp, python) below are the authoritative
+        # checks. The umbrella default sees a merged view across both flags
+        # and can fail spuriously when coverage is split across uploads;
+        # mark it informational so it reports without blocking.
+        informational: true
       cpp:
         target: auto
         threshold: 1%
