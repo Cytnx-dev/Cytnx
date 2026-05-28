@@ -19,8 +19,6 @@ namespace cytnx {
     std::vector<Tensor> Eig(const Tensor &Tin, const bool &is_V, const bool &row_v) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Eig] error, Eig can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[Eig] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_error_msg(Tin.shape()[0] != Tin.shape()[1],
                       "[Eig] error, Eig should accept a square matrix%s", "\n");
@@ -125,12 +123,13 @@ namespace cytnx {
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
-      Cy_S.Init({newBond, newBond}, {std::string("0"), std::string("1")}, 1, Type.Double,
-                Tin.device(), true);  // it is just reference so no hurt to alias ^^. All eigvals
-                                      // are real for eigh so Type.Double.
-
+      Cy_S.Init(
+        {newBond, newBond}, {std::string("0"), std::string("1")}, 1, Type.Double,
+        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+        true);  // is_diag!
       Cy_S.put_block_(outT[t]);
       t++;
+
       if (is_V) {
         cytnx::UniTensor &Cy_U = outCyT[t];
         Cy_U.Init(outT[t], false, 1);  // Tin is a rowrank = 1 square UniTensor.
@@ -264,10 +263,11 @@ namespace cytnx {
       // process e:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
       BlockUniTensor *e_ptr = new BlockUniTensor();
-      e_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                  Device.cpu,  // these two will be overwritten later, so doesnt matter.
-                  true,  // is_diag!
-                  true);  // no_alloc!
+      e_ptr->Init(
+        {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+        true,  // is_diag!
+        true);  // no_alloc!
       e_ptr->_blocks = e_blocks;
       UniTensor e;
       e._impl = boost::intrusive_ptr<UniTensor_base>(e_ptr);
@@ -303,7 +303,7 @@ namespace cytnx {
       //   BDLeft -[ ]- BDRight
       //
       cytnx_error_msg(
-        row_v,
+        row_v && is_V,
         "[ERROR] Currently Eig with row_v = true is not supported for BlockFermionicUniTensor.%s",
         "\n");
 
@@ -429,10 +429,11 @@ namespace cytnx {
       // process e:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
       BlockFermionicUniTensor *e_ptr = new BlockFermionicUniTensor();
-      e_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                  Device.cpu,  // these two will be overwritten later, so doesnt matter.
-                  true,  // is_diag!
-                  true);  // no_alloc!
+      e_ptr->Init(
+        {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+        true,  // is_diag!
+        true);  // no_alloc!
       e_ptr->_blocks = e_blocks;
       UniTensor e;
       e._impl = boost::intrusive_ptr<UniTensor_base>(e_ptr);
@@ -462,18 +463,18 @@ namespace cytnx {
     std::vector<cytnx::UniTensor> Eig(const UniTensor &Tin, const bool &is_V, const bool &row_v) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rank() <= 1,
-                      "[Eig][ERROR] Eig for UniTensor should have rank>1, but rank is %d\n",
+                      "[ERROR][Eig] Input UniTensor should have rank>1, but rank is %d\n",
                       Tin.rank());
       cytnx_error_msg(Tin.rowrank() < 1,
-                      "[Eig][ERROR] Eig for UniTensor should have rowrank>0, but rowrank is %d\n",
+                      "[ERROR][Eig] Input UniTensor should have rowrank>0, but rowrank is %d\n",
                       Tin.rowrank());
-      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
-                      "[Eig][ERROR] Eig for UniTensor should have rowrank<rank, but rowrank is %d "
-                      "and rank is %d\n",
-                      Tin.rowrank(), Tin.rank());
+      cytnx_error_msg(
+        Tin.rowrank() >= Tin.rank(),
+        "[ERROR][Eig] Input UniTensor should have rowrank<rank, but rowrank is %d and rank is %d\n",
+        Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[Eig][ERROR] Eig for diagonal UniTensor is trivial and currently not "
-                      "support. Use other manipulation.%s",
+                      "[ERROR][Eig] Input UniTensor is diagonal, so Eig is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
 
       std::vector<UniTensor> outCyT;
@@ -487,8 +488,8 @@ namespace cytnx {
         Eig_BlockFermionic_UT_internal(outCyT, Tin, is_V, row_v);
 
       } else {
-        cytnx_error_msg(true, "[ERROR] Eig only supports Dense/Block/BlockFermionic UniTensors.%s",
-                        "\n");
+        cytnx_error_msg(true, "[ERROR][Eig] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }  // ut type
 
       return outCyT;

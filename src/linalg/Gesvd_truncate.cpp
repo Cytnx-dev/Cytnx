@@ -112,8 +112,6 @@ namespace cytnx {
       cytnx_uint64 keep_dim = keepdim;
 
       Tensor tmp = Tin.get_block_().contiguous();
-      // if(Tin.is_contiguous()) tmp = Tin.get_block_();
-      // else{ tmp = Tin.get_block(); tmp.contiguous_();}
 
       std::vector<cytnx_uint64> tmps = tmp.shape();
       std::vector<cytnx_int64> oldshape(tmps.begin(), tmps.end());
@@ -128,14 +126,10 @@ namespace cytnx {
       std::vector<Tensor> outT =
         cytnx::linalg::Gesvd_truncate(tmp, keepdim, err, is_U, is_vT, return_err, mindim);
 
-      // if(Tin.is_contiguous()) tmp.reshape_(oldshape);
-
       int t = 0;
       outCyT.resize(outT.size());
 
       // s
-      // cytnx_error_msg(keepdim>outT[t].shape()[0],"[ERROR][Gesvd_truncate] keepdim should <=
-      // dimension of singular tensor%s","\n");
 
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[0].shape()[0]);
@@ -291,7 +285,6 @@ namespace cytnx {
       }
 
       // remove:
-      // vec_erase_(S.get_itoi(),to_be_removed);
       S.get_itoi() = new_itoi;
       if (!to_be_removed.empty()) {
         vec_erase_(S.get_blocks_(), to_be_removed);
@@ -384,14 +377,20 @@ namespace cytnx {
                                                  const cytnx_uint64 &mindim) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(
-        (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
-        "[ERROR][Gesvd_truncate] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s", "\n");
-
+        Tin.rank() <= 1,
+        "[ERROR][Gesvd_truncate] Input UniTensor should have rank>1, but rank is %d\n", Tin.rank());
       cytnx_error_msg(
-        Tin.is_diag(),
-        "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-        "support. Use other manipulation.%s",
-        "\n");
+        Tin.rowrank() < 1,
+        "[ERROR][Gesvd_truncate] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+        Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][Gesvd_truncate] Input UniTensor should have rowrank<rank, but "
+                      "rowrank is %d and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
+      cytnx_error_msg(Tin.is_diag(),
+                      "[ERROR][Gesvd_truncate] Input UniTensor is diagonal, so Gesvd_truncate is "
+                      "trivial and not supported. Use other manipulation.%s",
+                      "\n");
 
       // check input arguments
       cytnx_error_msg(mindim < 0, "[ERROR][Gesvd_truncate] mindim must be >=1%s", "\n");
@@ -408,9 +407,8 @@ namespace cytnx {
         Gesvd_truncate_Block_UTs_internal(outCyT, Tin, keepdim, err, is_U, is_vT, return_err,
                                           mindim);
       } else {
-        cytnx_error_msg(
-          true, "[ERROR] Gesvd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",
-          "\n");
+        cytnx_error_msg(true, "[ERROR][Gesvd_truncate] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
       return outCyT;
 
@@ -559,7 +557,6 @@ namespace cytnx {
         }
 
         // remove:
-        // vec_erase_(S.get_itoi(),to_be_removed);
         S.get_itoi() = new_itoi;
         if (!to_be_removed.empty()) {
           vec_erase_(S.get_blocks_(), to_be_removed);
@@ -646,20 +643,23 @@ namespace cytnx {
                                                  const cytnx_uint64 &mindim) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(
-        (Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank()),
-        "[ERROR][Gesvd_truncate] UniTensor should have rank>1 and rank>rowrank>0 for Svd%s", "\n");
-
+        Tin.rank() <= 1,
+        "[ERROR][Gesvd_truncate] Input UniTensor should have rank>1, but rank is %d\n", Tin.rank());
       cytnx_error_msg(
-        Tin.is_diag(),
-        "[Gesvd_truncate][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-        "support. Use other manipulation.%s",
-        "\n");
+        Tin.rowrank() < 1,
+        "[ERROR][Gesvd_truncate] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+        Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
+                      "[ERROR][Gesvd_truncate] Input UniTensor should have rowrank<rank, but "
+                      "rowrank is %d and rank is %d\n",
+                      Tin.rowrank(), Tin.rank());
+      cytnx_error_msg(Tin.is_diag(),
+                      "[ERROR][Gesvd_truncate] Input UniTensor is diagonal, so Gesvd_truncate is "
+                      "trivial and not supported. Use other manipulation.%s",
+                      "\n");
 
       // check input arguments
-      // cytnx_error_msg(mindim < 0, "[ERROR][Gesvd_truncate] mindim must be >=1%s", "\n");
       cytnx_error_msg(keepdim < 1, "[ERROR][Gesvd_truncate] keepdim must be >=1%s", "\n");
-      // cytnx_error_msg(return_err < 0, "[ERROR][Gesvd_truncate] return_err cannot be negative%s",
-      //                 "\n");
 
       std::vector<UniTensor> outCyT;
       if (Tin.uten_type() == UTenType.Dense) {
@@ -675,9 +675,8 @@ namespace cytnx {
                                           return_err, mindim);
 
       } else {
-        cytnx_error_msg(
-          true, "[ERROR] Gesvd_truncate only supports Dense/Block/BlockFermionic UniTensors.%s",
-          "\n");
+        cytnx_error_msg(true, "[ERROR][Gesvd_truncate] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
       return outCyT;
 

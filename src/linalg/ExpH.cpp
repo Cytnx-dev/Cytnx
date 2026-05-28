@@ -260,8 +260,8 @@ namespace cytnx {
 
         return out;
       } else {
-        cytnx_error_msg(true, "[ERROR] ExpH only supports Dense/Block/BlockFermionic UniTensors.%s",
-                        "\n");
+        cytnx_error_msg(true, "[ERROR][ExpH] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
 
     }  // ExpH()

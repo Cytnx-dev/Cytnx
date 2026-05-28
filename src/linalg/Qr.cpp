@@ -20,8 +20,6 @@ namespace cytnx {
     std::vector<Tensor> Qr(const Tensor &Tin, const bool &is_tau) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Qr] error, Qr can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[Qr] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_uint64 n_tau = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
 
@@ -54,7 +52,6 @@ namespace cytnx {
       } else {
   #ifdef UNI_GPU
     #ifdef UNI_CUQUANTUM
-        // cytnx_error_msg(true, "[Qr] error,%s", "Currently QR does not support CUDA.\n");
 
         checkCudaErrors(cudaSetDevice(in.device()));
 
@@ -357,10 +354,11 @@ namespace cytnx {
 
       if (is_tau) {
         BlockUniTensor *tau_ptr = new BlockUniTensor();
-        tau_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_tau_L", "_tau_R"}, 1, Type.Double,
-                      Device.cpu,  // these two will be overwritten later, so doesnt matter.
-                      true,  // is_diag!
-                      true);  // no_alloc!
+        tau_ptr->Init(
+          {Bd_aux, Bd_aux.redirect()}, {"_tau_L", "_tau_R"}, 1, Type.Double,
+          Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+          true,  // is_diag!
+          true);  // no_alloc!
         tau_ptr->_blocks = tau_blocks;
         UniTensor tau;
         tau._impl = boost::intrusive_ptr<UniTensor_base>(tau_ptr);
@@ -571,10 +569,11 @@ namespace cytnx {
 
       if (is_tau) {
         BlockFermionicUniTensor *tau_ptr = new BlockFermionicUniTensor();
-        tau_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_tau_L", "_tau_R"}, 1, Type.Double,
-                      Device.cpu,  // these two will be overwritten later, so doesnt matter.
-                      true,  // is_diag!
-                      true);  // no_alloc!
+        tau_ptr->Init(
+          {Bd_aux, Bd_aux.redirect()}, {"_tau_L", "_tau_R"}, 1, Type.Double,
+          Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+          true,  // is_diag!
+          true);  // no_alloc!
         tau_ptr->_blocks = tau_blocks;
         UniTensor tau;
         tau._impl = boost::intrusive_ptr<UniTensor_base>(tau_ptr);
@@ -585,8 +584,19 @@ namespace cytnx {
 
     std::vector<UniTensor> Qr(const UniTensor &Tin, const bool &is_tau) {
       // using rowrank to split the bond to form a matrix.
-      cytnx_error_msg(Tin.rowrank() < 1 || Tin.rank() == 1 || Tin.rowrank() == Tin.rank(),
-                      "[QR][ERROR] QR for DenseUniTensor should have rank>1 and rank>rowrank>0%s",
+      cytnx_error_msg(Tin.rank() <= 1,
+                      "[ERROR][QR] Input UniTensor should have rank>1, but rank is %d\n",
+                      Tin.rank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][QR] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
+      cytnx_error_msg(
+        Tin.rowrank() >= Tin.rank(),
+        "[ERROR][QR] Input UniTensor should have rowrank<rank, but rowrank is %d and rank is %d\n",
+        Tin.rowrank(), Tin.rank());
+      cytnx_error_msg(Tin.is_diag(),
+                      "[ERROR][QR] Input UniTensor is diagonal, so QR is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
 
       std::vector<UniTensor> outCyT;
@@ -597,7 +607,8 @@ namespace cytnx {
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
         Qr_BlockFermionic_UT_internal(outCyT, Tin, is_tau);
       } else {
-        cytnx_error_msg(true, "[QR for sparse UniTensor is developling%s]", "\n");
+        cytnx_error_msg(true, "[ERROR][QR] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
       return outCyT;
     }

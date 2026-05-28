@@ -18,8 +18,6 @@ namespace cytnx {
     std::vector<Tensor> Gesvd(const Tensor &Tin, const bool &is_U, const bool &is_vT) {
       cytnx_error_msg(Tin.shape().size() != 2,
                       "[Gesvd] error, Gesvd can only operate on rank-2 Tensor.%s", "\n");
-      // cytnx_error_msg(!Tin.is_contiguous(), "[Gesvd] error tensor must be contiguous. Call
-      // Contiguous_() or Contiguous() first%s","\n");
 
       cytnx_uint64 n_singlu = std::max(cytnx_uint64(1), std::min(Tin.shape()[0], Tin.shape()[1]));
 
@@ -111,9 +109,10 @@ namespace cytnx {
       cytnx::UniTensor &Cy_S = outCyT[t];
       cytnx::Bond newBond(outT[t].shape()[0]);
 
-      Cy_S.Init({newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
-                Tin.device(), true);  // it is just reference so no hurt to alias ^^
-
+      Cy_S.Init(
+        {newBond, newBond}, {std::string("_aux_L"), std::string("_aux_R")}, 1, Type.Double,
+        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+        true);  // is_diag!
       Cy_S.put_block_(outT[t]);
       t++;
 
@@ -336,10 +335,11 @@ namespace cytnx {
       // process S:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
       BlockUniTensor *S_ptr = new BlockUniTensor();
-      S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                  Device.cpu,  // these two will be overwritten later, so doesnt matter.
-                  true,  // is_diag!
-                  true);  // no_alloc!
+      S_ptr->Init(
+        {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+        true,  // is_diag!
+        true);  // no_alloc!
       S_ptr->_blocks = S_blocks;
       UniTensor S;
       S._impl = boost::intrusive_ptr<UniTensor_base>(S_ptr);
@@ -553,10 +553,11 @@ namespace cytnx {
       // process S:
       Bond Bd_aux = Bond(BD_IN, aux_qnums, aux_degs, Tin.syms());
       BlockFermionicUniTensor *S_ptr = new BlockFermionicUniTensor();
-      S_ptr->Init({Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
-                  Device.cpu,  // these two will be overwritten later, so doesnt matter.
-                  true,  // is_diag!
-                  true);  // no_alloc!
+      S_ptr->Init(
+        {Bd_aux, Bd_aux.redirect()}, {"_aux_L", "_aux_R"}, 1, Type.Double,
+        Device.cpu,  // dtype, device are overwritten when the blocks are set; use defaults here
+        true,  // is_diag!
+        true);  // no_alloc!
       S_ptr->_blocks = S_blocks;
       UniTensor S;
       S._impl = boost::intrusive_ptr<UniTensor_base>(S_ptr);
@@ -608,19 +609,18 @@ namespace cytnx {
                                         const bool &is_vT) {
       // using rowrank to split the bond to form a matrix.
       cytnx_error_msg(Tin.rank() <= 1,
-                      "[Gesvd][ERROR] Gesvd for UniTensor should have rank>1, but rank is %d\n",
+                      "[ERROR][Gesvd] Input UniTensor should have rank>1, but rank is %d\n",
                       Tin.rank());
-      cytnx_error_msg(
-        Tin.rowrank() < 1,
-        "[Gesvd][ERROR] Gesvd for UniTensor should have rowrank>0, but rowrank is %d\n",
-        Tin.rowrank());
+      cytnx_error_msg(Tin.rowrank() < 1,
+                      "[ERROR][Gesvd] Input UniTensor should have rowrank>0, but rowrank is %d\n",
+                      Tin.rowrank());
       cytnx_error_msg(Tin.rowrank() >= Tin.rank(),
-                      "[Gesvd][ERROR] Gesvd for UniTensor should have rowrank<rank, but rowrank is "
-                      "%d and rank is %d\n",
+                      "[ERROR][Gesvd] Input UniTensor should have rowrank<rank, but rowrank is %d "
+                      "and rank is %d\n",
                       Tin.rowrank(), Tin.rank());
       cytnx_error_msg(Tin.is_diag(),
-                      "[Gesvd][ERROR] SVD for diagonal UniTensor is trivial and currently not "
-                      "supported. Use other manipulations.%s",
+                      "[ERROR][Gesvd] Input UniTensor is diagonal, so Gesvd is trivial and not "
+                      "supported. Use other manipulation.%s",
                       "\n");
 
       std::vector<UniTensor> outCyT;
@@ -633,8 +633,8 @@ namespace cytnx {
       } else if (Tin.uten_type() == UTenType.BlockFermionic) {
         Gesvd_BlockFermionic_UT_internal(outCyT, Tin, is_U, is_vT);
       } else {
-        cytnx_error_msg(
-          true, "[ERROR] Gesvd only supports Dense/Block/BlockFermionic UniTensors.%s", "\n");
+        cytnx_error_msg(true, "[ERROR][Gesvd] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
 
       }  // ut type
 

@@ -247,8 +247,8 @@ namespace cytnx {
         _expm_Sparse_UT(out, Tin, a, b);
         return out;
       } else {
-        cytnx_error_msg(true, "[ERROR] ExpM only supports Dense/Block/BlockFermionic UniTensors.%s",
-                        "\n");
+        cytnx_error_msg(true, "[ERROR][ExpM] UniTensor type '%s' not supported\n",
+                        Tin.uten_type_str().c_str());
       }
     }
 
